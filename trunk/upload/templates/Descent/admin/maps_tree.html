@@ -1,0 +1,234 @@
+<script type="text/javascript">
+	function set_maps_cookie(id, val) {
+		try {
+			set_cookie('mapsgui_' + id, val, 3600);
+		} catch(e) {
+			alert(e.message);
+		}
+		return document.location = 'admin.php?act=permissions_gui';
+	}
+</script>
+<!-- MAPS GUI -->
+<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
+	<tr class="thead">
+		<td colspan="6">{$L_PERMISSIONS}</td>
+	</tr>
+	<tr class="panel">
+		<td colspan="6">
+			<div class="outset_box">
+				<fieldset>
+					<legend>{$L_LEGEND}</legend>
+					<span style="color: green;">{$L_INHERITSPERMS}</span>
+					<br />
+					<span style="color: firebrick;">{$L_DOESNTINHERITPERMS}</span>
+				</fieldset>
+				<br /><br />
+				<div align="center">
+					<input type="button" value="{$L_ADDMAPSITEM}" onclick="document.location='admin.php?act=maps_add&id=0'" />
+				</div>
+			</div>
+		</td>
+	</tr>
+	<tr class="tcat">
+		<td>{$L_NAME}</td>
+		<td align="center">{$L_VIEW}</td>
+		<td align="center">{$L_ADD}</td>
+		<td align="center">{$L_EDIT}</td>
+		<td align="center">{$L_DELETE}</td>
+		<td></td>
+	</tr>
+	<list:list id="maps_list">
+	<list:item list="maps_list">
+	<form name="maps_form{$id}" action="admin.php?act=maps_update&amp;id={$id}" method="post" enctype="multipart/form-data">
+	<tr class="alt1">
+		<td nowrap="nowrap">
+			<div id="maps_link{$id}" class="minitext">{$level}{$name}</div>
+			<div id="maps_menu{$id}" class="nav_menu" style="">
+				<table cellpadding="0" cellspacing="1" border="0" class="forum_content">
+					<tr class="tcat">
+						<td nowrap="nowrap">{$L_VARNAME}: {$varname}</td>
+					</tr>
+					<tr class="alt1">
+						<td nowrap="nowrap"><a href="javascript:;" onclick="document.maps_form{$id}.submit()" />{$L_UPDATEMAPS}</a></td>
+					</tr>
+					<tr class="alt1">
+						<td nowrap="nowrap"><a href="admin.php?act=maps_add&amp;id={$id}">{$L_ADDCHILDMAPS}</a></td>
+					</tr>
+					<tr class="alt1">
+						<td nowrap="nowrap"><a href="admin.php?act=maps_remove&amp;id={$id}">{$L_REMOVEMAPS}</a></td>
+					</tr>
+				</table>
+			</div>
+			<script type="text/javascript">
+				menu_init('maps_link{$id}', 'maps_menu{$id}');
+			</script>
+		</td>
+		<td align="center">
+			<select name="can_view" id="view_{$id}" class="minitext">
+				<option value="0">--</option>
+				<option value="1">{$L_GUEST}</option>
+				<option value="4">{$L_PENDINGMEMBER}</option>
+				<option value="5">{$L_MEMBER}</option>
+				<option value="6">{$L_SUPERMEMBER}</option>
+				<option value="7">{$L_MODERATOR}</option>
+				<option value="8">{$L_SUPERMODERATOR}</option>
+				<option value="9">{$L_ADMIN}</option>
+				<option value="10">{$L_SUPERADMIN}</option>
+			</select>
+			<script type="text/javascript">setIndex({$can_view}, 'view_{$id}');</script>
+		</td>
+		<td align="center">
+			<select name="can_add" id="add_{$id}" class="minitext">
+				<option value="0">--</option>
+				<option value="1">{$L_GUEST}</option>
+				<option value="4">{$L_PENDINGMEMBER}</option>
+				<option value="5">{$L_MEMBER}</option>
+				<option value="6">{$L_SUPERMEMBER}</option>
+				<option value="7">{$L_MODERATOR}</option>
+				<option value="8">{$L_SUPERMODERATOR}</option>
+				<option value="9">{$L_ADMIN}</option>
+				<option value="10">{$L_SUPERADMIN}</option>
+			</select>
+			<script type="text/javascript">setIndex({$can_add}, 'add_{$id}');</script>
+		</td>
+		<td align="center">
+			<select name="can_edit" id="edit_{$id}" class="minitext">
+				<option value="0">--</option>
+				<option value="1">{$L_GUEST}</option>
+				<option value="4">{$L_PENDINGMEMBER}</option>
+				<option value="5">{$L_MEMBER}</option>
+				<option value="6">{$L_SUPERMEMBER}</option>
+				<option value="7">{$L_MODERATOR}</option>
+				<option value="8">{$L_SUPERMODERATOR}</option>
+				<option value="9">{$L_ADMIN}</option>
+				<option value="10">{$L_SUPERADMIN}</option>
+			</select>
+			<script type="text/javascript">setIndex({$can_edit}, 'edit_{$id}');</script>
+		</td>
+		<td align="center">
+			<select name="can_del" id="del_{$id}" class="minitext">
+				<option value="0">--</option>
+				<option value="1">{$L_GUEST}</option>
+				<option value="4">{$L_PENDINGMEMBER}</option>
+				<option value="5">{$L_MEMBER}</option>
+				<option value="6">{$L_SUPERMEMBER}</option>
+				<option value="7">{$L_MODERATOR}</option>
+				<option value="8">{$L_SUPERMODERATOR}</option>
+				<option value="9">{$L_ADMIN}</option>
+				<option value="10">{$L_SUPERADMIN}</option>
+			</select>
+			<script type="text/javascript">setIndex({$can_del}, 'del_{$id}');</script>
+		</td>
+		<td>
+			<if:if var="row_level" eq="1">
+			<if:if var="expanded" eq="0">
+				<input type="button" value="&lt;&gt;" style="font-weight:bold;" class="minitext" onclick="set_maps_cookie({$id}, 'yes')" />
+			<if:else />
+				<input type="button" value="&gt;&lt;" style="font-weight:bold;" class="minitext" onclick="set_maps_cookie({$id}, 'no')" />
+			</if:if>
+			</if:if>
+		</td>
+	</tr>
+	</form>
+	<list:sublist list="maps_list" id="maps_children" column="maps_children">
+	<list:item list="maps_children">
+	<form name="maps_form{$id}" action="admin.php?act=maps_update&amp;id={$id}" method="post" enctype="multipart/form-data">
+	<tr class="alt2">
+		<td nowrap="nowrap">
+			<div id="maps_link{$id}" class="minitext">{$level}{$name}</div>
+			<div id="maps_menu{$id}" class="nav_menu" style="">
+				<table cellpadding="0" cellspacing="1" border="0" class="forum_content">
+					<tr class="tcat">
+						<td nowrap="nowrap">{$L_VARNAME}: {$varname}</td>
+					</tr>
+					<tr class="alt1">
+						<td nowrap="nowrap"><a href="javascript:;" onclick="document.maps_form{$id}.submit()" />{$L_UPDATEMAPS}</a></td>
+					</tr>
+					<if:if var="inherit" eq="1">
+					<tr class="alt1">
+						<td nowrap="nowrap"><a href="admin.php?act=maps_inherit&amp;id={$id}&amp;inherit=false">{$L_MAKEUNINHERIT}</a></td>
+					</tr>
+					<if:else />
+					<tr class="alt1">
+						<td nowrap="nowrap"><a href="admin.php?act=maps_inherit&amp;id={$id}&amp;inherit=true">{$L_MAKEINHERIT}</a></td>
+					</tr>
+					</if:if>
+					<tr class="alt1">
+						<td nowrap="nowrap"><a href="admin.php?act=maps_add&amp;id={$id}">{$L_ADDCHILDMAPS}</a></td>
+					</tr>
+					<tr class="alt1">
+						<td nowrap="nowrap"><a href="admin.php?act=maps_remove&amp;id={$id}">{$L_REMOVEMAPS}</a></td>
+					</tr>
+				</table>
+			</div>
+			<script type="text/javascript">
+				menu_init('maps_link{$id}', 'maps_menu{$id}');
+			</script>
+		</td>
+		<td align="center">
+			<select name="can_view" id="view_{$id}" class="minitext">
+				<option value="0">--</option>
+				<option value="1">{$L_GUEST}</option>
+				<option value="4">{$L_PENDINGMEMBER}</option>
+				<option value="5">{$L_MEMBER}</option>
+				<option value="6">{$L_SUPERMEMBER}</option>
+				<option value="7">{$L_MODERATOR}</option>
+				<option value="8">{$L_SUPERMODERATOR}</option>
+				<option value="9">{$L_ADMIN}</option>
+				<option value="10">{$L_SUPERADMIN}</option>
+			</select>
+			<script type="text/javascript">setIndex({$can_view}, 'view_{$id}');</script>
+		</td>
+		<td align="center">
+			<select name="can_add" id="add_{$id}" class="minitext">
+				<option value="0">--</option>
+				<option value="1">{$L_GUEST}</option>
+				<option value="4">{$L_PENDINGMEMBER}</option>
+				<option value="5">{$L_MEMBER}</option>
+				<option value="6">{$L_SUPERMEMBER}</option>
+				<option value="7">{$L_MODERATOR}</option>
+				<option value="8">{$L_SUPERMODERATOR}</option>
+				<option value="9">{$L_ADMIN}</option>
+				<option value="10">{$L_SUPERADMIN}</option>
+			</select>
+			<script type="text/javascript">setIndex({$can_add}, 'add_{$id}');</script>
+		</td>
+		<td align="center">
+			<select name="can_edit" id="edit_{$id}" class="minitext">
+				<option value="0">--</option>
+				<option value="1">{$L_GUEST}</option>
+				<option value="4">{$L_PENDINGMEMBER}</option>
+				<option value="5">{$L_MEMBER}</option>
+				<option value="6">{$L_SUPERMEMBER}</option>
+				<option value="7">{$L_MODERATOR}</option>
+				<option value="8">{$L_SUPERMODERATOR}</option>
+				<option value="9">{$L_ADMIN}</option>
+				<option value="10">{$L_SUPERADMIN}</option>
+			</select>
+			<script type="text/javascript">setIndex({$can_edit}, 'edit_{$id}');</script>
+		</td>
+		<td align="center">
+			<select name="can_del" id="del_{$id}" class="minitext">
+				<option value="0">--</option>
+				<option value="1">{$L_GUEST}</option>
+				<option value="4">{$L_PENDINGMEMBER}</option>
+				<option value="5">{$L_MEMBER}</option>
+				<option value="6">{$L_SUPERMEMBER}</option>
+				<option value="7">{$L_MODERATOR}</option>
+				<option value="8">{$L_SUPERMODERATOR}</option>
+				<option value="9">{$L_ADMIN}</option>
+				<option value="10">{$L_SUPERADMIN}</option>
+			</select>
+			<script type="text/javascript">setIndex({$can_del}, 'del_{$id}');</script>
+		</td>
+		<td>
+			
+		</td>
+	</tr>
+	</form>
+	</list:item>
+	</list:sublist>
+	</list:item>
+	</list:list>
+</table>
+<!-- / MAPS GUI -->

@@ -1,0 +1,60 @@
+<is:admin>
+<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content" id="nav_table">
+	<thead class="thead"><td>{$L_OPTIONS}</td></thead>
+	<tr class="panel"><td><a class="smalltext" target="main" href="admin.php?act=options">{$L_OPTIONS}</a></td></tr>
+	
+	<thead class="thead"><td>{$L_PERMISSIONS}</td></thead>
+	<tr class="panel"><td><a class="smalltext" target="main" href="admin.php?act=permissions_gui">{$L_PERMISSIONS}</a></td></tr>
+	
+	<!--
+	<thead class="thead"><td>{$L_STYLES}</td></thead>
+	<tr class="panel"><td><a class="smalltext" target="main" href="admin.php?act=css">{$L_CSS}</a></td></tr>
+	-->
+	<thead class="thead"><td>{$L_FORUMS}</td></thead>
+	<tr class="panel"><td><a class="smalltext" target="main" href="admin.php?act=categories">{$L_CATEGORIES}</a></td></tr>
+	<tr class="panel"><td><a class="smalltext" target="main" href="admin.php?act=forums">{$L_FORUMS}</a></td></tr>
+	<!--
+	<tr class="panel"><td><a class="smalltext" target="main" href="admin.php?act=prune">{$L_PRUNE}</a></td></tr>
+	<tr class="panel"><td><a class="smalltext" target="main" href="admin.php?act=permissions">{$L_PERMISSIONS}</a></td></tr>
+	-->
+	<thead class="thead"><td>{$L_USERS}</td></thead>
+	<!--<tr class="panel"><td><a class="smalltext" target="main" href="admin.php?act=users">{$L_USERS}</a></td></tr>
+	<tr class="panel"><td><a class="smalltext" target="main" href="admin.php?act=userranks">{$L_USERRANKS}</a></td></tr>
+	<tr class="panel"><td><a class="smalltext" target="main" href="admin.php?act=usertitles">{$L_USERTITLES}</a></td></tr>-->
+	<tr class="panel"><td><a class="smalltext" target="main" href="admin.php?act=usergroups">{$L_USERGROUPS}</a></td></tr>
+	<tr class="panel"><td><a class="smalltext" target="main" href="admin.php?act=userfields">{$L_USERPROFILEFIELDS}</a></td></tr>
+	<tr class="panel"><td><a class="smalltext" target="main" href="admin.php?act=usernames">{$L_DISALLOWNAMES}</a></td></tr>
+		
+	<thead class="thead"><td>{$L_POSTS}</td></thead>
+	<!--<tr class="panel"><td><a class="smalltext" target="main" href="admin.php?act=censoring">{$L_CENSORING}</a></td></tr>-->
+	<tr class="panel"><td><a class="smalltext" target="main" href="admin.php?act=posticons">{$L_POSTICONS}</a></td></tr>
+	<tr class="panel"><td><a class="smalltext" target="main" href="admin.php?act=emoticons">{$L_EMOTICONS}</a></td></tr>
+	<!--
+	<thead class="thead"><td>{$L_PRIVATE_MSGS}</td></thead>
+	<tr class="panel"><td><a class="smalltext" target="main" href="admin.php?act=globalpm">{$L_GLOBALPM}</a></td></tr>
+	
+	<thead class="thead"><td>{$L_FAQ}</td></thead>
+	<tr class="panel"><td><a class="smalltext" target="main" href="admin.php?act=faq">{$L_FAQ}</a></td></tr>
+	-->
+</table>
+<script type="text/javascript">
+	//<![CDATA[ <!--
+	window.onload = function() {
+		var row_links = document.getElementsByTagName("tr");
+		
+		for(var i = 0; i < row_links.length; i++) {
+			row_links[i].onmouseover = function() {
+				if(this.className == 'panel') {
+					this.className = 'alt1';
+				}
+			}
+			row_links[i].onmouseout = function() {
+				if(this.className == 'alt1') {
+					this.className = 'panel';
+				}
+			}
+		}
+	}
+	//]]> -->
+</script>
+</is:admin>

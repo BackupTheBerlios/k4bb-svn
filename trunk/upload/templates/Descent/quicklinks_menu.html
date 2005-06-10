@@ -1,0 +1,43 @@
+<!-- Quick Links Drop Down Menu -->
+<div id="quicklinks_menu" class="nav_menu" style="">
+	<table cellpadding="0" cellspacing="1" border="0" class="forum_content">
+		<tr class="tcat">
+			<td>{$L_QUICKLINKS}</td>
+		</tr>
+		<if:if var="calendarenabled" eq="1">
+		<tr class="alt1">
+			<td><a href="calendar.php" title="{$L_CALENDAR}" class="smalltext">{$L_CALENDER}</a></td>
+		</tr>
+		</if:if>
+		<tr class="alt1">
+			<td><a href="usergroups.php" title="{$L_USERGROUPS}" class="smalltext">{$L_USERGROUPS}</a></td>
+		</tr>
+		<tr class="alt1">
+			<td><a href="search.php?act=new_posts" title="{$L_NEWPOSTS}" class="smalltext">{$L_NEWPOSTS}</a></td>
+		</tr>
+		<is:logged>
+		<tr class="alt1">
+			<td><a href="search.php?act=my_posts" title="{$L_MYPOSTS}" class="smalltext">{$L_MYPOSTS}</a></td>
+		</tr>
+		<tr class="tcat">
+			<td nowrap="nowrap">{$L_USERCONTROLPANEL}</td>
+		</tr>
+		<tr class="alt1">
+			<td><a href="member.php?act=usercp" title="{$L_PROFILE}" class="smalltext">{$L_USERCONTROLPANEL}</a></td>
+		</tr>
+		<tr class="alt1">
+			<td><a href="member.php?act=profile" title="{$L_PROFILE}" class="smalltext">{$L_PROFILE}</a></td>
+		</tr>
+		</is:logged>
+		<tr class="tcat">
+			<td>{$L_MISCELLANEOUS}</td>
+		</tr>
+		<tr class="alt1">
+			<td nowrap="nowrap"><a href="index.php?act=markforums" title="{$L_MARKFORUMSREAD}" class="smalltext">{$L_MARKFORUMSREAD}</a></td>
+		</tr>
+	</table>
+</div>
+<script type="text/javascript">
+	menu_init('quicklinks_link', 'quicklinks_menu');
+</script>
+<!-- / Quick Links Drop Down Menu -->

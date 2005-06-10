@@ -1,0 +1,64 @@
+<is:admin>
+<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
+	<tr class="thead">
+		<td colspan="5">
+			<script type="text/javascript">doHelpButton('emoticons');</script>
+			{$L_EMOTICONS}
+		</td>
+	</tr>
+	<tr class="tcat">
+		<td colspan="5">{$L_MANAGEEMOTICONS}</td>
+	</tr>
+	<tr class="alt3">
+		<td colspan="5">
+			<div align="center">
+				<script type="text/javascript">doHelpButton('add_emoticon');</script>
+				<input type="button" class="minitext" style="font-weight: bold;" value="{$L_ADDEMOTICON}" onclick="document.location='admin.php?act=emoticons_add'" />
+			</div>
+		</td>
+	</tr>
+	<tr class="alt1">
+	<list:list id="emoticons">
+	<list:default list="emoticons">
+	<tr class="panel">
+		<td>
+			<div class="outset_box" align="center">
+				<br />
+				{$L_NOEMOTICONS}
+				<br /><br />
+			</div>
+		</td>
+	</tr>
+	</list:default>
+	<list:item list="emoticons">
+		<td width="20%">
+			<div align="center">
+				<img src="tmp/upload/emoticons/{$image}" alt="{$description}" border="0" />
+				<br />
+				<span class="minitext">{$typed}</span>
+				<br />
+				<span class="minitext">{$description}</span>
+				<br /><br />
+				<input type="button" class="minitext" value="{$L_EDIT}" onclick="document.location='admin.php?act=emoticons_edit&id={$id}'" />
+				<br />
+				<input type="button" class="minitext" value="{$L_DELETE}" onclick="document.location='admin.php?act=emoticons_remove&id={$id}'" />
+				<br />
+				<if:if var="clickable" eq="1">
+				<input type="button" value="{$L_DNDISPLAYINNEWPOST}" class="minitext" onclick="document.location='admin.php?act=emoticons_clickable&id={$id}'" />
+				<if:else />
+				<input type="button" value="{$L_DISPLAYINNEWPOST}" class="minitext" onclick="document.location='admin.php?act=emoticons_clickable&id={$id}'" />
+				</if:if>
+			</div>
+		</td>
+	<list:separator list="emoticons">
+		<list:alternate list="emoticons" count="3" remainder="2">
+			<list:switch list="emoticons" var="row_class" a="alt2" b="alt1">
+			</tr><tr class="{$row_class}">
+			</list:switch>
+		</list:alternate>
+	</list:separator>
+	</list:item>
+	</list:list>
+	</tr>
+</table>
+</is:admin>

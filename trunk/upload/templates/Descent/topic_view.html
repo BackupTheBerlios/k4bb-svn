@@ -1,0 +1,49 @@
+<tr class="panel">
+	<td><img src="{$topicicon}" alt="" border="0" /></td>
+	<td><img src="tmp/upload/posticons/{$posticon}" alt="" border="0" /></td>
+	<td width="50%" class="alt1">
+		{$rating}{$pager}
+		<if:if var="modpanel" eq="0">
+		<span class="smalltext">
+		<if:if var="topic_type" eq="2">{$stickytopicprefix}<else:if var="topic_type" geq="3" />{$announcementtopicprefix}</if:if>
+		<if:if var="is_feature" eq="1">{$featuretopicprefix}</if:if>
+		<if:if var="poll" eq="1">{$polltopicprefix}</if:if>
+		</span>
+		<a href="viewtopic.php?id={$id}" title="{$name}" style="font-size: 13px;"><core:truncate length="40" append="...">{$name}</core:truncate></a>
+		<br />
+		<if:else />
+		<form action="mod.php?act=topic_simpleupdate" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="id" value="{$id}" />
+		<input type="hidden" name="forum_id" value="{$forum_id}" />
+		<input type="submit" value="{$L_SAVE}" id="topic_submit{$id}" style="font-weigth: bold; display: none; float: right;" class="button" />
+		<input type="text" name="name" value="{$name}" id="topic_advedit{$id}" style="font-size: 13px;width: 70%;" class="alt1" />
+		</form>
+		</if:if>
+		<div style="float:left;" class="smalltext"><a href="member.php?id={$poster_id}" title="{$poster_name}">{$poster_name}</a></div>
+	</td>
+	<td align="center" class="alt2">{$num_replies}</td>
+	<td align="center" class="alt1">{$views}</td>
+	<td align="center" class="alt2" nowrap="nowrap" width="30%">
+		<if:if var="reply_time" greater="0">
+		<span class="minitext">
+			<core:date format="%b %d %y">{$reply_time}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$reply_time}</core:date></span>
+			<br />
+			{$L_BY}&nbsp;<if:if var="reply_uname" eq="">{$L_GUEST}<if:else /><if:if var="reply_uid" noteq="0"><a href="member.php?id={$reply_uid}" title="{$reply_uname}"><strong>{$reply_uname}</strong></a><if:else />{$reply_uname}</if:if></if:if>
+			<a href="findpost.php?id={$reply_id}" title="{$reply_name}"><img src="Images/{$IMG_DIR}/Icons/icon_latest_reply.gif" border="0" alt="{$reply_name}" /></a>
+		</span>
+		<if:else />
+		<span class="minitext">
+			<core:date format="%b %d %y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span>
+			<br />
+			{$L_BY}&nbsp;<if:if var="poster_name" eq="">{$L_GUEST}<if:else /><if:if var="poster_id" noteq="0"><a href="member.php?id={$poster_id}" title="{$poster_name}"><strong>{$poster_name}</strong></a><if:else />{$poster_name}</if:if></if:if>
+			<a href="viewtopic.php?id={$id}" title="{$name}"><img src="Images/{$IMG_DIR}/Icons/icon_latest_reply.gif" border="0" alt="{$name}" /></a>
+		</span>
+		</if:if>
+	</td>
+	<if:if var="modpanel" eq="1">
+	<td align="center">
+		<a href="javascript:;" onclick="select_topic({$id}, 'topic_select{$id}', 'topics', 'topic_submit{$id}');" title="{$L_SELECTTOPIC}"><img src="Images/{$IMG_DIR}/Icons/topic_unselected.gif" id="topic_select{$id}" alt="{$L_SELECTTOPIC}" border="0" /></a>
+		<script type="text/javascript">adv_edit('topic_advedit{$id}', 'viewtopic.php?id={$id}', 'topic_select{$id}', 'topic_submit{$id}', 'topics');</script>
+	</td>
+	</if:if>
+</tr>

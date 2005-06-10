@@ -1,0 +1,97 @@
+<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
+	<tr class="thead">
+		<td colspan="2">{$L_LOOKUPGROUP}: <span style="font-weight: normal;">{$group_name}</span></td>
+	</tr>
+	<tr class="alt1">
+		<td width="50%"><strong>{$L_DESCRIPTION}:</strong></td>
+		<td width="50%">{$group_description}</td>
+	</tr>
+	<tr class="alt3">
+		<td width="50%"><strong>{$L_USERGROUPTITLE}:</strong></td>
+		<td width="50%">{$group_nicename}</td>
+	</tr>
+	<if:if var="group_avatar" noteq="">
+	<tr class="alt1">
+		<td width="50%"><strong>{$L_USERGROUPAVATAR}</strong></td>
+		<td width="50%"><img src="tmp/upload/group_avatars/{$group_avatar}" border="0" /></td>
+	</tr>
+	<tr class="alt3">
+	<if:else />
+	<tr class="alt1">
+	</if:if>
+		<td width="50%"><strong>{$L_MODERATOR}:</strong></td>
+		<td width="50%"><a href="member.php?id={$group_mod_id}" style="font-weight: bold; color: #{$group_mod_color};">{$group_mod_name}</a></td>
+	</tr>
+</table>
+<br />
+
+<page:navigator id="users_pager">
+<div align="right">
+	<table cellpadding="0" cellspacing="1" border="0" class="forum_content">
+		<tr>
+			<td class="alt3"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></td>
+			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
+			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
+			<page:list id="users_pager" before="3" after="3">
+			<list:item list="users_pager">
+				<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
+			</list:item>
+			</page:list>
+			<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
+			<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
+		</tr>
+	</table>
+</div>
+</page:navigator>
+
+<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
+	<tr class="thead">
+		<td>{$L_MEMBERS} ({$num_group_members})</td>
+	</tr>
+	<list:list id="users_in_usergroup">
+	<list:item list="users_in_usergroup">
+	<list:switch list="users_in_usergroup" var="row_class" a="alt1" b="alt3">
+	<tr class="{$row_class}">
+		<td>
+			<a href="member.php?id={$id}" style="font-weight:bold;color:#{$group_color};">{$name}</a>
+		</td>
+	</tr>
+	</list:switch>
+	</list:item>
+	</list:list>
+</table>
+
+<page:navigator id="users_pager">
+<div align="right">
+	<table cellpadding="0" cellspacing="1" border="0" class="forum_content">
+		<tr>
+			<td class="alt3"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></td>
+			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
+			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
+			<page:list id="users_pager" before="3" after="3">
+			<list:item list="users_pager">
+				<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
+			</list:item>
+			</page:list>
+			<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
+			<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
+		</tr>
+	</table>
+</div>
+</page:navigator>
+
+<core:block id="add_user" hidden="yes">
+<form:form name="addusertogroup" id="addusertogroup" action="usergroups.php?act=add_user_to_group" method="post" name="post" enctype="multipart/form-data">
+<br />
+<div class="outset_box_small">
+	<fieldset>
+		<legend>{$L_ADDUSER}:</legend>
+		<input type="hidden" name="id" value="{$group_id}" />
+		<input type="text" class="inputbox" name="name" id="name" value="" />
+		<input type="submit" class="button" value="{$L_ADDUSER}" />
+		<input type="reset" class="button" value="{$L_RESET}" />
+		<form:error id="name_error" for="name" setclass="inputfailed" regex=".+">{$L_INSERTUSERNAME}</form:error>
+	</fieldset>
+</div>
+</form:form>
+</core:block>

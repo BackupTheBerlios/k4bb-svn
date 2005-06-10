@@ -1,0 +1,41 @@
+<is:admin>
+<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content" style="height: 450px;">
+	<tr class="thead">
+		<td>
+			<script type="text/javascript">doHelpButton('file_browser');</script>
+			{$L_FILEBROWSER}
+		</td>
+	</tr>
+	<tr class="panel">
+		<td>
+			<div class="outset_box" style="height: 300px;overflow: auto;">
+			<list:list id="files_list">
+			<list:item list="files_list">
+				<div align="center" style="border: 1px solid #CCCCCC; padding: 3px; width: 30%; height: 75px; float: left;margin-right: 5px;margin-bottom: 5px;" onclick="set_file('{$shortname}', 'file')" onmouseover="this.style.border='1px solid #999999';try{ this.style.cursor='pointer'; } catch(e) { this.style.cursor='hand'; }" onmouseout="this.style.border='1px solid #CCCCCC;';try{ this.style.cursor='pointer'; } catch(e) { this.style.cursor='hand'; }">
+				<if:if var="filetype" eq="img">
+				<img src="{$filename}" width="{$width}" height="{$height}" alt="" border="" />
+				<if:else />
+				<img src="Images/{$IMG_DIR}/Icons/filetype_{$filetype}.png" alt="" border="" width="48" height="48" />
+				</if:if>
+				<br />
+				<strong>{$shortname}</strong>
+				<br />
+				{$fileext}
+				</div>
+				<list:separator list="files_list">
+				<list:alternate list="files_list" count="3" remainder="2">
+					<br /><br /><br /><br /><br /><br />
+				</list:alternate>
+			</list:separator>
+			</list:item>
+			</list:list>
+			</div>
+		</td>
+	</tr>
+	<tr class="panel">
+		<td>
+			<input type="text" name="file" id="file" class="inputbox" value="{$selected}" style="width: 390px;" /><input type="button" class="minitext" value="{$L_SELECT}" onclick="select_file('file', '{$opener_input}')" />&nbsp;<input type="button" class="minitext" value="{$L_CANCEL}" onclick="window.close()" />
+		</td>
+	</tr>
+</table>
+</is:admin>

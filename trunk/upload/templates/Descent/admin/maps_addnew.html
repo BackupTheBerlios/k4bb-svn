@@ -1,0 +1,109 @@
+<is:admin>
+<form:form id="maps_add" name="maps_add" action="admin.php?act=maps_insert" method="post" enctype="multipart/form-data">
+<input type="hidden" name="parent_id" value="{$maps_id}" />
+<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
+	<tr class="thead">
+		<td colspan="3">{$L_ADDMAPSITEM}</td>
+	</tr>
+	<tr class="panel">
+		<td width="15%">{$L_VARNAME}</td>
+		<td width="10%"><input type="text" name="varname" id="varname" value="" /></td>
+		<td width="75%">
+			<form:error id="varname_empty" for="varname" setclass="inputfailed" regex=".+">
+			{$L_MAPSNEEDVARNAME}
+			</form:error>
+		</td>
+	</tr>
+	<tr class="panel">
+		<td width="15%">{$L_NAME}</td>
+		<td width="10%"><input type="text" name="name" id="name" value="" /></td>
+		<td width="75%">
+			<form:error id="name_empty" for="name" setclass="inputfailed" regex=".+">
+			{$L_MAPSNEEDNAME}
+			</form:error>
+		</td>
+	</tr>
+	<tr class="panel">
+		<td width="15%">{$L_VIEW}</td>
+		<td width="10%">
+			<select name="can_view">
+				<option value="0">--</option>
+				<option value="1">{$L_GUEST}</option>
+				<option value="2">{$L_MEMBER}</option>
+				<option value="7">{$L_MODERATOR}</option>
+				<option value="8">{$L_SUPERMODERATOR}</option>
+				<option value="9">{$L_ADMIN}</option>
+				<option value="10">{$L_SUPERADMIN}</option>
+			</select>
+		</td>
+		<td width="75%">
+		</td>
+	</tr>
+	<tr class="panel">
+		<td width="15%">{$L_ADD}</td>
+		<td width="10%">
+			<select name="can_add">
+				<option value="0">--</option>
+				<option value="1">{$L_GUEST}</option>
+				<option value="2">{$L_MEMBER}</option>
+				<option value="7">{$L_MODERATOR}</option>
+				<option value="8">{$L_SUPERMODERATOR}</option>
+				<option value="9">{$L_ADMIN}</option>
+				<option value="10">{$L_SUPERADMIN}</option>
+			</select>
+		</td>
+		<td width="75%">
+		</td>
+	</tr>
+	<tr class="panel">
+		<td width="15%">{$L_EDIT}</td>
+		<td width="10%">
+			<select name="can_edit">
+				<option value="0">--</option>
+				<option value="1">{$L_GUEST}</option>
+				<option value="2">{$L_MEMBER}</option>
+				<option value="7">{$L_MODERATOR}</option>
+				<option value="8">{$L_SUPERMODERATOR}</option>
+				<option value="9">{$L_ADMIN}</option>
+				<option value="10">{$L_SUPERADMIN}</option>
+			</select>
+		</td>
+		<td width="75%">
+		</td>
+	</tr>
+	<tr class="panel">
+		<td width="15%">{$L_DELETE}</td>
+		<td width="10%">
+			<select name="can_del">
+				<option value="0">--</option>
+				<option value="1">{$L_GUEST}</option>
+				<option value="2">{$L_MEMBER}</option>
+				<option value="7">{$L_MODERATOR}</option>
+				<option value="8">{$L_SUPERMODERATOR}</option>
+				<option value="9">{$L_ADMIN}</option>
+				<option value="10">{$L_SUPERADMIN}</option>
+			</select>
+		</td>
+		<td width="75%">
+		</td>
+	</tr>
+	<tr class="panel">
+		<td width="15%">{$L_INHERIT}</td>
+		<td width="10%">
+			<select name="inherit">
+				<option value="0">{$L_NO}</option>
+				<option value="1">{$L_YES}</option>
+			</select>
+		</td>
+		<td width="75%">
+		</td>
+	</tr>
+	<tr class="tcat">
+		<td colspan="3">
+			<input type="submit" value="{$L_SAVE}" />
+			<input type="reset" value="{$L_RESET}" />
+		</td>
+	</tr>
+</table>
+</form:form>
+</is:admin>

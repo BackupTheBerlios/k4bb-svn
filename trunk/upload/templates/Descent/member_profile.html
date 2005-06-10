@@ -1,0 +1,89 @@
+<!-- User Profile - {$member_name} -->
+<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
+	<tr class="thead">
+		<td colspan="2">
+			{$L_USERPROFILE}: <span style="font-weight: normal;">{$member_name}</span>
+		</td>
+	</tr>
+	<tr class="alt1">
+		<td width="50%" valign="top">
+			<div class="header_text"><strong>{$L_USERNAME}</strong></div>
+			<span style="color: #{$member_group_color}; font-size: 24px;">{$member_name}</span>
+		</td>
+		<td width="50%" valign="top">
+			<div class="header_text"><strong>{$L_REGISTERED}</strong></div>
+			<span class="smalltext">
+			<core:date format="%b %d %y">{$member_created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$member_created}</core:date></span>
+			</span>
+		</td>
+	</tr>
+	<tr class="alt3">
+		<td width="50%" valign="top">
+			<div class="header_text"><strong>{$L_POSTS}</strong></div>
+			<span class="smalltext">{$member_num_posts} ({$member_num_topics} {$L_TOPICS}, {$member_num_replies} {$L_REPLIES})</span>
+		</td>
+		<td width="50%" valign="top">
+			<div class="header_text"><strong>{$L_POSTINGSTATS}</strong></div>
+			<span class="smalltext">
+			{$member_posts_per_day}<br />
+			{$member_posts_percent}<br />
+			<a href="member.php?act=findposts&amp;id={$member_id}" style="font-weight: bold;">{$L_FINDPOSTSBYUSER}</a>
+			</span>
+		</td>
+	</tr>
+	<tr class="alt1">
+		<td width="50%" valign="top">
+			<div class="header_text"><strong>{$L_LASTSEEN}</strong></div>
+			<span class="smalltext">
+			<core:date format="%b %d %y">{$member_seen}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$member_seen}</core:date></span>
+			</span>
+		</td>
+		<td width="50%" valign="top">
+			<div class="header_text"><strong>{$L_ONLINESTATUS}</strong></div>
+			<img src="Images/{$IMG_DIR}/Buttons/{$LANG}/{$member_online}.gif" border="0" />
+		</td>
+	</tr>
+	<tr class="alt3">
+		<td width="50%" valign="top">
+			<div class="header_text"><strong>{$L_USERGROUPS}</strong></div>
+			<span class="smalltext">
+			<list:list id="member_usergroups">
+			<select name="member_usergroups" id="member_usergroups">
+			<list:item list="member_usergroups">
+			<option value="{$id}" style="color:#{$color};font-weight:bold;">{$name}</option>
+			<list:separator list="member_usergroups"><br /></list:separator>
+			</list:item>
+			</select>
+			<input type="button" value="{$L_GO}" class="button" onclick="var s = document.getElementById('member_usergroups');document.location='usergroups.php?id=' + s[s.selectedIndex].value;" />
+			</list:list>
+			</span>
+		</td>
+		<td width="50%" valign="top">
+			<div class="header_text"><strong>{$L_COMMUNICATE}</strong></div>
+			<if:if var="member_email" noteq=""><a href="<if:if var="secureemail" eq="1">member.php?act=mail&id={$member_id}<else:if var="displayemails" eq="1" />mailto: {$member_email}</if:if>" title="{$L_EMAIL}"><img src="Images/{$IMG_DIR}/Buttons/{$LANG}/email.gif" alt="{$L_EMAIL}" border="0" /></a><br /></if:if>
+			<if:if var="member_aim" noteq=""><img src="Images/{$IMG_DIR}/Buttons/{$LANG}/aim.gif" border="0" /><br /></if:if>
+			<if:if var="member_icq" noteq=""><img src="Images/{$IMG_DIR}/Buttons/{$LANG}/icq.gif" border="0" /><br /></if:if>
+			<if:if var="member_jabber" noteq=""><img src="Images/{$IMG_DIR}/Buttons/{$LANG}/jabber.gif" border="0" /><br /></if:if>
+			<if:if var="member_msn" noteq=""><img src="Images/{$IMG_DIR}/Buttons/{$LANG}/msn.gif" border="0" /><br /></if:if>
+			<if:if var="member_yahoo" noteq=""><img src="Images/{$IMG_DIR}/Buttons/{$LANG}/yahoo.gif" border="0" /></if:if>
+		</td>
+	</tr>
+	<list:list id="member_profilefields">
+	<tr class="alt1">
+	<list:item list="member_profilefields">
+		<td valign="top" colspan="{$colspan}">
+			<div class="header_text"><strong>{$title}</strong></div>
+			<span class="smalltext">{$value}</span>
+		</td>
+	<list:separator list="member_profilefields">
+		<list:alternate list="member_profilefields" count="2" remainder="1">
+			<list:switch list="member_profilefields" var="row_class" a="alt3" b="alt1">
+			</tr><tr class="{$row_class}">
+			</list:switch>
+		</list:alternate>
+	</list:separator>
+	</list:item>
+	</tr>
+	</list:list>
+</table>
+<!-- / User Profile -->

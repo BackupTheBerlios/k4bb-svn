@@ -1,0 +1,113 @@
+<is:admin>
+<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
+	<tr class="thead">
+		<td colspan="5">
+			<script type="text/javascript">doHelpButton('forum_permissions');</script>
+			{$L_FORUMPERMISSIONS}: <span style="font-weight: normal;">{$forum_name}</span>
+		</td>
+	</tr>
+	<tr class="panel">
+		<td colspan="6">
+			<div class="outset_box">
+				<fieldset>
+					<legend>{$L_LEGEND}</legend>
+					<span style="color: green;">{$L_INHERITSPERMS}</span>
+					<br />
+					<span style="color: firebrick;">{$L_DOESNTINHERITPERMS}</span>
+				</fieldset>
+			</div>
+		</td>
+	</tr>
+	<form name="update_forum_perms" id="update_forum_perms" action="admin.php?act=forums_updateperms" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="id" value="{$forum_id}" />
+	<list:list id="forum_maps">
+	<tr class="tcat">
+		<td>{$L_NAME}</td>
+		<td align="center">{$L_VIEW}</td>
+		<td align="center">{$L_ADD}</td>
+		<td align="center">{$L_EDIT}</td>
+		<td align="center">{$L_DELETE}</td>
+	</tr>
+	<list:default list="forum_maps">
+	<tr class="panel">
+		<td colspan="5">
+			<div class="outset_box" align="center">
+				<br />
+				{$L_NOFORUMMAPS}
+				<br /><br />
+			</div>
+		</td>
+	</tr>
+	</list:default>
+	<list:item list="forum_maps">
+	<list:switch list="forum_maps" var="row_class" a="alt1" b="alt2">
+	<tr class="{$row_class}">
+	</list:switch>
+		<td nowrap="nowrap">{$level}<strong>{$name}</strong></td>
+		<td align="center">
+			<select name="{$varname}_can_view" id="view_{$id}" class="minitext">
+				<option value="0">--</option>
+				<option value="1">{$L_GUEST}</option>
+				<option value="4">{$L_PENDINGMEMBER}</option>
+				<option value="5">{$L_MEMBER}</option>
+				<option value="6">{$L_SUPERMEMBER}</option>
+				<option value="7">{$L_MODERATOR}</option>
+				<option value="8">{$L_SUPERMODERATOR}</option>
+				<option value="9">{$L_ADMIN}</option>
+				<option value="10">{$L_SUPERADMIN}</option>
+			</select>
+			<script type="text/javascript">setIndex({$can_view}, 'view_{$id}');</script>
+		</td>
+		<td align="center">
+			<select name="{$varname}_can_add" id="add_{$id}" class="minitext">
+				<option value="0">--</option>
+				<option value="1">{$L_GUEST}</option>
+				<option value="4">{$L_PENDINGMEMBER}</option>
+				<option value="5">{$L_MEMBER}</option>
+				<option value="6">{$L_SUPERMEMBER}</option>
+				<option value="7">{$L_MODERATOR}</option>
+				<option value="8">{$L_SUPERMODERATOR}</option>
+				<option value="9">{$L_ADMIN}</option>
+				<option value="10">{$L_SUPERADMIN}</option>
+			</select>
+			<script type="text/javascript">setIndex({$can_add}, 'add_{$id}');</script>
+		</td>
+		<td align="center">
+			<select name="{$varname}_can_edit" id="edit_{$id}" class="minitext">
+				<option value="0">--</option>
+				<option value="1">{$L_GUEST}</option>
+				<option value="4">{$L_PENDINGMEMBER}</option>
+				<option value="5">{$L_MEMBER}</option>
+				<option value="6">{$L_SUPERMEMBER}</option>
+				<option value="7">{$L_MODERATOR}</option>
+				<option value="8">{$L_SUPERMODERATOR}</option>
+				<option value="9">{$L_ADMIN}</option>
+				<option value="10">{$L_SUPERADMIN}</option>
+			</select>
+			<script type="text/javascript">setIndex({$can_edit}, 'edit_{$id}');</script>
+		</td>
+		<td align="center">
+			<select name="{$varname}_can_del" id="del_{$id}" class="minitext">
+				<option value="0">--</option>
+				<option value="1">{$L_GUEST}</option>
+				<option value="4">{$L_PENDINGMEMBER}</option>
+				<option value="5">{$L_MEMBER}</option>
+				<option value="6">{$L_SUPERMEMBER}</option>
+				<option value="7">{$L_MODERATOR}</option>
+				<option value="8">{$L_SUPERMODERATOR}</option>
+				<option value="9">{$L_ADMIN}</option>
+				<option value="10">{$L_SUPERADMIN}</option>
+			</select>
+			<script type="text/javascript">setIndex({$can_del}, 'del_{$id}');</script>
+		</td>
+	</tr>
+	</list:item>
+	<tr class="tcat">
+		<td align="left" colspan="5">
+			<input type="submit" class="button" value="{$L_SAVE}" accesskey="s" /><input type="reset" class="button" value="{$L_RESET}" />
+		</td>
+	</tr>
+	</list:list>
+	</form>
+</table>
+</is:admin>

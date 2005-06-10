@@ -1,0 +1,25 @@
+<!-- Header Breadcrumbs Bit -->
+<div class="outset_box_small" id="forum_header" style="position: relative;top: -1px;">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+	<tr>
+		<td width="90%">
+			<div align="left">
+				<img src="Images/{$IMG_DIR}/Icons/navbits_start.gif" alt="{$bbtitle}" />&nbsp;<a href="index.php" title="{$bbtitle}"><strong>{$bbtitle}</strong></a> 
+				<list:list id="breadcrumbs">
+				<list:item list="breadcrumbs">
+				&gt; <a href="{$location}" title="{$name}"><strong><core:truncate length="40" append="...">{$name}</core:truncate></strong></a>
+				</list:item>
+				</list:list>
+				<br />
+				<img src="Images/{$IMG_DIR}/Icons/navbits_finallink.gif" alt="{$current_location}" /> <strong><core:truncate length="55" append="...">{$current_location}</core:truncate></strong>
+			</div>
+		</td>
+		<td width="10%" nowrap="nowrap">
+			<span class="minitext">
+			<core:date format="%B %d, %Y"></core:date>
+			</span>
+		</td>
+	</tr>
+</table>
+</div>
+<!-- / Header Breadcrumbs Bit -->

@@ -1,0 +1,54 @@
+<br />
+<!-- Similar Topics -->
+<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
+	<tr class="thead">
+		<td colspan="5">{$L_SIMILARTOPICS}</td>
+	</tr>
+	<tr class="tcat">
+		<td width="5%">&nbsp;</td>
+		<td align="center" class="minitext" width="55%">{$L_TOPICS}/{$L_AUTHOR}</td>
+		<td align="center" class="minitext" nowrap="nowrap">&nbsp;{$L_REPLIES}&nbsp;</td>
+		<td align="center" class="minitext" nowrap="nowrap">&nbsp;{$L_VIEWS}&nbsp;</td>
+		<td align="center" class="minitext" nowrap="nowrap" width="30%">&nbsp;{$L_LASTPOST}&nbsp;</td>
+	</tr>
+	<list:list id="similar_topics">
+	<list:item list="similar_topics">
+	<list:switch list="similar_topics" var="row_class" a="alt1" b="alt3">
+	<tr class="{$row_class}">
+		<td align="center"><img src="tmp/upload/posticons/{$posticon}" alt="" border="0" /></td>
+		<td width="55%">
+			{$rating}{$pager}
+			<span class="smalltext">
+			<if:if var="topic_type" eq="2">{$stickytopicprefix}<else:if var="topic_type" geq="3" />{$announcementtopicprefix}</if:if>
+			<if:if var="is_feature" eq="1">{$featuretopicprefix}</if:if>
+			<if:if var="poll" eq="1">{$polltopicprefix}</if:if>
+			</span>
+			<a href="viewtopic.php?id={$id}" title="{$name}"><core:truncate length="40" append="...">{$name}</core:truncate></a>
+			<br />
+			<div style="float:left;" class="smalltext"><a href="member.php?id={$poster_id}" title="{$poster_name}">{$poster_name}</a></div>
+		</td>
+		<td align="center" class="alt1">{$num_replies}</td>
+		<td align="center" class="alt1">{$views}</td>
+		<td align="center" class="alt2" nowrap="nowrap" width="30%">
+			<if:if var="reply_time" greater="0">
+			<span class="minitext">
+				<core:date format="%b %d %y">{$reply_time}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$reply_time}</core:date></span>
+				<br />
+				{$L_BY}&nbsp;<a href="member.php?id={$reply_uid}" style="text-decoration: underline;" title="{$reply_uname}">{$reply_uname}</a>
+				<a href="findpost.php?id={$reply_id}" title="{$reply_name}"><img src="Images/{$IMG_DIR}/Icons/icon_latest_reply.gif" border="0" alt="{$reply_name}" /></a>
+			</span>
+			<if:else />
+			<span class="minitext">
+				<core:date format="%b %d %y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span>
+				<br />
+				{$L_BY}&nbsp;<a href="member.php?id={$poster_id}" style="text-decoration: underline;" title="{$poster_name}">{$poster_name}</a>
+				<a href="viewtopic.php?id={$id}" title="{$name}"><img src="Images/{$IMG_DIR}/Icons/icon_latest_reply.gif" border="0" alt="{$name}" /></a>
+			</span>
+			</if:if>
+		</td>
+	</tr>
+	</list:switch>
+	</list:item>
+	</list:list>
+</table>
+<!-- / Similar Topics -->

@@ -1,0 +1,22 @@
+<form action="usergroups.php" method="get" name="post" enctype="multipart/form-data">
+<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
+	<tr class="thead">
+		<td colspan="2">{$L_USERGROUPS}</td>
+	</tr>
+	<tr class="panel">
+		<td width="50%">{$L_LOOKUPGROUP}</td>
+		<td width="50%">
+			<select name="id" id="group_id">
+				<list:list id="usergroups">
+				<list:item list="usergroups">
+				<option value="{$id}">{$name}</option>
+				</list:item>
+				</list:list>
+			</select>
+		</td>
+	</tr>
+	<tr class="tcat">
+		<td colspan="2"><input type="submit" class="button" value="{$L_LOOKUP}" /></td>
+	</tr>
+</table>
+</form>

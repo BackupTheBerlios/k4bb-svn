@@ -1,0 +1,19 @@
+<!-- Footer Breadcrumbs Bit -->
+<div class="outset_box_small">
+	<table cellpadding="0" cellspacing="1" border="0" width="100%">
+		<tr>
+			<td width="100%">
+				<div align="left">
+					<img src="Images/{$IMG_DIR}/Icons/navbits_start.gif" alt="{$bbtitle}" />&nbsp;<a href="index.php" title="{$bbtitle}"><strong>{$bbtitle}</strong></a>
+					<list:list id="breadcrumbs">
+					<list:item list="breadcrumbs">
+					&gt; <a href="{$location}" title="{$name}"><strong><core:truncate length="40" append="...">{$name}</core:truncate></strong></a>
+					</list:item>
+					</list:list>
+					&gt;&nbsp;<strong><core:truncate length="55" append="...">{$current_location}</core:truncate></strong>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- / Footer Breadcrumbs Bit -->

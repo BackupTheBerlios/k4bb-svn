@@ -1,0 +1,33 @@
+<is:logged>
+<form:form name="email_user" id="email_user" action="member.php?act=email_user" method="post" name="post" enctype="multipart/form-data">
+<input type="hidden" name="id" value="{$member_id}" />
+<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
+	<tr class="thead">
+		<td>{$L_EMAILUSER}: <span style="font-weight:normal;">{$member_name}</span></td>
+	</tr>
+	<tr class="panel">
+		<td>
+			<div class="outset_box">
+				<fieldset>
+					<legend>{$L_SUBJECT}</legend>
+					<input type="text" name="subject" id="subject" value="" size="80" class="inputbox" />
+					<form:error id="subject_error" for="subject" setclass="inputfailed" regex=".+">{$L_INSERTMAILSUBJECT}</form:error>
+				</fieldset>
+				<br />
+				<fieldset>
+					<legend>{$L_MESSAGE}</legend>
+					<textarea name="message" id="message" rows="10" cols="100" style="width:500px;" class="inputbox"></textarea>
+					<form:error id="message_error" for="message" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTMAILMESSAGE}</form:error>
+				</fieldset>
+			</div>
+		</td>
+	</tr>
+	<tr class="tcat">
+		<td>
+			<input type="submit" class="button" value="{$L_EMAIL}" />
+			<input type="reset" class="button" value="{$L_RESET}" />
+		</td>
+	</tr>
+</table>
+</form:form>
+</is:logged>

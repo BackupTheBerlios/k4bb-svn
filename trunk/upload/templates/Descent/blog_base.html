@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
+<core:import id="head" file="head.html" />
+<body>
+<div align="center">
+<div align="left" class="forum_base">
+
+<core:import id="header" file="header.html" />
+
+<core:import id="header_breadcrumbs" file="header_breadcrumbs.html" />
+
+<core:import id="menu_global" file="menu_global.html" />
+
+<div class="forum_main" id="forum_main">
+<br />
+<if:if var="bbactive" eq="1">
+<if:if var="enableblogs" eq="1">
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td valign="top" width="75%">
+			<core:import id="content" />
+		</td>
+		<td><div style="width:10px;">&nbsp;</div></td>
+		<td valign="top" width="25%">
+			<core:import id="content_extra" />
+		</td>
+	</tr>
+</table>
+<core:import id="users_browsing" />
+<core:import id="quick_login" />
+
+<if:else />
+
+<!-- You don't have permission to view the blogs -->
+<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
+	<tr class="thead">
+		<td>{$L_INFORMATION}</td>
+	</tr>
+	<tr class="panel">
+		<td>
+			<div class="outset_box">
+				{$L_YOUNEEDPERMS}
+			</div>
+		</td>
+	</tr>
+</table>
+<!-- / You don't have permission to view the blogs -->
+</if:if>
+<if:else />
+<!-- Board is Closed -->
+<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
+	<tr class="thead">
+		<td>{$L_INFORMATION}</td>
+	</tr>
+	<tr class="panel">
+		<td>
+			<div class="outset_box">
+				{$bbclosedreason}
+			</div>
+		</td>
+	</tr>
+</table>
+<!-- / Board is Closed -->
+</if:if>
+
+<br />
+
+<core:import id="quick_nav" file="quick_nav.html" />
+
+<br />
+
+<core:import id="footer_breadcrumbs" file="footer_breadcrumbs.html" />
+
+<br />
+</div>
+
+<core:import id="footer" file="footer.html" />
+
+</div>
+</div>
+<br />
+
+<core:import id="benchmarking" file="benchmarking.html" />
+
+<core:import id="quicklinks_menu" file="quicklinks_menu.html" />
+
+<a name="bottom" id="bottom"></a>
+
+<!--
+COPYRIGHT NOTICE
+
+// Please keep this copyright notice in place
+
+/**
+* k4 Bulletin Board
+*
+* Copyright (c) 2005, Peter Goodman
+*
+* Permission is hereby granted, free of charge, to any person obtaining
+* a copy of this software and associated documentation files (the
+* "Software"), to deal in the Software without restriction, including
+* without limitation the rights to use, copy, modify, merge, publish,
+* distribute, sublicense, and/or sell copies of the Software, and to
+* permit persons to whom the Software is furnished to do so, subject to
+* the following conditions:
+*
+* The above copyright notice and this permission notice shall be
+* included in all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+* NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+* BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+* ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+* CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+*
+* @author Peter Goodman
+* @author Geoffrey Goodman
+* @author James Logsdon
+* @version $Id: blog_base.html,v 1.3 2005/05/08 14:21:02 k4st Exp $
+* @package k42
+*/
+-->
+{$javascript_redirect}
+</body>
+</html>

@@ -1,0 +1,96 @@
+	<tr class="alt2">
+		<td colspan="2"><div style="height: 2px;font-size: 2px;"></div></td>
+	</tr>
+	<tr class="panel">
+		<td width="20%" class="alt1">
+			<div align="center">
+				<if:if var="poster_id" greater="0">
+				<strong style="color: #{$post_user_group_color};">{$poster_name}</strong>
+				<if:else />
+				<strong><if:if var="poster_name" eq="">{$L_GUEST}<if:else />{$poster_name}</if:if></strong>
+				</if:if>
+			</div>
+		</td>
+		<td width="80%">
+			<div style="float: right" class="smalltext">
+				<core:date format="%b %d %y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span>
+			</div>
+			<div class="smalltext">
+				<strong>{$L_POSTSUBJECT}:</strong> {$name}<a name="{$id}" id="{$id}"></a>&nbsp;<img src="tmp/upload/posticons/{$posticon}" alt="" border="0" />
+			</div>
+		</td>
+	</tr>
+	<tr class="panel">
+		<td width="20%" valign="top" rowspan="2" class="alt1">
+			<div class="smalltext">
+			<if:if var="poster_id" eq="0">
+			{$L_GUEST}
+			<if:else />
+				<if:if var="post_user_avatar" noteq="">
+				<img src="images.php?avatar={$poster_id}" alt="" border="" />
+				<br /><br />
+				</if:if>
+				{$post_user_group_nicename}<br />
+				<if:if var="post_user_group_avatar" noteq="">
+				<img src="tmp/upload/group_avatars/{$post_user_group_avatar}" border="0" alt="{$post_user_group_nicename}" />
+				<br /><br />
+				</if:if>
+				<strong>{$L_JOINED}:</strong> <core:date format="%b %d %y">{$post_user_created}</core:date><br />
+				<strong>{$L_POSTS}:</strong> {$post_user_num_posts}
+				<if:if var="user_location" noteq="">
+				<br /><strong>{$L_LOCATION}:</strong> {$post_user_location}
+				</if:if>
+				<list:sublist list="replies" id="profilefields" column="profilefields">
+				<list:item list="profilefields">
+				<br /><strong>{$title}:</strong></label>
+				{$value}
+				</list:item>
+				</list:sublist>
+			</if:if>
+			</div>
+		</td>
+		<td width="80%" id="topic{$id}" valign="top" style="height: 100px;">
+			{$body_text}
+			<if:if var="showeditedby" eq="1">
+				<if:if var="edited_time" greater="0">
+					<br /><br />
+					<div class="smalltext" style="font-style: italic;">
+						{$L_EDITEDON} <core:date format="%b %d %y">{$edited_time}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$edited_time}</core:date></span>
+						{$L_BY} <a href="member.php?id={$edited_userid}" alt="{$edited_username}">{$edited_username}</a>
+					</div>
+					<br />
+				</if:if>
+			</if:if>
+			<if:if var="disable_sig" eq="0">
+			<if:if var="post_user_signature" noteq="">
+			<br />
+			_________________
+			{$post_user_signature}
+			</if:if>
+			</if:if>
+		</td>
+	</tr>
+	<tr class="alt1">
+		<td width="80%">
+			<div style="float: left">
+				<a href="viewtopic.php?act=report_post&amp;id={$id}" title="{$L_REPORTPOST}"><img src="Images/{$IMG_DIR}/Icons/report_post.gif" alt="{$L_REPORTPOST}" border="0" /></a>
+				<if:if var="post_user_id" greater="0">
+					<img src="Images/{$IMG_DIR}/Buttons/{$LANG}/{$post_user_online}.gif" border="0" />
+					<a href="member.php?id={$post_user_id}" title="{$L_PROFILE}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/profile.gif" alt="{$L_PROFILE}" /></a>
+				</if:if>
+			</div>
+			<div style="float: right">
+				<maps:if var="replies" forum="topic_forum_id" method="can_add">
+					<a href="newreply.php?id={$topic_id}&amp;r={$id}" title="{$L_POSTREPLY}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/reply.gif" alt="{$L_POSTREPLY}" /></a>
+					<maps:if forum="forum_id" var="bbcode" method="can_add"><a href="newreply.php?id={$topic_id}&amp;r={$id}&amp;quote=1" title="{$L_QUOTE}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/quote.gif" alt="{$L_QUOTE}" /></a></maps:if>
+				</maps:if>
+				<if:if var="post_user_id" eq="user_id">
+					<maps:if var="replies" forum="topic_forum_id" method="can_edit"><a href="newreply.php?act=editreply&amp;id={$id}" title="{$L_EDIT}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/edit.gif" alt="{$L_EDIT}" /></a></maps:if>
+					<maps:if var="replies" forum="topic_forum_id" method="can_del"><a href="mod.php?act=deletereply&amp;id={$id}" title="{$L_DELETE}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/delete.gif" alt="{$L_DELETE}" /></a></maps:if>
+				<if:else />
+					<maps:if var="other_replies" forum="topic_forum_id" method="can_edit"><a href="newreply.php?act=editreply&amp;id={$id}" title="{$L_EDIT}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/edit.gif" alt="{$L_EDIT}" /></a></maps:if>
+					<maps:if var="other_replies" forum="topic_forum_id" method="can_del"><a href="mod.php?act=deletereply&amp;id={$id}" title="{$L_DELETE}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/delete.gif" alt="{$L_DELETE}" /></a></maps:if>
+				</if:if>
+			</div>
+		</td>
+	</tr>

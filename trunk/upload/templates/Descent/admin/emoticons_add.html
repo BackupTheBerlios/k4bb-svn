@@ -1,0 +1,51 @@
+<is:admin>
+<form:form id="add_emoticon" name="add_emoticon" action="admin.php?act=emoticons_insert" method="post" enctype="multipart/form-data">
+<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
+	<tr class="thead">
+		<td colspan="2">{$L_ADDEMOTICON}</td>
+	</tr>
+	<tr class="alt1">
+		<td width="30%"><strong>{$L_DESCRIPTION}:</strong></td>
+		<td>
+			<script type="text/javascript">doHelpButton('emoticon_description');</script>
+			<input type="text" name="description" id="description" value="" maxlength="255" class="inputbox" />
+			<form:error id="description_error" for="description" setclass="inputfailed" regex=".+">{$L_INSERTICONDESC}</form:error>
+		</td>
+	</tr>
+	<tr class="alt2">
+		<td width="30%"><strong>{$L_TYPED}:</strong></td>
+		<td>
+			<script type="text/javascript">doHelpButton('emoticon_typed');</script>
+			<input type="text" name="typed" id="typed" value="" maxlength="255" class="inputbox" />
+			<form:error id="typed_error" for="typed" setclass="inputfailed" regex=".+">{$L_INSERTICONTYPED}</form:error>
+		</td>
+	</tr>
+	<tr class="alt1">
+		<td width="30%"><strong>{$L_IMAGE}:</strong></td>
+		<td>
+			{$L_BROWSEFORIMGFILE}:<br />
+			<input type="text" class="inputbox" name="image_browse" id="image_browse" value="" /><input type="button" class="minitext" value="{$L_BROWSE}" onclick="popupImageBrowser('tmp/upload/emoticons', 'image_browse', '{$icon_image}')" />
+			<br />
+			{$L_ORUPLOADNEW}:<br />
+			<input type="file" name="image_upload" id="image_upload" value="" />
+		</td>
+	</tr>
+	<tr class="alt2">
+		<td width="30%"><strong>{$L_DISPLAYINNEWPOST}:</strong></td>
+		<td>
+			<script type="text/javascript">doHelpButton('emoticon_clickable');</script>
+			<select name="clickable">
+				<option value="1">{$L_YES}</option>
+				<option value="0">{$L_NO}</option>
+			</select>
+		</td>
+	</tr>
+	<tr class="tcat">
+		<td colspan="2">
+			<input type="submit" value="{$L_SAVE}" />
+			<input type="reset" value="{$L_RESET}" />
+		</td>
+	</tr>
+</table>
+</form:form>
+</is:admin>

@@ -1,0 +1,52 @@
+<is:admin>
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr class="tcat">
+		<td colspan="2">{$L_OPTIONS}</td>
+	</tr>
+	<tr class="panel">
+		<td width="50%" valign="top">
+			<list:list id="setting_groups">
+			<list:item list="setting_groups">
+			<list:alternate list="setting_groups" var="row" a="" b="" c="" d="" e="" f="" g="" h="" i="" j='</td><td valign="top">'>
+			<a href="#{$id}" class="smalltext" style="text-decoration:underline;padding-left:20px;">{$title}</a>
+			<list:separator list="setting_groups"><br /></list:separator>
+			{$row}
+			</list:alternate>
+			</list:item>
+			</list:list>
+		</td>
+	</tr>
+	<tr class="panel">
+		<td colspan="2">
+			<div class="outset_box">{$L_OPTIONSMESSAGE}</div>
+		</td>
+	</tr>
+</table>
+<br /><br />
+<list:list id="setting_groups">
+<list:item list="setting_groups">
+<form action="admin.php?act=update_options" method="post">
+<a name="{$id}" id="{$id}"></a>
+<input type="hidden" name="settinggroupid" value="{$id}" />
+<table width="100%" cellpadding="0" cellspacing="1" border="0">
+	<tr class="tcat">
+		<td colspan="2">{$title}</td>
+	</tr>
+	<list:sublist list="setting_groups" id="settings" column="settings">
+	<list:item list="settings">
+	<tr class="thead">
+		<td colspan="2"><a href="#top" style="float:right;">{$L_TOP}</a>{$title}</td>
+	</tr>
+	<tr class="panel">
+		<td width="50%"><span class="smalltext">{$description}</span></td>
+		<td width="50%">{$input}</td>
+	</tr>
+	</list:item>
+	</list:sublist>
+</table>
+<div align="center"><input type="submit" value="{$L_SAVE}" /></div>
+</form>
+<list:separator list="setting_groups"><br /><br /></list:separator>
+</list:item>
+</list:list>
+</is:admin>

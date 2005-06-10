@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>k4 Query Debugger</title>
+<meta name="Generator" content="k4 Bulletin Board">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<style type="text/css">
+	body {
+		background-color: #F7F7F7;
+		margin: 0px;
+		padding: 20px;
+		font-family: Arial, Helvetica, Sans-Serif;
+		font-size: 12px;
+	}
+	.debug_content {
+		border: 1px solid #363636;
+		background-color: #FFFAC1;
+		padding: 15px;
+	}
+	.debug_item {
+		border: 1px dotted #D88900;
+		background-color: #C8FFC1;
+		padding: 5px;
+	}
+	.debug_query {
+		border: 1px solid #999999;
+		background-color: #F6F6F6;
+		color: #777777;
+		font-size: 11px;
+		overflow: auto;
+		width: 99%;
+	}
+	.debug_sql_method {
+		color: #666666;
+		font-weight: bold;
+	}
+	.debug_results {
+		overflow: auto;
+		width: 99%;
+	}
+	.debug_file {
+		
+		border-top: 1px dotted #D88900;
+		border-left: 1px dotted #D88900;
+		border-right: 1px dotted #D88900;
+		border-bottom: 1px solid #C8FFC1;
+		background-color: #C8FFC1;
+		padding: 3px;
+		font-weight: bold;
+	}
+	.page_preview {
+		height: 250px;
+		overflow: auto;
+	}
+</style>
+</head>
+<body>
+<div align="left">
+	<h1>k4 Bulletin Board SQL Debug</h1>
+</div>
+<div class="debug_content">
+	<h2>SQL Queries for: {$filename}</h2>
+
+	<list:list id="queries">
+		<list:item list="queries">
+			<br />
+			<span class="debug_file">
+				{$file}
+			</span>
+			<div class="debug_item">
+				<div class="debug_query">{$query}</div>
+				<br />
+				<fieldset>
+					<legend><strong>Results</strong></legend>
+					<div class="debug_results">
+						<strong>Number of Rows Returned:</strong> {$num_rows}<br />
+						<pre>{$results}</pre>
+					</div>
+				</fieldset>
+			</div>
+
+		</list:item>
+	</list:list>
+</div>
+<div align="center">
+	<br />
+	{$page_preview}
+</div>
+</body>
+</html>

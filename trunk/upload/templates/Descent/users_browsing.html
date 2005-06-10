@@ -1,0 +1,43 @@
+<br />
+<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
+	<tr class="thead">
+		<td>
+			<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_ub', 'usersbrowsing')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_ub" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+			{$users_browsing}
+		</td>
+	</tr>
+	<tbody id="usersbrowsing">
+		<tr class="panel">
+			<td>
+				<div class="minitext" align="left">
+					<strong>{$L_LEGEND}:</strong>
+					<list:list id="usergroups_legend">
+					<list:item list="usergroups_legend">
+					<a href="usergroups.php?id={$id}" style="color: #{$color};font-weight: bold;" title="{$name}">{$name}</a><list:separator list="usergroups_legend">,&nbsp;</list:separator>
+					</list:item>
+					</list:list>
+				</div>
+			</td>
+		</tr>
+		<tr class="alt1">
+			<td>
+				<div class="minitext" align="left">
+					{$online_stats}
+					<br />
+					<if:if var="num_online_members" greater="0">
+					<list:list id="users_browsing">
+						{$L_REGISTEREDUSERS}:
+						<list:item list="users_browsing">
+						<if:if var="name" noteq="">
+						<if:if var="invisible" eq="0">
+							<if:if var="id" noteq="0"><a href="member.php?id={$id}" style="color: #{$color};font-weight: {$font_weight};" class="minitext">{$name}</a><if:else /><strong style="font-style: italic;">{$name}</strong></if:if><list:separator list="users_browsing">,</list:separator>
+						</if:if>
+						</if:if>
+						</list:item>
+					</list:list>
+					</if:if>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>

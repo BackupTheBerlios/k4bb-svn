@@ -1,0 +1,113 @@
+<is:admin>
+<form:form id="edit_usergroup" name="edit_usergroup" action="admin.php?act=usergroups_update" method="post" enctype="multipart/form-data">
+<input type="hidden" name="id" value="{$group_id}" />
+<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
+	<tr class="thead">
+		<td colspan="2">{$L_ADDUSERGROUP}</td>
+	</tr>
+	<tr class="alt1">
+		<td width="30%"><strong>{$L_NAME}:</strong></td>
+		<td>
+			<script type="text/javascript">doHelpButton('usergroup_name');</script>
+			<input type="text" name="name" id="name" value="{$group_name}" maxlength="255" class="inputbox" tabindex="1" />
+			<form:error id="name_error" for="name" setclass="inputfailed" regex=".+">{$L_INSERTGROUPNAME}</form:error>
+		</td>
+	</tr>
+	<tr class="alt2">
+		<td width="30%"><strong>{$L_NICENAME}:</strong></td>
+		<td>
+			<script type="text/javascript">doHelpButton('usergroup_nicename');</script>
+			<input type="text" name="nicename" id="nicename" value="{$group_nicename}" maxlength="255" class="inputbox" tabindex="2" />
+			<form:error id="name_error" for="nicename" setclass="inputfailed" regex=".+">{$L_INSERTGROUPNICENAME}</form:error>
+		</td>
+	</tr>
+	<tr class="alt1">
+		<td width="30%"><strong>{$L_DESCRIPTION}:</strong></td>
+		<td>
+			<script type="text/javascript">doHelpButton('usergroup_description');</script>
+			<textarea name="description" id="description" rows="2" style="width: 80%;" class="inputbox" tabindex="3">{$group_description}</textarea>
+			<form:error id="description_error" for="description" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTGROUPDESC}</form:error>
+		</td>
+	</tr>
+	<tr class="alt2">
+		<td width="30%"><strong>{$L_MINGROUPPERM}:</strong></td>
+		<td>
+			<script type="text/javascript">doHelpButton('usergroup_minperm');</script>
+			<select name="min_perm" id="min_perm" class="minitext" tabindex="4">
+				<option value="0">--</option>
+				<option value="1">{$L_GUEST}</option>
+				<option value="4">{$L_PENDINGMEMBER}</option>
+				<option value="5">{$L_MEMBER}</option>
+				<option value="6">{$L_SUPERMEMBER}</option>
+				<option value="7">{$L_MODERATOR}</option>
+				<option value="8">{$L_SUPERMODERATOR}</option>
+				<option value="9">{$L_ADMIN}</option>
+				<option value="10">{$L_SUPERADMIN}</option>
+			</select>
+			<script type="text/javascript">setIndex({$group_min_perm}, 'min_perm');</script>
+		</td>
+	</tr>
+	<tr class="alt1">
+		<td width="30%"><strong>{$L_MAXGROUPPERM}:</strong></td>
+		<td>
+			<script type="text/javascript">doHelpButton('usergroup_maxperm');</script>
+			<select name="max_perm" id="max_perm" class="minitext" tabindex="5">
+				<option value="0">--</option>
+				<option value="1">{$L_GUEST}</option>
+				<option value="4">{$L_PENDINGMEMBER}</option>
+				<option value="5">{$L_MEMBER}</option>
+				<option value="6">{$L_SUPERMEMBER}</option>
+				<option value="7">{$L_MODERATOR}</option>
+				<option value="8">{$L_SUPERMODERATOR}</option>
+				<option value="9">{$L_ADMIN}</option>
+				<option value="10">{$L_SUPERADMIN}</option>
+			</select>
+			<script type="text/javascript">setIndex({$group_max_perm}, 'max_perm');</script>
+		</td>
+	</tr>
+	<tr class="alt2">
+		<td width="30%"><strong>{$L_PUBLICDISPLAY}:</strong></td>
+		<td>
+			<script type="text/javascript">doHelpButton('usergroup_publicdisplay');</script>
+			<select name="display_legend" id="display_legend" class="minitext" tabindex="6">
+				<option value="0">{$L_NO}</option>
+				<option value="1">{$L_YES}</option>
+			</select>
+			<script type="text/javascript">setIndex({$group_display_legend}, 'display_legend');</script>
+		</td>
+	</tr>
+	<tr class="alt1">
+		<td width="30%"><strong>{$L_MODERATORSNAME}:</strong></td>
+		<td>
+			<script type="text/javascript">doHelpButton('usergroup_modname');</script>
+			<input type="text" name="mod_name" id="mod_name" value="{$group_mod_name}" size="{$maxuserlength}" maxlength="{$maxuserlength}" class="inputbox" tabindex="7" />
+			<form:error id="mod_name_error" for="mod_name" setclass="inputfailed" regex=".+">{$L_INSERTMODNAME}</form:error>
+		</td>
+	</tr>
+	<tr class="alt2">
+		<td width="30%"><strong>{$L_COLOR}:</strong></td>
+		<td>
+			<script type="text/javascript">doHelpButton('usergroup_color');</script>
+			#<input type="text" name="color" id="color" size="6" value="{$group_color}" maxlength="6" class="inputbox" tabindex="8" />
+			<form:error id="color_error" for="color" setclass="inputfailed" regex=".+">{$L_INSERTGROUPCOLOR}</form:error>
+		</td>
+	</tr>
+	<tr class="alt1">
+		<td width="30%"><strong>{$L_GROUPAVATAR}:</strong></td>
+		<td>
+			{$L_BROWSEFORIMGFILE}:<br />
+			<input type="text" class="inputbox" name="avatar_browse" id="avatar_browse" value="{$group_avatar}" /><input type="button" class="minitext" value="{$L_BROWSE}" onclick="popupImageBrowser('tmp/upload/group_avatars', 'avatar_browse', '')" />
+			<br />
+			{$L_ORUPLOADNEW}:<br />
+			<input type="file" name="image_upload" id="avatar_upload" value="" />
+		</td>
+	</tr>
+	<tr class="tcat">
+		<td colspan="2">
+			<input type="submit" value="{$L_SAVE}" />
+			<input type="reset" value="{$L_RESET}" />
+		</td>
+	</tr>
+</table>
+</form:form>
+</is:admin>

@@ -1,0 +1,70 @@
+<is:admin>
+<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
+	<tr class="thead">
+		<td colspan="2">
+			<script type="text/javascript">doHelpButton('usernames');</script>
+			{$L_DISALLOWEDNAMES}
+		</td>
+	</tr>
+	<tr class="tcat">
+		<td colspan="2">{$L_ADDBADUSERNAME}</td>
+	</tr>
+	<form:form name="add_badname" id="add_badname" action="admin.php?act=usernames_insert" method="post" enctype="multipart/form-data">
+	<tr class="alt1">
+		<td width="50%">
+			<label for="name"><strong>{$L_USERNAME}:</strong></label>
+		</td>
+		<td width="50%">
+			<script type="text/javascript">doHelpButton('add_badname');</script>
+			<input type="text" name="name" id="name" value="" size="{$maxuserlength}" maxlength="{$maxuserlength}" class="inputbox" />
+			<form:error id="username_error" for="name" setclass="inputfailed" regex=".+">{$L_SUPPLYBADUSERNAME}</form:error>
+		</td>
+	</tr>
+	<tr class="alt2">
+		<td colspan="2">
+			<input type="submit" value="{$L_SAVE}" class="button" />
+			<input type="reset" value="{$L_RESET}" class="button" />
+		</td>
+	</tr>
+	</form:form>
+	<tr class="tcat">
+		<td colspan="2">{$L_MANAGEDISALLOWEDNAMES}</td>
+	</tr>
+	<list:list id="badnames">
+	<list:default list="badnames">
+	<tr class="panel">
+		<td colspan="2">
+			<div class="outset_box" align="center">
+				<br />
+				{$L_NOACTIVEBADNAMES}
+				<br /><br />
+			</div>
+		</td>
+	</tr>
+	</list:default>
+	<list:item list="badnames">
+		<list:switch list="badnames" var="row_class" a="alt1" b="alt3">
+		<tr class="{$row_class}">
+		<form:form name="update_badname" id="update_badname" action="admin.php?act=usernames_update&amp;id={$id}" method="post" enctype="multipart/form-data">
+		<td width="50%">
+			<label for="name{$id}"><strong>{$L_USERNAME}:</strong></label>
+		</td>
+		<td width="50%">
+			<script type="text/javascript">doHelpButton('edit_badname');</script>
+			<input type="text" name="name" id="name{$id}" value="{$name}" size="{$maxuserlength}" maxlength="{$maxuserlength}" class="inputbox" />
+			<form:error id="username_error" for="name{$id}" setclass="inputfailed" regex=".+">{$L_SUPPLYBADUSERNAME}</form:error>
+		</td>
+		<tr class="{$row_class}">
+			<td colspan="2">
+				<input type="submit" value="{$L_SAVE}" class="button" />
+				<input type="button" value="{$L_REMOVE}" class="button" onclick="document.location='admin.php?act=usernames_remove&id={$id}'" />
+				<input type="reset" value="{$L_RESET}" class="button" />
+			</td>
+		</tr>
+		</form:form>
+		</list:switch>
+	</tr>
+	</list:item>
+	</list:list>
+</table>
+</is:admin>
