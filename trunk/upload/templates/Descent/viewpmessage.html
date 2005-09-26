@@ -1,0 +1,97 @@
+<list:list id="message">
+<list:item list="message">
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="50%">
+			<!-- Posting Buttons -->
+			<div align="left">
+				<maps:if var="pm_messages" method="can_add">
+				<a href="member.php?act=usercp&amp;view=pmnewmessage&amp;reply={$pm_id}" title="{$L_POSTREPLY}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/post_reply.gif" alt="{$L_POSTREPLY}" /></a>
+				</maps:if>
+			</div>
+			<!-- / Posting Buttons -->
+		</td>
+		<td width="50%">
+			<page:navigator id="replies_pager">
+			<div align="right">
+				<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
+					<tr>
+						<td class="alt3" id="page_jump1"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+						<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
+						<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
+						<page:list id="replies_pager" before="3" after="3">
+						<list:item list="replies_pager">
+							<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
+						</list:item>
+						</page:list>
+						<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
+						<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
+					</tr>
+				</table>
+			</div>
+			</page:navigator>
+		</td>
+	</tr>
+</table>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">
+		<!-- Message Navigation -->
+		<div class="smalltext">
+			<a href="findpost.php?id={$next_oldest}&amp;prev=1" title="{$L_NEXTOLDEST}">&laquo; {$L_NEXTOLDEST}</a>
+			| <a href="findpost.php?id={$next_newest}&amp;next=1" title="{$L_NEXTNEWEST}">{$L_NEXTNEWEST} &raquo;</a>
+		</div>
+		<!-- / Message Navigation -->
+	</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+	
+	<!-- Message {$name} -->
+	<core:import id="message_file" file="pm_message.html" />
+	<!-- / Message {$name} -->
+	
+	<list:sublist list="message" id="replies" column="replies">
+	<list:item list="replies">
+	
+	<!-- Message {$name} -->
+	<core:import id="message_file" file="pm_message.html" />
+	<!-- / Message {$name} -->
+
+	</list:item>
+	</list:sublist>
+
+	</table>
+</div>
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="50%">
+			<!-- Posting Buttons -->
+			<div align="left">
+				<maps:if var="pm_messages" method="can_add">
+				<a href="member.php?act=usercp&amp;view=pmnewmessage&amp;reply={$pm_id}" title="{$L_POSTREPLY}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/post_reply.gif" alt="{$L_POSTREPLY}" /></a>
+				</maps:if>
+			</div>
+			<!-- / Posting Buttons -->
+		</td>
+		<td width="50%">
+			<page:navigator id="replies_pager">
+			<div align="right">
+				<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
+					<tr>
+						<td class="alt3" id="page_jump1"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+						<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
+						<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
+						<page:list id="replies_pager" before="3" after="3">
+						<list:item list="replies_pager">
+							<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
+						</list:item>
+						</page:list>
+						<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
+						<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
+					</tr>
+				</table>
+			</div>
+			</page:navigator>
+		</td>
+	</tr>
+</table>
+</list:item>
+</list:list>	

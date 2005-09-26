@@ -1,0 +1,14 @@
+<if:if var="allowbbcode" eq="1">
+<if:if var="can_wysiwyg" eq="1">
+<if:if var="has_bbcode_perms" eq="1">
+	
+	<!-- Editor -->
+	<div id="editorcodex">
+		<textarea name="message" class="inputbox" id="messagecodex" style="width: 540px; height: 200px;">{$editor_text}</textarea>
+		<div style="text-align: right;"><img onclick="switch_editor_type('bbcode', 'wysiwyg', 'messagecodex', 'wysiwygcodex')" src="js/editor/switch_format.gif" alt="" border="0" class="alt3" style="padding:0px;border: 1px solid #AAAAAA;" /></div>
+	</div>
+	<!-- / Editor -->
+
+</if:if>
+</if:if>
+</if:if>

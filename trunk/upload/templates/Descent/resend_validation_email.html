@@ -1,0 +1,25 @@
+<is:unlogged>
+<form:form name="sendvalidationemail" id="sendvalidationemail" action="member.php?act=sendvalidationemail" method="post" enctype="multipart/form-data">
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_RESENDVALIDATIONEMAIL}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" width="50%"><label for="email">
+				<strong>{$L_EMAIL}:</strong></label><br />
+				<span class="smalltext">{$L_YOURREGEMAIL}</span>
+			</td>
+			<td class="alt3" width="50%">
+				<input type="text" name="email" id="email" value="" class="inputbox" />
+				<form:error id="email_error" for="email" setclass="inputfailed" regex=".+">{$L_SUPPLYEMAIL}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" colspan="2" style="text-align: center;">
+				<input type="submit" value="{$L_SEND}" class="button" />
+				<input type="reset" value="{$L_RESET}" class="button" />
+			</td>
+		</tr>
+	</table>
+</div>
+</form:form>
+</is:unlogged>

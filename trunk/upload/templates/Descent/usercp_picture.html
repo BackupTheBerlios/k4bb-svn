@@ -1,0 +1,47 @@
+<is:logged>
+<form:form action="member.php?act=update_picture" method="post" enctype="multipart/form-data">
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_USERCONTROLPANEL}: <span style="font-weight: normal;">{$L_EDITPICTURE}</span></div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr class="alt3">
+			<td><span class="smalltext">{$L_USERCPPICTUREMSG}</span></td>
+		</tr>
+	</table>
+</div>
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_PICTURESETTINGS}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" align="center" width="40%">
+				<em>{$L_YOURPICTURE}</em>
+				<if:if var="user_picture" eq="1">
+				<br />
+				<img src="viewfile.php?act=picture&amp;id={$user_id}" alt="" border="" />
+				</if:if>
+			</td>
+			<td width="60%" class="alt3" valign="top">
+				<div class="smalltext">
+					<strong>{$L_VALIDPPIMAGETYPES}:</strong> {$ppallowedfiles}<br />
+					<strong>{$L_VALIDPPDIMENSIONS}:</strong> {$ppmaxwidth}px {$L_BY} {$ppmaxheight}px
+					<br />
+					<input type="hidden" name="MAX_FILE_SIZE" value="{$ppmaxsize}" />
+					<if:if var="ppallowupload" eq="1"><br /><input type="file" name="picture_file" class="inputbox" size="50" /></if:if>
+					<if:if var="ppallowupload" eq="1"><if:if var="ppallowwebsite" eq="1"><br /><br />{$L_OR}<br /></if:if></if:if>
+					<if:if var="ppallowwebsite" eq="1"><br />{$L_PPWEBSITEURL}: <input type="text" name="picture_website" class="inputbox" size="30" /></if:if>
+					<br /><br />
+					<label for="usepicture"><input type="checkbox" value="yes" name="usepicture" id="usepicture" />&nbsp;{$L_USEAPICTURE}</label>
+					<script type="text/javascript">if(parseInt({$user_picture}) == 1) { d.setCheckbox(1, 'usepicture'); }</script>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" colspan="2" align="center">
+				<input type="submit" class="button" value="{$L_UPDATESETTINGS}" />
+				<input type="reset" class="button" value="{$L_RESET}" />
+			</td>
+		</tr>
+	</table>
+</div>
+</form:form>
+</is:logged>

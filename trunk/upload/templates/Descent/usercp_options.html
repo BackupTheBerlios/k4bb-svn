@@ -1,0 +1,214 @@
+<is:logged>
+<form:form action="member.php?act=update_options" method="post" enctype="multipart/form-data">
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_USERCONTROLPANEL}: <span style="font-weight: normal;">{$L_EDITOPTIONS}</span></div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt3"><span class="smalltext">{$L_USERCPOPTIONSMSG}</span></td>
+		</tr>
+	</table>
+</div>
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_GENERALOPTIONS}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" width="50%"><label for="templateset"><strong>{$L_TEMPLATESET}:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="templateset" id="templateset">
+					<list:list id="templatesets">
+					<list:item list="templatesets">
+					<option value="{$id}">{$name}</option>
+					</list:item>
+					</list:list>
+				</select>
+				<script type="text/javascript">d.setIndex({$user_styleset}, 'styleset');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="styleset"><strong>{$L_BOARDSTYLESET}:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="styleset" id="styleset">
+					<list:list id="stylesets">
+					<list:item list="stylesets">
+					<option value="{$id}">{$name}</option>
+					</list:item>
+					</list:list>
+				</select>
+				<script type="text/javascript">d.setIndex({$user_styleset}, 'styleset');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="imageset"><strong>{$L_BOARDIMAGESET}:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="imageset" id="imageset">
+					<list:list id="imagesets">
+					<list:item list="imagesets">
+					<option value="{$name}">{$name}</option>
+					</list:item>
+					</list:list>
+				</select>
+				<script type="text/javascript">d.setIndex({$user_imageset}, 'imageset');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="language"><strong>{$L_BOARDLANGUAGE}:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="language" id="language">
+					<list:list id="languages">
+					<list:item list="languages">
+					<option value="{$name}">{$name}</option>
+					</list:item>
+					</list:list>
+				</select>
+				<script type="text/javascript">d.setIndex({$user_language}, 'language');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="invisible"><strong>{$L_INVISIBLEMODE}:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="invisible" id="invisible">
+					<option value="1">{$L_YES}</option>
+					<option value="0">{$L_NO}</option>
+				</select>
+				<script type="text/javascript">d.setIndex({$user_invisible}, 'invisible');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="topic_display"><strong>{$L_TOPICDISPLAY}:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="topic_display" id="topic_display">
+					<option value="0">{$L_LINEAR}</option>
+					<option value="1">{$L_VERTICAL}</option>
+				</select>
+				<script type="text/javascript">d.setIndex({$user_topic_display}, 'topic_display');</script>
+			</td>
+		</tr>
+	</table>
+</div>
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_PMOPTIONS}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" width="50%"><label for="notify_pm"><strong>{$L_NOTIFYPRIVATEMESSAGE}:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="notify_pm" id="notify_pm">
+					<option value="1">{$L_YES}</option>
+					<option value="0">{$L_NO}</option>
+				</select>
+				<script type="text/javascript">d.setIndex({$user_notify_pm}, 'notify_pm');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="popup_pm"><strong>{$L_POPUPPRIVATEMESSAGE}:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="popup_pm" id="popup_pm">
+					<option value="1">{$L_YES}</option>
+					<option value="0">{$L_NO}</option>
+				</select>
+				<script type="text/javascript">d.setIndex({$user_popup_pm}, 'popup_pm');</script>
+			</td>
+		</tr>
+	</table>
+</div>
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_POSTOPTIONS}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" width="50%">
+				<label for="topicsperpage"><strong>{$L_TOPICSPERPAGE}:</strong></label>
+				<br />
+				<span class="smalltext">{$L_RESULTSPERPAGEMSG}</span>
+			</td>
+			<td class="alt2" width="50%">
+				<input type="text" name="topicsperpage" id="topicsperpage" value="{$user_topicsperpage}" size="2" maxlength="2" class="inputbox" />
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%">
+				<label for="postsperpage"><strong>{$L_POSTSPERPAGE}:</strong></label>
+				<br />
+				<span class="smalltext">{$L_RESULTSPERPAGEMSG}</span>
+			</td>
+			<td class="alt2" width="50%">
+				<input type="text" name="postsperpage" id="postsperpage" value="{$user_postsperpage}" size="2" maxlength="2" class="inputbox" />
+			</td>
+		</tr>
+	</table>
+</div>
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_VIEWINGOPTIONS}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" width="50%"><label for="viewimages"><strong>{$L_VIEWIMAGES}:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="viewimages" id="viewimages">
+					<option value="1">{$L_YES}</option>
+					<option value="0">{$L_NO}</option>
+				</select>
+				<script type="text/javascript">d.setIndex({$user_viewimages}, 'viewimages');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="viewavatars"><strong>{$L_VIEWAVATARS}:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="viewavatars" id="viewavatars">
+					<option value="1">{$L_YES}</option>
+					<option value="0">{$L_NO}</option>
+				</select>
+				<script type="text/javascript">d.setIndex({$user_viewavatars}, 'viewavatars');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="viewflash"><strong>{$L_VIEWFLASH}:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="viewflash" id="viewflash">
+					<option value="1">{$L_YES}</option>
+					<option value="0">{$L_NO}</option>
+				</select>
+				<script type="text/javascript">d.setIndex({$user_viewflash}, 'viewflash');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="viewemoticons"><strong>{$L_VIEWEMOTICONS}:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="viewemoticons" id="viewemoticons">
+					<option value="1">{$L_YES}</option>
+					<option value="0">{$L_NO}</option>
+				</select>
+				<script type="text/javascript">d.setIndex({$user_viewemoticons}, 'viewemoticons');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="viewsigs"><strong>{$L_VIEWSIGNATURES}:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="viewsigs" id="viewsigs">
+					<option value="1">{$L_YES}</option>
+					<option value="0">{$L_NO}</option>
+				</select>
+				<script type="text/javascript">d.setIndex({$user_viewsigs}, 'viewsigs');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="viewcensors"><strong>{$L_VIEWWORDCENSORS}:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="viewcensors" id="viewcensors">
+					<option value="1">{$L_YES}</option>
+					<option value="0">{$L_NO}</option>
+				</select>
+				<script type="text/javascript">d.setIndex({$user_viewcensors}, 'viewcensors');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" colspan="2" align="center">
+				<input type="submit" value="{$L_SAVE}" class="button" />
+				<input type="reset" value="{$L_RESET}" class="button" />
+			</td>
+		</tr>
+	</table>
+</div>
+</form:form>
+</is:logged>

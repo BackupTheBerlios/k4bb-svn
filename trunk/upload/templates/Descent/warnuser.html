@@ -1,0 +1,27 @@
+<is:mod>
+<!-- Warn User Form -->
+<form:form name="warnuser" id="warnuser" action="mod.php?act=sendwarning" method="post" enctype="multipart/form-data">
+<input type="hidden" name="id" value="{$warnuser_id}" />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_WARNUSER}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt3" width="30%">
+				<strong>{$L_WARNINGMESSAGE}:</strong><br />
+				<span class="smalltext">{$L_WARNINGBYEMAIL}</span>
+			</td>
+			<td class="alt1" width="70%">
+				<textarea name="warning" id="warning" rows="8" cols="70" class="inputbox">{$L_WARNINGTEXTAREA}</textarea>
+				<form:error id="messagecodex_error" for="messagecodex" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTWARNING}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" class="k4_subtitle">
+				<input type="submit" value="{$L_SENDWARNING}" class="button" />
+			</td>
+		</tr>
+	</table>
+</div>
+</form:form>
+<!-- / Warn User Form -->
+</is:mod>

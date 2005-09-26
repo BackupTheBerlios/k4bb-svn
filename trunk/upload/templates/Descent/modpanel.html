@@ -1,0 +1,65 @@
+<is:mod>
+<if:if var="nojs" eq="0">
+<!-- Moderating Panel -->
+<div id="modpanel_menu" class="k4_borderwrap" style="display: none;">
+	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<if:if var="modpanel" eq="1"><if:if var="forum_forum_id" noteq="0">
+		<tr><td class="k4_subtitle">{$L_POSTS}</td></tr>
+		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="viewforum.php?id={$forum_forum_id}&amp;queued=1" title="{$L_VIEWQUEUEDTOPICS}" class="smalltext">{$L_VIEWQUEUEDTOPICS}</a></td>
+		</tr>
+		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="viewforum.php?id={$forum_forum_id}&amp;locked=1" title="{$L_VIEWLOCKEDTOPICS}" class="smalltext">{$L_VIEWLOCKEDTOPICS}</a></td>
+		</tr>
+		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=viewbpreports&amp;id={$forum_forum_id}" title="{$L_VIEWBADPOSTREPORTS}" class="smalltext">{$L_VIEWBADPOSTREPORTS}</a></td>
+		</tr>
+		</if:if></if:if>
+		<tr><td class="k4_subtitle">{$L_MISCELLANEOUS}</td></tr>
+		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=baniprange" title="{$L_BANIPRANGE}" class="smalltext">{$L_BANIPRANGE}</a></td>
+		</tr>
+		<if:if var="modpanel" eq="1"><if:if var="forum_forum_id" noteq="0">
+		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=manage_attachments&amp;id={$forum_forum_id}" title="{$L_MANAGEATTACHMENTS}" class="smalltext">{$L_MANAGEATTACHMENTS}</a></td>
+		</tr>
+		</if:if></if:if>
+		<tr><td class="k4_subtitle">{$L_USERS}</td></tr>
+		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=bannedips" title="{$L_VIEWBANNEDIPS}" class="smalltext">{$L_VIEWBANNEDIPS}</a></td>
+		</tr>
+		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=banuser" title="{$L_BANUSER}" class="smalltext">{$L_BANUSER}</a></td>
+		</tr>
+		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=flaguser" title="{$L_FLAGUSER}" class="smalltext">{$L_FLAGUSER}</a></td>
+		</tr>
+		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=warnuser" title="{$L_WARNUSER}" class="smalltext">{$L_WARNUSER}</a></td>
+		</tr>
+	</table>
+</div>
+<!-- / Moderating Panel -->
+<script type="text/javascript">
+	menu_init('modpanel_link', 'modpanel_menu');
+</script>
+<if:else />
+<div class="outset_box_small" style="text-align: left;position: relative; top: -2px;margin-bottom: 1px;">
+	<ul class="menu_global">
+		<li class="first"><strong class="smalltext">{$L_MODCP}</strong></li>
+		<if:if var="modpanel" eq="1"><if:if var="forum_forum_id" noteq="0">
+		<li><a href="viewforum.php?id={$forum_forum_id}&amp;queued=1" title="{$L_VIEWQUEUEDTOPICS}" class="smalltext">{$L_VIEWQUEUEDTOPICS}</a></li>
+		<li><a href="viewforum.php?id={$forum_forum_id}&amp;locked=1" title="{$L_VIEWLOCKEDTOPICS}" class="smalltext">{$L_VIEWLOCKEDTOPICS}</a></li>
+		<li><a href="mod.php?act=viewbpreports&amp;id={$forum_forum_id}" title="{$L_VIEWBADPOSTREPORTS}" class="smalltext">{$L_VIEWBADPOSTREPORTS}</a></li>
+		</if:if></if:if>
+		<li><a href="mod.php?act=baniprange" title="{$L_BANIPRANGE}" class="smalltext">{$L_BANIPRANGE}</a></li>
+		<if:if var="modpanel" eq="1"><if:if var="forum_forum_id" noteq="0">
+		<li><a href="mod.php?act=manage_attachments&amp;id={$forum_forum_id}" title="{$L_MANAGEATTACHMENTS}" class="smalltext">{$L_MANAGEATTACHMENTS}</a></li>
+		</if:if></if:if>
+		<li><a href="mod.php?act=banuser" title="{$L_BANUSER}" class="smalltext">{$L_BANUSER}</a></li>
+		<li><a href="mod.php?act=flaguser" title="{$L_FLAGUSER}" class="smalltext">{$L_FLAGUSER}</a></li>
+		<li><a href="mod.php?act=warnuser" title="{$L_WARNUSER}" class="smalltext">{$L_WARNUSER}</a></li>
+	</ul>
+</div>
+</if:if>
+</is:mod>

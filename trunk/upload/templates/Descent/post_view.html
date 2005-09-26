@@ -1,0 +1,55 @@
+</table>
+	<div class="k4_maintitle">
+		<div class="smalltext">
+			<strong>{$L_FORUM}:</strong> <a href="viewforum.php?id={$forum_id}" title="{$forum_name}" class="smalltext" style="font-weight: normal;">{$forum_name}</a>
+			&nbsp;&nbsp;&nbsp;
+			<strong>{$L_TOPIC}:</strong> <a href="viewtopic.php?id={$topic_id}" title="{$topic_name}" class="smalltext" style="font-weight: normal;">{$topic_name}</a>
+		</div>
+	</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt3" width="20%" align="center">
+				<if:if var="poster_id" greater="0">
+				<a href="member.php?id={$poster_id}" title="{$L_PROFILE}"><strong style="color: #{$poster_group_color};">{$poster_name}</strong></a>
+				<img src="Images/{$IMG_DIR}/Icons/{$poster_online}_small.gif" alt="" border="0" />
+				<if:else />
+				<strong><if:if var="poster_name" eq="">{$L_GUEST}<if:else />{$poster_name}</if:if></strong>
+				</if:if>
+			</td>
+			<td class="alt3" width="80%">
+				<div style="float: right" class="smalltext">
+					<core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span>
+				</div>
+				<div class="smalltext">
+					<strong>{$L_POSTSUBJECT}:</strong>
+					<span class="smalltext">
+					<if:if var="topic_type" eq="2">{$stickytopicprefix}<else:if var="topic_type" geq="3" />{$announcementtopicprefix}</if:if>
+					<if:if var="is_feature" eq="1">{$featuretopicprefix}</if:if>
+					<if:if var="poll" eq="1">{$polltopicprefix}</if:if>
+					</span>
+					<a href="{$url}" title="{$name}" class="smalltext">{$name}</a>&nbsp;<img src="tmp/upload/posticons/{$posticon}" alt="" border="0" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt3" width="20%" valign="middle">
+				<div class="smalltext">
+					<if:if var="poster_avatar" eq="1"><img src="viewfile.php?act=avatar&amp;id={$poster_id}" alt="" border="" /><br /></if:if>
+					<if:if var="poster_group_nicename" noteq="">{$poster_group_nicename}<br /></if:if>
+					<if:if var="poster_group_avatar" noteq="">
+					<img src="tmp/upload/group_avatars/{$poster_group_avatar}" border="0" alt="{$poster_group_nicename}" />
+					<br />
+					</if:if>
+					<div style="float: right;">
+						{$L_REPLIES}: {$num_replies}<br />
+						{$L_VIEWS}: {$views}
+					</div>
+				</div>
+			</td>
+			<td class="alt3" width="80%" class="alt1" valign="top">
+				<core:truncate length="{@post_length}" append="...">{$body_text}</core:truncate>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" colspan="2"></td>
+		</tr>

@@ -1,0 +1,739 @@
+DROP TABLE IF EXISTS k4_users;
+CREATE TABLE k4_users (
+	id			INT NOT NULL SERIAL,
+	name			VARCHAR(30) NOT NULL DEFAULT '',
+	email			VARCHAR(255) NOT NULL DEFAULT '',
+	pass			VARCHAR(32) NOT NULL DEFAULT '',
+	priv_key		VARCHAR(32) NOT NULL DEFAULT '',
+	created			INT NOT NULL DEFAULT 0,
+	login			INT NOT NULL DEFAULT 0,
+	seen			INT NOT NULL DEFAULT 0,
+	last_seen		INT NOT NULL DEFAULT 0,
+	perms			INT NOT NULL DEFAULT 2,
+	invisible		INT NOT NULL DEFAULT 0,
+	usergroups		VARCHAR(255) NOT NULL DEFAULT '',
+	ip			VARCHAR(40) NOT NULL DEFAULT '',
+	reg_key			VARCHAR(32) NOT NULL DEFAULT '',
+
+	warn_level		INT NOT NULL DEFAULT 0,
+	flag_level		INT NOT NULL DEFAULT 0,
+	banned			INT NOT NULL DEFAULT 0,
+	new_pms			INT NOT NULL DEFAULT 0,
+
+	PRIMARY KEY(id)
+);
+CREATE INDEX name ON k4_users (name);
+
+DROP TABLE IF EXISTS k4_userinfo;
+CREATE TABLE k4_userinfo (
+	user_id			INT NOT NULL DEFAULT 0,
+	fullname		VARCHAR(100) NOT NULL DEFAULT '',
+	num_posts		INT NOT NULL DEFAULT 0,
+	total_posts		INT NOT NULL DEFAULT 0,
+	timezone		INT NOT NULL DEFAULT 0,
+	
+	field1			VARCHAR(255) NOT NULL DEFAULT '',
+	field2			VARCHAR(100) NOT NULL DEFAULT '',
+	field3			VARCHAR(100) NOT NULL DEFAULT '',
+	field4			VARCHAR(255) NOT NULL DEFAULT '',
+	field5			VARCHAR(255) NOT NULL DEFAULT '',
+	
+	icq			VARCHAR(255) NOT NULL DEFAULT '',
+	aim			VARCHAR(255) NOT NULL DEFAULT '',
+	msn			VARCHAR(255) NOT NULL DEFAULT '',
+	yahoo			VARCHAR(255) NOT NULL DEFAULT '',
+	jabber			VARCHAR(255) NOT NULL DEFAULT '',
+	googletalk		VARCHAR(255) NOT NULL DEFAULT '',
+	avatar			INT NOT NULL DEFAULT 0,
+	picture			INT NOT NULL DEFAULT 0,
+	signature		VARCHAR(255) NOT NULL DEFAULT '',
+	birthday		VARCHAR(10) NOT NULL DEFAULT '',
+	lastpage		VARCHAR(100) NOT NULL DEFAULT ''
+);
+CREATE INDEX user_id ON k4_userinfo (user_id);
+
+DROP TABLE IF EXISTS k4_usersettings;
+CREATE TABLE k4_usersettings (
+	user_id			INT NOT NULL DEFAULT 0,
+	
+	language		VARCHAR(20) NOT NULL DEFAULT 'english',
+	styleset		VARCHAR(100) NOT NULL DEFAULT 'Descent',
+	imageset		VARCHAR(100) NOT NULL DEFAULT 'Descent',
+	templateset		VARCHAR(100) NOT NULL DEFAULT 'Descent',
+	
+	topic_display		INT NOT NULL DEFAULT 0,
+	
+	notify_pm		INT NOT NULL DEFAULT 1,
+	popup_pm		INT NOT NULL DEFAULT 0,
+	
+	viewflash		INT NOT NULL DEFAULT 1,
+	viewemoticons		INT NOT NULL DEFAULT 1,
+	viewsigs		INT NOT NULL DEFAULT 1,
+	viewavatars		INT NOT NULL DEFAULT 1,
+	viewimages		INT NOT NULL DEFAULT 1,
+	viewcensors		INT NOT NULL DEFAULT 1,
+	attachsig		INT NOT NULL DEFAULT 1,
+	attachavatar		INT NOT NULL DEFAULT 1,
+	
+	topicsperpage		INT NOT NULL DEFAULT 0,
+	postsperpage		INT NOT NULL DEFAULT 0
+);
+CREATE INDEX user_id2 ON k4_usersettings (user_id);
+
+DROP TABLE IF EXISTS k4_sessions;
+CREATE TABLE k4_sessions (
+	id			VARCHAR(32) NOT NULL DEFAULT '',
+	seen			INT NOT NULL DEFAULT 0,
+	name			VARCHAR(30) NOT NULL DEFAULT '',
+	user_id			INT NOT NULL DEFAULT 0,
+	user_agent		VARCHAR(100) NOT NULL DEFAULT '',
+	user_ip			VARCHAR(15) NOT NULL DEFAULT '',
+	usergroups		VARCHAR(255) NOT NULL DEFAULT '',
+	invisible		INT NOT NULL DEFAULT 0,
+	data			TEXT,
+
+	location_file		VARCHAR(25) NOT NULL DEFAULT '',
+	location_act		VARCHAR(25) NOT NULL DEFAULT '',
+	location_id		INT NOT NULL DEFAULT 0,
+
+	PRIMARY KEY(id)
+);
+
+DROP TABLE IF EXISTS k4_settinggroups;
+CREATE TABLE k4_settinggroups (
+	id			INT NOT NULL SERIAL,
+	title			VARCHAR(100) NOT NULL,
+	displayorder		INT NOT NULL DEFAULT 0,
+
+	PRIMARY KEY (id)
+);
+DROP TABLE IF EXISTS k4_settings;
+CREATE TABLE k4_settings (
+	id			INT NOT NULL SERIAL,
+	settinggroupid		INT NOT NULL DEFAULT 0,
+	varname			VARCHAR(100) NOT NULL,
+	value			MEDIUMTEXT NOT NULL,
+	optioncode		CHAR(20) NOT NULL DEFAULT 'text',
+	displayorder		INT NOT NULL DEFAULT 0,
+
+	PRIMARY KEY (id)
+);
+CREATE INDEX varname ON k4_settings (varname);
+
+DROP TABLE IF EXISTS k4_styles;
+CREATE TABLE k4_styles (
+	id			INT NOT NULL SERIAL,
+	name			VARCHAR(100) NOT NULL DEFAULT '',
+	description		VARCHAR(255) NOT NULL DEFAULT '',
+	use_imageset		INT NOT NULL DEFAULT 0,
+	use_templateset		INT NOT NULL DEFAULT 0,
+
+	PRIMARY KEY(id)
+);
+CREATE INDEX style_name ON k4_styles (name);
+
+DROP TABLE IF EXISTS k4_css;
+CREATE TABLE k4_css (
+	id			INT NOT NULL SERIAL,
+	style_id		INT NOT NULL DEFAULT 1,
+	name			VARCHAR(100) NOT NULL DEFAULT '',
+	properties		TEXT,
+	description		VARCHAR(255) NOT NULL DEFAULT '',
+	prev_name		VARCHAR(100) NOT NULL DEFAULT '',
+	prev_properties		TEXT,
+
+	PRIMARY KEY(id)
+);
+
+DROP TABLE IF EXISTS k4_categories;
+CREATE TABLE k4_categories (
+	category_id		INT NOT NULL SERIAL,
+	name			VARCHAR(255) NOT NULL DEFAULT '',
+	description		TEXT,
+	suspended		INT NOT NULL DEFAULT 0,
+	archive			INT NOT NULL DEFAULT 0,
+	moderating_groups	TEXT,
+	moderating_users	TEXT,
+	
+	row_level		INT NOT NULL DEFAULT 1,
+	row_type		INT NOT NULL DEFAULT 0,
+	row_order		INT NOT NULL DEFAULT 1,
+	created			INT NOT NULL DEFAULT 0,
+
+	PRIMARY KEY(category_id)
+);
+CREATE INDEX category_id ON k4_categories (category_id);
+
+DROP TABLE IF EXISTS k4_forums;
+CREATE TABLE k4_forums (
+	forum_id		INT NOT NULL SERIAL,
+	parent_id		INT NOT NULL DEFAULT 0,
+	category_id		INT NOT NULL DEFAULT 0,
+	name			VARCHAR(255) NOT NULL DEFAULT '',
+	description		TEXT,
+	archive			INT NOT NULL DEFAULT 0,
+	subforums		INT NOT NULL DEFAULT 0,
+	
+	is_forum		INT NOT NULL DEFAULT 1,
+	is_tracker		INT NOT NULL DEFAULT 0,
+	is_link			INT NOT NULL DEFAULT 0,
+	link_redirects		INT NOT NULL DEFAULT 0,
+	link_show_redirects	INT NOT NULL DEFAULT 1,
+	link_href		VARCHAR(255) NOT NULL DEFAULT '',
+	
+	moderating_groups	VARCHAR(255) NOT NULL DEFAULT '',
+	moderating_users	VARCHAR(255) NOT NULL DEFAULT '',
+
+	pass			VARCHAR(32) NOT NULL DEFAULT '',
+	
+	topics			INT NOT NULL DEFAULT 0,
+	replies			INT NOT NULL DEFAULT 0,
+	posts			INT NOT NULL DEFAULT 0,
+	
+	topic_posticon		VARCHAR(100) NOT NULL DEFAULT '',
+	topic_created		INT NOT NULL DEFAULT 0,
+	topic_name		VARCHAR(32) NOT NULL DEFAULT '',
+	topic_uname		VARCHAR(30) NOT NULL DEFAULT '',
+	topic_id		INT NOT NULL DEFAULT 0,
+	topic_uid		INT NOT NULL DEFAULT 0,
+
+	post_posticon		VARCHAR(100) NOT NULL DEFAULT '',
+	post_created		INT NOT NULL DEFAULT 0,
+	post_name		VARCHAR(32) NOT NULL DEFAULT '',
+	post_uname		VARCHAR(30) NOT NULL DEFAULT '',
+	post_id			INT NOT NULL DEFAULT 0,
+	post_uid		INT NOT NULL DEFAULT 0,
+
+	topicsperpage		INT NOT NULL DEFAULT 30,
+	postsperpage		INT NOT NULL DEFAULT 9,
+	maxpolloptions		INT NOT NULL DEFAULT 10,
+	defaultlang		VARCHAR(100) NOT NULL DEFAULT 'english',
+	defaultstyle		VARCHAR(100) NOT NULL DEFAULT 'Descent',
+
+	prune_auto		INT NOT NULL DEFAULT 0,
+	prune_frequency		INT NOT NULL DEFAULT 0,
+	prune_post_age		INT NOT NULL DEFAULT 0,
+	prune_post_viewed_age	INT NOT NULL DEFAULT 0,
+	prune_old_polls		INT NOT NULL DEFAULT 0,
+	prune_announcements	INT NOT NULL DEFAULT 0,
+	prune_stickies		INT NOT NULL DEFAULT 0,
+
+	num_viewing		INT NOT NULL DEFAULT 0,
+	can_delete		INT NOT NULL DEFAULT 1,
+
+	forum_rules		TEXT,
+
+	row_level		INT NOT NULL DEFAULT 1,
+	row_type		INT NOT NULL DEFAULT 0,
+	row_order		INT NOT NULL DEFAULT 1,
+	created			INT NOT NULL DEFAULT 0,
+
+	PRIMARY KEY(forum_id)
+);
+CREATE INDEX forum_id ON k4_forums (forum_id);
+
+DROP TABLE IF EXISTS k4_topics;
+CREATE TABLE k4_topics (
+	topic_id		INT NOT NULL SERIAL,
+	parent_id		INT NOT NULL DEFAULT 0,
+	forum_id		INT NOT NULL DEFAULT 0,
+	category_id		INT NOT NULL DEFAULT 0,
+	name			VARCHAR(255) NOT NULL DEFAULT '',
+
+	is_draft		INT NOT NULL DEFAULT 0,
+	is_feature		INT NOT NULL DEFAULT 0,
+	moved			INT NOT NULL DEFAULT 0,
+	queue			INT NOT NULL DEFAULT 0,
+	display			INT NOT NULL DEFAULT 1,
+
+	edited_time		INT NOT NULL DEFAULT 0,
+	edited_username		VARCHAR(30) NOT NULL DEFAULT '',
+	edited_userid		INT NOT NULL DEFAULT 0,
+
+	ratings_sum		INT NOT NULL DEFAULT 0,
+	ratings_num		INT NOT NULL DEFAULT 0,
+	rating			INT NOT NULL DEFAULT 0,
+
+	disable_html		INT NOT NULL DEFAULT 1,
+	disable_bbcode		INT NOT NULL DEFAULT 0,
+	disable_emoticons	INT NOT NULL DEFAULT 0,
+	disable_sig		INT NOT NULL DEFAULT 0,
+	disable_areply		INT NOT NULL DEFAULT 1,
+	disable_aurls		INT NOT NULL DEFAULT 0,
+	
+	description		VARCHAR(255) NOT NULL DEFAULT '',
+	body_text		TEXT,
+	posticon		VARCHAR(100) NOT NULL DEFAULT '',
+	topic_type		INT NOT NULL DEFAULT 1,
+	topic_expire		INT NOT NULL DEFAULT 0,
+	topic_locked		INT NOT NULL DEFAULT 0,
+	
+	poster_name		VARCHAR(30) NOT NULL DEFAULT '',
+	poster_id		INT NOT NULL DEFAULT 0,
+	poster_ip		VARCHAR(40) NOT NULL DEFAULT '',
+	
+	reply_time		INT NOT NULL DEFAULT 0,
+	reply_uname		VARCHAR(30) NOT NULL DEFAULT '',
+	reply_id		INT NOT NULL DEFAULT 0,
+	reply_uid		INT NOT NULL DEFAULT 0,
+	
+	is_poll			INT NOT NULL DEFAULT 0,
+
+	num_replies		INT NOT NULL DEFAULT 0,
+	
+	views			INT NOT NULL DEFAULT 0,
+	last_viewed		INT NOT NULL DEFAULT 0,
+
+	attachments		INT NOT NULL DEFAULT 0,
+	total_attachments	INT NOT NULL DEFAULT 0,
+	last_post		INT NOT NULL DEFAULT 0,
+
+	row_level		INT NOT NULL DEFAULT 1,
+	row_type		INT NOT NULL DEFAULT 0,
+	created			INT NOT NULL DEFAULT 0,
+
+	moved_old_topic_id	INT NOT NULL DEFAULT 0,
+	moved_new_topic_id	INT NOT NULL DEFAULT 0,
+
+	PRIMARY KEY(topic_id)
+);
+CREATE INDEX topic_id ON k4_topics (topic_id);
+
+DROP TABLE IF EXISTS k4_replies;
+CREATE TABLE k4_replies (
+	reply_id		INT NOT NULL SERIAL,
+	parent_id		INT NOT NULL DEFAULT 0,
+	topic_id		INT NOT NULL DEFAULT 0,
+	forum_id		INT NOT NULL DEFAULT 0,
+	category_id		INT NOT NULL DEFAULT 0,
+	name			VARCHAR(255) NOT NULL DEFAULT '',
+
+	body_text		TEXT,
+	poster_name		VARCHAR(30) NOT NULL DEFAULT '',
+	poster_id		INT NOT NULL DEFAULT 0,
+	poster_ip		VARCHAR(40) NOT NULL DEFAULT '',
+
+	edited_time		INT NOT NULL DEFAULT 0,
+	edited_username		VARCHAR(30) NOT NULL DEFAULT '',
+	edited_userid		INT NOT NULL DEFAULT 0,
+
+	disable_html		INT NOT NULL DEFAULT 1,
+	disable_bbcode		INT NOT NULL DEFAULT 0,
+	disable_emoticons	INT NOT NULL DEFAULT 0,
+	disable_sig		INT NOT NULL DEFAULT 0,
+	disable_areply		INT NOT NULL DEFAULT 1,
+	disable_aurls		INT NOT NULL DEFAULT 0,
+
+	num_replies		INT NOT NULL DEFAULT 0,
+	is_poll			INT NOT NULL DEFAULT 0,
+
+	posticon		VARCHAR(100) NOT NULL DEFAULT '',
+
+	row_level		INT NOT NULL DEFAULT 1,
+	row_type		INT NOT NULL DEFAULT 0,
+	row_order		INT NOT NULL DEFAULT 0,
+	created			INT NOT NULL DEFAULT 0,
+
+	moved_old_topic_id	INT NOT NULL DEFAULT 0,
+	attachments		INT NOT NULL DEFAULT 0,
+
+	PRIMARY KEY(reply_id)
+);
+CREATE INDEX reply_id ON k4_replies (reply_id);
+
+DROP TABLE IF EXISTS k4_pollquestions;
+CREATE TABLE k4_pollquestions (
+	id			INT NOT NULL SERIAL,
+	question		VARCHAR(255) NOT NULL DEFAULT '',
+	num_votes		INT NOT NULL DEFAULT 0,
+	created			INT NOT NULL DEFAULT 0,
+	expiry			INT NOT NULL DEFAULT 0,
+	user_id			INT NOT NULL DEFAULT 0,
+	user_name		VARCHAR(30) NOT NULL DEFAULT '',
+	
+	PRIMARY KEY(id)	
+);
+
+DROP TABLE IF EXISTS k4_pollanswers;
+CREATE TABLE k4_pollanswers (
+	id			INT NOT NULL SERIAL,
+	question_id		INT NOT NULL DEFAULT 0,
+	answer			VARCHAR(255) NOT NULL DEFAULT '',
+	color	 		VARCHAR(24) NOT NULL DEFAULT '',
+	
+	PRIMARY KEY(id)	
+);
+
+DROP TABLE IF EXISTS k4_pollvotes;
+CREATE TABLE k4_pollvotes (
+	id			INT NOT NULL SERIAL,
+	question_id		INT NOT NULL DEFAULT 0,
+	answer_id 		INT NOT NULL DEFAULT 0,
+	user_id 		INT NOT NULL DEFAULT 0,
+	user_name		VARCHAR(30) NOT NULL DEFAULT '',
+	voted_time		INT NOT NULL DEFAULT 0,
+	
+	PRIMARY KEY(id)	
+);
+
+DROP TABLE IF EXISTS k4_ratings;
+CREATE TABLE k4_ratings (
+	user_name		VARCHAR(30) NOT NULL DEFAULT '',
+	user_id			INT NOT NULL DEFAULT 0,
+	topic_id		INT NOT NULL DEFAULT 0,
+	rating			INT NOT NULL DEFAULT 0
+);
+
+DROP TABLE IF EXISTS k4_maps;
+CREATE TABLE k4_maps (
+	id			INT NOT NULL SERIAL,
+	
+	row_level		INT NOT NULL DEFAULT 1,
+	name			VARCHAR(255) NOT NULL DEFAULT '',
+	varname			CHAR(30) NOT NULL DEFAULT '',
+	value			VARCHAR(255) NOT NULL DEFAULT '',
+	
+	is_global		INT NOT NULL DEFAULT 0,
+	category_id		INT NOT NULL DEFAULT 0,
+	forum_id		INT NOT NULL DEFAULT 0,
+	user_id			INT NOT NULL DEFAULT 0,
+	group_id		INT NOT NULL DEFAULT 0,
+	parent_id		INT NOT NULL DEFAULT 0,
+	num_children		INT NOT NULL DEFAULT 0,
+	
+	can_view		INT NOT NULL DEFAULT 1,
+	can_view_condition	INT NOT NULL DEFAULT 1,
+	can_add			INT NOT NULL DEFAULT 2,
+	can_add_condition	INT NOT NULL DEFAULT 1,
+	can_edit		INT NOT NULL DEFAULT 2,
+	can_edit_condition	INT NOT NULL DEFAULT 1,
+	can_del			INT NOT NULL DEFAULT 7,
+	can_del_condition	INT NOT NULL DEFAULT 1,
+
+	inherit			INT NOT NULL DEFAULT 1,
+
+	PRIMARY KEY(id)
+);
+
+DROP TABLE IF EXISTS k4_datastore;
+CREATE TABLE k4_datastore (
+	varname			CHAR(30) NOT NULL DEFAULT '',
+	data			TEXT,
+
+	PRIMARY KEY(varname)
+);
+
+DROP TABLE IF EXISTS k4_posticons;
+CREATE TABLE k4_posticons (
+	id			INT NOT NULL SERIAL,
+	description		VARCHAR(100) NOT NULL DEFAULT '',
+	image			VARCHAR(100) NOT NULL DEFAULT '',
+
+	PRIMARY KEY(id)
+);
+
+DROP TABLE IF EXISTS k4_emoticons;
+CREATE TABLE k4_emoticons (
+	id 			INT NOT NULL SERIAL,
+	typed 			VARCHAR(32) NOT NULL DEFAULT '',
+	description		VARCHAR(50) NOT NULL DEFAULT '',
+	image 			VARCHAR(128) NOT NULL DEFAULT '',
+	clickable 		INT NOT NULL DEFAULT 0,
+	
+	PRIMARY KEY(id)
+);
+
+DROP TABLE IF EXISTS k4_usergroups;
+CREATE TABLE k4_usergroups (
+	id			INT NOT NULL SERIAL,
+	name			VARCHAR(255) NOT NULL DEFAULT '',
+	nicename		VARCHAR(255) NOT NULL DEFAULT '',
+	description		VARCHAR(255) NOT NULL DEFAULT '',
+	mod_name		VARCHAR(30) NOT NULL DEFAULT '',
+	mod_id			INT NOT NULL DEFAULT 0,
+	created			INT NOT NULL DEFAULT 0,
+	min_perm		INT NOT NULL DEFAULT 3,
+	max_perm		INT NOT NULL DEFAULT 3,
+	display_legend		INT NOT NULL DEFAULT 1,
+
+	custom_map_set		INT NOT NULL DEFAULT 0,
+
+	color			VARCHAR(6) NOT NULL DEFAULT '',
+	avatar			VARCHAR(100) NOT NULL DEFAULT '',
+
+	PRIMARY KEY(id)
+);
+CREATE INDEX name2 ON k4_usergroups(name);
+
+DROP TABLE IF EXISTS k4_userprofilefields;
+CREATE TABLE k4_userprofilefields (
+	id			INT NOT NULL SERIAL,
+	name			VARCHAR(30) NOT NULL DEFAULT '',
+	title			VARCHAR(50) NOT NULL DEFAULT '',
+	description		VARCHAR(255) NOT NULL DEFAULT '',
+	default_value		TEXT,
+	inputtype		CHAR(20) NOT NULL DEFAULT 'text',
+	user_maxlength		INT NOT NULL DEFAULT 100,
+	inputoptions		TEXT,
+	min_perm		INT NOT NULL DEFAULT 2,
+	display_register	INT NOT NULL DEFAULT 1,
+	display_profile		INT NOT NULL DEFAULT 1,
+	display_topic		INT NOT NULL DEFAULT 1,
+	display_post		INT NOT NULL DEFAULT 1,
+	display_image		VARCHAR(255) NOT NULL DEFAULT '',
+	display_memberlist	INT NOT NULL DEFAULT 0,
+	display_size		INT NOT NULL DEFAULT 25,
+	display_rows		INT NOT NULL DEFAULT 0,
+	display_order		INT NOT NULL DEFAULT 0,
+	is_editable		INT NOT NULL DEFAULT 1,
+	is_private		INT NOT NULL DEFAULT 0,
+	is_required		INT NOT NULL DEFAULT 0,
+	special_pcre		VARCHAR(255) NOT NULL DEFAULT '',
+
+	PRIMARY KEY(id)
+);
+CREATE INDEX name3 ON k4_userprofilefields(name);
+
+DROP TABLE IF EXISTS k4_badusernames;
+CREATE TABLE k4_badusernames (
+	id			INT NOT NULL SERIAL,
+	name			VARCHAR(30) NOT NULL DEFAULT '',
+	
+	PRIMARY KEY(id)
+);
+CREATE INDEX name4 ON k4_badusernames(name);
+
+DROP TABLE IF EXISTS k4_subscriptions;
+CREATE TABLE k4_subscriptions (
+	id			INT NOT NULL SERIAL,
+	user_id			INT NOT NULL DEFAULT 0,
+	user_name		VARCHAR(30) NOT NULL DEFAULT '',
+	topic_id		INT NOT NULL DEFAULT 0,
+	forum_id		INT NOT NULL DEFAULT 0,
+	category_id		INT NOT NULL DEFAULT 0,
+	email			VARCHAR(100) NOT NULL DEFAULT '',
+	requires_revisit	INT NOT NULL DEFAULT 0,
+	last_visit		INT NOT NULL DEFAULT 0,
+
+	PRIMARY KEY(id)
+);
+
+DROP TABLE IF EXISTS k4_mailqueue;
+CREATE TABLE k4_mailqueue (
+	id			INT NOT NULL SERIAL,
+	subject			VARCHAR(255) NOT NULL DEFAULT '',
+	message			TEXT,
+	row_id			INT NOT NULL DEFAULT 0,
+	row_type		INT NOT NULL DEFAULT 0,
+	userinfo		TEXT,
+	finished		INT NOT NULL DEFAULT 0,
+
+	PRIMARY KEY(id)
+);
+
+DROP TABLE IF EXISTS k4_topicqueue;
+CREATE TABLE k4_topicqueue (
+	id			INT NOT NULL SERIAL,
+	topicinfo		TEXT,
+	finished		INT NOT NULL DEFAULT 0,
+
+	PRIMARY KEY(id)
+);
+
+DROP TABLE IF EXISTS k4_attachments;
+CREATE TABLE k4_attachments (
+	id			INT NOT NULL SERIAL,
+	topic_id		INT NOT NULL DEFAULT 0,
+	reply_id		INT NOT NULL DEFAULT 0,
+	forum_id		INT NOT NULL DEFAULT 0,
+	message_id		INT NOT NULL DEFAULT 0,
+	user_id			INT NOT NULL DEFAULT 0,
+	user_name		VARCHAR(30) NOT NULL DEFAULT '',
+	mime_type		VARCHAR(30) NOT NULL DEFAULT '',
+	file_type		VARCHAR(30) NOT NULL DEFAULT '',
+	file_size		INT NOT NULL DEFAULT 0,
+	file_name		VARCHAR(150) NOT NULL DEFAULT '',
+	in_db			INT NOT NULL DEFAULT 1,
+	file_contents		BLOB,
+	mdfive			VARCHAR(32) NOT NULL DEFAULT '',
+	created			INT NOT NULL DEFAULT 0,
+	num_downloads		INT NOT NULL DEFAULT 0,
+
+	PRIMARY KEY(id)
+);
+
+DROP TABLE IF EXISTS k4_avatars;
+CREATE TABLE k4_avatars (
+	id			INT NOT NULL SERIAL,
+	group_id		INT NOT NULL DEFAULT 0,
+	user_id			INT NOT NULL DEFAULT 0,
+	mime_type		VARCHAR(30) NOT NULL DEFAULT '',
+	file_type		VARCHAR(30) NOT NULL DEFAULT '',
+	file_size		INT NOT NULL DEFAULT 0,
+	in_db			INT NOT NULL DEFAULT 1,
+	file_contents		BLOB,
+
+	PRIMARY KEY(id)
+);
+
+DROP TABLE IF EXISTS k4_personalpictues;
+CREATE TABLE k4_personalpictues (
+	id			INT NOT NULL SERIAL,
+	group_id		INT NOT NULL DEFAULT 0,
+	user_id			INT NOT NULL DEFAULT 0,
+	mime_type		VARCHAR(30) NOT NULL DEFAULT '',
+	file_type		VARCHAR(30) NOT NULL DEFAULT '',
+	file_size		INT NOT NULL DEFAULT 0,
+	in_db			INT NOT NULL DEFAULT 1,
+	file_contents		BLOB,
+
+	PRIMARY KEY(id)
+);
+
+DROP TABLE IF EXISTS k4_acronyms;
+CREATE TABLE k4_acronyms (
+	id			INT NOT NULL SERIAL,
+	acronym			VARCHAR(50) NOT NULL DEFAULT '',
+	meaning			VARCHAR(150) NOT NULL DEFAULT '',
+	replace_type		INT NOT NULL DEFAULT 2,
+
+	PRIMARY KEY(id)
+);
+
+DROP TABLE IF EXISTS k4_wordcensors;
+CREATE TABLE k4_wordcensors (
+	id			INT NOT NULL SERIAL,
+	word			VARCHAR(50) NOT NULL DEFAULT '',
+	replacement		VARCHAR(150) NOT NULL DEFAULT '',
+	method			INT NOT NULL DEFAULT 1,
+
+	PRIMARY KEY(id)
+);
+
+DROP TABLE IF EXISTS k4_spiders;
+CREATE TABLE k4_spiders (
+	id			INT NOT NULL SERIAL,
+	useragent		VARCHAR(150) NOT NULL DEFAULT '',
+	spidername		VARCHAR(150) NOT NULL DEFAULT '',
+	allowaccess		INT NOT NULL DEFAULT 1,
+
+	PRIMARY KEY(id)
+);
+
+DROP TABLE IF EXISTS k4_badpostreports;
+CREATE TABLE k4_badpostreports (
+	id			INT NOT NULL SERIAL,
+	category_id		INT NOT NULL DEFAULT 0,
+	forum_id		INT NOT NULL DEFAULT 0,
+	topic_id		INT NOT NULL DEFAULT 0,
+	reply_id		INT NOT NULL DEFAULT 0,
+	message			TEXT,
+	user_id			INT NOT NULL DEFAULT 0,
+	user_name		VARCHAR(30) NOT NULL DEFAULT '',
+	poster_id		INT NOT NULL DEFAULT 0,
+	poster_name		VARCHAR(30) NOT NULL DEFAULT '',
+	num_requests		INT NOT NULL DEFAULT 1,
+	created			INT NOT NULL DEFAULT 0,
+
+	PRIMARY KEY(id)
+);
+
+DROP TABLE IF EXISTS k4_bannedusers;
+CREATE TABLE k4_bannedusers (
+	id			INT NOT NULL SERIAL,
+	user_id			INT NOT NULL DEFAULT 0,
+	user_name		VARCHAR(30) NOT NULL DEFAULT '',
+	user_ip			VARCHAR(114) NOT NULL DEFAULT '',
+	reason			TEXT,
+	expiry			INT NOT NULL DEFAULT 0,
+
+	PRIMARY KEY(id)
+);
+
+DROP TABLE IF EXISTS k4_pmfolders;
+CREATE TABLE k4_pmfolders (
+	id			INT SERIAL,
+	user_id			INT NOT NULL DEFAULT 0,
+	user_name		VARCHAR(30) NOT NULL DEFAULT '',
+	is_global		INT NOT NULL DEFAULT 0,
+	is_deleteable		INT NOT NULL DEFAULT 1,
+	name			VARCHAR(50) NOT NULL DEFAULT '',
+	description		VARCHAR(255) NOT NULL DEFAULT '',
+	actas			VARCHAR(15) NOT NULL DEFAULT 'custom',
+
+	PRIMARY KEY(id)
+);
+
+DROP TABLE IF EXISTS k4_privmessages;
+CREATE TABLE k4_privmessages (
+	pm_id			SERIAL,
+	saved_id		INT NOT NULL DEFAULT 0,
+	parent_id		INT NOT NULL DEFAULT 0,
+	created			INT NOT NULL DEFAULT 0,
+	name			VARCHAR(255) NOT NULL DEFAULT '',
+	body_text		TEXT,
+	posticon		VARCHAR(100) NOT NULL DEFAULT 'clear.gif',
+	folder_id		INT NOT NULL DEFAULT 1,
+	message_id		INT NOT NULL DEFAULT 0,
+
+	poster_name		VARCHAR(16) NOT NULL DEFAULT '',
+	poster_id		INT NOT NULL DEFAULT 0,
+	track_msg		INT NOT NULL DEFAULT 0,
+	member_id		INT NOT NULL DEFAULT 0,
+	member_name		VARCHAR(16) NOT NULL DEFAULT '',
+	member_has_read		INT NOT NULL DEFAULT 0,
+	
+	reply_time		INT NOT NULL DEFAULT 0,
+	reply_uname		VARCHAR(30) NOT NULL DEFAULT '',
+	reply_id		INT NOT NULL DEFAULT 0,
+	reply_uid		INT NOT NULL DEFAULT 0,
+	num_replies		INT NOT NULL DEFAULT 0,
+
+	is_draft		INT NOT NULL DEFAULT 0,
+	disable_html		INT NOT NULL DEFAULT 1,
+	disable_bbcode		INT NOT NULL DEFAULT 0,
+	disable_emoticons	INT NOT NULL DEFAULT 0,
+	disable_sig		INT NOT NULL DEFAULT 0,
+	disable_areply		INT NOT NULL DEFAULT 1,
+	disable_aurls		INT NOT NULL DEFAULT 0,
+	attachments		INT NOT NULL DEFAULT 0,
+	total_attachments	INT NOT NULL DEFAULT 0,
+
+	tracker_id		VARCHAR(32) NOT NULL DEFAULT '',
+	sending_id		VARCHAR(32) NOT NULL DEFAULT '',
+
+	PRIMARY KEY(pm_id)
+);
+
+DROP TABLE IF EXISTS k4_privmessagedrafts;
+CREATE TABLE k4_privmessagedrafts (
+	pm_id			INT NOT NULL DEFAULT 0,
+	pm_to			TEXT,
+	pm_cc			TEXT
+);
+CREATE INDEX pm_id ON k4_privmessagedrafts(pm_id);
+
+DROP TABLE IF EXISTS k4_privmessagetracker;
+CREATE TABLE k4_privmessagetracker (
+	pm_id			INT NOT NULL DEFAULT 0,
+	message_id		INT NOT NULL DEFAULT 0,
+	parent_id		INT NOT NULL DEFAULT 0,
+	tracker_id		VARCHAR(32) NOT NULL DEFAULT '',
+	sending_id		VARCHAR(32) NOT NULL DEFAULT ''
+);
+CREATE INDEX pm_id2 ON k4_privmessagetracker(pm_id);
+
+DROP TABLE IF EXISTS k4_faqcategories;
+CREATE TABLE k4_faqcategories (
+	category_id		INT NOT NULL AUTO_INCREMENT,
+	parent_id		INT NOT NULL DEFAULT 0,
+	name			VARCHAR(255) NOT NULL DEFAULT '',
+	row_level		INT NOT NULL DEFAULT 1,
+	row_order		INT NOT NULL DEFAULT 1,
+	created			INT NOT NULL DEFAULT 0,
+	
+	can_view		INT NOT NULL DEFAULT 1,
+	
+	PRIMARY KEY(category_id)
+);
+CREATE INDEX category_id2 ON k4_faqcategories (category_id);

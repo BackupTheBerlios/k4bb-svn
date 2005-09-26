@@ -1,0 +1,195 @@
+
+<!-- Member List letter sorter -->
+<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="inset_box_small">
+	<list:list id="letters">
+	<tr id="letters">
+		<list:item list="letters">
+		<td align="center" width="3%" class="{$class}" onclick="document.location='{$action}'"><a href="{$action}" title="">{$name}</a></td>
+		</list:item>
+	</tr>
+	</list:list>
+</table>
+<!-- / Member List letter sorter -->
+
+<br />
+<page:navigator id="memberlist_pager">
+<div align="right">
+	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
+		<tr>
+			<td class="alt3" id="page_jump1"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
+			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
+			<page:list id="replies_pager" before="3" after="3">
+			<list:item list="replies_pager">
+				<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
+			</list:item>
+			</page:list>
+			<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
+			<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
+		</tr>
+	</table>
+</div>
+</page:navigator>
+
+<!-- Member List -->
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_MEMBERLIST}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="k4_subtitle">{$L_USERNAME}</td>
+			<td class="k4_subtitle" align="center">{$L_POSTS}</td>
+			<td class="k4_subtitle" align="center">{$L_REGISTERED}</td>
+			<td class="k4_subtitle" align="center">{$L_AVATAR}</td>
+			<td class="k4_subtitle" align="center">{$L_ONLINESTATUS}</td>
+		</tr>
+		<list:list id="memberlist">
+		<list:default list="memberlist">
+		<tr>
+			<td class="alt3" colspan="6">
+				<div class="outset_box">
+					<br />
+					<strong>{$L_NOMEMBERS}</strong>
+					<br /><br />
+				</div>
+			</td>
+		</tr>
+		</list:default>
+		<list:item list="memberlist">
+		<list:switch list="memberlist" var="row_class" a="alt1" b="alt3">
+		<tr>
+			<td class="{$row_class}">
+				<a href="member.php?id={$id}" title="{$L_PROFILE}" style="font-weight: bold; color: #{$group_color};">{$name}</a>
+				<div class="smalltext">
+					<if:if var="group_nicename" noteq="">{$group_nicename}<br /></if:if>
+					<if:if var="group_avatar" noteq="">
+					<img src="tmp/upload/group_avatars/{$group_avatar}" border="0" alt="{$group_nicename}" />
+					</if:if>
+				</div>
+			</td>
+			<td class="{$row_class}" align="center"><span class="smalltext">{$num_posts}</span></td>
+			<td class="{$row_class}" align="center"><span class="smalltext"><core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span></span></td>
+			<td class="{$row_class}" align="center">
+				<if:if var="avatar" eq="1"><img src="viewfile.php?act=avatar&amp;id={$user_id}" alt="" border="" /></if:if>
+			</td>
+			<td class="{$row_class}" align="center"><img src="Images/{$IMG_DIR}/Buttons/{$LANG}/{$online}.gif" alt="" border="0" /></td>
+		</tr>
+		</list:switch>
+		</list:item>
+		</list:list>
+	</table>
+</div>
+<!-- / Member List -->
+
+<page:navigator id="memberlist_pager">
+<div align="right">
+	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
+		<tr>
+			<td class="alt3" id="page_jump2"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
+			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
+			<page:list id="replies_pager" before="3" after="3">
+			<list:item list="replies_pager">
+				<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
+			</list:item>
+			</page:list>
+			<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
+			<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
+		</tr>
+	</table>
+</div>
+</page:navigator>
+
+<maps:if var="memberlist_sort" method="can_view">
+<!-- Dsiplay Options -->
+<br />
+<form action="member.php" method="get" enctype="multipart/form-data">
+<input type="hidden" name="act" value="list" />
+<input type="hidden" name="start" value="0" />
+<input type="hidden" name="sort" value="{$ml_sort}" />
+
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_DISPLAYOPTIONS}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" width="24%" align="center">
+				{$L_SORTRESULTSBY}:
+			</td>
+			<td class="alt3" width="24%" align="center">
+				<div class="smalltext">
+					<select name="sort" id="sort" style="width: 125px;">
+						<option value="created" selected="selected">{$L_REGISTERED}</option>
+						<option value="name" >{$L_USERNAME}</option>
+						<option value="las_seen">{$L_LASTSEEN}</option>
+					</select>
+					<br />
+					{$L_IN}
+					<select name="order" id="order" style="width:125px">
+						<option value="DESC">{$L_DESCENDING}</option>
+						<option value="ASC">{$L_ASCENDING}</option>
+					</select>
+					<script type="text/javascript">
+						d.setIndex('{$search_sort}', 'sort');
+						d.setIndex('{$search_order}', 'order');
+					</script>
+				</div>
+			</td>
+			<td class="alt1" width="24%" align="center">
+				{$L_LIMIT}:
+			</td>
+			<td class="alt3" width="24%" align="center">
+				<select name="limit" id="limit" class="smalltext" style="width: 50px;">
+					<option value="5">5</option>
+					<option value="10">10</option>
+					<option value="20">20</option>
+					<option value="30">30</option>
+					<option value="40">40</option>
+					<option value="50">50</option>
+				</select>
+				<script type="text/javascript">d.setIndex({$ml_limit}, 'limit');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" colspan="4" align="center">
+				<input type="submit" value="{$L_GO}" class="button" />
+			</td>
+		</tr>
+	</table>
+</div>
+</form>
+<!-- / Display Options -->
+</maps:if>
+
+<core:import id="page_jumper" file="page_jumper.html" />
+<script type="text/javascript">
+//<![CDATA[
+	menu_init('page_jump1', 'page_jump_menu');
+	menu_init('page_jump2', 'page_jump_menu');
+	var letters			= d.getElementById('letters');
+
+	if(letters) {
+		var columns		= d.getElementsByTagName(letters, 'td');
+
+		if(columns) {
+			var numcols	= d.sizeof(columns);
+			for(var i = 0; i < numcols; i++) {
+				
+				if(columns[i]) {
+					
+					d.forceCursor(columns[i]);
+
+					if(columns[i].className == 'alt1') {
+
+						columns[i].onmouseover		= function() {
+							this.className		= 'alt2';
+						}
+						columns[i].onmouseout		= function() {
+							this.className		= 'alt1';
+						}
+					}
+				}
+			}
+		}
+	}
+
+//]]>
+</script>

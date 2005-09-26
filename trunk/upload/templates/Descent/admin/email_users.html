@@ -1,0 +1,32 @@
+<is:admin>
+<form:form name="email_users" id="email_users" action="admin.php?act=email_users" method="post" name="post" enctype="multipart/form-data">
+<input type="hidden" name="id" value="{$member_id}" />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_EMAILUSERS}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt3">
+				<div class="outset_box">
+					<label for="from" class="smalltext">{$L_FROM}</label><br />
+					<input type="text" name="from" id="from" value="noreply" size="20" class="inputbox" />@{$email_from}
+					<br /><br />
+					<label for="subject" class="smalltext">{$L_SUBJECT}</label><br />
+					<input type="text" name="subject" id="subject" value="" size="80" class="inputbox" />
+					<form:error id="subject_error" for="subject" setclass="inputfailed" regex=".+">{$L_INSERTMAILSUBJECT}</form:error>
+					<br /><br />
+					<label for="message" class="smalltext">{$L_MESSAGE}</label><br />
+					<textarea name="message" id="message" rows="10" cols="100" style="width:500px;" class="inputbox"></textarea>
+					<form:error id="message_error" for="message" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTMAILMESSAGE}</form:error>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle">
+				<input type="submit" class="button" value="{$L_EMAIL}" />
+				<input type="reset" class="button" value="{$L_RESET}" />
+			</td>
+		</tr>
+	</table>
+</div>
+</form:form>
+</is:admin>

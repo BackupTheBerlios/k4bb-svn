@@ -1,0 +1,109 @@
+<is:admin>
+<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+	<tr class="k4_maintitle">
+		<td colspan="6">
+			<script type="text/javascript">doHelpButton('wordcensors');</script>
+			{$L_CENSORMANAGEMENT}
+		</td>
+	</tr>
+	<tr class="k4_subtitle">
+		<td colspan="6">
+			<script type="text/javascript">doHelpButton('add_wordcensor');</script>
+			{$L_ADDWORDCENSOR}
+		</td>
+	</tr>
+	<form:form name="add_censor" id="add_censor" action="admin.php?act=add_censor" method="post" enctype="multipart/form-data">
+	<tr class="alt1">
+		<td width="17%" align="center">
+			<label for="acronym"><strong>{$L_BADWORD}:</strong></label>
+		</td>
+		<td width="17%" align="center" class="alt3">
+			<input type="text" name="word" id="word" value="" class="inputbox" />
+			<form:error id="word_error" for="word" setclass="inputfailed" regex=".+">{$L_SUPPLYWORD}</form:error>
+		</td>
+		<td width="17%" align="center">
+			<label for="meaning"><strong>{$L_REPLACEMENT}:</strong></label>
+		</td>
+		<td width="17%" align="center" class="alt3">
+			<input type="text" name="replacement" id="replacement" value="" class="inputbox" />
+			<form:error id="replacement_error" for="replacement" setclass="inputfailed" regex=".+">{$L_SUPPLYREPLACEMENT}</form:error>
+		</td>
+		<td width="17%" align="center">
+			<label for="method"><strong>{$L_METHOD}:</strong></label>
+		</td>
+		<td width="17%" align="center" class="alt3">
+			<select name="method" id="method" class="smalltext">
+				<option value="1">{$L_LOOSE}</option>
+				<option value="2">{$L_EXACT}</option>
+			</select>
+		</td>
+	</tr>
+	<tr class="alt2">
+		<td colspan="6">
+			<input type="submit" value="{$L_SAVE}" class="button" />
+			<input type="reset" value="{$L_RESET}" class="button" />
+		</td>
+	</tr>
+	</form:form>
+</table>
+<br />
+<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+	<tr class="k4_maintitle">
+		<td colspan="6">{$L_MANAGECURRENTCENSORS}</td>
+	</tr>
+	<list:list id="censors">
+	<list:default list="censors">
+	<tr class="alt3">
+		<td colspan="6">
+			<div class="outset_box" align="center">
+				<br />
+				{$L_NOACTIVECENSORS}
+				<br /><br />
+			</div>
+		</td>
+	</tr>
+	</list:default>
+	<list:item list="censors">
+		<list:switch list="censors" var="row_class" a="alt1" b="alt3">
+		<form:form name="update_censor" id="update_censor" action="admin.php?act=update_censor&amp;id={$id}" method="post" enctype="multipart/form-data">
+		<tr class="{$row_class}">
+			<td width="17%" align="center">
+				<label for="word{$id}"><strong>{$L_BADWORD}:</strong></label>
+			</td>
+			<td width="17%" align="center" class="alt3">
+				<input type="text" name="word" id="word{$id}" value="{$word}" class="inputbox" />
+			</td>
+			<td width="17%" align="center">
+				<label for="replacement{$id}"><strong>{$L_REPLACEMENT}:</strong></label>
+			</td>
+			<td width="17%" align="center" class="alt3">
+				<input type="text" name="replacement" id="replacement{$id}" value="{$replacement}" class="inputbox" />
+			</td>
+			<td width="17%" align="center">
+				<label for="method{$id}"><strong>{$L_METHOD}:</strong></label>
+			</td>
+			<td width="17%" align="center" class="alt3">
+				<select name="method" id="method{$id}" class="smalltext">
+					<option value="1">{$L_LOOSE}</option>
+					<option value="2">{$L_EXACT}</option>
+				</select>
+				<script type="text/javascript">d.setIndex({$method}, 'method{$id}');</script>
+			</td>
+		</tr>
+		<tr class="{$row_class}">
+			<td colspan="6">
+				<input type="submit" value="{$L_SAVE}" class="button" />
+				<input type="button" value="{$L_REMOVE}" class="button" onclick="document.location='admin.php?act=remove_censor&id={$id}'" />
+				<input type="reset" value="{$L_RESET}" class="button" />
+			</td>
+		</tr>
+		</form:form>
+		</list:switch>
+	</tr>
+	<tr class="alt2">
+		<td colspan="6"></td>
+	</tr>
+	</list:item>
+	</list:list>
+</table>
+</is:admin>

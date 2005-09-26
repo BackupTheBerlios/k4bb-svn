@@ -1,0 +1,4 @@
+<div id="editorcodex">
+	<textarea name="message" id="messagecodex" class="inputbox" rows="10" cols="100" wrap="SOFT" style="width: 500px;" tabindex="3">{$editor_text_reverted}</textarea>
+	<if:if var="allowbbcode" eq="1"><if:if var="has_bbcode_perms" eq="1"><div style="text-align: right;"><img onclick="switch_editor_type((can_wysiwyg ? 'wysiwyg' : 'bbcode'), 'bbcode', 'messagecodex', 'wysiwygcodex')" src="js/editor/switch_format.gif" alt="" border="0" class="alt3" style="padding:0px;border: 1px solid #AAAAAA;" /></div></if:if></if:if>
+</div>

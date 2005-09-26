@@ -1,0 +1,27 @@
+<form:form id="delete_pmfolder" name="delete_pmfolder" action="member.php?act=pm_deletepmfolder" method="post" enctype="multipart/form-data">
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_DELETEPMFOLDER}: <span style="font-weight: normal;">{$folder_name}</span></div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt3">
+				<div class="outset_box" style="text-align: center;">
+					<strong>{$L_MOVEPMSTO}:</strong><br /><br />
+					<select name="moveto" class="smalltext">
+						<option value="0">{$L_DELETEPRIVATEMESSAGES}</option>
+						<list:list id="pmfolders">
+						<list:item list="pmfolders">
+						<if:if var="id" noteq="folder_id"><option value="{$id}">&nbsp;&middot; {$name}</option></if:if>
+						</list:item>
+						</list:list>
+					</select>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle">
+				<input type="submit" class="button" value="{$L_DELETEFOLDER}" />
+			</td>
+		</tr>
+	</table>
+</div>
+</form:form>

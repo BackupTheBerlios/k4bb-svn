@@ -1,0 +1,52 @@
+<is:admin>
+<form:form name="add_faqcategory" id="add_faqcategory" action="admin.php?act=faq_insertcategory" method="post" enctype="multipart/form-data">
+<core:block id="parent_id"><input type="hidden" name="parent_id" value="{$parent_id}" /></core:block>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_ADDFAQCATEGORY}<core:block id="parent_id"><span style="font-weight: normal;">: {$parent_name}</span></core:block></div>
+	<table width="100%" cellpadding="0" cellspacing="1" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" width="30%">
+				<label for="name"><strong>{$L_NAME}:</strong></label>
+			</td>
+			<td class="alt3" width="70%">
+				<input type="text" name="name" id="name" value="" class="inputbox" size="40" tabindex="1" />
+				<form:error id="name_error" for="name" setclass="inputfailed" regex=".+">{$L_INSERTCATNAME}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="30%"><label for="row_order"><strong>{$L_ORDER}:</strong></label></td>
+			<td class="alt1">
+				<script type="text/javascript">doHelpButton('category_order');</script>
+				<input type="text" name="row_order" id="row_order" value="" maxlength="5" size="3" class="inputbox" tabindex="2" />
+				<form:error id="row_order_error" for="row_order" setclass="inputfailed" regex=".+">{$L_INSERTCATORDER}</form:error>
+				<form:error id="row_order_num_error" for="row_order" setclass="inputfailed" regex="([0-9])+">{$L_INSERTCATORDERNUM}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="30%">
+				<label for="can_view"><strong>{$L_WHOCANVIEWCATEGORY}:</strong></label>
+			</td>
+			<td class="alt3" width="70%">
+				<select name="can_view" id="can_view" class="minitext" tabindex="3">
+					<option value="0">--</option>
+					<option value="1">{$L_GUEST}</option>
+					<option value="4">{$L_PENDINGMEMBER}</option>
+					<option value="5">{$L_MEMBER}</option>
+					<option value="6">{$L_SUPERMEMBER}</option>
+					<option value="7">{$L_MODERATOR}</option>
+					<option value="8">{$L_SUPERMODERATOR}</option>
+					<option value="9">{$L_ADMIN}</option>
+					<option value="10">{$L_SUPERADMIN}</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" colspan="2">
+				<input type="submit" value="{$L_SAVE}" class="button" tabindex="4" />
+				<input type="reset" value="{$L_RESET}" class="button" tabindex="5" />
+			</td>
+		</tr>
+	</table>
+</div>
+</form:form>
+</is:admin>

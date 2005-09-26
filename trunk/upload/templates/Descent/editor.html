@@ -1,0 +1,231 @@
+<if:if var="allowbbcode" eq="1">
+<if:if var="has_bbcode_perms" eq="1">
+<a name="editor" id="editor"></a>
+<div class="outset_box_small">
+	<script type="text/javascript">
+		//<![CDATA[
+		u_styles_tip			= "{$L_STYLES_TIP}";
+		u_close_tags			= "{$L_BBCODE_CLOSE_TAGS}";
+		u_enter_url				= "{$L_ENTERURL}";
+		u_enter_pagetitle		= "{$L_ENTERPAGETITLE}";
+		s_webpage_title			= "{$L_PAGETITLE}";
+		u_error_enter_url		= " {$L_ERRORENTERURL}";
+		s_found_errors			= " {$L_ERRORENTERTITLE}";
+		s_error					= "{$L_ERROR}";
+		u_enter_img				= "{$L_ENTERIMG}";
+		u_error_enter_img		= " {$L_ERRORENTERIMG}";
+		u_enter_poll			= "{$L_ENTERPOLLQUESTION}";
+		u_error_enter_poll		= " {$L_ERRORENTERPOLLQUESTION}";
+		u_enter_answer			= "{$L_ENTERPOLLANSWER}";
+		u_error_enter_answer	= " {$L_ERRORENTERPOLLANSWERS}";
+		b_help					= "{$L_BBCODE_B_HELP}"; // Bold
+		i_help					= "{$L_BBCODE_I_HELP}"; // Italic
+		u_help					= "{$L_BBCODE_U_HELP}"; // Underline
+		quote_help				= "{$L_BBCODE_Q_HELP}"; // Quote
+		code_help				= "{$L_BBCODE_C_HELP}"; // Code
+		php_help				= "{$L_BBCODE_PHP_HELP}"; // PHP
+		l_help					= "{$L_BBCODE_L_HELP}"; // List
+		o_help					= "{$L_BBCODE_O_HELP}"; // Ordered List
+		p_help					= "{$L_BBCODE_P_HELP}"; // Image
+		w_help					= "{$L_BBCODE_W_HELP}"; // URL
+		a_help					= "{$L_BBCODE_A_HELP}"; // Close all tags
+		color_help				= "{$L_BBCODE_S_HELP}"; // Color
+		size_help				= "{$L_BBCODE_F_HELP}"; // Font Size
+		poll_help				= "{$L_BBCODE_POLL_HELP}";
+		use_polls				= "";
+
+		var maxpolloptions		= parseInt('{$maxpolloptions}');
+		var allowemoticons		= <maps:if forum="forum_forum_id" var="emoticons" method="can_add">true<maps:else />false</maps:if>;
+
+		var color_options	= new Array('{$L_FONT_COLOR}', '{$L_SKYBLUE}', '{$L_ROYALBLUE}', '{$L_BLUE}', '{$L_DARKBLUE}', '{$L_ORANGE}', '{$L_ORANGERED}', '{$L_CRIMSON}', '{$L_RED}', '{$L_FIREBRICK}', '{$L_DARKRED}', '{$L_GREEN}', '{$L_LIMEGREEN}', '{$L_SEAGREEN}', '{$L_DEEPPINK}', '{$L_TOMATO}', '{$L_CORAL}', '{$L_PURPLE}', '{$L_INDIGO}', '{$L_BURLYWOOD}', '{$L_SANDYBROWN}', '{$L_SIENNA}', '{$L_CHOCOLATE}', '{$L_TEAL}', '{$L_SILVER}');
+		var color_values	= new Array('black', 'skyblue', 'royalblue', 'blue', 'darkblue', 'orange', 'orangered', 'crimson', 'red', 'firebrick', 'darkred', 'green', 'limegreen', 'seagreen', 'deeppink', 'tomato', 'coral', 'purple', 'indigo', 'burlywood', 'sandybrown', 'sienna', 'chocolate', 'teal', 'silver');
+		var color_styles	= new Array('color: black;', 'color: skyblue;', 'color: royalblue;', 'color: blue;', 'color: darkblue;', 'color: orange;', 'color: orangered;', 'color: crimson;', 'color: red;', 'color: firebrick;', 'color: darkred;', 'color: green;', 'color: limegreen;', 'color: seagreen;', 'color: deeppink;', 'color: tomato;', 'color: coral;', 'color: purple;', 'color: indigo;', 'color: burlywood;', 'color: sandybrown;', 'color: sienna;', 'color: chocolate;', 'color: teal;', 'color: silver;');
+		
+		var size_options	= new Array('{$L_FONT_SIZE}', '{$L_FONT_TINY}', '{$L_FONT_SMALL}', '{$L_FONT_NORMAL}', '{$L_FONT_LARGE}', '{$L_FONT_HUGE}');
+		var size_values		= new Array(12, 7, 9, 12, 18, 24);
+		var size_styles		= new Array('font-size: auto;', 'font-size: 8px;', 'font-size: 9px;', 'font-size: 12px;');
+		
+		function emoticon(typed) {
+			var editor	= document.getElementById('messagecodex');
+			editor.value += ' ' + typed;
+		}
+		
+		/**
+		 * Initialize the editor
+		 */
+		var can_wysiwyg		= <if:if var="can_wysiwyg" eq="1">true<if:else />false</if:if>;
+		var start_wysiwyg	= <if:if var="start_wysiwyg" eq="1">true<if:else />false</if:if>;
+		
+		try {
+			init_wysiwyg('messagecodex', 'wysiwygcodex', can_wysiwyg);
+			bbcodex_init('message', 'message', 10, 100, 'button', can_wysiwyg);
+		} catch(e) {
+			//alert(e.message);
+		}
+		//]]>
+	</script>
+</if:if>
+</if:if>
+<if:if var="can_wysiwyg" eq="1">
+	<!-- Color Picker -->
+	<div id="colorpicker_menu" class="editor_button_over" style="display: none;">
+		<table cellpadding="3" cellspacing="0" border="0">
+			<tr>
+				<td id="#FFFFFF"><a href="#editor" onclick="set_color('#FFFFFF', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #FFFFFF;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#FFCCCC"><a href="#editor" onclick="set_color('#FFCCCC', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #FFCCCC;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#FFCC99"><a href="#editor" onclick="set_color('#FFCC99', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #FFCC99;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#FFFF99"><a href="#editor" onclick="set_color('#FFFF99', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #FFFF99;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#FFFFCC"><a href="#editor" onclick="set_color('#FFFFCC', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #FFFFCC;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#99FF99"><a href="#editor" onclick="set_color('#99FF99', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #99FF99;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#99FFFF"><a href="#editor" onclick="set_color('#99FFFF', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #99FFFF;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#CCFFFF"><a href="#editor" onclick="set_color('#CCFFFF', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #CCFFFF;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#CCCCFF"><a href="#editor" onclick="set_color('#CCCCFF', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #CCCCFF;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#FFCCFF"><a href="#editor" onclick="set_color('#FFCCFF', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #FFCCFF;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+			</tr>
+			<tr>
+				<td id="#CCCCCC"><a href="#editor" onclick="set_color('#CCCCCC', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #CCCCCC;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#FF6666"><a href="#editor" onclick="set_color('#FF6666', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #FF6666;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#FF9966"><a href="#editor" onclick="set_color('#FF9966', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #FF9966;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#FFFF66"><a href="#editor" onclick="set_color('#FFFF66', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #FFFF66;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#FFFF33"><a href="#editor" onclick="set_color('#FFFF33', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #FFFF33;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#66FF99"><a href="#editor" onclick="set_color('#66FF99', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #66FF99;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#33FFFF"><a href="#editor" onclick="set_color('#33FFFF', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #33FFFF;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#66FFFF"><a href="#editor" onclick="set_color('#66FFFF', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #66FFFF;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#9999FF"><a href="#editor" onclick="set_color('#9999FF', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #9999FF;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#FF99FF"><a href="#editor" onclick="set_color('#FF99FF', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #FF99FF;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+			</tr>
+			<tr>
+				<td id="#C0C0C0"><a href="#editor" onclick="set_color('#C0C0C0', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #C0C0C0;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#FF0000"><a href="#editor" onclick="set_color('#FF0000', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #FF0000;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#FF9900"><a href="#editor" onclick="set_color('#FF9900', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #FF9900;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#FFCC66"><a href="#editor" onclick="set_color('#FFCC66', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #FFCC66;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#FFFF00"><a href="#editor" onclick="set_color('#FFFF00', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #FFFF00;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#33FF33"><a href="#editor" onclick="set_color('#33FF33', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #33FF33;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#66CCCC"><a href="#editor" onclick="set_color('#66CCCC', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #66CCCC;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#33CCFF"><a href="#editor" onclick="set_color('#33CCFF', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #33CCFF;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#6666CC"><a href="#editor" onclick="set_color('#6666CC', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #6666CC;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#CC66CC"><a href="#editor" onclick="set_color('#CC66CC', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #CC66CC;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+			</tr>
+			<tr>
+				<td id="#999999"><a href="#editor" onclick="set_color('#999999', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #999999;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#CC0000"><a href="#editor" onclick="set_color('#CC0000', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #CC0000;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#FF6600"><a href="#editor" onclick="set_color('#FF6600', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #FF6600;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#FFCC33"><a href="#editor" onclick="set_color('#FFCC33', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #FFCC33;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#FFCC00"><a href="#editor" onclick="set_color('#FFCC00', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #FFCC00;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#33CC00"><a href="#editor" onclick="set_color('#33CC00', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #33CC00;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#00CCCC"><a href="#editor" onclick="set_color('#00CCCC', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #00CCCC;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#3366FF"><a href="#editor" onclick="set_color('#3366FF', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #3366FF;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#6633FF"><a href="#editor" onclick="set_color('#6633FF', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #6633FF;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#CC33CC"><a href="#editor" onclick="set_color('#CC33CC', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #CC33CC;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+			</tr>
+			<tr>
+				<td id="#666666"><a href="#editor" onclick="set_color('#666666', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #666666;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#990000"><a href="#editor" onclick="set_color('#990000', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #990000;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#CC6600"><a href="#editor" onclick="set_color('#CC6600', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #CC6600;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#CC9933"><a href="#editor" onclick="set_color('#CC9933', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #CC9933;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#999900"><a href="#editor" onclick="set_color('#999900', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #999900;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#009900"><a href="#editor" onclick="set_color('#009900', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #009900;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#339999"><a href="#editor" onclick="set_color('#339999', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #339999;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#3333FF"><a href="#editor" onclick="set_color('#3333FF', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #3333FF;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#6600CC"><a href="#editor" onclick="set_color('#6600CC', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #6600CC;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#993399"><a href="#editor" onclick="set_color('#993399', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #993399;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+			</tr>
+			<tr>
+				<td id="#333333"><a href="#editor" onclick="set_color('#333333', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #333333;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#660000"><a href="#editor" onclick="set_color('#660000', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #660000;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#993300"><a href="#editor" onclick="set_color('#993300', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #993300;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#996633"><a href="#editor" onclick="set_color('#996633', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #996633;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#666600"><a href="#editor" onclick="set_color('#666600', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #666600;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#006600"><a href="#editor" onclick="set_color('#006600', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #006600;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#336666"><a href="#editor" onclick="set_color('#336666', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #336666;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#000099"><a href="#editor" onclick="set_color('#000099', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #000099;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#333399"><a href="#editor" onclick="set_color('#333399', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #333399;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#663366"><a href="#editor" onclick="set_color('#663366', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #663366;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+			</tr>
+			<tr>
+				<td id="#000000"><a href="#editor" onclick="set_color('#000000', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #000000;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#330000"><a href="#editor" onclick="set_color('#330000', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #330000;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#663300"><a href="#editor" onclick="set_color('#663300', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #663300;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#663333"><a href="#editor" onclick="set_color('#663333', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #663333;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#333300"><a href="#editor" onclick="set_color('#333300', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #333300;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#003300"><a href="#editor" onclick="set_color('#003300', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #003300;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#003333"><a href="#editor" onclick="set_color('#003333', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #003333;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#000066"><a href="#editor" onclick="set_color('#000066', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #000066;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#330099"><a href="#editor" onclick="set_color('#330099', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #330099;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+				<td id="#330033"><a href="#editor" onclick="set_color('#330033', 'wysiwygcodex')" onmouseover="this.style.border='1px solid #FFFFFF'" onmouseout="this.style.border='1px solid #000000'" style="background-color: #330033;width: 10px; height: 10px;font-size: 8px; border: 1px solid #000000;">&nbsp;&nbsp;&nbsp;</a></td>
+			</tr>
+			<tr>
+				<td colspan="12" align="center">
+					<a href="javascript:;" onclick="set_color(null, 'wysiwygcodex')" title="{$L_NOCOLOR}" class="smalltext">{$L_NOCOLOR}</a>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<!-- / Color Picker -->
+
+	<maps:if forum="forum_forum_id" var="emoticons" method="can_add">
+	<list:list id="emoticons">
+	<!-- Emoticons Table -->
+	<div id="emoticons_menu" class="editor_button_over" style="display: none;">
+		<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0">
+			<tr>
+				<list:item list="emoticons">
+				<td align="center">
+					<a href="javascript:;" onclick="insert_image('tmp/upload/emoticons/{$image}')" title="{$description}"><img src="tmp/upload/emoticons/{$image}" alt="{$description}" border="0" /></a>
+				</td>
+				<list:separator list="emoticons">
+					<list:alternate list="emoticons" count="{@emoticons_per_row}" remainder="{@emoticons_per_row_remainder}">
+						</tr><tr>
+					</list:alternate>
+				</list:separator>
+				</list:item>
+			</tr>
+		</table>
+	</div>
+	<!-- / Emoticons Table -->
+	</list:list>
+	</maps:if>
+</if:if>
+
+	<core:import id="start_editor" />
+
+<if:if var="allowbbcode" eq="1">
+<if:if var="has_bbcode_perms" eq="1">
+	<script type="text/javascript">		
+		try {
+			var editorcodex		= d.getElementById('editorcodex');
+			var e_textarea		= d.getElementById('messagecodex');
+			var wysiwyg_editor	= d.getElementById('wysiwygcodex_area');
+			var bbcode_buttons	= d.getElementById('bbcodex_buttons');
+			var forum_id		= parseInt('{$forum_forum_id}');
+
+			<maps:if forum="forum_forum_id" var="emoticons" method="can_add">menu_init('emoticons_link', 'emoticons_menu');</maps:if>
+			
+			populate_wysiwyg('messagecodex', 'wysiwygcodex');
+			if(can_wysiwyg) { 
+				init_wysiwyg_menus(); 
+			} else { 
+				//init_bbcode_menus();
+			}
+
+			
+			if(start_wysiwyg && can_wysiwyg) {
+				bbcode_buttons.style.display	= 'none';
+				if(e_textarea) {
+					e_textarea.style.display	= 'none';
+				}
+			} else {
+				wysiwyg_editor.style.display	= 'none';
+				if(e_textarea) {
+					e_textarea.style.display	= 'block';
+				}
+			}
+
+		} catch(e) {
+			//alert(e.message);
+		}
+
+	</script>
+</div>
+</if:if>
+</if:if>

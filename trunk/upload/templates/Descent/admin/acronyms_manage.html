@@ -1,0 +1,90 @@
+<is:admin>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">
+		<script type="text/javascript">doHelpButton('acronyms');</script>
+		{$L_ACRONYMMANAGEMENT}
+	</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="k4_subtitle" colspan="4">
+				<script type="text/javascript">doHelpButton('add_badname');</script>
+				{$L_ADDACRONYM}
+			</td>
+		</tr>
+		<form:form name="add_acronym" id="add_acronym" action="admin.php?act=add_acronym" method="post" enctype="multipart/form-data">
+		<tr>
+			<td class="alt1" width="25%" align="center">
+				<label for="acronym"><strong>{$L_ACRONYM}:</strong></label>
+			</td>
+			<td class="alt3" width="25%" align="center">
+				<input type="text" name="acronym" id="acronym" value="" class="inputbox" />
+				<form:error id="acronym_error" for="acronym" setclass="inputfailed" regex=".+">{$L_SUPPLYACRONYM}</form:error>
+			</td>
+			<td class="alt1" width="25%" align="center">
+				<label for="meaning"><strong>{$L_MEANING}:</strong></label>
+			</td>
+			<td class="alt3" width="25%" align="center">
+				<input type="text" name="meaning" id="meaning" value="" class="inputbox" />
+				<form:error id="meaning_error" for="meaning" setclass="inputfailed" regex=".+">{$L_SUPPLYMEANING}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt2" colspan="4">
+				<input type="submit" value="{$L_SAVE}" class="button" />
+				<input type="reset" value="{$L_RESET}" class="button" />
+			</td>
+		</tr>
+		</form:form>
+	</table>
+</div>
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_MANAGECURRENTACRONYMS}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<list:list id="acronyms">
+		<list:default list="acronyms">
+		<tr>
+			<td class="alt3" colspan="4">
+				<div class="outset_box" align="center">
+					<br />
+					{$L_NOACTIVEACRONYMS}
+					<br /><br />
+				</div>
+			</td>
+		</tr>
+		</list:default>
+		<list:item list="acronyms">
+			<list:switch list="acronyms" var="row_class" a="alt1" b="alt3">
+			<form:form name="update_acronym" id="update_acronym" action="admin.php?act=update_acronym&amp;id={$id}" method="post" enctype="multipart/form-data">
+			<tr>
+				<td class="{$row_class}" width="25%" align="center">
+					<label for="acronym{$id}"><strong>{$L_ACRONYM}:</strong></label>
+				</td>
+				<td class="alt3" width="25%" align="center">
+					<input type="text" name="acronym" id="acronym{$id}" value="{$acronym}" class="inputbox" />
+				</td>
+				<td class="{$row_class}" width="25%" align="center">
+					<label for="meaning{$id}"><strong>{$L_MEANING}:</strong></label>
+				</td>
+				<td class="alt3" width="25%" align="center">
+					<input type="text" name="meaning" id="meaning{$id}" value="{$meaning}" class="inputbox" />
+				</td>
+			</tr>
+			<tr>
+				<td class="{$row_class}" colspan="4">
+					<input type="submit" value="{$L_SAVE}" class="button" />
+					<input type="button" value="{$L_REMOVE}" class="button" onclick="document.location='admin.php?act=acronym_remove&id={$id}'" />
+					<input type="reset" value="{$L_RESET}" class="button" />
+				</td>
+			</tr>
+			</form:form>
+			</list:switch>
+		</tr>
+		<tr>
+			<td class="alt2" colspan="4"></td>
+		</tr>
+		</list:item>
+		</list:list>
+	</table>
+</div>
+</is:admin>

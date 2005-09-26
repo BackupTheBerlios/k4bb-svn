@@ -1,0 +1,43 @@
+<is:logged>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_USERCONTROLPANEL}: <span style="font-weight: normal;">{$L_MANAGEATTACHMENTS}</span></div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt3"><span class="smalltext">{$L_USERCPSUBSCRIPTIONSMSG}</span></td>
+		</tr>
+	</table>
+</div>
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_SUBSCRIPTIONS}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<list:list id="subscriptions">
+		<list:default list="subscriptions">
+		<tr>
+			<td class="alt3">
+				<div class="outset_box" style="text-align: center;"><br /><strong>{$L_NOSUBSCRIPTIONS}</strong><br /><br /></div>
+			</td>
+		</tr>
+		</list:default>
+		<list:item list="subscriptions">
+		<list:switch list="subscriptions" var="row_class" a="alt3" b="alt1">
+		<tr>
+			<td class="{$row_class}" valign="middle">
+				<div style="float:right;">
+					<a href="<if:if var="topic_id" noteq="0">viewtopic.php?act=untrack&amp;id={$topic_id}<if:else />viewforum.php?act=untrack&amp;id={$forum_id}</if:if>" title="{$L_UNSUBSCRIBE}">{$L_UNSUBSCRIBE}</a><br />
+				</div>
+				<if:if var="topic_id" noteq="0">
+					<a href="viewtopic.php?id={$topic_id}" title="{$topic_name}" style="font-weight:bold;">{$topic_name}</a><br />
+					<a href="viewforum.php?f={$forum_id}" class="smalltext" title="{$forum_name}">{$forum_name}</a>
+				<if:else />
+					<a href="viewforum.php?f={$forum_id}" title="{$forum_name}" style="font-weight:bold;">{$forum_name}</a>
+				</if:if>
+			</td>
+		</tr>
+		</list:switch>
+		</list:item>
+		</list:list>
+	</table>
+</div>
+
+</is:logged>

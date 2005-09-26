@@ -1,0 +1,188 @@
+<core:block id="in_topicview">
+</table>
+</div>
+<br />
+<div class="k4_borderwrap">
+<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+</core:block>
+	<tr>
+		<td class="{$row_class}" colspan="2" valign="top">
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<if:if var="poster_id" noteq="0">
+					<td>
+						<if:if var="avatarenabled" eq="1"><if:if var="post_user_avatar" eq="1"><if:if var="user_viewavatars" eq="1">
+						<img src="viewfile.php?act=avatar&amp;id={$poster_id}" alt="" border="" />
+						</if:if></if:if></if:if>
+					</td>
+					</if:if>
+					<td class="smalltext" width="20%">
+						<if:if var="poster_id" greater="0">
+						<a href="member.php?id={$post_user_id}" title="{$L_PROFILE}"><strong style="color: #{$post_user_group_color};font-size:14px;{$post_user_background}">{$poster_name}</strong></a> <img src="Images/{$IMG_DIR}/Icons/{$post_user_online}_small.gif" alt="<if:if var="post_user_online" eq="online">{$L_ONLINE}<if:else />{$L_OFFLINE}</if:if>" border="0" />
+						<br />
+						<if:if var="post_user_group_nicename" noteq="">{$post_user_group_nicename}</if:if>
+						<if:if var="post_user_group_avatar" noteq="">
+						<br />
+						<img src="tmp/upload/group_avatars/{$post_user_group_avatar}" border="0" alt="{$post_user_group_nicename}" />
+						</if:if>
+						<if:else />
+						<strong><if:if var="poster_name" eq="">{$L_GUEST}<if:else />{$poster_name}</if:if></strong>
+						<br /><span class="smalltext">{$L_GUEST}</span>
+						</if:if>
+					</td>
+					<if:if var="poster_id" noteq="0">
+					<td class="smalltext" width="80%">
+						<div align="right">
+							<core:import id="post_user_ims" file="post_user_ims.html" />
+							<strong>{$L_JOINED}:</strong> <core:date format="%b %d %Y">{$post_user_created}</core:date><br />
+							<strong>{$L_POSTS}:</strong> <a href="search.php?act=find&author={$post_user_name}" title="{$L_FINDPOSTSBYUSER}">{$post_user_num_posts}</a>
+							<if:if var="user_location" noteq="">
+							<br /><strong>{$L_LOCATION}:</strong> {$post_user_location}
+							</if:if>
+							<list:sublist list="topic" id="profilefields" column="profilefields">
+							<list:item list="profilefields">
+							<br /><strong>{$title}:</strong></label>
+							{$value}
+							</list:item>
+							</list:sublist>
+						</div>
+					</td>
+					</if:if>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="{$row_class}" colspan="2" id="topic{$reply_id}" valign="top">
+			<div style="float: right" class="smalltext">
+				<core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span>
+				<if:if var="modpanel" eq="1"><a href="mod.php?act=baniprange&amp;ip={$poster_ip}" title="{$L_BANIP}"><img src="Images/{$IMG_DIR}/Icons/ban_ip.gif" alt="{$L_BANIP}" border="0" /></a></if:if>
+				<a href="viewtopic.php?act=report_post&amp;r={$reply_id}" title="{$L_REPORTPOST}"><img src="Images/{$IMG_DIR}/Icons/report_post.gif" alt="{$L_REPORTPOST}" border="0" /></a>
+			</div>
+			<div class="smalltext">
+				<strong>{$L_POSTSUBJECT}:</strong>
+				<span class="smalltext">
+				<if:if var="topic_type" eq="2">{$stickytopicprefix}<else:if var="topic_type" geq="3" />{$announcementtopicprefix}</if:if>
+				<if:if var="is_feature" eq="1">{$featuretopicprefix}</if:if>
+				<if:if var="poll" eq="1">{$polltopicprefix}</if:if>
+				</span>
+				{$name}
+				<a href="#" name="p{$reply_id}" id="p{$reply_id}"></a>
+				&nbsp;<img src="tmp/upload/posticons/{$posticon}" alt="" border="0" />
+			</div>
+			<hr noshade="noshade" size="1" />
+			
+			<!-- Body Text -->
+			<div id="reply{$reply_id}_body">{$body_text}</div>
+			<div style="text-align: right;display: none;" id="reply{$reply_id}_qebuttons"><input type="button" value="{$L_SAVE}" class="button" style="font-weight: bold;" onclick="saveQuickEdit('reply', {$reply_id}, 'reply{$reply_id}_body')" />&nbsp;<input type="button" value="X" class="button" style="font-weight: bold;color: #FF0000;" onclick="cancelQuickEdit('reply', {$reply_id}, 'reply{$reply_id}_body')" /></div>
+			<!-- / Body Text -->
+			
+			<if:if var="attachments" geq="1">
+				<maps:if var="attachments" forum="forum_id" method="can_view">
+					<!-- Attached Images -->
+					<list:sublist list="replies" id="attachment_files" column="attachment_files">
+					<list:item list="attachment_files">
+						<if:if var="is_image" eq="1">
+							<div>
+								<span class="smalltext" style="font-weight: bold;">{$L_ATTACHEDIMAGE}: {$file_name}</span>
+								<hr />
+								<img class="bbcode_img" src="viewfile.php?act=attachment&amp;id={$id}&amp;r={$reply_id}" alt="{$L_ATTACHMENT}: {$file_name}" border="0" />
+							</div>
+						</if:if>
+					<list:separator list="attachment_files"><br /><br /></list:separator>
+					</list:item>
+					</list:sublist>
+					<!-- / Attached Images -->
+				</maps:if>
+			</if:if>
+
+			<if:if var="showeditedby" eq="1">
+				<if:if var="edited_time" greater="0">
+					<!-- Edited Information -->
+						<br /><br />
+						<div class="smalltext" style="font-style: italic;">
+							{$L_EDITEDON} <core:date format="%b %d %Y">{$edited_time}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$edited_time}</core:date></span>
+							{$L_BY} <a href="member.php?id={$edited_userid}" title="{$edited_username}">{$edited_username}</a>
+						</div>
+						<br />
+					<!-- / Edited Information -->
+				</if:if>
+			</if:if>
+			
+			<if:if var="attachments" geq="1">
+				<maps:if var="attachments" forum="topic_forum_id" method="can_view">
+					<!-- Attached Files -->
+					<br /><br />
+					<fieldset>
+						<legend>{$L_ATTACHMENTS}</legend>
+						<list:sublist list="replies" id="attachment_files" column="attachment_files">
+						<list:item list="attachment_files">
+						<div style="float: right;" class="minitext">md5: {$mdfive}</div>
+						<img src="{$file_icon}" alt="{$L_ATTACHMENT}: {$file_name}" border="0" />&nbsp;<a href="viewfile.php?act=attachment&amp;id={$id}&amp;r={$reply_id}" target="_blank" title="{$L_ATTACHMENT}: {$file_name}" class="smalltext">{$file_name}</a>
+						<if:if var="modpanel" eq="1"><maps:if var="attachments" method="can_del" forum="forum_id"> - <a href="viewfile.php?act=remove_attach&amp;id={$id}&amp;r={$reply_id}" title="{$L_REMOVEATTACHMENT}" class="minitext">{$L_REMOVEATTACHMENT}</a></maps:if></if:if>
+						<list:separator list="attachment_files"><br /></list:separator>
+						</list:item>
+						</list:sublist>
+					</fieldset>
+					<!-- / Attached Files -->
+				</maps:if>
+			</if:if>
+
+			<if:if var="attachments" geq="1">
+				<maps:if var="attachments" forum="topic_forum_id" method="can_view">
+					<br /><br />
+					<!-- Attached Files -->
+					<fieldset>
+						<legend>{$L_ATTACHMENTS}</legend>
+						<list:sublist list="topic" id="attachment_files" column="attachment_files">
+						<list:item list="attachment_files">
+						<div style="float: right;" class="minitext">md5: {$mdfive}</div>
+						<img src="{$file_icon}" alt="{$L_ATTACHMENT}: {$file_name}" border="0" />&nbsp;<a href="viewfile.php?act=attachment&amp;id={$reply_id}&amp;t={$topic_id}" target="_blank" title="{$L_ATTACHMENT}: {$file_name}" class="smalltext">{$file_name}</a>
+						<list:separator list="attachment_files"><br /></list:separator>
+						</list:item>
+						</list:sublist>
+					</fieldset>
+					<!-- / Attached Files -->
+				</maps:if>
+			</if:if>
+
+			<if:if var="disable_sig" eq="0">
+			<if:if var="post_user_signature" noteq="">
+			<br /><br />
+			<if:if var="user_viewsigs" eq="1">{$signatureseparator}{$post_user_signature}</if:if>
+			</if:if>
+			</if:if>
+		</td>
+	</tr>
+	<if:if var="reply_row" eq="1">
+	<tr>
+		<td class="{$row_class}" colspan="2" height="20">
+			<div style="text-align: right">
+				<maps:if var="replies" forum="topic_forum_id" method="can_add">
+					<a href="newreply.php?id={$topic_id}&amp;r={$reply_id}" title="{$L_POSTREPLY}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/reply.gif" alt="{$L_POSTREPLY}" /></a>
+					<maps:if forum="forum_id" var="bbcode" method="can_add"><a href="newreply.php?id={$topic_id}&amp;r={$reply_id}&amp;quote=1" title="{$L_QUOTE}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/quote.gif" alt="{$L_QUOTE}" /></a></maps:if>
+				</maps:if>
+				<if:if var="post_user_id" eq="user_id">
+					<maps:if var="replies" forum="topic_forum_id" method="can_edit"><a href="<if:if var="nojs" eq="1">newreply.php?act=editreply&amp;id={$reply_id}<if:else />javascript:;</if:if>" title="{$L_EDIT}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/edit.gif" alt="{$L_EDIT}" id="edit_button_r{$reply_id}" /></a></maps:if>					
+					<maps:if var="replies" forum="topic_forum_id" method="can_del"><a href="mod.php?act=deletereply&amp;id={$reply_id}" title="{$L_DELETE}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/delete.gif" alt="{$L_DELETE}" /></a></maps:if>
+				<if:else />
+					<maps:if var="other_replies" forum="topic_forum_id" method="can_edit"><a href="<if:if var="nojs" eq="1">newreply.php?act=editreply&amp;id={$reply_id}<if:else />javascript:;</if:if>" title="{$L_EDIT}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/edit.gif" alt="{$L_EDIT}" id="edit_button_r{$reply_id}" /></a></maps:if>
+					<maps:if var="other_replies" forum="topic_forum_id" method="can_del"><a href="mod.php?act=deletereply&amp;id={$reply_id}" title="{$L_DELETE}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/delete.gif" alt="{$L_DELETE}" /></a></maps:if>
+				</if:if>
+			</div>
+			<!-- Edit DD Menu -->
+			<div class="k4_borderwrap" id="edit_menu_r{$reply_id}" style="display: none;">
+				<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+					<tr>
+						<td class="alt1" nowrap="nowrap"><a class="smalltext" href="javascript:;" title="{$L_QUICKEDIT}" onclick="quickEditPost('reply', {$reply_id}, 'reply{$reply_id}_body')">{$L_QUICKEDIT}</a></td>
+					</tr>
+					<tr>
+						<td class="alt1" nowrap="nowrap"><a class="smalltext" href="newreply.php?act=editreply&amp;id={$reply_id}" title="{$L_FULLEDIT}">{$L_FULLEDIT}</a></td>
+					</tr>
+				</table>
+			</div>
+			<script type="text/javascript">menu_init('edit_button_r{$reply_id}', 'edit_menu_r{$reply_id}');</script>
+			<!-- / Edit DD Menu -->
+		</td>
+	</tr>
+	</if:if>
