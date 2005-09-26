@@ -26,7 +26,7 @@
 *
 * @author Peter Goodman
 * @author James Logsdon
-* @version $Id: blog.php,v 1.2 2005/05/03 22:11:39 k4st Exp $
+* @version $Id: blog.php 110 2005-06-13 20:48:58Z Peter Goodman $
 * @package k42
 */
 

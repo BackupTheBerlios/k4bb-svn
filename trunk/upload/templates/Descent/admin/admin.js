@@ -1,6 +1,5 @@
 <script type="text/javascript">
-
-	// <!--
+//<![CDATA[
 
 	/**
 	* k4 Bulletin Board, admin.js
@@ -28,7 +27,7 @@
 	* SOFTWARE.
 	*
 	* @author Peter Goodman
-	* @version $Id: admin.js,v 1.1 2005/04/05 03:12:18 k4st Exp $
+	* @version $Id: admin.js 152 2005-07-14 01:37:57Z Peter Goodman $
 	* @package k42
 	*/
 
@@ -62,5 +61,5 @@
 			}
 		}
 	}
-	// -->
+//]]>
 </script>

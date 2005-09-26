@@ -1,20 +1,20 @@
 <!-- Main Navigation -->
-<div class="outset_box_small" align="right">
-	<table width="100%" cellpadding="3" cellspacing="0" border="0">
-		<tr>
-			<td align="right">
-				<a href="index.php" title="{$L_HOME}">{$L_HOME}</a> 
-				<if:if var="enableblogs" eq="1">| <a href="blogs.php" title="{$L_BLOGS}">{$L_BLOGS}</a></if:if>
-				<if:if var="enablememberlist" eq="1">| <a href="member.php?act=list&amp;start=0&amp;limit=30&amp;sort=*" title="{$L_MEMBERLIST}">{$L_MEMBERLIST}</a></if:if>
-				<if:if var="enablesearches" eq="1">| <a href="search.php" title="{$L_SEARCH}">{$L_SEARCH}</a></if:if>
-				| <a href="faq.php" title="{$L_FAQ}">{$L_FAQ}</a>
-				| <a class="nav_top" id="quicklinks_link" title="{$L_QUICKLINKS}">{$L_QUICKLINKS}</a>
-				<is:logged>| <a href="{$logout_link}" title="{$L_LOGOUT}">{$L_LOGOUT} [<strong>{$user_name}</strong>]</a></is:logged>
-				<is:unlogged>| <a href="member.php?act=register" title="{$L_REGISTER}">{$L_REGISTER}</a>
-				| <a href="member.php?act=login" title="{$L_LOGIN}">{$L_LOGIN}</a></is:unlogged>
-				<is:admin> | <a href="admin_index.php" id="admin_link" target="_blank" title="{$L_ADMINPANEL}"><strong>{$L_ADMINPANEL}</strong></a></is:admin>
-			</td>
-		</tr>
-	</table>
+<div class="outset_box_small" style="display:block;text-align: right;" id="header_menu">
+	<ul class="menu_global">
+		<li class="first"><a href="index.php" title="{$L_HOME}">{$L_HOME}</a></li>
+		<!--<if:if var="enableblogs" eq="1"><li><a href="blogs.php" title="{$L_BLOGS}">{$L_BLOGS}</a></li></if:if>-->
+		<if:if var="enablememberlist" eq="1"><li><a href="member.php?act=list&amp;start=0&amp;limit=30&amp;letter=*" title="{$L_MEMBERLIST}">{$L_MEMBERLIST}</a></li></if:if> 
+		<if:if var="enablesearches" eq="1"><li><a href="search.php" title="{$L_SEARCH}">{$L_SEARCH}</a></li></if:if>
+		<!--<li><a href="faq.php" title="{$L_FAQ}">{$L_FAQ}</a></li>-->
+		<is:logged><li><a href="member.php?act=usercp" title="{$L_USERCP}">{$L_USERCP}</a></li></is:logged>
+		<if:if var="nojs" eq="0"><li><a href="?nojs=1#quicklinks" class="nav_top" id="quicklinks_link" title="{$L_QUICKLINKS}">{$L_QUICKLINKS}</a></li></if:if>
+		<is:logged><li><a href="{$logout_link}" title="{$L_LOGOUT}">{$L_LOGOUT} [<strong>{$user_name}</strong>]</a></li></is:logged>
+		<is:unlogged><li><a href="member.php?act=register" title="{$L_REGISTER}">{$L_REGISTER}</a></li>
+		<li><a href="member.php?act=login" title="{$L_LOGIN}">{$L_LOGIN}</a></li></is:unlogged>
+		<if:if var="nojs" eq="0"><is:mod><li><a href="?nojs=1#modcp" class="nav_top" id="modpanel_link" title="{$L_MODCP}" style="font-weight: bold;">{$L_MODCP}</a></li></is:mod></if:if>
+		<is:admin><li><a href="admin.php" id="admin_link" target="_blank" title="{$L_ADMINPANEL}" style="font-weight: bold;">{$L_ADMINPANEL}</a></li></is:admin>
+	</ul>
 </div>
+<core:import id="quicklinks_menu" file="quicklinks_menu.html" />
+<core:import id="modpanel_menu" file="modpanel.html" />
 <!-- / Main Navigation -->

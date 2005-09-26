@@ -26,14 +26,518 @@
 *
 * @author Peter Goodman
 * @author Geoffrey Goodman
-* @version $Id: functions.inc.php,v 1.8 2005/05/24 20:03:44 k4st Exp $
+* @version $Id: functions.php 158 2005-07-18 02:55:30Z Peter Goodman $
 * @package k42
 */
 
 error_reporting(E_ALL);
 
 if(!defined('IN_K4')) {
+	return;
+}
+
+/**
+ * Function to get the current domain
+ */
+function get_domain() {
+//	global $_URL;
+//
+//	$domain = new FAUrl($_URL->__toString());
+//	
+//	$domain->args	= array();
+//	$domain->anchor = FALSE;
+//	$domain->scheme = FALSE;
+//	$domain->user	= FALSE;
+//	$domain->host	= FALSE;
+//	$domain->file	= FALSE;
+//
+//	$domain			= $domain->__toString();
+//
+//	$domain			= ($domain != '' && strpos('.', $domain) !== FALSE) ? $domain : '/';
+//
+//	return $domain;
+
+	return '/';
+}
+
+/**
+ * Get Profile Field info for iterators such as topics and replies
+ */
+function get_profile_fields($fields, $temp) {
+	foreach($fields as $field) {
+				
+		if($field['display_topic'] == 1) {
+
+			if(isset($temp['post_user_'. $field['name']]) && $temp['post_user_'. $field['name']] != '') {
+				switch($field['inputtype']) {
+					default:
+					case 'text':
+					case 'textarea':
+					case 'select': {
+						$field['value']		= $temp['post_user_'. $field['name']];
+						break;
+					}
+					case 'multiselect':
+					case 'radio':
+					case 'check': {
+						$result				= unserialize($temp['post_user_'. $field['name']]);
+						$field['value']		= implode(", ", (!$result ? array() : $result));
+						break;
+					}
+				}
+				$fields[] = $field;
+			}
+		}
+	}
+}
+
+/**
+ * Standard no permissions error page.. used often (implemented late, so might not be widespread
+ */
+function no_perms_error(&$request, $section = 'content') {
+	
+	if(!USE_AJAX) {
+		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
+		$request['template']->setFile($section, 'login_form.html');
+		$request['template']->setVisibility('no_perms', TRUE);
+	} else {
+		return ajax_message('L_YOUNEEDPERMS');
+	}
+}
+
+/**
+ * Rudimentry function to see if AJAX should be supported
+ * Most of this was from the PHP manual comments
+ */
+function allow_AJAX() {
+	
+	$use_ajax = FALSE;
+	
+	if(isset($_COOKIE['k4_canjs']) && intval($_COOKIE['k4_canjs']) == 0)
+		return FALSE;
+
+	$browsers = array ('MSIE','OPERA','MOZILLA','NETSCAPE','FIREFOX','SAFARI',);
+	
+	foreach ($browsers as $browser) {
+		$s			= strpos(strtoupper($_SERVER['HTTP_USER_AGENT']), $browser);
+		$f			= $s + strlen($browser);
+		$version	= substr($_SERVER['HTTP_USER_AGENT'], $f, 5);
+		$version	= preg_replace('/[^0-9,.]/','', $version);
+
+		if (strpos(strtoupper($_SERVER['HTTP_USER_AGENT']), $browser)) {
+			switch($browser) {
+				case 'MSIE':
+				case 'OPERA': {
+					$use_ajax = (intval($version) >= 5) ? TRUE : FALSE;
+					break;
+				}
+				case 'MOZILLA': {
+					$use_ajax = (floatval($version) >= 1.3) ? TRUE : FALSE;
+					break;
+				}
+				case 'NETSCAPE': {
+					$use_ajax = (intval($version) >= 6) ? TRUE : FALSE;
+					break;
+				}
+				case 'FIREFOX':
+				case 'SAFARI': {
+					$use_ajax = TRUE;
+					break;
+				}
+			}
+		}
+	}
+	
+	if(!isset($_REQUEST['use_ajax']) || intval($_REQUEST['use_ajax']) == 0) {
+		$use_ajax = FALSE;
+	}
+
+	return $use_ajax;
+}
+
+/**
+ * Rudimentry function to see if WYSIWYG editing should be supported
+ * Most of this was from the PHP manual comments
+ */
+function allow_WYSIWYG() {
+	
+	$use_wysiwyg = FALSE;
+	
+	$browsers = array ('MSIE','OPERA','MOZILLA','NETSCAPE','FIREFOX','SAFARI',);
+	
+	foreach ($browsers as $browser) {
+		$s			= strpos(strtoupper($_SERVER['HTTP_USER_AGENT']), $browser);
+		$f			= $s + strlen($browser);
+		$version	= substr($_SERVER['HTTP_USER_AGENT'], $f, 5);
+		$version	= preg_replace('/[^0-9,.]/','', $version);
+
+		if (strpos(strtoupper($_SERVER['HTTP_USER_AGENT']), $browser)) {
+			switch($browser) {
+				case 'MSIE': {
+					$use_wysiwyg = (floatval($version) >= 4) ? TRUE : FALSE;
+					break;
+				}
+				case 'OPERA': {
+					$use_wysiwyg = FALSE;
+					break;
+				}
+				case 'MOZILLA': {
+					$use_wysiwyg = (floatval($version) >= 1.3) ? TRUE : FALSE;
+					break;
+				}
+				case 'NETSCAPE': {
+					$use_wysiwyg = (intval($version) >= 6) ? TRUE : FALSE;
+					break;
+				}
+				case 'FIREFOX':
+				case 'SAFARI': {
+					$use_wysiwyg = TRUE;
+					break;
+				}
+			}
+		}
+	}
+
+	return $use_wysiwyg;
+}
+
+
+/**
+ * Send plain text to the browser for javascript to interpret
+ */
+function AJAX_message($lang_element, $prefix = 'ERROR') {
+	global $_LANG;
+	
+	if(is_a($lang_element, 'K4LanguageElement')) {
+		echo $prefix . $lang_element->__toString();
+	} else if(isset($_LANG[$lang_element])) {
+		echo $prefix . $_LANG[$lang_element];
+	}
+
 	exit;
+}
+
+/**
+ * Get a users IP
+ */
+function get_ip() {
+
+	$ip = '';
+	if (getenv("HTTP_CLIENT_IP") && strcasecmp(getenv("HTTP_CLIENT_IP"), "unknown")) {
+		$ip		= getenv("HTTP_CLIENT_IP");
+	} else if (getenv("HTTP_X_FORWARDED_FOR") && strcasecmp(getenv("HTTP_X_FORWARDED_FOR"), "unknown")) {
+		$ip		= getenv("HTTP_X_FORWARDED_FOR");
+	} else if (getenv("REMOTE_ADDR") && strcasecmp(getenv("REMOTE_ADDR"), "unknown")) {
+		$ip		= getenv("REMOTE_ADDR");
+	} else if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], "unknown")) {
+		$ip		= $_SERVER['REMOTE_ADDR'];
+	}
+	
+	return $ip;
+}
+
+/**
+ * Get cookies that hold information about the last viewed time of forums
+ */
+function get_forum_cookies() {
+	
+	$forums			= array();
+
+	if(isset($_COOKIE[K4FORUMINFO])) {
+		$cookieinfo		= explode(',', $_COOKIE[K4FORUMINFO]);
+
+		$count			= count($cookieinfo);
+		$forums			= array();
+		
+		if($count % 2 == 0) {
+			for($i = 0; $i < $count; $i++) {
+				$forums[$cookieinfo[$i]] = $cookieinfo[$i+1];
+				$i++;
+			}
+		}
+	}
+
+	return $forums;
+}
+
+/**
+ * Get cookies that hold topic viewed information
+ */
+function get_topic_cookies() {
+	$topics			= array();
+
+	if(isset($_COOKIE[K4TOPICINFO])) {
+		$cookieinfo		= explode(',', $_COOKIE[K4TOPICINFO]);
+
+		$count			= count($cookieinfo);
+		$forums			= array();
+		
+		if($count % 2 == 0) {
+			for($i = 0; $i < $count; $i++) {
+				$topics[$cookieinfo[$i]] = $cookieinfo[$i+1];
+				$i++;
+			}
+		}
+	}
+
+	return $topics;
+}
+
+/**
+ * Get the current URL 
+ */
+function current_url($ofk4 = FALSE) {
+	$url			= 'http';
+
+	// is it secure?
+	if(strpos($_SERVER['SERVER_PROTOCOL'], 'HTTPS') !== FALSE)
+		$url		.= 's';
+	
+	$right_host		= $_SERVER['HTTP_HOST'] != '' ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
+	
+	$pos			= strpos($right_host, '.');
+	$www			= substr($right_host, 0, ($pos === FALSE ? 0 : $pos));
+	
+	if($www == 'wwww')
+		$right_host	= substr($right_host, $pos);
+
+	$url			.= '://'. $right_host . (!$ofk4 ? $_SERVER['SCRIPT_NAME'] : '');
+	
+	if(!$ofk4) {
+		if($_SERVER['QUERY_STRING'] > ' ') {
+			$url		.= '?'. $_SERVER['QUERY_STRING'];
+		}
+	}
+
+	return $url;
+}
+
+/**
+ * Replace all acronyms in some text with the acronyms
+ */
+function replace_acronyms(&$text) {
+	global $_ACRONYMS;
+	
+	if(is_array($_ACRONYMS) && !empty($_ACRONYMS)) {
+		
+		$text			= ' '. $text .' ';
+
+		foreach($_ACRONYMS as $acronym => $meaning) {
+			$text		= preg_replace('~(\s|\r|\n)('. preg_quote($acronym) .')(\s|\r|\n)~i', '\\1<acronym title="'. $meaning .'">\\2</acronym>\\3', $text);
+		}
+
+		$text			= trim($text);
+	}
+}
+
+/**
+ * Replace all word censors in some text
+ */
+function replace_censors(&$text, $override = FALSE) {
+	global $_CENSORS;
+	
+	if(!$override && intval(@$_SESSION['user']->get('viewcensors')) == 0 && $_SESSION['user']->isMember())
+		return TRUE;
+
+	if(is_array($_CENSORS) && !empty($_CENSORS)) {
+		
+		$text			= ' '. $text .' ';
+
+		foreach($_CENSORS as $censor) {
+			// loose
+			if($censor['method'] == 1) {
+				
+				$text	= preg_replace('~(\b|\s)'. $censor['word'] .'(\b|\s)~i', '\\1'. $censor['replacement'] .'\\2', $text);
+
+			// exact
+			} else {
+				$text	= preg_replace('~\s'. $censor['word'] .'\s~i', $censor['replacement'], $text);
+			}
+		}
+
+		$text			= trim($text);
+	}
+}
+
+/**
+ * get the extension on a file
+ */
+function file_extension($filename) {
+	$parts		= explode(".", $filename);
+	$ext		= trim(strtolower(@$parts[count($parts)-1]));
+
+	return $ext;
+}
+
+/**
+ * Replacement for file_get_contents() in older versions of php
+ */
+if(!function_exists('file_get_contents')) {
+	function file_get_contents($filename) {
+		$fp			= fopen($filename, "rb");
+		$contents	= fread($fp, filesize($filename));
+
+		return $contents;
+	}
+}
+
+/**
+ * stupdily persistent function to chmod a file
+ * @param string filename 		The absolute path to the file
+ * @param int mode				The file permissions mode
+ */
+function __chmod($filename, $mode) {
+	
+	global $_CONFIG;
+	
+	@chmod($filename, $mode);
+
+	// do we need to chmod the directory?
+	if(!is_writeable(dirname($filename)) && !is_dir($filename)) {
+		__chmod(dirname($filename), $mode);
+	}
+	
+	// does the file exist?
+	if(file_exists($filename)) {
+
+		if($_CONFIG['ftp']['use_ftp']) {
+			
+			// try to connect
+			$conn				= ftp_connect($_SERVER['SERVER_ADDR']);
+			
+			if(is_resource($conn)) {
+				
+				// log in to ftp
+				if(ftp_login($conn, $_CONFIG['ftp']['username'], $_CONFIG['ftp']['password'])) {
+					
+					if(phpversion() < 5) {
+						
+						// this should always fail, but try anyway
+						if(!@ftp_site($conn, 'CHMOD 0777 '. $filename)) {
+
+							if(!@ftp_site($conn, 'CHMOD 0777 '. get_ftp_root($conn, dirname($filename)) . basename($filename)))
+								@chmod($filename, $mode);
+						}
+					
+					} else {
+						
+						@ftp_chmod($conn, $mode, $filename);
+
+					}
+				} else {
+					@chmod($filename, $mode);
+				}
+
+				ftp_close($conn);
+			
+			} else {
+				@chmod($filename, $mode);
+			}
+		} else {
+			@chmod($filename, $mode);
+		}
+	}
+}
+
+/**
+ * Find the FTP root directory for the file server
+ * @param ftp_conn object		FTP Connection
+ * @param ftp_root string		Path to a directory
+ *
+ * @author James Logsdon
+ */
+function get_ftp_root ( &$ftp_conn, $ftp_root ) {
+
+	if ( $ftp_root === null ) $DOC_ROOT = $_SERVER['DOCUMENT_ROOT'];
+    else $DOC_ROOT = $root;
+
+    $DOC_ROOT = str_replace ( '\\', '/', $DOC_ROOT ); // For the windows people
+
+    $ftp_dirs = ftp_nlist ( $ftp_conn, '/' );
+
+    $docs = explode ( '/', $DOC_ROOT );
+    $notInIt = array ( );
+    foreach ( $docs AS $key=>$dir )
+    {
+        if ( !in_array ( $dir, $ftp_dirs ) )
+        {
+            $notInIt[$key] = $dir;
+            unset ( $docs[$key] );
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    $newRoot = str_replace ( implode ( '/', $notInIt ), '', $DOC_ROOT ) .'/';
+
+    return $newRoot;
+
+}
+
+/**
+ * Function to get the ftp directory for a file
+ */
+function ftp_safe_dir($directory) {
+	$directory		= str_replace('\\', '/', $directory);
+
+	$folders	= explode('/', $directory);
+	
+	for($i = 0; $i < count($folders); $i++) {
+		if($folders[$i] != 'public_html' && $folders[$i] != 'www') {
+			unset($folders[$i]);
+		} else {
+			break;
+		}
+	}
+	
+	$folders	= array_values($folders);
+
+	$directory	= '/'. implode('/', $folders);
+
+	return $directory;
+}
+
+/**
+ * Function to get the files out of a directory
+ */
+function get_files($directory, $dirs_only = FALSE, $numerical = FALSE, $exceptions = array()) {
+	$dir		= dir($directory);
+	
+	$files		= array();
+	
+	while(FALSE !== ($file = $dir->read())) {
+		if($file != '.' && $file != '..' && $file != '.svn' && $files != 'CVS' && $file != 'index.html' && !in_array($file, $exceptions)) {
+			
+			if( ($dirs_only && is_dir($directory .'/'. $file)) || (!$dirs_only) ) {
+				$files[]	= !$numerical ? array('name' => $file) : $file;
+			}
+		}
+	}
+	$dir->close();
+
+	return $files;
+}
+
+/**
+ * Function to get a parent directory
+ */
+if(!function_exists('one_dir_up')) {
+	function one_dir_up($dir) {
+
+		$dir		= str_replace('\\', '/', $dir);
+
+		$folders	= explode('/', $dir);
+
+		unset($folders[count($folders)-1]);
+		
+		$folders	= array_values($folders);
+
+		$dir		= implode('/', $folders);
+		
+		return $dir;
+	}
 }
 
 /**
@@ -45,7 +549,7 @@ function force_usergroups($user) {
 	$groups = array();
 	
 	/* If the usergroups variable is not equal to nothing */
-	if($user['usergroups'] != '') {
+	if(isset($user['usergroups']) && $user['usergroups'] != '') {
 		
 		/* Look for something that identifies the scope of this serialized array */
 		preg_match("~\{(.*?)\}~ise", $user['usergroups'], $matches);
@@ -99,10 +603,12 @@ function is_in_group($my_groups, $groups, $my_perms) {
 
 	$my_groups			= !is_array($my_groups) || empty($my_groups) ? @unserialize($my_groups) : $my_groups;
 	$groups				= !is_array($groups) || empty($groups) ? @unserialize($groups) : $groups;
-
-	foreach($my_groups as $group_id)
-		if(in_array($group_id, $groups))
-			return TRUE;
+	
+	if(is_array($my_groups) && is_array($groups) && !empty($my_groups)) {
+		foreach($my_groups as $group_id)
+			if(in_array($group_id, $groups))
+				return TRUE;
+	}
 
 	return FALSE;
 }
@@ -115,7 +621,8 @@ function is_moderator($user, $forum) {
 	
 	if(is_a($user, 'FAUser')) {
 		$user		= $user->getInfoArray();
-	} else if(!is_array($user)) {
+	} 
+	if(!is_array($user)) {
 		trigger_error('Invalid $user call for is_moderator.', E_USER_ERROR);
 	}
 	
@@ -124,18 +631,8 @@ function is_moderator($user, $forum) {
 
 	$result				= @unserialize($forum['moderating_groups']);
 	$moderators			= !$result ? force_usergroups($forum['moderating_groups']) : $result;
-				
-	/* Make _sure_ that the moderating groups for this forum are set */
-	//if(!is_array($moderators) || empty($moderators)) {
-	//	if(isset($_USERGROUPS[6]) && $_USERGROUPS[6]['min_perm'] >= ADMIN) {
-	//		$moderators		= array(6);
-	//	} else {
-	//		foreach($_USERGROUPS as $g)
-	//			if($g['min_perm'] >= ADMIN)
-	//				$moderators	= array($g['id']);
-	//	}
-	//}
 	
+					
 	$groups				= array();
 
 	foreach($moderators as $g) {
@@ -151,6 +648,16 @@ function is_moderator($user, $forum) {
 		/* Do we toggle our moderator's panel? */
 		if(is_in_group($my_groups, $groups, $user['perms'])) {
 			return TRUE;
+		}
+	}
+
+	if($forum['moderating_users'] != '') {
+		$users					= unserialize($forum['moderating_users']);
+		if(is_array($users)) {
+			foreach($users as $user_id => $username) {
+				if($user['name'] == $username && $user['id'] == $user_id)
+					return TRUE;
+			}
 		}
 	}
 
@@ -179,14 +686,16 @@ function rewrite_file($filename, $time_interval) {
  * Get's the referring filename
  */
 function referer() {
+	
+	$file			= isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'index.php';
 
-	$url			= &new FAUrl($_SERVER['HTTP_REFERER']);
+	$url			= new FAUrl($file);
 	$url->scheme	= FALSE;
 	$url->user		= FALSE;
 	$url->host		= FALSE;
 	$url->path		= FALSE;
 
-	$url			= substr($url->__toString(), 1);
+	$url			= $url->__toString();
 	
 	return $url;
 }
@@ -326,7 +835,7 @@ function bbtime($timestamp = FALSE) {
 	if(!$timestamp)
 		$timestamp = time();
 
-	if($_SESSION['user']->isMember())
+	if(isset($_SESSION['user']) && $_SESSION['user']->isMember())
 		return $timestamp + ($_SESSION['user']->get('timezone') * 3600);
 	else
 		return $timestamp;
@@ -338,19 +847,26 @@ function bbtime($timestamp = FALSE) {
  */
 function paginate($count, $first, $prev, $separator, $next, $last, $limit, $id) {
 	
-	global $_URL;
+	global $_URL, $_LANG;
 	
-	$page				= isset($_URL->args['page']) && ctype_digit($_URL->args['page']) ? intval($_URL->args['page']) : 1;
-	$limit				= isset($_URL->args['limit']) && ctype_digit($_URL->args['limit']) ? intval($_URL->args['limit']) : $limit;
+	$page				= isset($_REQUEST['page']) && ctype_digit($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
+	$limit				= isset($_REQUEST['limit']) && ctype_digit($_REQUEST['limit']) ? intval($_REQUEST['limit']) : $limit;
 	
 	$url				= new FAUrl($_URL->__toString());
+
+	$url->anchor		= FALSE;
+	$url->host			= FALSE;
+	$url->user			= FALSE;
+	$url->scheme		= FALSE;
+	$url->path			= FALSE;
+
 	$url->file			= 'viewtopic.php';
 	$url->args['id']	= intval($id);
 
 	$before				= 3;
 	$after				= 3;
 	
-	$num_pages			= ceil($count/$limit);
+	$num_pages			= ceil($count / $limit);
 
 	$page_start			= ($page - $before) < 1 ? 1 : $page - $before;
 	$page_end			= ($page + $after) > $num_pages ? $num_pages : $page + $after;
@@ -360,7 +876,7 @@ function paginate($count, $first, $prev, $separator, $next, $last, $limit, $id) 
 
 	if($count > $limit) {
 		
-		$str = '<div style="float: right;"><table celpadding="0" cellspacing="1" border="0" class="forum_content"><tr>';
+		$str = '<div style="float: right;"><table celpadding="0" cellspacing="'. K4_TABLE_CELLSPACING .'" border="0" class="pagination"><tr>';
 		
 		if($page > 1 ) {
 			

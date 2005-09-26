@@ -1,41 +1,41 @@
 <is:admin>
 <form:form id="update_category" name="update_category" action="admin.php?act=categories_update" method="post" enctype="multipart/form-data">
-<input type="hidden" name="id" value="{$category_id}" />
-<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
-	<tr class="thead">
-		<td colspan="2">{$L_EDITCATEGORY}</td>
-	</tr>
-	<tr class="alt1">
-		<td width="30%"><strong>{$L_NAME}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('category_name');</script>
-			<input type="text" name="name" id="name" value="{$category_name}" maxlength="255" class="inputbox" tabindex="1" />
-			<form:error id="name_error" for="name" setclass="inputfailed" regex=".+">{$L_INSERTCATNAME}</form:error>
-		</td>
-	</tr>
-	<tr class="alt2">
-		<td width="30%"><strong>{$L_DESCRIPTION}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('category_description');</script>
-			<textarea name="description" id="description" rows="2" style="width: 80%;" class="inputbox" tabindex="2">{$category_description}</textarea>
-			<form:error id="description_error" for="description" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTCATDESC}</form:error>
-		</td>
-	</tr>
-	<tr class="alt1">
-		<td width="30%"><strong>{$L_ORDER}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('category_order');</script>
-			<input type="text" name="row_order" id="row_order" value="{$category_row_order}" maxlength="5" size="3" class="inputbox" tabindex="3" />
-			<form:error id="row_order_error" for="row_order" setclass="inputfailed" regex=".+">{$L_INSERTCATORDER}</form:error>
-			<form:error id="row_order_num_error" for="row_order" setclass="inputfailed" regex="([0-9])+">{$L_INSERTCATORDERNUM}</form:error>
-		</td>
-	</tr>
-	<tr class="tcat">
-		<td colspan="2">
-			<input type="submit" value="{$L_SAVE}" class="button" />
-			<input type="reset" value="{$L_RESET}" class="button" />
-		</td>
-	</tr>
-</table>
+<input type="hidden" name="id" value="{$category_category_id}" />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_EDITCATEGORY}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" width="30%"><strong>{$L_NAME}:</strong></td>
+			<td class="alt1">
+				<script type="text/javascript">doHelpButton('category_name');</script>
+				<input type="text" name="name" id="name" value="{$category_name}" maxlength="255" class="inputbox" tabindex="1" />
+				<form:error id="name_error" for="name" setclass="inputfailed" regex=".+">{$L_INSERTCATNAME}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt3" width="30%"><strong>{$L_DESCRIPTION}:</strong></td>
+			<td class="alt3">
+				<script type="text/javascript">doHelpButton('category_description');</script>
+				<textarea name="description" id="description" rows="2" style="width: 80%;" class="inputbox" tabindex="2">{$category_description}</textarea>
+				<form:error id="description_error" for="description" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTCATDESC}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="30%"><strong>{$L_ORDER}:</strong></td>
+			<td class="alt1">
+				<script type="text/javascript">doHelpButton('category_order');</script>
+				<input type="text" name="row_order" id="row_order" value="{$category_row_order}" maxlength="5" size="3" class="inputbox" tabindex="3" />
+				<form:error id="row_order_error" for="row_order" setclass="inputfailed" regex=".+">{$L_INSERTCATORDER}</form:error>
+				<form:error id="row_order_num_error" for="row_order" setclass="inputfailed" regex="([0-9])+">{$L_INSERTCATORDERNUM}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" colspan="2">
+				<input type="submit" value="{$L_SAVE}" class="button" />
+				<input type="reset" value="{$L_RESET}" class="button" />
+			</td>
+		</tr>
+	</table>
+</div>
 </form:form>
 </is:admin>

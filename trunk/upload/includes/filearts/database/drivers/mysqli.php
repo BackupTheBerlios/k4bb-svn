@@ -26,7 +26,7 @@
 *
 * @author Geoffrey Goodman
 * @author Peter Goodman
-* @version $Id: mysqli.php,v 1.1 2005/05/26 20:30:52 ggoodman Exp $
+* @version $Id: mysqli.php 147 2005-07-09 17:12:40Z Peter Goodman $
 * @package k42
 */
 
@@ -47,7 +47,8 @@ class MysqliResultIterator extends FADBResult {
 	}
 
 	function &current() {
-		return $this->current;
+		$current = $this->current;
+		return $current;
 	}
 
 	function hasNext() {
@@ -59,16 +60,23 @@ class MysqliResultIterator extends FADBResult {
 	}
 
 	function &next() {
+		$ret = FALSE;
 		if ($this->hasNext()) {
 			$this->current = mysqli_fetch_array($this->id, $this->mode);
 			$this->row++;
 
-			return $this->current();
+			$ret = $this->current();
 		}
+		return $ret;
 	}
 	
 	function free() {
 		return mysqli_free_result($this->id);
+	}
+
+	function seek($offset) {
+		mysqli_data_seek($this->id, $offset);
+		return TRUE;
 	}
 
 	function numRows() {
@@ -76,9 +84,10 @@ class MysqliResultIterator extends FADBResult {
 	}
 
 	function reset() {
-		if ($this->row > 0)
-			mysqli_data_seek($this->id, 0);
-
+		if ($this->row >= 0)
+			$this->seek(0);
+		
+		$this->current = NULL;
 		$this->row = -1;
 
 		return TRUE;
@@ -132,8 +141,8 @@ class MysqliConnection extends FADBConnection {
 	}
 
 	function &prepareStatement($sql) {
-		return new MySQLiStatement($sql, $this);
-		//return $this->createStatement($sql, &$this);
+		$ret = $this->createStatement($sql, $this);
+		return $ret;
 	}
 
 	function executeUpdate($stmt) {
@@ -167,7 +176,7 @@ class MysqliConnection extends FADBConnection {
 		return $result;
 	}
 
-	function getInsertId() {
+	function getInsertId($table = FALSE, $column = FALSE) {
 		return mysqli_insert_id($this->link);
 	}
 
@@ -178,13 +187,20 @@ class MysqliConnection extends FADBConnection {
 	function quote($value) {
 		return mysqli_escape_string($this->link, $value);
 	}
+
+	function createTemporary($table, $original = FALSE) {
+		$this->executeUpdate("CREATE TEMPORARY TABLE ". $table);
+	}
+
 	function alterTable($table, $stmt) {
 		$this->num_queries++;
 		$this->executeUpdate("ALTER TABLE $table $stmt");
 	}
+
 	function beginTransaction() {
 		mysqli_autocommit($this->link, FALSE);
 	}
+
 	function commitTransaction() {
 		mysqli_commit($this->link);
 	}

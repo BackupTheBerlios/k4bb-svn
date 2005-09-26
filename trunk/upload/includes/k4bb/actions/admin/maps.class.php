@@ -27,86 +27,45 @@
 * @author Peter Goodman
 * @author Geoffrey Goodman
 * @author James Logsdon
-* @version $Id: maps.class.php,v 1.9 2005/05/24 20:02:19 k4st Exp $
+* @version $Id: maps.class.php 149 2005-07-12 14:17:49Z Peter Goodman $
 * @package k42
 */
 
 error_reporting(E_ALL);
 
 if(!defined('IN_K4')) {
-	exit;
+	return;
 }
 
 class AdminMapsGui extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
-			$maps	= &new MAPSIterator($request['dba'], $request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE row_level = 1 ORDER BY row_left ASC"));
-			$request['template']->setList('maps_list', $maps);
-			
-			$request['template']->setFile('content', 'admin.html');
-			$request['template']->setFile('admin_panel', 'maps_tree.html');
-		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
-		}
-
-		return TRUE;
-	}
-}
-
-class AdminMapsInherit extends FAAction {
-	function execute(&$request) {		
-
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
-
-			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
-				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDMAPID'), 'content', FALSE);
-				return $action->execute($request);
-			}
-
-			$map	= $request['dba']->getRow("SELECT * FROM ". K4MAPS ." WHERE id = ". intval($_REQUEST['id']));			
-			
-			if(!is_array($map) || empty($map)) {
-				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDMAPID'), 'content', FALSE);
-				return $action->execute($request);
-			}
-			
-			if(isset($_REQUEST['inherit'])) {
-				if($_REQUEST['inherit'] == 'true') {
-					
-					$request['dba']->executeUpdate("UPDATE ". K4MAPS ." SET inherit = 1 WHERE id = ". $map['id']);
-
-					$action = new K4InformationAction(new K4LanguageElement('L_INHERITEDMAPS'), 'content', FALSE, 'admin.php?act=permissions_gui', 3);
-					return $action->execute($request);
-				} else if($_REQUEST['inherit'] == 'false') {
-					
-					$request['dba']->executeUpdate("UPDATE ". K4MAPS ." SET inherit = 0 WHERE id = ". $map['id']);
-
-					$action = new K4InformationAction(new K4LanguageElement('L_UNINHERITEDMAPS'), 'content', FALSE, 'admin.php?act=permissions_gui', 3);
-
-
-					return $action->execute($request);
-				} else {
-					$action = new K4InformationAction(new K4LanguageElement('L_MUSTSETINHERITOPTION'), 'content', TRUE);
-
-					return $action->execute($request);
+			/* Get the parent id's */
+			$parents = array();
+			foreach($_COOKIE as $key => $val) {
+				if(strpos($key, 'mapsgui') !== FALSE) {
+					$parents[] = intval($_COOKIE[$key]);
 				}
-			} else {
-				$action = new K4InformationAction(new K4LanguageElement('L_MUSTSETINHERITOPTION'), 'content', TRUE);
-
-				return $action->execute($request);
 			}
+						
+			$all_maps = array();
+
+			$maps = &$request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE row_level = 1 AND (varname <> 'forums' AND varname <> 'categories') ORDER BY name ASC");
+			
+			get_recursive_maps($request, $all_maps, $parents, $maps, 1);
+			
+			$all_maps = &new FAArrayIterator($all_maps);
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_PERMISSIONS');
+			$request['template']->setVar('options_on', '_on');
+			
+			$request['template']->setFile('sidebar_menu', 'menus/options.html');
+			$request['template']->setList('maps_list', $all_maps);
+			$request['template']->setFile('content', 'maps_tree.html');
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
-		}
-
-		if(!@touch(CACHE_FILE, time()-86460)) {
-			@unlink(CACHE_FILE);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -116,7 +75,7 @@ class AdminMapsInherit extends FAAction {
 class AdminMapsUpdate extends FAAction {
 	function execute(&$request) {		
 
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 
 			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDMAPID'), 'content', FALSE);
@@ -130,28 +89,26 @@ class AdminMapsUpdate extends FAAction {
 				return $action->execute($request);
 			}
 			
-			$stmt	= &$request['dba']->prepareStatement("UPDATE ". K4MAPS ." SET can_view=?,can_add=?,can_edit=?,can_del=? WHERE id=? OR (row_left > ? AND row_right < ? AND inherit = 1)");
+			$stmt	= &$request['dba']->prepareStatement("UPDATE ". K4MAPS ." SET can_view=?,can_add=?,can_edit=?,can_del=? WHERE id=?");
 			
-			$stmt->setInt(1, @$_REQUEST['can_view']);
-			$stmt->setInt(2, @$_REQUEST['can_add']);
-			$stmt->setInt(3, @$_REQUEST['can_edit']);
-			$stmt->setInt(4, @$_REQUEST['can_del']);
+			$stmt->setInt(1, $_REQUEST['can_view']);
+			$stmt->setInt(2, $_REQUEST['can_add']);
+			$stmt->setInt(3, $_REQUEST['can_edit']);
+			$stmt->setInt(4, $_REQUEST['can_del']);
 			$stmt->setInt(5, $map['id']);
-			$stmt->setInt(6, $map['row_left']);
-			$stmt->setInt(7, $map['row_right']);
 
 			$stmt->executeUpdate();
-
+			
+			reset_cache(CACHE_FILE);
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_PERMISSIONS');
+			$request['template']->setVar('options_on', '_on');
+			
+			$request['template']->setFile('sidebar_menu', 'menus/options.html');
 			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDMAPS'), 'content', FALSE, 'admin.php?act=permissions_gui', 3);
 			return $action->execute($request);
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
-		}
-
-		if(!@touch(CACHE_FILE, time()-86460)) {
-			@unlink(CACHE_FILE);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -161,7 +118,7 @@ class AdminMapsUpdate extends FAAction {
 class AdminMapsAddNode extends FAAction {
 	function execute(&$request) {		
 
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 
 			if(!isset($_REQUEST['id'])) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDMAPID'), 'content', FALSE);
@@ -178,128 +135,143 @@ class AdminMapsAddNode extends FAAction {
 				}
 			}
 			
-			$request['template']->setFile('content', 'admin.html');
-			$request['template']->setFile('admin_panel', 'maps_addnew.html');
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_PERMISSIONS');
+			$request['template']->setVar('options_on', '_on');
+			
+			$request['template']->setFile('sidebar_menu', 'menus/options.html');
+			$request['template']->setFile('content', 'maps_addnew.html');
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
 	}
 }
 
-class AdminInsertMap {
 
-	var $dba;
+class AdminMapsInsertNode extends FAAction {
+	function execute(&$request) {		
 
-	function AdminInsertMap(&$dba) {
-
-		$this->dba		= &$dba;
-	}
-	function getNumOnLevel($row_left, $row_right, $level) {
-		return $this->dba->GetValue("SELECT COUNT(*) FROM ". K4MAPS ." WHERE row_left > $row_left AND row_right < $row_right AND row_level = $level");
-	}
-	function insertNode($info, $category_id = FALSE, $forum_id = FALSE, $group_id = FALSE, $user_id = FALSE) {
-		
-		/**
-		 * Error checking on request fields 
-		 */
-		if(!isset($info['parent_id']))
-			return 'L_INVALIDMAPID';
-		
-		if(!isset($info['varname']))
-			return 'L_MAPSNEEDVARNAME';
-
-		if(!isset($info['name']))
-			return 'L_MAPSNEEDNAME';
-		
-		/**
-		 * Start building info for the queries
-		 */
-
-		/* Get the last node to the furthest right in the tree */
-		$last_node	= $this->dba->GetRow("SELECT * FROM ". K4MAPS ." WHERE row_level = 1 ORDER BY row_right DESC LIMIT 1");
-
-		$level		= 1;
-		
-		/* Is this a top level node? */
-		if(intval($info['parent_id']) == 0) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
-			$left			= $last_node['row_right']+1;
-			$level			= 1;
-			$parent			= array('category_id' => intval($category_id), 'forum_id' => intval($forum_id), 'group_id' => intval($group_id), 'user_id' => intval($user_id));
+			/**
+			 * Error checking on request fields 
+			 */
+			if(!isset($_REQUEST['parent_id'])) {
+				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDMAPID'), 'content', FALSE);
+				return $action->execute($request);
+			}
 			
-			$parent_id		= 0;
+			if(!isset($_REQUEST['varname'])) {
+				$action = new K4InformationAction(new K4LanguageElement('L_MAPSNEEDVARNAME'), 'content', FALSE);
+				return $action->execute($request);
+			}
+
+			if(!isset($_REQUEST['name'])) {
+				$action = new K4InformationAction(new K4LanguageElement('L_MAPSNEEDNAME'), 'content', FALSE);
+				return $action->execute($request);
+			}
+			
+			/**
+			 * Start building info for the queries
+			 */
+
+			$level		= 1;
+			
+			/* Is this a top level node? */
+			if(intval($_REQUEST['parent_id']) == 0) {
+				$parent			= array('id'=> 0,'category_id' => 0, 'forum_id' => 0, 'group_id' => 0, 'user_id' => 0);
+					
+			/* If we are actually dealing with a parent node */
+			} else if(intval($_REQUEST['parent_id']) > 0) {
 				
-		/* If we are actually dealing with a parent node */
-		} else if(intval($info['parent_id']) > 0) {
-			
-			/* Get the parent node */
-			$parent			= $this->dba->GetRow("SELECT * FROM ". K4MAPS ." WHERE id = ". intval($info['parent_id']));
-			
-			/* Check if the parent node exists */
-			if(!is_array($parent) || empty($parent)) {
-				return 'L_INVALIDMAPID';
-			}
-			/* Find out how many nodes are on the current level */
-			$num_on_level	= $this->getNumOnLevel($parent['row_left'], $parent['row_right'], $parent['row_level']+1);
-			
-			/* If there are more than 1 nodes on the current level */
-			if($num_on_level > 0) {
-				$left			= $parent['row_right'];
+				/* Get the parent node */
+				$parent			= $request['dba']->GetRow("SELECT * FROM ". K4MAPS ." WHERE id = ". intval($_REQUEST['parent_id']));
+				
+				/* Check if the parent node exists */
+				if(!is_array($parent) || empty($parent)) {
+					$action = new K4InformationAction(new K4LanguageElement('L_INVALIDMAPID'), 'content', FALSE);
+					return $action->execute($request);
+				}
+				
+				/* Set this nodes level */
+				$level			= $parent['row_level']+1;
 			} else {
-				$left			= $parent['row_left'] + 1;
+				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDMAPID'), 'content', FALSE);
+				return $action->execute($request);
 			}
 
-			$parent_id			= $parent['id'];
+			/**
+			 * Build the queries
+			 */
+
+			/* Prepare the queries */
+			$insert				= &$request['dba']->prepareStatement("INSERT INTO ". K4MAPS ." (row_level,name,varname,category_id,forum_id,user_id,group_id,can_view,can_add,can_edit,can_del,value,parent_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			
-			/* Should we need to reset some of the $parent values? */
-			$parent['category_id']	= !$category_id ? $parent['category_id'] : intval($category_id);
-			$parent['forum_id']		= !$forum_id ? $parent['forum_id'] : intval($forum_id);
-			$parent['group_id']		= !$group_id ? $parent['group_id'] : intval($group_id);
-			$parent['user_id']		= !$user_id ? $parent['user_id'] : intval($user_id);
+			/* Set the inserts for adding the actual node */
+			$insert->setInt(1, $level);
+			$insert->setString(2, $_REQUEST['name']);
+			$insert->setString(3, $_REQUEST['varname']);
+			$insert->setInt(4, $parent['category_id']);
+			$insert->setInt(5, $parent['forum_id']);
+			$insert->setInt(6, $parent['user_id']);
+			$insert->setInt(7, $parent['group_id']);
+			$insert->setInt(8, $_REQUEST['can_view']);
+			$insert->setInt(9, $_REQUEST['can_add']);
+			$insert->setInt(10, $_REQUEST['can_edit']);
+			$insert->setInt(11, $_REQUEST['can_del']);
+			$insert->setString(12, isset($_REQUEST['value']) ? $_REQUEST['value'] : '');
+			$insert->setInt(13, $parent['id']);
+			
 
-			/* Set this nodes level */
-			$level			= $parent['row_level']+1;
+			/**
+			 * Execute the queries
+			 */
+
+			/* Execute the queries */
+			$insert->executeUpdate();
+			
+			if($parent['id'] > 0) {
+				$request['dba']->executeUpdate("UPDATE ". K4MAPS ." SET num_children=num_children+1 WHERE id = ". intval($parent['id']));
+			}
+
+			reset_cache(CACHE_FILE);
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_PERMISSIONS');
+			$request['template']->setVar('options_on', '_on');
+			
+			$request['template']->setFile('sidebar_menu', 'menus/options.html');
+
+			/* Redirect the user */
+			$action = new K4InformationAction(new K4LanguageElement('L_ADDEDMAPSITEM'), 'content', FALSE, 'admin.php?act=permissions_gui', 3);
+			return $action->execute($request);
+
 		} else {
-			return 'L_INVALIDMAPID';
+			no_perms_error($request);
 		}
+	}
+}
 
-		$right = $left+1;
+class K4Maps {
+	function add(&$request, $info, $parent, $level) {
 		
-		/**
-		 * Build the queries
-		 */
-
 		/* Prepare the queries */
-		$update_a			= &$this->dba->prepareStatement("UPDATE ". K4MAPS ." SET row_right = row_right+2 WHERE row_left < ? AND row_right >= ?");
-		$update_b			= &$this->dba->prepareStatement("UPDATE ". K4MAPS ." SET row_left = row_left+2, row_right=row_right+2 WHERE row_left >= ?");
-		$insert				= &$this->dba->prepareStatement("INSERT INTO ". K4MAPS ." (row_left,row_right,row_level,name,varname,category_id,forum_id,user_id,group_id,can_view,can_add,can_edit,can_del,inherit,value,parent_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		$insert				= &$request['dba']->prepareStatement("INSERT INTO ". K4MAPS ." (row_level,name,varname,category_id,forum_id,user_id,group_id,can_view,can_add,can_edit,can_del,value,parent_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		
-		/* Set the insert variables needed */
-		$update_a->setInt(1, $left);
-		$update_a->setInt(2, $left);
-		$update_b->setInt(1, $left);
-
 		/* Set the inserts for adding the actual node */
-		$insert->setInt(1, $left);
-		$insert->setInt(2, $right);
-		$insert->setInt(3, $level);
-		$insert->setString(4, $info['name']);
-		$insert->setString(5, $info['varname']);
-		$insert->setInt(6, $parent['category_id']);
-		$insert->setInt(7, $parent['forum_id']);
-		$insert->setInt(8, $parent['user_id']);
-		$insert->setInt(9, $parent['group_id']);
-		$insert->setInt(10, @$info['can_view']);
-		$insert->setInt(11, @$info['can_add']);
-		$insert->setInt(12, @$info['can_edit']);
-		$insert->setInt(13, @$info['can_del']);
-		$insert->setInt(14, @$info['inherit']);
-		$insert->setString(15, @$info['value']);
-		$insert->setInt(16, $parent_id);
+		$insert->setInt(1, $level);
+		$insert->setString(2, isset($info['name']) ? $info['name'] : '');
+		$insert->setString(3, $info['varname']);
+		$insert->setInt(4, isset($info['category_id']) ? $info['category_id'] : 0);
+		$insert->setInt(5, isset($info['forum_id']) ? $info['forum_id'] : 0);
+		$insert->setInt(6, isset($info['user_id']) ? $info['user_id'] : 0);
+		$insert->setInt(7, isset($info['group_id']) ? $info['group_id'] : 0);
+		$insert->setInt(8, $info['can_view']);
+		$insert->setInt(9, $info['can_add']);
+		$insert->setInt(10, $info['can_edit']);
+		$insert->setInt(11, $info['can_del']);
+		$insert->setString(12, isset($info['value']) ? $info['value'] : '');
+		$insert->setInt(13, $parent['id']);
 		
 
 		/**
@@ -307,59 +279,28 @@ class AdminInsertMap {
 		 */
 
 		/* Execute the queries */
-		$update_a->executeUpdate();
-		$update_b->executeUpdate();
 		$insert->executeUpdate();
 		
-		if(!@touch(CACHE_FILE, time()-86460)) {
-			@unlink(CACHE_FILE);
+		if($parent['id'] > 0) {
+			$request['dba']->executeUpdate("UPDATE ". K4MAPS ." SET num_children=num_children+1 WHERE id = ". intval($parent['id']));
 		}
-
-	}
-}
-
-class AdminMapsInsertNode extends FAAction {
-	function getNumOnLevel(&$dba, $row_left, $row_right, $level) {
-		return $dba->GetValue("SELECT COUNT(*) FROM ". K4MAPS ." WHERE row_left > $row_left AND row_right < $row_right AND row_level = $level");
-	}
-	function execute(&$request) {		
-
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
-			
-			$map			= &new AdminInsertMap($request['dba']);
-			
-			$result			= $map->insertNode($_REQUEST);
-
-			if(is_string($result)) {
-				$action = new K4InformationAction(new K4LanguageElement($result), 'content', FALSE);
-
-				return $action->execute($request);
-				return TRUE;
-			}
-
-			/* Redirect the user */
-			$action = new K4InformationAction(new K4LanguageElement('L_ADDEDMAPSITEM'), 'content', FALSE, 'admin.php?act=permissions_gui', 3);
-
-			return $action->execute($request);
-			
-			if(!@touch(CACHE_FILE, time()-86460)) {
-				@unlink(CACHE_FILE);
-			}
-
-		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
-		}
-
-		return TRUE;
 	}
 }
 
 class AdminMapsRemoveNode extends FAAction {
+	function recursive_remove($parent_id) {
+		$maps = $request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE parent_id = ". intval($parent_id));
+		while($maps->next()) {
+			$map = $maps->current();
+			$request['dba']->executeUpdate("DELETE FROM ". K4MAPS ." WHERE id = ". intval($map['id']));
+			if($map['num_children'] > 0) {
+				$this->recursive_remove($map['id']);
+			}
+		}
+	}
 	function execute(&$request) {		
 
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
 			/* Error check */
 			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
@@ -368,66 +309,42 @@ class AdminMapsRemoveNode extends FAAction {
 			}
 
 			$map	= $request['dba']->getRow("SELECT * FROM ". K4MAPS ." WHERE id = ". intval($_REQUEST['id']));			
-			
+
 			/* Error check */
 			if(!is_array($map) || empty($map)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDMAPID'), 'content', FALSE);
 				return $action->execute($request);
 			}
 			
-			$heirarchy		= &new Heirarchy();
-			$heirarchy->removeNode($map, K4MAPS);
+			/* Update this map's parent */
+			if($map['parent_id'] > 0) {
+				$num_children = intval($map['num_children']) + 1;
+				$request['dba']->executeUpdate("UPDATE ". K4MAPS ." SET num_children=num_children-". $num_children ." WHERE id = ". intval($map['parent_id']));
+			}
+			
+			/* Remove this mapp node */
+			$request['dba']->executeUpdate("DELETE FROM ". K4MAPS ." WHERE id = ". intval($map['id']));
+			
+			/* Recursively remove all of its children */
+			if($map['num_children'] > 0) {
+				$this->recursive_remove($map['id']);
+			}
+
+			reset_cache(CACHE_FILE);
+
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_PERMISSIONS');
+			$request['template']->setVar('options_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/options.html');
 			
 			/* Redirect the user */
 			$action = new K4InformationAction(new K4LanguageElement('L_REMOVEDMAPSITEM'), 'content', FALSE, 'admin.php?act=permissions_gui', 3);
-
 			return $action->execute($request);
 						
-			if(!@touch(CACHE_FILE, time()-86460)) {
-				@unlink(CACHE_FILE);
-			}
-
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
-	}
-}
-
-class MAPSIterator extends FAProxyIterator {
-	var $dba;
-	var $start_level;
-	function MAPSIterator(&$dba, $data = NULL, $start_level = 1) {
-
-		$this->dba			= &$dba;
-		$this->start_level	= $start_level;
-		
-		parent::__construct($data);
-	}
-
-	function &current() {
-		$temp			= parent::current();
-		
-		$num_children	= @(($temp['row_right'] - $temp['row_left'] - 1) / 2);
-		$temp['level']	= str_repeat('&nbsp;&nbsp;&nbsp;', $temp['row_level']-$this->start_level);
-
-		$temp['name']	= $temp['inherit'] == 1 ? '<span style="color: green;">'. $temp['name'] .'</span>' : '<span style="color: firebrick;">'. $temp['name'] .'</span>';
-		
-		//print_r($_COOKIE['mapsgui_menu']); exit;
-
-		if(isset($_COOKIE['mapsgui_'. $temp['id']]) && $_COOKIE['mapsgui_'. $temp['id']] == 'yes' && $temp['row_level'] == 1) {
-			$temp['expanded']		= 1;
-			$temp['maps_children']	= &new MAPSIterator(&$this->dba, $this->dba->executeQuery("SELECT * FROM ". K4MAPS ." WHERE row_level > 1 AND row_left > ". $temp['row_left'] ." AND row_right < ". $temp['row_right'] ." ORDER BY row_left ASC"));				
-		} else {
-			$temp['expanded']		= 0;
-		}
-		return $temp;
-
-		if(!$this->hasNext())
-			$data->free();
 	}
 }
 

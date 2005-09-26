@@ -1,67 +1,67 @@
 <!-- Post Preview -->
 <list:list id="topic">
 <list:item list="topic">
-<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
-	<tr class="thead">
-		<td colspan="2">{$L_PREVIEW}</td>
-	</tr>
-	<tr class="tcat">
-		<td width="20%"><div align="center">{$L_AUTHOR}</div></td>
-		<td width="80%"><div align="center">{$L_MESSAGE}</div></td>
-	</tr>
-	<tr class="panel">
-		<td width="20%" class="alt1">
-			<div align="center">
+<a name="preview" id="preview"></a>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_PREVIEW}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="k4_subtitle" width="20%"><div align="center">{$L_AUTHOR}</div></td>
+			<td class="k4_subtitle" width="80%"><div align="center">{$L_MESSAGE}</div></td>
+		</tr>
+		<tr>
+			<td class="alt1" width="20%">
+				<div align="center">
+					<if:if var="poster_id" greater="0">
+					<strong style="color: #{$post_user_group_color}">{$poster_name}</strong>
+					<if:else />
+					<strong><if:if var="poster_name" eq="">{$L_GUEST}<if:else />{$poster_name}</if:if></strong>
+					</if:if>
+				</div>
+			</td>
+			<td class="alt3" width="80%">
+				<div style="float: right" class="smalltext">
+					<core:date format="%b %d %y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span>
+				</div>
+				<div class="smalltext">
+					<strong>{$L_POSTSUBJECT}:</strong> {$name}&nbsp;<img src="tmp/upload/posticons/{$posticon}" alt="" border="0" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="20%" valign="top" rowspan="2">
+				<div class="smalltext">
 				<if:if var="poster_id" greater="0">
-				<strong style="color: #{$post_user_group_color}">{$poster_name}</strong>
-				<if:else />
-				<strong><if:if var="poster_name" eq="">{$L_GUEST}<if:else />{$poster_name}</if:if></strong>
+					<if:if var="post_user_avatar" eq="1"><if:if var="user_viewavatars" eq="1">
+					<img src="viewfile.php?act=avatar&amp;id={$poster_id}" alt="" border="" />
+					<br /><br />
+					</if:if></if:if>
+					{$post_user_group_nicename}<br />
+					<if:if var="post_user_group_avatar" noteq="">
+					<img src="tmp/upload/group_avatars/{$post_user_group_avatar}" border="0" alt="{$post_user_group_nicename}" />
+					<br /><br />
+					</if:if>
+					<strong>{$L_JOINED}:</strong> <core:date format="%b %d %y">{$post_user_created}</core:date><br />
+					<strong>{$L_POSTS}:</strong> {$post_user_num_posts}
+					<if:if var="user_location" noteq="">
+					<br /><strong>{$L_LOCATION}:</strong> {$post_user_location}
+					</if:if>
 				</if:if>
-			</div>
-		</td>
-		<td width="80%">
-			<div style="float: right" class="smalltext">
-				<core:date format="%b %d %y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span>
-			</div>
-			<div class="smalltext">
-				<strong>{$L_POSTSUBJECT}:</strong> {$name}&nbsp;<img src="tmp/upload/posticons/{$posticon}" alt="" border="0" />
-			</div>
-		</td>
-	</tr>
-	<tr class="panel">
-		<td width="20%" valign="top" rowspan="2" class="alt1">
-			<div class="smalltext">
-			<if:if var="poster_id" greater="0">
-				<if:if var="post_user_avatar" noteq="">
-				<img src="images.php?avatar={$poster_id}" alt="" border="" />
+				</div>
+			</td>
+			<td class="alt3" width="80%" id="topic{$id}" valign="top" style="height: 100px;">
+				{$body_text}
+				<if:if var="disable_sig" eq="0">
+				<if:if var="post_user_signature" noteq="">
 				<br /><br />
+				<if:if var="user_viewsigs" eq="1">{$signatureseparator}{$post_user_signature}</if:if>
 				</if:if>
-				{$post_user_group_nicename}<br />
-				<if:if var="post_user_group_avatar" noteq="">
-				<img src="tmp/upload/group_avatars/{$post_user_group_avatar}" border="0" alt="{$post_user_group_nicename}" />
-				<br /><br />
 				</if:if>
-				<strong>{$L_JOINED}:</strong> <core:date format="%b %d %y">{$post_user_created}</core:date><br />
-				<strong>{$L_POSTS}:</strong> {$post_user_num_posts}
-				<if:if var="user_location" noteq="">
-				<br /><strong>{$L_LOCATION}:</strong> {$post_user_location}
-				</if:if>
-			</if:if>
-			</div>
-		</td>
-		<td width="80%" id="topic{$id}" valign="top" style="height: 100px;">
-			{$body_text}
-			<if:if var="disable_sig" eq="0">
-			<if:if var="post_user_signature" noteq="">
-			<br />
-			_________________
-			{$post_user_signature}
-			</if:if>
-			</if:if>
-		</td>
-	</tr>
-</table>
+			</td>
+		</tr>
+	</table>
+</div>
 </list:item>
 </list:list>
-<br />
 <!-- / Post Preview -->
+<br />

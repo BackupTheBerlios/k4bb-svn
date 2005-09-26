@@ -25,14 +25,30 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: users.class.php,v 1.1 2005/05/09 21:17:27 k4st Exp $
+* @version $Id: users.class.php 148 2005-07-11 16:04:28Z Peter Goodman $
 * @package k42
 */
 
-error_reporting(E_ALL);
-
 if(!defined('IN_K4')) {
-	exit;
+	return;
+}
+
+class AdminUsers extends FAAction {
+	function execute(&$request) {		
+		
+		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERS');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
+
+			//$request['template']->setFile('content', 'badnames_manage.html');
+		} else {
+			no_perms_error($request);
+		}
+
+		return TRUE;
+	}
 }
 
 class AdminBadUserNames extends FAAction {
@@ -43,12 +59,13 @@ class AdminBadUserNames extends FAAction {
 			$badnames	= &$request['dba']->executeQuery("SELECT * FROM ". K4BADUSERNAMES ." ORDER BY name ASC");
 			$request['template']->setList('badnames', $badnames);
 			
-			$request['template']->setFile('content', 'admin.html');
-			$request['template']->setFile('admin_panel', 'badnames_manage.html');
-		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_DISALLOWNAMES');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
 
-			return $action->execute($request);
+			$request['template']->setFile('content', 'badnames_manage.html');
+		} else {
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -64,42 +81,35 @@ class AdminInsertBadUserName extends FAAction {
 
 			if(!isset($_REQUEST['name']) || !$_REQUEST['name'] || $_REQUEST['name'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_SUPPLYBADUSERNAME'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			if(strlen($_REQUEST['name']) < intval($_SETTINGS['minuserlength'])) {
 				$action = new K4InformationAction(new K4LanguageElement('L_USERNAMETOOSHORT', intval($_SETTINGS['minuserlength']), intval($_SETTINGS['maxuserlength'])), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			if(strlen($_REQUEST['name']) > intval($_SETTINGS['maxuserlength'])) {
 				$action = new K4InformationAction(new K4LanguageElement('L_USERNAMETOOLONG', intval($_SETTINGS['maxuserlength'])), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			if($request['dba']->getValue("SELECT * FROM ". K4BADUSERNAMES ." WHERE name = '". $request['dba']->quote($_REQUEST['name']) ."'") > 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_BADNAMEEXISTS'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			$request['dba']->executeUpdate("INSERT INTO ". K4BADUSERNAMES ." (name) VALUES ('". $request['dba']->quote($_REQUEST['name']) ."')");
 			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_DISALLOWNAMES');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
+
 			$action = new K4InformationAction(new K4LanguageElement('L_ADDEDBADUSERNAME', $_REQUEST['name']), 'content', FALSE, 'admin.php?act=usernames', 3);
-
-			
 			return $action->execute($request);
+
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -115,58 +125,47 @@ class AdminUpdateBadUserName extends FAAction {
 			
 			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDBADNAME'), 'content', FALSE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			$bad		= $request['dba']->getRow("SELECT * FROM ". K4BADUSERNAMES ." WHERE id = ". intval($_REQUEST['id']));
 			
 			if(!is_array($bad) || empty($bad)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDBADNAME'), 'content', FALSE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			if(!isset($_REQUEST['name']) || !$_REQUEST['name'] || $_REQUEST['name'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_SUPPLYBADUSERNAME'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			if(strlen($_REQUEST['name']) < intval($_SETTINGS['minuserlength'])) {
 				$action = new K4InformationAction(new K4LanguageElement('L_USERNAMETOOSHORT', intval($_SETTINGS['minuserlength']), intval($_SETTINGS['maxuserlength'])), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			if(strlen($_REQUEST['name']) > intval($_SETTINGS['maxuserlength'])) {
 				$action = new K4InformationAction(new K4LanguageElement('L_USERNAMETOOLONG', intval($_SETTINGS['maxuserlength'])), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			if($request['dba']->getValue("SELECT * FROM ". K4BADUSERNAMES ." WHERE name = '". $request['dba']->quote($_REQUEST['name']) ."' AND id <> ". intval($bad['id'])) > 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_BADNAMEEXISTS'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			$request['dba']->executeUpdate("UPDATE ". K4BADUSERNAMES ." SET name = '". $request['dba']->quote($_REQUEST['name']) ."' WHERE id = ". intval($bad['id']));
 			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_DISALLOWNAMES');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
+
 			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDBADUSERNAME', $bad['name'], $_REQUEST['name']), 'content', FALSE, 'admin.php?act=usernames', 3);
-
-			
 			return $action->execute($request);
+
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -182,23 +181,27 @@ class AdminRemoveBadUserName extends FAAction {
 			
 			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDBADNAME'), 'content', FALSE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			$bad		= $request['dba']->getRow("SELECT * FROM ". K4BADUSERNAMES ." WHERE id = ". intval($_REQUEST['id']));
 			
+			if(!is_array($bad) || empty($bad)) {
+				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDBADNAME'), 'content', FALSE);
+				return $action->execute($request);
+			}
+			
 			$request['dba']->executeUpdate("DELETE FROM ". K4BADUSERNAMES ." WHERE id = ". intval($bad['id']));
 			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_DISALLOWNAMES');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
+
 			$action = new K4InformationAction(new K4LanguageElement('L_REMOVEDBADUSERNAME', $bad['name']), 'content', FALSE, 'admin.php?act=usernames', 3);
-
-			
 			return $action->execute($request);
+
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;

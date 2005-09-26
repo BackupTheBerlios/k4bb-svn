@@ -25,33 +25,34 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: categories.class.php,v 1.11 2005/05/24 20:02:18 k4st Exp $
+* @version $Id: categories.class.php 154 2005-07-15 02:56:28Z Peter Goodman $
 * @package k42
 */
 
 error_reporting(E_ALL);
 
 if(!defined('IN_K4')) {
-	exit;
+	return;
 }
 
 class AdminCategories extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			global $_QUERYPARAMS;
 
 
-			$categories			= &$request['dba']->executeQuery("SELECT ". $_QUERYPARAMS['info'] . $_QUERYPARAMS['category'] ." FROM ". K4INFO ." i LEFT JOIN ". K4CATEGORIES ." c ON c.category_id = i.id WHERE i.row_type = ". CATEGORY ." ORDER BY i.row_order ASC");
+			$categories			= &$request['dba']->executeQuery("SELECT * FROM ". K4CATEGORIES ." ORDER BY row_order ASC");
 
 			$request['template']->setList('categories', $categories);
 			
-			$request['template']->setFile('content', 'admin.html');
-			$request['template']->setFile('admin_panel', 'categories_manage.html');
-		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
+			$request['template']->setFile('content', 'categories_manage.html');
 
-			return $action->execute($request);
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_CATEGORIES');
+			$request['template']->setVar('forums_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/forums.html');
+		} else {
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -61,14 +62,14 @@ class AdminCategories extends FAAction {
 class AdminAddCategory extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
-						
-			$request['template']->setFile('content', 'admin.html');
-			$request['template']->setFile('admin_panel', 'categories_add.html');
-		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
+			$request['template']->setFile('content', 'categories_add.html');
 
-			return $action->execute($request);
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_CATEGORIES');
+			$request['template']->setVar('forums_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/forums.html');
+		} else {
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -78,81 +79,59 @@ class AdminAddCategory extends FAAction {
 class AdminInsertCategory extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
 			/* Error checking on the fields */
 			if(!isset($_REQUEST['name']) || $_REQUEST['name'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTCATNAME'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 						
 			if(!isset($_REQUEST['description']) || $_REQUEST['description'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTCATDESC'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			if(!isset($_REQUEST['row_order']) || $_REQUEST['row_order'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTCATORDER'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			if(!ctype_digit($_REQUEST['row_order'])) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTCATORDERNUM'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
-			
-			$abs_right			= $request['dba']->getValue("SELECT row_right FROM ". K4INFO ." WHERE row_type = ". CATEGORY ." ORDER BY row_right DESC LIMIT 1");
-			
-			$left				= $abs_right && $abs_right !== false && $abs_right != 0 ? $abs_right+1 : 1;
-			$right				= $left + 1;
 			
 			$request['dba']->beginTransaction();
 
 			/* Build the queries */
-			$insert_a			= &$request['dba']->prepareStatement("INSERT INTO ". K4INFO ." (name,row_left,row_right,row_type,row_level,created,row_order) VALUES (?,?,?,?,?,?,?)");
-			$insert_b			= &$request['dba']->prepareStatement("INSERT INTO ". K4CATEGORIES ." (category_id,description) VALUES (?,?)");
-			
-			/* Set the query values */
-			$insert_a->setString(1, $_REQUEST['name']);
-			$insert_a->setInt(2, $left);
-			$insert_a->setInt(3, $right);
-			$insert_a->setInt(4, CATEGORY);
-			$insert_a->setInt(5, 1);
-			$insert_a->setInt(6, time());
-			$insert_a->setInt(7, $_REQUEST['row_order']);
-			
-			/* Add the category to the info table */
-			$insert_a->executeUpdate();
-			
-			$category_id		= $request['dba']->getInsertId();
+			$insert_a			= &$request['dba']->prepareStatement("INSERT INTO ". K4CATEGORIES ." (name,description,row_type,row_level,created,row_order) VALUES (?,?,?,?,?,?)");
 			
 			/* Build the query for the categories table */
-			$insert_b->setInt(1, $category_id);
-			$insert_b->setString(2, $_REQUEST['description']);
+			$insert_a->setString(1, $_REQUEST['name']);
+			$insert_a->setString(2, $_REQUEST['description']);
+			$insert_a->setInt(3, CATEGORY);
+			$insert_a->setInt(4, 1);
+			$insert_a->setInt(5, time());
+			$insert_a->setInt(6, $_REQUEST['row_order']);
 			
 			/* Insert the extra category info */
-			$insert_b->executeUpdate();
+			$insert_a->executeUpdate();
+
+			$category_id		= $request['dba']->getInsertId(K4CATEGORIES, 'category_id');
 			
 			$request['dba']->commitTransaction();
 
-			if(!@touch(CACHE_FILE, time()-86460)) {
-				@unlink(CACHE_FILE);
-			}
+			reset_cache(CACHE_FILE);
 			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_CATEGORIES');
+			$request['template']->setVar('forums_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/forums.html');
+
 			$action = new K4InformationAction(new K4LanguageElement('L_ADDEDCATEGORY', $_REQUEST['name']), 'content', FALSE, 'admin.php?act=categories_insertmaps&id='. $category_id, 3);
 			return $action->execute($request);
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -162,90 +141,62 @@ class AdminInsertCategory extends FAAction {
 class AdminInsertCategoryMaps extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
 			global $_MAPITEMS, $_QUERYPARAMS;
 
 			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
-			$category					= $request['dba']->getRow("SELECT ". $_QUERYPARAMS['info'] . $_QUERYPARAMS['category'] ." FROM ". K4CATEGORIES ." c LEFT JOIN ". K4INFO ." i ON c.category_id = i.id WHERE i.id = ". intval($_REQUEST['id']));
+			$category					= $request['dba']->getRow("SELECT * FROM ". K4CATEGORIES ." WHERE category_id = ". intval($_REQUEST['id']));
 
 			if(!is_array($category) || empty($category)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
-			$parent_id					= $request['dba']->getValue("SELECT id FROM ". K4MAPS ." WHERE varname = 'categories'");
+			$parent					= $request['dba']->getRow("SELECT * FROM ". K4MAPS ." WHERE varname = 'categories'");
 			
+			// begin the sql transaction
 			$request['dba']->beginTransaction();
-
-			/* Insert the main category MAP item */
-			$map						= &new AdminInsertMap($request['dba']);
-			
+						
 			/* Set the default data for this category MAP element */
-			$category_array				= array_merge(array('name' => $category['name'], 'varname' => 'category'. $category['id'], 'parent_id' => $parent_id), $_MAPITEMS['category'][0]);
+			$category_array				= array_merge(array('name' => $category['name'], 'varname' => 'category'. $category['category_id'], 'parent_id' => $parent['id'], 'category_id'=>$category['category_id']), $_MAPITEMS['category'][0]);
 			
-			/**
-			 * Insert the main category MAP information
-			 */
-
-			$result			= $map->insertNode($category_array, $category['id']);
-
-			if(is_string($result)) {
-				$action = new K4InformationAction(new K4LanguageElement($error->message), 'content', FALSE);
-
-				return $action->execute($request);
-				return TRUE;
-			}
+			/* Insert the main category MAP item */
+			$maps							= &new K4Maps();
+			$maps->add($request, $category_array, $parent, $parent['row_level'] + 1);
 			
-			$category_map_id			= $request['dba']->getInsertId();
+			// get the parent now
+			$parent							= $request['dba']->getRow("SELECT * FROM ". K4MAPS ." WHERE varname = 'category". $category['category_id'] ."' LIMIT 1");
 
 			/**
 			 * Insert the secondary category MAP information
 			 */
 			for($i = 1; $i < count($_MAPITEMS['category'])-1; $i++) {
-				
 				if(isset($_MAPITEMS['category'][$i]) && is_array($_MAPITEMS['category'][$i])) {
-
-					$category_array			= array_merge(array('parent_id' => $category_map_id), $_MAPITEMS['category'][$i]);
-					
+					$category_array			= array_merge(array('parent_id' => $category_map_id, 'category_id'=>$category['category_id']), $_MAPITEMS['category'][$i]);
 					$category_array['name']	= $request['template']->getVar('L_'. strtoupper($category_array['varname']));
-
-					$result					= $map->insertNode($category_array, $category['id']);
-
-					if(is_string($result)) {
-						$action = new K4InformationAction(new K4LanguageElement($result), 'content', FALSE);
-
-						return $action->execute($request);
-						return TRUE;
-					}
+					$maps->add($request, $category_array, $parent, $parent['row_level'] + 1);
 				}
 			}
 			
-			if(!@touch(CACHE_FILE, time()-86460)) {
-				@unlink(CACHE_FILE);
-			}
+			reset_cache(CACHE_FILE);
 			
 			$request['dba']->commitTransaction();
 			
-			/**
-			 * If we've gotten to this point.. redirect
-			 */
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_CATEGORIES');
+			$request['template']->setVar('forums_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/forums.html');
+
 			$action = new K4InformationAction(new K4LanguageElement('L_ADDEDCATEGORYPERMS', $category['name']), 'content', FALSE, 'admin.php?act=categories', 3);
 
 			return $action->execute($request);
 
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -255,57 +206,49 @@ class AdminInsertCategoryMaps extends FAAction {
 class AdminSimpleCategoryUpdate extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
 			global $_MAPITEMS, $_QUERYPARAMS;
 
 			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
-			$category					= $request['dba']->getRow("SELECT ". $_QUERYPARAMS['info'] . $_QUERYPARAMS['category'] ." FROM ". K4CATEGORIES ." c LEFT JOIN ". K4INFO ." i ON c.category_id = i.id WHERE i.id = ". intval($_REQUEST['id']));
+			$category					= $request['dba']->getRow("SELECT * FROM ". K4CATEGORIES ." WHERE category_id = ". intval($_REQUEST['id']));
 
 			if(!is_array($category) || empty($category)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			if(!isset($_REQUEST['row_order']) || $_REQUEST['row_order'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTCATORDER'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
-			if(!ctype_digit($_REQUEST['row_order']))
+			if(!ctype_digit($_REQUEST['row_order'])) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTCATORDERNUM'), 'content', TRUE);
-
 				return $action->execute($request);
+			}
 
-			$update		= &$request['dba']->prepareStatement("UPDATE ". K4INFO ." SET row_order=? WHERE id=?");
+			$update		= &$request['dba']->prepareStatement("UPDATE ". K4CATEGORIES ." SET row_order=? WHERE category_id=?");
 			$update->setInt(1, $_REQUEST['row_order']);
-			$update->setInt(2, $category['id']);
+			$update->setInt(2, $category['category_id']);
 
 			$update->executeUpdate();
 			
-			if(!@touch(CACHE_FILE, time()-86460)) {
-				@unlink(CACHE_FILE);
-			}
+			reset_cache(CACHE_FILE);
+
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_CATEGORIES');
+			$request['template']->setVar('forums_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/forums.html');
 
 			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDCATEGORY', $category['name']), 'content', FALSE, 'admin.php?act=categories', 3);
-
-
 			return $action->execute($request);
 
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -315,35 +258,32 @@ class AdminSimpleCategoryUpdate extends FAAction {
 class AdminEditCategory extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
 			global $_QUERYPARAMS;
 
 			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
-			$category					= $request['dba']->getRow("SELECT ". $_QUERYPARAMS['info'] . $_QUERYPARAMS['category'] ." FROM ". K4CATEGORIES ." c LEFT JOIN ". K4INFO ." i ON c.category_id = i.id WHERE i.id = ". intval($_REQUEST['id']));
+			$category					= $request['dba']->getRow("SELECT * FROM ". K4CATEGORIES ." WHERE category_id = ". intval($_REQUEST['id']));
 
 			if(!is_array($category) || empty($category)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			foreach($category as $key => $val)
 				$request['template']->setVar('category_'. $key, $val);
 			
-			$request['template']->setFile('content', 'admin.html');
-			$request['template']->setFile('admin_panel', 'categories_edit.html');
-		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
+			$request['template']->setFile('content', 'categories_edit.html');
 
-			return $action->execute($request);
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_CATEGORIES');
+			$request['template']->setVar('forums_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/forums.html');
+		} else {
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -353,91 +293,72 @@ class AdminEditCategory extends FAAction {
 class AdminUpdateCategory extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
 			global $_QUERYPARAMS;
 
 			/* Error checking on the fields */
 			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
-			$category					= $request['dba']->getRow("SELECT ". $_QUERYPARAMS['info'] . $_QUERYPARAMS['category'] ." FROM ". K4CATEGORIES ." c LEFT JOIN ". K4INFO ." i ON c.category_id = i.id WHERE i.id = ". intval($_REQUEST['id']));
+			$category					= $request['dba']->getRow("SELECT * FROM ". K4CATEGORIES ." WHERE category_id = ". intval($_REQUEST['id']));
 
 			if(!is_array($category) || empty($category)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			if(!isset($_REQUEST['name']) || $_REQUEST['name'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTCATNAME'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 						
 			if(!isset($_REQUEST['description']) || $_REQUEST['description'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTCATDESC'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			if(!isset($_REQUEST['row_order']) || $_REQUEST['row_order'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTCATORDER'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			if(!ctype_digit($_REQUEST['row_order'])) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTCATORDERNUM'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 						
 			/* Build the queries */
-			$update_a			= &$request['dba']->prepareStatement("UPDATE ". K4INFO ." SET name=?,row_order=? WHERE id=?");
-			$update_b			= &$request['dba']->prepareStatement("UPDATE ". K4CATEGORIES ." SET description=? WHERE category_id=?");
-			$update_c			= &$request['dba']->prepareStatement("UPDATE ". K4MAPS ." SET name=? WHERE varname=?");
-
-			/* Set the query values */
-			$update_a->setString(1, $_REQUEST['name']);
-			$update_a->setInt(2, $_REQUEST['row_order']);
-			$update_a->setInt(3, $category['id']);
+			$update_a			= &$request['dba']->prepareStatement("UPDATE ". K4CATEGORIES ." SET name=?,description=?, row_order=? WHERE category_id=?");
+			$update_b			= &$request['dba']->prepareStatement("UPDATE ". K4MAPS ." SET name=? WHERE varname=?");
 			
 			/* Build the query for the categories table */
-			$update_b->setString(1, $_REQUEST['description']);
-			$update_b->setInt(2, $category['id']);
+			$update_a->setString(1, $_REQUEST['name']);
+			$update_a->setString(2, $_REQUEST['description']);
+			$update_a->setInt(3, $_REQUEST['row_order']);
+			$update_a->setInt(4, $category['category_id']);
 			
 			/* Simple update on the maps table */
-			$update_c->setString(1, $_REQUEST['name']);
-			$update_c->setString(2, 'category'. $category['id']);
+			$update_b->setString(1, $_REQUEST['name']);
+			$update_b->setString(2, 'category'. $category['category_id']);
 
 			/* Do all of the updates */
 			$update_a->executeUpdate();
 			$update_b->executeUpdate();
-			$update_c->executeUpdate();
-			
-			if(!@touch(CACHE_FILE, time()-86460)) {
-				@unlink(CACHE_FILE);
-			}
+						
+			reset_cache(CACHE_FILE);
+
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_CATEGORIES');
+			$request['template']->setVar('forums_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/forums.html');
 
 			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDCATEGORY', $category['name']), 'content', FALSE, 'admin.php?act=categories', 3);
-
-
 			return $action->execute($request);
 
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -447,74 +368,53 @@ class AdminUpdateCategory extends FAAction {
 class AdminRemoveCategory extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
 			global $_QUERYPARAMS;
 
 			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
-			$category					= $request['dba']->getRow("SELECT ". $_QUERYPARAMS['info'] . $_QUERYPARAMS['category'] ." FROM ". K4CATEGORIES ." c LEFT JOIN ". K4INFO ." i ON c.category_id = i.id WHERE i.id = ". intval($_REQUEST['id']));
+			$category					= $request['dba']->getRow("SELECT * FROM ". K4CATEGORIES ." WHERE category_id = ". intval($_REQUEST['id']));
 
 			if(!is_array($category) || empty($category)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			$request['dba']->beginTransaction();
 
-			$category_maps	= $request['dba']->getRow("SELECT * FROM ". K4MAPS ." WHERE varname = 'category". $category['id'] ."'");
+			$category_maps	= $request['dba']->getRow("SELECT * FROM ". K4MAPS ." WHERE varname = 'category". $category['category_id'] ."'");
 			
-			$request['dba']->executeUpdate("DELETE FROM ". K4CATEGORIES ." WHERE category_id=". intval($category['id']));
-			
-			/* Get this category's forums */
-			$forums			= &$request['dba']->executeQuery("SELECT * FROM ". K4INFO ." WHERE row_left > ". intval($category['row_left']) ." AND row_right < ". intval($category['row_right']) ." AND row_type = ". FORUM);
+			$request['dba']->executeUpdate("DELETE FROM ". K4CATEGORIES ." WHERE category_id=". intval($category['category_id']));
 			
 			$heirarchy		= &new Heirarchy();
 			
-			/* Deal with this forum and any sub-forums */
-			while($forums->next()) {
-				$f				= $forums->current();
-				$forum_maps		= $request['dba']->getRow("SELECT * FROM ". K4MAPS ." WHERE varname = 'forum". $f['id'] ."'");
-				$heirarchy->removeNode($forum_maps, K4MAPS);
-				//$heirarchy->removeItem($forum_maps, K4MAPS);
+			$remover		= &new AdminRemoveForum();
 
-				$request['dba']->executeUpdate("DELETE FROM ". K4FORUMS ." WHERE forum_id=". intval($f['id']));
-				$request['dba']->executeUpdate("DELETE FROM ". K4TOPICS ." WHERE forum_id=". intval($f['id']));
-				$request['dba']->executeUpdate("DELETE FROM ". K4REPLIES ." WHERE forum_id=". intval($f['id']));
-			}
-
-			/* This will take care of everything in the K4INFO table */
-			$heirarchy->removeNode($category, K4INFO);
-			$heirarchy->removeItem($category, K4INFO, 'category_id');
-
+			$remover->removeForums(array('forum_id' => $category['category_id']), $request['dba'], $heirarchy);
+			
 			$heirarchy->removeNode($category_maps, K4MAPS);
 			
-			$request['dba']->executeUpdate("DELETE FROM ". K4SUBSCRIPTIONS ." WHERE category_id=". intval($category['id']));
+			$request['dba']->executeUpdate("DELETE FROM ". K4SUBSCRIPTIONS ." WHERE category_id=". intval($category['category_id']));
 			
 			/* Commit the current transaction */
 			$request['dba']->commitTransaction();
 
-			if(!@touch(CACHE_FILE, time()-86460)) {
-				@unlink(CACHE_FILE);
-			}
-			if(!@touch(CACHE_EMAIL_FILE, time()-86460)) {
-				@unlink(CACHE_EMAIL_FILE);
-			}
+			reset_cache(CACHE_FILE);
+			reset_cache(CACHE_EMAIL_FILE);
+
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_CATEGORIES');
+			$request['template']->setVar('forums_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/forums.html');
 
 			$action = new K4InformationAction(new K4LanguageElement('L_REMOVEDCATEGORY', $category['name']), 'content', FALSE, 'admin.php?act=categories', 3);
 			return $action->execute($request);
 
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -524,39 +424,46 @@ class AdminRemoveCategory extends FAAction {
 class AdminCategoryPermissions extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
 			global $_QUERYPARAMS;
 
 			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
-			$category					= $request['dba']->getRow("SELECT ". $_QUERYPARAMS['info'] . $_QUERYPARAMS['category'] ." FROM ". K4CATEGORIES ." c LEFT JOIN ". K4INFO ." i ON c.category_id = i.id WHERE i.id = ". intval($_REQUEST['id']));
+			$category					= $request['dba']->getRow("SELECT * FROM ". K4CATEGORIES ." WHERE category_id = ". intval($_REQUEST['id']));
 
 			if(!is_array($category) || empty($category)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			foreach($category as $key => $val)
 				$request['template']->setVar('category_'. $key, $val);
 			
-			$category_maps				= &new MAPSIterator(&$request['dba'], $request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE category_id = ". intval($category['id']) ." AND forum_id = 0 ORDER BY row_left ASC"), 2);
+			/* Get the parent id's */
+			$parents = array();
+			foreach($_COOKIE as $key => $val) {
+				if(strpos($key, 'mapsgui') !== FALSE) {
+					$parents[] = intval($_COOKIE[$key]);
+				}
+			}
+						
+			$all_maps = array();
+			$maps = &$request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE category_id = ". intval($category['category_id']) ." AND forum_id = 0");
+			get_recursive_maps($request, $all_maps, $parents, $maps, 2);
+			$all_maps = &new FAArrayIterator($all_maps);
 			
-			$request['template']->setList('category_maps', $category_maps);
-
-			$request['template']->setFile('content', 'admin.html');
-			$request['template']->setFile('admin_panel', 'categories_permissions.html');
+			$request['template']->setList('category_maps', $all_maps);
+			$request['template']->setFile('content', 'categories_permissions.html');
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_CATEGORIES');
+			$request['template']->setVar('forums_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/forums.html');
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -566,31 +473,27 @@ class AdminCategoryPermissions extends FAAction {
 class AdminUpdateCategoryPermissions extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
 			global $_QUERYPARAMS;
 
 			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
-			$category					= $request['dba']->getRow("SELECT ". $_QUERYPARAMS['info'] . $_QUERYPARAMS['category'] ." FROM ". K4CATEGORIES ." c LEFT JOIN ". K4INFO ." i ON c.category_id = i.id WHERE i.id = ". intval($_REQUEST['id']));
+			$category					= $request['dba']->getRow("SELECT * FROM ". K4CATEGORIES ." WHERE category_id = ". intval($_REQUEST['id']));
 
 			if(!is_array($category) || empty($category)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			foreach($category as $key => $val)
 				$request['template']->setVar('category_'. $key, $val);
 			
-			$category_map				= $request['dba']->getRow("SELECT * FROM ". K4MAPS ." WHERE varname = 'category". $category['id'] ."' AND category_id = ". intval($category['id']));
-			$category_maps				= $request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE category_id = ". intval($category['id']) ." AND row_left >= ". intval($category_map['row_left']) ." AND row_right <= ". intval($category_map['row_right']) ." ORDER BY row_left ASC");
+			$category_map				= $request['dba']->getRow("SELECT * FROM ". K4MAPS ." WHERE varname = 'category". $category['category_id'] ."' AND category_id = ". intval($category['category_id']));
+			$category_maps				= $request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE category_id = ". intval($category['category_id']) ." AND forum_id = 0");
 
 			while($category_maps->next()) {
 				$c						= $category_maps->current();
@@ -605,7 +508,7 @@ class AdminUpdateCategoryPermissions extends FAAction {
 						$update->setInt(3, $_REQUEST[$c['varname'] .'_can_edit']);
 						$update->setInt(4, $_REQUEST[$c['varname'] .'_can_del']);
 						$update->setString(5, $c['varname']);
-						$update->setInt(6, $category['id']);
+						$update->setInt(6, $category['category_id']);
 
 						$update->executeUpdate();
 
@@ -614,18 +517,16 @@ class AdminUpdateCategoryPermissions extends FAAction {
 				}
 			}
 			
-			if(!@touch(CACHE_FILE, time()-86460)) {
-				@unlink(CACHE_FILE);
-			}
+			reset_cache(CACHE_FILE);
+
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_CATEGORIES');
+			$request['template']->setVar('forums_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/forums.html');
 
 			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDCATEGORYPERMS', $category['name']), 'content', FALSE, 'admin.php?act=categories', 3);
-
-
 			return $action->execute($request);
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -637,13 +538,7 @@ class AdminCategoriesIterator extends FAProxyIterator {
 	var $result;
 
 	function AdminCategoriesIterator(&$dba, $query = NULL) {
-		global $_CONFIG, $_QUERYPARAMS;
-		
-		$this->query_params	= $_QUERYPARAMS;
-		
-		$query_params		= $this->query_params['info'] . $this->query_params['category'];
-
-		$query				= $query == NULL ? "SELECT $query_params FROM ". K4INFO ." i LEFT JOIN ". K4CATEGORIES ." c ON c.category_id = i.id AND i.row_type = ". CATEGORY ." ORDER BY i.row_order ASC" : $query;
+		$query				= $query == NULL ? "SELECT * FROM ". K4CATEGORIES ." ORDER BY row_order ASC" : $query;
 		
 		$this->result		= &$dba->executeQuery($query);
 		$this->dba			= &$dba;
@@ -654,11 +549,12 @@ class AdminCategoriesIterator extends FAProxyIterator {
 	function &current() {
 		$temp = parent::current();
 		
-		if(($temp['row_right'] - $temp['row_left'] - 1) > 0) {
-			
-			$query_params	= $this->query_params['info'] . $this->query_params['forum'];
-
-			$temp['forums'] = &new K4ForumsIterator(&$this->dba, "SELECT $query_params FROM ". K4INFO ." i LEFT JOIN ". K4FORUMS ." f ON f.forum_id = i.id WHERE i.row_left > ". $temp['row_left'] ." AND i.row_right < ". $temp['row_right'] ." AND i.row_type = ". FORUM ." ORDER BY i.row_left, i.row_order ASC");
+		$forums = &new K4ForumsIterator($this->dba, "SELECT * FROM ". K4FORUMS ." WHERE category_id = ". $temp['category_id'] ." ORDER BY row_order ASC");
+		if($forums->hasNext()) {
+			$temp['forums'] =& $forums;
+		} else {
+			$forums->free();
+			unset($forums);
 		}
 
 		/* Should we free the result? */

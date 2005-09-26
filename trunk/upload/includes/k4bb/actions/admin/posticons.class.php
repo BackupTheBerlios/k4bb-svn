@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: posticons.class.php,v 1.3 2005/04/19 21:51:45 k4st Exp $
+* @version $Id: posticons.class.php 110 2005-06-13 20:48:58Z Peter Goodman $
 * @package k42
 */
 
@@ -41,12 +41,13 @@ class AdminPostIcons extends FAAction {
 
 			$request['template']->setList('posticons', $icons);
 			
-			$request['template']->setFile('content', 'admin.html');
-			$request['template']->setFile('admin_panel', 'posticons_manage.html');
-		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
+			$request['template']->setFile('content', 'posticons_manage.html');
 
-			return $action->execute($request);
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_POSTICONS');
+			$request['template']->setVar('posts_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/posts.html');
+		} else {
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -58,12 +59,13 @@ class AdminAddPostIcon extends FAAction {
 		
 		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 						
-			$request['template']->setFile('content', 'admin.html');
-			$request['template']->setFile('admin_panel', 'posticons_add.html');
-		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
+			$request['template']->setFile('content', 'posticons_add.html');
 
-			return $action->execute($request);
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_POSTICONS');
+			$request['template']->setVar('posts_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/posts.html');
+		} else {
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -114,9 +116,7 @@ class AdminInsertPostIcon extends FAAction {
 				}
 			} else {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDICONEXT'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			/**
@@ -135,15 +135,15 @@ class AdminInsertPostIcon extends FAAction {
 				@move_uploaded_file($_FILES['image_upload']['tmp_name'], $dir .'/'. $filename);
 			}
 
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_POSTICONS');
+			$request['template']->setVar('posts_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/posts.html');
+
 			$action = new K4InformationAction(new K4LanguageElement('L_ADDEDPOSTICON'), 'content', TRUE, 'admin.php?act=posticons', 3);
-
-
 			return $action->execute($request);
 
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -166,9 +166,7 @@ class AdminRemovePostIcon extends FAAction {
 			
 			if(!is_array($icon) || empty($icon)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_POSTICONDOESNTEXIST'), 'content', FALSE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			/* Remove the icon from the db */
@@ -183,14 +181,14 @@ class AdminRemovePostIcon extends FAAction {
 			@chmod($dir);
 			@unlink($dir .'/'. $icon['image']);
 			
-			$action = new K4InformationAction(new K4LanguageElement('L_REMOVEDPOSTICON'), 'content', TRUE, 'admin.php?act=posticons', 3);
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_POSTICONS');
+			$request['template']->setVar('posts_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/posts.html');
 
-			
+			$action = new K4InformationAction(new K4LanguageElement('L_REMOVEDPOSTICON'), 'content', TRUE, 'admin.php?act=posticons', 3);
 			return $action->execute($request);
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -204,30 +202,27 @@ class AdminEditPostIcon extends FAAction {
 			
 			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_POSTICONDOESNTEXIST'), 'content', FALSE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			$icon			= $request['dba']->getRow("SELECT * FROM ". K4POSTICONS ." WHERE id = ". intval($_REQUEST['id']));
 			
 			if(!is_array($icon) || empty($icon)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_POSTICONDOESNTEXIST'), 'content', FALSE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			foreach($icon as $key => $val) {
 				$request['template']->setVar('icon_'. $key, $val);
 			}
 			
-			$request['template']->setFile('content', 'admin.html');
-			$request['template']->setFile('admin_panel', 'posticons_edit.html');
-		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_POSTICONS');
+			$request['template']->setVar('posts_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/posts.html');
 
-			return $action->execute($request);
+			$request['template']->setFile('content', 'posticons_edit.html');
+		} else {
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -245,30 +240,22 @@ class AdminUpdatePostIcon extends FAAction {
 
 			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_POSTICONDOESNTEXIST'), 'content', FALSE);
-
 				return $action->execute($request);	
-				return TRUE;
 			}
 
 			$icon			= $request['dba']->getRow("SELECT * FROM ". K4POSTICONS ." WHERE id = ". intval($_REQUEST['id']));
 			
 			if(!is_array($icon) || empty($icon)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_POSTICONDOESNTEXIST'), 'content', FALSE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			if(!isset($_REQUEST['description']) || $_REQUEST['description'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTICONDESC'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			if(!isset($_REQUEST['image_browse']) && !isset($_FILES['image_upload'])) {
 				$action = new K4InformationAction(new K4LanguageElement('L_NEEDCHOOSEICONIMG'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			if(isset($_FILES['image_upload']) && is_array($_FILES['image_upload'])) {
 				$filename	= $_FILES['image_upload']['tmp_name'];
@@ -277,9 +264,7 @@ class AdminUpdatePostIcon extends FAAction {
 				$filename	= $_REQUEST['image_browse'];
 			} else {
 				$action = new K4InformationAction(new K4LanguageElement('L_NEEDCHOOSEICONIMG'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 
@@ -291,15 +276,11 @@ class AdminUpdatePostIcon extends FAAction {
 
 				if(!in_array(strtolower($file_ext), $exts)) {
 					$action = new K4InformationAction(new K4LanguageElement('L_INVALIDICONEXT'), 'content', TRUE);
-
 					return $action->execute($request);
-					return TRUE;
 				}
 			} else {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDICONEXT'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			/**
@@ -321,16 +302,16 @@ class AdminUpdatePostIcon extends FAAction {
 			
 			/* Change all of the topics to have no icon */
 			$request['dba']->executeUpdate("UPDATE ". K4TOPICS ." SET posticon = '". $request['dba']->quote($filename) ."' WHERE posticon = '". $request['dba']->quote($icon['image']) ."'");
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_POSTICONS');
+			$request['template']->setVar('posts_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/posts.html');
 
 			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDPOSTICON'), 'content', TRUE, 'admin.php?act=posticons', 3);
-
-
 			return $action->execute($request);
 
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;

@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: usergroups.php,v 1.2 2005/05/24 20:09:16 k4st Exp $
+* @version $Id: usergroups.php 144 2005-07-05 02:29:07Z Peter Goodman $
 * @package k42
 */
 
@@ -60,7 +60,7 @@ class K4DefaultAction extends FAAction {
 			
 			$request['template']->setList('usergroups', $groups);
 
-			k4_bread_crumbs(&$request['template'], &$request['dba'], 'L_USERGROUPS');
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERGROUPS');
 			$request['template']->setFile('content', 'usergroups.html');
 		
 		/**
@@ -70,7 +70,7 @@ class K4DefaultAction extends FAAction {
 
 			/* Is this user group set? */
 			if(!isset($_USERGROUPS[intval($_REQUEST['id'])])) {
-				k4_bread_crumbs(&$request['template'], &$request['dba'], 'L_INFORMATION');
+				k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 				
 				$action = new K4InformationAction(new K4LanguageElement('L_GROUPDOESNTEXIST'), 'content', FALSE);
 				return $action->execute($request);
@@ -118,10 +118,17 @@ class K4DefaultAction extends FAAction {
 			
 			if($num_results > $perpage) {
 				$request['template']->setPager('users_pager', $pager);
+
+				/* Create a friendly url for our pager jump */
+				$page_jumper	= new FAUrl($_URL->__toString());
+				$page_jumper->args['limit'] = $perpage;
+				$page_jumper->args['page']	= FALSE;
+				$page_jumper->anchor		= FALSE;
+				$request['template']->setVar('pagejumper_url', preg_replace('~&amp;~i', '&', $page_jumper->__toString()));
 			}
 			
 			/* Outside valid page range, redirect */
-			if(!$pager->hasPage($page) && $num_results > $resultsperpage) {
+			if(!$pager->hasPage($page) && $num_pages > 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_PASTPAGELIMIT'), 'content', FALSE, 'usergroups.php?id='. $group['id'] .'&limit='. $perpage .'&page='. $num_pages, 3);
 				return $action->execute($request);
 			}
@@ -135,10 +142,12 @@ class K4DefaultAction extends FAAction {
 
 			$request['template']->setVar('num_group_members', $num_results);
 			
-			if($request['user']->get('id') == $group['mod_id'])
+			if($request['user']->get('id') == $group['mod_id']) {
 				$request['template']->setVisibility('add_user', TRUE);
+				$request['template']->setVar('is_mod', 1);
+			}
 
-			k4_bread_crumbs(&$request['template'], &$request['dba'], $group['name']);
+			k4_bread_crumbs($request['template'], $request['dba'], $group['name']);
 			$request['template']->setList('users_in_usergroup', $users);
 			$request['template']->setFile('content', 'lookup_usergroup.html');
 		}
@@ -153,6 +162,7 @@ $app->setAction('', new K4DefaultAction);
 $app->setDefaultEvent('');
 
 $app->setAction('add_user_to_group', new AddUserToGroup);
+$app->setAction('remove_user_from_group', new RemoveUserFromGroup);
 
 $app->execute();
 

@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Geoffrey Goodman
-* @version $Id$
+* @version $Id: error.php 110 2005-06-13 20:48:58Z Peter Goodman $
 * @package k42
 */
 
@@ -50,7 +50,7 @@ class FAError extends FAObject {
 	function getArray() {
 		return array(	'type' => $this->type,
 						'message' => $this->message,
-						'file' => $this->file,
+						'file' => basename($this->file),
 						'line' => $this->line );
 	}
 		
@@ -94,7 +94,7 @@ class FAError extends FAObject {
 				
 				$buffer .= "<li><b>$function($args)</b>";
 				if (isset($call['file'], $call['line']))
-					$buffer .= " in <b>{$call['file']}</b> on line <b>{$call['line']}</b>";
+					$buffer .= " in <strong>". basename($call['file']) ."</strong> on line <b>{$call['line']}</b>";
 				
 				$buffer .= "</li>\n";
 			}

@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: init.php,v 1.16 2005/05/27 00:17:31 k4st Exp $
+* @version $Id: init.php 149 2005-07-12 14:17:49Z Peter Goodman $
 * @package k42
 */
 
@@ -36,18 +36,20 @@ if(!defined('IN_K4'))
 
 /* Functions */
 require K4_BASE_DIR. '/functions.php';
+require K4_BASE_DIR. '/mimetype.php';
 require K4_BASE_DIR. '/cache.php';
 require K4_BASE_DIR. '/maps.php';
 require K4_BASE_DIR. '/common.php';
 require K4_BASE_DIR. '/heirarchy.php';
 require K4_BASE_DIR. '/bbcode.php';
+require K4_BASE_DIR. '/editor.php';
 require K4_BASE_DIR. '/lazyload.php';
 require K4_BASE_DIR. '/breadcrumbs.php';
 require K4_BASE_DIR. '/globals.class.php';
+require K4_BASE_DIR. '/poll_template.php';
 require K4_BASE_DIR. '/feed.class.php';
 
 /* Action Classes */
-
 require K4_BASE_DIR. '/actions/categories.class.php';
 require K4_BASE_DIR. '/actions/online_users.class.php';
 require K4_BASE_DIR. '/actions/forums.class.php';
@@ -56,7 +58,14 @@ require K4_BASE_DIR. '/actions/topic_review.class.php';
 require K4_BASE_DIR. '/actions/replies.class.php';
 require K4_BASE_DIR. '/actions/users.class.php';
 require K4_BASE_DIR. '/actions/usergroups.class.php';
+require K4_BASE_DIR. '/actions/attachments.class.php';
+require K4_BASE_DIR. '/actions/usercp.class.php';
+require K4_BASE_DIR. '/actions/privmessages.class.php';
+
+/* Moderator Action Classes */
 require K4_BASE_DIR. '/actions/moderator.class.php';
+require K4_BASE_DIR. '/actions/reports.class.php';
+require K4_BASE_DIR. '/actions/modusers.class.php';
 
 /* Admin Action Classes */
 require K4_BASE_DIR. '/actions/admin/maps.class.php';
@@ -68,6 +77,14 @@ require K4_BASE_DIR. '/actions/admin/forums.class.php';
 require K4_BASE_DIR. '/actions/admin/usergroups.class.php';
 require K4_BASE_DIR. '/actions/admin/profilefields.class.php';
 require K4_BASE_DIR. '/actions/admin/users.class.php';
+require K4_BASE_DIR. '/actions/admin/options.class.php';
+require K4_BASE_DIR. '/actions/admin/acronyms.class.php';
+require K4_BASE_DIR. '/actions/admin/censors.class.php';
+require K4_BASE_DIR. '/actions/admin/spiders.class.php';
+require K4_BASE_DIR. '/actions/admin/css.class.php';
+require K4_BASE_DIR. '/actions/admin/faq.class.php';
+require K4_BASE_DIR. '/actions/admin/email.class.php';
+require K4_BASE_DIR. '/actions/admin/posts.class.php';
 
 /* Important Classes */
 require K4_BASE_DIR . '/database.php';

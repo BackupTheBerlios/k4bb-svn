@@ -1,80 +1,82 @@
 <is:admin>
-<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
-	<tr class="thead">
-		<td colspan="5">
-			<script type="text/javascript">doHelpButton('categories');</script>
-			{$L_FORUMS}
-		</td>
-	</tr>
-	<tr class="tcat">
-		<td colspan="5">{$L_MANAGEFORUMS}</td>
-	</tr>
-	<list:list id="categories">
-	<list:default list="categories">
-	<tr class="panel">
-		<td>
-			<div class="outset_box" align="center">
-				<br />
-				{$L_NOFORUMS}
-				<br /><br />
-			</div>
-		</td>
-	</tr>
-	</list:default>
-	<list:item list="categories">
-	<tr class="thead">
-		<td colspan="2">
-			{$name}
-			<span class="minitext" style="font-weight: normal;"><br />{$description}</span>
-		</td>
-		<td width="10%">
-			<div align="right">
-				<script type="text/javascript">doHelpButton('add_forum');</script>
-				<input type="button" class="minitext" style="font-weight: bold;" value="{$L_ADDFORUM}" onclick="document.location='admin.php?act=forums_add&category_id={$category_id}'" />
-			</div>
-		</td>
-	</tr>
-	<tr class="tcat">
-		<td>{$L_ORDER}</td>
-		<td colspan="2">{$L_MANAGEMENT}</td>
-	</tr>
-	<tbody>
-		<list:sublist list="categories" id="forums" column="forums">
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">
+		<script type="text/javascript">doHelpButton('categories');</script>
+		{$L_FORUMS}
+	</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="k4_subtitle" colspan="5">
+				<div style="float: right;"><input type="button" class="button" style="font-weight: bold;" value="{$L_ADDFORUM}" onclick="document.location='admin.php?act=forums_add&category_id=0&forum_id=0'" /></div>
+				{$L_MANAGEFORUMS}
+			</td>
+		</tr>
+		<list:list id="forums">
+		<list:default list="forums">
+		<tr class="alt3">
+			<td>
+				<div class="outset_box" align="center">
+					<br />
+					{$L_NOFORUMS}
+					<br /><br />
+				</div>
+			</td>
+		</tr>
+		</list:default>
 		<list:item list="forums">
-		<list:switch list="forums" var="row_class" a="alt1" b="alt2">
-		<tr class="{$row_class}">
-		</list:switch>
-			<form:form name="update_forum" id="update_forum" action="admin.php?act=forums_simpleupdate" method="post" enctype="multipart/form-data">
-			<td width="10%" align="center">
-				<input type="hidden" name="id" value="{$id}" />
+		<if:if var="row_type" eq="1">
+		<tr class="k4_maintitle">
+			<td colspan="2">
+				{$name}
+				<span class="minitext" style="font-weight: normal;"><br />{$description}</span>
+			</td>
+			<td width="10%">
+				<div align="right">
+					<script type="text/javascript">doHelpButton('add_forum');</script>
+					<input type="button" class="button" style="font-weight: bold;" value="{$L_ADDFORUM}" onclick="document.location='admin.php?act=forums_add&category_id={$category_id}'" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle">{$L_ORDER}</td>
+			<td class="k4_subtitle" colspan="2">{$L_MANAGEMENT}</td>
+		</tr>
+		<else:if var="row_type" eq="2">	
+		<form:form name="update_forum" id="update_forum" action="admin.php?act=forums_simpleupdate" method="post" enctype="multipart/form-data">
+		<list:switch list="forums" var="row_class" a="alt1" b="alt3">
+		<tr>
+			<td class="{$row_class}" width="10%" align="center">
+				<input type="hidden" name="id" value="{$forum_id}" />
 				<input type="text" size="3" name="row_order" id="row_order" value="{$row_order}" />
 				<form:error id="row_order_error" for="row_order" setclass="inputfailed" regex=".+"><span class="minitext">{$L_INSERTCATORDER}</span></form:error>
 				<form:error id="row_order_num_error" for="row_order" setclass="inputfailed" regex="([0-9])+"><span class="minitext">{$L_INSERTCATORDERNUM}</span></form:error>
 			</td>
-			<td width="80%">
+			<td class="{$row_class}" width="80%">
 				<div align="left" style="overflow: auto;">
 					<script type="text/javascript">doHelpButton('add_forum');</script>
-					{$level}{$level}<if:if var="parent_id" noteq="category_id"><img src="Images/{$IMG_DIR}/Icons/navbits_finallink.gif" alt="" />&nbsp;</if:if>
+					{$level}{$level}<if:if var="parent_id" noteq="0"><if:if var="parent_id" noteq="category_id"><img src="Images/{$IMG_DIR}/Icons/navbits_finallink.gif" alt="" />&nbsp;</if:if></if:if>
 					<strong>{$name}</strong>
 					<br />
 					{$level}{$level}<span class="minitext">{$description}</span>
 					<div align="right">
-						<input type="button" class="minitext" value="{$L_EDITPERMISSIONS}" onclick="document.location='admin.php?act=forums_permissions&id={$id}'" />
-						<input type="button" class="minitext" style="font-weight: bold;" value="{$L_ADDSUBFORUM}" onclick="document.location='admin.php?act=forums_add&category_id={$category_id}&forum_id={$id}'" />
+						<input type="button" class="button" value="{$L_EDITPERMISSIONS}" onclick="document.location='admin.php?act=forums_permissions&id={$forum_id}'" />
+						<input type="button" class="button" style="font-weight: bold;" value="{$L_ADDSUBFORUM}" onclick="document.location='admin.php?act=forums_add&category_id={$category_id}&forum_id={$forum_id}'" />
 					</div>
 				</div>
 			</td>
-			<td width="10%" align="center">
-				<input type="submit" class="minitext" value="{$L_SAVE}" /><input type="button" class="minitext" value="{$L_EDIT}" onclick="document.location='admin.php?act=forums_edit&id={$id}'" />
-				<br />
-				<input type="button" class="minitext" style="color: #FF0000;" value="{$L_DELETE}" onclick="if(confirm('{$L_CHECKDELFORUM}')) { document.location='admin.php?act=forums_remove&id={$id}'; } else { return false; }" />
+			<td class="alt2" width="10%" align="center">
+				<input type="submit" class="button" value="{$L_SAVE}" /><input type="button" class="button" value="{$L_EDIT}" onclick="document.location='admin.php?act=forums_edit&id={$forum_id}'" />
+				<if:if var="can_delete" eq="1">
+					<br />
+					<input type="button" class="button" style="color: #FF0000;" value="{$L_DELETE}" onclick="if(confirm('{$L_CHECKDELFORUM}')) { document.location='admin.php?act=forums_remove&id={$forum_id}'; } else { return false; }" />
+				</if:if>
 			</td>
-			</form:form>
 		</tr>
+		</list:switch>
+		</form:form>
+		</if:if>
 		</list:item>
-		</list:sublist>
-	</tbody>
-	</list:item>
-	</list:list>
-</table>
+		</list:list>
+	</table>
+</div>
 </is:admin>

@@ -25,14 +25,14 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: topic_review.class.php,v 1.3 2005/05/16 02:11:55 k4st Exp $
+* @version $Id: topic_review.class.php 144 2005-07-05 02:29:07Z Peter Goodman $
 * @package k42
 */
 
 error_reporting(E_ALL);
 
 if(!defined('IN_K4')) {
-	exit;
+	return;
 }
 
 class TopicReviewIterator extends FAArrayIterator {
@@ -41,23 +41,37 @@ class TopicReviewIterator extends FAArrayIterator {
 	var $users = array();
 	var $qp;
 	var $user;
+	var $url;
+	
+	function TopicReviewIterator(&$dba, $topic, &$replies, $user) {
+		$this->__construct($dba, $topic, $replies, $user);
+	}
 
-	function __construct(&$dba, $topic, &$replies, &$user) {
+	function __construct(&$dba, $topic, &$replies, $user) {
 		
-		global $_QUERYPARAMS, $_USERGROUPS;
+		global $_QUERYPARAMS, $_USERGROUPS, $_URL, $_LANG;
 		
 		$this->qp						= $_QUERYPARAMS;
 		$this->dba						= &$dba;
 		$this->groups					= $_USERGROUPS;
 		$this->result					= &$replies;
-		$this->user						= &$user;
+		$this->user						= $user;
+		
+		// create a url out of this page.
+		$url		=& new FAUrl($_URL->__toString());
+		$url->args	= array();
+		$url->anchor= FALSE;
+		$url->file	= 'viewpoll.php';
+		$this->url	= $url->__toString();
 
+		$this->poll_text				= $_LANG['L_POLL'];
+		
 		parent::__construct(array($topic));
 	}
 
 	function &current() {
 		$temp							= parent::current();
-		
+
 		$temp['posticon']				= @$temp['posticon'] != '' ? iif(file_exists(BB_BASE_DIR .'/tmp/upload/posticons/'. @$temp['posticon']), @$temp['posticon'], 'clear.gif') : 'clear.gif';
 
 		if($temp['poster_id'] > 0) {
@@ -79,15 +93,25 @@ class TopicReviewIterator extends FAArrayIterator {
 	
 		/* Do we have any replies? */
 		//$num_replies					= @(($temp['row_right'] - $temp['row_left'] - 1) / 2);
+		
+		
+		$bbcode							= &new BBCodex($this->dba, $this->user, $temp['body_text'], $temp['forum_id'], TRUE, TRUE, TRUE, TRUE);
 
 		if($temp['num_replies'] > 0) {
 
-			$temp['replies']			= &new RepliesReviewIterator($this->result, $this->qp, $this->dba, $this->users, $this->groups, $this->user);
+			$temp['replies']			= &new RepliesReviewIterator($this->result, $this->qp, $this->dba, $this->users, $this->groups, $this->user, $this->url, $this->poll_text, $bbcode);
 
 		}
 		
-		$bbcode							= &new BBCodex(&$this->dba, $this->user, $temp['body_text'], $temp['forum_id'], TRUE, TRUE, TRUE, TRUE);
-		$temp['reverted_body_text']		= $bbcode->revert();
+		//$temp['reverted_body_text']		= $bbcode->revert();
+		
+		if($temp['is_poll'] == 1) {
+			do_post_poll_urls($temp['reverted_body_text'], $this->dba, $this->url, $this->poll_text);
+		}
+
+		do_post_polls($temp, $this->dba, $this->url, $this->poll_text);
+		
+		unset($bbcode, $user, $group);
 
 		return $temp;
 	}
@@ -100,8 +124,12 @@ class RepliesReviewIterator extends FAProxyIterator {
 	var $img_dir;
 	var $forums;
 	var $user;
+	
+	function RepliesReviewIterator(&$result, $queryparams, &$dba, $users, $groups, &$user, $url, $poll_text, &$bbcode) {
+		$this->__construct($result, $queryparams, $dba, $users, $groups, $user, $url, $poll_text, $bbcode);
+	}
 
-	function RepliesReviewIterator(&$result, $queryparams, &$dba, $users, $groups, &$user) {
+	function __construct(&$result, $queryparams, &$dba, $users, $groups, &$user, $url, $poll_text, &$bbcode) {
 		
 		$this->users			= $users;
 		$this->qp				= $queryparams;
@@ -109,6 +137,10 @@ class RepliesReviewIterator extends FAProxyIterator {
 		$this->result			= &$result;
 		$this->groups			= $groups;
 		$this->user				= &$user;
+		
+		$this->url				= $url;
+		$this->poll_text		= $poll_text;
+		$this->bbcode			= &$bbcode;
 
 		parent::__construct($this->result);
 	}
@@ -116,7 +148,7 @@ class RepliesReviewIterator extends FAProxyIterator {
 	function &current() {
 		$temp					= parent::current();
 		
-		$temp['posticon']		= @$temp['posticon'] != '' ? iif(file_exists(BB_BASE_DIR .'/tmp/upload/posticons/'. @$temp['posticon']), @$temp['posticon'], 'clear.gif') : 'clear.gif';
+		$temp['posticon']		= isset($temp['posticon']) && $temp['posticon'] != '' ? (file_exists(BB_BASE_DIR .'/tmp/upload/posticons/'. $temp['posticon']) ? $temp['posticon'] : 'clear.gif') : 'clear.gif';
 
 		if($temp['poster_id'] > 0) {
 			
@@ -138,9 +170,15 @@ class RepliesReviewIterator extends FAProxyIterator {
 			foreach($user as $key => $val)
 				$temp['post_user_'. $key] = $val;
 		}
+		
+		$this->bbcode->text				= $temp['body_text'];
+		$temp['reverted_body_text']		= $this->bbcode->revert();
+		
+		if($temp['is_poll'] == 1) {
+			$temp['reverted_body_text']	= do_post_poll_urls($temp['reverted_body_text'], $this->dba, $this->url, $this->poll_text);
+		}
 
-		$bbcode							= &new BBCodex(&$this->dba, $this->user, $temp['body_text'], $temp['forum_id'], TRUE, TRUE, TRUE, TRUE);
-		$temp['reverted_body_text']		= $bbcode->revert();
+		do_post_polls($temp, $this->dba, $this->url, $this->poll_text);
 
 		/* Should we free the result? */
 		if(!$this->hasNext()) {

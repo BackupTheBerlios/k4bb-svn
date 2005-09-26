@@ -25,73 +25,77 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: categories.class.php,v 1.5 2005/05/16 02:11:54 k4st Exp $
+* @version $Id: categories.class.php 158 2005-07-18 02:55:30Z Peter Goodman $
 * @package k42
 */
 
 error_reporting(E_ALL);
 
 if(!defined('IN_K4')) {
-	exit;
+	return;
 }
 
 class MarkCategoryForumsRead extends FAAction {
 	function execute(&$request) {
 		
-		if(!isset($_REQUEST['id']) || !$_REQUEST['id'] || intval($_REQUEST['id']) == 0) {
+		if(isset($_REQUEST['c']) && intval($_REQUEST['c']) != 0) {
+			$forum					= $request['dba']->getRow("SELECT * FROM ". K4CATEGORIES ." WHERE category_id = ". intval($_REQUEST['c']));
+		} elseif(isset($_REQUEST['f']) && intval($_REQUEST['f']) != 0) {
+			$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['f']));
+		} else {
 			/* set the breadcrumbs bit */
-			k4_bread_crumbs(&$request['template'], $request['dba'], 'L_INVALIDFORUM');
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDFORUM');
+			
+			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
+			return $action->execute($request);
+		}
+				
+		if(!$forum || !is_array($forum) || empty($forum)) {
+			/* set the breadcrumbs bit */
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDFORUM');
 			$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUMASREAD'), 'content', FALSE);
 
 			return $action->execute($request);
-		} else {
+		}
 			
-			$forum			= $request['dba']->getRow("SELECT * FROM ". K4INFO ." WHERE id = ". intval($_REQUEST['id']));
+		if($forum['row_type'] & CATEGORY) {
 			
-			if(!$forum || !is_array($forum) || empty($forum)) {
-				/* set the breadcrumbs bit */
-				k4_bread_crumbs(&$request['template'], $request['dba'], 'L_INVALIDFORUM');
-				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUMASREAD'), 'content', FALSE);
+			/* Set the Breadcrumbs bit */
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_MARKFORUMSREAD', $forum);
+			
+			/* Get the forums of this Category */
+			$result						= $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE category_id = ". intval($forum['category_id']));
+			
+			$forums						= isset($_REQUEST['forums']) && $_REQUEST['forums'] != null && $_REQUEST['forums'] != '' ? iif(!unserialize($_REQUEST['forums']), array(), nserialize($_REQUEST['forums'])) : array();
+			$cookiestr						= '';
+			$cookieinfo						= get_forum_cookies();
 
-				return $action->execute($request);
-			} else {
+			/* Loop through the forums */
+			while($result->next()) {
 				
-				if($forum['row_type'] & CATEGORY) {
-					
-					/* Set the Breadcrumbs bit */
-					k4_bread_crumbs(&$request['template'], $request['dba'], 'L_MARKFORUMSREAD', $forum);
-					
-					/* Get the forums of this Category */
-					$result						= $request['dba']->executeQuery("SELECT * FROM ". K4INFO ." WHERE row_left > ". $forum['row_left'] ." AND row_right < ". $forum['row_right'] ." AND row_type = ". FORUM);
-					
-					$forums						= isset($_REQUEST['forums']) && $_REQUEST['forums'] != null && $_REQUEST['forums'] != '' ? iif(!unserialize($_REQUEST['forums']), array(), nserialize($_REQUEST['forums'])) : array();
-
-					/* Loop through the forums */
-					while($result->next()) {
-						
-						$temp = $result->current();
-						
-						$forums[$temp['id']]	= array();
-						
-					}
-					
-					$forums						= serialize($forums);
-
-					/* Cache some info to set a cookie on the next refresh */
-					bb_setcookie_cache('forums', $forums, time() + ini_get('session.gc_maxlifetime'));
-
-					$action = new K4InformationAction(new K4LanguageElement('L_MARKEDFORUMSREADCAT', $forum['name']), 'content', TRUE, 'viewforum.php?id='. $forum['id'], 3);
-
-
-					return $action->execute($request);
-				} else {
-					/* set the breadcrumbs bit */
-					k4_bread_crumbs(&$request['template'], $request['dba'], 'L_INVALIDFORUM');
-					$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUMASREAD'), 'content', FALSE);
-
-					return $action->execute($request);
-				}
+				$temp = $result->current();
+				
+				$cookieinfo[$temp['forum_id']] = time();
+				
 			}
+
+			$result->free();
+			
+			foreach($cookieinfo as $key => $val)
+				$cookiestr					.= ','. $key .','. $val;
+
+			setcookie(K4FORUMINFO, trim($cookiestr, ','), time() + 2592000, get_domain());
+
+			$action = new K4InformationAction(new K4LanguageElement('L_MARKEDFORUMSREADCAT', $forum['name']), 'content', TRUE, 'viewforum.php?id='. $forum['forum_id'], 3);
+
+
+			return $action->execute($request);
+		} else {
+			/* set the breadcrumbs bit */
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDFORUM');
+			$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUMASREAD'), 'content', FALSE);
+
+			return $action->execute($request);
 		}
 
 		return TRUE;
@@ -101,16 +105,17 @@ class MarkCategoryForumsRead extends FAAction {
 class K4CategoriesIterator extends FAProxyIterator {
 	var $dba;
 	var $result;
+	
+	function K4CategoriesIterator(&$dba, $query = NULL) {
+		$this->__construct($dba, $query);	
+	}
 
 	function __construct(&$dba, $query = NULL) {
 		global $_QUERYPARAMS;
 		
-		$this->query_params	= $_QUERYPARAMS;
 		$this->dba			= &$dba;
 		
-		$query_params		= $this->query_params['info'] . $this->query_params['category'];
-
-		$query				= $query == NULL ? "SELECT $query_params FROM ". K4INFO ." i LEFT JOIN ". K4CATEGORIES ." c ON c.category_id = i.id WHERE i.row_type = ". CATEGORY ." ORDER BY i.row_order ASC" : $query;
+		$query				= $query == NULL ? "SELECT * FROM ". K4CATEGORIES ." ORDER BY row_order ASC" : $query;
 		
 		$this->result		= &$this->dba->executeQuery($query);
 
@@ -122,12 +127,9 @@ class K4CategoriesIterator extends FAProxyIterator {
 		
 		cache_forum($temp);
 		
-		if(($temp['row_right'] - $temp['row_left'] - 1) > 0) {
-			
-			$query_params	= $this->query_params['info'] . $this->query_params['forum'];
+		$temp['forums']				= &new K4ForumsIterator($this->dba, "SELECT * FROM ". K4FORUMS ." WHERE category_id = ". $temp['category_id'] ." AND row_level = ". ($temp['row_level']+1) ." ORDER BY row_order ASC");
 
-			$temp['forums'] = &new K4ForumsIterator($this->dba, "SELECT $query_params FROM ". K4INFO ." i LEFT JOIN ". K4FORUMS ." f ON f.forum_id = i.id WHERE i.row_left > ". $temp['row_left'] ." AND i.row_right < ". $temp['row_right'] ." AND i.row_type = ". FORUM ." AND i.parent_id = f.category_id ORDER BY i.row_order ASC");
-		}
+		$temp['safe_description']	= strip_tags($temp['description']);
 
 		/* Should we free the result? */
 		if(!$this->hasNext())

@@ -46,11 +46,12 @@
 		margin: 0px;
 	}
 	.info_box {
+		width: auto;
 		padding: 10px;
 		text-align: justify;
 	}
 	.main_box_header {
-		width: 520px;
+		width: 545px;
 		height: 10px;
 		background-image: url('images/main_box_header.gif');
 		background-position: left bottom;
@@ -59,7 +60,7 @@
 		top: 3px;
 	}
 	.main_box_footer {
-		width: 520px;
+		width: 545px;
 		height: 10px;
 		background-image: url('images/main_box_footer.gif');
 		background-position: left top;
@@ -68,7 +69,7 @@
 		top: -3px;
 	}
 	.main_box {
-		width: 520px;
+		width: 545px;
 		background-color: #FEF4F7;
 		background-image: url('images/main_box_gradient.gif');
 		background-position: left bottom;
@@ -82,7 +83,8 @@
 		text-align: left;
 		font-size: 13px;
 		padding: 5px;
-		border-bottom: 1px solid #FEEAEF;
+		border-bottom: 1px solid #FFFFFF;
+		background-color: #FEEAEF;
 	}
 	.search_box {
 		border: 1px solid #666666;
@@ -120,20 +122,21 @@
 	.inputfailed {
 		border: 1px solid #FF0000;
 	}
+	.header {
+		border-left: 1px solid #FEEAEF;
+		border-right: 1px solid #FEE4EB;
+	}
 	</style>
 </head>
 <body>
 <div align="center">
-	<br />
-	<table cellpadding="0" cellspacing="0" border="0">
+	<div class="main_box_header">&nbsp;</div>
+	<table cellpadding="0" cellspacing="0" border="0" class="header">
 		<tr>
-			<td><img src="images/k4.gif" alt="k4 Bulletin Board" border="0" style="position:relative;left:-10px;" /></td>
-			<td valign="bottom"><h5>Install k4 Bulletin Board</h5></td>
+			<td><img src="images/k4.gif" alt="k4 Bulletin Board" border="0" /></td>
+			<td><img src="images/header.gif" alt="k4 Bulletin Board" border="0" /></td>
 		</tr>
 	</table>
-
-	<br />
-	<div class="main_box_header">&nbsp;</div>
 	<div class="main_box" align="center">
 		<div class="info_box">
 			<p class="smalltext">Congratulations, k4 Bulletin Board has been successfully installed on your server.  Please be sure to delete the install directory located in the forum directory.  If you fail to do so, anyone could easily whipe your k4 Bulletin Board installation.  If you do not feel comfortable deleting the directory, it is suggested that you move it above your document root to prevent outsiders from accessing its contents.</p>

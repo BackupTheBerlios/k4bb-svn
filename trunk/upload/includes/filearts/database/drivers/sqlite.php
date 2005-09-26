@@ -26,7 +26,7 @@
 *
 * @author Peter Goodman
 * @author Geoffrey Goodman
-* @version $Id: sqlite.php,v 1.9 2005/05/24 20:04:07 k4st Exp $
+* @version $Id: sqlite.php 147 2005-07-09 17:12:40Z Peter Goodman $
 * @package k42
 */
 
@@ -46,7 +46,8 @@ class SQLiteResultIterator extends FADBResult {
 	}
 
 	function &current() {
-		return $this->current;
+		$current = $this->current;
+		return $current;
 	}
 
 	function hasNext() {
@@ -59,16 +60,22 @@ class SQLiteResultIterator extends FADBResult {
 
 
 	function &next() {
+		$ret = FALSE;
 		if ($this->hasNext()) {
 			$this->current = sqlite_fetch_array($this->id, $this->mode);
 			$this->row++;
 
-			return $this->current();
+			$ret = $this->current();
 		}
+		return $ret;
 	}
 	
 	function numRows() {
 		return $this->size;
+	}
+
+	function seek($offset) {
+		return sqlite_seek($this->id, $offset);
 	}
 
 	function free() {
@@ -76,8 +83,8 @@ class SQLiteResultIterator extends FADBResult {
 	}
 
 	function reset() {
-		if ($this->row > 0)
-			sqlite_seek($this->id, 0);
+		if ($this->row >= 0)
+			$this->seek(0);
 
 		$this->row = -1;
 
@@ -119,9 +126,9 @@ class SQLiteConnection extends FADBConnection {
 
 			return FALSE;
 		}
-
+		
 		$link = @sqlite_open($info['directory'] .'/'. $info['database'], 0666);
-
+	
 		if (!is_resource($link)) {
 			$this->valid = FALSE;
 			trigger_error("Unable to connect to the database.", E_USER_ERROR);
@@ -135,7 +142,8 @@ class SQLiteConnection extends FADBConnection {
 	}
 
 	function &prepareStatement($sql) {
-		return $this->createStatement($sql, &$this);
+		$ret = $this->createStatement($sql, $this);
+		return $ret;
 	}
 
 	function executeUpdate($stmt) {
@@ -182,7 +190,7 @@ class SQLiteConnection extends FADBConnection {
 		return $this->num_queries;
 	}
 	
-	function getInsertId() {
+	function getInsertId($table = FALSE, $column = FALSE) {
 		return sqlite_last_insert_rowid($this->link);
 	}
 
@@ -193,6 +201,23 @@ class SQLiteConnection extends FADBConnection {
 	function quote($value) {
 		return sqlite_escape_string($value);
 	}
+	
+	function createTemporary($table, $original = FALSE) {
+		
+		if($original) {
+			$row					= $this->getRow("SELECT sql, name, type FROM sqlite_master WHERE tbl_name = '". $original ."' ORDER BY type DESC"); //table sql
+
+			if(is_array($row) && !empty($row)) {
+			
+				$origsql			= trim(preg_replace("/[\s]+/", " ", str_replace(",", ", ", preg_replace("/[\(]/", "( ", $row['sql'], 1))));
+				$origsql			= preg_replace("~, PRIMARY KEY\((.+?)\)~i", "", $origsql);
+				$sql				= 'CREATE TEMPORARY '. substr(trim(preg_replace("'". $original ."'", $table, $origsql, 1)), 6);
+				
+				/* Create the temporary table */
+				$this->executeUpdate($sql);
+			}
+		}
+	}
 
 	/* Modified and cleaned version of http://code.jenseng.com/db/ */
 	function alterTable($table, $alterdefs) {
@@ -200,14 +225,15 @@ class SQLiteConnection extends FADBConnection {
 		$this->num_queries++;
 
 		if($alterdefs != '') {
-			$result								= sqlite_query($this->link, "SELECT sql, name, type FROM sqlite_master WHERE tbl_name = '". $table ."' ORDER BY type DESC");
-		
-			if(sqlite_num_rows($result) > 0) {
 			
-				$row							= sqlite_fetch_array($result); //table sql
+			$row							= $this->getRow("SELECT sql, name, type FROM sqlite_master WHERE tbl_name = '". $table ."' ORDER BY type DESC"); //table sql
+
+			if(is_array($row) && !empty($row)) {
+			
 				$tmpname						= 't'. time();
 				$origsql						= trim(preg_replace("/[\s]+/", " ", str_replace(",", ", ", preg_replace("/[\(]/", "( ", $row['sql'], 1))));
-				$createtemptableSQL				= 'CREATE TEMPORARY '.substr(trim(preg_replace("'". $table ."'", $tmpname, $origsql, 1)), 6);
+				$createtemptableSQL				= 'CREATE TEMPORARY '. substr(trim(preg_replace("'". $table ."'", $tmpname, $origsql, 1)), 6);
+				//echo substr(trim(preg_replace("'". $table ."'", $tmpname, $origsql, 1)), 6); exit;
 				$createindexsql					= array();
 				$i								= 0;
 				$defs							= preg_split("/[,]+/", $alterdefs, -1, PREG_SPLIT_NO_EMPTY);
@@ -230,8 +256,10 @@ class SQLiteConnection extends FADBConnection {
 				reset($newcols);
 
 				while(list($key, $val) = each($newcols)) {
-					$newcolumns .= iif($newcolumns, ', ', '') . $val;
-					$oldcolumns .= iif($oldcolumns, ', ', '') . $key;
+					if(strtoupper($val) != 'PRIMARY' && strtoupper($key) != 'PRIMARY' && strtoupper($val) != 'UNIQUE' && strtoupper($key) != 'UNIQUE') {
+						$newcolumns		.= ($newcolumns ? ', ' : '') . $val;
+						$oldcolumns		.= ($oldcolumns ? ', ' : '') . $key;
+					}
 				}
 
 				$copytotempsql						= 'INSERT INTO '. $tmpname .'('. $newcolumns .') SELECT '. $oldcolumns .' FROM '. $table;
@@ -253,10 +281,10 @@ class SQLiteConnection extends FADBConnection {
 							$createtesttableSQL				= substr($createtesttableSQL,0,strlen($createtesttableSQL)-1).',';
 							
 							for($i = 1; $i < sizeof($defparts); $i++) {
-								$createtesttableSQL			.= ' '.$defparts[$i];
+								$createtesttableSQL			.= ' '. $defparts[$i];
 							}
 							
-							$createtesttableSQL				.= ')';
+							$createtesttableSQL				.= ');';
 
 							break;
 						}
@@ -320,32 +348,40 @@ class SQLiteConnection extends FADBConnection {
 
 					$prevword = $defparts[count($defparts)-1];
 				}
+				
+				preg_match("~, PRIMARY KEY\((.+?)\)~i", $createtesttableSQL, $matches);
 
-
+				if($matches > 0) {
+					$createtesttableSQL = preg_replace("~, PRIMARY KEY\((.+?)\)~i", "", $createtesttableSQL);
+					$createtesttableSQL = preg_replace("~\);$~", ", PRIMARY KEY(". $matches[1] .") );", $createtesttableSQL);
+				}
+				
 				/**
 				 * this block of code generates a test table simply to verify that the columns 
 				 * specifed are valid in an sql statement this ensures that no reserved words 
 				 * are used as columns, for example.
 				 */
-				if(!$this->query($createtesttableSQL)){
+				
+				if(!$this->executeUpdate($createtesttableSQL)){
 					trigger_error('The test table could not be created.<br /><br />'. $createtesttable, E_USER_ERROR);
 					return FALSE;
 				}
 
-				$droptempsql = 'DROP TABLE '. $tmpname;
-				sqlite_query($this->link, $droptempsql);
+				$this->executeUpdate('DROP TABLE '. $tmpname);
 				/* end block */
 
-
-				$createnewtableSQL	= 'CREATE '.substr(trim(preg_replace("'". $tmpname ."'", $table, $createtesttableSQL, 1)), 17);
+				$createnewtableSQL	= 'CREATE '. substr(trim(preg_replace("'". $tmpname ."'", $table, $createtesttableSQL, 1)), 17);
+				
 				$newcolumns			= '';
 				$oldcolumns			= '';
 
 				reset($newcols);
 
 				while(list($key, $val) = each($newcols)) {
-					$newcolumns		.= iif($newcolumns, ', ', '') . $val;
-					$oldcolumns		.= iif($oldcolumns, ', ', '') . $key;
+					if(strtoupper($val) != 'PRIMARY' && strtoupper($key) != 'PRIMARY' && strtoupper($val) != 'UNIQUE' && strtoupper($key) != 'UNIQUE') {
+						$newcolumns		.= ($newcolumns ? ', ' : '') . $val;
+						$oldcolumns		.= ($oldcolumns ? ', ' : '') . $key;
+					}
 				}
 
 				$copytonewsql		= 'INSERT INTO '. $table .'('. $newcolumns .') SELECT '. $oldcolumns .' FROM '. $tmpname;
@@ -358,7 +394,7 @@ class SQLiteConnection extends FADBConnection {
 				$this->beginTransaction();
 				
 				/* Create our temporary table */
-				$this->executeUpdate($createtemptableSQL);
+				$this->executeUpdate($createtesttableSQL); //createtemptableSQL
 
 				/* Copy the data to the temporary table */
 				$this->executeUpdate($copytotempsql);
@@ -373,7 +409,7 @@ class SQLiteConnection extends FADBConnection {
 				$this->executeUpdate($copytonewsql);
 
 				/* Drop our temporary table */
-				$this->executeUpdate($droptempsql);
+				$this->executeUpdate('DROP TABLE '. $tmpname);
 				
 				/* Finish the transaction */
 				$this->commitTransaction();

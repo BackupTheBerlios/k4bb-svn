@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Geoffrey Goodman
-* @version $Id$
+* @version $Id: controller.php 144 2005-07-05 02:29:07Z Peter Goodman $
 * @package k42
 */
  
@@ -64,7 +64,8 @@ class FAController extends FAObject {
 	}
 
 	function &getRequest() {
-		return $this->_request;
+		$ret = &$this->_request;
+		return $ret;
 	}
 	
 	function addFilter(&$filter) {
@@ -126,7 +127,7 @@ class FAController extends FAObject {
 	}
 	
 	function setDefaultEvent($event) {
-		$this->_defaultEvent = $event;
+		$this->_defaultEvent = &$event;
 	}
 	
 	function setInvalidAction(&$action) {
@@ -142,10 +143,11 @@ class FAController extends FAObject {
 	}
 
 	function execute() {
-		// Start with the default event
-		$event = $this->_defaultEvent;
-		$request = &$this->getRequest();
 		
+		// Start with the default event
+		$event		= $this->_defaultEvent;
+		$request	= &$this->getRequest();
+
 		if (isset($_GET[FA_EVENT_VAR])) {
 			$event = $_GET[FA_EVENT_VAR];
 		}
@@ -153,7 +155,7 @@ class FAController extends FAObject {
 		$request['event'] = $event;
 		
 		$action = &$this->getAction($event);
-
+		
 		if (!empty($this->_unsatisfied)) {
 			list($filter, $unsatisfied) = each($this->_unsatisfied);
 
@@ -161,17 +163,18 @@ class FAController extends FAObject {
 		}
 
 		foreach ($this->_filters as $filter) {
+			
 			// If the filter returns FALSE run the action immediately
 			if ($filter->execute($action, $request))
 				break;
 		}
-
+				
 		$this->_runAction($action, $request);
 	}
 	
 	function _runAction(&$action, &$request) {
 		$return = $action->execute($request);
-
+		
 		if (is_a($return, 'FAAction'))
 			$this->_runAction($return, $request);
 	}
@@ -193,7 +196,7 @@ class FARequestFilter extends FAObject {
 class FARequiredFilter extends FARequestFilter {
 
 	function execute(&$request, $var) {
-		return isset($request[$var]);
+		return isset($request[$var]) && $request[$var] != '';
 	}
 }
 
@@ -205,8 +208,8 @@ class FARegexFilter extends FARequestFilter {
 	}
 
 	function execute(&$request, $var) {
-		$value = (isset($request[$var])) ? $request[$var] : '';
-
+		$value = (isset($request[$var])) ? trim($request[$var]) : '';
+		
 		return (bool)preg_match($this->_regex, $value);
 	}
 }
@@ -221,7 +224,7 @@ class FALengthFilter extends FARequestFilter {
 	}
 
 	function execute(&$request, $var) {
-		$value = (isset($request[$var])) ? $request[$var] : '';
+		$value = (isset($request[$var])) ? trim($request[$var]) : '';
 		$length = strlen($value);
 		
 		return !($length > $this->_max || $length < $this->_min);
@@ -236,8 +239,8 @@ class FACompareFilter extends FARequestFilter {
 	}
 
 	function execute(&$request, $var) {
-		$value1 = (isset($request[$var])) ? $request[$var] : '';
-		$value2 = (isset($request[$this->_compare])) ? $request[$this->_compare] : '';
+		$value1 = (isset($request[$var])) ? trim($request[$var]) : '';
+		$value2 = (isset($request[$this->_compare])) ? trim($request[$this->_compare]) : '';
 
 		return ($value1 == $value2);
 	}
@@ -270,6 +273,10 @@ class FAEvent extends FAObject {
 
 	function runPostFilter($var, &$filter) {
 		return (bool)$filter->execute($_POST, $var);
+	}
+	
+	function runRequestFilter($var, &$filter) {
+		return (bool)$filter->execute($_REQUEST, $var);
 	}
 }
 

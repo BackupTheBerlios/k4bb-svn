@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Geoffrey Goodman
-* @version $Id$
+* @version $Id: form.php 110 2005-06-13 20:48:58Z Peter Goodman $
 * @package k42
 */
 
@@ -48,7 +48,7 @@ class Form_Form_Compiler extends FATemplateTagCompiler {
 class Form_Error_Compiler extends FATemplateTagCompiler {
 	function writeVerificationJs() {
 			$id = $this->getAttribute('id');
-			$class = $this->getAttribute('class');
+			$class = $this->getAttribute('setclass');
 			$for = $this->getAttribute('for');
 
 			if ($this->isAttribute('regex')) {

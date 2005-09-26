@@ -25,20 +25,50 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: maps.php,v 1.6 2005/05/05 21:35:48 k4st Exp $
+* @version $Id: maps.php 144 2005-07-05 02:29:07Z Peter Goodman $
 * @package k42
 */
 
 error_reporting(E_ALL);
 
 if(!defined('IN_K4')) {
-	exit;
+	return;
 }
 
+/**
+ * Recursively get MAPs
+ */
+function get_recursive_maps(&$request, &$all_maps, $parents, &$maps, $start_level) {
+	
+	while($maps->next()) {
+		$map = $maps->current();
+		
+		if($map['row_level']-$start_level > 0) {
+			$map['level']	= str_repeat('<img src="Images/'. $request['template']->getVar('IMG_DIR') .'/Icons/threaded_bit.gif" alt="" border="0" />', $map['row_level']-$start_level);
+		}
+
+		$all_maps[] = $map;
+
+		if(in_array($map['id'], $parents) && $map['num_children'] > 0) {
+			
+			// reset it if needed
+			$map['expanded'] = 1;
+			$all_maps[count($all_maps)-1] = $map;
+			
+			$n_maps = $request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE parent_id = ". intval($map['id']) ." ORDER BY name ASC");
+			get_recursive_maps($request, $all_maps, $parents, $n_maps, $start_level);
+		}
+
+	}
+}
+
+/**
+ * Get a MAP
+ */
 function get_map(&$user, $varname, $method, $args) {
 	
 	global $_MAPS;
-
+	
 	/* Simple global MAP request */
 	if(is_array($args) && empty($args)) {
 		$perm_needed		= isset($_MAPS[$varname][$method]) ? $_MAPS[$varname][$method] : 0;
@@ -46,8 +76,12 @@ function get_map(&$user, $varname, $method, $args) {
 
 		/* Forum */
 		if(isset($args['forum_id']) && intval($args['forum_id']) != 0) {
-			$perm_needed	= isset($_MAPS['forums'][$args['forum_id']][$varname][$method]) ? $_MAPS['forums'][$args['forum_id']][$varname][$method] : 0;
-		
+			
+			if($varname != '') {
+				$perm_needed	= isset($_MAPS['forums'][$args['forum_id']][$varname][$method]) ? $_MAPS['forums'][$args['forum_id']][$varname][$method] : 0;
+			} else {
+				$perm_needed	= isset($_MAPS['forums'][$args['forum_id']][$method]) ? $_MAPS['forums'][$args['forum_id']][$method] : 0;
+			}
 		/* Group */
 		} else if(isset($args['group_id']) && intval($args['group_id']) != 0) {
 			$perm_needed	= isset($_MAPS['groups'][$args['group_id']][$varname][$method]) ? $_MAPS['groups'][$args['group_id']][$varname][$method] : 0;
@@ -58,8 +92,12 @@ function get_map(&$user, $varname, $method, $args) {
 		
 		/* Category */
 		} else if(isset($args['category_id']) && intval($args['category_id']) != 0) {
-			$perm_needed	= isset($_MAPS['categories'][$args['category_id']][$varname][$method]) ? $_MAPS['categories'][$args['category_id']][$varname][$method] : 0;
-		
+			
+			if($varname != '') {
+				$perm_needed	= isset($_MAPS['categories'][$args['category_id']][$varname][$method]) ? $_MAPS['categories'][$args['category_id']][$varname][$method] : 0;
+			} else {
+				$perm_needed	= isset($_MAPS['categories'][$args['category_id']][$method]) ? $_MAPS['categories'][$args['category_id']][$method] : 0;
+			}
 		/* Blog */
 		} else if(isset($args['blog']) && $args['blog'] == TRUE) {
 			$perm_needed	= isset($_MAPS['blog'][$varname][$method]) ? $_MAPS['blog'][$varname][$method] : 0;
@@ -77,7 +115,7 @@ function get_maps(&$dba) {
 	
 	$maps	= array();
 	
-	/* Get everything from the maps table, this is only executed once per session */
+	/* Get everything from the maps table, this is only executed once per cache */
 	$query	= "SELECT * FROM ". K4MAPS;
 	
 	$result = &$dba->executeQuery($query);
@@ -87,14 +125,14 @@ function get_maps(&$dba) {
 
 		if($val['varname'] != '') {
 			if($val['forum_id'] != 0) {
-				if(!isset($maps['forums'][$val['forum_id']]) && ($val['varname'] == 'forum'. $val['forum_id']) ) {
-					$maps['forums'][$val['forum_id']] = $val;
+				if( ($val['varname'] == 'forum'. $val['forum_id']) ) { // !isset($maps['forums'][$val['forum_id']]) &&
+					$maps['forums'][$val['forum_id']] = isset($maps['forums'][$val['forum_id']]) ? array_merge($maps['forums'][$val['forum_id']], $val) : $val;
 				} else {
 					$maps['forums'][$val['forum_id']][$val['varname']] = $val;
 				}
 			} else if($val['group_id'] != 0) {
-				if(!isset($maps['groups'][$val['group_id']]) && ($val['varname'] == 'group'. $val['group_id']) ) {
-					$maps['groups'][$val['group_id']] = $val;
+				if(($val['varname'] == 'group'. $val['group_id']) ) { // !isset($maps['groups'][$val['group_id']]) && 
+					$maps['groups'][$val['group_id']] = isset($maps['groups'][$val['group_id']]) ? array_merge($maps['groups'][$val['group_id']], $val) : $val;
 				} else {
 					$maps['groups'][$val['group_id']][$val['varname']] = $val;
 				}
@@ -105,8 +143,8 @@ function get_maps(&$dba) {
 					$maps['users'][$val['user_id']][$val['varname']] = $val;
 				}
 			} else if($val['category_id'] != 0) {
-				if(!isset($maps['categories'][$val['category_id']]) && ($val['varname'] == 'category'. $val['category_id']) ) {
-					$maps['categories'][$val['category_id']] = $val;
+				if(($val['varname'] == 'category'. $val['category_id']) ) { // !isset($maps['categories'][$val['category_id']]) && 
+					$maps['categories'][$val['category_id']] = isset($maps['categories'][$val['category_id']]) ? array_merge($maps['categories'][$val['category_id']], $val) : $val;
 				} else {
 					$maps['categories'][$val['category_id']][$val['varname']] = $val;
 				}

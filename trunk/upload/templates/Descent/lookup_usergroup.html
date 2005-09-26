@@ -1,35 +1,33 @@
-<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
-	<tr class="thead">
-		<td colspan="2">{$L_LOOKUPGROUP}: <span style="font-weight: normal;">{$group_name}</span></td>
-	</tr>
-	<tr class="alt1">
-		<td width="50%"><strong>{$L_DESCRIPTION}:</strong></td>
-		<td width="50%">{$group_description}</td>
-	</tr>
-	<tr class="alt3">
-		<td width="50%"><strong>{$L_USERGROUPTITLE}:</strong></td>
-		<td width="50%">{$group_nicename}</td>
-	</tr>
-	<if:if var="group_avatar" noteq="">
-	<tr class="alt1">
-		<td width="50%"><strong>{$L_USERGROUPAVATAR}</strong></td>
-		<td width="50%"><img src="tmp/upload/group_avatars/{$group_avatar}" border="0" /></td>
-	</tr>
-	<tr class="alt3">
-	<if:else />
-	<tr class="alt1">
-	</if:if>
-		<td width="50%"><strong>{$L_MODERATOR}:</strong></td>
-		<td width="50%"><a href="member.php?id={$group_mod_id}" style="font-weight: bold; color: #{$group_mod_color};">{$group_mod_name}</a></td>
-	</tr>
-</table>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_LOOKUPGROUP}: <span style="font-weight: normal;">{$group_name}</span></div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" width="50%"><strong>{$L_DESCRIPTION}:</strong></td>
+			<td class="alt3" width="50%">{$group_description}</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><strong>{$L_USERGROUPTITLE}:</strong></td>
+			<td class="alt3" width="50%">{$group_nicename}</td>
+		</tr>
+		<if:if var="group_avatar" noteq="">
+		<tr>
+			<td class="alt1" width="50%"><strong>{$L_USERGROUPAVATAR}</strong></td>
+			<td class="alt3" width="50%"><img src="tmp/upload/group_avatars/{$group_avatar}" border="0" /></td>
+		</tr>
+		</if:if>
+		<tr>
+			<td class="alt1" width="50%"><strong>{$L_MODERATOR}:</strong></td>
+			<td class="alt3" width="50%"><a href="member.php?id={$group_mod_id}" style="font-weight: bold; color: #{$group_mod_color};">{$group_mod_name}</a></td>
+		</tr>
+	</table>
+</div>
 <br />
 
 <page:navigator id="users_pager">
 <div align="right">
-	<table cellpadding="0" cellspacing="1" border="0" class="forum_content">
+	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
 		<tr>
-			<td class="alt3"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></td>
+			<td class="alt1" id="page_jump2"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
 			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
 			<page:list id="users_pager" before="3" after="3">
@@ -44,28 +42,29 @@
 </div>
 </page:navigator>
 
-<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
-	<tr class="thead">
-		<td>{$L_MEMBERS} ({$num_group_members})</td>
-	</tr>
-	<list:list id="users_in_usergroup">
-	<list:item list="users_in_usergroup">
-	<list:switch list="users_in_usergroup" var="row_class" a="alt1" b="alt3">
-	<tr class="{$row_class}">
-		<td>
-			<a href="member.php?id={$id}" style="font-weight:bold;color:#{$group_color};">{$name}</a>
-		</td>
-	</tr>
-	</list:switch>
-	</list:item>
-	</list:list>
-</table>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_MEMBERS} ({$num_group_members})</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<list:list id="users_in_usergroup">
+		<list:item list="users_in_usergroup">
+		<list:switch list="users_in_usergroup" var="row_class" a="alt1" b="alt3">
+		<tr>
+			<td class="{$row_class}">
+				<if:if var="is_mod" eq="1"><div style="float:right;"><a href="usergroups.php?act=remove_user_from_group&amp;user_id={$id}&amp;id={$group_id}" title="{$L_REMOVEUSER}">{$L_REMOVEUSER}</a></div></if:if>
+				<a href="member.php?id={$id}" style="font-weight:bold;color:#{$group_color};">{$name}</a>
+			</td>
+		</tr>
+		</list:switch>
+		</list:item>
+		</list:list>
+	</table>
+</div>
 
 <page:navigator id="users_pager">
 <div align="right">
-	<table cellpadding="0" cellspacing="1" border="0" class="forum_content">
+	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
 		<tr>
-			<td class="alt3"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></td>
+			<td class="alt3" id="page_jump2"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
 			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
 			<page:list id="users_pager" before="3" after="3">
@@ -95,3 +94,16 @@
 </div>
 </form:form>
 </core:block>
+<core:import id="page_jumper" file="page_jumper.html" />
+<script type="text/javascript">
+//<![CDATA[
+	menu_init('page_jump1', 'page_jump_menu');
+	menu_init('page_jump2', 'page_jump_menu');
+	
+	function jump_pages() {
+		jumpto				= d.getElementById('jumpto');
+		page				= parseInt(jumpto.value);
+		document.location	= '{$pagejumper_url}&page=' + page;
+	}
+//]]>
+</script>

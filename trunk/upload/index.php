@@ -24,8 +24,8 @@
 * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 *
-* @author Geoffrey Goodman
-* @version $Id$
+* @author Peter Goodman
+* @version $Id: index.php 160 2005-07-18 16:28:46Z Peter Goodman $
 * @package k42
 */
 
@@ -34,29 +34,38 @@ require "includes/k4bb/k4bb.php";
 
 class K4DefaultAction extends FAAction {
 	function execute(&$request) {
-		global $_DATASTORE, $_USERGROUPS;
-		
-		$template =& $request['template'];
-		$dba = &$request['dba'];
-		
+				
+		//$action = new AdminCSSRequestAction();
+		//return $action->execute($request);
+
+		global $_DATASTORE, $_USERGROUPS, $_QUERYPARAMS;
+				
 		// Member/Guest specifics
 		if(!$request['user']->isMember()) {
-			$template->setVar('welcome_title', sprintf($template->getVar('L_WELCOMETITLE'), $template->getVar('bbtitle')));
-			$template->setFile('quick_login', 'login_form_quick.html');
-			$template->setVisibility('welcome_msg', TRUE);
+			$request['template']->setVar('welcome_title', sprintf($request['template']->getVar('L_WELCOMETITLE'), $request['template']->getVar('bbtitle')));
+			$request['template']->setFile('quick_login', 'login_form_quick.html');
+			$request['template']->setVisibility('welcome_msg', TRUE);
 		}
 
 		// The content panel
-		$template->setFile('content', 'forums.html');
-
+		$request['template']->setFile('content', 'forums.html');
+		
+		$tlforums	= &new K4ForumsIterator($request['dba'], "SELECT * FROM ". K4FORUMS ." WHERE row_level = 1 AND category_id = 0 ORDER BY row_order ASC");
 		$categories = &new K4CategoriesIterator($request['dba']);
-		$template->setList('categories', $categories);
+
+		$forums		= &new FAChainedIterator($tlforums);
+		$forums->addIterator($categories);
+		
+		$request['template']->setList('categories', $forums);
 		
 		// Set the online users list
-		$online_users						= &new K4OnlineUsersIterator($dba);
-		$template->setList('online_users', $online_users);
+		$user_extra			= $request['user']->isMember() ? ' OR (seen > 0 AND user_id = '. intval($request['user']->get('id')) .')' : '';
+		$expired							= time() - ini_get('session.gc_maxlifetime');
+		$online_users						= $request['dba']->executeQuery("SELECT * FROM ". K4SESSIONS ." WHERE ((seen >= $expired) $user_extra) AND ((user_id > 0) OR (user_id = 0 AND name <> '')) GROUP BY name ORDER BY seen DESC");
+		$online_users						= &new K4OnlineUsersIterator($request['dba'], '', $online_users);
+		$request['template']->setList('online_users', $online_users);
 		
-		$newest_user						= $dba->getRow("SELECT name, id FROM ". K4USERS ." ORDER BY id DESC LIMIT 1");
+		$newest_user						= $request['dba']->getRow("SELECT name, id FROM ". K4USERS ." ORDER BY id DESC LIMIT 1");
 		$expired							= time() - ini_get('session.gc_maxlifetime');
 
 		$stats = array('num_online_members'	=> Globals::getGlobal('num_online_members'),
@@ -64,23 +73,23 @@ class K4DefaultAction extends FAAction {
 						'num_topics'		=> intval($_DATASTORE['forumstats']['num_topics']),
 						'num_replies'		=> intval($_DATASTORE['forumstats']['num_replies']),
 						'num_members'		=> intval($_DATASTORE['forumstats']['num_members']),
-						'num_guests'		=> $dba->getValue("SELECT COUNT(*) FROM ". K4SESSIONS ." WHERE seen >= $expired AND user_id=0"),
+						'num_guests'		=> $request['dba']->getValue("SELECT COUNT(*) FROM ". K4SESSIONS ." WHERE seen >= $expired AND user_id=0"),
 						'newest_uid'		=> $newest_user['id'],
 						'newest_user'		=> $newest_user['name'],
 						);
 		$stats['num_online_total'] = ($stats['num_online_members'] + $stats['num_invisible'] + $stats['num_guests']);
 
-		$template->setVar('num_online_members', $stats['num_online_members']);
+		$request['template']->setVar('num_online_members', $stats['num_online_members']);
 		
-		$template->setVar('newest_member',	sprintf($template->getVar('L_NEWESTMEMBER'),		$stats['newest_uid'], $stats['newest_user']));
-		$template->setVar('total_users',	sprintf($template->getVar('L_TOTALUSERS'),			$stats['num_members']));
-		$template->setVar('total_posts',	sprintf($template->getVar('L_TOTALPOSTS'),			($stats['num_topics'] + $stats['num_replies']), $stats['num_topics'], $stats['num_replies']));
-		$template->setVar('online_stats',	sprintf($template->getVar('L_ONLINEUSERSTATS'),		$stats['num_online_total'], $stats['num_online_members'], $stats['num_guests'], $stats['num_invisible']));
-		$template->setVar('most_users_ever',sprintf($template->getVar('L_MOSTUSERSEVERONLINE'),	$_DATASTORE['maxloggedin']['maxonline'], date("n/j/Y", bbtime($_DATASTORE['maxloggedin']['maxonlinedate'])), date("g:ia", bbtime($_DATASTORE['maxloggedin']['maxonlinedate']))));
+		$request['template']->setVar('newest_member',	sprintf($request['template']->getVar('L_NEWESTMEMBER'),		$stats['newest_uid'], $stats['newest_user']));
+		$request['template']->setVar('total_users',	sprintf($request['template']->getVar('L_TOTALUSERS'),			$stats['num_members']));
+		$request['template']->setVar('total_posts',	sprintf($request['template']->getVar('L_TOTALPOSTS'),			($stats['num_topics'] + $stats['num_replies']), $stats['num_topics'], $stats['num_replies']));
+		$request['template']->setVar('online_stats',	sprintf($request['template']->getVar('L_ONLINEUSERSTATS'),		$stats['num_online_total'], $stats['num_online_members'], $stats['num_guests'], $stats['num_invisible']));
+		$request['template']->setVar('most_users_ever',sprintf($request['template']->getVar('L_MOSTUSERSEVERONLINE'),	$_DATASTORE['maxloggedin']['maxonline'], date("n/j/Y", bbtime($_DATASTORE['maxloggedin']['maxonlinedate'])), date("g:ia", bbtime($_DATASTORE['maxloggedin']['maxonlinedate']))));
 		
 		if($stats['num_online_total'] >= $_DATASTORE['maxloggedin']['maxonline']) {
 			$maxloggedin	= array('maxonline' => $stats['num_online_total'], 'maxonlinedate' => time());
-			$query			= $dba->prepareStatement("UPDATE ". K4DATASTORE ." SET data = ? WHERE varname = ?");
+			$query			= $request['dba']->prepareStatement("UPDATE ". K4DATASTORE ." SET data = ? WHERE varname = ?");
 			
 			$query->setString(1, serialize($maxloggedin));
 			$query->setString(2, 'maxloggedin');
@@ -92,7 +101,7 @@ class K4DefaultAction extends FAAction {
 		}
 		
 		// Show the forum status icons
-		$template->setVisibility('forum_status_icons', TRUE);
+		$request['template']->setVisibility('forum_status_icons', TRUE);
 		
 		$groups				= array();
 
@@ -103,50 +112,14 @@ class K4DefaultAction extends FAAction {
 		}
 
 		$groups				= &new FAArrayIterator($groups);
-		$template->setList('usergroups_legend', $groups);
+		$request['template']->setList('usergroups_legend', $groups);
 
-		/* Set the forums template to content variable */
-		$template->setFile('forum_info', 'forum_info.html');
+		/* Set the forum stats */
+		$request['template']->setFile('forum_info', 'forum_info.html');
 		
-		$template->setVar('can_see_board', get_map($request['user'], 'can_see_board', 'can_view', array()));
+		$request['template']->setVar('can_see_board', get_map($request['user'], 'can_see_board', 'can_view', array()));
 		
-		k4_bread_crumbs($template, $dba, 'L_HOME');
-		
-		/*
-		// alter the information table
-		$request['dba']->alterTable(K4INFO, "ADD reply_id INT UNSIGNED NOT NULL DEFAULT 0");
-		$request['dba']->alterTable(K4INFO, "ADD topic_id INT UNSIGNED NOT NULL DEFAULT 00");
-		$request['dba']->alterTable(K4INFO, "ADD forum_id INT UNSIGNED NOT NULL DEFAULT 0");
-		$request['dba']->alterTable(K4INFO, "ADD category_id INT UNSIGNED NOT NULL DEFAULT 0");
-		
-		// add reply info
-		$replies = $request['dba']->executeQuery("SELECT * FROM ". K4REPLIES);
-		while($replies->next()) {
-			$temp		= $replies->current();
-			$request['dba']->executeUpdate("UPDATE ". K4INFO ." SET reply_id = ". $temp['reply_id'] .", topic_id = ". $temp['topic_id'] .", forum_id = ". $temp['forum_id'] .", category_id = ". $temp['category_id'] ." WHERE id = ". $temp['reply_id']);
-		}
-
-		// add topic info
-		$topics = $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS);
-		while($topics->next()) {
-			$temp		= $topics->current();
-			$request['dba']->executeUpdate("UPDATE ". K4INFO ." SET topic_id = ". $temp['topic_id'] .", forum_id = ". $temp['forum_id'] .", category_id = ". $temp['category_id'] ." WHERE id = ". $temp['topic_id']);
-		}
-
-		// add forum info
-		$forums = $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS);
-		while($forums->next()) {
-			$temp		= $forums->current();
-			$request['dba']->executeUpdate("UPDATE ". K4INFO ." SET forum_id = ". $temp['forum_id'] .", category_id = ". $temp['category_id'] ." WHERE id = ". $temp['forum_id']);
-		}
-
-		// add category info
-		$cats = $request['dba']->executeQuery("SELECT * FROM ". K4CATEGORIES);
-		while($cats->next()) {
-			$temp		= $cats->current();
-			$request['dba']->executeUpdate("UPDATE ". K4INFO ." SET category_id = ". $temp['category_id'] ." WHERE id = ". $temp['category_id']);
-		}
-		*/
+		k4_bread_crumbs($request['template'], $request['dba'], 'L_HOME');		
 	}
 }
 

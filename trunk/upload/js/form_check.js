@@ -24,7 +24,7 @@
 * SOFTWARE.
 *
 * @author Geoffrey Goodman
-* @version $Id: form_check.js,v 1.1 2005/04/05 03:22:59 k4st Exp $
+* @version $Id: form_check.js 110 2005-06-13 20:48:58Z Peter Goodman $
 * @package k42
 */
 
@@ -109,7 +109,7 @@ function addMessage(id, message)
 		}
 	}
 }
-function addVerification(id, regex, error, classname)
+function addVerification(id, regex, error, errorclassname)
 {
 	var num = elements.length;
 
@@ -120,9 +120,9 @@ function addVerification(id, regex, error, classname)
 
 	element = document.getElementById(id);
 	base_classes[num] = element.className;
-	error_classes[num] = (classname) ? classname : element.className;
+	error_classes[num] = (errorclassname && errorclassname != '') ? errorclassname : element.className;
 }
-function addCompare(id, match, error, classname)
+function addCompare(id, match, error, errorclassname)
 {
 	var num = elements.length;
 
@@ -133,5 +133,5 @@ function addCompare(id, match, error, classname)
 
 	element = document.getElementById(id);
 	base_classes[num] = element.className;
-	error_classes[num] = (classname) ? classname : element.className;
+	error_classes[num] = (errorclassname && errorclassname != '') ? errorclassname : element.className;
 }

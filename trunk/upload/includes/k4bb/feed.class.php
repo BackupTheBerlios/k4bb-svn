@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author James Logsdon
-* @version $Id: feed.class.php,v 1.1 2005/05/03 21:37:43 k4st Exp $
+* @version $Id: feed.class.php 110 2005-06-13 20:48:58Z Peter Goodman $
 * @package k42
 */
 

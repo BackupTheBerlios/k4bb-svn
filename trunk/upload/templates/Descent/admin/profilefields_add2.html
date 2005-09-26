@@ -1,8 +1,8 @@
 <is:admin>
 <form:form name="add_field" id="add_field" action="admin.php?act=userfields_insert" method="post" enctype="multipart/form-data">
 <input type="hidden" name="inputtype" id="inputtype" value="{$inputtype}" />
-<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
-	<tr class="thead">
+<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+	<tr class="k4_maintitle">
 		<td colspan="2">{$L_ADDPROFILEFIELD}</td>
 	</tr>
 	<tr class="alt2">
@@ -87,7 +87,7 @@
 		</td>
 	</tr>
 	<core:block id="text" hidden="yes">
-	<tr class="thead">
+	<tr class="k4_maintitle">
 		<td colspan="2">{$L_OPTIONS}</td>
 	</tr>
 	<tr class="alt2">
@@ -117,7 +117,7 @@
 	</tr>
 	</core:block>
 	<core:block id="textarea" hidden="yes">
-	<tr class="thead">
+	<tr class="k4_maintitle">
 		<td colspan="2">{$L_OPTIONS}</td>
 	</tr>
 	<tr class="alt2">
@@ -152,7 +152,7 @@
 	</tr>
 	</core:block>
 	<core:block id="radio" hidden="yes">
-	<tr class="thead">
+	<tr class="k4_maintitle">
 		<td colspan="2">{$L_OPTIONS}</td>
 	</tr>
 	<tr class="alt2">
@@ -168,7 +168,7 @@
 	</tr>
 	</core:block>
 	<core:block id="select" hidden="yes">
-	<tr class="thead">
+	<tr class="k4_maintitle">
 		<td colspan="2">{$L_OPTIONS}</td>
 	</tr>
 	<tr class="alt2">
@@ -184,7 +184,7 @@
 	</tr>
 	</core:block>
 	<core:block id="multiselect" hidden="yes">
-	<tr class="thead">
+	<tr class="k4_maintitle">
 		<td colspan="2">{$L_OPTIONS}</td>
 	</tr>
 	<tr class="alt2">
@@ -207,7 +207,7 @@
 	</tr>
 	</core:block>
 	<core:block id="checkbox" hidden="yes">
-	<tr class="thead">
+	<tr class="k4_maintitle">
 		<td colspan="2">{$L_OPTIONS}</td>
 	</tr>
 	<tr class="alt2">
@@ -222,7 +222,7 @@
 		</td>
 	</tr>
 	</core:block>
-	<tr class="tcat">
+	<tr class="k4_subtitle">
 		<td colspan="2">
 			<input type="submit" value="{$L_SAVE}" class="button" />
 			<input type="reset" value="{$L_RESET}" class="button" />

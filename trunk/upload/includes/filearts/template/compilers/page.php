@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Geoffrey Goodman
-* @version $Id: paginator.php,v 1.5 2005/05/16 02:13:44 k4st Exp $
+* @version $Id: page.php 137 2005-06-29 18:48:28Z Peter Goodman $
 * @package k42
 */
 
@@ -82,11 +82,11 @@ class Page_List_Compiler extends FATemplateTagCompiler {
 	function parseOpen() {
 		$this->requireAttributes('id', 'before', 'after');
 
-		$list = $this->getAttribute('id');
+		$list	= $this->getAttribute('id');
 		$before = $this->getAttribute('before');
-		$after = $this->getAttribute('after');
+		$after	= $this->getAttribute('after');
 
-		$this->writePHP("if (\$pager->hasPage('2') && \$scope->listBegin(\"$list\", \$pager->getIterator(\"$before\", \"$after\"))):");
+		$this->writePHP("if (\$pager->hasPage('2') && \$scope->listBeginNew(\"$list\", \$pager->getIterator(\"$before\", \"$after\"))):");
 	}
 	function parseClose() {
 		$this->writePHP("endif;");
@@ -97,10 +97,10 @@ class Page_Link_Compiler extends FATemplateTagCompiler {
 	function parseOpen() {
 		$attribs = $this->getAttributeString();
 
-		$this->writePHP("if (\$pager->page_num != \$scope->getVar(\"pagenum\")): ?><a$attribs href=\"<?php echo \$scope->getVar(\"pagelink\"); ?>\"><?php else: ?><span$attribs><?php endif;");
+		$this->writePHP("if (\$pager->page_num != \$scope->getVar(\"pagenum\")): ?><a$attribs href=\"<?php echo \$scope->getVar(\"pagelink\"); ?>\"><?php else: ?><strong$attribs><?php endif;");
 	}
 	function parseClose() {
-		$this->writePHP("if (\$pager->page_num != \$scope->getVar(\"pagenum\")): ?></a><?php else: ?></span><?php endif;");
+		$this->writePHP("if (\$pager->page_num != \$scope->getVar(\"pagenum\")): ?></a><?php else: ?></strong><?php endif;");
 	}
 }
 

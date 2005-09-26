@@ -32,11 +32,11 @@
 <if:else />
 
 <!-- You don't have permission to view the blogs -->
-<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
-	<tr class="thead">
+<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+	<tr class="k4_maintitle">
 		<td>{$L_INFORMATION}</td>
 	</tr>
-	<tr class="panel">
+	<tr class="alt3">
 		<td>
 			<div class="outset_box">
 				{$L_YOUNEEDPERMS}
@@ -48,11 +48,11 @@
 </if:if>
 <if:else />
 <!-- Board is Closed -->
-<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
-	<tr class="thead">
+<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+	<tr class="k4_maintitle">
 		<td>{$L_INFORMATION}</td>
 	</tr>
-	<tr class="panel">
+	<tr class="alt3">
 		<td>
 			<div class="outset_box">
 				{$bbclosedreason}
@@ -119,7 +119,7 @@ COPYRIGHT NOTICE
 * @author Peter Goodman
 * @author Geoffrey Goodman
 * @author James Logsdon
-* @version $Id: blog_base.html,v 1.3 2005/05/08 14:21:02 k4st Exp $
+* @version $Id: blog_base.html 110 2005-06-13 20:48:58Z Peter Goodman $
 * @package k42
 */
 -->

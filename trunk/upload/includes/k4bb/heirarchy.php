@@ -25,14 +25,14 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: heirarchy.php,v 1.6 2005/05/24 20:03:26 k4st Exp $
+* @version $Id: heirarchy.php 154 2005-07-15 02:56:28Z Peter Goodman $
 * @package k42
 */
 
 error_reporting(E_ALL);
 
 if(!defined('IN_K4')) {
-	exit;
+	return;
 }
 
 function remove_item($id, $id_type) {
@@ -48,18 +48,20 @@ function remove_item($id, $id_type) {
 		case 'topic_id': {
 			
 			/* Get the row */
-			$info		= $_DBA->getRow("SELECT ". $_QUERYPARAMS['info'] . $_QUERYPARAMS['topic'] ." FROM ". K4INFO ." i LEFT JOIN ". K4TOPICS ." t ON t.topic_id=i.id WHERE i.id=". intval($id));
+			$info		= $_DBA->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id=". intval($id));
 
 			/* The number of replies that this topic has */
 			$num_replies		= $info['num_replies'];
 			//$num_replies		= @intval(($info['row_right'] - $info['row_left'] - 1) / 2);
 		
 			/* Get that last topic in this forum that's not this topic */
-			$last_topic			= $_DBA->getRow("SELECT ". $_QUERYPARAMS['info'] . $_QUERYPARAMS['topic'] ." FROM ". K4TOPICS ." t LEFT JOIN ". K4INFO ." i ON t.topic_id = i.id WHERE i.id <> ". intval($info['id']) ." AND t.is_draft=0 AND t.queue=0 AND t.display=1 AND t.forum_id=". intval($info['forum_id']) ." ORDER BY i.created DESC LIMIT 1");
+			$last_topic			= $_DBA->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id <> ". intval($info['topic_id']) ." AND is_draft=0 AND queue=0 AND display=1 AND forum_id=". intval($info['forum_id']) ." ORDER BY created DESC LIMIT 1");
 			$last_topic			= !$last_topic || !is_array($last_topic) ? array('created'=>0,'name'=>'','poster_name'=>'','id'=>0,'poster_id'=>0,'posticon'=>'') : $last_topic;
-			
+			$last_topic['id']	= $last_topic['topic_id'];
+
 			/* Get that last post in this forum that's not part of/from this topic */
-			$last_post			= $_DBA->getRow("SELECT ". $_QUERYPARAMS['info'] . $_QUERYPARAMS['reply'] ." FROM ". K4REPLIES ." r LEFT JOIN ". K4INFO ." i ON r.reply_id = i.id WHERE r.topic_id <> ". intval($info['id']) ." AND r.forum_id=". intval($info['forum_id']) ." ORDER BY i.created DESC LIMIT 1");
+			$last_post			= $_DBA->getRow("SELECT * FROM ". K4REPLIES ." WHERE topic_id <> ". intval($info['topic_id']) ." AND forum_id=". intval($info['forum_id']) ." ORDER BY created DESC LIMIT 1");
+			$last_post['id']	= $last_post['topic_id'];
 			$last_post			= !$last_post || !is_array($last_post) ? $last_topic : $last_post;
 			
 			/**
@@ -75,7 +77,7 @@ function remove_item($id, $id_type) {
 			$forum_update->setInt(3, $last_topic['created']);
 			$forum_update->setString(4, $last_topic['name']);
 			$forum_update->setString(5, $last_topic['poster_name']);
-			$forum_update->setInt(6, $last_topic['id']);
+			$forum_update->setInt(6, $last_topic['topic_id']);
 			$forum_update->setInt(7, $last_topic['poster_id']);
 			$forum_update->setString(8, $last_topic['posticon']);
 			$forum_update->setInt(9, $last_post['created']);
@@ -89,7 +91,7 @@ function remove_item($id, $id_type) {
 			/* Set the datastore values */
 			$datastore					= $_DATASTORE['forumstats'];
 			$datastore['num_topics']	= $_DBA->getValue("SELECT COUNT(*) FROM ". K4TOPICS ." WHERE is_draft = 0 AND queue = 0 AND display = 1") - 1;
-			$datastore['num_replies']	= $_DBA->getValue("SELECT COUNT(*) FROM ". K4REPLIES ." WHERE is_draft = 0") - intval($num_replies);
+			$datastore['num_replies']	= $_DBA->getValue("SELECT COUNT(*) FROM ". K4REPLIES ) - intval($num_replies); // ." WHERE is_draft = 0"
 			
 			$datastore_update->setString(1, serialize($datastore));
 			$datastore_update->setString(2, 'forumstats');
@@ -112,7 +114,7 @@ function remove_item($id, $id_type) {
 			if(intval($num_replies) > 0) {
 				
 				/* Get all of the replies */
-				$replies				= $_DBA->executeQuery("SELECT poster_id FROM ". K4REPLIES ." WHERE topic_id = ". intval($info['id']));
+				$replies				= $_DBA->executeQuery("SELECT poster_id FROM ". K4REPLIES ." WHERE topic_id = ". intval($info['topic_id']));
 				
 				while($replies->next()) {
 					$reply				= $replies->current();
@@ -144,15 +146,12 @@ function remove_item($id, $id_type) {
 			$_DBA->executeUpdate("DELETE FROM ". K4REPLIES ." WHERE topic_id = ". intval($id));
 			$_DBA->executeUpdate("DELETE FROM ". K4SUBSCRIPTIONS ." WHERE topic_id = ". intval($id));
 			$_DBA->executeUpdate("DELETE FROM ". K4MAILQUEUE ." WHERE row_id = ". intval($id) ." AND row_type = ". TOPIC);
+			$_DBA->executeUpdate("DELETE FROM ". K4BADPOSTREPORTS ." WHERE topic_id = ". intval($id));
 
 			break;
 		}
 	}
-	
-	/* Remove all of the nodes from the tree now */
-	$heirarchy->removeItem($info, K4INFO, $id_type);
-	//$heirarchy->removeNode($info, K4INFO);
-	
+		
 	/* Commit the transaction */
 	$_DBA->commitTransaction();
 	
@@ -178,11 +177,14 @@ class Heirarchy {
 	/**
 	 * This will remove a heirarchy recursion item and all of its children
 	 */
-	function removeItem($info, $table, $connector = FALSE) {
+	function removeItem($info, $table, $connector = FALSE, $mptt = FALSE) {
 		$this->dba->executeUpdate("DELETE FROM ". $table ." WHERE id = ". intval($info['id']));
 		
 		if($connector)
 			$this->dba->executeUpdate("DELETE FROM ". $table ." WHERE $connector = ". intval($info['id']));
+	
+		if($mptt)
+			$this->dba->executeUpdate("DELETE FROM ". $table ." WHERE row_left > ". intval($info['row_left']) ." AND row_right < ". intval($info['row_right']));
 	}
 	/**
 	 * This will remove an MPTT node and all of its children

@@ -4,19 +4,20 @@
 		<tr>
 			<td align="left" width="70%">
 				<!-- Benchmarking -->
-				
-				<span class="smalltext">
-				<a href="http://www.k4bb.org" title="k4 Bulletin Board" target="_blank">Powered By: k4 {$VERSION}</a>
-				| Load time: {$load_time}
-				| Num Queries: {$num_queries}
-				<core:block id="sql_debug" hidden="yes">
-				| <a href="{$debug_url}">Debug</a>
-				</core:block>
-				</span>
+				<ul class="menu_global">
+					<li class="first"><a href="http://www.k4bb.org" title="k4 Bulletin Board" class="smalltext" target="_blank">Powered By: k4 {$VERSION}</a></li>
+					<li><span class="smalltext">Load time: {$load_time}</span></li>
+					<li><span class="smalltext">Num Queries: {$num_queries}</span></li>
+					<li><a href="{$debug_url}" title="Debug" class="smalltext">Debug</a></li>
+				</ul>
 				<!-- / Benchmarking -->
 			</td>
 			<td align="right" width="30%" nowrap="nowrap">
-				<a href="{$contactuslink}" title="{$L_CONTACTUS}">{$L_CONTACTUS}</a> | <a href="#top" title="{$L_TOP}">{$L_TOP}</a>
+				<ul class="menu_global">
+					<li class="first"><a href="{$contactuslink}" title="{$L_CONTACTUS}" class="smalltext">{$L_CONTACTUS}</a></li>
+					<li><a href="#top" title="{$L_TOP}" class="smalltext">{$L_TOP}</a></li>
+					<if:if var="enablegzip" eq="1"><li><span class="smalltext">{$L_GZIPENABLED}</span></li></if:if>
+				</ul>
 			</td>
 		</tr>
 	</table>

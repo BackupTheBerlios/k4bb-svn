@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: newreply.php,v 1.4 2005/05/12 01:33:21 k4st Exp $
+* @version $Id: newreply.php 154 2005-07-15 02:56:28Z Peter Goodman $
 * @package k42
 */
 
@@ -35,99 +35,75 @@ require "includes/k4bb/k4bb.php";
 class K4DefaultAction extends FAAction {
 	function execute(&$request) {
 		
-		global $_QUERYPARAMS;
+		global $_QUERYPARAMS, $_URL;
 		
 		/**
 		 * Error checking 
 		 */
+		
+		/* set the breadcrumbs bit */
+		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 
 		if(!isset($_REQUEST['id']) || !$_REQUEST['id'] || intval($_REQUEST['id']) == 0) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs(&$request['template'], &$request['dba'], 'L_INVALIDTOPIC');
-			
 			$action = new K4InformationAction(new K4LanguageElement('L_TOPICDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
 
 		/* Get our topic */
-		$topic				= $request['dba']->getRow("SELECT ". $_QUERYPARAMS['info'] . $_QUERYPARAMS['topic'] ." FROM ". K4TOPICS ." t LEFT JOIN ". K4INFO ." i ON t.topic_id = i.id WHERE i.id = ". intval($_REQUEST['id']));
+		$topic				= $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($_REQUEST['id']));
 		
 		if(!$topic || !is_array($topic) || empty($topic)) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs(&$request['template'], &$request['dba'], 'L_INVALIDTOPIC');
-			
 			$action = new K4InformationAction(new K4LanguageElement('L_TOPICDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
 			
-		$forum				= $request['dba']->getRow("SELECT ". $_QUERYPARAMS['info'] . $_QUERYPARAMS['forum'] ." FROM ". K4FORUMS ." f LEFT JOIN ". K4INFO ." i ON f.forum_id = i.id WHERE i.id = ". intval($topic['forum_id']));
+		$forum				= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($topic['forum_id']));
 		
 		/* Check the forum data given */
 		if(!$forum || !is_array($forum) || empty($forum)) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs(&$request['template'], &$request['dba'], 'L_INVALIDFORUM');
-			
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
 			
 		/* Make sure the we are trying to delete from a forum */
 		if(!($forum['row_type'] & FORUM)) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs(&$request['template'], &$request['dba'], 'L_INFORMATION');
-			
 			$action = new K4InformationAction(new K4LanguageElement('L_CANTDELFROMNONFORUM'), 'content', FALSE);
 			return $action->execute($request);
 		}
 
 		/* Do we have permission to post to this topic in this forum? */
-		if($request['user']->get('perms') < get_map($request['user'], 'replies', 'can_add', array('forum_id'=>$forum['id']))) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs(&$request['template'], &$request['dba'], 'L_INFORMATION');
-			
-			$request['template']->setFile('content', 'login_form.html');
-			$request['template']->setVisibility('no_perms', TRUE);
+		if($request['user']->get('perms') < get_map($request['user'], 'replies', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+			no_perms_error($request);
 			return TRUE;
-
 			//$action = new K4InformationAction(new K4LanguageElement('L_PERMCANTPOST'), 'content', FALSE);
 			//return $action->execute($request);		
 		}
 
 		if(isset($_REQUEST['r']) && intval($_REQUEST['r']) != 0) {
-			$reply				= $request['dba']->getRow("SELECT ". $_QUERYPARAMS['info'] . $_QUERYPARAMS['reply'] ." FROM ". K4REPLIES ." r LEFT JOIN ". K4INFO ." i ON r.reply_id = i.id WHERE i.id = ". intval($_REQUEST['r']));
+			$reply				= $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE reply_id = ". intval($_REQUEST['r']));
 			
 			if(!$reply || !is_array($reply) || empty($reply)) {
-				/* set the breadcrumbs bit */
-				k4_bread_crumbs(&$request['template'], &$request['dba'], 'L_INVALIDREPLY');
-				
 				$action = new K4InformationAction(new K4LanguageElement('L_REPLYDOESNTEXIST'), 'content', FALSE);
 				return $action->execute($request);
 			} else {
-				
 				$request['template']->setVisibility('parent_id', TRUE);
-				$request['template']->setVar('parent_id', $reply['id']);
+				$request['template']->setVar('parent_id', $reply['reply_id']);
 			}
 		}
 		
 		/* Prevent post flooding */
-		$last_topic		= $request['dba']->getRow("SELECT ". $_QUERYPARAMS['info'] . $_QUERYPARAMS['topic'] ." FROM ". K4TOPICS ." t LEFT JOIN ". K4INFO ." i ON t.topic_id = i.id WHERE t.poster_ip = '". USER_IP ."' ORDER BY i.created DESC LIMIT 1");
-		$last_reply		= $request['dba']->getRow("SELECT ". $_QUERYPARAMS['info'] . $_QUERYPARAMS['reply'] ." FROM ". K4REPLIES ." r LEFT JOIN ". K4INFO ." i ON r.reply_id = i.id WHERE r.poster_ip = '". USER_IP ."' ORDER BY i.created DESC LIMIT 1");
+		$last_topic		= $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE poster_ip = '". USER_IP ."' ORDER BY created DESC LIMIT 1");
+		$last_reply		= $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE poster_ip = '". USER_IP ."' ORDER BY created DESC LIMIT 1");
 		
 		if(is_array($last_topic) && !empty($last_topic)) {
-			if(intval($last_topic['created']) + POST_IMPULSE_LIMIT > time()) {
-				/* set the breadcrumbs bit */
-				k4_bread_crumbs(&$request['template'], &$request['dba'], 'L_INFORMATION');
-				
+			if(intval($last_topic['created']) + POST_IMPULSE_LIMIT > time() && $request['user']->get('perms') < MODERATOR) {
 				$action = new K4InformationAction(new K4LanguageElement('L_MUSTWAITSECSTOPOST'), 'content', TRUE);
 				return $action->execute($request);
 			}
 		}
 
 		if(is_array($last_reply) && !empty($last_reply)) {
-			if(intval($last_reply['created']) + POST_IMPULSE_LIMIT > time()) {
-				/* set the breadcrumbs bit */
-				k4_bread_crumbs(&$request['template'], &$request['dba'], 'L_INFORMATION');
-				
+			if(intval($last_reply['created']) + POST_IMPULSE_LIMIT > time() && $request['user']->get('perms') < MODERATOR) {
 				$action = new K4InformationAction(new K4LanguageElement('L_MUSTWAITSECSTOPOST'), 'content', TRUE);
 				return $action->execute($request);
 			}
@@ -138,7 +114,6 @@ class K4DefaultAction extends FAAction {
 		/**
 		 * Start setting useful template information
 		 */
-		
 
 		/* Get and set the emoticons and post icons to the template */
 		$emoticons	= &$request['dba']->executeQuery("SELECT * FROM ". K4EMOTICONS ." WHERE clickable = 1");
@@ -150,7 +125,29 @@ class K4DefaultAction extends FAAction {
 		$request['template']->setVar('emoticons_per_row', $request['template']->getVar('smcolumns'));
 		$request['template']->setVar('emoticons_per_row_remainder', $request['template']->getVar('smcolumns')-1);
 		
-		topic_post_options(&$request['template'], &$request['user'], $forum);
+		/* Set to the template what posting perms this user has */
+		topic_post_options($request['template'], $request['user'], $forum);
+
+		/**
+		 * Deal with reply attachments
+		 */
+		$num_attachments		= 0;
+		
+		/**
+		 * Deal with file attachments
+		 */
+		if($request['template']->getVar('attach_inputs') == '') {
+			if($request['user']->get('perms') >= get_map($request['user'], 'attachments', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+				$num_attachments	= $request['template']->getVar('nummaxattaches') - $num_attachments;
+				
+				$attach_inputs		= '';
+				for($i = 1; $i <= $num_attachments; $i++) {
+					$attach_inputs	.= '<br /><input type="file" class="inputbox" name="attach'. $i .'" id="attach'. $i .'" value="" size="55" />';
+				}
+				
+				$request['template']->setVar('attach_inputs', $attach_inputs);
+			}
+		}
 
 		/* Set the forum and topic info to the template */
 		foreach($forum as $key => $val)
@@ -163,38 +160,71 @@ class K4DefaultAction extends FAAction {
 			if($key != 'body_text')
 				$request['template']->setVar('reply_'. $key, $val);
 		}
+		
+		$body_text = '';
 
 		/* If this is a quote, put quote tags around the message */
 		if(isset($_REQUEST['quote']) && intval($_REQUEST['quote']) == 1) {
-			$bbcode			= &new BBCodex($request['dba'], $request['user'], $parent['body_text'], $forum['id'], TRUE, TRUE, TRUE, TRUE);
-			$request['template']->setVar('reply_body_text', '[quote='. $parent['poster_name'] .']'. $bbcode->revert() .'[/quote]');
+			
+			// are we quoting a poll?
+			if($parent['is_poll'] == 1) {
+				
+				// does this reply have a/some poll(s) ?
+				preg_match_all('~\[poll=([0-9]+?)\]~i', $parent['body_text'], $poll_matches, PREG_SET_ORDER);
+
+				if(count($poll_matches) > 0) {
+					
+					$url		= new FAUrl($_URL->__toString());
+					$url->args	= array();
+					$url->anchor= FALSE;
+					$url->file	= 'viewpoll.php';
+
+					foreach($poll_matches as $poll) {
+						
+						$parent['body_text'] = str_replace('[poll='. $poll[1] .']', $request['template']->getVar('L_POLL') .': [b][url='. $url->__toString() .'?id='. $poll[1] .']'. $request['dba']->getValue("SELECT question FROM ". K4POLLQUESTIONS ." WHERE id = ". intval($poll[1])) .'[/url][/b]', $parent['body_text']);
+
+					}
+				}
+			}
+			
+			// revert the text with the bbcode parser
+			$bbcode			= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $parent['body_text'], $forum['forum_id'], TRUE, TRUE, TRUE, TRUE);
+			$body_text		= '[quote='. iif($parent['poster_name'] == '', $request['template']->getVar('L_GUEST'), $parent['poster_name']) .']'. $bbcode->revert() .'[/quote]';
 		}
 
 		/* Set the title variable */
-		if(isset($reply))
+		if(isset($reply)) {
 			$request['template']->setVar('reply_name', $request['template']->getVar('L_RE') .': '. $reply['name']);
-		else
+		} else {
 			$request['template']->setVar('reply_name', $request['template']->getVar('L_RE') .': '. $topic['name']);
-
-		$request['template']->setVar('newtopic_action', 'newreply.php?act=postreply');
+		}
+		
+		$request['template']->setVar('L_TITLETOOSHORT', sprintf($request['template']->getVar('L_TITLETOOSHORT'), $request['template']->getVar('topicminchars'), $request['template']->getVar('topicmaxchars')));
 
 		/* set the breadcrumbs bit */
-		k4_bread_crumbs(&$request['template'], &$request['dba'], 'L_POSTREPLY', $parent, $forum);
+		k4_bread_crumbs($request['template'], $request['dba'], 'L_POSTREPLY', $parent, $forum);
 		
 		foreach($parent as $key => $val)
 			$request['template']->setVar('parent_'. $key, $val);
 		
-		$query				= "SELECT ". $_QUERYPARAMS['info'] . $_QUERYPARAMS['reply'] ." FROM ". K4REPLIES ." r LEFT JOIN ". K4INFO ." i ON i.id = r.reply_id WHERE r.topic_id = ". intval($topic['id']) ." AND i.row_type = ". REPLY ." ORDER BY i.created DESC LIMIT 10";
+		$query				= "SELECT * FROM ". K4REPLIES ." WHERE topic_id = ". intval($topic['topic_id']) ." ORDER BY created DESC LIMIT 10";
 		
 		$replies			= &$request['dba']->executeQuery($query);
 		
 		/* Set the form actiob */
 		$request['template']->setVar('newreply_act', 'newreply.php?act=postreply');
-
-		$request['template']->setList('topic_review', new TopicReviewIterator($request['dba'], $topic, $replies, $request['user']->getInfoArray()));
-
+		
+		$it					= &new TopicReviewIterator($request['dba'], $topic, $replies, $request['user']->getInfoArray() );
+		$request['template']->setList('topic_review', $it);
+		
 		/* Set the post topic form */
 		$request['template']->setFile('content', 'newreply.html');
+		
+		/* Create our editor */
+		create_editor($request, $body_text, 'post', $forum);
+		
+		/* Clear up some memory */
+		unset($it, $body_text, $forum, $replies, $bbcode, $last_topic, $last_reply, $topic);
 
 		return TRUE;
 	}

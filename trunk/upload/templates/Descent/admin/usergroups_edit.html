@@ -1,8 +1,8 @@
 <is:admin>
 <form:form id="edit_usergroup" name="edit_usergroup" action="admin.php?act=usergroups_update" method="post" enctype="multipart/form-data">
 <input type="hidden" name="id" value="{$group_id}" />
-<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
-	<tr class="thead">
+<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+	<tr class="k4_maintitle">
 		<td colspan="2">{$L_ADDUSERGROUP}</td>
 	</tr>
 	<tr class="alt1">
@@ -44,7 +44,7 @@
 				<option value="9">{$L_ADMIN}</option>
 				<option value="10">{$L_SUPERADMIN}</option>
 			</select>
-			<script type="text/javascript">setIndex({$group_min_perm}, 'min_perm');</script>
+			<script type="text/javascript">d.setIndex({$group_min_perm}, 'min_perm');</script>
 		</td>
 	</tr>
 	<tr class="alt1">
@@ -62,7 +62,7 @@
 				<option value="9">{$L_ADMIN}</option>
 				<option value="10">{$L_SUPERADMIN}</option>
 			</select>
-			<script type="text/javascript">setIndex({$group_max_perm}, 'max_perm');</script>
+			<script type="text/javascript">d.setIndex({$group_max_perm}, 'max_perm');</script>
 		</td>
 	</tr>
 	<tr class="alt2">
@@ -73,7 +73,7 @@
 				<option value="0">{$L_NO}</option>
 				<option value="1">{$L_YES}</option>
 			</select>
-			<script type="text/javascript">setIndex({$group_display_legend}, 'display_legend');</script>
+			<script type="text/javascript">d.setIndex({$group_display_legend}, 'display_legend');</script>
 		</td>
 	</tr>
 	<tr class="alt1">
@@ -102,7 +102,7 @@
 			<input type="file" name="image_upload" id="avatar_upload" value="" />
 		</td>
 	</tr>
-	<tr class="tcat">
+	<tr class="k4_subtitle">
 		<td colspan="2">
 			<input type="submit" value="{$L_SAVE}" />
 			<input type="reset" value="{$L_RESET}" />

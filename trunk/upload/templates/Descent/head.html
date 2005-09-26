@@ -12,14 +12,17 @@
 	<meta name="distribution" content="GLOBAL" />
 	<meta name="rating" content="general" />
 	<link rel="icon" href="favicon.ico" type="image/x-icon" />
-	<link rel="stylesheet" href="tmp/cache/{$css_styles}.css" type="text/css" media="screen" />
 	<style type="text/css">
+		
+		{$css_styles}
+
 		/* Drop Down menus */
 		.nav_top {
 			padding-right: 15px;
 			background-image:url('Images/{$IMG_DIR}/Icons/menu_open.gif');
 			background-repeat: no-repeat;
 			background-position: right center;
+			color: #000000;
 		}
 		.nav_menu {
 			text-align: left;
@@ -28,7 +31,20 @@
 		.required_info { border: 1px solid #FF0000;font-size:11px;background-color:#FFEEFF;padding:5px; }
 		.required_info a { font-size:11px; }
 	</style>
+	<script type="text/javascript" src="js/lib.js"></script>
 	<script type="text/javascript" src="js/javascript.js"></script>
 	<script type="text/javascript" src="js/form_check.js"></script>
-	<script type="text/javascript" src="js/dd_menu.js"></script>
+	<script type="text/javascript" src="js/form_styles.js"></script>
+	<script type="text/javascript" src="js/k4_menu.js"></script>
+	<script type="text/javascript" src="js/http_requests.js"></script>
+	<script type="text/javascript" src="js/wysiwyg.js"></script>
+	<script type="text/javascript" src="js/bbcode.js"></script>
+	<script type="text/javascript" src="js/dom-drag.js"></script>
+	<script type="text/javascript">
+		var d = new k4lib();
+		var http_request = getHTTPRequestObject();
+		var k4_domain = '{$domain}';
+		set_cookie('k4_canjs', 1, 2592000, '{$domain}'); /* This cookie is very important and should always be set here. */
+		d.preload_images('Images/{$IMG_DIR}/Icons/collapse_thead.gif', 'Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif', 'Images/{$IMG_DIR}/Icons/dots.gif', 'Images/{$IMG_DIR}/Icons/icon_latest_reply.gif');
+	</script>
 </head>

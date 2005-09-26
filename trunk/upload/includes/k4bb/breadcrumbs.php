@@ -26,7 +26,7 @@
 *
 * @author Peter Goodman
 * @author Geoffrey Goodman
-* @version $Id: breadcrumbs.class.php,v 1.5 2005/05/16 02:11:54 k4st Exp $
+* @version $Id: breadcrumbs.php 156 2005-07-15 17:51:48Z Peter Goodman $
 * @package k42
 */
 
@@ -36,29 +36,32 @@ if(!defined('IN_K4')) {
 	return;
 }
 
-function loop_recursive(&$info, &$dba, $temp) {
-	
+function loop_recursive(&$breadcrumbs, &$dba, $temp) {
+
 	global $_QUERYPARAMS;
 	
 	if(is_array($temp) && !empty($temp)) {
 		
 		switch($temp['row_type']) {
-			/* Thread */
-			case 4: {
-				$temp['location'] = 'viewtopic.php?id='. $temp['id'];
+			case TOPIC: {
+				$temp['location'] = 'viewtopic.php?id='. $temp['topic_id'];
 				break;
 			}
-			/* Reply */
-			case 8: {
-				$temp['location'] = 'findpost.php?id='. $temp['id'];
+			case REPLY: {
+
+				$temp['location'] = 'findpost.php?id='. $temp['reply_id'];
 				break;
 			}
 		}
-
-		$info[]					= $temp;
-
-		if($temp['row_level'] >= 3) {
-			$this->loop_recursive($info, $dba, $dba->getRow("SELECT * FROM ". K4INFO ." WHERE (row_type = ". TOPIC ." OR row_type = ". REPLY .") AND row_level = ". intval($temp['row_level'] - 1) ." AND id = ". intval($temp['parent_id']) ." LIMIT 1"));
+		
+		$breadcrumbs[]			= $temp;
+		
+		if($temp['row_type'] & REPLY) {
+			if($temp['topic_id'] != $temp['parent_id']) {
+				loop_recursive($breadcrumbs, $dba, $dba->getRow("SELECT * FROM ". K4REPLIES ." WHERE row_level = ". intval($temp['row_level'] - 1) ." AND reply_id = ". intval($temp['parent_id']) ." LIMIT 1"));
+			} else {
+				loop_recursive($breadcrumbs, $dba, $dba->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($temp['topic_id']) ." LIMIT 1"));
+			}
 		}
 	}
 }
@@ -73,67 +76,37 @@ function k4_bread_crumbs(&$template, &$dba, $location = NULL, $info = FALSE, $fo
 	
 	} elseif($info) {
 		
-		$breadcrumbs	= array();
+		$breadcrumbs		= array();
 		
-		$forum			= ($info['row_type'] == FORUM || $info['row_type'] == CATEGORY) ? $info : ($forum ? $forum : array());
+		$forum				= ($info['row_type'] == FORUM || $info['row_type'] == CATEGORY) ? $info : ($forum ? $forum : array());
 		
-		if(is_array($forum) && !empty($forum)) {
-			$query = &$dba->prepareStatement("SELECT * FROM ". K4INFO ." WHERE row_left <= ? AND row_right >= ? ORDER BY row_left ASC");
-			$query->setInt(1, intval($forum['row_left']));
-			$query->setInt(2, intval($forum['row_right']));
-			
-			$result			= &$query->executeQuery();
-			
-			while($result->next()) {
-				$current	= $result->current();
-
-				switch($current['row_type']) {
-					/* Categories and forums */
-					case 1:
-					case 2: {
-						$current['location'] = 'viewforum.php?id='. $current['id'];
-						break;
-					}
-					/* Gallery Category */
-					case 16: {
-						$current['location'] = 'viewgallery.php?id='. $current['id'];
-						break;
-					}
-					/* Gallery Image */
-					case 32: {
-						$current['location'] = 'viewimage.php?id='. $current['id'];
-						break;
-					}
-				}
-
-				$breadcrumbs[] = $current;
-			}
-		} else {
-			trigger_error("Failed to supply forum information to bread crumbs.", E_USER_ERROR);
+		if(!empty($forum)) {
+			$breadcrumbs	= array_reverse(follow_forum_ids($breadcrumbs, $forum));
 		}
-		
-		/* Free up some memory */
-		$result->free();
-		
+				
 		/**
 		 * Do the recursive section of our bread crumbs if needed
 		 */
-		if(($info['row_type'] == TOPIC || $info['row_type'] == REPLY) && $forum) {
+		if(($info['row_type'] & TOPIC || $info['row_type'] & REPLY) && $forum) {
 			
-			if($info['row_level'] >= 3) {
-				loop_recursive($breadcrumbs, $dba, $dba->getRow("SELECT * FROM ". K4INFO ." WHERE (row_type = ". TOPIC ." OR row_type = ". REPLY .") AND row_level = ". intval($info['row_level'] - 1) ." AND id = ". intval($info['parent_id']) ." LIMIT 1"));
+			if($info['row_type'] & REPLY) {
+				if($info['topic_id'] != $info['parent_id']) {
+					loop_recursive($breadcrumbs, $dba, $dba->getRow("SELECT * FROM ". K4REPLIES ." WHERE row_level = ". intval($info['row_level'] - 1) ." AND reply_id = ". intval($info['parent_id']) ." LIMIT 1"));
+				} else {
+					loop_recursive($breadcrumbs, $dba, $dba->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($info['topic_id']) ." LIMIT 1"));
+				}
 			}
 
 			switch($info['row_type']) {
-				case 4: { $info['location'] = 'viewtopic.php?id='. $info['id']; break; }
-				case 8: { $info['location'] = 'findpost.php?id='. $info['id']; break; }
+				case 4: { $info['location'] = 'viewtopic.php?id='. $info['topic_id']; break; }
+				case 8: { $info['location'] = 'findpost.php?id='. $info['reply_id']; break; }
 			}
 
 			$breadcrumbs[]	= $info;
 		}
 
 		/* Check if we have a preset location or not */
-		if($location == NULL) {
+		if($location == NULL || $location == '') {
 			$current_location = array_pop($breadcrumbs);
 			$template->setVar('current_location', $current_location['name']);
 		} else {
@@ -141,8 +114,45 @@ function k4_bread_crumbs(&$template, &$dba, $location = NULL, $info = FALSE, $fo
 		}
 
 		/* Set the Breadcrumbs list */
-		$template->setList('breadcrumbs', new FAArrayIterator($breadcrumbs));
+		$it = &new FAArrayIterator($breadcrumbs);
+		$template->setList('breadcrumbs', $it);
 	}
+}
+
+function follow_forum_ids($breadcrumbs, $forum) {
+	
+	switch($forum['row_type']) {
+		/* Categories and forums */
+		case 1: {
+			$forum['location'] = 'viewforum.php?c='. $forum['category_id'];
+			break;
+		}
+		case 2: {
+			$forum['location'] = 'viewforum.php?f='. $forum['forum_id'];
+			break;
+		}
+		/* Gallery Category */
+		case 16: {
+			$forum['location'] = 'viewgallery.php?id='. $forum['forum_id'];
+			break;
+		}
+		/* Gallery Image */
+		case 32: {
+			$forum['location'] = 'viewimage.php?id='. $forum['forum_id'];
+			break;
+		}
+	}
+	
+	$breadcrumbs[]			= $forum;
+
+	if(isset($forum['parent_id']) && $forum['parent_id'] > 0) {
+		global $_ALLFORUMS;
+
+		$prefix				= $forum['row_level'] == 2 ? 'c' : 'f';
+		$breadcrumbs		= follow_forum_ids($breadcrumbs, $_ALLFORUMS[$prefix . $forum['parent_id']]);
+	}
+
+	return $breadcrumbs;
 }
 
 ?>

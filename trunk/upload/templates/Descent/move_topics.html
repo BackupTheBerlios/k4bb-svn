@@ -1,55 +1,55 @@
-<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
-	<tr class="thead">
-		<td colspan="7">{$L_MOVETOPICS}</td>
-	</tr>
-	<tr class="panel">
-		<td colspan="7">
-			<form action="mod.php?act=move_topics" method="post" enctype="multipart/form-data">
-			<div class="outset_box">
-				<label for="movetrack"><input type="radio" name="action" value="movetrack" id="movetrack" checked="checked" /> {$L_MOVEWITHTRACKER}</label><br />
-				<label for="move"><input type="radio" name="action" value="move" id="move" /> {$L_MOVEWITHOUTTRACKER}</label><br />
-				<label for="copy"><input type="radio" name="action" value="copy" id="copy" /> {$L_COPYTOFORUM}</label>
-			</div>
-			<input type="hidden" name="id" value="{$forum_id}" />
-			<input type="hidden" name="topics" id="topics" value="{$topics}" />
-			<br />
-			<div align="center">
-				<strong>{$L_MOVETOFORUM}:</strong>
-				<select name="forum">
-				<list:list id="all_forums">
-				<list:item list="all_forums">
-					<if:if var="row_type" eq="2">
-						<maps:if forum="id" method="can_view">
-							<if:if var="is_forum" geq="0">
-								<option value="{$id}">{$indent_level}{$name}</option>
-							</if:if>
-						</maps:if>
-					<if:else />
-						<maps:if category="id" method="can_view">
-							<optgroup label="{$indent_level}{$name}" />
-						</maps:if>
-					</if:if>
-				</list:item>
-				</list:list>
-				</select>
-				<br /><br />
-				<input type="submit" value="{$L_MOVECOPY}" class="button" />
-				<br /><br />
-			</div>
-			</form>
-		</td>
-	</tr>
-	<tr class="tcat">
-		<td width="5%" colspan="2">&nbsp;</td>
-		<td align="center" class="minitext" width="55%">{$L_TOPICS}/{$L_AUTHOR}</td>
-		<td align="center" class="minitext" nowrap="nowrap">&nbsp;{$L_REPLIES}&nbsp;</td>
-		<td align="center" class="minitext" nowrap="nowrap">&nbsp;{$L_VIEWS}&nbsp;</td>
-		<td align="center" class="minitext" nowrap="nowrap" width="30%">&nbsp;{$L_LASTPOST}&nbsp;</td>
-		<if:if var="modpanel" eq="1"><td align="center" class="minitext">&nbsp;{$L_SELECT}&nbsp;</td></if:if>
-	</tr>
-	<list:list id="topics">
-	<list:item list="topics">
-	<core:import id="topic_view" file="topic_view.html" />
-	</list:item>
-	</list:list>
-</table>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_MOVETOPICS}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt3" colspan="7">
+				<form action="mod.php?act=move_topics" method="post" enctype="multipart/form-data">
+				<div class="outset_box">
+					<label for="movetrack"><input type="radio" name="action" value="movetrack" id="movetrack" checked="checked" /> {$L_MOVEWITHTRACKER}</label><br />
+					<label for="move"><input type="radio" name="action" value="move" id="move" /> {$L_MOVEWITHOUTTRACKER}</label><br />
+					<label for="copy"><input type="radio" name="action" value="copy" id="copy" /> {$L_COPYTOFORUM}</label>
+				</div>
+				<input type="hidden" name="id" value="{$forum_id}" />
+				<input type="hidden" name="topics" id="topics" value="{$topics}" />
+				<br />
+				<div align="center">
+					<strong>{$L_MOVETOFORUM}:</strong>
+					<select name="forum">
+					<list:list id="all_forums">
+					<list:item list="all_forums">
+						<if:if var="row_type" eq="2">
+							<maps:if forum="forum_id" method="can_view">
+								<if:if var="is_forum" geq="0">
+									<option value="{$forum_id}">{$indent_level}{$name}</option>
+								</if:if>
+							</maps:if>
+						<if:else />
+							<maps:if category="category_id" method="can_view">
+								<optgroup label="{$indent_level}{$name}" />
+							</maps:if>
+						</if:if>
+					</list:item>
+					</list:list>
+					</select>
+					<br /><br />
+					<input type="submit" value="{$L_MOVECOPY} (0)" id="performact_button" class="button" />
+					<br /><br />
+				</div>
+				</form>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" width="5%" colspan="2">&nbsp;</td>
+			<td class="k4_subtitle" style="text-align: center;" width="65%">{$L_TOPICS}/{$L_AUTHOR}</td>
+			<td class="k4_subtitle" style="text-align: center;" width="20%">&nbsp;{$L_LASTPOST}&nbsp;</td>
+			<td class="k4_subtitle" style="text-align: center;">&nbsp;{$L_REPLIES}&nbsp;</td>
+			<td class="k4_subtitle" style="text-align: center;">&nbsp;{$L_VIEWS}&nbsp;</td>
+			<td class="k4_subtitle" style="text-align: center;">&nbsp;{$L_SELECT}&nbsp;</td>
+		</tr>
+		<list:list id="topics">
+		<list:item list="topics">
+		<core:import id="topic_view" file="topic_view.html" />
+		</list:item>
+		</list:list>
+	</table>
+</div>

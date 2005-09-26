@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Geoffrey Goodman
-* @version $Id$
+* @version $Id: database.php 110 2005-06-13 20:48:58Z Peter Goodman $
 * @package k42
 */
 
@@ -75,7 +75,8 @@ class FADBConnection extends FAObject {
 	function connect($info) {}
 
 	function &createStatement($stmt, &$dba) {
-		return new FADBStatement($stmt, $dba);
+		$ret = &new FADBStatement($stmt, $dba);
+		return $ret;
 	}
 
 	function getNumQueries() {
@@ -152,7 +153,8 @@ class FADBStatement extends FAObject {
 	}
 
 	function &executeQuery($mode = DBA_ASSOC) {
-		return $this->db->executeQuery($this->getSql(), $mode);
+		$ret = $this->db->executeQuery($this->getSql(), $mode);
+		return $ret;
 	}
 
 	function executeUpdate($mode = DBA_ASSOC) {

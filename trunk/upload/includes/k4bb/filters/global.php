@@ -25,7 +25,8 @@
 * SOFTWARE.
 *
 * @author Geoffrey Goodman
-* @version $Id$
+* @author Peter Goodman
+* @version $Id: global.php 144 2005-07-05 02:29:07Z Peter Goodman $
 * @package k42
 */
 
@@ -59,6 +60,7 @@ class K4DatabaseFilter extends FAFilter {
 		
 		// TODO: This should not be needed in the final version
 		$GLOBALS['_DBA'] = &$dba;
+		
 	}
 
 	function getId() {
@@ -68,6 +70,13 @@ class K4DatabaseFilter extends FAFilter {
 
 class K4SqlDebugPreFilter extends FAFilter {
 	function execute(&$action, &$request) {
+		global $_URL;
+
+		$url		= &new FAUrl($_URL->__toString());
+		$url->args['debug'] = 1;
+
+		$request['template']->setVar('debug_url', $url->__toString());
+		
 		if (isset($_GET['debug'])) {
 			$request['dba'] = &new K4SqlDebugger($request['dba']);
 		}
@@ -84,7 +93,7 @@ class K4SqlDebugPreFilter extends FAFilter {
 
 class K4SessionFilter extends FAFilter {
 	function execute(&$action, &$request) {
-		$session = &new FASession($request['dba'], K4SESSIONS);
+		$session = &FASession::start($request['dba'], K4SESSIONS);
 		$request['session'] = &$session;
 	}
 
@@ -99,23 +108,41 @@ class K4SessionFilter extends FAFilter {
 
 class K4UserFilter extends FAFilter {
 	function execute(&$action, &$request) {
-		if (!isset($_SESSION['user']) || !is_a($_SESSION['user'], 'FAUser'))
+		
+		global $_QUERYPARAMS;
+
+		if (!isset($_SESSION['user']) || !is_a($_SESSION['user'], 'FAUser')) {
 			$_SESSION['user'] = &new K4Guest();
+		}
 
-		$user = &$_SESSION['user'];
-		$session = &$request['session'];
-
+		$user		= &$_SESSION['user'];
+		$session	= &$request['session'];
+		
 		if (!$user->isMember() && $session->isNew()) {
 			$factory = &new K4UserFactory;
 			$validator = &new K4CookieValidator($request['dba']);
-
+			
 			$user = &$factory->getUser($validator);
-
+			
 			if ($user->isMember())
 				k4_set_login($request['dba'], $user, TRUE);
 		}
 
+		if($user->isMember() && !$session->isNew()) {
+			$info = $request['dba']->getRow("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']}{$_QUERYPARAMS['usersettings']} FROM ". K4USERS ." u, ". K4USERINFO ." ui, ". K4USERSETTINGS ." us WHERE u.id=ui.user_id AND us.user_id=u.id AND u.id=". intval($_SESSION['user']->get('id')) ." LIMIT 1");
+
+			if(is_array($info) && !empty($info)) {
+				$user->setInfo($info);
+			}
+		}
+		
 		$request['user'] = &$user;
+		$last_seen_days = ceil(@((time() - intval($request['user']->get('last_seen'))) / 86400));
+		
+		$request['user']->set('last_seen_days', $last_seen_days < 0 ? 0 : $last_seen_days);
+
+		foreach($request['user']->getInfoArray() as $key => $val)
+			$request['template']->setVar('user_'. $key, $val);
 
 		$request['user_manager'] = &new K4UserManager($request['dba']);
 	}
@@ -134,10 +161,10 @@ class K4LanguageFilter extends FAFilter {
 		global $_CONFIG;
 
 		$lang = $_CONFIG['application']['lang'];
-
+		
 		if ($_SESSION['user']->isMember())
-			$lang = $_SESSION['user']->get('language');
-
+			$lang = ($_SESSION['user']->get('language') != '') ? $_SESSION['user']->get('language') : $lang;
+		
 		k4_set_language($lang);
 	}
 
@@ -157,6 +184,8 @@ class K4LoginFilter extends FAFilter {
 		if (isset($_POST['username'], $_POST['password'])) {
 			// Ok, a login attempt is being made
 			
+			header("Cache-Control: must-revalidate");
+
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_LOGIN');
 
 			$user = &$request['user'];
@@ -172,17 +201,25 @@ class K4LoginFilter extends FAFilter {
 				$user = $factory->getUser($validator);
 
 				if ($user->isMember()) {
-					// User successfully logged in
 					
-					if (isset($_POST['rememberme']) && $_POST['rememberme'] == 'on')
-						$remember = TRUE;
-					else 
-						$remember = FALSE;
+					if(($user->get('reg_key') == '') || ($user->get('reg_key') != '' && $request['template']->getVar('canloginunverified') == 1) ) {
+					
+						// User successfully logged in
+						
+						if (isset($_POST['rememberme']) && $_POST['rememberme'] == 'on')
+							$remember = TRUE;
+						else 
+							$remember = FALSE;
 
-					k4_set_login($request['dba'], $user, $remember);
-					//$request['user'] = &$user;
+						k4_set_login($request['dba'], $user, $remember);
+						//$request['user'] = &$user;
 
-					$action = new K4InformationAction(new K4LanguageElement('L_LOGGEDINSUCCESS'), 'content', FALSE, $_SERVER['REQUEST_URI'], 3);
+						$action = new K4InformationAction(new K4LanguageElement('L_LOGGEDINSUCCESS'), 'content', FALSE, $_SERVER['REQUEST_URI'], 3);
+					} else {
+						// this is a pending user who cannot log in
+						k4_set_logout($request['dba'], $user);
+						$action = new K4InformationAction(new K4LanguageElement('L_VERIFYEMAILTOLOGIN'), 'content');
+					}
 				} else {
 					// User failed to log in
 					$action = new K4InformationAction(new K4LanguageElement('L_INVALIDUSERPASS'), 'content');
@@ -197,6 +234,55 @@ class K4LoginFilter extends FAFilter {
 
 	function getId() {
 		return 'login';
+	}
+}
+
+class K4BannedUsersFilter extends FAFilter {
+	function execute(&$action, &$request) {
+		global $_LANG, $_BANNEDUSERIDS, $_BANNEDUSERIPS;
+		
+		$banned			= FALSE;
+
+		/**
+		 * User ID banning
+		 */
+		if($request['user']->isMember()) {
+			
+			// this user is banned
+			if(in_array($request['user']->get('id'), $_BANNEDUSERIDS) || $request['user']->get('banned') == 1) {
+				
+				$ban	= $request['dba']->getRow("SELECT * FROM ". K4BANNEDUSERS ." WHERE user_id = ". intval($request['user']->get('id')));
+				
+				if(is_array($ban) && !empty($ban)) {
+
+					$action = new K4InformationAction(new K4LanguageElement('L_BANNEDUSERID', $request['user']->get('name'), $ban['reason'], ($ban['expiry'] == 0 ? $_LANG['L_YOURDEATH'] : strftime("%m/%d/%Y", bbtime($ban['expiry']))) ), 'content', FALSE);
+					
+					$banned	= TRUE;
+				} else {
+					// TODO: should I put anything here...?
+				}
+			}
+		}
+		
+		/**
+		 * User IP banning
+		 */
+		//if(in_array(USER_IP, $_BANNEDUSERIPS) && !$banned) {
+		foreach($_BANNEDUSERIPS as $ip) {
+			if(preg_match('~'. $ip .'~', USER_IP)) {
+				$ban	= $request['dba']->getRow("SELECT * FROM ". K4BANNEDUSERS ." WHERE user_ip = '". $request['dba']->quote(USER_IP) ."'");
+					
+				$action = new K4InformationAction(new K4LanguageElement('L_BANNEDUSERIP', $ban['reason'], ($ban['expiry'] == 0 ? $_LANG['L_YOURDEATH'] : strftime("%m/%d/%Y", bbtime($ban['expiry']))) ), 'content', FALSE);
+			}
+		}
+	}
+
+	function getDependencies() {
+		return array('login');
+	}
+
+	function getId() {
+		return 'bannedusers';
 	}
 }
 
@@ -243,26 +329,30 @@ class K4TemplateFilter extends FAFilter {
 	}
 
 	function execute(&$action, &$request) {
-		global $_LANG, $_CONFIG, $_SETTINGS, $_USERGROUPS;
+		global $_LANG, $_CONFIG, $_SETTINGS, $_USERGROUPS, $_STYLESETS;
 
 		$logout = &new FAUrl($_SERVER['REQUEST_URI']);
 		//$logout->path = FALSE;
 		$logout->args['logout'] = 'yes';
-
-		$templateset = ($request['user']->isMember()) ? $request['user']->get('templateset') : 'Descent';
-		$imageset = ($request['user']->isMember()) ? $request['user']->get('imageset') : 'Descent';
-		$styleset = ($request['user']->isMember()) ? $request['user']->get('styleset') : 'Descent';
-
+		
+		$styleset		= ($request['user']->isMember()) ? $request['user']->get('styleset') : 'Descent';
+		
+		$templateset	= intval($_STYLESETS[$styleset]['use_templateset']) == 0 ? (($request['user']->isMember()) ? $request['user']->get('templateset') : $styleset) : $styleset;
+		$imageset		= intval($_STYLESETS[$styleset]['use_imageset']) == 0 ? (($request['user']->isMember()) ? $request['user']->get('imageset') : $styleset) : $styleset;
+		
 		// TODO: query the user to determine the theme		
 		$request['template_file'] = BB_BASE_DIR . "/templates/$templateset/{$this->_filename}";
 		
 		// Load k4 custom compilers
-		$compiler = &$request['template']->getTemplateCompiler();
+		$compiler		= &$request['template']->getTemplateCompiler();
 		$compiler->loadCompilers(K4_BASE_DIR . '/compilers/');
-
+		
 		// Set Theme specific template variables
 		$request['template']->setVar('IMG_DIR', $imageset);
-		$request['template']->setVar('css_styles', get_cached_styleset($request['dba'], $styleset, $_SETTINGS['styleset']));
+		$request['template']->setVar('TPL_DIR', $templateset);
+		
+		// Set the CSS to the template
+		get_cached_styleset($request, $styleset, $_SETTINGS['styleset']);
 
 		// Set global template variables
 		$request['template']->setVarArray($_LANG);
@@ -340,24 +430,117 @@ class K4InformationAction extends FAAction {
 	var $_url;
 	var $_timeout;
 	
-	function __construct(&$message, $block_id, $show_button = TRUE, $url = '', $timeout = 0) {
-		$this->_message = &$message;
-		$this->_block_id = $block_id;
+	function __construct($message, $block_id, $show_button = TRUE, $url = '', $timeout = 0) {
+		$this->_message		= $message;
+		$this->_block_id	= $block_id;
 		$this->_show_button = $show_button;
-		$this->_url = $url;
-		$this->_timeout = $timeout;
+		$this->_url			= $url;
+		$this->_timeout		= $timeout;
 	}
 
 	function execute(&$request) {
 		$js = '';
 		
-		if ($this->_timeout && $this->_url)
-			$js = "setTimeout(\"location.href='{$this->_url}'\", {$this->_timeout} * 1000);";
+		$this->_url			= str_replace('&amp;', '&', $this->_url);
 
-		$request['template']->setVar('information', $this->_message->__toString());
+		if ($this->_timeout && $this->_url)
+			$js = "setTimeout(\"location.href='{$this->_url}'\", ". intval($this->_timeout * 1000) .");";
+		
+		if(!$request['template']->getVar('current_location')) {
+			
+			global $_LANG;
+			
+			$request['template']->setVar('current_location', $_LANG['L_INFORMATION']);
+		}
+		
+		$message = is_a($this->_message, 'K4LanguageElement') ? $this->_message->__toString() : $this->_message;
+
+		$request['template']->setVar('information', $message);
 		$request['template']->setVar('redirect', $js);
+		$request['template']->setVar('html_redirect', $this->_url && $this->_timeout ? '<meta http-equiv="refresh" content="'. intval($this->_timeout) .';url='. $this->_url .'" />' : '');
 		$request['template']->setVisibility('info_back_button', $this->_show_button);		
 		$request['template']->setFile($this->_block_id, 'information.html');
+	}
+}
+
+class K4CloseBoardFilter extends FAFilter {
+	function execute(&$action, &$request) {
+		
+		if(intval($request['template']->getVar('bbactive')) == 0) {
+			
+			global $_URL;
+			
+			$file	= !isset($_URL->file) || !$_URL->file ? 'index.php' : $_URL->file;
+			$act	= !isset($_URL->args['act']) ? '' : $_URL->args['act'];
+
+			if($request['user']->get('perms') < SUPERADMIN && ($file != 'admin.php' && $act != 'login')) {
+			
+				$action = new K4InformationAction($request['template']->getVar('bbclosedreason'), 'content', FALSE);
+				return $action->execute($request);
+			}
+		}		
+	}
+
+	function getDependencies() {
+		return array('generalinfo');
+	}
+}
+
+class K4MasMailFilter extends FAFilter {
+	function execute(&$action, &$request) {
+		global $_DATASTORE;
+		
+		if(isset($_DATASTORE['massmail']) && is_array($_DATASTORE['massmail'])) {
+			
+			$maxid = $_DATASTORE['massmail']['startid'] + EMAIL_INTERVAL;
+
+			$users = $request['dba']->executeQuery("SELECT name, email FROM ". K4USERS ." WHERE id >= ". intval($_DATASTORE['massmail']['startid']) ." AND id < ". intval($maxid));
+			
+			if($users->numrows() > 0) {
+				
+				$bcc	= '';
+				$to		= '';
+
+				/* Send out a specific frequency of emails */
+				while($users->next()) {
+					$user = $users->current();
+
+					if($user['email'] != '') {
+						email_user($user['email'], $_DATASTORE['massmail']['subject'], $_DATASTORE['massmail']['message'], $_DATASTORE['massmail']['from']);
+//						if($to != '') {
+//							$bcc .= $user['email'] .", ";
+//						} else {
+//							$to = $user['email'];
+//						}
+					}
+				}
+				
+//				$bcc = $bcc != '' ? "\nBcc:". trim(trim($bcc), ',') : '';
+//				email_user($to, $_DATASTORE['massmail']['subject'], $_DATASTORE['massmail']['message'], $_DATASTORE['massmail']['from'], $bcc);
+
+				/* Change the properties of the massmail */
+				$_DATASTORE['massmail']['startid'] = $maxid;
+					
+				// update the datastore
+				$update = $request['dba']->prepareStatement("UPDATE ". K4DATASTORE ." SET data = ? WHERE varname = 'massmail'");
+				$update->setString(1, serialize($_DATASTORE['massmail']));
+				$update->executeUpdate();
+
+			} else {
+				$request['dba']->executeUpdate("DELETE FROM ". K4DATASTORE ." WHERE varname = 'massmail'");
+			}
+			
+			reset_cache(CACHE_DS_FILE);
+
+		}		
+	}
+
+	function getDependencies() {
+		return array('dba', 'template');
+	}
+
+	function getId() {
+		return 'massmail';
 	}
 }
 

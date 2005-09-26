@@ -25,16 +25,37 @@
 * SOFTWARE.
 *
 * @author Geoffrey Goodman
-* @version $Id$
+* @version $Id: user.php 158 2005-07-18 02:55:30Z Peter Goodman $
 * @package k42
 */
 
 if (!defined(IN_K4))
 	return;
 
+/**
+ * Email a user with the proper noreply email address
+ */
+function email_user($to, $subject, $message, $from = 'noreply', $headers = "") {
+	global $_URL, $_SETTINGS;
+
+	$verify_url					= new FAUrl($_URL->__toString());
+	$verify_url->args			= array();
+	$verify_url->file			= FALSE;
+	$verify_url->anchor			= FALSE;
+	$verify_url->scheme			= FALSE;
+	$verify_url->path			= FALSE;
+	$verify_url->host			= preg_replace('~www\.~i', '', $verify_url->host);
+			
+	return @mail($to, $subject, $message, "From: \"". $_SETTINGS['bbtitle'] ." Forums\" <". $from ."@". substr($verify_url->__toString(), 0, -1) .">" . $headers);
+}
+
+/**
+ * Set a user a logged in
+ */
 function k4_set_login(&$dba, &$user, $remember) {
+
 	// TODO: change last_seen in k4_users to last_login
-	$stmt = &$dba->prepareStatement("UPDATE ".K4USERS." SET seen=?,last_seen=?,priv_key=? WHERE id=?");
+	$stmt = &$dba->prepareStatement("UPDATE ". K4USERS ." SET seen=?,last_seen=?,priv_key=? WHERE id=?");
 
 	$seen = time();
 	$priv_key = md5(uniqid(microtime()));
@@ -50,17 +71,15 @@ function k4_set_login(&$dba, &$user, $remember) {
 	if ($remember) {
 		$expire = time() + (3600 * 24 * 30);
 
-		setcookie(K4COOKIE_ID, $user->get('id'), $expire);
-		setcookie(K4COOKIE_KEY, $priv_key, $expire);
+		setcookie(K4COOKIE_ID, $user->get('id'), $expire, get_domain());
+		setcookie(K4COOKIE_KEY, $priv_key, $expire, get_domain());
 	}
-
-	// TODO: load the user's language
 
 	$_SESSION['user'] = &$user;
 }
 
 function k4_set_logout(&$dba, &$user) {
-	$stmt = &$dba->prepareStatement("UPDATE ".K4USERS." SET seen=?,priv_key='' WHERE id=?");
+	$stmt = &$dba->prepareStatement("UPDATE ". K4USERS ." SET seen=?,priv_key='' WHERE id=?");
 
 	$seen = time();
 
@@ -70,8 +89,8 @@ function k4_set_logout(&$dba, &$user) {
 
 	$expire = time() - (3600 * 24);
 
-	setcookie(K4COOKIE_ID, '', $expire);
-	setcookie(K4COOKIE_KEY, '', $expire);
+	setcookie(K4COOKIE_ID, '', $expire, get_domain());
+	setcookie(K4COOKIE_KEY, '', $expire, get_domain());
 	
 	//unset($_SESSION['user']);
 
@@ -79,8 +98,25 @@ function k4_set_logout(&$dba, &$user) {
 }
 
 class K4Guest extends FAUser {
+	function guestInfo() {
+		global $_SPIDERS, $_SPIDERAGENTS;
+		
+		$info	= array('name' => '', 'email' => '', 'id' => 0, 'usergroups' => serialize(array()), 'perms' => 1, 'styleset' => '', 'topicsperpage' => 0, 'postsperpage' => 0, 'viewavatars' => 0,'viewflash'=>1,'viewemoticons'=>1,'viewsigs'=>1,'viewavatars'=> 1,'viewimages'=>1,'viewcensors'=>1,'invisible'=>0,'seen'=>time(),'last_seen'=>time());
+		
+		/* Check if this person is a search engine */
+		if(preg_match("~(". $_SPIDERAGENTS .")~is", USER_AGENT)) {
+			foreach($_SPIDERS as $spider) {
+				if(eregi($spider['useragent'], USER_AGENT)) {
+					$info['name']	= $spider['spidername'];
+					$info['perms']	= $spider['allowaccess'] == 1 ? 1 : -1;
+				}
+			}
+		}
+
+		return $info;
+	}
 	function __construct() {
-		parent::__construct(array('name' => '', 'email' => '', 'id' => 0, 'perms' => 1, 'styleset' => ''));
+		parent::__construct($this->guestInfo());
 	}
 }
 
@@ -89,11 +125,15 @@ class K4Member extends FAMember {
 
 class K4UserManager extends FAObject {
 	var $_info;
+	
+	function K4UserManager(&$dba) {
+		$this->__construct($dba);
+	}
 
 	function __construct(&$dba) {
 		global $_QUERYPARAMS;
-
-		$this->_info = &$dba->prepareStatement("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']} FROM ".K4USERS." u LEFT JOIN ".K4USERINFO." ui ON u.id=ui.user_id WHERE u.id=?");
+		
+		$this->_info = &$dba->prepareStatement("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']}{$_QUERYPARAMS['usersettings']} FROM ". K4USERS ." u, ". K4USERINFO ." ui, ". K4USERSETTINGS ." us WHERE u.id=ui.user_id AND us.user_id=u.id AND u.id=? LIMIT 1");
 	}
 
 	function getInfo($id) {
@@ -112,17 +152,22 @@ class K4UserManager extends FAObject {
 
 class K4CookieValidator extends FAUserValidator {
 	var $_stmt;
+	
+	function K4CookieValidator(&$dba) {
+		$this->__construct($dba);
+	}
 
 	function __construct(&$dba) {
 		global $_QUERYPARAMS;
 
-		$this->_stmt = &$dba->prepareStatement("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']} FROM ".K4USERS." u LEFT JOIN ".K4USERINFO." ui ON u.id=ui.user_id WHERE u.id=? AND u.priv_key=?");
+		$this->_stmt = &$dba->prepareStatement("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']}{$_QUERYPARAMS['usersettings']} FROM ". K4USERS ." u, ". K4USERINFO ." ui, ". K4USERSETTINGS ." us WHERE u.id=ui.user_id AND us.user_id=u.id AND u.id=? AND u.priv_key=? LIMIT 1");
 	}
 
 	function validateLoginKey() {
 		$ret = FALSE;
 
 		if (isset($_COOKIE[K4COOKIE_ID], $_COOKIE[K4COOKIE_KEY])) {
+			
 			$this->_stmt->setInt(1, $_COOKIE[K4COOKIE_ID]);
 			$this->_stmt->setString(2, $_COOKIE[K4COOKIE_KEY]);
 
@@ -138,11 +183,15 @@ class K4CookieValidator extends FAUserValidator {
 
 class K4RequestValidator extends FAUserValidator {
 	var $_stmt;
+	
+	function K4RequestValidator(&$dba) {
+		$this->__construct($dba);
+	}
 
 	function __construct(&$dba) {
 		global $_QUERYPARAMS;
 
-		$this->_stmt = &$dba->prepareStatement("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']} FROM ".K4USERS." u LEFT JOIN ".K4USERINFO." ui ON u.id=ui.user_id WHERE `name`=? AND `pass`=?");
+		$this->_stmt = &$dba->prepareStatement("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']}{$_QUERYPARAMS['usersettings']} FROM ". K4USERS ." u, ". K4USERINFO ." ui, ". K4USERSETTINGS ." us WHERE u.id=ui.user_id AND us.user_id=u.id AND u.name=? AND u.pass=? LIMIT 1");
 	}
 
 	function validateLoginKey() {
@@ -165,15 +214,14 @@ class K4RequestValidator extends FAUserValidator {
 class K4UserFactory extends FAUserFactory {
 
 	function &createGuest() {
-		return new K4Guest(array('name' => '', 'email' => '', 'id' => 0, 'perms' => 1, 'styleset' => ''));
+		$ret = &new K4Guest();
+
+		return $ret;
 	}
 
 	function &createMember($info) {
-		$info['templateset'] = 'Descent';
-		$info['styleset'] = 'Descent';
-		$info['imageset'] = 'Descent';
-
-		return new K4Member($info);
+		$ret = &new K4Member($info);
+		return $ret;
 	}
 }
 

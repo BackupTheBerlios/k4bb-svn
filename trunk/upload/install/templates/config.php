@@ -24,7 +24,7 @@
 * SOFTWARE.
 *
 * @author Geoffrey Goodman
-* @version $Id$
+* @version $Id: config.php 132 2005-06-23 17:04:42Z Peter Goodman $
 * @package k42
 */
 
@@ -37,10 +37,10 @@ $_CONFIG['application']['lang']			= 'english';
 $_CONFIG['template']['force_compile']	= FALSE;
 $_CONFIG['template']['ignore_white']	= FALSE;
 
-$_CONFIG['ftp']['use_ftp']				= FALSE;
-$_CONFIG['ftp']['username']				= '';
-$_CONFIG['ftp']['password']				= '';
-$_CONFIG['ftp']['server']				= '';
+$_CONFIG['ftp']['use_ftp']				= {$use_ftp};
+$_CONFIG['ftp']['username']				= '{$ftp_user}';
+$_CONFIG['ftp']['password']				= '{$ftp_pass}';
+//$_CONFIG['ftp']['server']				= '';
 
 $_CONFIG['dba']['driver']				= '{$db_driver}';
 $_CONFIG['dba']['database']				= '{$db_database}';

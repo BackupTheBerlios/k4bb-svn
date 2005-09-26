@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Geoffrey Goodman
-* @version $Id$
+* @version $Id: config.php 132 2005-06-23 17:04:42Z Peter Goodman $
 * @package k42
 */
 
@@ -39,13 +39,13 @@ $_CONFIG['template']['force_compile']	= FALSE;
 $_CONFIG['template']['ignore_white']	= FALSE;
 
 $_CONFIG['ftp']['use_ftp']				= FALSE;
-$_CONFIG['ftp']['username']				= '';
-$_CONFIG['ftp']['password']				= '';
-$_CONFIG['ftp']['server']				= '';
+$_CONFIG['ftp']['username']				= '.';
+$_CONFIG['ftp']['password']				= '.';
+//$_CONFIG['ftp']['server']				= '';
 
 $_CONFIG['dba']['driver']				= 'mysqli';
 $_CONFIG['dba']['database']				= 'k4_forum';
-$_CONFIG['dba']['directory']			= '';
+$_CONFIG['dba']['directory']			= 'c:/documents and settings/peter goodman/my documents/my websites/k4-2.0-dev/upload/tmp/sqlite';
 $_CONFIG['dba']['server']				= 'localhost';
 $_CONFIG['dba']['user']					= 'test';
 $_CONFIG['dba']['pass']					= 'test';

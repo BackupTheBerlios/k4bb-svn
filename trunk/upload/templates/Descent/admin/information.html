@@ -1,26 +1,28 @@
 <!-- Information Table -->
-<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
-	<tr class="thead">
-		<td>{$L_INFORMATION}</td>
-	</tr>
-	<tr class="panel">
-		<td>
-			<div class="outset_box">
-				{$information}
-			</div>
-		</td>
-	</tr>
-	<core:block id="info_back_button">
-		<tr class="tcat">
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_INFORMATION}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr class="alt3">
 			<td>
-				<div align="center">
-					<input type="button" class="button" value="{$L_GOBACK}" onClick="javascript:history.go(-1)" />
+				<div class="outset_box">
+					{$information}
 				</div>
 			</td>
 		</tr>
-	</core:block>
-</table>
+		<core:block id="info_back_button">
+			<tr class="k4_subtitle">
+				<td>
+					<div align="center">
+						<input type="button" class="button" value="{$L_GOBACK}" onClick="javascript:history.go(-1)" />
+					</div>
+				</td>
+			</tr>
+		</core:block>
+	</table>
+</div>
 <script type="text/javascript">
+//<![CDATA[
 {$redirect}
+//]]>
 </script>
 <!-- / Information Table -->

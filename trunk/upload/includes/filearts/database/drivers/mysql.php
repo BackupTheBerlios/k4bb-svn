@@ -26,7 +26,7 @@
 *
 * @author Geoffrey Goodman
 * @author Peter Goodman
-* @version $Id: mysql.php,v 1.10 2005/05/24 20:04:07 k4st Exp $
+* @version $Id: mysql.php 147 2005-07-09 17:12:40Z Peter Goodman $
 * @package k42
 */
 
@@ -47,7 +47,8 @@ class MysqlResultIterator extends FADBResult {
 	}
 
 	function &current() {
-		return $this->current;
+		$current = $this->current;
+		return $current;
 	}
 
 	function hasNext() {
@@ -59,16 +60,23 @@ class MysqlResultIterator extends FADBResult {
 	}
 
 	function &next() {
+		$ret = FALSE;
 		if ($this->hasNext()) {
 			$this->current = mysql_fetch_array($this->id, $this->mode);
 			$this->row++;
 
-			return $this->current();
+			$ret = $this->current();
 		}
+
+		return $ret;
 	}
 	
 	function free() {
 		return mysql_free_result($this->id);
+	}
+
+	function seek($offset) {
+		return mysql_data_seek($this->id, $offset);
 	}
 
 	function numRows() {
@@ -76,8 +84,8 @@ class MysqlResultIterator extends FADBResult {
 	}
 
 	function reset() {
-		if ($this->row > 0)
-			mysql_data_seek($this->id, 0);
+		if ($this->row >= 0)
+			$this->seek(0);
 
 		$this->row = -1;
 
@@ -131,7 +139,8 @@ class MysqlConnection extends FADBConnection {
 	}
 
 	function &prepareStatement($sql) {
-		return $this->createStatement($sql, &$this);
+		$ret = $this->createStatement($sql, $this);
+		return $ret;
 	}
 
 	function executeUpdate($stmt) {
@@ -171,7 +180,7 @@ class MysqlConnection extends FADBConnection {
 		return $this->num_queries;
 	}
 
-	function getInsertId() {
+	function getInsertId($table = FALSE, $column = FALSE) {
 		/* Increment the number of queries */
 		return mysql_insert_id($this->link);
 	}
@@ -183,13 +192,39 @@ class MysqlConnection extends FADBConnection {
 	function quote($value) {
 		return mysql_escape_string($value);
 	}
+
+	function createTemporary($table, $original = FALSE) {
+
+		if($original) {
+			$tableinfo				= $this->executeQuery("DESCRIBE ". $original);
+
+			if($tableinfo->numrows() > 0) {
+				
+				$origsql			= '';
+
+				while($tableinfo->next()) {
+					$col			= $tableinfo->current();
+					$origsql		.= ','. $col['Field'] .' '. $col['Type'] .' '. (strtolower($col['Null']) == 'yes' ? '' : 'NOT NULL') .' DEFAULT \''. $col['Default'] .'\'';
+				}
+				$tableinfo->free();
+				
+				$sql				= 'CREATE TEMPORARY TABLE '. $table .' ('. substr($origsql, 1) .')';
+				
+				/* Create the temporary table */
+				$this->executeUpdate($sql);
+			}
+		}
+	}
+
 	function alterTable($table, $stmt) {
 		$this->num_queries++;
 		$this->executeUpdate("ALTER TABLE $table $stmt");
 	}
+
 	function beginTransaction() {
 		return TRUE;
 	}
+
 	function commitTransaction() {
 		return TRUE;
 	}

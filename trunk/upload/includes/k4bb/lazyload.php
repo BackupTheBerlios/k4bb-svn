@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: lazyload.php,v 1.3 2005/05/26 18:35:27 k4st Exp $
+* @version $Id: lazyload.php 154 2005-07-15 02:56:28Z Peter Goodman $
 * @package k42
 */
 
@@ -134,15 +134,14 @@ function set_send_topic_mail($forum_id, $poster_name) {
 
 	if(ctype_digit($forum_id) && intval($forum_id) != 0) {
 		
-		$forum				= $_DBA->getRow("SELECT ". $_QUERYPARAMS['info'] . $_QUERYPARAMS['forum'] ." FROM ". K4FORUMS ." f LEFT JOIN ". K4INFO ." i ON f.forum_id = i.id WHERE i.id = ". intval($forum_id));
+		$forum				= $_DBA->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($forum_id));
 		
 		if(is_array($forum) && !empty($forum)) {
-			
 
 			/**
-			 * Get the subscribers of this topic
+			 * Get the subscribers of this forum
 			 */
-			$users			= &$_DBA->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE topic_id = 0 AND forum_id = ". intval($forum['id']));
+			$users			= &$_DBA->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE topic_id = 0 AND forum_id = ". intval($forum['forum_id']));
 			
 			$subscribers	= array();
 
@@ -161,13 +160,13 @@ function set_send_topic_mail($forum_id, $poster_name) {
 			 * Insert the data into the mail queue
 			 */
 			$subject			= $lang['L_TOPICPOSTIN'] .": ". $forum['name'];
-			$message			= sprintf($lang['L_FORUMSUBSCRIBEEMAIL'], "%s", "%s", $forum['name'], $forum['id'], $_SETTINGS['bbtitle'], $forum['id']);
+			$message			= sprintf($lang['L_FORUMSUBSCRIBEEMAIL'], "%s", "%s", $forum['name'], $forum['forum_id'], $_SETTINGS['bbtitle'], $forum['forum_id']);
 			$userinfo			= serialize($subscribers);
 			
 			$insert				= &$_DBA->prepareStatement("INSERT INTO ". K4MAILQUEUE ." (subject,message,row_id,row_type,userinfo) VALUES (?,?,?,?,?)");
 			$insert->setString(1, $subject);
 			$insert->setString(2, $message);
-			$insert->setInt(3, $forum['id']);
+			$insert->setInt(3, $forum['forum_id']);
 			$insert->setInt(4, FORUM);
 			$insert->setString(5, $userinfo);
 
@@ -176,9 +175,7 @@ function set_send_topic_mail($forum_id, $poster_name) {
 			/* Memory saving */
 			unset($_SETTINGS, $lang, $_QUERYPARAMS, $_DBA);
 
-			if(!@touch(CACHE_EMAIL_FILE, time()-86460)) {
-				@unlink(CACHE_EMAIL_FILE);
-			}
+			reset_cache(CACHE_EMAIL_FILE);
 		}
 	}
 }
@@ -193,7 +190,7 @@ function set_send_reply_mail($topic_id, $poster_name) {
 
 	if(ctype_digit($topic_id) && intval($topic_id) != 0) {
 		
-		$topic				= $_DBA->getRow("SELECT ". $_QUERYPARAMS['info'] . $_QUERYPARAMS['topic'] ." FROM ". K4TOPICS ." t LEFT JOIN ". K4INFO ." i ON t.topic_id = i.id WHERE i.id = ". intval($topic_id));
+		$topic				= $_DBA->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($topic_id));
 		
 		if(is_array($topic) && !empty($topic)) {
 			
@@ -201,14 +198,14 @@ function set_send_reply_mail($topic_id, $poster_name) {
 			/**
 			 * Get the subscribers of this topic
 			 */
-			$users			= &$_DBA->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE topic_id = ". intval($topic['id']) ." AND requires_revisit = 0");
+			$users			= &$_DBA->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE topic_id = ". intval($topic['topic_id']) ." AND requires_revisit = 0");
 			
 			$subscribers	= array();
 
 			while($users->next()) {
 				
 				$u				= $users->current();
-				$subscribers[]	= array('name' => $u['user_name'], 'id' => $u['user_id'], 'email' => $u['email'], 'poster_name' => $poster_name, 'topic_id' => $topic['id']);
+				$subscribers[]	= array('name' => $u['user_name'], 'id' => $u['user_id'], 'email' => $u['email'], 'poster_name' => $poster_name, 'topic_id' => $topic['topic_id']);
 			}
 			
 			/* Memory Saving */
@@ -219,13 +216,13 @@ function set_send_reply_mail($topic_id, $poster_name) {
 			 * Insert the data into the mail queue
 			 */
 			$subject			= $_LANG['L_REPLYTO'] .": ". $topic['name'];
-			$message			= sprintf($_LANG['L_TOPICSUBSCRIBEEMAIL'], "%s", "%s", $topic['name'], $topic['id'], $_SETTINGS['bbtitle'], $topic['id']);
+			$message			= sprintf($_LANG['L_TOPICSUBSCRIBEEMAIL'], "%s", "%s", $topic['name'], $topic['topic_id'], $_SETTINGS['bbtitle'], $topic['topic_id']);
 			$userinfo			= serialize($subscribers);
 			
 			$insert				= &$_DBA->prepareStatement("INSERT INTO ". K4MAILQUEUE ." (subject,message,row_id,row_type,userinfo) VALUES (?,?,?,?,?)");
 			$insert->setString(1, $subject);
 			$insert->setString(2, $message);
-			$insert->setInt(3, $topic['id']);
+			$insert->setInt(3, $topic['topic_id']);
 			$insert->setInt(4, TOPIC);
 			$insert->setString(5, $userinfo);
 
@@ -234,9 +231,7 @@ function set_send_reply_mail($topic_id, $poster_name) {
 			/* Memory saving */
 			unset($_SETTINGS, $_LANG, $_QUERYPARAMS, $_DBA);
 
-			if(!@touch(CACHE_EMAIL_FILE, time()-86460)) {
-				@unlink(CACHE_EMAIL_FILE);
-			}
+			reset_cache(CACHE_EMAIL_FILE);
 		}
 	}
 }
@@ -291,9 +286,9 @@ function execute_mail_queue(&$dba, $mailqueue) {
 					}
 
 				}
-
+				
 				/* Update the subscriptions 'requires revisit' field */
-				$dba->executeUpdate("UPDATE ". K4SUBSCRIPTIONS ." SET requires_revisit = 1 WHERE topic_id = ". $queue['row_id'] ." AND (". $user_query .")");
+				$dba->executeUpdate("UPDATE ". K4SUBSCRIPTIONS ." SET requires_revisit = 1 WHERE topic_id = ". $queue['row_id'] ." ". ($user_query != '' ? "AND (". $user_query .")" : ''));
 				
 				/* If we have finished with this queue item */
 				if($count <= EMAIL_INTERVAL) {
@@ -306,88 +301,79 @@ function execute_mail_queue(&$dba, $mailqueue) {
 					$update->setInt(2, $mailqueue[0]['id']);
 					$update->executeUpdate();
 				}
-				
-				/* Reset the filetime on our email cache file */
-				if(!@touch(CACHE_EMAIL_FILE, time()-86460)) {
-					@unlink(CACHE_EMAIL_FILE);
-				}
 
 			} else {
 				$dba->executeUpdate("DELETE FROM ". K4MAILQUEUE ." WHERE id = ". intval($mailqueue[0]['id']));
-					
-				/* Reset the filetime on our email cache file */
-				if(!@touch(CACHE_EMAIL_FILE, time()-86460)) {
-					@unlink(CACHE_EMAIL_FILE);
-				}
 			}
+			reset_cache(CACHE_EMAIL_FILE);
 		}
 	}
 }
 
-/**
- * Execute our topic queue to delete moderated topics
- */
-function execute_topic_queue(&$dba, $topicqueue) {
-	
-	if(is_array($topicqueue) && !empty($topicqueue)) {
-		
-		// TODO: Make this work!!
-		trigger_error("This feature is off limits for now.", E_USER_ERROR);
-
-		array_values($topicqueue);
-		
-		if(isset($topicqueue[0])) {
-			
-			$queue			= $topicqueue[0];
-			
-			$topics			= unserialize($topicqueue[0]['topicinfo']);
-			
-			if(is_array($topics) && !empty($topics)) {
-				
-				/* Reset the starting point of this array */
-				$topics		= array_values($topics);
-				$count		= count($topics);
-				
-				/* Loop through the users */
-				for($i = 0; $i < TOPIC_INTERVAL; $i++) {
-					
-					if(isset($topics[$i]) && intval($topics[$i]) != 0) {
-						
-						/* Remove this topic */
-						remove_item(intval($topics[$i]), 'topic_id');
-						
-						unset($topics[$i]);
-					}
-
-				}
-				
-				/* If we have finished with this queue item */
-				if($count <= TOPIC_INTERVAL) {
-					$dba->executeUpdate("DELETE FROM ". K4TOPICQUEUE ." WHERE id = ". intval($topicqueue[0]['id']));
-				} else {
-					
-					$topics		= array_values($topics);
-					$update		= $dba->prepareStatement("UPDATE ". K4TOPICQUEUE ." SET topicinfo=? WHERE id=?");
-					$update->setString(1, serialize($topics));
-					$update->setInt(2, $topicqueue[0]['id']);
-					$update->executeUpdate();
-				}
-				
-				/* Reset the filetime on our email cache file */
-				if(!@touch(CACHE_TOPIC_FILE, time()-86460)) {
-					@unlink(CACHE_TOPIC_FILE);
-				}
-
-			} else {
-				$dba->executeUpdate("DELETE FROM ". K4TOPICQUEUE ." WHERE id = ". intval($topicqueue[0]['id']));
-					
-				/* Reset the filetime on our email cache file */
-				if(!@touch(CACHE_TOPIC_FILE, time()-86460)) {
-					@unlink(CACHE_TOPIC_FILE);
-				}
-			}
-		}
-	}
-}
+///**
+// * Execute our topic queue to delete moderated topics
+// */
+//function execute_topic_queue(&$dba, $topicqueue) {
+//	
+//	if(is_array($topicqueue) && !empty($topicqueue)) {
+//		
+//		// TODO: Make this work!!
+//		trigger_error("This feature is off limits for now.", E_USER_ERROR);
+//
+//		array_values($topicqueue);
+//		
+//		if(isset($topicqueue[0])) {
+//			
+//			$queue			= $topicqueue[0];
+//			
+//			$topics			= unserialize($topicqueue[0]['topicinfo']);
+//			
+//			if(is_array($topics) && !empty($topics)) {
+//				
+//				/* Reset the starting point of this array */
+//				$topics		= array_values($topics);
+//				$count		= count($topics);
+//				
+//				/* Loop through the users */
+//				for($i = 0; $i < TOPIC_INTERVAL; $i++) {
+//					
+//					if(isset($topics[$i]) && intval($topics[$i]) != 0) {
+//						
+//						/* Remove this topic */
+//						remove_item(intval($topics[$i]), 'topic_id');
+//						
+//						unset($topics[$i]);
+//					}
+//
+//				}
+//				
+//				/* If we have finished with this queue item */
+//				if($count <= TOPIC_INTERVAL) {
+//					$dba->executeUpdate("DELETE FROM ". K4TOPICQUEUE ." WHERE id = ". intval($topicqueue[0]['id']));
+//				} else {
+//					
+//					$topics		= array_values($topics);
+//					$update		= $dba->prepareStatement("UPDATE ". K4TOPICQUEUE ." SET topicinfo=? WHERE id=?");
+//					$update->setString(1, serialize($topics));
+//					$update->setInt(2, $topicqueue[0]['id']);
+//					$update->executeUpdate();
+//				}
+//				
+//				/* Reset the filetime on our email cache file */
+//				if(!@touch(CACHE_TOPIC_FILE, time()-86460)) {
+//					@unlink(CACHE_TOPIC_FILE);
+//				}
+//
+//			} else {
+//				$dba->executeUpdate("DELETE FROM ". K4TOPICQUEUE ." WHERE id = ". intval($topicqueue[0]['id']));
+//					
+//				/* Reset the filetime on our email cache file */
+//				if(!@touch(CACHE_TOPIC_FILE, time()-86460)) {
+//					@unlink(CACHE_TOPIC_FILE);
+//				}
+//			}
+//		}
+//	}
+//}
 
 ?>

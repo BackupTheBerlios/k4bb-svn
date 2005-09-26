@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Geoffrey Goodman
-* @version $Id: user.inc.php,v 1.7 2005/05/26 18:36:02 k4st Exp $
+* @version $Id: user.php 138 2005-07-01 15:56:08Z Peter Goodman $
 * @package k42
 */
 
@@ -41,16 +41,18 @@ class FAUserValidator extends FAObject {
 
 class FAUserFactory extends FAObject {
 	function &createGuest() {
-		return new FAUser();
+		$user = &new FAUser();
+		return $user;
 	}
 
 	function &createMember($info) {
-		return new FAMember($info);
+		$member = &new FAMember($info);
+		return $member;
 	}
 
 	function &getUser(&$validator) {
 		$info = $validator->validateLoginKey();
-
+		
 		if (is_array($info))
 			$user = &$this->createMember($info);
 		else
@@ -66,6 +68,10 @@ class FAUser extends FAObject {
 	function __construct($info) {
 		assert(is_array($info));
 
+		$this->setInfo($info);
+	}
+
+	function setInfo($info) {
 		$this->_info = $info;
 	}
 
@@ -76,6 +82,10 @@ class FAUser extends FAObject {
 			$value = $this->_info[$key];
 
 		return $value;
+	}
+
+	function set($key, $value) {
+		$this->_info[$key] = $value;
 	}
 
 	function getInfoArray() {

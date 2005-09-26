@@ -2,195 +2,224 @@
 <form:form id="insert_forum" name="insert_forum" action="admin.php?act=forums_insert" method="post" enctype="multipart/form-data">
 <input type="hidden" name="category_id" value="{$category_id}" />
 <input type="hidden" name="forum_id" value="{$forum_id}" />
-<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
-	<tr class="thead">
-		<td colspan="2">{$L_ADDFORUM}</td>
-	</tr>
-	<tr class="alt1">
-		<td width="30%"><strong>{$L_NAME}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('forum_name');</script>
-			<input type="text" name="name" id="name" value="{$forum_name}" maxlength="255" class="inputbox" tabindex="1" />
-			<form:error id="name_error" for="name" setclass="inputfailed" regex=".+">{$L_INSERTFORUMNAME}</form:error>
-		</td>
-	</tr>
-	<tr class="alt2">
-		<td width="30%"><strong>{$L_DESCRIPTION}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('forum_description');</script>
-			<textarea name="description" id="description" rows="2" style="width: 80%;" class="inputbox" tabindex="2">{$forum_description}</textarea>
-			<form:error id="description_error" for="description" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTFORUMDESC}</form:error>
-		</td>
-	</tr>
-	<tr class="alt1">
-		<td width="30%"><strong>{$L_ORDER}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('forum_order');</script>
-			<input type="text" name="row_order" id="row_order" value="{$forum_row_order}" maxlength="5" size="3" class="inputbox" tabindex="3" />
-			<form:error id="row_order_error" for="row_order" setclass="inputfailed" regex=".+">{$L_INSERTFORUMORDER}</form:error>
-			<form:error id="row_order_num_error" for="row_order" setclass="inputfailed" regex="([0-9])+">{$L_INSERTFORUMORDERNUM}</form:error>
-		</td>
-	</tr>
-	<tr class="alt2">
-		<td width="30%"><strong>{$L_FORUMPASSWORD}</strong></td>
-		<td><input type="text" name="pass" class="inputbox" value="{$forum_pass}" maxlength="32" tabindex="4" /></td>
-	</tr>
-	<tr class="alt1">
-		<td width="30%"><strong>{$L_ISLINK}:</strong></td>
-		<td>
-			<select name="is_link" id="is_link" tabindex="5">
-				<option value="0">{$L_NO}</option>
-				<option value="1">{$L_YES}</option>
-			</select>
-			<script type="text/javascript">setIndex({$forum_is_link}, 'is_link');</script>
-			<span class="smalltext"><br />{$L_ISDIRECTLINKEXPLAIN}</span>
-		</td>
-	</tr>
-	<tr class="alt2">
-		<td width="30%"><strong>{$L_LINKURL}:</strong></td>
-		<td><input type="text" name="link_href" value="{$forum_link_href}" class="inputbox" tabindex="6" /></td>
-	</tr>
-	<tr class="alt1">
-		<td width="30%"><strong>{$L_ISDIRECTLINK}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('forum_directlink');</script>
-			<select name="link_show_redirects" id="link_show_redirects" tabindex="7">
-				<option value="1">{$L_NO}</option>
-				<option value="0">{$L_YES}</option>
-			</select>
-		</td>
-	</tr>
-	<tr class="alt2">
-		<td width="30%"><strong>{$L_FORUMRULES}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('forum_forumrules');</script>
-			<textarea name="forum_rules" id="forum_rules" rows="5" class="inputbox" style="width: 80%;" tabindex="8">{$forum_forum_rules}</textarea>
-		</td>
-	</tr>
-
-	<tr class="alt1">
-		<td width="30%"><strong>{$L_AUTOPRUNING}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('forum_autopruning');</script>
-			<select name="prune_auto" id="prune_auto" tabindex="9">
-				<option value="0">{$L_NO}</option>
-				<option value="1">{$L_YES}</option>
-			</select>
-		</td>
-	</tr>
-	<tr class="alt2">
-		<td width="30%"><strong>{$L_AUTOPRUNEFREQUENCY}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('forum_autoprunefrequency');</script>
-			<input type="text" name="prune_frequency" id="prune_frequency" value="0" maxlength="3" size="3" class="inputbox" tabindex="10" />
-			{$L_DAYS}
-		</td>
-	</tr>
-	<tr class="alt1">
-		<td width="30%"><strong>{$L_AUTOPRUNEPOSTAGE}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('forum_autoprunepostage');</script>
-			<input type="text" name="prune_post_age" id="prune_post_age" value="0" maxlength="3" size="3" class="inputbox" tabindex="11" />
-			{$L_DAYS}
-		</td>
-	</tr>
-	<tr class="alt2">
-		<td width="30%"><strong>{$L_AUTOPRUNEPOSTVIEWAGE}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('forum_autoprunepostviewage');</script>
-			<input type="text" name="prune_post_viewed_age" id="prune_post_viewed_age" value="0" maxlength="3" size="3" class="inputbox" tabindex="12" />
-			{$L_DAYS}
-		</td>
-	</tr>
-	<tr class="alt1">
-		<td width="30%"><strong>{$L_PRUNEOLDPOLLS}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('forum_pruneoldpolls');</script>
-			<select name="prune_old_polls" id="prune_old_polls" tabindex="13">
-				<option value="0">{$L_NO}</option>
-				<option value="1">{$L_YES}</option>
-			</select>
-		</td>
-	</tr>
-	<tr class="alt2">
-		<td width="30%"><strong>{$L_PRUNEANNOUNCEMENTS}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('forum_pruneannouncements');</script>
-			<select name="prune_announcements" id="prune_announcements" tabindex="14">
-				<option value="0">{$L_NO}</option>
-				<option value="1">{$L_YES}</option>
-			</select>
-		</td>
-	</tr>
-	<tr class="alt1">
-		<td width="30%"><strong>{$L_PRUNESTICKIES}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('forum_prunestickies');</script>
-			<select name="prune_stickies" id="prune_stickies" tabindex="15">
-				<option value="0">{$L_NO}</option>
-				<option value="1">{$L_YES}</option>
-			</select>
-		</td>
-	</tr>
-
-	<tr class="alt2">
-		<td width="30%"><strong>{$L_TOPICSPERPAGE}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('forum_topicsperpage');</script>
-			<input type="text" name="topicsperpage" id="topicsperpage" value="30" maxlength="3" size="3" class="inputbox" tabindex="16" />
-			<form:error id="topicsperpage_error" for="topicsperpage" setclass="inputfailed" regex=".+">{$L_INSERTFORUMTPP}</form:error>
-			<form:error id="topicsperpage_num_error" for="topicsperpage" setclass="inputfailed" regex="([0-9])+">{$L_INSERTFORUMTPPNUM}</form:error>
-		</td>
-	</tr>
-	<tr class="alt1">
-		<td width="30%"><strong>{$L_POSTSPERPAGE}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('forum_postsperpage');</script>
-			<input type="text" name="postsperpage" id="postsperpage" value="10" maxlength="2" size="3" class="inputbox" tabindex="17" />
-			<form:error id="postsperpage_error" for="postsperpage" setclass="inputfailed" regex=".+">{$L_INSERTFORUMPPP}</form:error>
-			<form:error id="postsperpage_num_error" for="row_order" setclass="inputfailed" regex="([0-9])+">{$L_INSERTFORUMPPPNUM}</form:error>
-		</td>
-	</tr>
-	<tr class="alt2">
-		<td width="30%"><strong>{$L_MAXPOLLOPTIONS}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('forum_maxpolloptions');</script>
-			<input type="text" name="maxpolloptions" id="maxpolloptions" value="10" maxlength="2" size="3" class="inputbox" tabindex="18" />
-			<form:error id="maxpolloptions_error" for="postsperpage" setclass="inputfailed" regex=".+">{$L_INSERTFORUMMPO}</form:error>
-			<form:error id="maxpolloptions_num_error" for="row_order" setclass="inputfailed" regex="([0-9])+">{$L_INSERTFORUMMPONUM}</form:error>
-		</td>
-	</tr>
-	<tr class="alt1">
-		<td width="30%"><strong>{$L_LANGUAGE}:</strong></td>
-		<td>
-			<select name="defaultlang" id="defaultlang" tabindex="19">
-				<list:list id="languages">
-				<list:item list="languages">
-				<option value="{$lang}">{$name}</option>
-				</list:item>
-				</list:list>
-			</select>
-		</td>
-	</tr>
-	<tr class="alt2">
-		<td width="30%"><strong>{$L_MODERATORS}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('forum_moderators');</script>
-			<select name="moderators[]" id="moderators" tabindex="20" size="5" multiple="multiple">
-				<list:list id="usergroups">
-				<list:item list="usergroups">
-				<option value="{$id}">{$name}</option>
-				</list:item>
-				</list:list>
-			</select>
-		</td>
-	</tr>
-	<tr class="tcat">
-		<td colspan="2">
-			<input type="submit" value="{$L_SAVE}" tabindex="15" />
-			<input type="reset" value="{$L_RESET}" />
-		</td>
-	</tr>
-</table>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_ADDFORUM}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="k4_subtitle" colspan="2">{$L_GENERAL}</td>
+		</tr>
+		<tr class="alt1">
+			<td width="30%"><strong>{$L_NAME}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('forum_name');</script>
+				<input type="text" name="name" id="name" value="{$forum_name}" maxlength="255" class="inputbox" tabindex="1" />
+				<form:error id="name_error" for="name" setclass="inputfailed" regex=".+">{$L_INSERTFORUMNAME}</form:error>
+			</td>
+		</tr>
+		<tr class="alt2">
+			<td width="30%"><strong>{$L_DESCRIPTION}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('forum_description');</script>
+				<textarea name="description" id="description" rows="2" style="width: 80%;" class="inputbox" tabindex="2">{$forum_description}</textarea>
+				<form:error id="description_error" for="description" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTFORUMDESC}</form:error>
+			</td>
+		</tr>
+		<tr class="alt1">
+			<td width="30%"><strong>{$L_ORDER}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('forum_order');</script>
+				<input type="text" name="row_order" id="row_order" value="{$forum_row_order}" maxlength="5" size="3" class="inputbox" tabindex="3" />
+				<form:error id="row_order_error" for="row_order" setclass="inputfailed" regex=".+">{$L_INSERTFORUMORDER}</form:error>
+				<form:error id="row_order_num_error" for="row_order" setclass="inputfailed" regex="([0-9])+">{$L_INSERTFORUMORDERNUM}</form:error>
+			</td>
+		</tr>
+		<tr class="alt2">
+			<td width="30%"><strong>{$L_FORUMPASSWORD}</strong></td>
+			<td><input type="text" name="pass" class="inputbox" value="{$forum_pass}" maxlength="32" tabindex="4" /></td>
+		</tr>
+		<tr class="alt2">
+			<td width="30%"><strong>{$L_FORUMRULES}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('forum_forumrules');</script>
+				<textarea name="forum_rules" id="forum_rules" rows="5" class="inputbox" style="width: 80%;" tabindex="8">{$forum_forum_rules}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" colspan="2">{$L_LINKING}</td>
+		</tr>
+		<tr class="alt1">
+			<td width="30%">
+				<strong>{$L_ISLINK}:</strong><br />
+				<span class="smalltext">{$L_ISDIRECTLINKEXPLAIN}</span>
+				</td>
+			<td>
+				<select name="is_link" id="is_link" tabindex="5">
+					<option value="0" selected="selected">{$L_NO}</option>
+					<option value="1">{$L_YES}</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="alt2">
+			<td width="30%"><strong>{$L_LINKURL}:</strong></td>
+			<td><input type="text" name="link_href" value="{$forum_link_href}" class="inputbox" tabindex="6" /></td>
+		</tr>
+		<tr class="alt1">
+			<td width="30%"><strong>{$L_ISDIRECTLINK}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('forum_directlink');</script>
+				<select name="link_show_redirects" id="link_show_redirects" tabindex="7">
+					<option value="1">{$L_NO}</option>
+					<option value="0">{$L_YES}</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" colspan="2">{$L_PRUNING}</td>
+		</tr>
+		<tr class="alt1">
+			<td width="30%"><strong>{$L_AUTOPRUNING}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('forum_autopruning');</script>
+				<select name="prune_auto" id="prune_auto" tabindex="9">
+					<option value="0">{$L_NO}</option>
+					<option value="1">{$L_YES}</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="alt2">
+			<td width="30%"><strong>{$L_AUTOPRUNEFREQUENCY}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('forum_autoprunefrequency');</script>
+				<input type="text" name="prune_frequency" id="prune_frequency" value="0" maxlength="3" size="3" class="inputbox" tabindex="10" />
+				{$L_DAYS}
+			</td>
+		</tr>
+		<tr class="alt1">
+			<td width="30%"><strong>{$L_AUTOPRUNEPOSTAGE}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('forum_autoprunepostage');</script>
+				<input type="text" name="prune_post_age" id="prune_post_age" value="0" maxlength="3" size="3" class="inputbox" tabindex="11" />
+				{$L_DAYS}
+			</td>
+		</tr>
+		<tr class="alt2">
+			<td width="30%"><strong>{$L_AUTOPRUNEPOSTVIEWAGE}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('forum_autoprunepostviewage');</script>
+				<input type="text" name="prune_post_viewed_age" id="prune_post_viewed_age" value="0" maxlength="3" size="3" class="inputbox" tabindex="12" />
+				{$L_DAYS}
+			</td>
+		</tr>
+		<tr class="alt1">
+			<td width="30%"><strong>{$L_PRUNEOLDPOLLS}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('forum_pruneoldpolls');</script>
+				<select name="prune_old_polls" id="prune_old_polls" tabindex="13">
+					<option value="0">{$L_NO}</option>
+					<option value="1">{$L_YES}</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="alt2">
+			<td width="30%"><strong>{$L_PRUNEANNOUNCEMENTS}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('forum_pruneannouncements');</script>
+				<select name="prune_announcements" id="prune_announcements" tabindex="14">
+					<option value="0">{$L_NO}</option>
+					<option value="1">{$L_YES}</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="alt1">
+			<td width="30%"><strong>{$L_PRUNESTICKIES}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('forum_prunestickies');</script>
+				<select name="prune_stickies" id="prune_stickies" tabindex="15">
+					<option value="0">{$L_NO}</option>
+					<option value="1">{$L_YES}</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" colspan="2">{$L_VIEWING}</td>
+		</tr>
+		<tr class="alt2">
+			<td width="30%"><strong>{$L_TOPICSPERPAGE}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('forum_topicsperpage');</script>
+				<input type="text" name="topicsperpage" id="topicsperpage" value="30" maxlength="3" size="3" class="inputbox" tabindex="16" />
+				<form:error id="topicsperpage_error" for="topicsperpage" setclass="inputfailed" regex=".+">{$L_INSERTFORUMTPP}</form:error>
+				<form:error id="topicsperpage_num_error" for="topicsperpage" setclass="inputfailed" regex="([0-9])+">{$L_INSERTFORUMTPPNUM}</form:error>
+			</td>
+		</tr>
+		<tr class="alt1">
+			<td width="30%"><strong>{$L_POSTSPERPAGE}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('forum_postsperpage');</script>
+				<input type="text" name="postsperpage" id="postsperpage" value="10" maxlength="2" size="3" class="inputbox" tabindex="17" />
+				<form:error id="postsperpage_error" for="postsperpage" setclass="inputfailed" regex=".+">{$L_INSERTFORUMPPP}</form:error>
+				<form:error id="postsperpage_num_error" for="row_order" setclass="inputfailed" regex="([0-9])+">{$L_INSERTFORUMPPPNUM}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" colspan="2">{$L_SETTINGS}</td>
+		</tr>
+		<tr class="alt2">
+			<td width="30%"><strong>{$L_MAXPOLLOPTIONS}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('forum_maxpolloptions');</script>
+				<input type="text" name="maxpolloptions" id="maxpolloptions" value="10" maxlength="2" size="3" class="inputbox" tabindex="18" />
+				<form:error id="maxpolloptions_error" for="postsperpage" setclass="inputfailed" regex=".+">{$L_INSERTFORUMMPO}</form:error>
+				<form:error id="maxpolloptions_num_error" for="row_order" setclass="inputfailed" regex="([0-9])+">{$L_INSERTFORUMMPONUM}</form:error>
+			</td>
+		</tr>
+		<tr class="alt1">
+			<td width="30%"><strong>{$L_LANGUAGE}:</strong></td>
+			<td>
+				<select name="defaultlang" id="defaultlang" tabindex="19">
+					<list:list id="languages">
+					<list:item list="languages">
+					<option value="{$lang}">{$name}</option>
+					</list:item>
+					</list:list>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" colspan="2">{$L_MODERATORS}</td>
+		</tr>
+		<tr class="alt2">
+			<td width="30%"><strong>{$L_MODERATORS}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('forum_moderators');</script>
+				<div style="float:left;">
+					<label for="moderators">{$L_MODERATINGGROUPS}</label><br />
+					<select name="moderators[]" id="moderators" tabindex="20" size="5" multiple="multiple">
+						<list:list id="usergroups">
+						<list:item list="usergroups">
+						<option value="{$id}">{$name}</option>
+						</list:item>
+						</list:list>
+					</select>
+					<br />
+					<input type="button" class="button" value="{$L_NONE}" onclick="d.selectNone('moderators')" />
+					<input type="button" class="button" value="{$L_ALL}" onclick="d.selectAll('moderators')" />
+				</div>
+				<div style="padding-left: 15px;float:left;">
+					<label for="moderating_users">{$L_MODERATINGUSERS}</label><br />
+					<textarea name="moderating_users" id="moderating_users" rows="5" cols="{$maxuserlength}" class="inputbox"></textarea>
+					<br />
+					<span class="minitext">{$L_ONEUSERPERLINE}</span>
+				</div>
+			</td>
+		</tr>
+		<tr class="k4_subtitle">
+			<td colspan="2">
+				<input type="submit" class="button" value="{$L_SAVE}" tabindex="15" />
+				<input type="reset" class="button" value="{$L_RESET}" />
+			</td>
+		</tr>
+	</table>
+</div>
 </form:form>
 </is:admin>

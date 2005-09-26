@@ -25,19 +25,71 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: javascript.js,v 1.7 2005/05/24 20:07:17 k4st Exp $
+* @version $Id: javascript.js 144 2005-07-05 02:29:07Z Peter Goodman $
 * @package k42
 */
 
-// Check for Browser & Platform for PC & IE specific bits
-// More details from: http://www.mozilla.org/docs/web-developer/sniffer/browser_type.html
-var clientPC = navigator.userAgent.toLowerCase(); // Get client info
-var clientVer = parseInt(navigator.appVersion); // Get browser version
+var d			= new k4lib()
 
-var is_ie = ((clientPC.indexOf("msie") != -1) && (clientPC.indexOf("opera") == -1));
-var is_nav = ((clientPC.indexOf('mozilla')!=-1) && (clientPC.indexOf('spoofer')==-1)
-                && (clientPC.indexOf('compatible') == -1) && (clientPC.indexOf('opera')==-1)
-                && (clientPC.indexOf('webtv')==-1) && (clientPC.indexOf('hotjava')==-1));
+/**
+ * Show a div when there are new private messages
+ */
+function show_newmessage_box(num_messages, text_to_write, img_dir, menu_id) {
+	var menu = d.getElementById(menu_id);
+	
+	if(menu && parseInt(num_messages) > 0) {
+		document.write('<div id="new_pms_box" class="special_panel" style="z-index: 99;border: 0px;position: absolute;top: ' + d.bottom(menu) + 'px;padding: 5px;"><span class="smalltext"><a href="member.php?act=usercp&amp;view=pmfolder&amp;folder=1" title=""><img src="Images/' + img_dir + '/Icons/icon_latest_reply.gif" alt="" border="0" />&nbsp;<strong>' + parseInt(num_messages) + '</strong> ' + text_to_write + '</a></span></div>');
+		new_pms_box = d.getElementById('new_pms_box');
+		if(new_pms_box) {
+			new_pms_box.style.left = parseInt(d.right(menu) - d.width(new_pms_box) - 1) + 'px'; // -1 for the border
+		}
+	}
+}
+
+/**
+ * Add an emoticon into the textarea
+ */
+function emoticon(typed) {
+	var editor		= d.getElementById('messagecodex');
+	if(editor) {
+		editor.value += ' ' + typed;
+	}
+}
+
+/**
+ * Show / Hide a table or other block-level element
+ */
+function showTable(table_id) {
+	var the_tr = d.getElementById(table_id);
+	if(the_tr.style.display == 'block') {
+		return the_tr.style.display = 'none';
+	} else {
+		return the_tr.style.display = 'block';
+	}
+}
+
+/**
+ * Change the posticon beside the post title when a new one is set
+ */
+function swap_posticon(imgid) {
+	var out = d.getElementById("display_posticon");
+	var img	= d.getElementById(imgid);
+	if (img && out) {
+		out.src = img.src;
+		out.alt = img.alt;
+	} else {
+		out.src = "tmp/upload/posticons/clear.gif";
+		out.alt = "";
+	}
+}
+
+/**
+ * Change the submit type for topic/reply posting
+ */
+function change_submit_type(input_id, submit_type) {
+	var input = d.getElementById(input_id);
+	if(input) input.value = submit_type;
+}
 
 /**
  * Alternative to <meta http-equiv="refresh" content="*; url=*">
@@ -47,51 +99,6 @@ function redirect_page(seconds, url) {
 }
 function document_location(url) {
 	return document.location = url;
-}
-
-/**
- * count()/sizeof() like function for an array
- */
-function sizeof(thearray) {
-	for (i = 0; i < thearray.length; i++) {
-		if ((thearray[i] == "undefined") || (thearray[i] == "") || (thearray[i] == null)) {
-			return i;
-		}
-	}
-	return thearray.length;
-}
-
-/**
- * Array Push function 
- */
-function array_push(thearray, value) {
-	thearray[sizeof(thearray)] = value;
-}
-
-/**
- * Array unset function for a given value 
- */
-function array_unset(thearray, value) {
-	for(var i = 0; i < sizeof(thearray); i++) {
-		if(thearray[i] == value) {
-			delete thearray[i];
-		}
-	}
-
-	return true;
-}
-
-/**
- * In array type function
- */
-function in_array(thearray, needle) {
-	var bool = false;
-	for (var i=0; i < sizeof(thearray); i++) {
-		if (thearray[i] == needle) {
-			bool = true;
-		}
-	}
-	return bool;
 }
 
 /**
@@ -109,37 +116,52 @@ function iif(condition, trueval, falseval) {
  * Select topic(s) for moderation
  */
 var topics	= new Array()
-function select_topic(topic_id, button_id, input_id, savetopic_id) {
-	if(topics) {
-		var button		= document.getElementById(button_id);
-		var savetopic	= document.getElementById(savetopic_id);
+function select_topic(span_object, button_id, topic_id) {
 
-		if(button && savetopic) {
-			try {
-				if(in_array(topics, topic_id)) {
-					array_unset(topics, topic_id);
-					button_regex		= new RegExp("selected\\.gif$");
-					button.src			= button.src.replace(button_regex, 'unselected.gif');
-					savetopic.style.display = 'none';
-				} else {
-					array_push(topics, topic_id);
-					button_regex		= new RegExp("unselected\\.gif$");
-					button.src			= button.src.replace(button_regex, 'selected.gif');
-				}
-				collect_topics(input_id);
-			} catch(e) {
-				alert(e.message);
+	try {
+		if(span_object) {
+
+			var button		= d.getElementById(button_id);
+			var checkbox	= d.getElementsByTagName(span_object, 'input');
+			button_regex	= new RegExp("\(([0-9]+?)\)", "g");
+			
+			if(button && checkbox) {
+				
+				match			= button.value.match(button_regex);
+				
+				try {
+					if(match) {
+						
+						if(checkbox[0].checked == true) {
+							
+							var new_value = parseInt(parseInt(match[0])+1) < 0 ? 0 : parseInt(parseInt(match[0])+1);
+							
+							d.array_push(topics, topic_id);
+							button.value = button.value.replace(match[0], new_value);
+
+						} else {
+							
+							var new_value = parseInt(parseInt(match[0])-1) < 0 ? 0 : parseInt(parseInt(match[0])-1);
+							
+							d.unset(topics, topic_id);
+							button.value = button.value.replace(match[0], new_value);
+						}
+
+						collect_topics('topics');
+					}
+				} catch(e) { alert(e.message); }
 			}
 		}
-	}
+	} catch(e) { alert(e.message); }
 }
+
 function collect_topics(id) {
 	
 	var str		= ''
-	var input	= document.getElementById(id);
+	var input	= d.getElementById(id);
 	
 	if(topics && input) {
-		for(var i = 0; i < sizeof(topics); i++) {
+		for(var i = 0; i < d.sizeof(topics); i++) {
 			if(topics[i] && topics[i] != '' && topics[i] != 0) {
 				str	+= (i == 0) ? topics[i] : '|' + topics[i];
 			}
@@ -148,70 +170,67 @@ function collect_topics(id) {
 		input.value = str;
 	}	
 }
-function adv_edit(edit_id, topic_url, checkbox_id, submit_button, topics_list) {
-	var topic_name	= document.getElementById(edit_id);
-	var checkbox	= document.getElementById(checkbox_id);
-	var s_button	= document.getElementById(submit_button);
-	var topics		= document.getElementById(topics_list);
-	
-	if(topics && checkbox) {
-		topics		= topics.value.split("|");
-		id			= edit_id.substring(13)
-		
-		if(in_array(id, topics)) {
-			button_regex		= new RegExp("unselected\\.gif$");
-			checkbox.src		= checkbox.src.replace(button_regex, 'selected.gif');
-		}
-	}
 
-	if(topic_name && checkbox) {
-		
+/**
+ * Inline topic title Moderation
+ */
+var edit_mode		= false;
+var edit_topic_id	= false;
+var edit_topic_area = false;
+var being_edited	= new Array();
+
+function adv_edit(topic_id, div_id) {
+	var topic_area	= d.getElementById(div_id);
+
+	if(topic_area) {
 		try {
-			topic_name.onfocus = function() {
-				
-				checkbox_regex	= new RegExp("unselected\\.gif$");
-				edit			= checkbox.src.match(checkbox_regex);
-				
-				if(edit) {
-					this.blur();
-				} else {
-					s_button.style.display = 'block';
+			topic_area.onmousedown = function() {
+				var inputs		= d.getElementsByTagName(topic_area, 'input');
+
+				if(d.sizeof(inputs) == 0) {
+					edit_mode		= 'topic' + topic_id + '_name';
+					edit_topic_id	= topic_id;
+					edit_topic_area = div_id;
+					edit_timer		= setTimeout("getTopicTitle(" + topic_id + ", '" + div_id + "')", 1000);
 				}
 			}
-
-			topic_name.onclick = function() {
-
-				checkbox_regex	= new RegExp("unselected\\.gif$");
-				edit			= checkbox.src.match(checkbox_regex);
-				
-				if(edit) {
-					document.location = topic_url;
-				} else {
-					s_button.style.display = 'block';
-				}
-			}
-		
-			topic_name.onmouseover = function() {
-				
-				checkbox_regex	= new RegExp("unselected\\.gif$");
-				edit			= checkbox.src.match(checkbox_regex);
-
-				if(edit) {
-					try { topic_name.style.cursor = 'pointer'; } catch(e) { topic_name.style.cursor = 'hand'; }
-				} else {
-					topic_name.style.cursor = 'text';
-				}
-			}
-
+						
 		} catch(e) {
 			alert(e.message);
 		}
 	}
 }
 
-/* Function to jump from one forum to another */
+function disable_edit_mode(e) {
+	
+	if(edit_mode && edit_topic_id && edit_topic_area) {
+		
+		if(!e) {
+			e = window.event;
+		}
+
+		topic_area	= d.getElementById(edit_mode);
+		
+		if(e.clientX < d.left(topic_area) ||
+			e.clientX > d.right(topic_area) ||
+			e.clientY < d.top(topic_area) ||
+			e.clientY > d.bottom(topic_area)
+			) {
+			
+			// update the topic name
+			updateTopicTitle(edit_mode, edit_topic_id, edit_topic_area);
+			
+			// reset all of the adv. edit vars
+			//edit_mode = edit_topic_id = edit_topic_area = false;
+		}
+	}
+}
+
+/**
+ * Function to jump from one forum to another 
+ */
 function jump_to(select_id) {
-	var select			= document.getElementById(select_id);
+	var select			= d.getElementById(select_id);
 	if(select) {
 		if(select.selectedIndex) {
 			if(select[select.selectedIndex].value != '-1') {
@@ -225,36 +244,31 @@ function jump_to(select_id) {
 
 /* Resize images imported using bbcode */
 function resize_bbimgs(ruler_id) {
-	var ruler					= document.getElementById(ruler_id);
+	var ruler					= d.getElementById(ruler_id);
 	
 	if(ruler) {
-		var divs				= document.getElementsByTagName('div');
-		for(var i = 0; i < sizeof(divs); i++) {
-			if(divs[i] && divs[i].className) {
+		var divs				= d.getElementsByTagName(document, 'div');
+		
+		for(var i = 0; i < d.sizeof(divs); i++) {			if(divs[i] && divs[i].className) {
 				if(divs[i].className == 'bbcode_img') {
 
-					bbcodeimages	= divs[i].getElementsByTagName('img');
+					bbcodeimages	= d.getElementsByTagName(divs[i], 'img');
 
-					if(sizeof(bbcodeimages) > 0) {
+					if(d.sizeof(bbcodeimages) > 0) {
 						
 						divs[i].align	= 'center';
 
 						divs[i].onclick = function() {
 							return document.location = bbcodeimages[0].src;
 						}
+						
+						d.forceCursor(divs[i]);
 
-						try {
-							divs[i].style.cursor = 'pointer';
-						} catch(e) {
-							divs[i].style.cursor = 'hand';
-						}
-
-						if(divs[i].offsetWidth > ruler.offsetWidth) {
+						if(d.width(divs[i]) > d.width(ruler)) {
 
 							/* Scale the image accordingly */
-							bbcodeimages[0].width.value = (ruler.offsetWidth - 200);
-							bbcodeimages[0].height = ((ruler.offsetWidth - 200) / divs[i].offsetWidth) * divs[i].offsetHeight;
-						
+							bbcodeimages[0].width.value = (d.width(ruler) - 200);
+							bbcodeimages[0].height		= ((d.width(ruler) - 200) / d.width(divs[i])) * d.height(divs[i]);
 					
 						}
 					}
@@ -264,35 +278,38 @@ function resize_bbimgs(ruler_id) {
 	}
 }
 
-var collapsed_items = new Array()
+var collapsed_items				= new Array()
 
 function switch_button(open, button) {
 	if(open) {
 		if(button.src) {
-			button_regex		= new RegExp("_collapsed\\.gif$");
+			button_regex		= new RegExp("_collapsed\.gif$");
 			button.src			= button.src.replace(button_regex, '.gif');
 		}
 	} else {
 		if(button.src) {
-			button_regex		= new RegExp("\\.gif$");
+			button_regex		= new RegExp("\.gif$");
 			button.src			= button.src.replace(button_regex, '_collapsed.gif');
 		}
 	}
-	button.style.display	= 'block';
+	button.style.display		= 'block';
 }
 
-function collapse_tbody(buttonId, Id) {
-	var tbody	= document.getElementById(Id);
-	var button	= document.getElementById(buttonId);
+function collapse_tbody(button_id, element_id, maintitle_id) {
+	var element	= d.getElementById(element_id);
+	var button	= d.getElementById(button_id);
+	var maintitle = d.getElementById(maintitle_id);
 	
 	try {
-		if(tbody) {
-			if(tbody.style.display == 'none') {
+		if(element && maintitle) {
+			if(element.style.display == 'none') {
 				switch_button(true, button);
-				tbody.style.display = '';
+				element.style.display = '';
+				maintitle.style.margin = '1px 1px 0px 1px';
 			} else {
 				switch_button(false, button);
-				tbody.style.display = 'none';
+				element.style.display = 'none';
+				maintitle.style.margin = '1px 1px 1px 1px';
 			}
 		}
 	} catch(e) {
@@ -302,7 +319,7 @@ function collapse_tbody(buttonId, Id) {
 
 /* Show or Hide an html element */
 function ShowHide(Id) {
-	var obj = document.getElementById(Id);
+	var obj = d.getElementById(Id);
 	
 	if(obj) {
 		if(obj.style.display == 'none') {
@@ -310,109 +327,6 @@ function ShowHide(Id) {
 		} else {
 			obj.style.display = 'none';
 		}
-	}
-}
-
-/* Set the index on a select form field */
-function setIndex(element, array) {
-	var temp = document.getElementById(array);
-	temp.selectedIndex = getSelectedIndex(element, temp);
-}
-
-/* Set the indices on a multi-select select field */
-function setIndices(values_array, select) {
-	var temp = document.getElementById(select);
-	
-	if(sizeof(values_array) > 1) {
-		for(var i = 0; i < sizeof(temp.options); i++) {
-			if(in_array(values_array, temp.options[i].value)) {
-				temp.options[i].selected = true;
-			}
-		}
-	} else {
-		setIndex(values_array[0], select);
-	}
-}
-
-/* Set a radio button */
-function setRadio(value, name) {
-	var inputs		= document.getElementsByTagName("input");
-	
-	for (var x = 0; x < sizeof(inputs); x++) {
-		if(inputs[x].name == name) {
-			if(inputs[x].value == value) {
-				inputs[x].checked = true;
-			} else {
-				inputs[x].checked = false;
-			}
-		}
-	}
-
-	return true;
-}
-
-/* Set a checkbox */
-function setCheckbox(value, id) {
-	var input		= document.getElementById(id);
-	if(value || value == 1) {	
-		input.checked = true;
-	} else {
-		input.checked = false;
-	}
-}
-
-/* Get the positiong of an element in an array */
-function getSelectedIndex(element, array) {
-	var pos = '';
-	for(var i = 0; i < sizeof(array); i++) {
-		if(array[i].value == element) {
-			pos = i;
-		}
-	}
-	return pos;
-}
-
-var ns6			= document.getElementById && !document.all;
-
-function restrictinput(maxlength, e, placeholder){
-	if (window.event && event.srcElement.value.length >= maxlength) {
-		return false
-	} else if (e.target && e.target == eval(placeholder) && e.target.value.length >= maxlength) {
-		var pressedkey = /[a-zA-Z0-9\.\,\/]/ //detect alphanumeric keys
-		if (pressedkey.test(String.fromCharCode(e.which))) {
-			e.stopPropagation();
-		}
-	}
-}
-
-function countlimit(maxlength, e, placeholder){
-	var theform						= eval(placeholder)
-	var lengthleft					= maxlength-theform.value.length
-	var placeholderobj				= document.all? document.all[placeholder] : document.getElementById(placeholder);
-	if (window.event || e.target&&e.target == eval(placeholder)) {
-		if (lengthleft < 0) {
-			theform.value			= theform.value.substring(0,maxlength);
-		}
-		placeholderobj.innerHTML	= lengthleft;
-	}
-}
-
-
-function displaylimit(theform, thelimit){
-	var limit_text = '<b><span id="' + theform.toString() + '">' + thelimit + '</span></b>';
-	if (document.all||ns6) {
-		document.write(limit_text)
-	}
-	if (document.all){
-		eval(theform).onkeypress = function(){ 
-			return restrictinput(thelimit,event,theform);
-		}
-		eval(theform).onkeyup = function() { 
-			countlimit(thelimit,event,theform);
-		}
-	} else if (ns6){
-		document.body.addEventListener('keypress', function(event) { restrictinput(thelimit,event,theform) }, true); 
-		document.body.addEventListener('keyup', function(event) { countlimit(thelimit,event,theform) }, true); 
 	}
 }
 
@@ -437,11 +351,12 @@ function fix_cookie_date(date) {
 }
 
 /* Set a cookie */
-function set_cookie(name, value, seconds) {
-	var expires = new Date ();
+function set_cookie(name, value, seconds, k4_domain) {
+	var expires = new Date();
 	fix_cookie_date(expires);
 	expires.setTime (expires.getTime() + (seconds * 1000));
-	document.cookie = name + "=" + escape(value) + "; expires=" + expires +  "; path=/";
+	document.cookie = name + "=" + escape(value) + "; expires=" + expires +  "; path=" + k4_domain + ";";
+
 }
 
 /* Fetch a cookie */

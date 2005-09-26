@@ -2,8 +2,8 @@
 <form:form name="edit_field" id="edit_field" action="admin.php?act=userfields_update" method="post" enctype="multipart/form-data">
 <input type="hidden" name="inputtype" id="inputtype" value="{$field_inputtype}" />
 <input type="hidden" name="field" id="field" value="{$field_name}" />
-<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
-	<tr class="thead">
+<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+	<tr class="k4_maintitle">
 		<td colspan="2">{$L_ADDPROFILEFIELD}</td>
 	</tr>
 	<tr class="alt2">
@@ -39,7 +39,7 @@
 				<option value="0">{$L_NO}</option>
 				<option value="1">{$L_YES}</option>
 			</select>
-			<script type="text/javascript">setIndex({$field_is_required}, 'is_required');</script>
+			<script type="text/javascript">d.setIndex({$field_is_required}, 'is_required');</script>
 		</td>
 	</tr>
 	<tr class="alt2">
@@ -50,7 +50,7 @@
 				<option value="1">{$L_YES}</option>
 				<option value="0">{$L_NO}</option>
 			</select>
-			<script type="text/javascript">setIndex({$field_is_editable}, 'is_editable');</script>
+			<script type="text/javascript">d.setIndex({$field_is_editable}, 'is_editable');</script>
 		</td>
 	</tr>
 	<tr class="alt1">
@@ -61,7 +61,7 @@
 				<option value="0">{$L_NO}</option>
 				<option value="1">{$L_YES}</option>
 			</select>
-			<script type="text/javascript">setIndex({$field_is_private}, 'is_private');</script>
+			<script type="text/javascript">d.setIndex({$field_is_private}, 'is_private');</script>
 		</td>
 	</tr>
 	<tr class="alt2">
@@ -77,7 +77,7 @@
 				<option value="9">{$L_ADMIN}</option>
 				<option value="10">{$L_SUPERADMIN}</option>
 			</select>
-			<script type="text/javascript">setIndex({$field_min_perm}, 'min_perm');</script>
+			<script type="text/javascript">d.setIndex({$field_min_perm}, 'min_perm');</script>
 		</td>
 	</tr>
 	<tr class="alt1">
@@ -91,11 +91,11 @@
 			<label for="display_register"><input type="checkbox" name="display_register" id="display_register" value="yes" /> {$L_REGISTRATION}</label>
 			<script type="text/javascript">
 				try {
-					setCheckbox({$field_display_memberlist}, 'display_memberlist');
-					setCheckbox({$field_display_profile}, 'display_profile');
-					setCheckbox({$field_display_topic}, 'display_topic');
-					setCheckbox({$field_display_post}, 'display_post');
-					setCheckbox({$field_display_register}, 'display_register');
+					d.setCheckbox({$field_display_memberlist}, 'display_memberlist');
+					d.setCheckbox({$field_display_profile}, 'display_profile');
+					d.setCheckbox({$field_display_topic}, 'display_topic');
+					d.setCheckbox({$field_display_post}, 'display_post');
+					d.setCheckbox({$field_display_register}, 'display_register');
 				} catch(e) {
 					alert(e.message);
 				}
@@ -103,7 +103,7 @@
 		</td>
 	</tr>
 	<core:block id="text" hidden="yes">
-	<tr class="thead">
+	<tr class="k4_maintitle">
 		<td colspan="2">{$L_OPTIONS}</td>
 	</tr>
 	<tr class="alt2">
@@ -133,7 +133,7 @@
 	</tr>
 	</core:block>
 	<core:block id="textarea" hidden="yes">
-	<tr class="thead">
+	<tr class="k4_maintitle">
 		<td colspan="2">{$L_OPTIONS}</td>
 	</tr>
 	<tr class="alt2">
@@ -170,7 +170,7 @@
 	</tr>
 	</core:block>
 	<core:block id="radio" hidden="yes">
-	<tr class="thead">
+	<tr class="k4_maintitle">
 		<td colspan="2">{$L_OPTIONS}</td>
 	</tr>
 	<tr class="alt2">
@@ -186,7 +186,7 @@
 	</tr>
 	</core:block>
 	<core:block id="select" hidden="yes">
-	<tr class="thead">
+	<tr class="k4_maintitle">
 		<td colspan="2">{$L_OPTIONS}</td>
 	</tr>
 	<tr class="alt2">
@@ -202,7 +202,7 @@
 	</tr>
 	</core:block>
 	<core:block id="multiselect" hidden="yes">
-	<tr class="thead">
+	<tr class="k4_maintitle">
 		<td colspan="2">{$L_OPTIONS}</td>
 	</tr>
 	<tr class="alt2">
@@ -218,7 +218,7 @@
 	</tr>
 	</core:block>
 	<core:block id="checkbox" hidden="yes">
-	<tr class="thead">
+	<tr class="k4_maintitle">
 		<td colspan="2">{$L_OPTIONS}</td>
 	</tr>
 	<tr class="alt2">
@@ -233,7 +233,7 @@
 		</td>
 	</tr>
 	</core:block>
-	<tr class="tcat">
+	<tr class="k4_subtitle">
 		<td colspan="2">
 			<input type="submit" value="{$L_SAVE}" class="button" />
 			<input type="reset" value="{$L_RESET}" class="button" />

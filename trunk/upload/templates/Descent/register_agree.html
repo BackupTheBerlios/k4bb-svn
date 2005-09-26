@@ -1,37 +1,37 @@
 <is:unlogged>
 <form action="member.php?act=register" method="post" enctype="multipart/form-data">
-<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
-	<tr class="thead">
-		<td>{$L_REGFORUMRULES}</td>
-	</tr>
-	<tr class="panel">
-		<td>
-			<div class="outset_box">
-				<fieldset>
-					<legend>{$L_FORUMRULES}:</legend>
-					<span class="minitext">
-						<strong>{$L_INORDERTOREGISTER}</strong>
-						<br /><br />
-						<strong>{$L_FORUMRULES}</strong>
-						<div style="height:120px;overflow:auto;" class="alt2">
-							{$L_REGISTRATIONAGREEMENT}
-						</div>
-						<label for="agree"><input type="checkbox" name="agreed" id="agree" value="yes" />&nbsp;{$L_READANDAGREED}</label>
-					</span>
-				</fieldset>
-			</div>
-		</td>
-	</tr>
-	<tr class="tcat">
-		<td><input type="submit" id="reg_button" value="{$L_REGISTER}" class="button" /></td>
-	</tr>
-</table>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_REGFORUMRULES}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt3">
+				<div class="outset_box">
+					<fieldset>
+						<legend>{$L_FORUMRULES}:</legend>
+						<span class="minitext">
+							<strong>{$L_INORDERTOREGISTER}</strong>
+							<br /><br />
+							<strong>{$L_FORUMRULES}</strong>
+							<div style="height:120px;overflow:auto;" class="alt2">
+								{$L_REGISTRATIONAGREEMENT}
+							</div>
+							<label for="agree"><input type="checkbox" name="agreed" id="agree" value="yes" />&nbsp;{$L_READANDAGREED}</label>
+						</span>
+					</fieldset>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" align="center"><input type="submit" id="reg_button" value="{$L_REGISTER}" class="button" /></td>
+		</tr>
+	</table>
+</div>
 </form>
 <script type="text/javascript">
-// <!--
+//<![CDATA[
 try {
-	var agree				= document.getElementById('agree');
-	var reg_button			= document.getElementById('reg_button');
+	var agree				= d.getElementById('agree');
+	var reg_button			= d.getElementById('reg_button');
 	reg_button.disabled		= true;
 	agree.onclick			= function() {
 		if(agree.checked == true) {
@@ -43,6 +43,6 @@ try {
 } catch(e) {
 
 }
-// -->
+//]]>
 </script>
 </is:unlogged>

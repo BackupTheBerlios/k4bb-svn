@@ -25,14 +25,25 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: globals.class.php,v 1.4 2005/05/24 20:01:31 k4st Exp $
+* @version $Id: globals.class.php 144 2005-07-05 02:29:07Z Peter Goodman $
 * @package k42
 */
 
 error_reporting(E_ALL);
 
 if(!defined('IN_K4')) {
-	exit;
+	return;
+}
+
+class AnonymousClass {
+	function AnonymousClass($methods) {
+		
+		if(is_array($methods)) {
+			foreach($methods as $var => $val) {
+				$this->$var		= $val;
+			}
+		}
+	}
 }
 
 class GlobalsStack {
@@ -59,6 +70,11 @@ class Globals {
 			$instance = new GlobalsStack();
 
 		return $instance;
+	}
+	function getGlobals() {
+		$stack = &Globals::getStack();
+
+		return $stack->globals;
 	}
 	function setGlobal($varname, $val) {
 		$stack = &Globals::getStack();

@@ -1,57 +1,57 @@
 <is:admin>
-<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
-	<tr class="thead">
-		<td colspan="5">
-			<script type="text/javascript">doHelpButton('usergroups');</script>
-			{$L_USERGROUPS}
-		</td>
-	</tr>
-	<tr class="tcat">
-		<td colspan="5">{$L_MANAGEUSERGROUPS}</td>
-	</tr>
-	<tr class="alt3">
-		<td colspan="5">
-			<div align="center">
-				<script type="text/javascript">doHelpButton('add_usergroup');</script>
-				<input type="button" class="minitext" style="font-weight: bold;" value="{$L_ADDUSERGROUP}" onclick="document.location='admin.php?act=usergroups_add'" />
-			</div>
-		</td>
-	</tr>
-	<tr class="tcat">
-		<td colspan="2">{$L_MANAGEMENT}</td>
-	</tr>
-	<list:list id="usergroups">
-	<list:default list="usergroups">
-	<tr class="panel">
-		<td colspan="2">
-			<div class="outset_box" align="center">
-				<br />
-				{$L_NOUSERGROUPS}
-				<br /><br />
-			</div>
-		</td>
-	</tr>
-	</list:default>
-	<list:item list="usergroups">
-	<list:switch list="usergroups" var="row_class" a="alt1" b="alt2">
-	<tr class="{$row_class}">
-	</list:switch>
-		<td>
-			<div align="left">
-				<strong style="color: #{$color};">{$name}</strong>
-				<br />
-				<span class="minitext">{$description}</span>
-			</div>
-		</td>
-		<td width="10%" align="center">
-			<input type="button" class="minitext" value="{$L_EDIT}" onclick="document.location='admin.php?act=usergroups_edit&id={$id}'" />
-			<!--<br />
-			<input type="button" class="minitext" value="{$L_EDITPERMISSIONS}" onclick="document.location='admin.php?act=usergroups_permissions&id={$id}'" />
-			--><br />
-			<input type="button" class="minitext" style="color: #FF0000;" value="{$L_DELETE}" onclick="if(confirm('{$L_CHECKDELGROUP}')) { document.location='admin.php?act=usergroups_remove&id={$id}'; } else { return false; }" />
-		</td>
-	</tr>
-	</list:item>
-	</list:list>
-</table>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">
+		<script type="text/javascript">doHelpButton('usergroups');</script>
+		{$L_USERGROUPS}
+	</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td colspan="5" class="k4_subtitle">{$L_MANAGEUSERGROUPS}</td>
+		</tr>
+		<tr class="alt3">
+			<td colspan="5">
+				<div align="center">
+					<script type="text/javascript">doHelpButton('add_usergroup');</script>
+					<input type="button" class="button" style="font-weight: bold;" value="{$L_ADDUSERGROUP}" onclick="document.location='admin.php?act=usergroups_add'" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" class="k4_subtitle">{$L_MANAGEMENT}</td>
+		</tr>
+		<list:list id="usergroups">
+		<list:default list="usergroups">
+		<tr class="alt3">
+			<td colspan="2">
+				<div class="outset_box" align="center">
+					<br />
+					{$L_NOUSERGROUPS}
+					<br /><br />
+				</div>
+			</td>
+		</tr>
+		</list:default>
+		<list:item list="usergroups">
+		<list:switch list="usergroups" var="row_class" a="alt1" b="alt2">
+		<tr class="{$row_class}">
+		</list:switch>
+			<td>
+				<div align="left">
+					<strong style="color: #{$color};">{$name}</strong>
+					<br />
+					<span class="minitext">{$description}</span>
+				</div>
+			</td>
+			<td width="10%" align="center">
+				<input type="button" class="button" value="{$L_EDIT}" onclick="document.location='admin.php?act=usergroups_edit&id={$id}'" />
+				<!--<br />
+				<input type="button" class="minitext" value="{$L_EDITPERMISSIONS}" onclick="document.location='admin.php?act=usergroups_permissions&id={$id}'" />
+				--><br />
+				<input type="button" class="button" style="color: #FF0000;" value="{$L_DELETE}" onclick="if(confirm('{$L_CHECKDELGROUP}')) { document.location='admin.php?act=usergroups_remove&id={$id}'; } else { return false; }" />
+			</td>
+		</tr>
+		</list:item>
+		</list:list>
+	</table>
+</div>
 </is:admin>

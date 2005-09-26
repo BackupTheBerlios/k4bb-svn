@@ -28,7 +28,7 @@
 * @author Peter Goodman
 * @author Geoffrey Goodman
 * @author James Logsdon
-* @version $Id: feed.php,v 1.1 2005/05/01 23:24:55 necrotic Exp $
+* @version $Id: feed.php 110 2005-06-13 20:48:58Z Peter Goodman $
 * @package k42
 */
 

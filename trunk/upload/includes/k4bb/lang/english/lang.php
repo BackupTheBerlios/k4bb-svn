@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: lang.php,v 1.10 2005/05/24 20:05:09 k4st Exp $
+* @version $Id: lang.php 142 2005-07-01 19:08:04Z Peter Goodman $
 * @package k42
 */
 
@@ -40,6 +40,7 @@ include LANG_DIR . '/general.php';
 include LANG_DIR . '/blog.php';
 include LANG_DIR . '/admin.php';
 include LANG_DIR . '/mod.php';
+include LANG_DIR . '/usercp.php';
 include LANG_DIR . '/mail.php';
 
 ?>

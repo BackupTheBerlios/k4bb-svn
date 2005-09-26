@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Geoffrey Goodman
-* @version $Id$
+* @version $Id: database.php 110 2005-06-13 20:48:58Z Peter Goodman $
 * @package k42
 */
 
@@ -47,7 +47,8 @@ class K4SqlDebugger extends FAObject {
 	}
 
 	function &prepareStatement($sql) {
-		return $this->_obj->createStatement($sql, &$this);
+		$ret = $this->_obj->createStatement($sql, $this);
+		return $ret;
 	}
 
 	function executeUpdate($stmt) {
@@ -68,8 +69,8 @@ class K4SqlDebugger extends FAObject {
 		return $result;
 	}
 
-	function getInsertId() {
-		return $this->_obj->getInsertId();
+	function getInsertId($table, $column) {
+		return $this->_obj->getInsertId($table, $column);
 	}
 
 	function isValid() {
@@ -107,7 +108,8 @@ class K4SqlDebugger extends FAObject {
 	}
 
 	function &getDebugIterator() {
-		return new K4SqlDebuggerIterator($this->_queries, $this->_results);
+		$ret = &new K4SqlDebuggerIterator($this->_queries, $this->_results);
+		return $ret;
 	}
 }
 

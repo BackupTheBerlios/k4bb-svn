@@ -25,14 +25,14 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: profilefields.class.php,v 1.7 2005/05/16 02:12:15 k4st Exp $
+* @version $Id: profilefields.class.php 144 2005-07-05 02:29:07Z Peter Goodman $
 * @package k42
 */
 
 error_reporting(E_ALL);
 
 if(!defined('IN_K4')) {
-	exit;
+	return;
 }
 
 class AdminUserProfileFields extends FAAction {
@@ -44,12 +44,13 @@ class AdminUserProfileFields extends FAAction {
 
 			$request['template']->setList('fields', $fields);
 			
-			$request['template']->setFile('content', 'admin.html');
-			$request['template']->setFile('admin_panel', 'profilefields_manage.html');
-		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
+			$request['template']->setFile('content', 'profilefields_manage.html');
 
-			return $action->execute($request);
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERPROFILEFIELDS');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
+		} else {
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -61,12 +62,13 @@ class AdminAddUserField extends FAAction {
 		
 		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			
-			$request['template']->setFile('content', 'admin.html');
-			$request['template']->setFile('admin_panel', 'profilefields_add1.html');
-		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
+			$request['template']->setFile('content', 'profilefields_add1.html');
 
-			return $action->execute($request);
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERPROFILEFIELDS');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
+		} else {
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -82,20 +84,18 @@ class AdminAddUserFieldTwo extends FAAction {
 			
 			if(!isset($_REQUEST['inputtype']) || $_REQUEST['inputtype'] == '' || !in_array($_REQUEST['inputtype'], $types)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_NEEDFIELDINPUTTYPE'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			$request['template']->setVisibility($_REQUEST['inputtype'], TRUE);
 			$request['template']->setVar('inputtype', $_REQUEST['inputtype']);
+			$request['template']->setFile('content', 'profilefields_add2.html');
 
-			$request['template']->setFile('content', 'admin.html');
-			$request['template']->setFile('admin_panel', 'profilefields_add2.html');
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERPROFILEFIELDS');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -111,9 +111,7 @@ class AdminInsertUserField extends FAAction {
 			
 			if(!isset($_REQUEST['inputtype']) || $_REQUEST['inputtype'] == '' || !in_array($_REQUEST['inputtype'], $types)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_NEEDFIELDINPUTTYPE'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			$last_field		= $request['dba']->getValue("SELECT name FROM ". K4PROFILEFIELDS ." ORDER BY name DESC LIMIT 1");
@@ -165,32 +163,20 @@ class AdminInsertUserField extends FAAction {
 			}
 			
 			/* If there is a problem altering the userinfo table, don't continue past this point. */
-			error::reset();
-			$request['dba']->alterTable(USERINFO, "$update_type $name $params");
-			$error				= error::grab();
-			if($error) {
-				$action = new K4InformationAction(new K4LanguageElement('L_ERRORADDPROFILEFIELD', $_REQUEST['title'], $error->message .' Line: '. $error->line .', File: '. basename($error->filename)), 'content', FALSE);
-
-				return $action->execute($request);
-				return TRUE;
-			}
-
+			$request['dba']->alterTable(K4USERINFO, "$update_type $name $params");
 			$insert->executeUpdate();
 			
-			/* Remove our cache file so it may be recreated */
-			if(!@touch(CACHE_FILE, time()-86460)) {
-				@unlink(CACHE_FILE);
-			}
+			reset_cache(CACHE_FILE);
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERPROFILEFIELDS');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
 
 			$action = new K4InformationAction(new K4LanguageElement('L_ADDEDPROFILEFIELD', $_REQUEST['title']), 'content', FALSE, 'admin.php?act=userfields', 3);
-
-
 			return $action->execute($request);
 			
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -204,18 +190,14 @@ class AdminRemoveUserField extends FAAction {
 			
 			if(!isset($_REQUEST['field']) || $_REQUEST['field'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDUSERFIELD'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			$field		= $request['dba']->getRow("SELECT * FROM ". K4PROFILEFIELDS ." WHERE name = '". $request['dba']->quote($_REQUEST['field']) ."'");
 			
 			if(!$field || !is_array($field) || empty($field)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDUSERFIELD'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			if(!$request['dba']->query("SELECT ". $field['name'] ." FROM ". K4USERINFO ." LIMIT 1")) {
@@ -224,40 +206,26 @@ class AdminRemoveUserField extends FAAction {
 				$request['dba']->executeUpdate("DELETE FROM ". K4PROFILEFIELDS ." WHERE name = '". $request['dba']->quote($field['name']) ."'");
 				
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDUSERFIELD'), 'content', TRUE);
-
-				
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			/* Remove the field */
-			error::reset();
-			$request['dba']->alterTable(USERINFO, "DROP ". $request['dba']->quote($field['name']));
-			$error		= error::grab();
-			if($error) {
-				$action = new K4InformationAction(new K4LanguageElement('L_ERRORDELPROFILEFIELD', $_REQUEST['title'], $error->message .' Line: '. $error->line .', File: '. basename($error->filename)), 'content', FALSE);
-
-				return $action->execute($request);
-				return TRUE;
-			}			
-			
+			$request['dba']->alterTable(K4USERINFO, "DROP ". $request['dba']->quote($field['name']));
+						
 			/* Remove the last of the profile field info if we've made it this far */
 			$request['dba']->executeUpdate("DELETE FROM ". K4PROFILEFIELDS ." WHERE name = '". $request['dba']->quote($field['name']) ."'");
 			
-			/* Remove the cache file so it may be remade */
-			if(!@touch(CACHE_FILE, time()-86460)) {
-				@unlink(CACHE_FILE);
-			}	
+			reset_cache(CACHE_FILE);
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERPROFILEFIELDS');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
 
 			$action = new K4InformationAction(new K4LanguageElement('L_REMOVEDPROFILEFIELD', $field['title']), 'content', FALSE, 'admin.php?act=userfields', 3);
-	
-
 			return $action->execute($request);
 
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -271,18 +239,14 @@ class AdminEditUserField extends FAAction {
 			
 			if(!isset($_REQUEST['field']) || $_REQUEST['field'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDUSERFIELD'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			$field		= $request['dba']->getRow("SELECT * FROM ". K4PROFILEFIELDS ." WHERE name = '". $request['dba']->quote($_REQUEST['field']) ."'");
 			
 			if(!$field || !is_array($field) || empty($field)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDUSERFIELD'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			push_error_handler(create_function('', 'return TRUE;'));
@@ -295,10 +259,7 @@ class AdminEditUserField extends FAAction {
 				$request['dba']->executeUpdate("DELETE FROM ". K4PROFILEFIELDS ." WHERE name = '". $request['dba']->quote($field['name']) ."'");
 				
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDUSERFIELD'), 'content', TRUE);
-
-				
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			foreach($field as $key => $val) {
@@ -325,14 +286,15 @@ class AdminEditUserField extends FAAction {
 				 
 				$request['template']->setVar('field_'. $key, $val);
 			}
-			$request['template']->setVisibility($field['inputtype'], TRUE);
-			
-			$request['template']->setFile('content', 'admin.html');
-			$request['template']->setFile('admin_panel', 'profilefields_edit.html');
-		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
 
-			return $action->execute($request);
+			$request['template']->setVisibility($field['inputtype'], TRUE);
+			$request['template']->setFile('content', 'profilefields_edit.html');
+
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERPROFILEFIELDS');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
+		} else {
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -346,18 +308,14 @@ class AdminUpdateUserField extends FAAction {
 			
 			if(!isset($_REQUEST['field']) || $_REQUEST['field'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDUSERFIELD'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			$field		= $request['dba']->getRow("SELECT * FROM ". K4PROFILEFIELDS ." WHERE name = '". $request['dba']->quote($_REQUEST['field']) ."'");
 			
 			if(!$field || !is_array($field) || empty($field)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDUSERFIELD'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			push_error_handler(create_function('', 'return TRUE;'));
@@ -370,10 +328,7 @@ class AdminUpdateUserField extends FAAction {
 				$request['dba']->executeUpdate("DELETE FROM ". K4PROFILEFIELDS ." WHERE name = '". $request['dba']->quote($field['name']) ."'");
 				
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDUSERFIELD'), 'content', TRUE);
-
-				
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			$update			= &$request['dba']->prepareStatement("UPDATE ". K4PROFILEFIELDS ." SET title=?, description=?, default_value=?, inputtype=?, user_maxlength=?, inputoptions=?, min_perm=?, display_register=?, display_profile=?, display_topic=?, display_post=?, display_memberlist=?, display_image=?, display_size=?, display_rows=?, display_order=?, is_editable=?, is_private=?, is_required=?, special_pcre=? WHERE name=?");
@@ -402,20 +357,17 @@ class AdminUpdateUserField extends FAAction {
 
 			$update->executeUpdate();
 			
-			/* Remove our cache file so it may be recreated */
-			if(!@touch(CACHE_FILE, time()-86460)) {
-				@unlink(CACHE_FILE);
-			}
-
+			reset_cache(CACHE_FILE);
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERPROFILEFIELDS');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
+			
 			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDPROFILEFIELD', $_REQUEST['title']), 'content', FALSE, 'admin.php?act=userfields', 3);
-
-
 			return $action->execute($request);
 			
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -442,15 +394,15 @@ class AdminSimpleUpdateUserFields extends FAAction {
 				}
 			}
 			
-			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDPROFILEFIELDS'), 'content', FALSE, 'admin.php?act=userfields', 3);
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERPROFILEFIELDS');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
 
-			
+			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDPROFILEFIELDS'), 'content', FALSE, 'admin.php?act=userfields', 3);
 			return $action->execute($request);
 
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;

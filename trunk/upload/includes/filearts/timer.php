@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Geoffrey Goodman
-* @version $Id: timer.class.php,v 1.4 2005/04/20 20:36:59 k4st Exp $
+* @version $Id: timer.php 110 2005-06-13 20:48:58Z Peter Goodman $
 * @package k42
 */
 

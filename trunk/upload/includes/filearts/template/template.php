@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Geoffrey Goodman
-* @version $Id$
+* @version $Id: template.php 152 2005-07-14 01:37:57Z Peter Goodman $
 * @package k42
 */
 
@@ -153,7 +153,7 @@ class FATemplateCompiler extends FAObject {
 	function compile($filename) {
 		$buffer = file_get_contents($filename);
 
-		$buffer = preg_replace_callback('~(?:[\t]*)(<(/)?([a-z]+:[a-z]+)((?:[\s][a-zA-Z]+="[^"]*")*)[\s]?(/)?>)~', array(&$this, 'compileTag'), $buffer);
+		$buffer = preg_replace_callback('~(?:[\t]*)(<(/)?([a-z]+:[a-z]+)((?:[\s][a-zA-Z]+="[^"]*")*)[\s]?(/)?>)~', array($this, 'compileTag'), $buffer);
 		$buffer = preg_replace('~{\$([a-zA-Z_-][a-zA-Z0-9_-]*)}~', '<?php echo $scope->getVar("$1"); ?>', $buffer);
 		$buffer = preg_replace('~"?{\@([a-zA-Z_-][a-zA-Z0-9_-]*)}"?~', '$scope->getVar("$1")', $buffer);
 		
@@ -185,7 +185,7 @@ class FATemplateCompiler extends FAObject {
 	}
 	
 	function &getCompiler($tag) {
-		$compiler = $this->default_compiler;
+		$compiler = &$this->default_compiler;
 
 		if (isset($this->compilers[$tag])) {
 			$compiler = &$this->compilers[$tag];
@@ -243,8 +243,11 @@ class FATemplateRuntime extends FAObject {
 	}
 
 	function &getPager($id) {
-		if (isset($this->_pagers[$id]))
-			return $this->_pagers[$id];
+		$ret = FALSE;
+		if (isset($this->_pagers[$id])) {
+			$ret = &$this->_pagers[$id];
+		}
+		return $ret;
 	}
 }
 
@@ -259,12 +262,12 @@ class FATemplateScope extends FAObject {
 		$this->_keys = array();
 	}
 	
-	function getVar($name) {
-		$ret = "";
+	function &getVar($name) {
+		$ret = FALSE;
 		
 		for ($i = count($this->_scope) - 1; $i >= 0; $i--) {
 			if (isset($this->_scope[$i][$name])) {
-				$ret = $this->_scope[$i][$name];
+				$ret = &$this->_scope[$i][$name];
 				break;
 			}
 		}
@@ -287,23 +290,24 @@ class FATemplateScope extends FAObject {
 		array_pop($this->_scope);
 	}
 	
-	function listBegin($name, $list) {
+	function listBegin($name) {
 		$ret = FALSE;
-		
-		if ($list != NULL && is_a($list, 'FAIterator')) {
-			$this->_lists[$name] = &$list;
-		}
-		
+
 		if (isset($this->_lists[$name])) {
+			$this->_lists[$name]->reset();
 			$this->_keys[$name] = -1;
 			$ret = TRUE;
 		}
-		
 		return $ret;
 	}
-	
-	function listEnd() {
-		array_pop($this->_list_names);
+
+	function listBeginNew($name, &$list) {
+		//var_dump($list);
+		if ($list != NULL && is_a($list, 'FAIterator')) {
+			$this->_lists[$name] = &$list;
+		}
+
+		return $this->listBegin($name);
 	}
 	
 	function listHasNext($name) {
@@ -331,7 +335,7 @@ class FATemplateScope extends FAObject {
 		
 		if ($list = &$this->_lists[$name]) {
 			$scope = $list->next();
-			
+
 			if (is_array($scope)) {
 				$this->_keys[$name]++;
 				$this->push($scope);
@@ -363,11 +367,12 @@ class FATemplate extends FAObject {
 	}
 
 	function getCompiledFilename($filename) {
-		return dirname($filename) . '/.compiled/' . basename($filename);
+		return dirname($filename) . '/compiled/' . basename($filename);
 	}
 
 	function &getTemplateCompiler() {
-		return $this->_compiler;
+		$ret = &$this->_compiler;
+		return $ret;
 	}
 
 	function isCompiled($filename) {
@@ -387,7 +392,8 @@ class FATemplate extends FAObject {
 			$scope = &new FATemplateScope($this->_vars, $this->_lists);
 		if ($runtime == NULL)
 			$runtime = &new FATemplateRuntime($filename, $this->_blocks, $this->_files, $this->_pagers);
-		$template = &$this;
+		
+		$template = $this;
 
 		if (!$this->_force && $this->isCompiled($filename)) {
 			include $this->getCompiledFilename($filename);
@@ -395,26 +401,37 @@ class FATemplate extends FAObject {
 			$compiler = &$this->getTemplateCompiler();
 			$buffer = $compiler->compile($filename);
 
+			$compiled_file = $this->getCompiledFilename($filename);
+			if ($this->_cache) {
+				$this->writeBuffer($compiled_file, $buffer);
+			}
+
+			//$buffer		= preg_replace('~&amp;~i', '&', $buffer);
+			//$buffer		= preg_replace('~&~', '&amp;', $buffer);
+
 			//echo "<pre>$buffer</pre>";
 			
 			eval("?> $buffer");
 			// <?php
 
-			$compiled_file = $this->getCompiledFilename($filename);
-
-			if ($this->_cache) {
-				$this->writeBuffer($compiled_file, $buffer);
-			}
 		}
 	}
 
 	function run($filename) {
 		ob_start();
+		
+		// Prevent template compiling
+		$old_cache		= $this->_cache;
+		$this->_cache	= FALSE;
 
+		// render the template
 		$this->render($filename);
 
 		$buffer = ob_get_contents();
 		ob_end_clean();
+		
+		// reset the cache setting
+		$this->_cache	= $old_cache;
 
 		return $buffer;
 	}
@@ -422,24 +439,36 @@ class FATemplate extends FAObject {
 	function writeBuffer($filename, $buffer) {
 		if (!is_dir(dirname($filename))) {
 			$mask = umask(0);
-			
+
 			if (!mkdir(dirname($filename), 0777))
 				trigger_error("Unable to create the compiled template cache: " . dirname($filename), E_USER_WARNING);
+			
+			__chmod(dirname($filename), 0777);
 
 			umask($mask);
 		}
 
 		if (!is_writable(dirname($filename))) {
-			trigger_error("Unable to write to the compiled template cache: " . dirname($filename), E_USER_WARNING);
-		} else {
-			$fp = fopen($filename, 'w');
-
-			if (!$fp) {
-				trigger_error("Unable to write to the compiled template: $filename", E_USER_ERROR);
-			} else {
-				fwrite($fp, $buffer);
-				fclose($fp);
+			
+			__chmod(dirname($filename), 0777);
+			
+			// means that the chmod function is not working.
+			if (!is_writable(dirname($filename))) {
+				trigger_error("Unable to write to the compiled template cache: " . dirname($filename), E_USER_WARNING);
 			}
+		}
+		
+		__chmod($filename, 0777);
+
+		$fp = @fopen($filename, "w");
+
+		if (!$fp) {
+			trigger_error("Unable to write to the compiled template: $filename", E_USER_ERROR);
+		} else {
+			fwrite($fp, $buffer);
+			fclose($fp);
+
+			__chmod($filename, 0777);
 		}
 	}
 

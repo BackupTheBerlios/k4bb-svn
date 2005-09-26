@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: admin.php,v 1.9 2005/05/16 02:10:03 k4st Exp $
+* @version $Id: admin.php 149 2005-07-12 14:17:49Z Peter Goodman $
 * @package k42
 */
 
@@ -42,11 +42,11 @@ class K4DefaultAction extends FAAction {
 	function execute(&$request) {		
 		
 		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
-			$request['template']->setFile('content', 'admin.html');
+			
 			
 			
 		} else {
-			k4_bread_crumbs(&$request['template'], &$request['dba'], 'L_INFORMATION');
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$request['template']->setFile('content', '../login_form.html');
 			$request['template']->setVisibility('no_perms', TRUE);
 			return TRUE;
@@ -62,7 +62,7 @@ class AdminMenu extends FAAction {
 		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			$request['template']->setFile('content', 'admin_menu.html');
 		} else {
-			k4_bread_crumbs(&$request['template'], &$request['dba'], 'L_INFORMATION');
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$request['template']->setFile('content', '../login_form.html');
 			$request['template']->setVisibility('no_perms', TRUE);
 			return TRUE;
@@ -77,10 +77,9 @@ class AdminHead extends FAAction {
 		
 		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			$request['template']->setFile('content', 'admin_head.html');
+			$request['template']->setVisibility('content_padding', FALSE);
 		} else {
-			k4_bread_crumbs(&$request['template'], &$request['dba'], 'L_INFORMATION');
-			$request['template']->setFile('content', 'login_form.html');
-			$request['template']->setVisibility('no_perms', TRUE);
+			no_perms_error($request);
 			return TRUE;
 		}
 
@@ -93,16 +92,17 @@ $app = new K4controller('admin/admin_base.html');
 $app->setAction('', new K4DefaultAction);
 $app->setDefaultEvent('');
 
-/* Things in the Frameset */
-$app->setAction('admin_header', new AdminHead);
-$app->setAction('admin_navigation', new AdminMenu);
-
 /* Admin File Browser */
 $app->setAction('file_browser', new AdminFileBrowser);
 
+/* Options */
+$app->setAction('options', new AdminOptionGroups);
+$app->setAction('options_view', new AdminSettings);
+$app->setAction('update_options', new AdminUpdateOptions);
+
 /* The GUI for the K4MAPS permission system */
 $app->setAction('permissions_gui', new AdminMapsGui);
-$app->setAction('maps_inherit', new AdminMapsInherit);
+//$app->setAction('maps_inherit', new AdminMapsInherit);
 $app->setAction('maps_update', new AdminMapsUpdate);
 $app->setAction('maps_add', new AdminMapsAddNode);
 $app->setAction('maps_insert', new AdminMapsInsertNode);
@@ -149,6 +149,9 @@ $app->setAction('forums_remove', new AdminRemoveForum);
 $app->setAction('forums_permissions', new AdminForumPermissions);
 $app->setAction('forums_updateperms', new AdminUpdateForumPermissions);
 
+/* Users */
+$app->setAction('users', new AdminUsers);
+
 /* User Groups */
 $app->setAction('usergroups', new AdminUserGroups);
 $app->setAction('usergroups_add', new AdminAddUserGroup);
@@ -172,6 +175,39 @@ $app->setAction('usernames', new AdminBadUserNames);
 $app->setAction('usernames_insert', new AdminInsertBadUserName);
 $app->setAction('usernames_update', new AdminUpdateBadUserName);
 $app->setAction('usernames_remove', new AdminRemoveBadUserName);
+
+/* Acronym Management */
+$app->setAction('acronyms', new AdminAcronyms);
+$app->setAction('add_acronym', new AdminInsertAcronym);
+$app->setAction('update_acronym', new AdminUpdateAcronym);
+$app->setAction('acronym_remove', new AdminRemoveAcronym);
+
+/* Word Censor Management */
+$app->setAction('censors', new AdminWordCensors);
+$app->setAction('add_censor', new AdminInsertCensor);
+$app->setAction('update_censor', new AdminUpdateCensor);
+$app->setAction('remove_censor', new AdminRemoveCensor);
+
+/* Search Engine Spider Management */
+$app->setAction('spiders', new AdminSpiders);
+$app->setAction('add_spider', new AdminInsertSpider);
+$app->setAction('update_spider', new AdminUpdateSpider);
+$app->setAction('spider_remove', new AdminRemoveSpider);
+
+/* Style Management */
+$app->setAction('stylesets', new AdminManageStyleSets);
+
+/* Frequently Asked Questions */
+$app->setAction('faq_categories', new AdminFAQCategories);
+$app->setAction('faq_addcategory', new AdminAddFAQCategory);
+$app->setAction('faq_insertcategory', new AdminInsertFAQCategory);
+
+/* Email Users */
+$app->setAction('email', new AdminEmailUsers);
+$app->setAction('email_users', new AdminSetSendEmails);
+
+/* Posts */
+$app->setAction('posts', new AdminPosts);
 
 $app->execute();
 

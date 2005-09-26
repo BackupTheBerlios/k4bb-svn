@@ -25,18 +25,37 @@
 * SOFTWARE.
 *
 * @author Geoffrey Goodman
-* @version $Id$
+* @version $Id: index.php 144 2005-07-05 02:29:07Z Peter Goodman $
 * @package k42
 */
 	
 error_reporting(E_ALL);
 ignore_user_abort(TRUE);
+@set_time_limit(0);
+
+function one_dir_up($dir) {
+
+	$dir		= str_replace('\\', '/', $dir);
+
+	$folders	= explode('/', $dir);
+
+	unset($folders[count($folders)-1]);
+	
+	$folders	= array_values($folders);
+
+	$dir		= implode('/', $folders);
+	
+	return $dir;
+}
 
 define('INSTALLER_BASE_DIR', dirname(__FILE__));
-define('FORUM_BASE_DIR', INSTALLER_BASE_DIR . "/../");
-define('INCLUDE_BASE_DIR', INSTALLER_BASE_DIR . "/../includes");
+define('FORUM_BASE_DIR', one_dir_up(INSTALLER_BASE_DIR));
+define('INCLUDE_BASE_DIR', one_dir_up(INSTALLER_BASE_DIR) . '/includes');
+
+define('IN_K4', TRUE);
 
 include INCLUDE_BASE_DIR . '/filearts/filearts.php';
+include INCLUDE_BASE_DIR . '/k4bb/functions.php';
 
 class K4Installer extends FAController {
 	function execute() {
@@ -54,7 +73,7 @@ class DatabaseVerifyFilter extends FAFilter {
 		$ret = FALSE;
 
 		if ($request['event'] == 'dbverify') {
-			push_error_handler(array(&$this, 'verifyError'));
+			push_error_handler(array($this, 'verifyError'));
 
 			$this->addPostFilter('bb_title', new FARequiredFilter);
 			$this->addPostFilter('bb_description', new FARequiredFilter);
@@ -77,13 +96,17 @@ class DatabaseVerifyFilter extends FAFilter {
 
 			if (!$this->_error) {
 				// Setup the database info
-				$db_info = array();
-				$db_info['driver'] = $_POST['dba_driver'];
-				$db_info['database'] = $_POST['dba_name'];
-				$db_info['directory'] = '';
-				$db_info['server'] = $_POST['dba_server'];
-				$db_info['user'] = $_POST['dba_username'];
-				$db_info['pass'] = $_POST['dba_password'];
+				$db_info				= array();
+				$db_info['driver']		= $_POST['dba_driver'];
+				$db_info['database']	= $_POST['dba_name'];
+				$db_info['directory']	= FORUM_BASE_DIR .'/tmp/sqlite';
+				$db_info['server']		= $_POST['dba_server'];
+				$db_info['user']		= $_POST['dba_username'];
+				$db_info['pass']		= $_POST['dba_password'];
+				$ftp_info				= array();
+				$ftp_info['use']		= $_POST['use_ftp'];
+				$ftp_info['user']		= $_POST['ftp_name'];
+				$ftp_info['pass']		= $_POST['ftp_pass'];
 
 				$dba = &db_connect($db_info);
 
@@ -110,6 +133,7 @@ class DatabaseVerifyFilter extends FAFilter {
 			} else {
 				$request['dba'] = &$dba;
 				$request['db_info'] = $db_info;
+				$request['ftp_info'] = $ftp_info;
 
 				$action = new ConfigWriterAction();
 			}
@@ -143,19 +167,35 @@ class ConfigWriterAction extends FAAction {
 		$config = &new FATemplate(FA_FORCE | FA_NOCACHE);
 		$config->setVar('db_driver', $request['db_info']['driver']);
 		$config->setVar('db_database', $request['db_info']['database']);
-		$config->setVar('db_directory', '');
+		$config->setVar('db_directory', $request['db_info']['directory']);
 		$config->setVar('db_server', $request['db_info']['server']);
 		$config->setVar('db_user', $request['db_info']['user']);
 		$config->setVar('db_pass', $request['db_info']['pass']);
+		
+		// ftp settings
+		$config->setVar('use_ftp', $request['ftp_info']['use']);
+		$config->setVar('ftp_user', $request['ftp_info']['user']);
+		$config->setVar('ftp_pass', $request['ftp_info']['pass']);
+				
+		$_CONFIG					= array();
+		$_CONFIG['ftp']['use_ftp']	= $request['ftp_info']['use'] == 'TRUE' ? TRUE : FALSE;
+		$_CONFIG['ftp']['username']	= $request['ftp_info']['user'];
+		$_CONFIG['ftp']['password']	= $request['ftp_info']['pass'];
 
-		$buffer = $config->run(dirname(__FILE__) . '/templates/config.php');
+		$GLOBALS['_CONFIG']			= $_CONFIG;
+
+		$buffer						= $config->run(dirname(__FILE__) . '/templates/config.php');
+
 		$config->writeBuffer(INCLUDE_BASE_DIR . '/k4bb/config.php', '<?php' . FA_NL . $buffer . FA_NL . '?>');
 
-		$sqldata = &new FATemplate(FA_FORCE | FA_NOCACHE);
+		$sqldata					= &new FATemplate(FA_FORCE | FA_NOCACHE);
+		$_POST['admin_created']		= time();
 		$sqldata->setVarArray($_POST);
 
-		$buffer = file_get_contents($request['schema']);
-		$queries = explode(';', $buffer);
+		$sqldata->setVar('IMG_DIR', '{$IMG_DIR}');
+
+		$buffer		= file_get_contents($request['schema']);
+		$queries	= explode(';', $buffer);
 
 		foreach ($queries as $query) {
 			if (trim($query))

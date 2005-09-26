@@ -25,14 +25,14 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: emoticons.class.php,v 1.2 2005/04/13 02:52:47 k4st Exp $
+* @version $Id: emoticons.class.php 144 2005-07-05 02:29:07Z Peter Goodman $
 * @package k42
 */
 
 error_reporting(E_ALL);
 
 if(!defined('IN_K4')) {
-	exit;
+	return;
 }
 
 class AdminEmoticons extends FAAction {
@@ -44,12 +44,13 @@ class AdminEmoticons extends FAAction {
 
 			$request['template']->setList('emoticons', $icons);
 			
-			$request['template']->setFile('content', 'admin.html');
-			$request['template']->setFile('admin_panel', 'emoticons_manage.html');
-		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
+			$request['template']->setFile('content', 'emoticons_manage.html');
 
-			return $action->execute($request);
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_EMOTICONS');
+			$request['template']->setVar('posts_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/posts.html');
+		} else {
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -61,12 +62,13 @@ class AdminAddEmoticon extends FAAction {
 		
 		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 						
-			$request['template']->setFile('content', 'admin.html');
-			$request['template']->setFile('admin_panel', 'emoticons_add.html');
-		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
+			$request['template']->setFile('content', 'emoticons_add.html');
 
-			return $action->execute($request);
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_EMOTICONS');
+			$request['template']->setVar('posts_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/posts.html');
+		} else {
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -136,16 +138,19 @@ class AdminInsertEmoticon extends FAAction {
 			if(isset($_FILES['image_upload']) && is_array($_FILES['image_upload'])) {
 				$dir		= BB_BASE_DIR . '/tmp/upload/emoticons';
 				
-				@chmod($dir, 0777);
+				__chmod($dir, 0777);
 				@move_uploaded_file($_FILES['image_upload']['tmp_name'], $dir .'/'. $filename);
 			}
+
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_EMOTICONS');
+			$request['template']->setVar('posts_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/posts.html');
 
 			$action = new K4InformationAction(new K4LanguageElement('L_ADDEDEMOTICON'), 'content', TRUE, 'admin.php?act=emoticons', 3);
 			return $action->execute($request);
 
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -175,16 +180,18 @@ class AdminRemoveEmoticon extends FAAction {
 			/* Remove the actual icon */
 			$dir		= BB_BASE_DIR . '/tmp/upload/emoticons';
 
-			@chmod($dir);
+			__chmod($dir);
 			@unlink($dir .'/'. $icon['image']);
+
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_EMOTICONS');
+			$request['template']->setVar('posts_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/posts.html');
 			
 			$action = new K4InformationAction(new K4LanguageElement('L_REMOVEDPOSTICON'), 'content', TRUE, 'admin.php?act=posticons', 3);			
 			return $action->execute($request);
 
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -212,12 +219,13 @@ class AdminEditEmoticon extends FAAction {
 				$request['template']->setVar('icon_'. $key, $val);
 			}
 			
-			$request['template']->setFile('content', 'admin.html');
-			$request['template']->setFile('admin_panel', 'emoticons_edit.html');
-		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
+			$request['template']->setFile('content', 'emoticons_edit.html');
 
-			return $action->execute($request);
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_EMOTICONS');
+			$request['template']->setVar('posts_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/posts.html');
+		} else {
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -305,13 +313,15 @@ class AdminUpdateEmoticon extends FAAction {
 				@move_uploaded_file($_FILES['image_upload']['tmp_name'], $dir .'/'. $filename);
 			}
 
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_EMOTICONS');
+			$request['template']->setVar('posts_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/posts.html');
+
 			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDEMOTICON'), 'content', TRUE, 'admin.php?act=emoticons', 3);
 			return $action->execute($request);
 
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -339,13 +349,15 @@ class AdminUpdateEmoticonClick extends FAAction {
 
 			$request['dba']->executeUpdate("UPDATE ". K4EMOTICONS ." SET clickable = ". intval($clickable) ." WHERE id = ". intval($icon['id']));
 			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_EMOTICONS');
+			$request['template']->setVar('posts_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/posts.html');
+
 			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDEMOCLICK'), 'content', TRUE, 'admin.php?act=emoticons', 3);
 			return $action->execute($request);
 
 		} else {
-
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;

@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Geoffrey Goodman
-* @version $Id$
+* @version $Id: core.php 110 2005-06-13 20:48:58Z Peter Goodman $
 * @package k42
 */
 

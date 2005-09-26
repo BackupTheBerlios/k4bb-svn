@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Geoffrey Goodman
-* @version $Id$
+* @version $Id: list.php 136 2005-06-28 18:12:22Z Peter Goodman $
 * @package k42
 */
 
@@ -36,7 +36,7 @@ class List_List_Compiler extends FATemplateTagCompiler {
 		
 		$list = $this->getAttribute('id');
 		
-		$this->writePHP("if (\$scope->listBegin(\"$list\", NULL)):");
+		$this->writePHP("if (\$scope->listBegin(\"$list\")):");
 	}
 	function parseClose() {
 		$this->writePHP("endif;");
@@ -50,7 +50,7 @@ class List_Sublist_Compiler extends FATemplateTagCompiler {
 		$sublist = $this->getAttribute('id');
 		$column = $this->getAttribute('column');
 		
-		$this->writePHP("if (\$scope->listBegin(\"$sublist\", \$scope->getVar(\"$column\"))):");
+		$this->writePHP("if (\$scope->listBeginNew(\"$sublist\", \$scope->getVar(\"$column\"))):");
 	}
 	function parseClose() {
 		$this->writePHP("endif;");

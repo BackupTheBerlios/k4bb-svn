@@ -25,14 +25,14 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: conditionals.php,v 1.5 2005/05/03 21:39:04 k4st Exp $
+* @version $Id: conditionals.php 147 2005-07-09 17:12:40Z Peter Goodman $
 * @package k42
 */
 
 error_reporting(E_ALL);
 
 if(!defined('IN_K4')) {
-	exit;
+	return;
 }
 
 class If_If_Compiler extends FATemplateTagCompiler {
@@ -52,7 +52,7 @@ class If_If_Compiler extends FATemplateTagCompiler {
 		$value = $this->getAttribute($operator);
 		$var = $this->getAttribute('var');
 
-		$this->writePHP("if (\$scope->getVar(\"$var\") {$operators[$operator]} ". iif(ctype_digit($value) && $value != '', intval($value), iif($value == '', "\"\"", "\$scope->getVar(\"$value\")")) ."):");
+		$this->writePHP("if (\$scope->getVar(\"$var\") {$operators[$operator]} ". (ctype_digit($value) && $value != '' ? intval($value) : ($value == '' ? "\"\"" : "(!\$scope->getVar(\"$value\") ? \"$value\" : \$scope->getVar(\"$value\"))")) ."):");
 	}
 	function parseClose() {
 		$this->writePHP("endif;");
@@ -76,7 +76,7 @@ class Else_If_Compiler extends FATemplateTagCompiler {
 		$value = $this->getAttribute($operator);
 		$var = $this->getAttribute('var');
 
-		$this->writePHP("elseif (\$scope->getVar('$var') {$operators[$operator]} ". iif(ctype_digit($value) && $value != '', intval($value), "\"$value\"") ."):");
+		$this->writePHP("elseif (\$scope->getVar(\"$var\") {$operators[$operator]} ". (ctype_digit($value) && $value != '' ? intval($value) : ($value == '' ? "\"\"" : "(!\$scope->getVar(\"$value\") ? \"$value\" : \$scope->getVar(\"$value\"))")) ."):");
 	}
 }
 

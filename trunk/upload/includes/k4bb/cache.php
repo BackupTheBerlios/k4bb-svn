@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: cache.php,v 1.11 2005/05/24 20:03:26 k4st Exp $
+* @version $Id: cache.php 154 2005-07-15 02:56:28Z Peter Goodman $
 * @package k42
 */
 
@@ -35,6 +35,17 @@ if(!defined('IN_K4'))
 	return;
 
 /**
+ * Change the last modified time on a cache file or remove it
+ */
+function reset_cache($cache) {
+	if(file_exists($cache)) {
+		if(!touch($cache, time()-86460)) {
+			@unlink($cache);
+		}
+	}
+}
+
+/**
  * Forums Caching functions
  */
 
@@ -42,17 +53,19 @@ function cache_forum($info) {
 
 	if(!isset($_SESSION['bbcache']))
 		$_SESSION['bbcache'] = array();
-
-	$required	= array('id', 'parent_id', 'row_left', 'row_right', 'row_type', 'row_level', 'row_order', 'name', 'created', 'subforums');
+	
+	$required	= array('forum_id', 'category_id', 'parent_id', 'row_left', 'row_right', 'row_type', 'row_level', 'row_order', 'name', 'created', 'subforums');
 	$data		= array();
 	foreach($required as $val) {
 		if(isset($info[$val]))
 			$data[$val]	= $info[$val];
 	}
 
-	$data['subforums']											= isset($info['subforums']) ? intval($info['subforums']) : 0;
+	$data['subforums']												= isset($info['subforums']) ? intval($info['subforums']) : 0;
 	
-	$_SESSION['bbcache']['forums'][$data['id']]					= $data;
+	$data['id']			= $data['row_type'] & FORUM ? $data['forum_id'] : $data['category_id'];
+
+	$_SESSION['bbcache']['forums'][$data['id']]				= $data;
 	$_SESSION['bbcache']['forums'][$data['id']]['forum_time']	= time();
 }
 
@@ -67,11 +80,11 @@ function isset_forum_cache_item($name, $id) {
 /**
  * styleset Caching
  */
-function get_cached_styleset(&$dba, $styleset, $default_styleset) {
+function get_cached_styleset(&$request, $styleset, $default_styleset) {
 	
-	if(!file_exists(BB_BASE_DIR .'/tmp/cache/'. $styleset .'.css')) {
+	if(!file_exists(BB_BASE_DIR .'/tmp/stylesets/'. $styleset .'.css')) {
 
-		$query			= &$dba->prepareStatement("SELECT c.name as name, c.properties as properties FROM ". K4CSS ." c LEFT JOIN ". K4STYLES ." s ON s.id = c.style_id WHERE s.name = ? ORDER BY c.name ASC");
+		$query			= &$request['dba']->prepareStatement("SELECT c.name as name, c.properties as properties FROM ". K4CSS ." c LEFT JOIN ". K4STYLES ." s ON s.id = c.style_id WHERE s.name = ? ORDER BY c.name ASC");
 		$css			= "/* k4 Bulletin Board ". VERSION ." CSS Generated Style Set :: ". $styleset ." */\r\n\r\n";
 
 		/* Set the user's styleset to the query */
@@ -95,19 +108,32 @@ function get_cached_styleset(&$dba, $styleset, $default_styleset) {
 		/* Loop through the result iterator */
 		while($result->next()) {
 			$temp = $result->current();
-			$css .= $temp['name'] ." { ". $temp['properties'] ." }\r\n";
+			$css .= "\t\t". $temp['name'] ." { ". $temp['properties'] ." }\r\n";
 		}
 		
 		$result->free();
 
-		/* Create a cached file for the K4CSS info */
-		$handle = @fopen(BB_BASE_DIR .'/tmp/cache/'. $styleset .'.css', "w");
-		@chmod(BB_BASE_DIR .'/tmp/cache/'. $styleset .'.K4CSS', 0777);
+		/* Create a cached file for the CSS info */
+		$handle = @fopen(BB_BASE_DIR .'/tmp/stylesets/'. $styleset .'.css', "w");
+		@__chmod(BB_BASE_DIR .'/tmp/stylesets/'. $styleset .'.css', 0777);
 		@fwrite($handle, $css);
 		@fclose($handle);
 	}
+	
+	$which_styleset = '';
 
-	return $styleset;
+	if(file_exists(BB_BASE_DIR .'/tmp/stylesets/'. $styleset .'.css')) {
+		$which_styleset = $styleset;
+	} else {
+		if(file_exists(BB_BASE_DIR .'/tmp/stylesets/'. $default_styleset .'.css')) {
+			$which_styleset = $default_styleset;
+		} else {
+			trigger_error('Could not retrieve the default style set.', E_USER_ERROR);
+		}
+	}
+
+	$css	= $request['template']->run('tmp/stylesets/'. $which_styleset .'.css');
+	$request['template']->setVar('css_styles', $css);
 }
 
 /* Set a temporary session cache */
@@ -137,7 +163,7 @@ function bb_execute_cache() {
 				
 				$temp = $_SESSION['bbcache']['cookies'][$i];
 
-				setcookie($temp['name'], $temp['value'], $temp['expire']);
+				setcookie($temp['name'], $temp['value'], $temp['expire'], get_domain());
 			}
 		}
 
@@ -156,7 +182,7 @@ function bb_execute_topiccache() {
 				
 				$temp = $_SESSION['bbcache']['temp_cookies'][$i];
 
-				@setcookie($temp['name'], $temp['value'], $temp['expire']);
+				@setcookie($temp['name'], $temp['value'], $temp['expire'], get_domain());
 				//bb_setcookie_cache($temp['name'], '', time()-3600);
 			}
 		}
@@ -190,7 +216,7 @@ class DBCache {
 	}
 	function createCache($allinfo, $filename) {
 		
-		$contents				= "<?php \nerror_reporting(E_ALL); \n\nif(!defined('IN_K4')) { \n\texit; \n}";
+		$contents				= "<?php \nerror_reporting(E_ALL); \n\nif(!defined('IN_K4')) { \n\treturn; \n}";
 		
 		$contents				.= "\n\n\$cache += " . var_export($allinfo, TRUE) .";";
 
@@ -202,9 +228,9 @@ class DBCache {
 		}
 		
 		$handle = @fopen($filename, "w");
-		@chmod($filename, 0777);
+		__chmod($filename, 0777);
 		@fwrite($handle, $contents);
-		@chmod($filename, 0777);
+		__chmod($filename, 0777);
 		@fclose($handle);
 		
 		@touch($filename);
@@ -212,13 +238,13 @@ class DBCache {
 		/* Error checking on our newly created file */
 		if(!file_exists($filename) || !is_readable($filename) || !is_writeable($filename)) {
 			
-			compile_error('An error occured while trying to create the forum cache file.', __FILE__, __LINE__);
+			trigger_error('An error occured while trying to create the forum cache file.', E_USER_ERROR);
 		} else {
 			
 			$lines = file($filename);
 
 			if(count($lines) <= 1 || empty($lines)) {
-				compile_error('An error occured while trying to create the forum cache file. It appears to be empty.', __FILE__, __LINE__);
+				trigger_error('An error occured while trying to create the forum cache file. It appears to be empty.', E_USER_ERROR);
 			}
 			
 			return TRUE;

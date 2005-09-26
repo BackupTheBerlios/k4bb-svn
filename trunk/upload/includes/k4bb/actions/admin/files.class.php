@@ -25,14 +25,14 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: files.class.php,v 1.4 2005/04/13 02:52:47 k4st Exp $
+* @version $Id: files.class.php 144 2005-07-05 02:29:07Z Peter Goodman $
 * @package k42
 */
 
 error_reporting(E_ALL);
 
 if(!defined('IN_K4')) {
-	exit;
+	return;
 }
 
 class AdminFileBrowser extends FAAction {
@@ -88,7 +88,7 @@ class AdminFileBrowser extends FAAction {
 			
 			while(false !== ($file = $dir->read())) {
 				
-				if($file != '.' && $file != '..') {
+				if($file != '.' && $file != '..' && $file != 'Thumbs.db') {
 					
 					if(!is_dir($directory . DIRECTORY_SEPARATOR . $file)) {
 						
@@ -103,10 +103,15 @@ class AdminFileBrowser extends FAAction {
 						$temp['file']			= $exts[0];
 
 						if(in_array($temp['fileext'], $filetypes['html'])) {
+							
 							$temp['filetype']	= 'html';
+						
 						} else if(in_array($temp['fileext'], $filetypes['php'])) {
+							
 							$temp['filetype']	= 'php';
+						
 						} else if(in_array($temp['fileext'], $filetypes['img'])) {
+							
 							$temp['filetype']	= 'img';
 							$dimensions			= $this->resize_image($temp['filename']);
 							
@@ -114,27 +119,28 @@ class AdminFileBrowser extends FAAction {
 							$temp['height']		= $dimensions[1];
 
 						} else {
+							
 							$temp['filetype']	= '';
 						}
-
-						if(!$filetype)
+						
+						if(!$filetype) {
 							$files[]			= $temp;
-						else if($temp['filetype'] == $filetype)
+						} else if($temp['filetype'] == $filetype) {
 							$files[]			= $temp;
+						}
 					}
 				}
 			}
 
 			$files		= &new FAArrayIterator($files);
-
+			
+			$request['template']->setVar('img', 'img');
 			$request['template']->setList('files_list', $files);
 			
 			$request['template']->setFile('content', 'file_browser.html');
 		
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;

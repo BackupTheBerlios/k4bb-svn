@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: checker.php,v 1.2 2005/04/13 02:54:29 k4st Exp $
+* @version $Id: checker.php 110 2005-06-13 20:48:58Z Peter Goodman $
 * @package k42
 */
 
@@ -35,6 +35,15 @@ if(!defined('IN_K4'))
 class Is_Admin_Compiler extends FATemplateTagCompiler {
 	function parseOpen() {
 		$this->writePHP("if (\$_SESSION['user']->get('perms') >= ADMIN):");
+	}
+	function parseClose() {
+		$this->writePHP("endif;");
+	}
+}
+
+class Is_Mod_Compiler extends FATemplateTagCompiler {
+	function parseOpen() {
+		$this->writePHP("if (\$_SESSION['user']->get('perms') >= MODERATOR):");
 	}
 	function parseClose() {
 		$this->writePHP("endif;");

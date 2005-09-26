@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: mod.php,v 1.4 2005/05/24 20:09:16 k4st Exp $
+* @version $Id: mod.php 110 2005-06-13 20:48:58Z Peter Goodman $
 * @package k42
 */
 
@@ -50,12 +50,28 @@ $app->setDefaultEvent('');
 
 $app->setAction('deletetopic', new DeleteTopic);
 $app->setAction('deletereply', new DeleteReply);
-$app->setAction('locktopic', new LockTopic);
-$app->setAction('unlocktopic', new UnlockTopic);
+$app->setAction('locktopic', new LockTopic(1));
+$app->setAction('unlocktopic', new LockTopic(0));
 
 $app->setAction('moderate_forum', new ModerateForum);
 $app->setAction('topic_simpleupdate', new SimpleUpdateTopic);
+$app->setAction('get_topic_title', new getTopicTitle);
 $app->setAction('move_topics', new MoveTopics);
+
+/* Bad post reports */
+$app->setAction('viewbpreports', new ViewBadPostReports);
+$app->setAction('deletereport', new DeleteBadPostReport);
+
+/* User related moderations */
+$app->setAction('findusers', new ModFindUsers);
+$app->setAction('banuser', new ModBanUser);
+$app->setAction('warnuser', new ModWarnUser);
+$app->setAction('flaguser', new ModFlagUser);
+$app->setAction('sendwarning', new ModSendWarning);
+$app->setAction('hardbanuser', new HardBanUser);
+$app->setAction('baniprange', new BanIPRange);
+$app->setAction('liftban', new LiftIPBan);
+$app->setAction('bannedips', new ModViewBanneIPs);
 
 $app->execute();
 

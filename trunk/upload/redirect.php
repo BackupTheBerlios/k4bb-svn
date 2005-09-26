@@ -27,7 +27,7 @@
 * @author Peter Goodman
 * @author Geoffrey Goodman
 * @author James Logsdon
-* @version $Id: redirect.php,v 1.1 2005/05/16 02:10:03 k4st Exp $
+* @version $Id: redirect.php 154 2005-07-15 02:56:28Z Peter Goodman $
 * @package k42
 */
 
@@ -43,18 +43,18 @@ class K4DefaultAction extends FAAction {
 				
 		if(!isset($_REQUEST['id']) || !$_REQUEST['id'] || intval($_REQUEST['id']) == 0) {
 			/* set the breadcrumbs bit */
-			k4_bread_crumbs(&$request['template'], &$request['dba'], 'L_INVALIDFORUM');
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDFORUM');
 			
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
 			
 		/* Get the current forum/category */
-		$forum					= $request['dba']->getRow("SELECT ". $_QUERYPARAMS['info'] . $_QUERYPARAMS['forum'] ." FROM ". K4FORUMS ." f LEFT JOIN ". K4INFO ." i ON f.forum_id = i.id WHERE i.id = ". intval($_REQUEST['id']));
+		$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['id']));
 
 		if(!$forum || !is_array($forum) || empty($forum)) {
 			/* set the breadcrumbs bit */
-			k4_bread_crumbs(&$request['template'], &$request['dba'], 'L_INVALIDFORUM');
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDFORUM');
 			
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
@@ -63,23 +63,23 @@ class K4DefaultAction extends FAAction {
 		if($forum['is_link'] == 1) {
 			if($forum['is_forum'] == 1) {
 				if(($forum['row_right'] - $forum['row_left']) > 0) {
-					header("Location: viewforum.php?id=". intval($forum['id']));
+					header("Location: viewforum.php?id=". intval($forum['forum_id']));
 				}
 			}
 
 			if(!isset($forum['link_href']) || $forum['link_href'] == '') {
-				k4_bread_crumbs(&$request['template'], &$request['dba'], 'L_INFORMATION');
+				k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 				
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDLINKFORUM'), 'content', FALSE);
 				return $action->execute($request);
 			}
 
-			$request['dba']->executeUpdate("UPDATE ". K4FORUMS ." SET link_redirects=link_redirects+1 WHERE forum_id=". intval($forum['id']));
+			$request['dba']->executeUpdate("UPDATE ". K4FORUMS ." SET link_redirects=link_redirects+1 WHERE forum_id=". intval($forum['forum_id']));
 
 			header("Location: ". $forum['link_href']);
 
 		} else {
-			header("Location: viewforum.php?id=". intval($forum['id']));
+			header("Location: viewforum.php?id=". intval($forum['forum_id']));
 		}
 		
 		return TRUE;

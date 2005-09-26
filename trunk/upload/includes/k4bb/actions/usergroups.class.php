@@ -25,14 +25,14 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: usergroups.class.php,v 1.2 2005/05/24 20:01:31 k4st Exp $
+* @version $Id: usergroups.class.php 144 2005-07-05 02:29:07Z Peter Goodman $
 * @package k42
 */
 
 error_reporting(E_ALL);
 
 if(!defined('IN_K4')) {
-	exit;
+	return;
 }
 
 class AddUserToGroup extends FAAction {
@@ -41,14 +41,14 @@ class AddUserToGroup extends FAAction {
 		global $_USERGROUPS, $_QUERYPARAMS;
 		
 		if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
-			k4_bread_crumbs(&$request['template'], $request['dba'], 'L_INFORMATION');
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_GROUPDOESNTEXIST'), 'content', FALSE);
 
 			return $action->execute($request);
 		}
 
 		if(!isset($_USERGROUPS[intval($_REQUEST['id'])])) {
-			k4_bread_crumbs(&$request['template'], $request['dba'], 'L_INFORMATION');
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_GROUPDOESNTEXIST'), 'content', FALSE);
 
 			return $action->execute($request);
@@ -56,7 +56,7 @@ class AddUserToGroup extends FAAction {
 
 		if(!isset($_REQUEST['name']) || !$_REQUEST['name'] || $_REQUEST['name'] == '') {
 			/* set the breadcrumbs bit */
-			k4_bread_crumbs(&$request['template'], $request['dba'], 'L_INFORMATION');
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_USERDOESNTEXIST'), 'content', TRUE);
 
 			return $action->execute($request);
@@ -69,7 +69,7 @@ class AddUserToGroup extends FAAction {
 		
 		if(!$member || !is_array($member) || empty($member)) {
 			/* set the breadcrumbs bit */
-			k4_bread_crumbs(&$request['template'], $request['dba'], 'L_INFORMATION');
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_USERDOESNTEXIST'), 'content', TRUE);
 
 			return $action->execute($request);
@@ -91,7 +91,7 @@ class AddUserToGroup extends FAAction {
 
 		if($group['mod_id'] == $member['id']) {
 			/* set the breadcrumbs bit */
-			k4_bread_crumbs(&$request['template'], $request['dba'], 'L_INFORMATION');
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_YOUAREMODERATOR'), 'content', TRUE);
 
 			return $action->execute($request);
@@ -108,7 +108,7 @@ class AddUserToGroup extends FAAction {
 		
 		if($in_group) {
 			/* set the breadcrumbs bit */
-			k4_bread_crumbs(&$request['template'], $request['dba'], 'L_INFORMATION');
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_BELONGSTOGROUP'), 'content', TRUE);
 
 			return $action->execute($request);
@@ -124,8 +124,119 @@ class AddUserToGroup extends FAAction {
 		/* Add this user to the group and change his perms if we need to */
 		$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET usergroups='". $request['dba']->quote(serialize($groups)) ."' $extra WHERE id = ". intval($member['id']));
 		
-		k4_bread_crumbs(&$request['template'], $request['dba'], 'L_ADDUSER');
+		k4_bread_crumbs($request['template'], $request['dba'], 'L_ADDUSER');
 		$action = new K4InformationAction(new K4LanguageElement('L_ADDEDUSERTOGROUP', $member['name'], $group['name']), 'content', FALSE, 'usergroups.php?id='. intval($group['id']), 3);
+
+		return $action->execute($request);
+
+		return TRUE;
+	}
+}
+
+class RemoveUserFromGroup extends FAAction {
+	function execute(&$request) {
+		
+		global $_USERGROUPS, $_QUERYPARAMS;
+		
+		if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
+			$action = new K4InformationAction(new K4LanguageElement('L_GROUPDOESNTEXIST'), 'content', FALSE);
+
+			return $action->execute($request);
+		}
+
+		if(!isset($_USERGROUPS[intval($_REQUEST['id'])])) {
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
+			$action = new K4InformationAction(new K4LanguageElement('L_GROUPDOESNTEXIST'), 'content', FALSE);
+
+			return $action->execute($request);
+		}
+
+		if(!isset($_REQUEST['user_id']) || intval($_REQUEST['user_id']) == 0) {
+			/* set the breadcrumbs bit */
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
+			$action = new K4InformationAction(new K4LanguageElement('L_USERDOESNTEXIST'), 'content', TRUE);
+
+			return $action->execute($request);
+			return TRUE;
+		}
+		
+		$group			= $_USERGROUPS[intval($_REQUEST['id'])];
+		
+		$member			= $request['dba']->getRow("SELECT ". $_QUERYPARAMS['user'] . $_QUERYPARAMS['userinfo'] ." FROM ". K4USERS ." u LEFT JOIN ". K4USERINFO ." ui ON u.id=ui.user_id WHERE u.id = '". intval($_REQUEST['user_id']) ."'");
+		
+		if(!$member || !is_array($member) || empty($member)) {
+			/* set the breadcrumbs bit */
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
+			$action = new K4InformationAction(new K4LanguageElement('L_USERDOESNTEXIST'), 'content', TRUE);
+
+			return $action->execute($request);
+		}
+		
+		/* Should we set the group moderator? */
+		if($group['mod_name'] == '' || $group['mod_id'] == 0) {
+			$admin		= $request['dba']->getRow("SELECT * FROM ". K4USERS ." WHERE perms >= ". intval(ADMIN) ." ORDER BY perms,id ASC LIMIT 1");
+			$request['dba']->executeUpdate("UPDATE ". K4USERGROUPS  ." SET mod_name = '". $request['dba']->quote($admin['name']) ."', mod_id = ". intval($admin['id']) ." WHERE id = ". intval($group['id']));
+		
+			if(!@touch(CACHE_FILE, time()-86460)) {
+				@unlink(CACHE_FILE);
+			}
+			
+			$group['mod_name']	= $admin['name'];
+			$group['mod_id']	= $admin['id'];
+		}
+
+		if($group['mod_id'] == $member['id']) {
+			/* set the breadcrumbs bit */
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
+			$action = new K4InformationAction(new K4LanguageElement('L_YOUAREMODERATOR'), 'content', TRUE);
+			
+			return $action->execute($request);
+		}
+		
+		$result					= @unserialize(@$member['usergroups']);
+		$groups					= $member['usergroups'] != '' ? iif(!$result, force_usergroups($member), $result) : array();		
+		
+		$groups					= array_values($groups);
+
+		$in_group				= FALSE;
+		$i						= 0;
+		foreach($groups as $id) {
+			if(isset($_USERGROUPS[$id]) && $id == $group['id']) {
+				$in_group		= TRUE;
+				
+				// remove the person from the user group
+				unset($groups[$i]);
+			}
+
+			$i++;
+		}
+
+		$groups					= array_values($groups);
+		
+		if(!$in_group) {
+			/* set the breadcrumbs bit */
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
+			$action = new K4InformationAction(new K4LanguageElement('L_NOTBELONGSTOGROUP'), 'content', TRUE);
+
+			return $action->execute($request);
+		}
+		
+		$newgroup				= get_user_max_group(array('usergroups' => serialize($groups) ), $_USERGROUPS);
+		
+		$perms					= 5;
+		
+		if($request['user']->get('perms') > @$newgroup['max_perms']) {
+			$perms				= @$newgroup['max_perms'];
+		} else if($request['user']->get('perms') < @$newgroup['min_perms']) {
+			$perms				= @$newgroup['min_perms'];
+		}
+		
+		/* Add this user to the group and change his perms if we need to */
+		$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET usergroups='". $request['dba']->quote(serialize($groups)) ."', perms=". intval($perms) ." WHERE id = ". intval($member['id']));
+		
+		k4_bread_crumbs($request['template'], $request['dba'], 'L_REMOVEUSER');
+		$action = new K4InformationAction(new K4LanguageElement('L_REMOVEDUSERFROMGROUP', $member['name'], $group['name']), 'content', FALSE, 'usergroups.php?id='. intval($group['id']), 3);
 
 		return $action->execute($request);
 

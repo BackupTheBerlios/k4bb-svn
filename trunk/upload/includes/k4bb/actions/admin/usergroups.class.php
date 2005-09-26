@@ -25,27 +25,28 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
-* @version $Id: usergroups.class.php,v 1.3 2005/05/16 02:12:15 k4st Exp $
+* @version $Id: usergroups.class.php 144 2005-07-05 02:29:07Z Peter Goodman $
 * @package k42
 */
 
 error_reporting(E_ALL);
 
 if(!defined('IN_K4')) {
-	exit;
+	return;
 }
 
 class AdminUserGroups extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
-			$request['template']->setFile('content', 'admin.html');
-			$request['template']->setFile('admin_panel', 'usergroups_manage.html');
-		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERGROUPS');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
 
-			return $action->execute($request);
+			$request['template']->setFile('content', 'usergroups_manage.html');
+		} else {
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -55,14 +56,15 @@ class AdminUserGroups extends FAAction {
 class AdminAddUserGroup extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
-			$request['template']->setFile('content', 'admin.html');
-			$request['template']->setFile('admin_panel', 'usergroups_add.html');
-		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
+			$request['template']->setFile('content', 'usergroups_add.html');
 
-			return $action->execute($request);
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERGROUPS');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
+		} else {
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -72,60 +74,46 @@ class AdminAddUserGroup extends FAAction {
 class AdminInsertUserGroup extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
 			/* Error checking on the fields */
 			if(!isset($_REQUEST['name']) || $_REQUEST['name'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTGROUPNAME'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			if(!isset($_REQUEST['nicename']) || $_REQUEST['nicename'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTGROUPNICENAME'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			$g = $request['dba']->getRow("SELECT * FROM ". K4USERGROUPS ." WHERE name = '". $request['dba']->quote($_REQUEST['name']) ."'");			
 			
 			if(is_array($g) && !empty($g)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_GROUPNAMEEXISTS'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			if(!isset($_REQUEST['description']) || $_REQUEST['description'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTGROUPDESC'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			if(!isset($_REQUEST['mod_name']) || $_REQUEST['mod_name'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTMODNAME'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			$moderator			= $request['dba']->getRow("SELECT * FROM ". K4USERS ." WHERE name = '". $request['dba']->quote($_REQUEST['mod_name']) ."'");
 			
 			if(!is_array($moderator) || empty($moderator)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDMODNAME'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			if(!isset($_REQUEST['color']) || $_REQUEST['color'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTGROUPCOLOR'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			$filename		= '';
@@ -147,15 +135,11 @@ class AdminInsertUserGroup extends FAAction {
 
 					if(!in_array(strtolower($file_ext), $exts)) {
 						$action = new K4InformationAction(new K4LanguageElement('L_INVALIDAVATAREXT'), 'content', TRUE);
-
 						return $action->execute($request);
-						return TRUE;
 					}
 				} else {
 					$action = new K4InformationAction(new K4LanguageElement('L_INVALIDAVATAREXT'), 'content', TRUE);
-
 					return $action->execute($request);
-					return TRUE;
 				}
 			}
 			
@@ -179,7 +163,7 @@ class AdminInsertUserGroup extends FAAction {
 			/* Add the category to the info table */
 			$insert_a->executeUpdate();
 			
-			$group_id			= $request['dba']->getInsertId();
+			$group_id			= $request['dba']->getInsertId(K4USERGROUPS, 'id');
 			
 			$usergroups			= $moderator['usergroups'] != '' ? iif(!unserialize($moderator['usergroups']), array(), unserialize($moderator['usergroups'])) : array();
 			
@@ -199,23 +183,21 @@ class AdminInsertUserGroup extends FAAction {
 			if(isset($_FILES['avatar_upload']) && is_array($_FILES['avatar_upload'])) {
 				$dir		= BB_BASE_DIR . '/tmp/upload/group_avatars';
 				
-				@chmod($dir, 0777);
+				__chmod($dir, 0777);
 				@move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $dir .'/'. $filename);
 			}
 			
-			if(!@touch(CACHE_FILE, time()-86460)) {
-				@unlink(CACHE_FILE);
-			}
+			reset_cache(CACHE_FILE);
+
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERGROUPS');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
 
 			$action = new K4InformationAction(new K4LanguageElement('L_ADDEDUSERGROUP', $_REQUEST['name']), 'content', FALSE, 'admin.php?act=usergroups', 3);
-
-
 			return $action->execute($request);
 
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -225,22 +207,18 @@ class AdminInsertUserGroup extends FAAction {
 class AdminRemoveUserGroup extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
 			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDUSERGROUP'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			$group		= $request['dba']->getRow("SELECT * FROM ". K4USERGROUPS ." WHERE id = ". intval($_REQUEST['id']));
 
 			if(!is_array($group) || empty($group)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDUSERGROUP'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			/* Get all users of this usergroup */
@@ -270,25 +248,23 @@ class AdminRemoveUserGroup extends FAAction {
 					$groups = $new_groups;
 				}
 				
-				$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET usergroups = '". $request['dba']->quote($groups) ."' WHERE id = ". $request['user']->get('id'));
+				$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET usergroups = '". $request['dba']->quote(serialize($groups)) ."' WHERE id = ". intval($user['id']));
 			}
 			
 			/* Remove the usergroup */
 			$request['dba']->executeUpdate("DELETE FROM ". K4USERGROUPS ." WHERE id = ". intval($group['id']));
 			
-			if(!@touch(CACHE_FILE, time()-86460)) {
-				@unlink(CACHE_FILE);
-			}
+			reset_cache(CACHE_FILE);
+
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERGROUPS');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
 
 			$action = new K4InformationAction(new K4LanguageElement('L_REMOVEDUSERGROUP', $group['name']), 'content', FALSE, 'admin.php?act=usergroups', 3);
-
-
 			return $action->execute($request);
 
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -298,22 +274,18 @@ class AdminRemoveUserGroup extends FAAction {
 class AdminEditUserGroup extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
 			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDUSERGROUP'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			$group		= $request['dba']->getRow("SELECT * FROM ". K4USERGROUPS ." WHERE id = ". intval($_REQUEST['id']));
 
 			if(!is_array($group) || empty($group)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDUSERGROUP'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			/** 
@@ -333,12 +305,13 @@ class AdminEditUserGroup extends FAAction {
 				$request['template']->setVar('group_'. $key, $val);
 			}
 
-			$request['template']->setFile('content', 'admin.html');
-			$request['template']->setFile('admin_panel', 'usergroups_edit.html');
-		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERGROUPS');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
 
-			return $action->execute($request);
+			$request['template']->setFile('content', 'usergroups_edit.html');
+		} else {
+			no_perms_error($request);
 		}
 
 		return TRUE;
@@ -348,76 +321,58 @@ class AdminEditUserGroup extends FAAction {
 class AdminUpdateUserGroup extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
 			/* Error checking on the fields */
 			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDUSERGROUP'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			$group		= $request['dba']->getRow("SELECT * FROM ". K4USERGROUPS ." WHERE id = ". intval($_REQUEST['id']));
 
 			if(!is_array($group) || empty($group)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDUSERGROUP'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			if(!isset($_REQUEST['name']) || $_REQUEST['name'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTGROUPNAME'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			if(!isset($_REQUEST['nicename']) || $_REQUEST['nicename'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTGROUPNICENAME'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			$g = $request['dba']->getRow("SELECT * FROM ". K4USERGROUPS ." WHERE name = '". $request['dba']->quote($_REQUEST['name']) ."' AND id != ". intval($group['id']));			
 			
 			if(is_array($g) && !empty($g)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_GROUPNAMEEXISTS'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			if(!isset($_REQUEST['description']) || $_REQUEST['description'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTGROUPDESC'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			if(!isset($_REQUEST['mod_name']) || $_REQUEST['mod_name'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTMODNAME'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			$moderator			= $request['dba']->getRow("SELECT * FROM ". K4USERS ." WHERE name = '". $request['dba']->quote($_REQUEST['mod_name']) ."'");
 			
 			if(!is_array($moderator) || empty($moderator)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDMODNAME'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 
 			if(!isset($_REQUEST['color']) || $_REQUEST['color'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTGROUPCOLOR'), 'content', TRUE);
-
 				return $action->execute($request);
-				return TRUE;
 			}
 			
 			$filename		= '';
@@ -441,13 +396,11 @@ class AdminUpdateUserGroup extends FAAction {
 						$action = new K4InformationAction(new K4LanguageElement('L_INVALIDAVATAREXT'), 'content', TRUE);
 
 						return $action->execute($request);
-						return TRUE;
 					}
 				} else {
 					$action = new K4InformationAction(new K4LanguageElement('L_INVALIDAVATAREXT'), 'content', TRUE);
 
 					return $action->execute($request);
-					return TRUE;
 				}
 			}
 			
@@ -471,7 +424,7 @@ class AdminUpdateUserGroup extends FAAction {
 			/* Add the category to the info table */
 			$update_a->executeUpdate();
 
-			$group_id			= $request['dba']->getInsertId();
+			$group_id			= $request['dba']->getInsertId(K4USERGROUPS, 'id');
 			
 			$usergroups			= $moderator['usergroups'] != '' ? iif(!unserialize($moderator['usergroups']), array(), unserialize($moderator['usergroups'])) : array();
 
@@ -498,19 +451,17 @@ class AdminUpdateUserGroup extends FAAction {
 				@move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $dir .'/'. $filename);
 			}
 			
-			if(!@touch(CACHE_FILE, time()-86460)) {
-				@unlink(CACHE_FILE);
-			}
+			reset_cache(CACHE_FILE);
+
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERGROUPS');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
 
 			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDUSERGROUP', $_REQUEST['name']), 'content', FALSE, 'admin.php?act=usergroups', 3);
-
-
 			return $action->execute($request);
 
 		} else {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
-
-			return $action->execute($request);
+			no_perms_error($request);
 		}
 
 		return TRUE;

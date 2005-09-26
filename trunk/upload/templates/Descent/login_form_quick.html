@@ -2,25 +2,25 @@
 <br />
 <!-- Quick Login Form -->
 <form action="" method="post" enctype="multipart/form-data">
-<table width="100%" cellpadding="0" cellspacing="1" border="0" class="forum_content">
-	<tr class="thead">
-		<td><a href="member.php?act=login" title="{$L_LOGIN}">{$L_LOGIN}</a></td>
-	</tr>	
-	<tr class="panel">
-		<td nowrap="nowrap">
-			<div align="center">
-				<label for="username" class="smalltext">{$L_USERNAME}</label>
-				<input type="text" name="username" id="username" class="inputbox" maxlength="{$maxuserlength}" value="" />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<label for="password" class="smalltext">{$L_PASSWORD}</label>
-				<input type="password" name="password" id="password" class="inputbox" maxlength="{$maxuserlength}" value="" />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<input type="checkbox" class="checkbox" name="rememberme" id="rememberme" checked="checked" value="on" /><label for="rememberme" class="smalltext">&nbsp;{$L_REMEMBERME}</label>
-				<input type="submit" class="button" value="{$L_LOGIN}" />
-			</div>
-		</td>
-	</tr>
-</table>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><a href="member.php?act=login" title="{$L_LOGIN}">{$L_LOGIN}</a></div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt3" nowrap="nowrap">
+				<div align="center">
+					<label for="username" class="smalltext">{$L_USERNAME}</label>
+					<input type="text" name="username" id="username" class="inputbox" maxlength="{$maxuserlength}" value="" />
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<label for="password" class="smalltext">{$L_PASSWORD}</label>
+					<input type="password" name="password" id="password" class="inputbox" maxlength="{$maxuserlength}" value="" />
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="checkbox" class="checkbox" name="rememberme" id="rememberme" checked="checked" value="on" /><label for="rememberme" class="smalltext">&nbsp;{$L_REMEMBERME}</label>
+					<input type="submit" class="button" value="{$L_LOGIN}" />
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
 </form>
 <!-- / Quick Login Form -->
 </is:unlogged>

@@ -25,7 +25,7 @@
 * SOFTWARE.
 *
 * @author Geoffrey Goodman
-* @version $Id: paginator.php,v 1.5 2005/05/16 02:13:44 k4st Exp $
+* @version $Id: paginator.php 137 2005-06-29 18:48:28Z Peter Goodman $
 * @package k42
 */
 
@@ -39,6 +39,10 @@ class FAPageIterator extends FAIterator {
 	var $pager;
 	var $before;
 	var $after;
+	
+	function FAPageIterator(&$pager, $before, $after) {
+		$this->__construct($pager, $before, $after);
+	}
 
 	function __construct(&$pager, $before, $after) {
 		$this->pager = &$pager;
@@ -54,7 +58,8 @@ class FAPageIterator extends FAIterator {
 	}
 
 	function &current() {
-		return array('pagelink' => $this->pager->getPage($this->current), 'pagenum' => $this->current);
+		$ret = array('pagelink' => $this->pager->getPage($this->current), 'pagenum' => $this->current);
+		return $ret;
 	}
 
 	function hasNext() {
@@ -69,10 +74,12 @@ class FAPageIterator extends FAIterator {
 	}
 
 	function &next() {
+		$ret = FALSE;
 		if ($this->hasNext()) {
 			$this->current++;
-			return $this->current();
+			$ret = $this->current();
 		}
+		return $ret;
 	}
 
 	function reset() {
@@ -92,6 +99,17 @@ class FAPaginator extends FAObject {
 
 	function __construct($base_url, $count, $page_num, $page_size = 15) {
 		assert(is_a($base_url, 'FAUrl'));
+		
+		// shouldn't need to do this, but if the base_url is a reference to _URL
+		// and it has been changed elsewhere, this will sort things out
+		$base_url->args		= array_merge($base_url->args, $_GET);
+		
+		// remove everything but the file
+		$base_url->anchor	= FALSE;
+		$base_url->host		= FALSE;
+		$base_url->user		= FALSE;
+		$base_url->scheme	= FALSE;
+		$base_url->path		= FALSE;
 
 		$this->base_url		= $base_url;
 		$this->count		= $count;
@@ -105,7 +123,7 @@ class FAPaginator extends FAObject {
 	function getPage($page) {
 		if ($this->hasPage($page)) {
 			$url = $this->base_url;
-			$url->args['page'] = $page;
+			$url->args['page']	= $page;
 			$url->args['limit'] = $this->page_size;
 
 			return $url->__toString();
@@ -145,7 +163,8 @@ class FAPaginator extends FAObject {
 	}
 
 	function &getIterator($before, $after) {
-		return new FAPageIterator($this, $before, $after);
+		$ret = &new FAPageIterator($this, $before, $after);
+		return $ret;
 	}
 }
 

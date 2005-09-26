@@ -46,12 +46,12 @@
 		margin: 0px;
 	}
 	.info_box {
-		width: 520px;
+		width: auto;
 		padding: 10px;
 		text-align: justify;
 	}
 	.main_box_header {
-		width: 520px;
+		width: 545px;
 		height: 10px;
 		background-image: url('images/main_box_header.gif');
 		background-position: left bottom;
@@ -60,7 +60,7 @@
 		top: 3px;
 	}
 	.main_box_footer {
-		width: 520px;
+		width: 545px;
 		height: 10px;
 		background-image: url('images/main_box_footer.gif');
 		background-position: left top;
@@ -69,7 +69,7 @@
 		top: -3px;
 	}
 	.main_box {
-		width: 520px;
+		width: 545px;
 		background-color: #FEF4F7;
 		background-image: url('images/main_box_gradient.gif');
 		background-position: left bottom;
@@ -83,7 +83,8 @@
 		text-align: left;
 		font-size: 13px;
 		padding: 5px;
-		border-bottom: 1px solid #FEEAEF;
+		border-bottom: 1px solid #FFFFFF;
+		background-color: #FEEAEF;
 	}
 	.search_box {
 		border: 1px solid #666666;
@@ -120,6 +121,10 @@
 	}
 	.inputfailed {
 		border: 1px solid #FF0000;
+	}
+	.header {
+		border-left: 1px solid #FEEAEF;
+		border-right: 1px solid #FEE4EB;
 	}
 	</style>
 	<script type="text/javascript">
@@ -244,19 +249,23 @@
 </head>
 <body>
 <div align="center">
-	<br />
-	<table cellpadding="0" cellspacing="0" border="0">
-		<tr>
-			<td><img src="images/k4.gif" alt="k4 Bulletin Board" border="0" style="position:relative;left:-10px;" /></td>
-			<td valign="bottom"><h5>Install k4 Bulletin Board</h5></td>
-		</tr>
-	</table>
-
-	<br />
-	<div class="info_box">
-		<span class="smalltext">For this installation to work, you will be required to fill in fields concerning your server setup and where k4 will be located therein. If you do not feel that you will be able to fill these fields in, please contact your hosting service and ask them kindly for help.</span>
+	<div class="info_box" style="width: 520px;">
+		<div style="text-align: center;">
+			<h5>Install</h5>
+		</div>
+		<span class="smalltext">
+			For this installation to work, you will be required to fill in fields concerning your server setup and where k4 will be located therein. If you do not feel that you will be able to fill these fields in, please contact your hosting service and ask them kindly for help.
+			<br /><br />
+			<strong>Make sure to read the README file before installing k4 Bulletin Board.</strong>
+		</span>
 	</div>
 	<div class="main_box_header">&nbsp;</div>
+	<table cellpadding="0" cellspacing="0" border="0" class="header">
+		<tr>
+			<td><img src="images/k4.gif" alt="k4 Bulletin Board" border="0" /></td>
+			<td><img src="images/header.gif" alt="k4 Bulletin Board" border="0" /></td>
+		</tr>
+	</table>
 	<div class="main_box" align="center">
 		<br />
 		<h3>General Information</h3>
@@ -293,16 +302,13 @@
 			<tr>
 				<td width="50%"><strong>Database Type:</strong></td>
 				<td width="50%">
-					<select name="dba_driver" id="dba_driver">
+					<script type="text/javascript">var db_type = 'mysql';</script>
+					<select name="dba_driver" id="dba_driver" onchange="db_type = this[this.selectedIndex].value;" onselect="db_type = this[this.selectedIndex].value;">
 						<option value="mysql">MySQL</option>
 						<option value="mysqli">MySQLi</option>
 						<option value="sqlite">SQLite</option>
-
+						<option value="pgsql">PostgreSQL</option>
 					</select>
-					<script type="text/javascript">
-						var dba		= document.getElementById('dba_driver');
-						var db_type	= dba[dba.selectedIndex].value;
-					</script>
 				</td>
 			</tr>
 			<tr>
@@ -344,10 +350,47 @@
 		</table>
 		<br />
 
+		<h3>FTP Information</h3>
+		<div class="info_box">
+			<p class="smalltext">If you are running k4 on the internet, then FTP is essential for it to work. If you don't know your server's FTP information, please consult your hosting provider.</p>
+		</div>
+		<table width="100%" cellpadding="0" cellspacing="0" border="0">
+			<tr>
+				<td width="50%"><strong>Use FTP?:</strong></td>
+				<td width="50%">
+					<script type="text/javascript">var use_ftp = 'TRUE';</script>
+					<select name="use_ftp" id="use_ftp" onchange="use_ftp = this[this.selectedIndex].value;" onselect="use_ftp = this[this.selectedIndex].value;">
+						<option value="TRUE">Yes</option>
+						<option value="FALSE">No</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td width="50%"><strong>FTP Username:</strong></td>
+				<td width="50%">
+					<input type="text" name="ftp_name" id="ftp_name" value="" class="inputbox" />
+					<script type="text/javascript">if(use_ftp != 'FALSE') { addVerification('ftp_name', '.+', 'username_error', 'inputfailed'); }</script>
+
+					<div id="username_error" style="display: none;">Please insert an FTP Username.</div>
+				</td>
+			</tr>
+			<tr>
+				<td width="50%"><strong>FTP Password:</strong></td>
+				<td width="50%">
+					<input type="password" name="ftp_pass" id="ftp_pass" value="" class="inputbox" />
+					<script type="text/javascript">if(use_ftp != 'FALSE') { addVerification('ftp_pass', '.+', 'password_error', 'inputfailed'); }</script>
+
+					<div id="password_error" style="display: none;">Please insert an FTP Password.</div>
+				</td>
+			</tr>
+		</table>
+
+		<br />
+
 		<h3>Administrator Information</h3>
 		<table width="100%" cellpadding="0" cellspacing="0" border="0">
 			<tr>
-				<td width="50%"><strong>Administrator User Name:</strong></td>
+				<td width="50%"><strong>Administrator Username:</strong></td>
 				<td width="50%">
 					<input type="text" name="admin_name" id="admin_name" value="" class="inputbox" />
 					<script type="text/javascript">addVerification('admin_name', '.+', 'username_error', 'inputfailed');</script>
