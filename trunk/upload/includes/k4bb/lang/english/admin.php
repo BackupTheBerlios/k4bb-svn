@@ -556,6 +556,7 @@ $_LANG += array(
 'L_INVALIDACRONYM'		=> 'You have selected an invalid acronym.',
 'L_UPDATEDACRONYM'		=> 'Successfully udated the acronym <strong>%s</strong>.',
 'L_REMOVEDACRONYM'		=> 'Successfully removed the acronym <strong>%s</strong>.',
+'L_ALLOWDYNURL'			=> 'Allow Dynamic URLs?',
 /* / Acronym Management */
 
 /* Word Censor Management */

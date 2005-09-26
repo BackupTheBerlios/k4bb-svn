@@ -1052,9 +1052,11 @@ class K4Url_Compiler extends K4BBCodeTag {
 
 	var $url				= '';
 	var $dynamic_url		= FALSE;
+	var $auto_url			= TRUE;
 
-	function K4Url_Compiler($dynamic_url) {
+	function K4Url_Compiler($dynamic_url, $auto_url) {
 		$this->dynamic_url	= (bool)$dynamic_url;
+		$this->auto_url		= (bool)$auto_url;
 	}
 	function parse_open($matches) {
 
@@ -1399,8 +1401,8 @@ class BBCodex extends FAObject {
 		$this->bbcode_parser->set_compiler('anchor',	new K4Anchor_Compiler);
 
 		// Set two of the compilers that need input from here
-		$this->bbcode_parser->set_compiler('url',		new K4Url_Compiler((bool)$this->auto_urls)); // true/false to allow dynamic urls
-		$this->bbcode_parser->set_compiler('img',		new K4Image_Compiler((bool)$this->settings['allowdynimg'])); // true/false to allow dynamic urls
+		$this->bbcode_parser->set_compiler('url',		new K4Url_Compiler((bool)intval($this->settings['allowdynurl']), (bool)intval($this->auto_urls))); // true/false to allow dynamic urls
+		$this->bbcode_parser->set_compiler('img',		new K4Image_Compiler((bool)intval($this->settings['allowdynimg']))); // true/false to allow dynamic urls
 		
 		$this->emoticon_parser = &new BBEmoticons($this);
 

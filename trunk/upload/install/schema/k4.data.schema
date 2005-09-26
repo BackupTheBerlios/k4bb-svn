@@ -215,8 +215,9 @@ INSERT INTO k4_settings (settinggroupid, varname, value, optioncode, displayorde
 INSERT INTO k4_settings (settinggroupid, varname, value, optioncode, displayorder) VALUES (4,'maximages','10','',4);
 INSERT INTO k4_settings (settinggroupid, varname, value, optioncode, displayorder) VALUES (4,'smcolumns','3','',5);
 INSERT INTO k4_settings (settinggroupid, varname, value, optioncode, displayorder) VALUES (4,'smtotal','15','',6);
-INSERT INTO k4_settings (settinggroupid, varname, value, optioncode, displayorder) VALUES (4,'allowdynimg','0','yesno',7);
-INSERT INTO k4_settings (settinggroupid, varname, value, optioncode, displayorder) VALUES (4,'allowcodebuttons','1','yesno',8);
+INSERT INTO k4_settings (settinggroupid, varname, value, optioncode, displayorder) VALUES (4,'allowdynurl','1','yesno',7);
+INSERT INTO k4_settings (settinggroupid, varname, value, optioncode, displayorder) VALUES (4,'allowdynimg','1','yesno',8);
+INSERT INTO k4_settings (settinggroupid, varname, value, optioncode, displayorder) VALUES (4,'allowcodebuttons','1','yesno',9);
 
 INSERT INTO k4_settings (settinggroupid, varname, value, optioncode, displayorder) VALUES (5,'showsubforums','1','yesno',1);
 INSERT INTO k4_settings (settinggroupid, varname, value, optioncode, displayorder) VALUES (5,'showlocks','0','yesno',2);
