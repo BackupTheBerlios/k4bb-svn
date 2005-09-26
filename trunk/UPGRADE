@@ -1,0 +1,13 @@
+-- Beta 5 to Beta 6 --
+Do generally the same as with b4 to b5. However, I suggest that you delete and reinsert all of the settings
+(k4_settings table) that can be found in the k4.data.schema. Lot's has been added. Also, 16 new MAP items have
+been added and using and upgrade script to add them would be annoying. I SUGGEST REINSTALLING.
+
+-- Beta 4 to Beta 5 --
+This is an untested upgrading script. The script can be found in upload/install/beta4_to_beta5.php in
+the k4-2.0b5.zip file. Upload that file to k4 BB's root directory on your server and run it once! If you 
+run it twice, it will fail miserable and bombard you with errors. To finalize your update, copy over
+every file found in the above mentioned ZIP file (except config.php, which can be found in includes/k4bb)
+and you should be good to go. 
+
+If you are having any problems at all, please contact me directly at peter.goodman@gmail.com

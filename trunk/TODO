@@ -1,0 +1,35 @@
+Create a permissions layer system to make the bbcode parser MAP's more flexible
+Remake the BB Code parser altogether
+Add a bookmarking system
+Add the styles section to the admin panel
+User title functionality
+User ranking functionality
+Karma system
+Merge/Split topics
+More admin panel control over topics/replies/private messages
+Make it so that when you click IM icons in user profiles/topics, something happens
+RSS feeds
+Printable versions of everything
+Ability to email a topic to someone
+Cut down on code redundancy
+Make the __chmod() function work more often for php4 servers
+Make a backwards compatable version of array_export()
+Make the FAQ (frequently asked questions) section
+Make the calendar component
+Make the blog component
+Make the gallery component
+Make a rudimentry portal system (maybe)
+Optimize all database tables
+Do something about all of the "TODO:"'s in the code
+Try to get WYSIWYG up and running (1/2 implemented sofar.. dependant on bbcodeparser)
+Add some novelty features...
+	Click on number of replies to get whose replied (popup)
+	click on attachments icon to see all attached files (popup)
+Get the load time down everywhere
+Number topics and replies in the same way as is done on mike davidsons blog
+
+
+
+Skipped:
+Private message tracking
+Private message attachments

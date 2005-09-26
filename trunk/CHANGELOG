@@ -1,0 +1,114 @@
+-- 2.0 Beta 7 --
+Added the `k4_privmessages`, `k4_privmessagedrafts` and `k4_privmessagetracker` tables
+Fixed the bug with infinite while() loops in the bbcode parser
+Changed the way the filters and cache deal with stylesets
+Changed the styles around a lot
+Added GZIP Compression
+Fixed the WYSIWYG editor
+Made it so k4 BB could work on servers with session.auto_start enabled
+Fixed a lot of AJAX related problems
+Cleaned up AJAX transitions
+Added several private messaging options to the settings
+Fixed a delete topic bug
+Added the ability for moderators+ to be able to ban a user from within a topic/reply
+Added 'signatureseparator' to the admin settings
+Added private Message
+Refactored a lot of the core functions to work in different PHP5 environments
+Memberlist fixed
+Changed the way the FAUrl class was referenced everywhere
+Added the `googletalk` column to the `k4_users` table
+Added the ability to set your Google Talk handle to your profile
+Fixed over 70 bugs.
+Added the ability to send a new password to a user who forgot their password
+Added the ability to resend your registration validation email
+Added the ability to search for new posts by using the date cutoff only
+Fixed far too many more bugs
+Made the MAP's work with recursion rather than MPTT and added 4 columns into the table
+Added the `row_order` column into the `k4_replies` table for future threaded view
+Fixed a private messaging bug but sacrificed the 'conversation' idea of it
+SOOOO MUCH STUFF THAT I DIDN'T COMMENT ON
+New BB Code parser
+Started to add hints of there being a FAQ system in
+
+
+-- 2.0 Beta 6 Patch --
+Lot's of bug fixes in the drafts section for topics
+Made k4 work almost as well with javascript disabled
+Made the CSS W3C valid
+Fixed a registration bug
+Compiled templates now go in 'compiled' rather than '.compiled'
+
+-- 2.0 Beta 6 --
+Added `reply_id` to the k4_attachments table
+Added `total_attachments` to the k4_topics table
+Added `attachments` to the k4_replies table
+Fixed some miscategorizing in the settings table
+Added the ability to attach files to replies
+Changed some of the admin templates around a bit here and there
+Made it so that the inline topic title moderation uses AJAX
+Changed all of the lock topic icons to have '_lock coming out of the end of the name
+Changed the lock topic icons in general
+Registration now uses AJAX for error checking.
+AJAX previewing for topics, drafts, replies and quick replies
+Fixed bugs in the topics.class and replies.class that had to do with bad request names
+Added `forum_id` and `message_id` into the k4_attachments table
+Added 'maxattachquota' to the settings list
+Added the manage attachments section to the user control panel
+Added subscription management to the user control panel
+Added a WYSIWYG editor for posts
+Added misc.php to deal with the switching of bbcode/wysiwyg editors
+Fixed the usercp.class.php line 675 bug posted in the forums
+Made it so something DOES happen when someone registers
+Added misc.php and editor.php
+Changed lot's of stuff in bbcode.php (for better or for worse?)
+*Disabled WYSIWYG editing mode for the time being*
+Moderators and up are no longer restricted by the post impulse limit
+Added the `k4_pmfolders` and the `k4_privmessages` tables
+Added 3 or so more options to the admin panel settings (#14) for private messages
+Added 16 new permissions to the MAP's set for Private Messageing
+Cut some glut down by creating the no_perms_error() function (error checking/display)
+
+
+-- 2.0 Beta 5 --
+Changed the breadcrumb images and made them work with seen and not seen forums/topics
+Made it so that [code] tags revert any bbcode inside of them (like v1's [omit] tag)
+Fixed bug number #0000001 (session bug)
+Fixed bug number #0000002 (quote html bug)
+Added The ability to report a bad post
+Made it so moderators could view and delete bad post reports
+Added extra security to the sessions by checking with a users IP
+Fixed BB code reverting issues with [code] and [php] tags
+Started working on porting some of the version one CSS action classes
+Added the ability to search for users (for banning/warning/flagging)
+Added the ability to flag a user and see who is flagged in forum/topic views
+Made it so that warnings could be sent to users
+Removed `ban_time` and `banned` columns from `k4_userinfo` and put `banned` in k4_users
+Added the sql table `k4_bannedusers`
+Added the ability to ban users and general ips with a reason and an expiry date
+Moved the moderating panel link to the main navigation
+Added the <is:mod> tag to the template compilers
+Fixed a bug in the FAUrl class
+Fixed a polling bug which limited the number of options to 1 and which displayed the answers first
+Fixed a bug in the polling system
+Made it rework with SQLite.. as there were install problems and session problems
+Added `moved_old_topic_id` and `moved_old_topic_id` to k4_topics
+Added `moved_old_topic_id` to k4_replies
+Added the ability to copy topics and move them with referral links
+
+
+-- 2.0 Beta 4 --
+Added topic and forum 'has seen' functionality
+Added quick reply
+Fixed a critical bug in the FAUrl class
+Changed all of the topic status icons
+Changed all of the post icons
+Changed the introduction text
+Added a DD menu in the forum view as a future moderators panel
+Added the ability to assign single users as forum moderators
+Added the ability to sort topics by clicking on the header text (name,author,last post, etc)
+Removed the k4_information table and fixed all (hopefully) associated bugs
+Started on the calendar (using an external script by Benjamin Kuz)
+Made it so that you could search a forum while browsing it
+Fixed a fatal flaw in the MAP array builder by using array_merge()
+Made some BB Code parser changes with URL
+Disallowed the use of index.html as an attachment
