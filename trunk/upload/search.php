@@ -230,8 +230,8 @@ class K4SearchEverything extends FAAction {
 		$queries			= array(
 			'topics'		=> "SELECT {$select} FROM ". K4TOPICS ." WHERE topic_id > 0 AND moved_new_topic_id=0 {$user_ids} {$forum_ids} {$category_ids} {$keyword_query} AND created >= {$daysprune}",
 			'replies'		=> "SELECT {$selectr} FROM ". K4REPLIES ." WHERE reply_id > 0 {$user_ids} {$forum_ids} {$category_ids} {$keyword_query} AND created >= {$daysprune}",
-			'count'			=> "SELECT COUNT(*) FROM ". K4TEMPTABLE ." ORDER BY {$sortedby} {$sortorder}",
-			'final'			=> "SELECT * FROM ". K4TEMPTABLE ." ORDER BY {$sortedby} {$sortorder}",
+			'count'			=> "SELECT COUNT(*) FROM ** ORDER BY {$sortedby} {$sortorder}",
+			'final'			=> "SELECT * FROM ** ORDER BY {$sortedby} {$sortorder}",
 			'topics_only'	=> "SELECT * FROM ". K4TOPICS ." WHERE is_draft=0 AND queue=0 AND display=1 AND moved_new_topic_id=0 {$user_ids} {$forum_ids} {$keyword_query} ORDER BY {$sortedby} {$sortorder}",
 			'viewas'		=> $viewas,
 			'limit'			=> $resultsperpage,
@@ -265,7 +265,7 @@ class K4SearchEverything extends FAAction {
 			
 			if(!isset($queries['num_results'])) {
 				
-				$result			= $request['dba']->getValue($queries['count']);
+				$result			= $request['dba']->getValue(str_replace('FROM **', 'FROM '. K4TEMPTABLE, $queries['count']));
 				$num_results	= $result;
 				
 				$_SESSION['search_queries']['num_results'] = $num_results;
@@ -273,7 +273,7 @@ class K4SearchEverything extends FAAction {
 				$num_results	= $queries['num_results'];
 			}
 			
-			$result				= $request['dba']->executeQuery($queries['final'] . " LIMIT {$start},". intval($queries['limit']));
+			$result				= $request['dba']->executeQuery(str_replace('FROM **', 'FROM '. K4TEMPTABLE, $queries['final']) . " LIMIT {$start},". intval($queries['limit']));
 						
 			/* Set the iterator */
 			$it					= &new SearchResultsIterator($request['dba'], $result);
