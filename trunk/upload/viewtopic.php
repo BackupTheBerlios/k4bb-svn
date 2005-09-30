@@ -269,13 +269,28 @@ class K4DefaultAction extends FAAction {
 			$request['template']->setFile('similar_topics', 'similar_topics.html');
 		}
 		
+		/* Do we show the replies or show the threaded view? */
+		$show_replies = $request['user']->get('topic_threaded') == 1 ? FALSE : TRUE;
+
 		/* set the topic iterator */
-		$topic_list					= &new TopicIterator($request['dba'], $request['user'], $topic, TRUE);
+		$topic_list					= &new TopicIterator($request['dba'], $request['user'], $topic, $show_replies);
 		$request['template']->setList('topic', $topic_list);
 		
 		$request['template']->setVar('next_oldest', intval($request['dba']->getValue("SELECT topic_id FROM ". K4TOPICS ." WHERE topic_id < ". $topic['topic_id'] ." LIMIT 1")));
 		$request['template']->setVar('next_newest',intval($request['dba']->getValue("SELECT topic_id FROM ". K4TOPICS ." WHERE topic_id > ". $topic['topic_id'] ." LIMIT 1")));
 		
+		/* Show the threaded view if necessary */
+		if($request['user']->get('topic_threaded') == 1) {
+			if($topic['num_replies'] > 0) {
+				$request['template']->setFile('topic_threaded', 'topic_threaded.html');
+				
+				$replies	= $request['dba']->executeQuery("SELECT * FROM ". K4REPLIES ." WHERE topic_id = ". intval($topic['topic_id']) ." ORDER BY row_order ASC");
+				$it			= &new ThreadedRepliesIterator($replies, $topic['row_level']);
+				
+				$request['template']->setList('threaded_replies', $it);
+			}
+		}
+
 		/**
 		 * Topic subscription stuff
 		 */

@@ -66,6 +66,11 @@ $_LANG += array(
 'L_CHECKNEWPASS'		=> 'Check New Password',
 'L_CHANGEPASS'			=> 'Change your Password',
 
+'L_TOPICDISPLAY'		=> 'Topic Display Mode',
+'L_TOPICTHREADEDMODE'	=> 'Topic Threaded Mode',
+'L_NORMAL'				=> 'Normal',
+'L_THREADED'			=> 'Threaded',
+
 'L_EMAILSETTINGS'		=> 'Email Settings',
 'L_CURRENTEMAIL'		=> 'CURRENT Email',
 'L_CHECKCURRENTEMAIL'	=> 'Check CURRENT Email',

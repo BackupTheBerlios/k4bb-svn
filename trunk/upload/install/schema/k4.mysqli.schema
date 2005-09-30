@@ -60,6 +60,7 @@ CREATE TABLE k4_usersettings (
 	imageset		VARCHAR(100) NOT NULL DEFAULT 'Descent',
 	templateset		VARCHAR(100) NOT NULL DEFAULT 'Descent',
 	topic_display		INT UNSIGNED NOT NULL DEFAULT 0,
+	topic_threaded		INT UNSIGNED NOT NULL DEFAULT 0,
 	notify_pm		INT UNSIGNED NOT NULL DEFAULT 1,
 	popup_pm		INT UNSIGNED NOT NULL DEFAULT 0,
 	viewflash		INT UNSIGNED NOT NULL DEFAULT 1,

@@ -43,7 +43,7 @@ class K4DefaultAction extends FAAction {
 		
 		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			
-			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_WELCOME');
 			
 		} else {
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');

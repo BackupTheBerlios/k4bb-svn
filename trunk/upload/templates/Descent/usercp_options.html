@@ -81,7 +81,17 @@
 					<option value="0">{$L_LINEAR}</option>
 					<option value="1">{$L_VERTICAL}</option>
 				</select>
-				<script type="text/javascript">d.setIndex({$user_topic_display}, 'topic_display');</script>
+				<script type="text/javascript">d.setIndex(parseInt({$user_topic_display}), 'topic_display');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="topic_display"><strong>{$L_TOPICTHREADEDMODE}:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="topic_threaded" id="topic_threaded">
+					<option value="0">{$L_NORMAL}</option>
+					<option value="1">{$L_THREADED}</option>
+				</select>
+				<script type="text/javascript">d.setIndex(parseInt({$user_topic_threaded}), 'topic_threaded');</script>
 			</td>
 		</tr>
 	</table>
@@ -97,7 +107,7 @@
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>
-				<script type="text/javascript">d.setIndex({$user_notify_pm}, 'notify_pm');</script>
+				<script type="text/javascript">d.setIndex(parseInt({$user_notify_pm}), 'notify_pm');</script>
 			</td>
 		</tr>
 		<tr>
@@ -107,7 +117,7 @@
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>
-				<script type="text/javascript">d.setIndex({$user_popup_pm}, 'popup_pm');</script>
+				<script type="text/javascript">d.setIndex(parseInt({$user_popup_pm}), 'popup_pm');</script>
 			</td>
 		</tr>
 	</table>

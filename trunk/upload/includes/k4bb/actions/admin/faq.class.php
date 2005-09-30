@@ -33,6 +33,11 @@ class AdminFAQCategories extends FAAction {
 	function execute(&$request) {		
 		
 		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_FAQ');
+			$request['template']->setVar('faq_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/faq.html');
+			
 			$request['template']->setList('categories', new AdminFAQCategoriesIterator($request['dba'], $request['template']->getVar('IMG_DIR')));
 			
 			$request['template']->setFile('content', 'faq_categories.html');
@@ -49,6 +54,10 @@ class AdminAddFAQCategory extends FAAction {
 		
 		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			$request['template']->setFile('content', 'faq_addcategory.html');
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_FAQ');
+			$request['template']->setVar('faq_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/faq.html');
 
 			if(isset($_REQUEST['id']) && intval($_REQUEST['id']) > 0) {
 				$parent = $request['dba']->getRow("SELECT * FROM ". K4FAQCATEGORIES ." WHERE category_id = ". intval($_REQUEST['id']));
@@ -73,6 +82,10 @@ class AdminInsertFAQCategory extends FAAction {
 		
 		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_FAQ');
+			$request['template']->setVar('faq_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/faq.html');
+
 			/* Error checking on the fields */
 			if(!isset($_REQUEST['name']) || $_REQUEST['name'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTCATNAME'), 'content', TRUE);
@@ -91,7 +104,7 @@ class AdminInsertFAQCategory extends FAAction {
 			
 			// get any parent category stuff
 			$parent = array('row_level'=>0,'category_id'=>0);
-			if(isset($_REQUEST['id']) && intval($_REQUEST['parent_id']) > 0) {
+			if(isset($_REQUEST['parent_id']) && intval($_REQUEST['parent_id']) > 0) {
 				$parent_i = $request['dba']->getRow("SELECT * FROM ". K4FAQCATEGORIES ." WHERE category_id = ". intval($_REQUEST['parent_id']));
 
 				if(is_array($parent_i) && !empty($parent_i)) {
@@ -120,9 +133,7 @@ class AdminInsertFAQCategory extends FAAction {
 
 			$request['dba']->commitTransaction();
 
-			if(!@touch(CACHE_FILE, time()-86460)) {
-				@unlink(CACHE_FILE);
-			}
+			reset_cache(CACHE_FILE);
 			
 			$action = new K4InformationAction(new K4LanguageElement('L_ADDEDFAQCATEGORY', $_REQUEST['name']), 'content', FALSE, 'admin.php?act=faq_categories', 3);
 			return $action->execute($request);

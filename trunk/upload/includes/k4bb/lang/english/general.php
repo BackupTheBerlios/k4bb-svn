@@ -180,7 +180,6 @@ $_LANG += array(
 'L_TYPED'				=> 'Typed',
 'L_MODFAQ'				=> 'Add/Edit/Delete FAQ',
 'L_DELCATEGORY'			=> 'Delete Category',
-'L_CHECKDELFAQCAT'		=> 'Are you sure that you would like to delete this FAQ category and all of it\'s child FAQs?',
 'L_ADDFAQ'				=> 'Add FAQ',
 'L_QUESTION'			=> 'Question',
 'L_ANSWER'				=> 'Answer',
@@ -382,7 +381,6 @@ $_LANG += array(
 'L_TOTALVOTES'			=> 'Total number of votes',
 'L_PERCENTAGE'			=> 'Percentage',
 'L_VOTEONPOLL'			=> 'Vote on Poll',
-'L_TOPICDISPLAY'		=> 'Topic Display Mode',
 
 /* Single forum view */
 'L_OPENTOPICNEW'		=> 'Open Topic (new replies)',

@@ -101,9 +101,9 @@ function getTopicTitle(topic_id, div_id) {
 			http_request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 			http_request.onreadystatechange = function() { topicMakeUpdatable(topic_id, div_id); }
 			http_request.send(null);
-		} catch(e) { alert('Failed.'); }
+		} catch(e) { alert(e.message); }
 	} else {
-		alert('Failed.');
+		alert('Failed at: http_request (98)');
 	}
 }
 function topicMakeUpdatable(topic_id, div_id) {
@@ -134,7 +134,7 @@ function topicMakeUpdatable(topic_id, div_id) {
 			}
 		} catch(e) { alert(e.message); }
 	} else {
-		alert('Failed.');
+		alert('Failed as http_requests (112)');
 	}
 }
 var topic_area_id = false;
@@ -181,7 +181,7 @@ function topicSimpleUpdate() {
 			}
 		} catch(e) { alert(e.message); }
 	} else {
-		alert('Failed.');
+		alert('Failed at http_requests (160)');
 	}
 }
 
@@ -692,7 +692,7 @@ function showQuickEditForm(quickedit_div, quickedit_height, post_type, post_id, 
 
 					// if the response is nothing
 					if(response == null || response == '') {
-						alert('Failed.');
+						alert('Failed at http_requests (694)');
 					} else {
 						
 						// see if there is a back-end error sent with this response
@@ -728,7 +728,7 @@ function showQuickEditForm(quickedit_div, quickedit_height, post_type, post_id, 
 			}
 		} catch(e) { alert(e.message); }
 	} else {
-		alert('Failed.');
+		alert('Failed at http_requests (676)');
 	}
 }
 

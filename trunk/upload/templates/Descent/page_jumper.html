@@ -1,10 +1,12 @@
 <!-- Pager Jump To Drop Down Menu -->
 <script type="text/javascript">
 //<![CDATA[
-function jump_pages() {
-	jumpto				= d.getElementById('jumpto');
-	page				= parseInt(jumpto.value);
-	document.location	= '{$pagejumper_url}&page=' + page;
+function jump_pages(input_id) {
+	var jumpto				= d.getElementById(input_id);
+	if(jumpto) {
+		page				= parseInt(jumpto.value);
+		document.location	= '{$pagejumper_url}&page=' + page;
+	}
 }
 //]]>
 </script>
@@ -16,7 +18,7 @@ function jump_pages() {
 		<tr>
 			<td class="alt3">
 				<input type="text" name="jumpto" id="jumpto" size="2" class="inputbox" />
-				<input type="button" class="button" value="{$L_GO}" onclick="jump_pages();" />
+				<input type="button" class="button" value="{$L_GO}" onclick="jump_pages('jumpto')" />
 			</td>
 		</tr>
 	</table>

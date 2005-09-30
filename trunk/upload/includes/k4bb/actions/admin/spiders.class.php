@@ -38,6 +38,10 @@ class AdminSpiders extends FAAction {
 		
 		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_SPIDERS');
+			$request['template']->setVar('misc_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/misc.html');
+
 			$spiders	= &$request['dba']->executeQuery("SELECT * FROM ". K4SPIDERS ." ORDER BY spidername ASC");
 			$request['template']->setList('spiders', $spiders);
 			
@@ -56,6 +60,10 @@ class AdminInsertSpider extends FAAction {
 		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			
 			global $_SETTINGS;
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_SPIDERS');
+			$request['template']->setVar('misc_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/misc.html');
 
 			if(!isset($_REQUEST['useragent']) || !$_REQUEST['useragent'] || $_REQUEST['useragent'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_SUPPLYUSERAGENT'), 'content', TRUE);
@@ -94,6 +102,10 @@ class AdminUpdateSpider extends FAAction {
 			
 			global $_SETTINGS;
 			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_SPIDERS');
+			$request['template']->setVar('misc_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/misc.html');
+
 			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDSPIDER'), 'content', FALSE);
 				return $action->execute($request);
@@ -148,6 +160,10 @@ class AdminRemoveSpider extends FAAction {
 			
 			global $_SETTINGS;
 			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_SPIDERS');
+			$request['template']->setVar('misc_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/misc.html');
+
 			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDSPIDER'), 'content', FALSE);
 				return $action->execute($request);

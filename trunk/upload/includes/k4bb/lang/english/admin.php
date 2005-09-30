@@ -65,6 +65,7 @@ $_LANG += array(
 /* / Admin CP Menu */
 
 /* Admin CP */
+'L_WELCOME'				=> 'Welcome',
 'L_ADMINISTRATION'		=> 'Administration',
 'L_WELCOMEACP'			=> 'Welcome to the k4 Admin Control Panel',
 'L_ACPWELCOME'			=> 'Welcome to the k4 Administration Control Panel. From here you can control vital aspects of the forum. Depending on whether you are an administrator or a moderator you can:',

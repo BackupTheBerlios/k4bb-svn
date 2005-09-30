@@ -1051,15 +1051,42 @@ class DeleteReply extends FAAction {
 		
 		$request['dba']->commitTransaction();
 
-		if(!@touch(CACHE_DS_FILE, time()-86460)) {
-			@unlink(CACHE_DS_FILE);
-		}
+		reset_cache(CACHE_DS_FILE);
 		
 		/* Redirect the user */
 		$action = new K4InformationAction(new K4LanguageElement('L_DELETEDREPLY', $reply['name'], $topic['name']), 'content', FALSE, 'viewtopic.php?id='. $topic['topic_id'], 3);
 
 		return $action->execute($request);
 		return TRUE;
+	}
+}
+
+class ThreadedRepliesIterator extends FAProxyIterator {
+	
+	var $result, $start_level;
+
+	function ThreadedRepliesIterator(&$result, $topic_level) {
+		$this->__construct($result, $topic_level);
+	}
+
+	function __construct(&$result, $topic_level) {
+		
+		$this->result		= &$result;
+		$this->start_level	= intval($topic_level);
+
+		parent::__construct($this->result);
+	}
+
+	function &current() {
+		$temp					= parent::current();
+
+		$temp['inset_level']	= str_repeat('&nbsp; &nbsp; &nbsp;', intval($temp['row_level'] - $this->start_level - 1));
+		
+		/* Should we free the result? */
+		if(!$this->hasNext())
+			$this->result->free();
+		
+		return $temp;
 	}
 }
 

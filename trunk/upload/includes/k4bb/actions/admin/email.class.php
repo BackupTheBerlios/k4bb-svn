@@ -35,6 +35,10 @@ class AdminEmailUsers extends FAAction {
 		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
 			global $_DATASTORE;
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_EMAILUSERS');
+			$request['template']->setVar('misc_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/misc.html');
 
 			if(isset($_DATASTORE['massmail'])) {
 				$action = new K4InformationAction(new K4LanguageElement('L_EMAILINPROGRESS'), 'content', FALSE);
@@ -68,6 +72,10 @@ class AdminSetSendEmails extends FAAction {
 		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
 			global $_DATASTORE;
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_EMAILUSERS');
+			$request['template']->setVar('misc_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/misc.html');
 
 			if(isset($_DATASTORE['massmail'])) {
 				$action = new K4InformationAction(new K4LanguageElement('L_EMAILINPROGRESS'), 'content', FALSE);

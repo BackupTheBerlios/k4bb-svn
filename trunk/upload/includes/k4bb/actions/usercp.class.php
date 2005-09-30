@@ -330,7 +330,7 @@ class K4UpdateUserProfile extends FAAction {
 		global $_USERFIELDS;
 		
 		foreach($_REQUEST as $key => $val)
-			$_REQUEST[$key]		= htmlspecialchars(strip_tags($val), ENT_QUOTES);
+			$_REQUEST[$key]		= htmlentities(strip_tags($val), ENT_QUOTES);
 
 		/* Check if the user is logged in or not */
 		if(!$request['user']->isMember()) {
@@ -422,7 +422,7 @@ class K4UpdateUserPassword extends FAAction {
 		global $_URL;
 		
 		foreach($_REQUEST as $key => $val)
-			$_REQUEST[$key]		= htmlspecialchars(strip_tags($val), ENT_QUOTES);
+			$_REQUEST[$key]		= htmlentities(strip_tags($val), ENT_QUOTES);
 
 		/* Check if the user is logged in or not */
 		if(!$request['user']->isMember()) {
@@ -488,7 +488,7 @@ class K4UpdateUserEmail extends FAAction {
 		global $_URL, $_SETTINGS;
 		
 		foreach($_REQUEST as $key => $val)
-			$_REQUEST[$key]		= htmlspecialchars(strip_tags($val), ENT_QUOTES);
+			$_REQUEST[$key]		= htmlentities(strip_tags($val), ENT_QUOTES);
 
 		/* Check if the user is logged in or not */
 		if(!$request['user']->isMember()) {
@@ -645,7 +645,7 @@ class K4UpdateUserOptions extends FAAction {
 		/**
 		 * Prepare the big query
 		 */
-		$query				= $request['dba']->prepareStatement("UPDATE ". K4USERSETTINGS ." SET templateset=?,styleset=?,imageset=?,language=?,topic_display=?,notify_pm=?,popup_pm=?,topicsperpage=?,postsperpage=?,viewimages=?,viewavatars=?,viewsigs=?,viewflash=?,viewemoticons=?,viewcensors=? WHERE user_id = ?");
+		$query				= $request['dba']->prepareStatement("UPDATE ". K4USERSETTINGS ." SET templateset=?,styleset=?,imageset=?,language=?,topic_display=?,notify_pm=?,popup_pm=?,topicsperpage=?,postsperpage=?,viewimages=?,viewavatars=?,viewsigs=?,viewflash=?,viewemoticons=?,viewcensors=?,topic_threaded=? WHERE user_id = ?");
 		$query->setString(1, $templateset);
 		$query->setString(2, $styleset);
 		$query->setString(3, $imageset);
@@ -661,7 +661,8 @@ class K4UpdateUserOptions extends FAAction {
 		$query->setInt(13, $_REQUEST['viewflash']);
 		$query->setInt(14, $_REQUEST['viewemoticons']);
 		$query->setInt(15, $_REQUEST['viewcensors']);
-		$query->setInt(16, $request['user']->get('id'));
+		$query->setInt(16, $_REQUEST['topic_threaded']);
+		$query->setInt(17, $request['user']->get('id'));
 
 		$query->executeUpdate();
 		
@@ -676,7 +677,7 @@ class K4UpdateUserSignature extends FAAction {
 		global $_SETTINGS;
 		
 		foreach($_REQUEST as $key => $val)
-			$_REQUEST[$key]		= htmlspecialchars(strip_tags($val), ENT_QUOTES);
+			$_REQUEST[$key]		= htmlentities(strip_tags($val), ENT_QUOTES);
 
 		/* Check if the user is logged in or not */
 		if(!$request['user']->isMember()) {
@@ -733,7 +734,7 @@ class K4UpdateUserFile extends FAAction {
 		global $_SETTINGS;
 		
 		foreach($_REQUEST as $key => $val)
-			$_REQUEST[$key]		= htmlspecialchars(strip_tags($val), ENT_QUOTES);
+			$_REQUEST[$key]		= htmlentities(strip_tags($val), ENT_QUOTES);
 
 		/* Check if the user is logged in or not */
 		if(!$request['user']->isMember()) {
