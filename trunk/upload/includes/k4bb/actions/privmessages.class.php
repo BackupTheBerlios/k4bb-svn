@@ -35,15 +35,11 @@ if(!defined('IN_K4')) {
 
 class K4ShowPMFolder extends FAAction {
 	function execute(&$request) {
-		if(!$request['user']->isMember()) {
-			no_perms_error($request, 'usercp_content');
-			return TRUE;
-		}
 		
-		if(get_map($request['user'], 'private_messaging', 'can_view', array()) > $request['user']->get('perms')) {
-			no_perms_error($request, 'usercp_content');
-			return TRUE;
-		}
+		global $_URL;
+
+		$check = new K4PMCheckPerms();
+		$check->execute($request);
 
 		if(get_map($request['user'], 'pm_messages', 'can_add', array()) > $request['user']->get('perms')) {
 			no_perms_error($request, 'usercp_content');
@@ -89,6 +85,36 @@ class K4ShowPMFolder extends FAAction {
 		$result = &$request['dba']->executeQuery("SELECT * FROM ". K4PRIVMESSAGES ." WHERE member_id = ". intval($request['user']->get('id')) ." AND folder_id = ". intval($folder['id']) ." ORDER BY created DESC");
 		$it 	= &new K4PrivMessageIterator($request['dba'], $result, $request['template']->getVar('IMG_DIR'), $request['template']->getVar('pmrepliesperpage') );
 		
+		
+		$resultsperpage		= $request['template']->getVar('pmsperpage');
+		$num_results		= $result->numrows();
+
+		$num_pages			= @ceil($num_results / $resultsperpage);
+		$page				= isset($_REQUEST['page']) && ctype_digit($_REQUEST['page']) && intval($_REQUEST['page']) > 0 ? intval($_REQUEST['page']) : 1;
+		
+		$request['template']->setVar('page', $page);
+		$url				= &new FAUrl($_URL->__toString());
+
+		$pager				= &new FAPaginator($url, $num_results, $page, $resultsperpage);
+		
+		if($num_results > $perpage) {
+			$request['template']->setPager('pms_pager', $pager);
+
+			/* Create a friendly url for our pager jump */
+			$page_jumper	= $url;
+			$page_jumper->args['limit'] = $perpage;
+			$page_jumper->args['page']	= FALSE;
+			$page_jumper->anchor		= FALSE;
+			$request['template']->setVar('pagejumper_url', preg_replace('~&amp;~i', '&', $page_jumper->__toString()));
+		}
+		
+		/* Outside valid page range, redirect */
+		if(!$pager->hasPage($page) && $num_pages > 0) {
+			$action = new K4InformationAction(new K4LanguageElement('L_PASTPAGELIMIT'), 'content', FALSE, 'viewtopic.php?id='. $topic['topic_id'] .'&limit='. $perpage .'&page='. $num_pages, 3);
+			return $action->execute($request);
+		}
+
+
 		$request['template']->setVar('pm_usedpercent', ceil(($num_pms / $max_pms) * 100));
 	
 		$request['template']->setVar('L_PMSGSTATS', sprintf($request['template']->getVar('L_PMSGSTATS'), $num_pms, $max_pms));
@@ -99,14 +125,12 @@ class K4ShowPMFolder extends FAAction {
 
 class K4CreatePMFolder extends FAAction {
 	function execute(&$request) {
+		$check = new K4PMCheckPerms();
+		$check->execute($request);
+
 		if(intval($request['template']->getVar('allowcustomfolders')) == 0) {
 			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'usercp_content', FALSE);
 			return $action->execute($request);
-		}
-		
-		if(get_map($request['user'], 'private_messaging', 'can_view', array()) > $request['user']->get('perms')) {
-			no_perms_error($request, 'usercp_content');
-			return TRUE;
 		}
 
 		if(get_map($request['user'], 'pm_customfolders', 'can_add', array()) > $request['user']->get('perms')) {
@@ -132,15 +156,8 @@ class K4CreatePMFolder extends FAAction {
 class K4InsertPMFolder extends FAAction {
 	function execute(&$request) {
 		
-		if(!$request['user']->isMember()) {
-			no_perms_error($request, 'usercp_content');
-			return TRUE;
-		}
-		
-		if(get_map($request['user'], 'private_messaging', 'can_view', array()) > $request['user']->get('perms')) {
-			no_perms_error($request, 'usercp_content');
-			return TRUE;
-		}
+		$check = new K4PMCheckPerms();
+		$check->execute($request);
 
 		if(get_map($request['user'], 'pm_customfolders', 'can_add', array()) > $request['user']->get('perms')) {
 			no_perms_error($request, 'usercp_content');
@@ -193,15 +210,8 @@ class K4InsertPMFolder extends FAAction {
 
 class K4EditPMFolder extends FAAction {
 	function execute(&$request) {
-		if(!$request['user']->isMember()) {
-			no_perms_error($request, 'usercp_content');
-			return TRUE;
-		}		
-		
-		if(get_map($request['user'], 'private_messaging', 'can_view', array()) > $request['user']->get('perms')) {
-			no_perms_error($request, 'usercp_content');
-			return TRUE;
-		}
+		$check = new K4PMCheckPerms();
+		$check->execute($request);
 
 		if(get_map($request['user'], 'pm_customfolders', 'can_edit', array()) > $request['user']->get('perms')) {
 			no_perms_error($request, 'usercp_content');
@@ -248,15 +258,8 @@ class K4EditPMFolder extends FAAction {
 
 class K4UpdatePMFolder extends FAAction {
 	function execute(&$request) {
-		if(!$request['user']->isMember()) {
-			no_perms_error($request, 'usercp_content');
-			return TRUE;
-		}		
-		
-		if(get_map($request['user'], 'private_messaging', 'can_view', array()) > $request['user']->get('perms')) {
-			no_perms_error($request, 'usercp_content');
-			return TRUE;
-		}
+		$check = new K4PMCheckPerms();
+		$check->execute($request);
 
 		if(get_map($request['user'], 'pm_customfolders', 'can_edit', array()) > $request['user']->get('perms')) {
 			no_perms_error($request, 'usercp_content');
@@ -313,15 +316,8 @@ class K4UpdatePMFolder extends FAAction {
 
 class K4PreDeleteFolder extends FAAction {
 	function execute(&$request) {
-		if(!$request['user']->isMember()) {
-			no_perms_error($request, 'usercp_content');
-			return TRUE;
-		}		
-		
-		if(get_map($request['user'], 'private_messaging', 'can_view', array()) > $request['user']->get('perms')) {
-			no_perms_error($request, 'usercp_content');
-			return TRUE;
-		}
+		$check = new K4PMCheckPerms();
+		$check->execute($request);
 
 		if(get_map($request['user'], 'pm_customfolders', 'can_del', array()) > $request['user']->get('perms')) {
 			no_perms_error($request, 'usercp_content');
@@ -363,15 +359,8 @@ class K4PreDeleteFolder extends FAAction {
 class K4ComposePMessage extends FAAction {
 	function execute(&$request) {
 
-		if(!$request['user']->isMember()) {
-			no_perms_error($request, 'usercp_content');
-			return TRUE;
-		}		
-		
-		if(get_map($request['user'], 'private_messaging', 'can_view', array()) > $request['user']->get('perms')) {
-			no_perms_error($request, 'usercp_content');
-			return TRUE;
-		}
+		$check = new K4PMCheckPerms();
+		$check->execute($request);
 
 		if(get_map($request['user'], 'pm_message', 'can_add', array()) > $request['user']->get('perms')) {
 			no_perms_error($request, 'usercp_content');
@@ -474,15 +463,8 @@ class K4SendPMessage extends FAAction {
 		
 		global $_SETTINGS;
 
-		if(!$request['user']->isMember()) {
-			no_perms_error($request);
-			return TRUE;
-		}		
-		
-		if(get_map($request['user'], 'private_messaging', 'can_view', array()) > $request['user']->get('perms')) {
-			no_perms_error($request);
-			return TRUE;
-		}
+		$check = new K4PMCheckPerms();
+		$check->execute($request);
 
 		if(get_map($request['user'], 'pm_message', 'can_add', array()) > $request['user']->get('perms')) {
 			no_perms_error($request);
@@ -844,24 +826,26 @@ class K4SendPMessage extends FAAction {
 
 class K4ViewPMessage extends FAAction {
 	function execute(&$request) {
-
-		if(!$request['user']->isMember()) {
-			no_perms_error($request, 'usercp_content');
-			return TRUE;
-		}
-	
+		
+		$check = new K4PMCheckPerms();
+		$check->execute($request);
+		
+		// check over the message id
 		if(!isset($_REQUEST['pm']) || intval($_REQUEST['pm']) == 0) {
 			$action = new K4InformationAction(new K4LanguageElement('L_PMSGDOESNTEXIST'), 'usercp_content', FALSE);
 			return $action->execute($request);
 		}
-
+		
+		// get the message
 		$message	= $request['dba']->getRow("SELECT * FROM ". K4PRIVMESSAGES ." WHERE pm_id = ". intval($_REQUEST['pm']));
-
+		
+		// recheck the message
 		if(!is_array($message) || empty($message)) {
 			$action = new K4InformationAction(new K4LanguageElement('L_PMSGDOESNTEXIST'), 'usercp_content', FALSE);
 			return $action->execute($request);
 		}
-
+		
+		// if this is a draft, return a different action
 		if($message['is_draft'] == 1) {
 			$_REQUEST['draft']	= $message['pm_id'];
 			$_POST['draft']		= $message['pm_id'];
@@ -877,6 +861,159 @@ class K4ViewPMessage extends FAAction {
 		$request['template']->setList('message', new K4PrivMsgIterator($request['dba'], $request['user'], $message));
 
 		$request['template']->setFile('usercp_content', 'viewpmessage.html');
+	}
+}
+
+/**
+ * Set which folders to move this message to/from
+ */
+class K4SelectPMMoveFolder extends FAAction {
+	function execute(&$request) {
+		
+		$check = new K4PMCheckPerms();
+		$check->execute($request);
+
+		// check the folder
+		if(!isset($_REQUEST['original_folder']) || intval($_REQUEST['original_folder']) == 0) {
+			$action = new K4InformationAction(new K4LanguageElement('L_PMBADORIGINALFOLDER'), 'usercp_content', FALSE);
+			return $action->execute($request);
+		}
+		$original		= $request['dba']->getRow("SELECT * FROM ". K4PMFOLDERS ." WHERE id = ". intval($_REQUEST['original_folder']));
+		if(!is_array($original) || empty($original)) {
+			$action = new K4InformationAction(new K4LanguageElement('L_PMBADORIGINALFOLDER'), 'usercp_content', FALSE);
+			return $action->execute($request);
+		}
+		
+		// get the folders that pm's can be moved to
+		$folders = $request['dba']->executeQuery("SELECT * FROM ". K4FOLDERS ." WHERE (user_id = ". intval($request['user']->get('id')) ." OR is_global = 1) AND (id <> ". PM_SENTITEMS ." AND id <> ". PM_SAVEDITEMS .")");
+		
+		// set the original folder to the template
+		foreach($original as $key => $val) {
+			$request['template']->setVar('folder_'. $key, $val);
+		}
+		
+		// set the folders list and template
+		$request['template']->setList('moveto_folders', $folders);
+		$request['template']->setFile('usercp_content', 'pm_movemessages.html');
+
+		return TRUE;
+	}
+}
+
+/**
+ * Move a/multiple Private Messages
+ */
+class K4MovePMessages extends FAAction {
+	function execute(&$request) {
+		
+		k4_bread_crumbs($request['template'], $request['dba'], 'L_USERCONTROLPANEL');
+		$request['template']->setFile('content', 'usercp.html');
+
+		$check = new K4PMCheckPerms();
+		$check->execute($request);
+		
+		// check the ids
+		if(!isset($_REQUEST['pmessage']) || !is_array($_REQUEST['pmessage']) || empty($_REQUEST['pmessage'])) {
+			$action = new K4InformationAction(new K4LanguageElement('L_PMNEEDSELECTONE'), 'usercp_content', FALSE);
+			return $action->execute($request);
+		}
+		
+		// check the folders
+		if(!isset($_REQUEST['original_folder']) || intval($_REQUEST['original_folder']) == 0) {
+			$action = new K4InformationAction(new K4LanguageElement('L_PMBADORIGINALFOLDER'), 'usercp_content', FALSE);
+			return $action->execute($request);
+		}
+		if(!isset($_REQUEST['destination_folder']) || intval($_REQUEST['destination_folder']) == 0) {
+			$action = new K4InformationAction(new K4LanguageElement('L_PMBADDESTFOLDER'), 'usercp_content', FALSE);
+			return $action->execute($request);
+		}
+		
+		// get the folders
+		$original		= $request['dba']->getRow("SELECT * FROM ". K4PMFOLDERS ." WHERE id = ". intval($_REQUEST['original_folder']));
+		$destination	= $request['dba']->getRow("SELECT * FROM ". K4PMFOLDERS ." WHERE id = ". intval($_REQUEST['destination_folder']));
+		
+		// recheck the folders
+		if(!is_array($original) || empty($original)) {
+			$action = new K4InformationAction(new K4LanguageElement('L_PMBADORIGINALFOLDER'), 'usercp_content', FALSE);
+			return $action->execute($request);
+		}
+		if(!is_array($destination) || empty($destination)) {
+			$action = new K4InformationAction(new K4LanguageElement('L_PMBADDESTFOLDER'), 'usercp_content', FALSE);
+			return $action->execute($request);
+		}
+
+		// loop through the messages and move them
+		foreach($_REQUEST['pmessage'] as $pm_id) {
+			
+			$temp = $request['dba']->getRow("SELECT * FROM ". K4PRIVMESSAGES ." WHERE pm_id = ". intval($pm_id));
+
+			if($temp['member_id'] == $request['user']->get('id')) {
+				$request['dba']->executeUpdate("UPDATE ". K4PRIVMESSAGES ." SET folder_id = ". intval($destination['id']) ." WHERE (pm_id = ". intval($pm_id) ." OR message_id = ". intval($pm_id) .") AND member_id = ". intval($request['user']->get('id')));
+			}
+		}
+		
+		// success!
+		$action = new K4InformationAction(new K4LanguageElement('L_MOVEDPMESSAGES', $original['name'], $destination['name']), 'usercp_content', FALSE);
+		return $action->execute($request);
+
+		return TRUE;
+	}
+}
+
+/**
+ * Delete a/multiple Private Messages
+ */
+class K4DeletePMessages extends FAAction {
+	function execute(&$request) {
+		
+		$check = new K4PMCheckPerms();
+		$check->execute($request);
+		
+		// check the ids
+		if(!isset($_REQUEST['pmessage']) || !is_array($_REQUEST['pmessage']) || empty($_REQUEST['pmessage'])) {
+			$action = new K4InformationAction(new K4LanguageElement('L_PMNEEDSELECTONE'), 'usercp_content', FALSE);
+			return $action->execute($request);
+		}
+		
+		$less_newpms = 0;
+
+		// loop through the messages and move them
+		foreach($_REQUEST['pmessage'] as $pm_id) {
+			
+			$temp = $request['dba']->getRow("SELECT * FROM ". K4PRIVMESSAGES ." WHERE pm_id = ". intval($pm_id));
+
+			if($temp['member_id'] == $request['user']->get('id')) {
+				
+				// TODO: this can be optimized easily
+				$less_newpms += intval($request['dba']->getValue("SELECT COUNT(*) FROM ". K4PRIVMESSAGES ." WHERE (pm_id = ". intval($pm_id) ." OR message_id = ". intval($pm_id) .") AND member_has_read = 0 AND member_id = ". intval($request['user']->get('id'))));
+				
+				$request['dba']->executeUpdate("DELETE FROM ". K4PRIVMESSAGES ." WHERE (pm_id = ". intval($pm_id) ." OR message_id = ". intval($pm_id) .") AND member_id = ". intval($request['user']->get('id')));
+			}
+		}
+		
+		if($less_newpms > 0) {
+			$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET new_pms=new_pms-$less_newpms WHERE id = ". intval($request['user']->get('id')));
+		}
+
+		// success! removed selected pms :D
+		$action = new K4InformationAction(new K4LanguageElement('L_DELETEDPMESSAGES', $original['name'], $destination['name']), 'usercp_content', FALSE);
+		return $action->execute($request);
+
+		return TRUE;
+	}
+}
+
+class K4PMCheckPerms extends FAAction {
+	function execute(&$request) {
+		// check the perms
+		if(!$request['user']->isMember()) {
+			no_perms_error($request, 'usercp_content');
+			return TRUE;
+		}
+		if($request['user']->get('perms') < get_map($request['user'], 'private_messaging', 'can_view', array())) {
+			no_perms_error($request, 'usercp_content');
+			return TRUE;
+		}
 	}
 }
 

@@ -732,9 +732,26 @@ CREATE TABLE k4_faqcategories (
 	row_level		INT UNSIGNED NOT NULL DEFAULT 1,
 	row_order		INT UNSIGNED NOT NULL DEFAULT 1,
 	created			INT UNSIGNED NOT NULL DEFAULT 0,
-	
+	num_answers		INT UNSIGNED NOT NULL DEFAULT 0,
+	num_categories		INT UNSIGNED NOT NULL DEFAULT 0,
+	row_type		INT UNSIGNED NOT NULL DEFAULT 64,
 	can_view		INT UNSIGNED NOT NULL DEFAULT 1,
 	
 	PRIMARY KEY(category_id)
 );
 CREATE INDEX category_id2 ON k4_faqcategories (category_id);
+
+DROP TABLE IF EXISTS k4_faqanswers;
+CREATE TABLE k4_faqanswers (
+	answer_id		INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	category_id		INT UNSIGNED NOT NULL DEFAULT 0,
+	question		VARCHAR(255) NOT NULL DEFAULT '',
+	answer			TEXT,
+	row_order		INT UNSIGNED NOT NULL DEFAULT 1,
+	created			INT UNSIGNED NOT NULL DEFAULT 0,
+	
+	can_view		INT UNSIGNED NOT NULL DEFAULT 1,
+	
+	PRIMARY KEY(answer_id)
+);
+CREATE INDEX answer_id ON k4_faqanswers (answer_id);

@@ -277,6 +277,13 @@ $_LANG += array(
 'L_DELETEPMESSAGES'		=> 'Delete Messages',
 'L_MOVEPMESSAGES'		=> 'Move Messages',
 
+'L_PMNEEDSELECTONE'		=> 'You must select at least one private message to move/delete.',
+'L_MOVEDPMESSAGES'		=> 'Successfully moved the selected private messages from <strong>%s</strong> to <strong>%s</strong>.',
+'L_PMBADORIGINALFOLDER'	=> 'The original folder of these messages does not appear to exist.',
+'L_PMBADDESTFOLDER'		=> 'The destination folder for these messages does not appear to exist.',
+'L_MOVEPMSFROM'			=> 'Move PMs From',
+'L_DELETEDPMESSAGES'	=> 'Successfully deleted the selected private messages.',
+
 );
 
 ?>

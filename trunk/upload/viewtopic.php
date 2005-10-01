@@ -231,14 +231,16 @@ class K4DefaultAction extends FAAction {
 		$page				= isset($_REQUEST['page']) && ctype_digit($_REQUEST['page']) && intval($_REQUEST['page']) > 0 ? intval($_REQUEST['page']) : 1;
 		
 		$request['template']->setVar('page', $page);
-		
-		$pager				= &new FAPaginator(new FAUrl($_URL->__toString()), $num_results, $page, $perpage);
+
+		$url				= &new FAUrl($_URL->__toString());
+
+		$pager				= &new FAPaginator(new FAUrl($url, $num_results, $page, $perpage);
 		
 		if($num_results > $perpage) {
 			$request['template']->setPager('replies_pager', $pager);
 
 			/* Create a friendly url for our pager jump */
-			$page_jumper	= new FAUrl($_URL->__toString());
+			$page_jumper	= $url;
 			$page_jumper->args['limit'] = $perpage;
 			$page_jumper->args['page']	= FALSE;
 			$page_jumper->anchor		= FALSE;
@@ -271,9 +273,11 @@ class K4DefaultAction extends FAAction {
 		
 		/* Do we show the replies or show the threaded view? */
 		$show_replies = $request['user']->get('topic_threaded') == 1 ? FALSE : TRUE;
+		$show_replies = $request['user']->get('topic_threaded') == 1 && isset($_REQUEST['p']) && intval($_REQUEST['p']) > 0 ? TRUE : $show_replies;
+		$single_reply = $request['user']->get('topic_threaded') == 1 && isset($_REQUEST['p']) && intval($_REQUEST['p']) > 0 ? intval($_REQUEST['p']) : FALSE;
 
 		/* set the topic iterator */
-		$topic_list					= &new TopicIterator($request['dba'], $request['user'], $topic, $show_replies);
+		$topic_list					= &new TopicIterator($request['dba'], $request['user'], $topic, $show_replies, $single_reply);
 		$request['template']->setList('topic', $topic_list);
 		
 		$request['template']->setVar('next_oldest', intval($request['dba']->getValue("SELECT topic_id FROM ". K4TOPICS ." WHERE topic_id < ". $topic['topic_id'] ." LIMIT 1")));
@@ -361,23 +365,25 @@ class ChangeTopicView extends FAAction {
 		/* Create the ancestors bar */
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 		
-		$mode						= 0;
-		
-		if(isset($_REQUEST['mode']) && ($_REQUEST['mode'] == 'linear' || $_REQUEST['mode'] == 'vertical')) {
+		$mode			= 0;
+		$modes			= array('threaded', 'linear', 'vertical', 'normal');
+		$mode_var		= 'topic_display';
+
+		if(isset($_REQUEST['mode']) && in_array($_REQUEST['mode'], $modes)) {
 			
-			if($_REQUEST['mode'] == 'linear')
-				$mode				= 1;
-			
-			if($request['user']->isMember()) {
-				if($request['user']->get('topic_display') != $mode)
-					$request['dba']->executeUpdate("UPDATE ". K4USERSETTINGS ." SET topic_display=". intval($mode) ." WHERE user_id = ". intval($request['user']->get('id')));
+			if($_REQUEST['mode'] == 'linear' || $_REQUEST['mode'] == 'threaded') {
+				$mode	= 1;
 			}
 
-			/* Make sure to change the information in the $request */
-			$user				= &new K4UserManager($request['dba']);
-			$user				= $user->getInfo($request['user']->get('id'));
-			$request['user']	= &new K4Member($user);
-			$_SESSION['user']	= &new K4Member($user);
+			if($_REQUEST['mode'] == 'threaded' || $_REQUEST['mode'] == 'normal') {
+				$mode_var = 'topic_threaded';
+			}
+			
+			if($request['user']->isMember()) {
+				if($request['user']->get($mode_var) != $mode) {
+					$request['dba']->executeUpdate("UPDATE ". K4USERSETTINGS ." SET $mode_var=$mode WHERE user_id = ". intval($request['user']->get('id')));
+				}
+			}
 		}
 		
 		$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDTOPICVIEWS'), 'content', TRUE, referer(), 3);

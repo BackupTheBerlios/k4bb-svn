@@ -1,3 +1,21 @@
+<page:navigator id="pms_pager">
+<div align="right">
+	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
+		<tr>
+			<td class="alt3" id="page_jump1"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
+			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
+			<page:list id="pms_pager" before="3" after="3">
+			<list:item list="pms_pager">
+				<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
+			</list:item>
+			</page:list>
+			<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
+			<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
+		</tr>
+	</table>
+</div>
+</page:navigator>
 <div class="k4_borderwrap">
 	<div class="k4_maintitle">{$L_LISTMESSAGES}: <span style="font-weight: normal;">{$folder_name}</span></div>
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
@@ -81,6 +99,7 @@
 		</list:list>
 		<tr>
 			<td class="k4_subtitle" colspan="5" style="text-align: right;">
+				<input type="hidden" name="original_folder" value="{$folder_id}" />
 				<select name="action" id="action" class="smalltext">
 					<option value="delete">{$L_DELETEPMESSAGES}</option>
 					<option value="move">{$L_MOVEPMESSAGES}</option>
@@ -91,3 +110,22 @@
 	</table>
 </div>
 </form>
+<page:navigator id="pms_pager">
+<div align="right">
+	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
+		<tr>
+			<td class="alt3" id="page_jump1"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
+			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
+			<page:list id="pms_pager" before="3" after="3">
+			<list:item list="pms_pager">
+				<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
+			</list:item>
+			</page:list>
+			<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
+			<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
+		</tr>
+	</table>
+</div>
+</page:navigator>
+<core:import id="page_jumper" file="page_jumper.html" />

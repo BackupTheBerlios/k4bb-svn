@@ -381,6 +381,7 @@ $_LANG += array(
 'L_TOTALVOTES'			=> 'Total number of votes',
 'L_PERCENTAGE'			=> 'Percentage',
 'L_VOTEONPOLL'			=> 'Vote on Poll',
+'L_VIEWOPTIONS'			=> 'View Options',
 
 /* Single forum view */
 'L_OPENTOPICNEW'		=> 'Open Topic (new replies)',

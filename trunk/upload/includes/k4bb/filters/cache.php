@@ -206,6 +206,19 @@ class K4GeneralCacheFilter extends FAFilter {
 			}
 			$result->free();
 
+			/**
+			 * Get ALL of the defined FAQ Categories
+			 */
+			
+			$cache[K4FAQCATEGORIES]				= array();
+			$result								= &$request['dba']->executeQuery("SELECT * FROM ". K4FAQCATEGORIES);
+			while($result->next()) {
+				$temp							= $result->current();
+				
+				$cache[K4FAQCATEGORIES][$temp['category_id']]	= $temp;
+			}
+			$result->free();
+
 			
 			/* Memory saving */
 			unset($result);
@@ -252,6 +265,7 @@ class K4GeneralCacheFilter extends FAFilter {
 		$GLOBALS['_BANNEDUSERIDS']			= $cache['_BANNEDUSERIDS'];
 		$GLOBALS['_BANNEDUSERIPS']			= $cache['_BANNEDUSERIPS'];
 		$GLOBALS['_STYLESETS']				= $cache[K4STYLES];
+		$GLOBALS['_FAQCATEGORIES']			= $cache[K4FAQCATEGORIES];
 		
 		$all_forums							= &new AllForumsIterator($cache['all_forums']);
 

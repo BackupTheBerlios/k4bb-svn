@@ -627,7 +627,6 @@ CREATE TABLE k4_pmfolders (
 	PRIMARY KEY(id)
 );
 
-DROP TABLE IF EXISTS k4_privmessages;
 CREATE TABLE k4_privmessages (
 	pm_id			INTEGER UNSIGNED,
 	saved_id		INTEGER UNSIGNED NOT NULL DEFAULT 0,
@@ -668,7 +667,6 @@ CREATE TABLE k4_privmessages (
 	PRIMARY KEY(pm_id)
 );
 
-DROP TABLE IF EXISTS k4_privmessagedrafts;
 CREATE TABLE k4_privmessagedrafts (
 	pm_id			INTEGER UNSIGNED NOT NULL DEFAULT 0,
 	pm_to			TEXT,
@@ -676,7 +674,6 @@ CREATE TABLE k4_privmessagedrafts (
 );
 CREATE INDEX pm_id ON k4_privmessagedrafts(pm_id);
 
-DROP TABLE IF EXISTS k4_privmessagetracker;
 CREATE TABLE k4_privmessagetracker (
 	pm_id			INTEGER UNSIGNED NOT NULL DEFAULT 0,
 	message_id		INTEGER UNSIGNED NOT NULL DEFAULT 0,
@@ -686,7 +683,6 @@ CREATE TABLE k4_privmessagetracker (
 );
 CREATE INDEX pm_id2 ON k4_privmessagetracker(pm_id);
 
-DROP TABLE IF EXISTS k4_faqcategories;
 CREATE TABLE k4_faqcategories (
 	category_id		INTEGER UNSIGNED,
 	parent_id		INTEGER UNSIGNED NOT NULL DEFAULT 0,
@@ -694,9 +690,25 @@ CREATE TABLE k4_faqcategories (
 	row_level		INTEGER UNSIGNED NOT NULL DEFAULT 1,
 	row_order		INTEGER UNSIGNED NOT NULL DEFAULT 1,
 	created			INTEGER UNSIGNED NOT NULL DEFAULT 0,
-	
+	num_answers		INTEGER UNSIGNED NOT NULL DEFAULT 0,
+	num_categories		INTEGER UNSIGNED NOT NULL DEFAULT 0,
+	row_type		INTEGER UNSIGNED NOT NULL DEFAULT 64,
 	can_view		INTEGER UNSIGNED NOT NULL DEFAULT 1,
 	
 	PRIMARY KEY(category_id)
 );
 CREATE INDEX category_id2 ON k4_faqcategories (category_id);
+
+CREATE TABLE k4_faqanswers (
+	answer_id		INTEGER UNSIGNED,
+	category_id		INTEGER UNSIGNED NOT NULL DEFAULT 0,
+	question		VARCHAR(255) NOT NULL DEFAULT '',
+	answer			TEXT,
+	row_order		INTEGER UNSIGNED NOT NULL DEFAULT 1,
+	created			INTEGER UNSIGNED NOT NULL DEFAULT 0,
+
+	can_view		INTEGER UNSIGNED NOT NULL DEFAULT 1,
+	
+	PRIMARY KEY(answer_id)
+);
+CREATE INDEX answer_id ON k4_faqanswers (answer_id);

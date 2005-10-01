@@ -134,6 +134,25 @@ class K4UserControlPanel extends FAAction {
 				$action				= &new K4ViewPMessage();
 				break;
 			}
+			case 'pmperformact': {
+				
+				$actions = array('move', 'delete');
+
+				if(isset($_REQUEST['action']) && in_array($_REQUEST['action'], $actions)) {
+					
+					// move PMs
+					if($_REQUEST['action'] == 'move') {
+						
+						$action		= &new K4SelectPMMoveFolder();
+
+					// delete PMs
+					} else {
+						
+						$action		= &new K4DeletePMessages();
+
+					}
+				}
+			}
 		}
 		
 		/* Execute an action */

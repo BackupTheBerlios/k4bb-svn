@@ -798,6 +798,7 @@ $app->setAction('editpmfolder', new K4EditPMFolder);
 $app->setAction('update_pmfolder', new K4UpdatePMFolder);
 $app->setAction('pm_delchoosefolder', new K4PreDeleteFolder);
 $app->setAction('pm_savemessage', new K4SendPMessage);
+$app->setAction('pm_movemessages', new K4MovePMessages);
 
 $app->setAction('list', new K4MemberList);
 

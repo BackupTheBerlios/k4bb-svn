@@ -52,6 +52,10 @@ function loop_recursive(&$breadcrumbs, &$dba, $temp) {
 				$temp['location'] = 'findpost.php?id='. $temp['reply_id'];
 				break;
 			}
+			case FAQANSWER: {
+				$temp['location'] = 'faq.php?c='. $temp['category_id'] .'#faq'. $temp['answer_id'];
+				break;
+			}
 		}
 		
 		$breadcrumbs[]			= $temp;
@@ -66,22 +70,36 @@ function loop_recursive(&$breadcrumbs, &$dba, $temp) {
 	}
 }
 
-function k4_bread_crumbs(&$template, &$dba, $location = NULL, $info = FALSE, $forum = FALSE) {
+function k4_bread_crumbs(&$template, &$dba, $location = NULL, $info = FALSE) {
 	global $_LANG, $_QUERYPARAMS;
-
+	
 	if($location != NULL && !$info) {
 		
 		$page = isset($_LANG[$location]) ? $_LANG[$location] : $location;
 		$template->setVar('current_location', $page);
 	
-	} elseif($info) {
+	} 
+	if($info) {
+		
+		$message_types		= array(CATEGORY, FORUM, TOPIC, REPLY);
 		
 		$breadcrumbs		= array();
 		
-		$forum				= ($info['row_type'] == FORUM || $info['row_type'] == CATEGORY) ? $info : ($forum ? $forum : array());
+		// this will look in forums
+		if(in_array($info['row_type'], $message_types)) {
+			$forum				= ($info['row_type'] == FORUM || $info['row_type'] == CATEGORY) ? $info : ($forum ? $forum : array());
+			
+			if(!empty($forum)) {
+				$breadcrumbs	= array_reverse(follow_forum_ids($breadcrumbs, $forum));
+			}
 		
-		if(!empty($forum)) {
-			$breadcrumbs	= array_reverse(follow_forum_ids($breadcrumbs, $forum));
+		// this will look in non-message things
+		} else {
+			if($info['row_type'] & FAQCATEGORY) {
+				$breadcrumbs	= follow_faqc_ids($breadcrumbs, $info);
+				$breadcrumbs[]	= array('name'=>$template->getVar('L_FAQLONG'),'location'=>'faq.php');
+				$breadcrumbs	= array_reverse($breadcrumbs);
+			}
 		}
 				
 		/**
@@ -150,6 +168,21 @@ function follow_forum_ids($breadcrumbs, $forum) {
 
 		$prefix				= $forum['row_level'] == 2 ? 'c' : 'f';
 		$breadcrumbs		= follow_forum_ids($breadcrumbs, $_ALLFORUMS[$prefix . $forum['parent_id']]);
+	}
+
+	return $breadcrumbs;
+}
+
+function follow_faqc_ids($breadcrumbs, $category) {
+	
+	$category['location']	= 'faq.php?c='. $category['category_id'];
+	
+	$breadcrumbs[]			= $category;
+	
+	if(isset($category['parent_id']) && $category['parent_id'] > 0) {
+		global $_FAQCATEGORIES;
+
+		$breadcrumbs		= follow_faqc_ids($breadcrumbs, $_FAQCATEGORIES[$category['parent_id']]);
 	}
 
 	return $breadcrumbs;

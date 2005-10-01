@@ -31,8 +31,6 @@
 
 error_reporting(E_ALL);
 
-ob_start();
-
 require "includes/filearts/filearts.php";
 require "includes/k4bb/k4bb.php";
 
@@ -201,6 +199,16 @@ $app->setAction('stylesets', new AdminManageStyleSets);
 $app->setAction('faq_categories', new AdminFAQCategories);
 $app->setAction('faq_addcategory', new AdminAddFAQCategory);
 $app->setAction('faq_insertcategory', new AdminInsertFAQCategory);
+$app->setAction('faq_csimpleupdate', new AdminFAQCategorySimpleUpdate);
+$app->setAction('faq_cedit', new AdminEditFAQCategory);
+$app->setAction('faq_cupdate', new AdminUpdateFAQCategory);
+$app->setAction('faq_cremove', new AdminRemoveFAQCategory);
+$app->setAction('faq_answers', new AdminFAQAnswers);
+$app->setAction('faq_addanswer', new AdminFAQAddAnswer);
+$app->setAction('faq_insertanswer', new AdminFAQInsertAnswer);
+$app->setAction('faq_aedit', new AdminEditFAQAnswer);
+$app->setAction('faq_aupdate', new AdminUpdateFAQAnswer);
+$app->setAction('faq_aremove', new AdminRemoveFAQAnswer);
 
 /* Email Users */
 $app->setAction('email', new AdminEmailUsers);
@@ -210,7 +218,5 @@ $app->setAction('email_users', new AdminSetSendEmails);
 $app->setAction('posts', new AdminPosts);
 
 $app->execute();
-
-ob_flush();
 
 ?>

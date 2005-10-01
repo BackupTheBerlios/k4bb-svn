@@ -47,7 +47,7 @@
 		<li><a href="calendar.php" title="{$L_CALENDER}" class="smalltext">{$L_CALENDAR}</a></li>
 		</if:if>
 		<li><a href="usergroups.php" title="{$L_USERGROUPS}" class="smalltext">{$L_USERGROUPS}</a></li>
-		<li><a href="search.php?act=new_posts" title="{$L_NEWPOSTS}" class="smalltext">{$L_NEWPOSTS}</a></li>
+		<li><a href="search.php?act=find&amp;newposts=1&amp;daysprune={$user_last_seen_days}" title="{$L_NEWPOSTS}" class="smalltext">{$L_NEWPOSTS}</a></li>
 		<is:logged>
 		<li><a href="search.php?act=find&amp;author={$user_name}" title="{$L_MYPOSTS}" class="smalltext">{$L_MYPOSTS}</a></li>
 		<li><a href="member.php?act=usercp" title="{$L_USERCONTROLPANEL}" class="smalltext">{$L_USERCONTROLPANEL}</a></li>

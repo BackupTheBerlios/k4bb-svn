@@ -726,15 +726,31 @@ CREATE INDEX pm_id2 ON k4_privmessagetracker(pm_id);
 
 DROP TABLE IF EXISTS k4_faqcategories;
 CREATE TABLE k4_faqcategories (
-	category_id		INT NOT NULL AUTO_INCREMENT,
+	category_id		INT NOT NULL SERIAL,
 	parent_id		INT NOT NULL DEFAULT 0,
 	name			VARCHAR(255) NOT NULL DEFAULT '',
 	row_level		INT NOT NULL DEFAULT 1,
 	row_order		INT NOT NULL DEFAULT 1,
 	created			INT NOT NULL DEFAULT 0,
-	
+	num_answers		INT NOT NULL DEFAULT 0,
+	num_categories		INT NOT NULL DEFAULT 0,
+	row_type		INT NOT NULL DEFAULT 64,
 	can_view		INT NOT NULL DEFAULT 1,
 	
 	PRIMARY KEY(category_id)
 );
 CREATE INDEX category_id2 ON k4_faqcategories (category_id);
+
+DROP TABLE IF EXISTS k4_faqanswers;
+CREATE TABLE k4_faqanswers (
+	answer_id		INT NOT NULL SERIAL,
+	category_id		INT NOT NULL DEFAULT 0,
+	question		VARCHAR(255) NOT NULL DEFAULT '',
+	answer			TEXT,
+	row_order		INT NOT NULL DEFAULT 1,
+	created			INT NOT NULL DEFAULT 0,
+	can_view		INT NOT NULL DEFAULT 1,
+	
+	PRIMARY KEY(answer_id)
+);
+CREATE INDEX answer_id ON k4_faqanswers (answer_id);

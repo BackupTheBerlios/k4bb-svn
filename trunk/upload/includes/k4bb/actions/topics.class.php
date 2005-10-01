@@ -1275,12 +1275,8 @@ class DeleteTopic extends FAAction {
 		// delete any possible moved topic redirectors
 		$request['dba']->executeUpdate("DELETE FROM ". K4TOPICS ." WHERE moved_new_topic_id = ". intval($topic['topic_id']));
 
-		if(!@touch(CACHE_DS_FILE, time()-86460)) {
-			@unlink(CACHE_DS_FILE);
-		}
-		if(!@touch(CACHE_EMAIL_FILE, time()-86460)) {
-			@unlink(CACHE_EMAIL_FILE);
-		}
+		reset_cache(CACHE_DS_FILE);
+		reset_cache(CACHE_EMAIL_FILE);
 		
 		/* Redirect the user */
 		$action = new K4InformationAction(new K4LanguageElement('L_DELETEDTOPIC', $topic['name'], $forum['name']), 'content', FALSE, 'viewforum.php?f='. $forum['forum_id'], 3);
@@ -1714,18 +1710,14 @@ class TopicsIterator extends FAProxyIterator {
 
 class TopicIterator extends FAArrayIterator {
 	
-	var $dba;
-	var $result;
+	var $dba, $result, $qp, $sr, $user, $reply_id;
 	var $users = array();
-	var $qp;
-	var $sr;
-	var $user;
 	
-	function TopicIterator(&$dba, &$user, $topic, $show_replies = TRUE) {
-		$this->__construct($dba, $user, $topic, $show_replies);
+	function TopicIterator(&$dba, &$user, $topic, $show_replies = TRUE, $reply_id = FALSE) {
+		$this->__construct($dba, $user, $topic, $show_replies, $reply_id = FALSE);
 	}
 
-	function __construct(&$dba, &$user, $topic, $show_replies = TRUE) {
+	function __construct(&$dba, &$user, $topic, $show_replies = TRUE, $reply_id = FALSE) {
 		
 		global $_QUERYPARAMS, $_USERGROUPS, $_USERFIELDS;
 		
@@ -1735,6 +1727,7 @@ class TopicIterator extends FAArrayIterator {
 		$this->user						= &$user;
 		$this->groups					= $_USERGROUPS;
 		$this->fields					= $_USERFIELDS;
+		$this->reply_id					= intval($reply_id);
 				
 		parent::__construct(array(0 => $topic));
 	}
@@ -1799,7 +1792,7 @@ class TopicIterator extends FAArrayIterator {
 		}
 
 		if($this->sr && $temp['num_replies'] > 0) {
-			$this->result					= &$this->dba->executeQuery("SELECT * FROM ". K4REPLIES ." WHERE topic_id = ". intval($temp['topic_id']) ." AND created >= ". (3600 * 24 * intval($temp['daysprune'])) ." ORDER BY ". $temp['sortedby'] ." ". $temp['sortorder'] ." LIMIT ". intval($temp['start']) .",". intval($temp['postsperpage']));
+			$this->result					= &$this->dba->executeQuery("SELECT * FROM ". K4REPLIES ." WHERE topic_id = ". intval($temp['topic_id']) ." ". ($this->reply_id ? "AND reply_id = ". $this->reply_id : "") ." AND created >= ". (3600 * 24 * intval($temp['daysprune'])) ." ORDER BY ". $temp['sortedby'] ." ". $temp['sortorder'] ." LIMIT ". intval($temp['start']) .",". intval($temp['postsperpage']));
 			$temp['replies']				= &new RepliesIterator($this->user, $this->dba, $this->result, $this->qp, $this->users, $this->groups, $this->fields);
 		}
 		

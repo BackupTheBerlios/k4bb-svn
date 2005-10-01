@@ -48,6 +48,9 @@ define('TOPIC', 4);
 define('REPLY', 8);
 define('GALLERY', 16);
 define('IMAGE', 32);
+define('FAQCATEGORY', 64);
+define('FAQANSWER', 128);
+
 
 
 /**
@@ -94,6 +97,7 @@ define('K4PRIVMESSAGES',	'k4_privmessages');
 define('K4PRIVMSGDRAFTS',	'k4_privmessagedrafts');
 define('K4PRIVMSGTRACKER',	'k4_privmessagetracker');
 define('K4FAQCATEGORIES',	'k4_faqcategories');
+define('K4FAQANSWERS',		'k4_faqanswers');
 
 define('K4TEMPTABLE',		'k4_'. substr(md5(uniqid(rand(), true)), 0, 16)); // special table
 

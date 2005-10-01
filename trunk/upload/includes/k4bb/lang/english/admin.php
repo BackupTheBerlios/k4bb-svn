@@ -699,11 +699,32 @@ $_LANG += array(
 
 /* FAQ */
 'L_ADDFAQCATEGORY'		=> 'Add New FAQ Category',
+'L_EDITFAQCATEGORY'		=> 'Edit FAQ Category',
 'L_WHOCANVIEWCATEGORY'	=> 'Who can view this Category?',
 'L_ADDEDFAQCATEGORY'	=> 'Successfully added the FAQ category <strong>%s</strong>.',
 'L_NOFAQCATEGORIES'		=> 'There are currently no active FAQ Categories.',
 'L_CHECKDELFAQCAT'		=> 'Are you sure that you would like to remove this FAQ Category and all Questions within it and any sub-categories?',
 'L_ADDSUBCATEGORY'		=> 'Add Sub Category',
+'L_UPDATEDFAQCATEGORY'	=> 'Successfully updated the FAQ category <strong>%s</strong>.',
+'L_BADFAQCATEGORY'		=> 'The selected FAQ Category does not exist.',
+'L_REMOVEDFAQCATEGORY'	=> 'Successfully removed the FAQ category <strong>%s</strong>, all of its sub-categories and all of the FAQ answers associated with it.',
+'L_CHECKDELFAQANS'		=> 'Are you sure that you would like to remove this FAQ answer?',
+'L_FAQANSWERS'			=> 'FAQ Answers',
+'L_MANAGEFAQANSWERS'	=> 'Manage FAQ Answers',
+'L_ADDFAQANSWER'		=> 'Add FAQ	Answer',
+'L_EDITFAQANSWER'		=> 'Edit FAQ Answer',
+'L_NOFAQANSWERSONLEVEL'	=> 'There are no FAQ answers on this level.',
+'L_INSERTANSQUESTION'	=> 'Please insert a question for this FAQ item.',
+'L_INSERTANSWER'		=> 'Please insert an answer for this FAQ item.',
+'L_INSERTANSORDER'		=> 'Please insert a listing order for this FAQ item.',
+'L_WHOCANVIEWANSWER'	=> 'Who can see this FAQ item',
+'L_INSERTANSORDER'		=> 'Please insert a numerical value for the display order of this FAQ item.',
+'L_ADDEDFAQANSWER'		=> 'Successfully added the FAQ answer with the question <strong>%s</strong>.',
+'L_TOPLEVEL'			=> 'Top Level',
+'L_BADFAQANSER'			=> 'The selected FAQ answer does not exist.',
+'L_UPDATEDFAQANSWER'	=> 'Successfully updated the FAQ answer for the question <strong>%s</strong>.',
+'L_ANSWERS'				=> 'Answers',
+'L_DELETEDFAQANSWER'	=> 'Successfully deleted the FAQ answer for the question <strong>%s</strong>.',
 /* / FAQ */
 
 /* Mass Emailer */

@@ -6,10 +6,10 @@
 	</div>
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
 		<tr>
-			<td class="k4_subtitle" colspan="5">{$L_MANAGECATEGORIES}</td>
+			<td class="k4_subtitle" colspan="3">{$L_MANAGECATEGORIES}</td>
 		</tr>
 		<tr>
-			<td class="alt3" colspan="5">
+			<td class="alt3" colspan="3">
 				<div align="center">
 					<script type="text/javascript">doHelpButton('add_category');</script>
 					<input type="button" class="button" style="font-weight: bold;" value="{$L_ADDFAQCATEGORY}" onclick="document.location='admin.php?act=faq_addcategory'" />
@@ -35,21 +35,22 @@
 		<list:item list="categories">
 		<list:switch list="categories" var="row_class" a="alt1" b="alt3">
 		<tr>
-			<form:form name="update_category" id="update_category" action="admin.php?act=categories_simpleupdate" method="post" enctype="multipart/form-data">
+			<form:form name="update_category" id="update_category" action="admin.php?act=faq_csimpleupdate" method="post" enctype="multipart/form-data">
 			<td class="{$row_class}" width="10%" align="center" width="10%">
-				<input type="hidden" name="id" value="{$category_id}" />
+				<input type="hidden" name="category_id" value="{$category_id}" />
 				<input type="text" size="3" name="row_order" id="row_order" value="{$row_order}" />
 				<form:error id="row_order_error" for="row_order" setclass="inputfailed" regex=".+"><span class="minitext">{$L_INSERTCATORDER}</span></form:error>
 				<form:error id="row_order_num_error" for="row_order" setclass="inputfailed" regex="([0-9])+"><span class="minitext">{$L_INSERTCATORDERNUM}</span></form:error>
 			</td>
 			<td class="{$row_class}" width="70%">
 				{$level}<strong>{$name}</strong>
+				<span class="smalltext"><em>({$num_answers} {$L_ANSWERS})</em></span>
 			</td>
 			<td class="alt2" width="20%" align="center" nowrap="nowrap">
 				<input type="button" class="button" style="color: #006600;" value="{$L_ADDSUBCATEGORY}" onclick="document.location='admin.php?act=faq_addcategory&id={$category_id}'" />
 				<input type="submit" class="button" value="{$L_SAVE}" />
-				<input type="button" class="button" value="{$L_EDIT}" onclick="document.location='admin.php?act=categories_edit&id={$category_id}'" />
-				<input type="button" class="button" style="color: #FF0000;" value="{$L_DELETE}" onclick="if(confirm('{$L_CHECKDELFAQCAT}')) { document.location='admin.php?act=categories_remove&id={$category_id}'; } else { return false; }" />
+				<input type="button" class="button" value="{$L_EDIT}" onclick="document.location='admin.php?act=faq_cedit&id={$category_id}'" />
+				<input type="button" class="button" style="color: #FF0000;" value="{$L_DELETE}" onclick="if(confirm('{$L_CHECKDELFAQCAT}')) { document.location='admin.php?act=faq_cremove&id={$category_id}'; } else { return false; }" />
 			</td>
 			</form:form>
 		</tr>

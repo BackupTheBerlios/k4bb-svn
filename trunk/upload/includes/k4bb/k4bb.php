@@ -112,8 +112,7 @@ class K4Controller extends FAController {
 	}
 
 	function execute() {
-		//print_r($this->_filters); exit;
-
+		
 		parent::execute();
 				
 		$request	= &$this->getRequest();
