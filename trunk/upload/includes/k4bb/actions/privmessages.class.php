@@ -79,30 +79,28 @@ class K4ShowPMFolder extends FAAction {
 		foreach($folder as $key=>$val)
 			$request['template']->setVar('folder_'. $key, $val);
 		
-		$num_pms		= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4PRIVMESSAGES ." WHERE member_id = ". intval($request['user']->get('id')));
-		$max_pms		= intval($request['template']->getVar('pmquota'));
-		
-		$result = &$request['dba']->executeQuery("SELECT * FROM ". K4PRIVMESSAGES ." WHERE member_id = ". intval($request['user']->get('id')) ." AND folder_id = ". intval($folder['id']) ." ORDER BY created DESC");
-		$it 	= &new K4PrivMessageIterator($request['dba'], $result, $request['template']->getVar('IMG_DIR'), $request['template']->getVar('pmrepliesperpage') );
-		
+		$num_pms			= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4PRIVMESSAGES ." WHERE member_id = ". intval($request['user']->get('id')));
+		$max_pms			= intval($request['template']->getVar('pmquota'));
 		
 		$resultsperpage		= $request['template']->getVar('pmsperpage');
-		$num_results		= $result->numrows();
+		$num_results		= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4PRIVMESSAGES ." WHERE member_id = ". intval($request['user']->get('id')) ." AND folder_id = ". intval($folder['id']));
 
 		$num_pages			= @ceil($num_results / $resultsperpage);
 		$page				= isset($_REQUEST['page']) && ctype_digit($_REQUEST['page']) && intval($_REQUEST['page']) > 0 ? intval($_REQUEST['page']) : 1;
+		$start				= ($page - 1) * $resultsperpage;
 		
 		$request['template']->setVar('page', $page);
-		$url				= &new FAUrl($_URL->__toString());
 
-		$pager				= &new FAPaginator($url, $num_results, $page, $resultsperpage);
+		$url				= &new FAUrl($_URL->__toString());
 		
-		if($num_results > $perpage) {
+		$pager				= &new FAPaginator($url, $num_results, $page, $resultsperpage);
+
+		if($num_results > $resultsperpage) {
 			$request['template']->setPager('pms_pager', $pager);
 
 			/* Create a friendly url for our pager jump */
 			$page_jumper	= $url;
-			$page_jumper->args['limit'] = $perpage;
+			$page_jumper->args['limit'] = $resultsperpage;
 			$page_jumper->args['page']	= FALSE;
 			$page_jumper->anchor		= FALSE;
 			$request['template']->setVar('pagejumper_url', preg_replace('~&amp;~i', '&', $page_jumper->__toString()));
@@ -110,16 +108,20 @@ class K4ShowPMFolder extends FAAction {
 		
 		/* Outside valid page range, redirect */
 		if(!$pager->hasPage($page) && $num_pages > 0) {
-			$action = new K4InformationAction(new K4LanguageElement('L_PASTPAGELIMIT'), 'content', FALSE, 'viewtopic.php?id='. $topic['topic_id'] .'&limit='. $perpage .'&page='. $num_pages, 3);
+			$action = new K4InformationAction(new K4LanguageElement('L_PASTPAGELIMIT'), 'content', FALSE, 'member.php?act=usercp&view=pmfolder&folder='. $folder['id'], 3);
 			return $action->execute($request);
 		}
-
+		
+		$result		= &$request['dba']->executeQuery("SELECT COUNT(*) FROM ". K4PRIVMESSAGES ." WHERE member_id = ". intval($request['user']->get('id')) ." AND folder_id = ". intval($folder['id']) ." ORDER BY created DESC LIMIT $start,$resultsperpage");
+		$it 		= &new K4PrivMessageIterator($request['dba'], $result, $request['template']->getVar('IMG_DIR'), $request['template']->getVar('pmrepliesperpage') );
 
 		$request['template']->setVar('pm_usedpercent', ceil(($num_pms / $max_pms) * 100));
 	
 		$request['template']->setVar('L_PMSGSTATS', sprintf($request['template']->getVar('L_PMSGSTATS'), $num_pms, $max_pms));
 		$request['template']->setFile('usercp_content', 'pm_listmessages.html');
 		$request['template']->setList('pmessages', $it);
+		
+		return TRUE;
 	}
 }
 
@@ -1215,11 +1217,11 @@ class K4PrivMessageIterator extends FAProxyIterator {
 	
 	var $result, $img_dir, $dba, $repliesperpage;
 	
-	function K4PrivMessageIterator(&$dba, $result, $img_dir, $repliesperpage) {
+	function K4PrivMessageIterator(&$dba, &$result, $img_dir, $repliesperpage) {
 		$this->__construct($dba, $result, $img_dir, $repliesperpage);
 	}
 
-	function __construct(&$dba, $result, $img_dir, $repliesperpage) {
+	function __construct(&$dba, &$result, $img_dir, $repliesperpage) {
 		
 		global $_FLAGGEDUSERS;
 

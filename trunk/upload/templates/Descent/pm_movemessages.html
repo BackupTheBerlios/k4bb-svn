@@ -1,0 +1,28 @@
+<is:logged>
+<form action="member.php?act=pm_movemessages" method="post" enctype="multipart/form-data">
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_MOVEPMSFROM}: <span style="font-weight: normal;">{$folder_name}</span></div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" width="50%"><strong>{$L_DESTINATIONFOLDER}:</strong></td>
+			<td class="alt3" width="50%">
+				<input type="hidden" name="original_folder" value="{$original_id}" />
+				<select name="destination_folder">
+					<list:list id="moveto_folders">
+					<list:item list="moveto_folders">
+					<option value="{$id}">{$name}</option>
+					</list:item>
+					</list:list>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" style="text-align: center;">
+				<input type="submit" value="{$L_MOVE}" class="button" />
+				<input type="reset" value="{$L_RESET}" class="button" />
+			</td>
+		</tr>
+	</table>
+</div>
+</form>
+</is:logged>

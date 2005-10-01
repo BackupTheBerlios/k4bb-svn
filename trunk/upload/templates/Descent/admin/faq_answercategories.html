@@ -1,0 +1,68 @@
+<is:admin>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">
+		{$L_FAQANSWERS}
+	</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="k4_subtitle" colspan="2">{$L_MANAGEFAQANSWERS}</td>
+		</tr>
+		<tr>
+			<td class="alt3" colspan="2">
+				<div align="center">
+					<input type="button" class="button" style="font-weight: bold;" value="{$L_ADDFAQANSWER}{$add_catname}" onclick="document.location='admin.php?act=faq_addanswer{$add_extra}'" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" colspan="2">{$L_MANAGEMENT}{$add_catname}</td>
+		</tr>
+		<list:list id="answers">
+		<list:default list="answers">
+		<tr>
+			<td class="alt3" colspan="2">
+				<div class="outset_box" style="text-align: center;">
+					<br />
+					<strong>{$L_NOFAQANSWERSONLEVEL}</strong>
+					<br /><br />
+				</div>
+			</td>
+		</tr>
+		</list:default>
+		<list:item list="answers">
+		<list:switch list="answers" var="row_class" a="alt1" b="alt3">
+		<tr>
+			<td class="{$row_class}" width="90%">
+				<em><strong>{$question}</strong></em>
+			</td>
+			<td class="alt3" width="10%" nowrap="nowrap">
+				<input type="button" class="button" value="{$L_EDIT}" onclick="document.location='admin.php?act=faq_aedit&id={$answer_id}'" />
+				<input type="button" class="button" style="color: #FF0000;" value="{$L_DELETE}" onclick="if(confirm('{$L_CHECKDELFAQANS}')) { document.location='admin.php?act=faq_aremove&id={$answer_id}'; } else { return false; }" />
+			</td>
+		</tr>
+		</list:switch>
+		</list:item>
+		</list:list>
+		<tr>
+			<td class="k4_subtitle" colspan="2">{$L_CATEGORIES}</td>
+		</tr>
+		<tr>
+			<td colspan="2" class="alt1">
+				<strong><a href="admin.php?act=faq_answers" title="{$L_TOPLEVEL}">--{$L_TOPLEVEL}--</a></strong>
+			</td>
+		</tr>
+		<list:list id="categories">
+		<list:item list="categories">
+		<list:switch list="categories" var="row_class" a="alt3" b="alt1">
+		<tr>
+			<td colspan="2" class="{$row_class}">
+				{$level}<strong><a href="admin.php?act=faq_answers&amp;c={$category_id}" title="{$name}">{$name}</a></strong>
+				<span class="smalltext"><em>({$num_answers} {$L_ANSWERS})</em></span>
+			</td>
+		</tr>
+		</list:switch>
+		</list:item>
+		</list:list>
+	</table>
+</div>
+</is:admin>

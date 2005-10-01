@@ -1,21 +1,3 @@
-<page:navigator id="pms_pager">
-<div align="right">
-	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
-		<tr>
-			<td class="alt3" id="page_jump1"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
-			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
-			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
-			<page:list id="pms_pager" before="3" after="3">
-			<list:item list="pms_pager">
-				<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
-			</list:item>
-			</page:list>
-			<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
-			<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
-		</tr>
-	</table>
-</div>
-</page:navigator>
 <div class="k4_borderwrap">
 	<div class="k4_maintitle">{$L_LISTMESSAGES}: <span style="font-weight: normal;">{$folder_name}</span></div>
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
@@ -55,6 +37,24 @@
 	</table>
 </div>
 <br />
+<page:navigator id="pms_pager">
+<div align="right">
+	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
+		<tr>
+			<td class="alt3" id="page_jump1"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
+			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
+			<page:list id="pms_pager" before="3" after="3">
+			<list:item list="pms_pager">
+				<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
+			</list:item>
+			</page:list>
+			<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
+			<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
+		</tr>
+	</table>
+</div>
+</page:navigator>
 <form action="member.php?act=usercp&amp;view=pmperformact" method="post" enctype="multipart/form-data">
 <div class="k4_borderwrap">
 	<div class="k4_maintitle">{$L_MESSAGES}</div>
@@ -129,3 +129,7 @@
 </div>
 </page:navigator>
 <core:import id="page_jumper" file="page_jumper.html" />
+<script type="text/javascript">
+	menu_init('page_jump1', 'page_jump_menu');
+	menu_init('page_jump2', 'page_jump_menu');
+</script>

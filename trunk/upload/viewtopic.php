@@ -234,7 +234,7 @@ class K4DefaultAction extends FAAction {
 
 		$url				= &new FAUrl($_URL->__toString());
 
-		$pager				= &new FAPaginator(new FAUrl($url, $num_results, $page, $perpage);
+		$pager				= &new FAPaginator($url, $num_results, $page, $perpage);
 		
 		if($num_results > $perpage) {
 			$request['template']->setPager('replies_pager', $pager);

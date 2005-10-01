@@ -134,7 +134,7 @@ function topicMakeUpdatable(topic_id, div_id) {
 			}
 		} catch(e) { alert(e.message); }
 	} else {
-		alert('Failed as http_requests (112)');
+		alert('Failed at http_requests (112)');
 	}
 }
 var topic_area_id = false;
