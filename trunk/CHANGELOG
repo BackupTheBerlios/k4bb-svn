@@ -26,9 +26,12 @@ Fixed far too many more bugs
 Made the MAP's work with recursion rather than MPTT and added 4 columns into the table
 Added the `row_order` column into the `k4_replies` table for future threaded view
 Fixed a private messaging bug but sacrificed the 'conversation' idea of it
-SOOOO MUCH STUFF THAT I DIDN'T COMMENT ON
+** SOOOO MUCH STUFF THAT I DIDN'T COMMENT ON **
 New BB Code parser
-Started to add hints of there being a FAQ system in
+Made the FAQ system
+Finished the private messaging system
+Added threaded view for topics
+Remade the look of the admin panel
 
 
 -- 2.0 Beta 6 Patch --
