@@ -1,0 +1,84 @@
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">
+		{$L_FAQLONG}<if:if var="add_catname" noteq=""><span style="font-weight:normal;">{$add_catname}</spamn></if:if>
+	</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<if:if var="has_top_level" eq="1">
+		<list:list id="faq_answers">
+		<tr>
+			<td class="alt3">
+				<ul type="circle">
+					<list:item list="faq_answers">
+					<li><a href="faq.php?c={$category_id}#faq{$answer_id}" title="{$question}"><strong>{$question}</strong></a></li>
+					</list:item>
+				</ul>
+			</td>
+		</tr>
+		</list:list>
+		</if:if>
+		<list:list id="faq_categories">
+		<list:item list="faq_categories">
+		<list:switch list="faq_categories" var="row_class" a="alt1" b="alt3">
+		<tr>
+			<td class="k4_subtitle">
+				<a href="faq.php?c={$category_id}" title="{$name}"><strong>{$name}</strong></a>
+			</td>
+		</tr>
+		<tr>
+			<td class="{$row_class}">
+				
+				<if:if var="num_answers" greater="0">
+				<list:sublist list="faq_categories" id="sub_answers" column="sub_answers">
+				<!-- Answers -->
+				<ul type="circle">
+					<list:item list="sub_answers">
+					<li><a href="faq.php?c={$category_id}#faq{$answer_id}" title="{$question}"><strong>{$question}</strong></a></li>
+					</list:item>
+				</ul>
+				<!-- / Answers -->
+				</list:sublist>
+				</if:if>
+				
+				<if:if var="num_categories" greater="0">
+				<list:sublist list="faq_categories" id="sub_categories" column="sub_categories">
+				<!-- Sub-Categories -->
+				<ul type="disc">
+					<list:item list="sub_categories">
+					<li>
+						<a href="faq.php?c={$category_id}" title="{$name}"><strong>{$name}</strong></a>
+						<span class="minitext"><em>({$num_answers} {$L_ANSWERS})</em></span>
+					</li>
+					</list:item>
+				</ul>
+				<!--/ Sub-Categories -->
+				</list:sublist>
+				</if:if>
+
+			</td>
+		</tr>
+		</list:switch>
+		</list:item>
+		</list:list>
+	</table>
+</div>
+<if:if var="has_top_level" eq="1">
+<br />
+<list:list id="faq_answers">
+<list:item list="faq_answers">
+<div class="k4_borderwrap">
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="k4_maintitle">
+				<a name="faq{$answer_id}" id="faq{$answer_id}">{$question}</a>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1">
+				{$answer}
+			</td>
+		</tr>
+	</table>
+</div>
+</list:item>
+</list:list>
+</if:if>
