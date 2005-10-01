@@ -55,9 +55,9 @@ class K4DefaultAction extends FAAction {
 		k4_bread_crumbs($request['template'], $request['dba'], (!$category ? 'L_FAQLONG' : NULL), $category);
 		$request['template']->setFile('content', 'faq.html');
 
-		$result = $request['dba']->executeQuery("SELECT * FROM ". K4FAQCATEGORIES ." WHERE row_level=$row_level AND parent_id=$category_id ORDER BY row_order ASC");
+		$result = $request['dba']->executeQuery("SELECT * FROM ". K4FAQCATEGORIES ." WHERE row_level=$row_level AND parent_id=$category_id AND can_view <= ". intval($request['user']->get('perms')) ." ORDER BY row_order ASC");
 		$it		= &new K4FAQIterator($result, $request['dba']);
-		$top_level = $request['dba']->executeQuery("SELECT * FROM ". K4FAQANSWERS ." WHERE category_id = $category_id ORDER BY row_order ASC");
+		$top_level = $request['dba']->executeQuery("SELECT * FROM ". K4FAQANSWERS ." WHERE category_id = $category_id AND can_view <= ". intval($request['user']->get('perms')) ." ORDER BY row_order ASC");
 		
 		$request['template']->setVar('has_top_level', ($top_level->hasNext() ? 1 : 0));
 		$request['template']->setList('faq_categories', $it);
@@ -81,12 +81,12 @@ class K4FAQIterator extends FAProxyIterator {
 		
 		// if there are more than one answers
 		if($temp['num_answers'] > 0) {
-			$temp['sub_answers'] = $this->dba->executeQuery("SELECT * FROM ". K4FAQANSWERS ." WHERE category_id = ". intval($temp['category_id']));
+			$temp['sub_answers'] = $this->dba->executeQuery("SELECT * FROM ". K4FAQANSWERS ." WHERE category_id = ". intval($temp['category_id']) ." AND can_view <= ". intval($_SESSION['user']->get('perms')));
 		}
 
 		// if there are more than one sub-categories
 		if($temp['num_categories'] > 0) {
-			$temp['sub_categories'] = $this->dba->executeQuery("SELECT * FROM ". K4FAQCATEGORIES ." WHERE parent_id = ". intval($temp['category_id']));
+			$temp['sub_categories'] = $this->dba->executeQuery("SELECT * FROM ". K4FAQCATEGORIES ." WHERE parent_id = ". intval($temp['category_id']) ." AND can_view <= ". intval($_SESSION['user']->get('perms')));
 		}
 
 		/* Should we free the result? */
