@@ -112,7 +112,7 @@ class K4ShowPMFolder extends FAAction {
 			return $action->execute($request);
 		}
 		
-		$result		= &$request['dba']->executeQuery("SELECT COUNT(*) FROM ". K4PRIVMESSAGES ." WHERE member_id = ". intval($request['user']->get('id')) ." AND folder_id = ". intval($folder['id']) ." ORDER BY created DESC LIMIT $start,$resultsperpage");
+		$result		= &$request['dba']->executeQuery("SELECT * FROM ". K4PRIVMESSAGES ." WHERE member_id = ". intval($request['user']->get('id')) ." AND folder_id = ". intval($folder['id']) ." ORDER BY created DESC LIMIT $start,$resultsperpage");
 		$it 		= &new K4PrivMessageIterator($request['dba'], $result, $request['template']->getVar('IMG_DIR'), $request['template']->getVar('pmrepliesperpage') );
 
 		$request['template']->setVar('pm_usedpercent', ceil(($num_pms / $max_pms) * 100));
@@ -887,15 +887,28 @@ class K4SelectPMMoveFolder extends FAAction {
 		}
 		
 		// get the folders that pm's can be moved to
-		$folders = $request['dba']->executeQuery("SELECT * FROM ". K4FOLDERS ." WHERE (user_id = ". intval($request['user']->get('id')) ." OR is_global = 1) AND (id <> ". PM_SENTITEMS ." AND id <> ". PM_SAVEDITEMS .")");
+		$folders = $request['dba']->executeQuery("SELECT * FROM ". K4PMFOLDERS ." WHERE ((user_id = ". intval($request['user']->get('id')) ." AND is_global = 0) OR is_global = 1) AND (id <> ". PM_SENTITEMS ." AND id <> ". PM_SAVEDITEMS .") ORDER BY id ASC");
 		
 		// set the original folder to the template
 		foreach($original as $key => $val) {
 			$request['template']->setVar('folder_'. $key, $val);
 		}
 		
+		$pm_ids = $prefix ='';
+
+		// loop through the messages and move them
+		foreach($_REQUEST['pmessage'] as $pm_id) {
+			
+			$pm_ids .= $prefix .' pm_id = '. intval($pm_id);
+			$prefix = 'OR';
+		}
+
+		$result		= &$request['dba']->executeQuery("SELECT * FROM ". K4PRIVMESSAGES ." WHERE member_id = ". intval($request['user']->get('id')) ." AND ($pm_ids)");
+		$it 		= &new K4PrivMessageIterator($request['dba'], $result, $request['template']->getVar('IMG_DIR'), $request['template']->getVar('pmrepliesperpage') );
+		
 		// set the folders list and template
 		$request['template']->setList('moveto_folders', $folders);
+		$request['template']->setList('pmessages', $it);
 		$request['template']->setFile('usercp_content', 'pm_movemessages.html');
 
 		return TRUE;
@@ -955,7 +968,7 @@ class K4MovePMessages extends FAAction {
 		}
 		
 		// success!
-		$action = new K4InformationAction(new K4LanguageElement('L_MOVEDPMESSAGES', $original['name'], $destination['name']), 'usercp_content', FALSE);
+		$action = new K4InformationAction(new K4LanguageElement('L_MOVEDPMESSAGES', $original['name'], $destination['name']), 'usercp_content', FALSE, 'member.php?act=usercp&view=pmfolder&folder='. $destination['id'], 3);
 		return $action->execute($request);
 
 		return TRUE;
@@ -978,7 +991,7 @@ class K4DeletePMessages extends FAAction {
 		}
 		
 		$less_newpms = 0;
-
+		
 		// loop through the messages and move them
 		foreach($_REQUEST['pmessage'] as $pm_id) {
 			
@@ -998,7 +1011,7 @@ class K4DeletePMessages extends FAAction {
 		}
 
 		// success! removed selected pms :D
-		$action = new K4InformationAction(new K4LanguageElement('L_DELETEDPMESSAGES', $original['name'], $destination['name']), 'usercp_content', FALSE);
+		$action = new K4InformationAction(new K4LanguageElement('L_DELETEDPMESSAGES'), 'usercp_content', FALSE, referer(), 3);
 		return $action->execute($request);
 
 		return TRUE;
@@ -1236,7 +1249,7 @@ class K4PrivMessageIterator extends FAProxyIterator {
 
 	function current() {
 		$temp					= parent::current();
-
+		
 		/* Set the topic icons */
 		$temp['posticon']		= $temp['posticon'] != '' ? iif(file_exists(BB_BASE_DIR .'/tmp/upload/posticons/'. $temp['posticon']), $temp['posticon'], 'clear.gif') : 'clear.gif';
 		

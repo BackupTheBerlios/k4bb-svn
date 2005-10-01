@@ -137,7 +137,7 @@ class K4UserControlPanel extends FAAction {
 			case 'pmperformact': {
 				
 				$actions = array('move', 'delete');
-
+				
 				if(isset($_REQUEST['action']) && in_array($_REQUEST['action'], $actions)) {
 					
 					// move PMs
@@ -156,8 +156,10 @@ class K4UserControlPanel extends FAAction {
 		}
 		
 		/* Execute an action */
-		$action->execute($request);
-		
+		if(isset($action)) {
+			$action->execute($request);
+		}
+
 		/* Create the ancestors bar */
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_USERCONTROLPANEL');
 

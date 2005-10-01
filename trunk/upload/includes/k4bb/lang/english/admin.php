@@ -725,6 +725,7 @@ $_LANG += array(
 'L_UPDATEDFAQANSWER'	=> 'Successfully updated the FAQ answer for the question <strong>%s</strong>.',
 'L_ANSWERS'				=> 'Answers',
 'L_DELETEDFAQANSWER'	=> 'Successfully deleted the FAQ answer for the question <strong>%s</strong>.',
+'L_NOFAQANSWERS'		=> 'There are no FAQ answers in this category.',
 /* / FAQ */
 
 /* Mass Emailer */

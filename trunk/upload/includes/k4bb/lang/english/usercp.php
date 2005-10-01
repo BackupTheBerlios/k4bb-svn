@@ -283,6 +283,7 @@ $_LANG += array(
 'L_PMBADDESTFOLDER'		=> 'The destination folder for these messages does not appear to exist.',
 'L_MOVEPMSFROM'			=> 'Move PMs From',
 'L_DELETEDPMESSAGES'	=> 'Successfully deleted the selected private messages.',
+'L_DESTINATIONFOLDER'	=> 'Destination Folder',
 
 );
 

@@ -70,7 +70,7 @@ function loop_recursive(&$breadcrumbs, &$dba, $temp) {
 	}
 }
 
-function k4_bread_crumbs(&$template, &$dba, $location = NULL, $info = FALSE) {
+function k4_bread_crumbs(&$template, &$dba, $location = NULL, $info = FALSE, $forum = FALSE) {
 	global $_LANG, $_QUERYPARAMS;
 	
 	if($location != NULL && !$info) {

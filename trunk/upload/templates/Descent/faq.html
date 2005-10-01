@@ -3,22 +3,29 @@
 		{$L_FAQLONG}<if:if var="add_catname" noteq=""><span style="font-weight:normal;">{$add_catname}</spamn></if:if>
 	</div>
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-		<if:if var="has_top_level" eq="1">
+		
 		<list:list id="faq_answers">
 		<tr>
 			<td class="alt3">
 				<ul type="circle">
+					<list:default list="faq_answers">
+					<div align="center" class="smalltext"><em>{$L_NOFAQANSWERS}</em></div>
+					</list:default>
 					<list:item list="faq_answers">
-					<li><a href="faq.php?c={$category_id}#faq{$answer_id}" title="{$question}"><strong>{$question}</strong></a></li>
+					<if:if var="has_top_level" eq="1"><li><a href="faq.php?c={$category_id}#faq{$answer_id}" title="{$question}"><strong>{$question}</strong></a></li></if:if>
 					</list:item>
 				</ul>
 			</td>
 		</tr>
 		</list:list>
-		</if:if>
-		<list:list id="faq_categories">
-		<list:item list="faq_categories">
-		<list:switch list="faq_categories" var="row_class" a="alt1" b="alt3">
+	</table>
+</div>
+<list:list id="faq_categories">
+<list:item list="faq_categories">
+<list:switch list="faq_categories" var="row_class" a="alt1" b="alt3">
+<br />
+<div class="k4_borderwrap">
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
 		<tr>
 			<td class="k4_subtitle">
 				<a href="faq.php?c={$category_id}" title="{$name}"><strong>{$name}</strong></a>
@@ -56,11 +63,11 @@
 
 			</td>
 		</tr>
-		</list:switch>
-		</list:item>
-		</list:list>
 	</table>
 </div>
+</list:switch>
+</list:item>
+</list:list>
 <if:if var="has_top_level" eq="1">
 <br />
 <list:list id="faq_answers">
