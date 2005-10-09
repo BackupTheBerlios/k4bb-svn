@@ -35,7 +35,7 @@ if(!defined('IN_K4')) {
 }
 
 define('K4MPTT', FALSE);
-define('VERSION', '2.0 Beta 7');
+define('VERSION', '2.0 Beta 8');
 
 /**
  * Constants that define what a category/forum/thread/etc is

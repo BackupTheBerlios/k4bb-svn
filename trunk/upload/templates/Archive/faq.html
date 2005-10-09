@@ -1,0 +1,56 @@
+<div>
+	<div class="k4_maintitle">
+		{$L_FAQLONG}<if:if var="add_catname" noteq=""><span style="font-weight:normal;">{$add_catname}</spamn></if:if>
+	</div>
+	<list:list id="faq_answers">
+	<ul>
+		<list:default list="faq_answers">
+		<li><strong>{$L_NOFAQANSWERS}</strong></li>
+		</list:default>
+		<list:item list="faq_answers">
+		<if:if var="has_top_level" eq="1"><li><a href="faq.php?c={$category_id}#faq{$answer_id}" title="{$question}">{$question}</a></li></if:if>
+		</list:item>
+	</ul>
+	</list:list>
+</div>
+<list:list id="faq_categories">
+<ul>
+	<list:item list="faq_categories">
+	<li><a href="faq.php?c={$category_id}" title="{$name}">{$name}</a>
+		<if:if var="num_answers" greater="0">
+		<list:sublist list="faq_categories" id="sub_answers" column="sub_answers">
+		<!-- Answers -->
+		<ul type="circle">
+			<list:item list="sub_answers">
+			<li><a href="faq.php?c={$category_id}#faq{$answer_id}" title="{$question}">{$question}</a></li>
+			</list:item>
+		</ul>
+		<!-- / Answers -->
+		</list:sublist>
+		</if:if>
+		
+		<if:if var="num_categories" greater="0">
+		<list:sublist list="faq_categories" id="sub_categories" column="sub_categories">
+		<!-- Sub-Categories -->
+		<ul type="disc">
+			<list:item list="sub_categories">
+			<li><a href="faq.php?c={$category_id}" title="{$name}">{$name}</a></li>
+			</list:item>
+		</ul>
+		<!--/ Sub-Categories -->
+		</list:sublist>
+		</if:if>
+	</li>
+	</list:item>
+</ul>
+</list:list>
+<if:if var="has_top_level" eq="1">
+<list:list id="faq_answers">
+<list:item list="faq_answers">
+<div>
+	<div class="alt2"><strong>{$question}</strong></div>
+	<div class="alt1">{$answer}</div>
+</div>
+</list:item>
+</list:list>
+</if:if>

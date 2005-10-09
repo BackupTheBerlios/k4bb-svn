@@ -194,6 +194,7 @@ class PostTopic extends FAAction {
 								
 				if($body_text != $poll_text) {
 					$body_text	= $poll_text;
+					$is_poll	= 1;
 				}
 			}
 
@@ -536,6 +537,7 @@ class PostDraft extends FAAction {
 			$poll_text		= $poller->parse($request, $is_poll);
 
 			if($body_text != $poll_text) {
+				$is_poll	= 1;
 				$body_text	= $poll_text;
 			}
 
@@ -977,7 +979,7 @@ class UpdateTopic extends FAAction {
 		
 		/* Parse the bbcode */
 		$body_text	= $bbcode->parse();
-		
+
 		// permissions are taken into account inside the poller
 		$poller		= &new K4BBPolls($body_text, $topic['body_text'], $forum, $topic['topic_id']);
 				
@@ -1003,7 +1005,7 @@ class UpdateTopic extends FAAction {
 		if((isset($_REQUEST['submit_type']) && $_REQUEST['submit_type'] == 'post') || isset($_REQUEST['post'])) {
 			
 			// put it here to avoid previewing
-			$is_poll	= 0;
+			$is_poll		= 0;
 			$poll_text		= $poller->parse($request, $is_poll);
 
 			if($body_text != $poll_text) {

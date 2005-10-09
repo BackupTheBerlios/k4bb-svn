@@ -100,6 +100,11 @@ class K4BBCodeParser {
 	var $_omit_tags = array();
 	
 	/**
+	 * A debug variable to exit search matches or not
+	 */
+	var $exit_matches = FALSE;
+
+	/**
 	 * Constructor, initialize the compilers
 	 * @author Peter Goodman
 	 */
@@ -109,25 +114,30 @@ class K4BBCodeParser {
 		$this->set_default_compiler(new K4Default_Compiler);
 
 		// set tags to omit
-		$this->set_omit_tags(array('poll', 'hr'));
+		$this->set_omit_tags(array('question', '*', 'poll', 'hr'));
+
+		// add the omit compiler
+		$this->set_compiler('omit', new K4Omit_Compiler);
 	}
 	
 	/**
 	 * Find the first opening tag and start parsing
 	 */
-	function parse($buffer) {
+	function parse($buffer, $exit_matches = FALSE) {
 		
+		$this->exit_matches = $exit_matches;
+
 		$buffer		= trim($buffer, "\r\n\s\t");
 
 		// if there are any open tags
-		if(preg_match('~(?:[\t]*)(\[([a-z]+)(=[a-zA-Z0-9\-_ \@\:/\?\+\%\&\.\#\=\&\;\/\\\]*)?\])(.*)~is', $buffer, $matches)) {
-						
+		if(preg_match('~(\[([a-z]+)(=([^\]]+))?\])(.*)~is', $buffer, $matches)) {
+
 			// parse the open tags
-			$buffer = preg_replace_callback('~(?:[\t]*)(\[([a-z]+)(=[a-zA-Z0-9\-_ \@\:/\?\+\%\&\.\#\=\&\;\/\\\]*)?\])(.*)~is', array($this, 'parse_tag'), $buffer);
+			$buffer = preg_replace_callback('~(\[([a-z]+)(=([^\]]+))?\])(.*)~is', array($this, 'parse_tag'), $buffer);
 		}
 		
 		// return the finished, compiled text
-		return $buffer;
+		return $this->finish($buffer);
 	}
 
 	/**
@@ -137,12 +147,9 @@ class K4BBCodeParser {
 
 		// loop through the compilers
 		foreach($this->_compilers as $name => $compiler) {
-			
-			//if(!in_array($name, $this->_omit_tags)) {
 				
-				// revert the text
-				$buffer = $compiler->revert($buffer);
-			//}
+			// revert the text
+			$buffer = $compiler->revert($buffer);
 		}
 		
 		// return the finished, reverted text
@@ -155,17 +162,20 @@ class K4BBCodeParser {
 	 * been replaced
 	 */
 	function parse_tag($matches) {
-		
+
 		// 0 -> entire string
 		// 1 -> full tag
 		// 2 -> name
-		// 3 -> parameters
-		// 4 -> everything after the tag
+		// 3 -> parameters (with =)
+		// 4 -> parameters
+		// 5 -> everything after the tag
 		
 		// the tag name
 		$name		= $matches[2];
 		
+		
 		if(!in_array(strtolower($name), $this->_omit_tags)) {
+			
 			// text that we have matched
 			$buffer		= $matches[0];
 
@@ -177,7 +187,7 @@ class K4BBCodeParser {
 			
 			// If there is a compiler for this tag
 			if(is_a($compiler, 'K4BBCodeTag')) {
-				
+
 				// the starting position of the opening tag.. should always be 0
 				$start_pos	= intval(strpos($buffer, $matches[1]));
 				
@@ -205,26 +215,7 @@ class K4BBCodeParser {
 					// start the process over
 					return $this->parse($new_text);
 				}
-				
-
-//				echo '<fieldset><legend>'. $matches[1] .'</legend><pre>'. $tagged_text .'</pre></fieldset><br />';
-//
-//				// if the end position of the closing tag is the end of the string, then we
-//				// need to add the closing tag to the end, and return the text before getting
-//				// into a mess
-//				if($end_pos == strlen($buffer)) {
-//					
-//					// this weeds out any tags that have empty buffers
-//					if($tagged_text != '') {
-//						$new_text	.= $compiler->parse_open($matches);
-//						$new_text	.= $compiler->parse_buffer($buffer);
-//						$new_text	.= $compiler->parse_close();
-//					}
-//					$new_text		.= $untagged_text;
-//					
-//					return $this->parse($new_text);
-//				}
-				
+								
 				// remove anomalous tags from the tagged and untagged text
 				$this->remove_extra_tags($tagged_text);
 				//$this->remove_extra_tags($untagged_text);
@@ -239,12 +230,14 @@ class K4BBCodeParser {
 				}
 
 				$new_text .= $untagged_text;
-			
+				
 				// recursively call the parse function to restart the
 				// proccess but with a new tag or return our compiled
 				// text
 				return $this->parse($new_text);
 			}
+		} else {
+			return $matches[1] . $this->parse($matches[5]);
 		}
 	}
 
@@ -258,10 +251,11 @@ class K4BBCodeParser {
 		// 1 -> whole tag
 		// 2 -> '/' if it's an ending
 		// 3 -> name
-		// 4 -> params
+		// 4 -> params (with =)
+		// 5 -> params
 		
 		// find all of this type of tag in the text
-		preg_match_all('~(?:[\t]*)(\[(/)?('. preg_quote($name) .')(=[a-zA-Z0-9\-_ \@\:/\?\+\%\&\.\#\=\&\;\/\\\]*)?\])~i', $buffer, $tag_matches, PREG_SET_ORDER);
+		preg_match_all('~(\[(/)?('. preg_quote($name) .')(=([^\]]+))?\])~i', $buffer, $tag_matches, PREG_SET_ORDER);
 				
 		// default position of the closing tag
 		$pos			= $end_pos;
@@ -280,7 +274,6 @@ class K4BBCodeParser {
 
 		// we also always want to store a previous versio
 		// of the buffer to check against the stack
-//		$prev_buffer	= $buffer;
 		
 		// loop through the matches
 		foreach($tag_matches as $match) {				
@@ -310,7 +303,6 @@ class K4BBCodeParser {
 			}
 
 			// replace the tag with a token so that we don't use it again
-//			$prev_buffer	= $buffer;
 			$buffer			= substr_replace($buffer, str_repeat('*', strlen($match[1])), strpos($buffer, $match[1]), strlen($match[1]));
 			
 			// save the current tag as the previous tag for the next iteration
@@ -319,33 +311,14 @@ class K4BBCodeParser {
 			$i++;
 		}
 		
-//		// if we have reached the end of the loop without a match,
-//		// set the pos to the end of the string. The alternative is
-//		// look if the stack isn't empty
+		// if we have reached the end of the loop without a match,
+		// set the pos to the end of the string. The alternative is
+		// look if the stack isn't empty
 		if(!empty($stack) && $tag_to_match == '') {
 			
 			// tell the parser that we have not matched a closing tag and to
 			// remove the opening tag from the buffer
 			$pos = -1;
-//			
-//			$create_tag_at_pos = TRUE;
-//
-//			// set our tag position
-//			$pos		= strlen($buffer);
-//
-//			// do some checking and modifying on our stack
-//			$stack		= array_values($stack);
-//
-//			// if the first remaining stack item is an opening tag,
-//			// set the position to just after it
-//			if($stack[0][2] == '') {
-//				$pos	= strpos($prev_buffer, $prev_tag[1]) - $prev_tag[1];
-//				print_r($prev_tag); exit;
-//			}
-//
-//			if($stack[0][2] == '/') {
-//				$pos	= $pos - strlen($stack[0][1]);
-//			}
 		}
 		
 		// since we are looking for the closing tag, we may not have
@@ -354,14 +327,6 @@ class K4BBCodeParser {
 		if($tag_to_match == '' && $i == $num_total) {
 			$pos = -1;
 
-//			// add 1 to simulate another tag
-//			if($num_closes == (($i + 1) / 2)) {
-//				
-//				// set the position to right after our last tag matched
-//				$pos = strpos($prev_buffer, $prev_tag[1]) + strlen($prev_tag[1]);
-//				
-//				$create_tag_at_pos = TRUE;
-//			}
 		}
 
 		// if we have found our tag to match and if the stack ins't empty
@@ -378,16 +343,10 @@ class K4BBCodeParser {
 	 */
 	function remove_extra_tags(&$buffer) {
 		
-//		// if the starting position of this is the first character, don't
-//		// use this
-//		if($start_pos == 0) {
-//			return;
-//		}
-
 		$workable_buffer = $buffer;
 
 		// find all of the tags
-		preg_match_all('~(?:[\t]*)(\[(/)?([a-z]+)(=[a-zA-Z0-9\-_ \@\:/\?\+\%\&\.\#\=\&\;\/\\\]*)?\])~i', $buffer, $tag_matches, PREG_SET_ORDER);
+		preg_match_all('~(\[(/)?([a-z]+)(=([^\]]+))?\])~i', $buffer, $tag_matches, PREG_SET_ORDER);
 		
 		// this will hold a multidimensional array of tag names -> all of the
 		// tags with those names found
@@ -403,7 +362,8 @@ class K4BBCodeParser {
 			// 1 -> whole tag
 			// 2 -> '/' if it's an ending
 			// 3 -> name
-			// 4 -> params
+			// 4 -> params (with =)
+			// 5 -> params
 			
 			// add this tag to the names array under its tag name
 			if(!in_array(strtolower($match[3]), $this->_omit_tags)) {
@@ -448,7 +408,6 @@ class K4BBCodeParser {
 						} else {
 
 							// otherwise, remove the closing tag from the text
-//							$buffer = substr_replace($buffer, '', strpos($buffer, $tag[1]), strlen($tag[1]));
 							$remove_positions[] = array(strpos($workable_buffer, $tag[1]), strlen($tag[1]));
 						}
 						
@@ -459,7 +418,6 @@ class K4BBCodeParser {
 				
 				// if there are still open tags within the text, remove them
 				if(!empty($open)) {
-					//$buffer = preg_replace('~(?:[\t]*)(\[(/)?'. $tagname .'(=[a-zA-Z0-9]*)?\])~i', '', $buffer);
 					foreach($open as $tag) {
 						$remove_positions[] = array(strpos($workable_buffer, $tag[1]), strlen($tag[1]));
 					}
@@ -479,6 +437,11 @@ class K4BBCodeParser {
 				$num_chars_less += $pos[1];
 			}
 		}
+	}
+	function finish($buffer) {
+		$buffer = str_replace(array('&#91;', '&#93;'), array('[', ']'), $buffer);
+
+		return $buffer;
 	}
 
 	/**
@@ -520,6 +483,12 @@ class K4BBCodeParser {
 		// add them to the array of arguments
 		$this->_omit_tags	= array_merge($this->_omit_tags, $tags);
 	}
+	/**
+	 * Clear the omit tags
+	 */
+	function clear_omit_tags() {
+		$this->_omit_tags = array();
+	}
 }
 
 /**
@@ -553,26 +522,24 @@ class K4BBCodeTag {
 	function get_params($matches) {
 		$params = array();
 		
-		// if this was a submatched element, i.e. matched from within
-		// a matched tags text
-		if(isset($matches[2]) && ($matches[2] == '' || $matches[2] == '/')) {
-//			$params = (isset($matches[4]) && $matches[4] != '') ? explode('=', trim($matches[4])) : $params;
-			
+//		// if this was a submatched element, i.e. matched from within
+//		// a matched tags text
+//		if(isset($matches[2]) && ($matches[2] == '' || $matches[2] == '/')) {
+//			
+//			$lookwhere = trim($matches[4]);
+//
+//		// otherwise
+//		} else {
 			$lookwhere = trim($matches[4]);
-
-		// otherwise
-		} else {
-//			$params = (isset($matches[3]) && $matches[3] != '') ? explode('=', trim($matches[3])) : $params;
-			$lookwhere = trim($matches[3]);
-		}
-
-		$pos = strpos($lookwhere, '=');
-
-		if($pos !== FALSE) {
-			$params[] = substr($lookwhere, $pos + 1);
-		}
+//		}
 		
-		return $params;
+//		$pos = strpos($lookwhere, '=');
+//
+//		if($pos !== FALSE && $pos <= 1) {
+//			$params[] = substr($lookwhere, $pos + 1);
+//		}
+//		print_r($params); exit;
+		return array($lookwhere);
 	}
 }
 
@@ -581,11 +548,14 @@ class K4BBCodeTag {
  * unsupported tags and maintain the text
  */
 class K4Default_Compiler extends K4BBCodeTag {
-	function parse_open() {
-		return '';
+	var $matches;
+	function parse_open($matches) {
+		$this->matches = $matches;
+
+		return str_replace(array('[', ']'), array('&#91;', '&#93;'), $matches[1]);
 	}
 	function parse_close() {
-		return '';
+		return '&#91;/'. $matches[3] .'&#93;';
 	}
 }
 
@@ -817,6 +787,32 @@ class K4Quote_Compiler extends K4BBCodeTag {
 		$buffer = preg_replace('~<!-- QUOTE --><div align="center" id="quote([0-9]+?)"><br /><div class="quotetitle" align="left">QUOTE: </div><div class="quotecontent" align="left">\n~i', '[quote]', $buffer);
 		$buffer = preg_replace('~<!-- QUOTE --><div align="center" id="quote([0-9]+?)"><br /><div class="quotetitle" align="left">QUOTE \( (.+?) \): </div><div class="quotecontent" align="left">\n~i', '[quote=\\1]', $buffer);
 		$buffer = preg_replace('~\n</div><br /></div><!-- / QUOTE -->~i', '[/quote]', $buffer);
+
+		return $buffer;
+	}
+}
+
+/**
+ * Omit tag, any bbcodes in between will be omitted
+ */
+class K4Omit_Compiler extends K4BBCodeTag {
+	function parse_open() {
+		return '<!-- OMIT -->';
+	}
+	function parse_buffer($buffer) {
+		
+		$buffer = str_replace(array('[', ']'), array('&#91;', '&#93;'), $buffer);
+		
+		return $buffer;
+	}
+	function parse_close() {
+		return  '<!-- / OMIT -->';
+	}
+	function revert($buffer) {
+
+		// revert all types of ways to accomplish underlined text
+		$buffer = preg_replace('~<!-- OMIT -->~i', '[omit]', $buffer);
+		$buffer = preg_replace('~<!-- / OMIT -->~i', '[/omit]', $buffer);
 
 		return $buffer;
 	}
@@ -1118,6 +1114,10 @@ class K4Image_Compiler extends K4BBCodeTag {
 		$this->dynamic_url = (bool)$dynamic_url;
 	}
 	function parse_open($matches) {
+		
+		$params = $this->get_params($matches);
+		$this->url = (isset($params[0]) && $params[0] != '' ? $params[0] : (isset($params[1]) ? $params[1] : ''));
+
 		return '';
 	}
 	function parse_buffer($buffer) {
@@ -1225,13 +1225,15 @@ class K4Poll_Compiler extends K4BBCodeTag {
 	function parse_open($matches) {
 		
 		$params = $this->get_params($matches);
-		
+
 		$this->question = (isset($params[0]) && $params[0] != '' ? $params[0] : (isset($params[1]) ? $params[1] : ''));
 		
 		return '';
 	}
 	function parse_buffer($buffer) {
 		
+		$ret = '';
+
 		if($this->question != '' && $this->can_poll) {
 			
 			// remove any type of new lines from the buffer
@@ -1249,31 +1251,31 @@ class K4Poll_Compiler extends K4BBCodeTag {
 					$this->num_polls++;
 					
 					// get the question
-					$question				= $this->dba->quote(htmlentities($this->question, ENT_QUOTES));
-					$insert_question		= $this->dba->executeUpdate("INSERT INTO ". K4POLLQUESTIONS ." (question, created, user_id, user_name) VALUES ('". $question ."', ". time() .", ". intval($_SESSION['user']->get('id')) .", '". $_DBA->quote($_SESSION['user']->get('name')) ."')");
+					$question				= $this->dba->quote(htmlentities(html_entity_decode($this->question, ENT_QUOTES), ENT_QUOTES));
+					$insert_question		= $this->dba->executeUpdate("INSERT INTO ". K4POLLQUESTIONS ." (question, created, user_id, user_name) VALUES ('". $question ."', ". time() .", ". intval($_SESSION['user']->get('id')) .", '". $this->dba->quote($_SESSION['user']->get('name')) ."')");
 					$question_id			= $this->dba->getInsertId(K4POLLQUESTIONS, 'id');
 					
 					// loop through the poll questions and add them to the database
 					$i = 1;
-					foreach($items as $item) {
-						if($item != '') {
-							$this->dba->executeUpdate("INSERT INTO ". K4POLLANSWERS ." (question_id, answer) VALUES (". intval($question_id) .", '". $_DBA->quote(htmlentities($answer), ENT_QUOTES) ."')");
+					foreach($items as $answer) {
+						if($answer != '') {
+							$this->dba->executeUpdate("INSERT INTO ". K4POLLANSWERS ." (question_id, answer) VALUES (". intval($question_id) .", '". $this->dba->quote(htmlentities(html_entity_decode($answer, ENT_QUOTES), ENT_QUOTES), ENT_QUOTES) ."')");
 							
-							if($i >= $max_poll_answers) {
+							if($i >= $this->max_poll_answers) {
 								break;
 							}
 
 							$i++;
 						}
 					}
-				} else {
-					return '';
+
+					$ret = '[poll='. $question_id .']';
 				}
 			}
 		}
 				
 		/* Return the link or nothing */
-		return '[poll='. $question_id .']';
+		return $ret;
 	}
 	function parse_close() {
 		return '';
@@ -1517,6 +1519,9 @@ class BBCodex extends FAObject {
 	}
 }
 
+/** 
+ * Do polls
+ */
 class K4BBPolls extends FAObject {
 	
 	var $text;
@@ -1537,6 +1542,8 @@ class K4BBPolls extends FAObject {
 
 		/* Initialize the parser */
 		$this->bbcode_parser = &new K4BBCodeParser();
+		$this->bbcode_parser->clear_omit_tags();
+		$this->bbcode_parser->set_omit_tags(array('*', 'poll', 'hr'));
 	}
 
 	/* Parse the text and make a poll out of it */
@@ -1549,7 +1556,7 @@ class K4BBPolls extends FAObject {
 		$this->bbcode_parser->set_compiler('question', new K4Poll_Compiler($request['dba'], $can_poll, $request['template']->getVar('maxpollquestions'), $request['template']->getVar('maxpolloptions')));
 
 		$this->text = $this->bbcode_parser->parse($this->text);
-				
+		
 		$this->second_pass($request, $is_poll);
 
 		return $this->text;

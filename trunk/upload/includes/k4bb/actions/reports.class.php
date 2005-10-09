@@ -163,12 +163,12 @@ class ViewBadPostReports extends FAAction {
 	function execute(&$request) {
 		
 		global $_URL;
+		
+		/* set the breadcrumbs bit */
+		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 
 		if(!isset($_REQUEST['id']) || !$_REQUEST['id'] || intval($_REQUEST['id']) == 0) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
-
 			return $action->execute($request);
 		}
 			
@@ -176,25 +176,19 @@ class ViewBadPostReports extends FAAction {
 		
 		/* Check the forum data given */
 		if(!$forum || !is_array($forum) || empty($forum)) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
-
 			return $action->execute($request);
 		}
 			
 		/* Make sure the we are trying to post into a forum */
 		if(!($forum['row_type'] & FORUM)) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_CANTMODACATEGORY'), 'content', FALSE);
-
 			return $action->execute($request);
 		}
 		
-		foreach($forum as $key => $val)
+		foreach($forum as $key => $val) {
 			$request['template']->setVar('forum_'. $key, $val);
-		
+		}
 
 		/**
 		 * Moderator Functions
@@ -252,8 +246,8 @@ class ViewBadPostReports extends FAAction {
 		/* Get the bad post reports for this forum */
 		$start				= ($page - 1) * $perpage;
 		
-		$reports			= &$request['dba']->executeQuery("SELECT * FROM ". K4BADPOSTREPORTS ." WHERE forum_id = ". intval($forum['forum_id'] ." ORDER BY created ASC LIMIT $start,$perpage"));
-		$it					= &new BadPostReportIterator($request['dba'], $reports);
+		$reports			= $request['dba']->executeQuery("SELECT * FROM ". K4BADPOSTREPORTS ." WHERE forum_id = ". intval($forum['forum_id'] ." ORDER BY created ASC LIMIT $start,$perpage"));
+		$it					= new BadPostReportIterator($request['dba'], $reports);
 		$request['template']->setList('badpost_reports', $it);
 
 		$request['template']->setFile('content', 'badpost_reports.html');
@@ -348,40 +342,39 @@ class BadPostReportIterator extends FAProxyIterator {
 
 			$temp['topic_name']	= $topic['name'];
 			$temp['url']		= 'viewtopic.php?id='. $topic['topic_id'];
-			$temp['id']			= $topic['topic_id'];
+			$temp['post_id']	= $topic['topic_id'];
 
 			$this->topics[$temp['topic_id']] = $topic;
 
 			$temp				= array_merge($temp, $topic);
 		} else {
 			$reply				= $this->dba->getRow("SELECT * FROM ". K4REPLIES ." WHERE reply_id = ". intval($temp['reply_id']));
-
-			$temp['id']			= $reply['reply_id'];
+			$temp['post_id']	= $reply['reply_id'];
 			$temp['views']		= '--';
 			$temp['url']		= 'findpost.php?id='. $reply['reply_id'];
 			$temp['topic_name'] = !isset($this->topics[$reply['topic_id']]) ? $this->dba->getValue("SELECT name FROM ". K4TOPICS ." WHERE topic_id = ". intval($reply['topic_id'])) : $this->topics[$reply['topic_id']]['name'];
-		
+			
 			$temp				= array_merge($temp, $reply);
 		}
 
 		if($temp['poster_id'] > 0) {
-			$user						= !isset($this->users[$temp['poster_id']]) ? $this->dba->getRow("SELECT ". $this->qp['user'] . $this->qp['userinfo'] ." FROM ". K4USERS ." u LEFT JOIN ". K4USERINFO ." ui ON u.id=ui.user_id WHERE u.id=". intval($temp['poster_id'])) : $this->users[$temp['poster_id']];
+			$user					= !isset($this->users[$temp['poster_id']]) ? $this->dba->getRow("SELECT ". $this->qp['user'] . $this->qp['userinfo'] ." FROM ". K4USERS ." u LEFT JOIN ". K4USERINFO ." ui ON u.id=ui.user_id WHERE u.id=". intval($temp['poster_id'])) : $this->users[$temp['poster_id']];
 			
-			$group						= get_user_max_group($user, $this->groups);
+			$group					= get_user_max_group($user, $this->groups);
 			
-			$user['group_color']		= (!isset($group['color']) || $group['color'] == '') ? '000000' : $group['color'];
-			$user['group_nicename']		= $group['nicename'];
-			$user['group_avatar']		= $group['avatar'];
-			$user['online']				= (time() - ini_get('session.gc_maxlifetime')) > $user['seen'] ? 'offline' : 'online';
+			$user['group_color']	= (!isset($group['color']) || $group['color'] == '') ? '000000' : $group['color'];
+			$user['group_nicename']	= $group['nicename'];
+			$user['group_avatar']	= $group['avatar'];
+			$user['online']			= (time() - ini_get('session.gc_maxlifetime')) > $user['seen'] ? 'offline' : 'online';
 			
 			foreach($user as $key => $val)
 				$temp['poster_'. $key] = $val;
 
 			$this->users[$temp['poster_id']] = $user;
-		}
-		
-		$temp['body_text']		= preg_replace("~<!--(.+?)-->~is", "", $temp['body_text']);
-		$temp['forum_name']		= $this->forums['f'. $temp['forum_id']]['name'];
+		}		
+
+		$temp['body_text']		= isset($temp['body_text']) ? preg_replace("~<!--(.+?)-->~is", "", $temp['body_text']) : '';
+		$temp['forum_name']		= isset($this->forums['f'. $temp['forum_id']]) ? $this->forums['f'. $temp['forum_id']]['name'] : '';
 
 		/* Should we free the result? */
 		if(!$this->hasNext())

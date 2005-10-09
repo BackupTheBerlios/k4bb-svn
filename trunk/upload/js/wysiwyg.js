@@ -46,7 +46,7 @@ function init_wysiwyg(textarea_id, iframe_id, can_wysiwyg) {
 	
 	try {
 		
-		if(!d.is_opera && !d.is_ie4 && http_request && can_wysiwyg) {
+		if(!d.is_opera && !d.is_ie4 && r && can_wysiwyg) {
 			
 			try {
 				document.writeln('<div id="wysiwygcodex_area" style="text-align:left;">');

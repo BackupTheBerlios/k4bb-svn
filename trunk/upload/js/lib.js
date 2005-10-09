@@ -145,10 +145,10 @@ k4lib.prototype.sizeof					= function(thearray) {
 	
 	array_length		= 0;
 
-	if(thearray != null && thearray != 'undefined') {
+	if(thearray != null && typeof thearray != 'undefined') {
 
 		for (i = 0; i < thearray.length; i++) {
-			if ((thearray[i] == "undefined") || (thearray[i] == "") || (thearray[i] == null)) {
+			if ((typeof thearray[i] == 'undefined') || (thearray[i] == '') || (thearray[i] == null)) {
 				return i;
 			}
 		}
@@ -394,4 +394,163 @@ k4lib.prototype.preload_images	= function() {
 			}
 		}
 	}
+}
+
+/**
+ * k4 AJAX/XML-RPC object handler
+ */
+function k4http() {
+	this.d			= new k4lib();
+	this.request	= null;
+	this.state		= 0;
+	this.status		= 200;
+	this.response	= '';
+	this.state_handler = null;
+}
+
+/* Initiate a http request object */
+k4http.prototype.init	= function() {
+	if(typeof this.request == 'undefined' || this.request == null) {
+		
+		if(window.XMLHttpRequest) {
+			
+			// create an XML HTTP Request object
+			this.request = new XMLHttpRequest();
+
+		} else if(window.ActiveXObject) { 
+			
+			// define control types for the ActiveX object
+			var control_types = new Array(
+											'MSXML2.XMLHTTP.5.0',
+											'MSXML2.XMLHTTP.4.0',
+											'MSXML2.XMLHTTP.3.0',
+											'MSXML2.XMLHTTP',
+											'Microsoft.XMLHTTP'
+											);
+			
+			// loop through and try to instanciate an ActiveX object
+			for (var i = 0; i < d.sizeof(control_types) && (typeof this.request == 'undefined' || this.request == null); i++) {
+				try {
+					this.request = new ActiveXObject(control_types[i]);
+				} catch (e) { 
+					this.request = null; 
+				}
+			}
+		}
+	}
+}
+
+/* Close a request object */
+k4http.prototype.close	= function() {
+	if(typeof this.request != 'undefined' && this.request != null) {
+		this.request.abort();
+		this.request		= null;
+		this.r_state		= 1;
+		this.r_status		= 200;
+		this.r_response		= '';
+		this.state_handler	= null;
+	}
+}
+
+/* Function to open a request */
+k4http.prototype.open	= function(method, url, flag) {
+	if(typeof this.request != 'undefined' && this.request != null) {
+		
+		method	= (method == 'POST' ? 'POST' : 'GET');
+		flag	= typeof flag != 'undefined' ? flag : false;
+		
+		// some redundant checking
+		if(method != null && url != null) {
+			
+			// open a request
+			this.request.open(method, url, flag);
+			
+			// set the request header format
+			this.set_header();
+		}
+	}
+}
+
+/* Function to set the request header */
+k4http.prototype.set_header	= function() {
+	if(typeof this.request != 'undefined' && this.request != null) {
+		this.request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	}
+}
+
+/* Function to set the current ready-state status */
+k4http.prototype.change_ready_state = function() {
+	if(typeof this.request != 'undefined' && this.request != null) {
+//		this.state		= (typeof this.request.readyState != 'undefined' && this.request.readyState ? this.request.readyState : 0);
+//		this.status		= (typeof this.request.status != 'undefined' && this.request.status ? this.request.status : 0);
+//		this.response	= (typeof this.request.responseText != 'undefined' && this.request.responseText ? this.request.responseText : '');
+	
+		if(this.request.readyState && typeof this.request.readyState != 'undefined') this.r_state = this.request.readyState;
+		if(this.request.status && typeof this.request.status != 'undefined') this.r_status = this.request.status;
+		if(this.request.responseText && typeof this.request.responseText != 'undefined') this.r_response = this.request.responseText;
+	}
+}
+
+/* Create a ready-state-change function */
+k4http.prototype.set_handler = function() {
+	
+	// add a function to the ready state change handler
+	if(this.request != null) {
+		
+		this.request.onreadystatechange = this.state_handler;
+
+//		this.request.onreadystatechange = function() { 
+//			
+//			if(r.state_handler != null) {
+//
+//				// get the state and status, need to use 'r' here because we are within a sub-function
+//				//r.change_ready_state();
+//				
+//				// evaluate the state change handling function
+//				eval(r.state_handler);
+//			}
+//		}
+	}
+}
+
+/* Function to send data */
+k4http.prototype.send	= function(data_string) {
+	
+	if(this.request != null) {
+		// set the handling functions
+		this.set_handler();
+		
+		if(typeof data_string == 'string') {
+			this.request.send(data_string);
+		} else {
+			if(!this.d.is_ie) {
+				this.request.send(null);
+			} else {
+				this.request.send();
+			}
+		}
+	}
+}
+
+/* Function to evaluate a function */
+k4http.prototype.evaluate_function = function(function_name, arguments) {
+	var str = '';
+	var args = arguments;
+	
+	for(var i = 0; i < this.d.sizeof(args); i++) {
+		
+		switch(typeof args[i]) {
+			case 'string': args[i] = "'" + args[i] + "'"; break;
+			case 'object': alert('Error: cannot complete function evaluation.'); break;
+			case 'boolean':
+			case 'integer': arguments[i] = parseInt(args[i]); break;
+			default: alert('Unknown argument type for function evaluation.');
+		}
+		
+		str += args[i] + ",";
+	}
+	
+	//str		= str.length > 1 ? str.substring(1) : str;
+	alert(function_name + "(" + str + ");");
+	//return eval(function_name + "(" + str + ");");
 }

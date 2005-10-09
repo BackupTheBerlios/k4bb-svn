@@ -144,11 +144,11 @@ class K4DefaultAction extends FAAction {
 				$page		= ceil($whereinline / $forum['postsperpage']);
 				$page		= $page <= 0 ? 1 : $page;
 
-				header("Location: viewtopic.php?id=". $topic['topic_id'] ."&page=". intval($page) ."&limit=". $forum['postsperpage'] ."&order=ASC&sort=created&daysprune=0#p". $post['reply_id']);
+				header("Location: viewtopic.php?id=". $topic['topic_id'] ."&page=". intval($page) ."&limit=". $forum['postsperpage'] ."&order=ASC&sort=created&daysprune=0&p=". $post['reply_id'] ."#p". $post['reply_id']);
 				return;
 
 			} else {
-				header("Location: viewtopic.php?id=". $topic['topic_id'] ."#p". $post['reply_id']);
+				header("Location: viewtopic.php?id=". $topic['topic_id'] ."&p=". $post['reply_id'] ."#p". $post['reply_id']);
 				return;
 			}
 		}

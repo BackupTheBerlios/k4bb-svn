@@ -47,7 +47,6 @@ require K4_BASE_DIR. '/lazyload.php';
 require K4_BASE_DIR. '/breadcrumbs.php';
 require K4_BASE_DIR. '/globals.class.php';
 require K4_BASE_DIR. '/poll_template.php';
-require K4_BASE_DIR. '/feed.class.php';
 
 /* Action Classes */
 require K4_BASE_DIR. '/actions/categories.class.php';

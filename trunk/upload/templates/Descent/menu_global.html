@@ -1,10 +1,10 @@
 <!-- Main Navigation -->
-<div class="outset_box_small" style="display:block;text-align: right;" id="header_menu">
+<div class="menu_global" style="display:block;text-align: right;" id="header_menu">
 	<ul class="menu_global">
 		<li class="first"><a href="index.php" title="{$L_HOME}">{$L_HOME}</a></li>
 		<!--<if:if var="enableblogs" eq="1"><li><a href="blogs.php" title="{$L_BLOGS}">{$L_BLOGS}</a></li></if:if>-->
 		<if:if var="enablememberlist" eq="1"><li><a href="member.php?act=list&amp;start=0&amp;limit=30&amp;letter=*" title="{$L_MEMBERLIST}">{$L_MEMBERLIST}</a></li></if:if> 
-		<if:if var="enablesearches" eq="1"><li><a href="search.php" title="{$L_SEARCH}">{$L_SEARCH}</a></li></if:if>
+		<if:if var="enablesearches" eq="1"><li><a href="<if:if var="nojs" eq="0">search.php<if:else />#search</if:if>" class="nav_top" title="{$L_SEARCH}" id="search_link">{$L_SEARCH}</a></li></if:if>
 		<is:logged><li><a href="member.php?act=usercp" title="{$L_USERCP}">{$L_USERCP}</a></li></is:logged>
 		<if:if var="nojs" eq="0"><li><a href="?nojs=1#quicklinks" class="nav_top" id="quicklinks_link" title="{$L_QUICKLINKS}">{$L_QUICKLINKS}</a></li></if:if>
 		<is:logged><li><a href="{$logout_link}" title="{$L_LOGOUT}">{$L_LOGOUT} [<strong>{$user_name}</strong>]</a></li></is:logged>
@@ -17,4 +17,5 @@
 </div>
 <core:import id="quicklinks_menu" file="quicklinks_menu.html" />
 <core:import id="modpanel_menu" file="modpanel.html" />
+<core:import id="search_menu" file="search_menu.html" />
 <!-- / Main Navigation -->

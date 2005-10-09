@@ -35,8 +35,8 @@ require "includes/k4bb/k4bb.php";
 class K4DefaultAction extends FAAction {
 	function execute(&$request) {
 
-		header("Location: index.php");
-
+		no_perms_error($request);
+		return TRUE;
 	}
 }
 
@@ -260,6 +260,8 @@ class changePostBodyText extends FAAction {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
+				$post['id'] = $post['topic_id'];
+
 			} else if(isset($_REQUEST['reply']) && intval($_REQUEST['reply']) != 0) {
 				
 				// get the reply
@@ -278,6 +280,8 @@ class changePostBodyText extends FAAction {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
+				$post['id'] = $post['reply_id'];
+
 			} else {
 				return ajax_message('L_YOUNEEDPERMS');
 			}
@@ -293,25 +297,38 @@ class changePostBodyText extends FAAction {
 			(bool)$post['disable_aurls']);
 						
 			$body_text	= $bbcode->parse();
+
+			$poller		= &new K4BBPolls($body_text, '', array('forum_id'=>$post['forum_id']), $post['id']);
+
+			$is_poll	= 0;
+			// put it here to avoid previewing
+			$poll_text		= $poller->parse($request, $is_poll);
+							
+			if($body_text != $poll_text) {
+				$body_text	= $poll_text;
+				$is_poll	= 1;
+			}
 			
 			/* If this topic is a redirect/ connects to one, update the original */
 			if($post['row_type'] & TOPIC && ($post['moved_new_topic_id'] > 0 || $post['moved_old_topic_id'] > 0)) {
-				$update		= $request['dba']->prepareStatement("UPDATE ". ($post['row_type'] & TOPIC ? K4TOPICS : K4REPLIES) ." SET body_text=?,edited_time=?,edited_username=?,edited_userid=? WHERE ". ($post['row_type'] & TOPIC ? 'topic_id' : 'reply_id') ."=?");
+				$update		= $request['dba']->prepareStatement("UPDATE ". ($post['row_type'] & TOPIC ? K4TOPICS : K4REPLIES) ." SET body_text=?,edited_time=?,edited_username=?,edited_userid=?,is_poll=? WHERE ". ($post['row_type'] & TOPIC ? 'topic_id' : 'reply_id') ."=?");
 				$update->setString(1, $body_text);
 				$update->setInt(2, time());
 				$update->setString(3, $request['user']->get('name'));
 				$update->setInt(4, $request['user']->get('id'));
-				$update->setInt(5, ($post['moved_new_topic_id'] > 0 ? $post['moved_new_topic_id'] : $post['moved_old_topic_id']));
+				$update->setInt(5,$is_poll);
+				$update->setInt(6, ($post['moved_new_topic_id'] > 0 ? $post['moved_new_topic_id'] : $post['moved_old_topic_id']));
 				$update->executeUpdate();
 			}
 			
 			/* Update the original */
-			$update		= $request['dba']->prepareStatement("UPDATE ". ($post['row_type'] & TOPIC ? K4TOPICS : K4REPLIES) ." SET body_text=?,edited_time=?,edited_username=?,edited_userid=? WHERE ". ($post['row_type'] & TOPIC ? 'topic_id' : 'reply_id') ."=?");
+			$update		= $request['dba']->prepareStatement("UPDATE ". ($post['row_type'] & TOPIC ? K4TOPICS : K4REPLIES) ." SET body_text=?,edited_time=?,edited_username=?,edited_userid=?,is_poll=? WHERE ". ($post['row_type'] & TOPIC ? 'topic_id' : 'reply_id') ."=?");
 			$update->setString(1, $body_text);
 			$update->setInt(2, time());
 			$update->setString(3, $request['user']->get('name'));
 			$update->setInt(4, $request['user']->get('id'));
-			$update->setInt(5, $post[($post['row_type'] & TOPIC ? 'topic_id' : 'reply_id')]);
+			$update->setInt(5,$is_poll);
+			$update->setInt(6, $post[($post['row_type'] & TOPIC ? 'topic_id' : 'reply_id')]);
 			$update->executeUpdate();
 			
 			echo $body_text;

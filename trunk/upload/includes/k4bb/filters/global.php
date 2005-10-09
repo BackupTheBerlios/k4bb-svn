@@ -340,6 +340,9 @@ class K4TemplateFilter extends FAFilter {
 		$templateset	= intval($_STYLESETS[$styleset]['use_templateset']) == 0 ? (($request['user']->isMember()) ? $request['user']->get('templateset') : $styleset) : $styleset;
 		$imageset		= intval($_STYLESETS[$styleset]['use_imageset']) == 0 ? (($request['user']->isMember()) ? $request['user']->get('imageset') : $styleset) : $styleset;
 		
+		if($request['user']->get('spider') == TRUE)
+			$templateset = 'Archive';
+
 		// TODO: query the user to determine the theme		
 		$request['template_file'] = BB_BASE_DIR . "/templates/$templateset/{$this->_filename}";
 		
@@ -470,10 +473,16 @@ class K4CloseBoardFilter extends FAFilter {
 			
 			global $_URL;
 			
+			// current filename and argument
 			$file	= !isset($_URL->file) || !$_URL->file ? 'index.php' : $_URL->file;
 			$act	= !isset($_URL->args['act']) ? '' : $_URL->args['act'];
-
-			if($request['user']->get('perms') < SUPERADMIN && ($file != 'admin.php' && $act != 'login')) {
+			
+			// previous argument
+			$url		= new FAUrl(referer());
+			$prev_act	= isset($url->args['act']) ? $url->args['act'] : '';
+			
+			// check
+			if($request['user']->get('perms') < SUPERADMIN && ($file != 'admin.php' && $act != 'login' && $prev_act != 'login')) {
 			
 				$action = new K4InformationAction($request['template']->getVar('bbclosedreason'), 'content', FALSE);
 				return $action->execute($request);

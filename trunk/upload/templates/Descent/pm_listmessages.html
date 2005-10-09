@@ -37,24 +37,31 @@
 	</table>
 </div>
 <br />
-<page:navigator id="pms_pager">
-<div align="right">
-	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
-		<tr>
-			<td class="alt3" id="page_jump1"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
-			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
-			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
-			<page:list id="pms_pager" before="3" after="3">
-			<list:item list="pms_pager">
-				<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
-			</list:item>
-			</page:list>
-			<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
-			<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
-		</tr>
-	</table>
-</div>
-</page:navigator>
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td width="50%" align="left"><span class="title_link">{$folder_name}</span></td>
+		<td width="50%" align="right">
+			<page:navigator id="pms_pager">
+			<div>
+				<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
+					<tr>
+						<td class="alt3" id="page_jump1"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+						<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
+						<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
+						<page:list id="pms_pager" before="3" after="3">
+						<list:item list="pms_pager">
+							<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
+						</list:item>
+						</page:list>
+						<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
+						<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
+					</tr>
+				</table>
+			</div>
+			</page:navigator>
+		</td>
+	</tr>
+</table>
 <form action="member.php?act=usercp&amp;view=pmperformact" method="post" enctype="multipart/form-data">
 <div class="k4_borderwrap">
 	<div class="k4_maintitle">{$L_MESSAGES}</div>

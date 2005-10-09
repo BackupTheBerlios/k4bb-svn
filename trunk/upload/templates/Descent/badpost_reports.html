@@ -39,7 +39,7 @@
 		</table>
 			<div class="k4_maintitle">
 				<div class="smalltext">
-					<strong>{$L_FORUM}:</strong> <a href="viewforum.php?id={$forum_id}" title="{$forum_name}" class="smalltext" style="font-weight: normal;">{$forum_name}</a>
+					<strong>{$L_FORUM}:</strong> <a href="viewforum.php?f={$forum_id}" title="{$forum_name}" class="smalltext" style="font-weight: normal;">{$forum_name}</a>
 					&nbsp;&nbsp;&nbsp;
 					<strong>{$L_TOPIC}:</strong> <a href="viewtopic.php?id={$topic_id}" title="{$topic_name}" class="smalltext" style="font-weight: normal;">{$topic_name}</a>
 					&nbsp;&nbsp;&nbsp;
@@ -88,7 +88,7 @@
 							<div class="smalltext">
 								<a href="mod.php?act=deletetopic&amp;id={$topic_id}" title="{$L_DELETETOPIC}">{$L_DELETETOPIC}</a><br />
 								<a href="mod.php?act=locktopic&amp;id={$topic_id}" title="{$L_LOCKTOPIC}">{$L_LOCKTOPIC}</a><br />
-								<if:if var="row_type" eq="8"><a href="mod.php?act=deletereply&amp;id=1" title="{$L_DELETEREPLY}">{$L_DELETEREPLY}</a><br /></if:if>
+								<if:if var="row_type" eq="8"><a href="mod.php?act=deletereply&amp;id={$reply_id}" title="{$L_DELETEREPLY}">{$L_DELETEREPLY}</a><br /></if:if>
 								<a href="mod.php?act=deletereport&amp;id={$id}" title="{$L_DELETEREPORT}">{$L_DELETEREPORT}</a><br />
 								--------------------
 								<br />

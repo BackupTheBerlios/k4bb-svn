@@ -34,13 +34,16 @@
 			<td class="k4_subtitle">{$L_MISCELLANEOUS}</td>
 		</tr>
 		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="member.php?act=usercp&amp;view=pmfolder&amp;folder=1" title="{$L_GOTOINBOX}" class="smalltext">{$L_GOTOINBOX}</a></td>
+		</tr>
+		<tr>
 			<td class="alt1" nowrap="nowrap"><a href="index.php?act=markforums" title="{$L_MARKFORUMSREAD}" class="smalltext">{$L_MARKFORUMSREAD}</a></td>
 		</tr>
 	</table>
 </div>
 <script type="text/javascript">menu_init('quicklinks_link', 'quicklinks_menu');</script>
 <if:else />
-<div class="outset_box_small" style="text-align: left;position: relative; top: -1px;">
+<div class="alt2" style="text-align: left;border-top: 1px solid #FFFFFF;">
 	<ul class="menu_global">
 		<li class="first"><strong class="smalltext">{$L_QUICKLINKS}</strong></li>
 		<if:if var="calendarenabled" eq="1">

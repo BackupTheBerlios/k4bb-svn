@@ -39,29 +39,24 @@ class K4DefaultAction extends FAAction {
 		
 		global $_QUERYPARAMS, $_USERGROUPS, $_ALLFORUMS, $_URL;
 		
+		/* set the breadcrumbs bit */
+		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
+
 		if(isset($_REQUEST['c']) && intval($_REQUEST['c']) != 0) {
 			$forum					= $request['dba']->getRow("SELECT * FROM ". K4CATEGORIES ." WHERE category_id = ". intval($_REQUEST['c']));
 		} elseif(isset($_REQUEST['f']) && intval($_REQUEST['f']) != 0) {
 			$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['f']));
 		} else {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
-			
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', TRUE);
 			return $action->execute($request);
 		}
 		
 		if(!$forum || !is_array($forum) || empty($forum)) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDFORUM');
-			
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
 
 		if($forum['row_type'] & FORUM && $forum['is_link'] == 1) {
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION', $forum);
-			
 			if($forum['link_show_redirects'] == 1) {
 				$action = new K4InformationAction(new K4LanguageElement('L_REDIRECTING'), 'content', FALSE, 'redirect.php?id='. $forum['forum_id'], 3);
 			} else {
@@ -153,10 +148,6 @@ class K4DefaultAction extends FAAction {
 		if($forum['row_type'] & CATEGORY) {
 			
 			if(get_map($request['user'], 'categories', 'can_view', array()) > $request['user']->get('perms')) {
-				
-				/* set the breadcrumbs bit */
-				k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION', $forum);
-				
 				$action = new K4InformationAction(new K4LanguageElement('L_PERMCANTVIEW'), 'content', FALSE);
 				return $action->execute($request);
 			}
@@ -200,14 +191,9 @@ class K4DefaultAction extends FAAction {
 			}
 
 			if(get_map($request['user'], 'topics', 'can_view', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
-				
-				/* set the breadcrumbs bit */
-				k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION', $forum);
-				
 				$action = new K4InformationAction(new K4LanguageElement('L_CANTVIEWFORUMTOPICS'), 'content_extra', FALSE);
 				return $action->execute($request);
 			}
-			
 			
 			/**
 			 * Forum settings
@@ -318,7 +304,7 @@ class K4DefaultAction extends FAAction {
 				 */
 				if($page == 1) {
 					$announcements		= &$request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE (is_draft=0 AND display=1) AND topic_type = ". TOPIC_ANNOUNCE ." AND (forum_id = ". intval($forum['forum_id']) ." OR forum_id = ". GLBL_ANNOUNCEMENTS .") $extra ORDER BY last_post DESC");
-					if($announcements->numrows() > 0) {
+					if($announcements->hasNext()) {
 						$a_it				= &new TopicsIterator($request['dba'], $request['user'], $announcements, $request['template']->getVar('IMG_DIR'), $forum);
 						$request['template']->setList('announcements', $a_it);
 					}
@@ -328,7 +314,7 @@ class K4DefaultAction extends FAAction {
 				 * Get sticky/feature topics
 				 */
 				$importants			= &$request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE is_draft=0 AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (topic_type <> ". TOPIC_ANNOUNCE .") AND (topic_type = ". TOPIC_STICKY ." OR is_feature = 1) $extra ORDER BY last_post DESC");
-				if($importants->numrows() > 0) {
+				if($importants->hasNext()) {
 					$i_it				= &new TopicsIterator($request['dba'], $request['user'], $importants, $request['template']->getVar('IMG_DIR'), $forum);
 					$request['template']->setList('importants', $i_it);
 				}

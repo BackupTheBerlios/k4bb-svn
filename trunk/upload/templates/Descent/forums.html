@@ -27,10 +27,10 @@
 	<else:if var="row_type" eq="1">
 	
 		<maps:if category="category_id" method="can_view">
+			<a href="viewforum.php?c={$category_id}" title="{$safe_description}" class="title_link">{$name}</a>
 			<div class="k4_borderwrap">	
 				<div class="k4_maintitle" id="c{$category_id}_maintitle">
 					<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_{$category_id}', 'forums_{$category_id}', 'c{$category_id}_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_{$category_id}" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
-					<a href="viewforum.php?c={$category_id}" title="{$safe_description}">{$name}</a><br />
 					<span class="minitext" style="font-weight: normal;">{$description}</span>
 				</div>
 				<!-- Forums -->

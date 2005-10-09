@@ -371,7 +371,7 @@ function bbcodex_init(name, id, rows, cols, can_wysiwyg) {
 				/**
 				 * Write the switch format button, AJAX required
 				 */
-				if(can_wysiwyg && http_request) {
+				if(can_wysiwyg && r) {
 				//	document.writeln('<td><img onclick="switch_editor_type(\'bbcode\', \'messagecodex\', \'wysiwygcodex\')" src="js/editor/switch_format.gif" alt="" border="0" class="alt3" style="padding:0px;border: 1px solid #AAAAAA;" /></td>');
 				}
 				//  style="padding: 0px;"

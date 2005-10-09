@@ -1,7 +1,7 @@
 <tr>
 	<td class="alt3" style="text-align: center;"><img src="{$topicicon}" id="topicicon{$topic_id}" alt="" border="0" <if:if var="modpanel" eq="1">onclick="updateTopicLocked(this, {$topic_id})"</if:if> /></td>
 	<td class="alt1" style="text-align: center;"><img src="tmp/upload/posticons/{$posticon}" alt="" border="0" /></td>
-	<td class="alt3" width="65%">
+	<td class="alt3" width="65%" id="topicname_{$topic_id}_area">
 		<if:if var="ratings_num" geq="1"><img src="Images/{$IMG_DIR}/Icons/Rating/{$rating}stars.gif" alt="({$ratings_num} {$L_VOTES})" border="0" style="float: right;" /></if:if>
 		<if:if var="use_pager" eq="1">{$pager}</if:if>
 			<span class="smalltext">

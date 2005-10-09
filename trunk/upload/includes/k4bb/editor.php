@@ -69,6 +69,7 @@ function create_editor(&$request, $text, $place, $forum = FALSE) {
 
 		$request['template']->setVar('editor_text', $bbcode->parse());
 	}
+	$request['template']->setVar('editor_enabled', 1);
 }
 
 ?>

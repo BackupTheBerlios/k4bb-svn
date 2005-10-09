@@ -37,7 +37,7 @@ require "includes/k4bb/k4bb.php";
 class K4DefaultAction extends FAAction {
 	function execute(&$request) {
 		
-		header("Location: ". referer());
+		no_perms_error($request);
 
 		return TRUE;
 	}

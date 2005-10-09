@@ -34,8 +34,6 @@ error_reporting(E_ALL);
 require "includes/filearts/filearts.php";
 require "includes/k4bb/k4bb.php";
 
-@set_time_limit(120);
-
 class K4DefaultAction extends FAAction {
 	function execute(&$request) {		
 		
@@ -194,6 +192,16 @@ $app->setAction('spider_remove', new AdminRemoveSpider);
 
 /* Style Management */
 $app->setAction('stylesets', new AdminManageStyleSets);
+$app->setAction('css_addstyleset', new AdminAddStyleSet);
+$app->setAction('css_insertstyleset', new AdminInsertStyleSet);
+$app->setAction('css_editstyleset', new AdminEditStyleset);
+$app->setAction('css_updatestyleset', new AdminUpdateStyleSet);
+$app->setAction('css_removestyleset', new AdminRemoveStyleSet);
+$app->setAction('css', new AdminManageCSSStyles);
+$app->setAction('css_addstyle', new AdminAddCSSClass);
+$app->setAction('css_insertstyle', new AdminInsertCSSClass);
+$app->setAction('css_removestyle', new AdminRemoveCSSClass);
+$app->addFilter(new AdminCSSRequestFilter);
 
 /* Frequently Asked Questions */
 $app->setAction('faq_categories', new AdminFAQCategories);

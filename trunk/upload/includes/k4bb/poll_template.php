@@ -155,11 +155,11 @@ function poll_template(&$text, &$dba, $poll_id, $replace_text, $topic_id, $reply
 				$num_votes		= $dba->getValue("SELECT COUNT(*) FROM ". K4POLLVOTES ." WHERE question_id = ". $question['id'] ." AND answer_id = ". $answer['id']);
 				$percent		= @ceil(($num_votes / $question['num_votes']) * 100);
 				
-				$tpl		.=	'	<td align="left"><div class="smalltext">'. $answer['answer'] .'</div></td>';
+				$tpl		.=	'	<td align="left"><div class="smalltext">'. htmlentities(html_entity_decode($answer['answer'], ENT_QUOTES), ENT_QUOTES) .'</div></td>';
 				$tpl		.=	'	<td width="100" align="left"><div class="smalltext"><div style="float: left;border: 1px solid #333333;width: 100px;height: 18px;background-color: #FFFFFF;"><div style="float: left; height: 18px; width: '. $percent .'%;background-color: #666666;"></div></div><br />('. $percent .'%, '. $num_votes .' '. $_LANG['L_VOTES'] .')</div></td>';
 
 			} else {
-				$tpl		.=	'	<td align="left"><div class="smalltext"><label for="vote'. $answer['id'] .'">'. $answer['answer'] .'</label></div></td>';
+				$tpl		.=	'	<td align="left"><div class="smalltext"><label for="vote'. $answer['id'] .'">'. htmlentities(html_entity_decode($answer['answer'], ENT_QUOTES), ENT_QUOTES) .'</label></div></td>';
 				$tpl		.=	'	<td align="center"><div class="smalltext"><input type="radio" id="vote'. $answer['id'] .'" name="vote" value="'. $answer['id'] .'" /></div></td>';
 			}
 

@@ -61,7 +61,7 @@ class K4DefaultAction extends FAAction {
 		// get the poll answers
 		$result		= $request['dba']->executeQuery("SELECT * FROM ". K4POLLANSWERS ." WHERE question_id = ". intval($question['id']) ." ORDER BY id ASC");
 		
-		if(($has_voted->numRows() > 0) || isset($_REQUEST['sr'])) {
+		if(($has_voted->numRows() > 0) || isset($_REQUEST['sr']) || !$request['user']->isMember()) {
 			
 			$it		= &new K4PollAnswersIterator($result, $request['dba'], $question['num_votes']);
 

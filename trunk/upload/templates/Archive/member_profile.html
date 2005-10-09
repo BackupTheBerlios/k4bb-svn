@@ -1,0 +1,63 @@
+<!-- User Profile - {$member_name} -->
+<h4>{$member_name}</h4>
+<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+	<tr>
+		<td class="alt1" width="50%" valign="top">
+			<div class="header_text"><strong>{$L_USERNAME}</strong></div>
+			
+			<table cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<if:if var="member_avatar" eq="1">
+					<td>
+						<img src="viewfile.php?act=avatar&amp;id={$member_id}" alt="" border="" />
+					</td>
+					</if:if>
+					<td valign="top" nowrap="nowrap">
+						<span style="color: #{$member_group_color}; font-size: 18px;">{$member_name}</span><br />
+						<if:if var="member_group_nicename" noteq=""><span class="smalltext">{$member_group_nicename}</span><br /></if:if>
+						<if:if var="member_group_avatar" noteq="">
+						<img src="tmp/upload/group_avatars/{$member_group_avatar}" border="0" alt="{$member_group_nicename}" />
+						</if:if>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td class="alt1" width="50%" valign="top">
+			<div class="header_text"><strong>{$L_PROFILE}</strong></div>
+			<table cellpadding="0" cellspacing="0" border="0">
+				<tr><td style="padding-bottom: 3px;" class="smalltext"><strong>{$L_REGISTERED}</strong>:&nbsp;&nbsp;</td><td class="smalltext"><core:date format="%b %d %Y">{$member_created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$member_created}</core:date></span></td></tr>
+				<list:list id="member_profilefields">
+				<list:item list="member_profilefields">
+				<tr><td style="padding-bottom: 3px;" class="smalltext"><strong>{$title}</strong>:&nbsp;&nbsp;</td><td class="smalltext">{$value}</td></tr>
+				</list:item>
+				</list:list>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="alt3" width="50%" valign="top">
+			<div class="header_text"><strong>{$L_POSTS}</strong></div>
+			<span class="smalltext">{$member_num_posts} ({$member_num_topics} {$L_TOPICS}, {$member_num_replies} {$L_REPLIES})</span>
+		</td>
+		<td class="alt3" width="50%" valign="top">
+			<div class="header_text"><strong>{$L_POSTINGSTATS}</strong></div>
+			<span class="smalltext">
+			{$member_posts_per_day}<br />
+			{$member_posts_percent}<br />
+			</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="alt1" width="50%" valign="top">
+			<div class="header_text"><strong>{$L_LASTSEEN}</strong></div>
+			<span class="smalltext">
+			<core:date format="%b %d %Y">{$member_seen}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$member_seen}</core:date></span>
+			</span>
+		</td>
+		<td class="alt1" width="50%" valign="top">
+			<div class="header_text"><strong>{$L_ONLINESTATUS}</strong></div>
+			<img src="Images/{$IMG_DIR}/Buttons/{$LANG}/{$member_online}.gif" border="0" />
+		</td>
+	</tr>
+</table>
+<!-- / User Profile -->

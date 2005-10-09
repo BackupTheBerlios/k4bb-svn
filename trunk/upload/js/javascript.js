@@ -179,19 +179,27 @@ var edit_topic_id	= false;
 var edit_topic_area = false;
 var being_edited	= new Array();
 
-function adv_edit(topic_id, div_id) {
-	var topic_area	= d.getElementById(div_id);
+function close_edit_mode() {
+	edit_mode		= false;
+	edit_topic_id	= false;
+	edit_topic_area = false;
+}
 
+function adv_edit(topic_id, div_id) {
+	var topic_area	= d.getElementById(div_id + '_area');
+	
 	if(topic_area) {
 		try {
-			topic_area.onmousedown = function() {
-				var inputs		= d.getElementsByTagName(topic_area, 'input');
+			topic_area.ondblclick = function(e) {
+				
+				if(edit_mode || edit_topic_id && topic_id != edit_topic_id) {
+					alert('One at a time please.');
+				} else {
 
-				if(d.sizeof(inputs) == 0) {
 					edit_mode		= 'topic' + topic_id + '_name';
 					edit_topic_id	= topic_id;
 					edit_topic_area = div_id;
-					edit_timer		= setTimeout("getTopicTitle(" + topic_id + ", '" + div_id + "')", 1000);
+					getTopicTitle(topic_id);
 				}
 			}
 						

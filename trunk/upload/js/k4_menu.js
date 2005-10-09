@@ -75,7 +75,7 @@ function menu_init(link_id, menu_id) {
 		/* Onmouseover for a link object */
 		link.onmouseover = function() {
 			
-			if(open_menu) {
+			if(typeof open_menu != 'undefined' && open_menu) {
 				
 				if(open_menu.link_id != this.id) {
 					

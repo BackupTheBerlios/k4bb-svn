@@ -1,0 +1,68 @@
+<!-- Member List letter sorter -->
+<ul>
+	<list:list id="letters">
+	<list:item list="letters">
+	<li><a href="{$action}" title="">{$name}</a></li>
+	</list:item>
+	</list:list>
+</ul>
+<!-- / Member List letter sorter -->
+
+<page:navigator id="memberlist_pager">
+<hr />
+<ul>
+	<li>{$L_PAGES} ({$num_pages})</li>
+	<page:first><li><page:link>{$L_FIRST}</span></page:link></li></page:first>
+	<page:prev><li><page:link>{$L_PREV}</span></page:link></li></page:prev>
+	<page:list id="replies_pager" before="3" after="3">
+	<list:item list="replies_pager">
+		<li><page:link class="pager_link">{$pagenum}</page:link></td>
+	</list:item>
+	</page:list>
+	<page:next><li><page:link>{$L_NEXT}</page:link></li></page:next>
+	<page:last><li><page:link>{$L_LAST}</page:link></li></page:last>
+</ul>
+</page:navigator>
+<hr />
+<!-- Member List -->
+<div>
+	<div>{$L_MEMBERLIST}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="k4_subtitle">{$L_USERNAME}</td>
+			<td class="k4_subtitle" align="center">{$L_POSTS}</td>
+			<td class="k4_subtitle" align="center">{$L_REGISTERED}</td>
+			<td class="k4_subtitle" align="center">{$L_AVATAR}</td>
+			<td class="k4_subtitle" align="center">{$L_ONLINESTATUS}</td>
+		</tr>
+		<list:list id="memberlist">
+		<list:default list="memberlist">
+		<tr>
+			<td class="alt3" colspan="6"><div class="outset_box">{$L_NOMEMBERS}</div></td>
+		</tr>
+		</list:default>
+		<list:item list="memberlist">
+		<list:switch list="memberlist" var="row_class" a="alt1" b="alt3">
+		<tr>
+			<td class="{$row_class}">
+				<a href="member.php?id={$id}" title="{$L_PROFILE}" style="font-weight: bold; color: #{$group_color};">{$name}</a>
+				<div class="smalltext">
+					<if:if var="group_nicename" noteq="">{$group_nicename}<br /></if:if>
+					<if:if var="group_avatar" noteq="">
+					<img src="tmp/upload/group_avatars/{$group_avatar}" border="0" alt="{$group_nicename}" />
+					</if:if>
+				</div>
+			</td>
+			<td class="{$row_class}" align="center"><span class="smalltext">{$num_posts}</span></td>
+			<td class="{$row_class}" align="center"><span class="smalltext"><core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span></span></td>
+			<td class="{$row_class}" align="center">
+				<if:if var="avatar" eq="1"><img src="viewfile.php?act=avatar&amp;id={$user_id}" alt="" border="" /></if:if>
+			</td>
+			<td class="{$row_class}" align="center"><img src="Images/{$IMG_DIR}/Buttons/{$LANG}/{$online}.gif" alt="" border="0" /></td>
+		</tr>
+		</list:switch>
+		</list:item>
+		</list:list>
+	</table>
+</div>
+<!-- / Member List -->

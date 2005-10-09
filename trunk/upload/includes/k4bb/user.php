@@ -101,7 +101,7 @@ class K4Guest extends FAUser {
 	function guestInfo() {
 		global $_SPIDERS, $_SPIDERAGENTS;
 		
-		$info	= array('name' => '', 'email' => '', 'id' => 0, 'usergroups' => serialize(array()), 'perms' => 1, 'styleset' => '', 'topicsperpage' => 0, 'postsperpage' => 0, 'viewavatars' => 0,'viewflash'=>1,'viewemoticons'=>1,'viewsigs'=>1,'viewavatars'=> 1,'viewimages'=>1,'viewcensors'=>1,'invisible'=>0,'seen'=>time(),'last_seen'=>time());
+		$info	= array('name' => '', 'email' => '', 'id' => 0, 'usergroups' => serialize(array()), 'perms' => 1, 'styleset' => '', 'topicsperpage' => 0, 'postsperpage' => 0, 'viewavatars' => 0,'viewflash'=>1,'viewemoticons'=>1,'viewsigs'=>1,'viewavatars'=> 1,'viewimages'=>1,'viewcensors'=>1,'invisible'=>0,'seen'=>time(),'last_seen'=>time(),'spider'=>FALSE);
 		
 		/* Check if this person is a search engine */
 		if(preg_match("~(". $_SPIDERAGENTS .")~is", USER_AGENT)) {
@@ -109,6 +109,7 @@ class K4Guest extends FAUser {
 				if(eregi($spider['useragent'], USER_AGENT)) {
 					$info['name']	= $spider['spidername'];
 					$info['perms']	= $spider['allowaccess'] == 1 ? 1 : -1;
+					$info['spider']	= TRUE;
 				}
 			}
 		}

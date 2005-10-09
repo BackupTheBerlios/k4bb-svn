@@ -123,7 +123,7 @@
 	function register(button) {
 		try {
 			d.disableButton(button);
-			if(http_request) { 
+			if(r) { 
 				errorCheckRegistration(button);
 			} else { 
 				return true;

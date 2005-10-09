@@ -37,13 +37,11 @@
 	<script type="text/javascript" src="js/form_styles.js"></script>
 	<script type="text/javascript" src="js/k4_menu.js"></script>
 	<script type="text/javascript" src="js/http_requests.js"></script>
-	<script type="text/javascript" src="js/wysiwyg.js"></script>
-	<script type="text/javascript" src="js/bbcode.js"></script>
+	<if:if var="editor_enabled" eq="1"><script type="text/javascript" src="js/wysiwyg.js"></script>
+	<script type="text/javascript" src="js/bbcode.js"></script></if:if>
 	<script type="text/javascript" src="js/dom-drag.js"></script>
 	<script type="text/javascript">
-		var d = new k4lib();
-		var http_request = getHTTPRequestObject();
-		var k4_domain = '{$domain}';
+		var d=new k4lib();var r=new k4http();r.init();var k4_domain='{$domain}'; // important stuff, don't touch
 		set_cookie('k4_canjs', 1, 2592000, '{$domain}'); /* This cookie is very important and should always be set here. */
 		d.preload_images('Images/{$IMG_DIR}/Icons/collapse_thead.gif', 'Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif', 'Images/{$IMG_DIR}/Icons/dots.gif', 'Images/{$IMG_DIR}/Icons/icon_latest_reply.gif');
 	</script>

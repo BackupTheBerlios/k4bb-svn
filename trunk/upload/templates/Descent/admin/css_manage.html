@@ -15,8 +15,8 @@
 		<list:switch list="stylesets" var="row_class" a="alt1" b="alt3">
 		<tr>
 			<td class="{$row_class}" width="80%">
-				<strong>{$name}</strong><br />
-				<span class="smalltext">{$description}</span>
+				<a href="admin.php?act=css&amp;id={$id}" title="{$name}"><strong>{$name}</strong>
+				<span class="smalltext"><br />{$description}</span></a>
 			</td>
 			<td class="alt2" width="30%" align="center">
 				<input type="button" class="button" value="{$L_EDIT}" onclick="document.location='admin.php?act=css_editstyleset&id={$id}'" />

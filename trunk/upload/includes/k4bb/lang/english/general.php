@@ -40,6 +40,7 @@ if (empty($_LANG) || !is_array($_LANG)) {
 
 $_LANG += array(
 
+'LANGSHORT'				=> 'en',
 'locale'				=> 'eng_eng',
 'LANG'					=> 'english',
 
@@ -94,6 +95,9 @@ $_LANG += array(
 'L_COULDNOTBELOGGEDIN'	=> 'You could not be logged in.',
 'L_GZIPENABLED'			=> 'GZIP Enabled',
 'L_NEWPMS'				=> 'New Private Messages',
+'L_RSSFEED'				=> 'RSS Feed',
+'L_ADVANCEDSEARCH'		=> 'Advanced Search',
+'L_GOTOINBOX'			=> 'Go to Inbox',
 
 /* User Titles */
 'L_JUNIORMEMBER'		=> 'Junior Member',

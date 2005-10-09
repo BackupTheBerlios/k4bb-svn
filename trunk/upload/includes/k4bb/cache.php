@@ -61,7 +61,7 @@ function cache_forum($info) {
 			$data[$val]	= $info[$val];
 	}
 
-	$data['subforums']												= isset($info['subforums']) ? intval($info['subforums']) : 0;
+	$data['subforums']	= isset($info['subforums']) ? intval($info['subforums']) : 0;
 	
 	$data['id']			= $data['row_type'] & FORUM ? $data['forum_id'] : $data['category_id'];
 
@@ -82,7 +82,7 @@ function isset_forum_cache_item($name, $id) {
  */
 function get_cached_styleset(&$request, $styleset, $default_styleset) {
 	
-	if(!file_exists(BB_BASE_DIR .'/tmp/stylesets/'. $styleset .'.css')) {
+	if(!file_exists(BB_BASE_DIR .'/tmp/stylesets/'. preg_replace("~\s~i", '_', $styleset) .'.css')) {
 
 		$query			= &$request['dba']->prepareStatement("SELECT c.name as name, c.properties as properties FROM ". K4CSS ." c LEFT JOIN ". K4STYLES ." s ON s.id = c.style_id WHERE s.name = ? ORDER BY c.name ASC");
 		$css			= "/* k4 Bulletin Board ". VERSION ." CSS Generated Style Set :: ". $styleset ." */\r\n\r\n";
@@ -114,8 +114,8 @@ function get_cached_styleset(&$request, $styleset, $default_styleset) {
 		$result->free();
 
 		/* Create a cached file for the CSS info */
-		$handle = @fopen(BB_BASE_DIR .'/tmp/stylesets/'. $styleset .'.css', "w");
-		@__chmod(BB_BASE_DIR .'/tmp/stylesets/'. $styleset .'.css', 0777);
+		$handle = @fopen(BB_BASE_DIR .'/tmp/stylesets/'. preg_replace("~\s~i", '_', $styleset) .'.css', "w");
+		@__chmod(BB_BASE_DIR .'/tmp/stylesets/'. preg_replace("~\s~i", '_', $styleset) .'.css', 0777);
 		@fwrite($handle, $css);
 		@fclose($handle);
 	}

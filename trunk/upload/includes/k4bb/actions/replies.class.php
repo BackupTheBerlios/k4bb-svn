@@ -179,8 +179,10 @@ class PostReply extends FAAction {
 		
 		if((isset($_REQUEST['submit_type']) && $_REQUEST['submit_type'] == 'post') || isset($_REQUEST['post'])) {
 			
-			if($body_text != $poll_text)
+			if($body_text != $poll_text) {
 				$body_text = $poll_text;
+				$is_poll	= 1;
+			}
 			
 			/* Make sure we're not double-posting */
 			if(!empty($last_reply) && (($_REQUEST['name'] == $last_reply['name']) && ($body_text == $last_reply['body_text']))) {
@@ -341,7 +343,7 @@ class PostReply extends FAAction {
 				
 				/* Send a javascript redirect to the browser */
 				if(ceil(($topic['num_replies']+1) / $limit) > $page) {
-					$html	= '<div style="text-align: center;"><a href="viewtopic.php?id='. $topic['topic_id'] .'&page='. ceil(($topic['num_replies']+1) / $limit) .'&limit='. $limit .'#p'. $reply_id .'" title="'. $request['template']->getVar('L_SEEYOURPOST') .'" style="font-weight: bold;">'. $request['template']->getVar('L_SEEYOURPOST') .'</a></div><br />';
+					$html	= '<div style="text-align: center;"><a href="viewtopic.php?id='. $topic['topic_id'] .'&page='. ceil(($topic['num_replies']+1) / $limit) .'&limit='. $limit .'?p='. $reply_id .'#p'. $reply_id .'" title="'. $request['template']->getVar('L_SEEYOURPOST') .'" style="font-weight: bold;">'. $request['template']->getVar('L_SEEYOURPOST') .'</a></div><br />';
 					echo $html;
 					exit;
 
@@ -731,8 +733,10 @@ class UpdateReply extends FAAction {
 
 		if((isset($_REQUEST['submit_type']) && $_REQUEST['submit_type'] == 'post') || isset($_REQUEST['post'])) {
 			
-			if($body_text != $poll_text)
+			if($body_text != $poll_text) {
 				$body_text = $poll_text;
+				$is_poll	= 1;
+			}
 
 			$posticon	= iif(($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif');
 			
@@ -997,7 +1001,7 @@ class DeleteReply extends FAAction {
 		}
 		
 		/* Remove any bad post reports */
-		$request['dba']->executeUpdate("DELETE FROM ". K4BADPOSTREPORTS ." WHERE topic_id = ". intval($reply['reply_id']));
+		$request['dba']->executeUpdate("DELETE FROM ". K4BADPOSTREPORTS ." WHERE reply_id = ". intval($reply['reply_id']));
 		
 		/**
 		 * Update the forum and the datastore
@@ -1055,9 +1059,7 @@ class DeleteReply extends FAAction {
 		
 		/* Redirect the user */
 		$action = new K4InformationAction(new K4LanguageElement('L_DELETEDREPLY', $reply['name'], $topic['name']), 'content', FALSE, 'viewtopic.php?id='. $topic['topic_id'], 3);
-
 		return $action->execute($request);
-		return TRUE;
 	}
 }
 

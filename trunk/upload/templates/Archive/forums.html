@@ -1,0 +1,64 @@
+<!-- Forums List -->
+<ul>
+<list:list id="categories">
+	<list:default list="categories">
+	<li><strong>{$L_NOFORUMSEXIST}</strong></li>
+	</list:default>
+	<list:item list="categories">
+	<if:if var="row_type" eq="2">
+	<maps:if forum="forum_id" method="can_view">
+	<li>
+		<a href="viewforum.php?f={$forum_id}" title="{$name}">{$name}</a>
+		<ul>
+			<li>{$description}</li>
+		</ul>
+	</li>
+	</maps:if>
+	<else:if var="row_type" eq="1">
+	<maps:if category="category_id" method="can_view">
+	<li>
+		<a href="viewforum.php?c={$category_id}" title="{$name}">{$name}</a>
+		<ul>
+			<li>{$description}</li>
+		</ul>
+		<list:sublist list="categories" id="forums" column="forums">
+		<list:item list="forums">
+		<maps:if forum="forum_id" method="can_view">
+		<li>
+			<a href="viewforum.php?f={$forum_id}" title="{$name}">{$name}</a>
+			<ul>
+				<li>{$description}</li>
+				<li>{$L_TOPICS}: {$topics}</li>
+				<li>{$L_POSTS}: {$posts}</li>
+				<if:if var="post_id" greater="0">
+				<li>
+					<a href="findpost.php?id={$post_id}" title="{$post_name}">{$L_LASTPOST}:</a>
+					<a href="<if:if var="post_id" eq="topic_id">viewtopic.php?id={$post_id}<if:else />findpost.php?id={$post_id}</if:if>" title="{$post_name}"><strong>{$post_name}</strong></a>,
+					{$L_BY} <if:if var="post_uname" eq="">{$L_GUEST}<if:else /><if:if var="post_uid" noteq="0"><a href="member.php?id={$post_uid}" title="{$post_uname}"><strong>{$post_uname}</strong></a><if:else />{$post_uname}</if:if></if:if>,
+					<core:date format="%b %d %Y">{$post_created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$post_created}</core:date></span>
+				</li>
+				</if:if>
+				<if:if var="subforums" greater="0">
+				<if:if var="showsubforums" eq="1">
+				<li>{$L_SUBFORUMS}</li>
+				<ul>
+				<list:sublist list="forums" id="subforums" column="subforums">
+					<list:item list="subforums">
+					<li><a href="viewforum.php?f={$forum_id}" title="{$description}">{$name}</a></li>
+					</list:item>
+				</list:sublist>
+				</ul>
+				</if:if>
+				</if:if>
+			</ul>
+		</li>
+		</maps:if>
+		</list:item>
+		</list:sublist>
+	</li>
+	</maps:if>
+	</if:if>
+	</list:item>
+</list:list>
+</ul>
+<!-- / Forums List -->

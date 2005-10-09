@@ -1,0 +1,17 @@
+<li>
+	<ul type="{$list_type}">
+		<li>
+			<if:if var="topic_type" eq="2">{$stickytopicprefix}<else:if var="topic_type" geq="3" />{$announcementtopicprefix}</if:if>
+			<if:if var="is_feature" eq="1">{$featuretopicprefix}</if:if>
+			<if:if var="is_poll" eq="1">{$polltopicprefix}</if:if>
+			<a href="viewtopic.php?id={$topic_id}" title="{$name}"><if:if var="is_new" eq="1"><strong></if:if>{$name}<if:if var="is_new" eq="1"></strong></if:if></a>
+		</li>
+		<li>{$L_REPLIES}: {$num_replies}</li>
+		<li>{$L_VIEWS}: {$views}</li>
+		<li>
+			<a href="findpost.php?id={$reply_id}" title="{$reply_name}">{$L_LASTPOST}:</a>
+			<core:date format="%b %d %Y">{$reply_time}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$reply_time}</core:date></span>,
+			{$L_BY}&nbsp;<if:if var="reply_uname" eq="">{$L_GUEST}<if:else /><if:if var="reply_uid" noteq="0"><a href="member.php?id={$reply_uid}" title="{$reply_uname}"><strong>{$reply_uname}</strong></a><if:else />{$reply_uname}</if:if></if:if>
+		</li>
+	</ul>
+</li>

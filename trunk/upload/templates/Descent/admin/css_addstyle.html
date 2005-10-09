@@ -1,0 +1,42 @@
+<is:admin>
+<form:form action="{$css_formaction}" method="post" enctype="multipart/form-data">
+<div class="k4_borderwrap">
+	<if:if var="edit_style" eq="1">
+	<div class="k4_maintitle">{$L_EDITCSSSTYLE}<span style="font-weight: normal;">: {$style_name}</span></div>
+	<input type="hidden" name="id" value="{$styleset_id}" />
+	<if:else />
+	<div class="k4_maintitle">{$L_ADDCSSSTYLE}</div>
+	</if:if>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" width="30%"><label for="name"><strong>{$L_NAME}:</strong></label></td>
+			<td class="alt3">
+				<input type="text" name="name" id="name" class="inputbox" value="{$style_name}" />
+				<form:error id="name_error" for="name" setclass="inputfailed" regex=".+">{$L_INSERTCSSNAME}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="30%"><label for="description"><strong>{$L_DESCRIPTION}:</strong></label></td>
+			<td class="alt3">
+				<input type="text" name="description" id="description" size="40" class="inputbox" value="{$style_description}" />
+				<form:error id="description_error" for="description" setclass="inputfailed" regex=".+">{$L_INSERTCSSDESCRIPTION}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" colspan="2" style="text-align: center;"><strong>{$L_PROPERTIES}</strong></td>
+		</tr>
+		<tr>
+			<td class="alt3" colspan="2">
+				
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" colspan="2">
+				<input type="submit" class="button" value="{$L_SAVE}" tabindex="15" />
+				<input type="reset" class="button" value="{$L_RESET}" />
+			</td>
+		</tr>
+	</table>
+</div>
+</form:form>
+</is:admin>

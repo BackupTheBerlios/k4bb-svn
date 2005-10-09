@@ -43,8 +43,8 @@ $_CONFIG['ftp']['username']				= '.';
 $_CONFIG['ftp']['password']				= '.';
 //$_CONFIG['ftp']['server']				= '';
 
-$_CONFIG['dba']['driver']				= 'mysqli';
-$_CONFIG['dba']['database']				= 'k4_forum';
+$_CONFIG['dba']['driver']				= 'sqlite';
+$_CONFIG['dba']['database']				= 'test';
 $_CONFIG['dba']['directory']			= 'c:/documents and settings/peter goodman/my documents/my websites/k4-2.0-dev/upload/tmp/sqlite';
 $_CONFIG['dba']['server']				= 'localhost';
 $_CONFIG['dba']['user']					= 'test';

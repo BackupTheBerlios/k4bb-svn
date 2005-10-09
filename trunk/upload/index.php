@@ -1,4 +1,5 @@
 <?php
+
 /**
 * k4 Bulletin Board, index.php
 *

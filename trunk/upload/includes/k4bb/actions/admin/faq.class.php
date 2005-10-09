@@ -95,7 +95,7 @@ class AdminAddFAQCategory extends FAAction {
 class AdminInsertFAQCategory extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_FAQ');
 			$request['template']->setVar('faq_on', '_on');
@@ -166,7 +166,7 @@ class AdminInsertFAQCategory extends FAAction {
 class AdminFAQCategorySimpleUpdate extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_FAQ');
 			$request['template']->setVar('faq_on', '_on');
@@ -206,7 +206,7 @@ class AdminFAQCategorySimpleUpdate extends FAAction {
 class AdminEditFAQCategory extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_FAQ');
 			$request['template']->setVar('faq_on', '_on');
@@ -243,7 +243,7 @@ class AdminEditFAQCategory extends FAAction {
 class AdminUpdateFAQCategory extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_FAQ');
 			$request['template']->setVar('faq_on', '_on');
@@ -307,7 +307,7 @@ class AdminRemoveFAQCategory extends FAAction {
 	}
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_FAQ');
 			$request['template']->setVar('faq_on', '_on');

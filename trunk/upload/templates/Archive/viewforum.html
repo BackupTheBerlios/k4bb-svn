@@ -1,0 +1,61 @@
+<maps:if forum="forum_forum_id" method="can_view">
+<core:import id="forum_rules" file="forum_rules.html" />
+<h4>{$forum_name}</h4>
+<a href="rss.php?f={$forum_forum_id}" title="{$L_RSSFEED}: {$forum_name}">{$L_RSSFEED}</a>
+
+<page:navigator id="topics_pager">
+<hr />
+<ul>
+	<li>{$L_PAGES} ({$num_pages})</li>
+	<page:first><li><page:link><span class="smalltext">{$L_FIRST}</span></page:link></li></page:first>
+	<page:prev><li><page:link><span class="smalltext">{$L_PREV}</span></page:link></li></page:prev>
+	<page:list id="topics_pager" before="3" after="3">
+	<list:item list="topics_pager">
+		<li><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
+	</list:item>
+	</page:list>
+	<page:next><li><page:link><span class="smalltext">{$L_NEXT}</span></page:link></li></page:next>
+	<page:last><li><page:link><span class="smalltext">{$L_LAST}</span></page:link></li></page:last>
+</ul>
+<hr />
+</page:navigator>
+
+<!-- Topics List of '{$current_location}' -->
+<ul>
+	<list:list id="announcements">
+	<li>
+		<ul>
+			<li><strong>{$L_ANNOUNCEMENTS}</strong></li>
+			<list:item list="announcements">
+			<list:switch list="announcements" var="list_type" a="square" b="circle">
+			<core:import id="topic_view" file="topic_view.html" />
+			</list:switch>
+			</list:item>
+		</ul>
+	</li>
+	</list:list>
+	<list:list id="importants">
+	<li>
+		<ul>
+			<li><strong>{$L_IMPORTANTTOPICS}</strong></li>
+			<list:item list="importants">
+			<list:switch list="importants" var="list_type" a="square" b="circle">
+			<core:import id="topic_view" file="topic_view.html" />
+			</list:switch>
+			</list:item>
+		</ul>
+	</li>
+	</list:list>
+	<core:block id="no_topics" hidden="yes">
+	<li><strong>{$topics_message}</strong>
+	</core:block>
+	<list:list id="topics">
+	<list:item list="topics">
+		<list:switch list="topics" var="list_type" a="square" b="circle">
+		<core:import id="topic_view" file="topic_view.html" />
+		</list:switch>
+	</list:item>
+	</list:list>
+</ul>
+<!-- / Topics List of '{$current_location}' -->
+</maps:if>

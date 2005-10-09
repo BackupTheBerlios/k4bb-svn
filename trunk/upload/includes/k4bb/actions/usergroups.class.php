@@ -40,27 +40,22 @@ class AddUserToGroup extends FAAction {
 		
 		global $_USERGROUPS, $_QUERYPARAMS;
 		
-		if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
-			$action = new K4InformationAction(new K4LanguageElement('L_GROUPDOESNTEXIST'), 'content', FALSE);
+		/* set the breadcrumbs bit */
+		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 
+		if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
+			$action = new K4InformationAction(new K4LanguageElement('L_GROUPDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
 
 		if(!isset($_USERGROUPS[intval($_REQUEST['id'])])) {
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_GROUPDOESNTEXIST'), 'content', FALSE);
-
 			return $action->execute($request);
 		}
 
 		if(!isset($_REQUEST['name']) || !$_REQUEST['name'] || $_REQUEST['name'] == '') {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_USERDOESNTEXIST'), 'content', TRUE);
-
 			return $action->execute($request);
-			return TRUE;
 		}
 		
 		$group			= $_USERGROUPS[intval($_REQUEST['id'])];
@@ -68,12 +63,8 @@ class AddUserToGroup extends FAAction {
 		$member			= $request['dba']->getRow("SELECT ". $_QUERYPARAMS['user'] . $_QUERYPARAMS['userinfo'] ." FROM ". K4USERS ." u LEFT JOIN ". K4USERINFO ." ui ON u.id=ui.user_id WHERE u.name = '". $request['dba']->quote($_REQUEST['name']) ."'");
 		
 		if(!$member || !is_array($member) || empty($member)) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_USERDOESNTEXIST'), 'content', TRUE);
-
 			return $action->execute($request);
-			return TRUE;
 		}
 		
 		/* Should we set the group moderator? */
@@ -81,38 +72,30 @@ class AddUserToGroup extends FAAction {
 			$admin		= $request['dba']->getRow("SELECT * FROM ". K4USERS ." WHERE perms >= ". intval(ADMIN) ." ORDER BY perms,id ASC LIMIT 1");
 			$request['dba']->executeUpdate("UPDATE ". K4USERGROUPS  ." SET mod_name = '". $request['dba']->quote($admin['name']) ."', mod_id = ". intval($admin['id']) ." WHERE id = ". intval($group['id']));
 		
-			if(!@touch(CACHE_FILE, time()-86460)) {
-				@unlink(CACHE_FILE);
-			}
+			reset_cache(CACHE_FILE);
 			
 			$group['mod_name']	= $admin['name'];
 			$group['mod_id']	= $admin['id'];
 		}
 
 		if($group['mod_id'] == $member['id']) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_YOUAREMODERATOR'), 'content', TRUE);
-
 			return $action->execute($request);
-			return TRUE;
 		}
 		
 		$result					= @unserialize(@$member['usergroups']);
 		$groups					= $member['usergroups'] != '' ? iif(!$result, force_usergroups($member), $result) : array();		
 		
 		$in_group				= FALSE;
-		foreach($groups as $id)
-			if(isset($_USERGROUPS[$id]) && $id == $group['id'])
+		foreach($groups as $id) {
+			if(isset($_USERGROUPS[$id]) && $id == $group['id']) {
 				$in_group		= TRUE;
-		
-		if($in_group) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
-			$action = new K4InformationAction(new K4LanguageElement('L_BELONGSTOGROUP'), 'content', TRUE);
+			}
+		}
 
+		if($in_group) {
+			$action = new K4InformationAction(new K4LanguageElement('L_BELONGSTOGROUP'), 'content', TRUE);
 			return $action->execute($request);
-			return TRUE;
 		}
 
 		$groups[]				= intval($group['id']);
@@ -126,10 +109,7 @@ class AddUserToGroup extends FAAction {
 		
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_ADDUSER');
 		$action = new K4InformationAction(new K4LanguageElement('L_ADDEDUSERTOGROUP', $member['name'], $group['name']), 'content', FALSE, 'usergroups.php?id='. intval($group['id']), 3);
-
 		return $action->execute($request);
-
-		return TRUE;
 	}
 }
 

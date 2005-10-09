@@ -598,8 +598,20 @@ $_LANG += array(
 /**
  * CSS editor
  */
+'L_PROPERTIES'			=> 'Properties',
+'L_ADDCSSSTYLE'			=> 'Add CSS Style',
+'L_STARTNEWSS'			=> 'Start new Styleset',
+'L_STYLESETTOCLONE'		=> 'Styleset to Clone',
+'L_STYLESETTOCLONEHOWTO'=> 'The styleset that you are making will start off with all of the same classes as this styleset so that you have something to build on.',
+'L_CSSSTYLES'			=> 'CSS Styles',
+'L_NOCSSSTYLES'			=> 'There are no CSS styles for this styleset.',
 'L_ADDSTYLESET'			=> 'Add Style Set',
+'L_EDITSTYLESET'		=> 'Edit Style Set',
 'L_STYLESETS'			=> 'Style Sets',
+'L_USETEMPLATESET'		=> 'Use the template set with the same name?',
+'L_USEIMAGESET'			=> 'Use the image set with the same name?',
+'L_INSERTSSNAME'		=> 'You must insert a name for the style set.',
+'L_INSERTSSDESCRIPTION'	=> 'You must put a brief description for this styleset.',
 'L_UPDATEDSTYLESET'		=> 'Successfully updated the style set with the name <strong>%s</strong>',
 'L_STYLESETEXISTS'		=> 'A styleset with the name <strong>%s</strong> already exists.',
 'L_ADDEDSTYLESET'		=> 'Successfully added the styleset <strong>%s</strong>.',

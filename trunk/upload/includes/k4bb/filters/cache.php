@@ -61,8 +61,8 @@ class K4GeneralCacheFilter extends FAFilter {
 			 * Get the usergroups 
 			 */
 			
-			$cache[K4USERGROUPS]					= array();
-			$result									= &$request['dba']->executeQuery("SELECT * FROM ". K4USERGROUPS ." ORDER BY max_perm DESC");
+			$cache[K4USERGROUPS]	= array();
+			$result					= &$request['dba']->executeQuery("SELECT * FROM ". K4USERGROUPS ." ORDER BY max_perm DESC");
 			while($result->next()) {
 				$temp								= $result->current();
 				$cache[K4USERGROUPS][$temp['id']]	= $temp;

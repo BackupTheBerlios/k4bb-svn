@@ -1,0 +1,60 @@
+<is:admin>
+<form:form action="{$css_formaction}" method="post" enctype="multipart/form-data">
+<div class="k4_borderwrap">
+	<if:if var="edit_styleset" eq="1">
+	<div class="k4_maintitle">{$L_EDITSTYLESET}<span style="font-weight: normal;">: {$styleset_name}</span></div>
+	<input type="hidden" name="id" value="{$styleset_id}" />
+	<if:else />
+	<div class="k4_maintitle">{$L_ADDSTYLESET}</div>
+	</if:if>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" width="30%"><label for="name"><strong>{$L_NAME}:</strong></label></td>
+			<td class="alt3">
+				<input type="text" name="name" id="name" class="inputbox" value="{$styleset_name}" />
+				<form:error id="name_error" for="name" setclass="inputfailed" regex=".+">{$L_INSERTSSNAME}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="30%"><label for="description"><strong>{$L_DESCRIPTION}:</strong></label></td>
+			<td class="alt3">
+				<input type="text" name="description" id="description" size="40" class="inputbox" value="{$styleset_description}" />
+				<form:error id="description_error" for="description" setclass="inputfailed" regex=".+">{$L_INSERTSSDESCRIPTION}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="30%"><strong>{$L_SETTINGS}:</strong></td>
+			<td class="alt3">
+				<input type="checkbox" name="use_templateset" id="use_templateset" value="1" /> {$L_USETEMPLATESET}
+				<br />
+				<input type="checkbox" name="use_imageset" id="use_imageset" value="1" /> {$L_USEIMAGESET}
+				<if:if var="edit_styleset" eq="1">
+				<script type="text/javascript">
+				d.setCheckbox({$styleset_use_templateset}, 'use_templateset');
+				d.setCheckbox({$styleset_use_imageset}, 'use_imageset');
+				</script>
+				<if:else />
+				<br /><br />
+				<strong>{$L_STYLESETTOCLONE}</strong><br />
+				<span class="smalltext">{$L_STYLESETTOCLONEHOWTO}</span><br />
+				<select name="clone_styleset" class="inputbox">
+					<option value="0"> - {$L_STARTNEWSS} - </option>
+					<list:list id="stylesets">
+					<list:item list="stylesets">
+					<option value="{$id}">{$name}</option>
+					</list:item>
+					</list:list>
+				</select>
+				</if:if>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" colspan="2">
+				<input type="submit" class="button" value="{$L_SAVE}" tabindex="15" />
+				<input type="reset" class="button" value="{$L_RESET}" />
+			</td>
+		</tr>
+	</table>
+</div>
+</form:form>
+</is:admin>

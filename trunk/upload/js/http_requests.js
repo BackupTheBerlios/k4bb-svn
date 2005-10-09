@@ -1,5 +1,5 @@
 /**
-* k4 Bulletin Board, http_requests.js
+* k4 Bulletin Board, rs.js
 *
 * Copyright (c) 2005, Peter Goodman
 *
@@ -27,32 +27,6 @@
 * @version $Id$
 * @package k4-2.0-dev
 */
-
-var d		= new k4lib();
-
-/**
- * Function to create an HTTP Request Object
- */
-function getHTTPRequestObject() {	
-	
-	if(!http_request) {
-
-		var control	= false;
-		if(window.XMLHttpRequest) {
-			control = new XMLHttpRequest();
-		} else if(window.ActiveXObject) { 
-			var control_types = new Array('MSXML2.XMLHTTP.5.0','MSXML2.XMLHTTP.4.0','MSXML2.XMLHTTP.3.0','MSXML2.XMLHTTP','Microsoft.XMLHTTP');
-			for (var i = 0; i < d.sizeof(control_types) && !control; i++) {
-				try {
-					control = new ActiveXObject(control_types[i]);
-				} catch (e) { control = false; }
-			}
-		}
-		return control;
-	} else {
-		return http_request;
-	}
-}
 
 /**
  * Function to check if the server response is an error
@@ -86,102 +60,94 @@ function textarea_value(textarea) {
 	return inner_value;
 }
 
-/* Create the request object */
-var http_request	= getHTTPRequestObject();
-
 /**
  * Inline Moderation
  */
-function getTopicTitle(topic_id, div_id) {
-	var topic_area		= d.getElementById(div_id);
-	
-	if(http_request && topic_area) {
-		try {
-			http_request.open("GET",  'mod.php?act=get_topic_title&topic_id=' + parseInt(topic_id), true);
-			http_request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-			http_request.onreadystatechange = function() { topicMakeUpdatable(topic_id, div_id); }
-			http_request.send(null);
-		} catch(e) { alert(e.message); }
+function getTopicTitle(topic_id) {
+	if(r) {
+		r.open("GET", 'mod.php?act=get_topic_title&topic_id=' + parseInt(topic_id), true);
+		r.state_handler = function() { r.change_ready_state(); topicMakeUpdatable(topic_id); };
+		r.send(null);
 	} else {
-		alert('Failed at: http_request (98)');
+		alert('Failed at: r (66)');
 	}
 }
-function topicMakeUpdatable(topic_id, div_id) {
-	var topic_area	= d.getElementById(div_id);
-
-	if(http_request && topic_area) {
+function topicMakeUpdatable(topic_id) {
+	var topic_span	= d.getElementById('topicname_' + topic_id);
+	var topic_area	= d.getElementById('topicname_' + topic_id + '_area');
+	
+	if(r && topic_span && topic_area) {
 		try {
-			if(http_request.readyState == 4) {
-				if(http_request.status == 200) {
-					var response				= http_request.responseText;
-					//alert(response);
-					if(response != null && response != '') {
+			if(r.r_state == 4) {
+				if(r.r_status == 200) {
+					if(r.r_response != null && r.r_response != '') {
 						
 						// add an input box into the topic box
-						topic_area.innerHTML	= '<input type="text" name="name" id="topic' + topic_id + '_name" value="' + response + '" class="alt1" style="padding: 1px;font-size: 11px;" />';
+						topic_span.innerHTML	= '<input type="text" name="name" id="topic' + topic_id + '_name" value="' + r.r_response + '" class="alt1" style="padding: 1px;font-size: 11px;" />';
 					
 						// attach a function to monitor document clicks
-						AttachEvent(document,'mousedown',disable_edit_mode,false);
+						AttachEvent(document,'click',disable_edit_mode,false);
 						if(document.addEventListener ) {
-							document.addEventListener('mousedown', disable_edit_mode, false);
+							document.addEventListener('click', disable_edit_mode, false);
 						} else if(document.attachEvent ) {
-							document.attachEvent('onmousedown', disable_edit_mode);
+							document.attachEvent('onclick', disable_edit_mode);
 						}
 					}
 				} else {
-					http_request.abort();
+					r.close();
 				}
 			}
 		} catch(e) { alert(e.message); }
 	} else {
-		alert('Failed at http_requests (112)');
+		alert('Failed at rs (79)');
 	}
 }
-var topic_area_id = false;
+
 function updateTopicTitle(textbox_id, topic_id, div_id) {
-	topic_area_id	= div_id;
 	var textbox		= d.getElementById(textbox_id);
 	
-	if(http_request && textbox) {
+	if(r && textbox) {
 		try {
-			http_request.open("POST", 'mod.php?act=topic_simpleupdate', true);
-			http_request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-			http_request.onreadystatechange = topicSimpleUpdate;
-			http_request.send('use_ajax=1&id=' + parseInt(topic_id) + '&name=' + encodeURIComponent(textbox.value));
+			r.open("POST", 'mod.php?act=topic_simpleupdate', true);
+			r.state_handler = function() { r.change_ready_state(); topicSimpleUpdate(div_id); }
+			r.send('use_ajax=1&id=' + parseInt(topic_id) + '&name=' + encodeURIComponent(textbox.value));
 		} catch(e) { alert(e.message); }
 	} else {
-	//	alert('Failed.');
+		alert('Failed at rs (106)');
 	}
 }
-function topicSimpleUpdate() {
+function topicSimpleUpdate(topic_area_id) {
 	
 	var topic_area	= d.getElementById(topic_area_id);
-
-	if(http_request && topic_area) {
+	
+	if(r && topic_area) {
 		try {
-			if(http_request.readyState == 4) {
-				if(http_request.status == 200) {
-					var response				= http_request.responseText;
-					
-					if(response != null && response != '') {
+			if(r.r_state == 4) {
+				if(r.r_status == 200) {
+					if(r.r_response != null && r.r_response != '') {
 
 						// try to get an error string
-						var errorstr = response_error(response);
+						var errorstr = response_error(r.r_response);
 						
 						// if there is an error string
 						if(errorstr != '') {
 							alert(errorstr);
 						} else {
-							topic_area.innerHTML	= response;
+							
+							// put in the new topic title
+							topic_area.innerHTML	= r.r_response;
+
+							// unset some other things
+							close_edit_mode();
 						}
 					}
 				} else {
-					http_request.abort();
+					r.close();
 				}
 			}
 		} catch(e) { alert(e.message); }
 	} else {
-		alert('Failed at http_requests (160)');
+		alert('Failed at rs (119)');
 	}
 }
 
@@ -189,16 +155,16 @@ function topicSimpleUpdate() {
  * Topic Locking
  */
 function updateTopicLocked(icon, topic_id) {
-	if(http_request && icon) {
+	if(r && icon) {
 		try {
 			
 			var lock_regex	= new RegExp("_lock\.gif$", "i");
 			var locked		= d.sizeof(icon.src.match(lock_regex)) > 0 ? true : false;
 			
-			http_request.open("POST", 'mod.php?act=' + (locked == 1 ? 'un' : '') + 'locktopic', true);
-			http_request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-			http_request.onreadystatechange = function() { changeLockedIcon(icon); }
-			http_request.send('id=' + parseInt(topic_id) + '&use_ajax=1');
+			r.open("POST", 'mod.php?act=' + (locked == 1 ? 'un' : '') + 'locktopic', true);
+			r.state_handler = function() { r.change_ready_state(); changeLockedIcon(icon); }
+			r.send('id=' + parseInt(topic_id) + '&use_ajax=1');
+
 		} catch(e) { alert(e.message); }
 	} else {
 		document.location = 'mod.php?act=' + (locked == 1 ? 'un' : '') + 'locktopic&id=' + parseInt(topic_id);
@@ -206,20 +172,16 @@ function updateTopicLocked(icon, topic_id) {
 }
 // change the topic icon for locked
 function changeLockedIcon(icon) {
-	if(http_request && icon) {
-		if(http_request.readyState == 1) {
-			
-		}
-		if(http_request.readyState == 4) {
-			if(http_request.status == 200) {
-				var response = http_request.responseText;
-
-				if(response != '') {
+	if(r && icon) {
+		if(r.r_state == 4) {
+			if(r.r_status == 200) {
+				if(r.r_response != '') {
 					
 					var new_lock	= (locked == 1 ? 0 : 1);
 					
 					var bad_match			= new RegExp("(announce|sticky)", "i");
 					var matches				= icon.src.match(bad_match);
+					
 					if(d.sizeof(matches) == 0) {
 						
 						var lock_regex	= new RegExp("_lock\.gif$", "i");
@@ -234,7 +196,7 @@ function changeLockedIcon(icon) {
 					}
 				}
 			} else {
-				http_request.abort();	
+				r.close();	
 			}
 		}
 	}
@@ -249,13 +211,12 @@ function saveQuickReply(form_id, textarea_id, topic_id, page) {
 		var textarea	= d.getElementById(textarea_id);
 		var form		= d.getElementById(form_id);
 		var query_string = '';
-		if(http_request && textarea && form) {
+		if(r && textarea && form) {
 			if(textarea_value(textarea) != '') query_string += 'message=' + encodeURIComponent(textarea_value(textarea));
 			try {
-				http_request.open("POST", 'newreply.php?act=postreply&use_ajax=1&topic_id=' + parseInt(topic_id) + '&submit_type=post&page=' + parseInt(page), true);
-				http_request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-				http_request.onreadystatechange = findQuickReply;
-				http_request.send(query_string);
+				r.open("POST", 'newreply.php?act=postreply&use_ajax=1&topic_id=' + parseInt(topic_id) + '&submit_type=post&page=' + parseInt(page), true);
+				r.state_handler = function() { r.change_ready_state(); findQuickReply(); };
+				r.send(query_string);
 			} catch(e) {
 				form.submit();
 			}
@@ -265,30 +226,36 @@ function saveQuickReply(form_id, textarea_id, topic_id, page) {
 	} catch(e) { alert(e.message); }
 }
 function findQuickReply() {
+	
 	var message_holder	= d.getElementById('quick_reply_sent');
 	var container		= d.getElementById('quick_reply_content');
 	var message			= d.getElementById('quick_reply_message');
 	var preview			= d.getElementById('ajax_post_preview');
-	if(http_request && message_holder && container && preview) {
-		if(http_request.readyState == 1 && preview) {
+	
+	if(r && message_holder && container && preview) {
+		if(r.r_state < 4 && preview) {
 			preview.style.display = 'block';
 			document.location = '#preview';
 			preview.innerHTML = '';
 			preview.innerHTML = '<div style="padding: 30px;text-align: center;font-weight: bold;font-size:18px;font-family: Arial, Helvetica, serif;">Loading...</div>';
 		}		
-		if(http_request.readyState == 4) {
-			if(http_request.status == 200) {
-				var response = http_request.responseText;
-				if(response != '') {
-					var errorstr = response_error(response);
+		if(r.r_state == 4) {
+			if(r.r_status == 200) {
+				if(r.r_response != '') {
+					
+					var errorstr = response_error(r.r_response);
 					message_holder.style.display = 'block';
+					
 					if(errorstr == '') {
+						
 						if(container) {
 							container.style.display = 'block';
-							container.innerHTML += response;
+							container.innerHTML += r.r_response;
 						}
-						if(textarea) { textarea.value = ''; }
-						if(e_textarea) { e_textarea.value = ''; }
+
+						if(textarea) { textarea.value		= ''; }
+						if(e_textarea) { e_textarea.value	= ''; }
+
 						if(e_iframe) {
 							e_iframe_document = get_document(e_iframe);
 							e_iframe_document.body.innerHTML = '';
@@ -299,7 +266,7 @@ function findQuickReply() {
 					}
 				}
 			} else {
-				http_request.abort();
+				r.close();
 			}
 		}
 	}
@@ -309,22 +276,27 @@ function findQuickReply() {
  * Registration
  */
 function errorCheckRegistration(button) {
-	var fields = new Array('username','password','password2','email','email2');
-	var form = d.getElementById('register_form');
+	
+	var fields	= new Array('username','password','password2','email','email2');
+	var form	= d.getElementById('register_form');
+	
 	try {
-		if(http_request && form) {
-			var query_string = new String();
-			var sep = new String();
+		if(r && form) {
+			
+			var query_string	= new String();
+			var sep				= new String();
+			
 			for(var i = 0; i < d.sizeof(fields); i++) {
 				field = d.getElementById(fields[i]);
 				if(field) query_string += sep + fields[i] + '=' + encodeURIComponent(field.value);
 				sep = '&';
 			}
 			try {
-				http_request.open("POST", 'member.php?act=register_user&use_ajax=1', true);
-				http_request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
-				http_request.onreadystatechange = function() { handeRegErrors(button); }
-				http_request.send(query_string);
+
+				r.open("POST", 'member.php?act=register_user&use_ajax=1', true);
+				r.state_handler = function() { r.change_ready_state(); handeRegErrors(button); }
+				r.send(query_string);
+
 			} catch(e) { form.submit(); return true; }
 		} else {
 			if(form) { form.submit(); return true; }
@@ -343,15 +315,14 @@ function handeRegErrors(button) {
 	var form			= d.getElementById('register_form');
 	
 	// if everything is a-okay
-	if(http_request && message_holder && message_area) {
-		
+	if(r && message_holder && message_area) {
+
 		// if the request has completed
-		if(http_request.readyState == 4) {
-			if(http_request.status == 200) {
-				var response			= http_request.responseText;
+		if(r.r_state == 4) {
+			if(r.r_status == 200) {
 				
 				// if the response was nothing
-				if(response == '') {
+				if(r.r_response == '') {
 					
 					// submit the form
 					form.submit();
@@ -362,15 +333,15 @@ function handeRegErrors(button) {
 				} else {
 					
 					// try to get an error string
-					var errorstr = response_error(response);
+					var errorstr = response_error(r.r_response);
 					
 					// if there is an error string
 					if(errorstr != '') {
 
 						// set the error to message holder
-						message_holder.innerHTML = errorstr;
-						message_area.style.display = 'block';
-						document.location = '#top';
+						message_holder.innerHTML	= errorstr;
+						message_area.style.display	= 'block';
+						document.location			= '#top';
 						d.enableButton(button);
 
 					// Everything's good, submit the form
@@ -379,7 +350,7 @@ function handeRegErrors(button) {
 			} else {
 
 				// abort the request
-				http_request.abort();
+				r.close();
 			}
 		}
 	} else {
@@ -404,7 +375,7 @@ function setSendPostPreview(form_url) {
 	try {
 
 		// if everything is good sofar
-		if(http_request && form) {
+		if(r && form) {
 			
 			// loop through the above defined fields
 			var query_string = '';
@@ -428,10 +399,9 @@ function setSendPostPreview(form_url) {
 			try {
 
 				// open and send the request
-				http_request.open("POST", form_url + '&use_ajax=1', true);
-				http_request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
-				http_request.onreadystatechange = getPostPreview;
-				http_request.send('submit_type=preview' + query_string);
+				r.open("POST", form_url + '&use_ajax=1', true);
+				r.state_handler = function() { r.change_ready_state(); getPostPreview(); }
+				r.send('submit_type=preview' + query_string);
 
 			} catch(e) { form.submit(); }
 		} else {
@@ -450,12 +420,13 @@ function getPostPreview() {
 	var preview_holder	= d.getElementById('ajax_post_preview'); // get the preview holder
 	
 	// if everything looks good
-	if(http_request && preview_holder && form) {
+	if(r && preview_holder && form) {
+		
 		try {
-
+	
 			// if the request is loading
-			if(http_request.readyState == 1) {
-
+			if(r.r_state < 4) {
+				
 				// display the preview holder
 				preview_holder.style.display = 'block';
 				
@@ -467,16 +438,14 @@ function getPostPreview() {
 			}
 
 			// if the request is complete
-			if(http_request.readyState == 4) {
-				
-				// if there were no errors
-				if(http_request.status == 200) {
+			if(r.r_state == 4) {
 
-					// get the response
-					var response = http_request.responseText;
+				// if there were no errors
+				if(r.r_status == 200) {
 					
 					// if there is no response
-					if(response == null || response == '') {
+					if(r.r_response == null || r.r_response == '') {
+						
 						form.submit();
 						preview_holder.style.display = 'none';
 					
@@ -484,21 +453,22 @@ function getPostPreview() {
 					} else {
 
 						// get an error string if any
-						var errorstr = response_error(response);
-						
+						var errorstr = response_error(r.r_response);
+							
 						// if there is an error
 						if(errorstr != '') {
 							preview_holder.innerHTML = '<div class="special_panel" style="text-align:center;">' + errorstr + '</div><br />';
 						
 						// otherwise
 						} else {
-							preview_holder.innerHTML = response;
+							preview_holder.style.display = 'block';
+							preview_holder.innerHTML = r.r_response;
 						}
 					}
 				} else {
 
 					// abort the request
-					http_request.abort();
+					r.close();
 				}
 			}
 		} catch(e) { alert(e.message); }
@@ -521,7 +491,7 @@ function switch_editor_type(switch_to, curr_type, textarea_id, iframe_id) {
 	try {
 
 		// if everything is good and this isn't Opera
-		if(http_request && e_textarea && !d.is_opera) {
+		if(r && e_textarea && !d.is_opera) {
 			
 			// some checks
 			if((switch_to == 'bbcode' && curr_type == 'bbcode') || (switch_to == 'wysiwyg' && curr_type == 'wysiwyg')) {
@@ -558,10 +528,9 @@ function switch_editor_type(switch_to, curr_type, textarea_id, iframe_id) {
 			try {
 				
 				// open and send a request
-				http_request.open("POST", 'misc.php?act=switch_editor&switchto=' + switch_to, true);
-				http_request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
-				http_request.onreadystatechange = createEditor;
-				http_request.send('use_ajax=1' + query_string + '&switchto=' + switch_to);
+				r.open("POST", 'misc.php?act=switch_editor&switchto=' + switch_to, true);
+				r.state_handler = function() { r.change_ready_state(); createEditor(); }
+				r.send('use_ajax=1' + query_string + '&switchto=' + switch_to);
 			} catch(e) { alert(e.message); }
 		}
 	} catch(e) { alert(e.message); }
@@ -571,25 +540,24 @@ function switch_editor_type(switch_to, curr_type, textarea_id, iframe_id) {
  * Create the specified editor: bbcode or wysiwyg
  */
 function createEditor() {
-	if(http_request && editorcodex) {
+	if(r && editorcodex) {
 
 		// if the request is still loading
-		if(http_request.readyState == 1) {
+		if(r.r_state == 1) {
 			editorcodex.innerHTML = '';
 			editorcodex.innerHTML = '<div style="padding: 30px;text-align: center;font-weight: bold;font-size:18px;font-family: Arial, Helvetica, serif;">Loading...</div>';
 		}
 
 		// if the request is complete
-		if(http_request.readyState == 4) {
+		if(r.r_state == 4) {
 			
 			// if the request status is good
-			if(http_request.status == 200) {
-				var response = http_request.responseText;
+			if(r.r_status == 200) {
 				
-				if(response != '' && response != null) { 
+				if(r.r_response != '' && r.r_response != null) { 
 
 					// get an error string if any
-					var errorstr = response_error(response);
+					var errorstr = response_error(r.r_response);
 					
 					// if there was an error
 					if(errorstr != '') {
@@ -619,7 +587,7 @@ function createEditor() {
 						// if we have a response..
 						if(editorcodex) {
 							editorcodex.innerHTML = '';
-							editorcodex.innerHTML = response; // set the editor's inner value to the response
+							editorcodex.innerHTML = r.r_response; // set the editor's inner value to the response
 						}
 						
 						// if we are switching to wysiwyg
@@ -633,7 +601,7 @@ function createEditor() {
 			} else {
 
 				// abort the request
-				http_request.abort();
+				r.close();
 			}
 		}
 	}
@@ -647,56 +615,44 @@ function quickEditPost(post_type, post_id, div_id) {
 	// set the quick edit box
 	var quickedit_div		= d.getElementById(div_id);
 	
-	try {
-
-		// if we have a connection and the edit box
-		if(http_request && quickedit_div) {
-			try {
-				
-				// set the height of the quickedit box
-				var quickedit_height = d.height(quickedit_div);
-				quickedit_height = quickedit_height > 200 ? (quickedit_height > 400 ? 400 : quickedit_height) : 200;
-
-				// send a request via the GET method
-				http_request.open("GET", 'misc.php?act=revert_text&' + post_type + '=' + post_id + '&use_ajax=1', true);
-				http_request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
-				http_request.onreadystatechange = function() { showQuickEditForm(quickedit_div, quickedit_height, post_type, post_id, false); }
-				http_request.send(null);
-
-			} catch(e) { alert(e.message); }
-		} else {
-			alert(e.message);
-		}
-	} catch(e) { alert(e.message); }
+	// if we have a connection and the edit box
+	if(r && quickedit_div) {
+		// set the height of the quickedit box
+		var quickedit_height	= d.height(quickedit_div);
+		quickedit_height		= quickedit_height > 200 ? (quickedit_height > 400 ? 400 : quickedit_height) : 200;
+		
+		// send a request via the GET method
+		r.open("GET", 'misc.php?act=revert_text&' + post_type + '=' + post_id + '&use_ajax=1', true);
+		r.state_handler = function() { r.change_ready_state(); showQuickEditForm(quickedit_div, quickedit_height, post_type, post_id, false); }
+		r.send(null);
+	}
 }
 
 /* Function to show the quick edit form */
 function showQuickEditForm(quickedit_div, quickedit_height, post_type, post_id, hide) {
+	
 	// if we have a connection and the edit box
-	if(http_request && quickedit_div) {
+	if(r && quickedit_div) {
 		try {
 			
 			// if the request is still loading
-			if(http_request.readyState == 1) {
+			if(r.r_state == 1) {
 				quickedit_div.innerHTML = '<div style="padding: 30px;text-align: center;font-weight: bold;font-size:18px;font-family: Arial, Helvetica, serif;">Loading...</div>';
 			}
 
 			// if the request is sending stuff back
-			if(http_request.readyState == 4) {
+			if(r.r_state == 4) {
 
 				// if there are no errors
-				if(http_request.status == 200) {
-
-					// get the response
-					var response = http_request.responseText;
-
+				if(r.r_status == 200) {
+					
 					// if the response is nothing
-					if(response == null || response == '') {
-						alert('Failed at http_requests (694)');
+					if(r.r_response == null || r.r_response == '') {
+						alert('Failed at rs (694)');
 					} else {
 						
 						// see if there is a back-end error sent with this response
-						var errorstr = response_error(response);
+						var errorstr = response_error(r.r_response);
 						
 						// display an error
 						if(errorstr != '') {
@@ -707,10 +663,11 @@ function showQuickEditForm(quickedit_div, quickedit_height, post_type, post_id, 
 							
 							if(!hide) {
 								// insert the textarea
-								quickedit_div.innerHTML = '<textarea id="' + post_type + '' + post_id + '_message" rows="10" cols="100" style="width: 100%;height: ' + quickedit_height + 'px;" class="inputbox">' + response + '</textarea>';
+								quickedit_div.innerHTML = '<textarea id="' + post_type + '' + post_id + '_message" rows="10" cols="100" style="width: 100%;height: ' + quickedit_height + 'px;" class="inputbox">' + r.r_response + '</textarea>';
 							} else {
-								quickedit_div.innerHTML = response;	
+								quickedit_div.innerHTML = r.r_response;	
 							}
+
 							// try to get the button pallette for the quick edit
 							var buttons = d.getElementById(post_type + '' + post_id + '_qebuttons');
 							if(buttons) {
@@ -723,12 +680,12 @@ function showQuickEditForm(quickedit_div, quickedit_height, post_type, post_id, 
 				} else {
 
 					// abort the connection
-					http_request.abort();
+					r.close();
 				}
 			}
 		} catch(e) { alert(e.message); }
 	} else {
-		alert('Failed at http_requests (676)');
+		alert('Failed at rs (676)');
 	}
 }
 
@@ -737,20 +694,20 @@ function showQuickEditForm(quickedit_div, quickedit_height, post_type, post_id, 
  * has been cancelled
  */
 function cancelQuickEdit(post_type, post_id, div_id) {
+	
 	// set the quick edit box
 	var quickedit_div		= d.getElementById(div_id);
 	
 	try {
 
 		// if we have a connection and the edit box
-		if(http_request && quickedit_div) {
+		if(r && quickedit_div) {
 			try {
 				
 				// send a request via the GET method
-				http_request.open("GET", 'misc.php?act=original_text&' + post_type + '=' + post_id + '&use_ajax=1', true);
-				http_request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
-				http_request.onreadystatechange = function() { showQuickEditForm(quickedit_div, 0, post_type, post_id, true); }
-				http_request.send(null);
+				r.open("GET", 'misc.php?act=original_text&' + post_type + '=' + post_id + '&use_ajax=1', true);
+				r.state_handler = function() { r.change_ready_state(); showQuickEditForm(quickedit_div, 0, post_type, post_id, true); }
+				r.send(null);
 
 			} catch(e) { alert(e.message); }
 		} else {
@@ -770,17 +727,16 @@ function saveQuickEdit(post_type, post_id, div_id) {
 	try {
 
 		// if we have a connection and the edit box
-		if(http_request && quickedit_div) {
+		if(r && quickedit_div) {
 			try {
 				
 				var textarea		= d.getElementById(post_type + '' + post_id + '_message');
 				var edited_msg		= textarea_value(textarea);
 
 				// send a request via the GET method
-				http_request.open("POST", 'misc.php?act=save_text&' + post_type + '=' + post_id + '&use_ajax=1', true);
-				http_request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
-				http_request.onreadystatechange = function() { showQuickEditForm(quickedit_div, 0, post_type, post_id, true); }
-				http_request.send('message=' + encodeURIComponent(edited_msg));
+				r.open("POST", 'misc.php?act=save_text&' + post_type + '=' + post_id + '&use_ajax=1', true);
+				r.state_handler = function() { r.change_ready_state(); showQuickEditForm(quickedit_div, 0, post_type, post_id, true); }
+				r.send('message=' + encodeURIComponent(edited_msg));
 
 			} catch(e) { alert(e.message); }
 		} else {
