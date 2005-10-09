@@ -1,0 +1,21 @@
+<!-- Main Navigation -->
+<div class="menu_global" style="display:block;text-align: right;" id="header_menu">
+	<ul class="menu_global">
+		<li class="first"><a href="index.php" title="<?php echo $scope->getVar("L_HOME"); ?>"><?php echo $scope->getVar("L_HOME"); ?></a></li>
+		<!--<?php if ($scope->getVar("enableblogs") == 1): ?><li><a href="blogs.php" title="<?php echo $scope->getVar("L_BLOGS"); ?>"><?php echo $scope->getVar("L_BLOGS"); ?></a></li><?php endif; ?>-->
+<?php if ($scope->getVar("enablememberlist") == 1): ?><li><a href="member.php?act=list&amp;start=0&amp;limit=30&amp;letter=*" title="<?php echo $scope->getVar("L_MEMBERLIST"); ?>"><?php echo $scope->getVar("L_MEMBERLIST"); ?></a></li><?php endif; ?> 
+<?php if ($scope->getVar("enablesearches") == 1): ?><li><a href="<?php if ($scope->getVar("nojs") == 0): ?>search.php<?php else: ?>#search<?php endif; ?>" class="nav_top" title="<?php echo $scope->getVar("L_SEARCH"); ?>" id="search_link"><?php echo $scope->getVar("L_SEARCH"); ?></a></li><?php endif; ?>
+<?php if ($_SESSION['user']->isMember()): ?><li><a href="member.php?act=usercp" title="<?php echo $scope->getVar("L_USERCP"); ?>"><?php echo $scope->getVar("L_USERCP"); ?></a></li><?php endif; ?>
+<?php if ($scope->getVar("nojs") == 0): ?><li><a href="?nojs=1#quicklinks" class="nav_top" id="quicklinks_link" title="<?php echo $scope->getVar("L_QUICKLINKS"); ?>"><?php echo $scope->getVar("L_QUICKLINKS"); ?></a></li><?php endif; ?>
+<?php if ($_SESSION['user']->isMember()): ?><li><a href="<?php echo $scope->getVar("logout_link"); ?>" title="<?php echo $scope->getVar("L_LOGOUT"); ?>"><?php echo $scope->getVar("L_LOGOUT"); ?> [<strong><?php echo $scope->getVar("user_name"); ?></strong>]</a></li><?php endif; ?>
+<?php if (!$_SESSION['user']->isMember()): ?><li><a href="member.php?act=register" title="<?php echo $scope->getVar("L_REGISTER"); ?>"><?php echo $scope->getVar("L_REGISTER"); ?></a></li>
+		<li><a href="member.php?act=login" title="<?php echo $scope->getVar("L_LOGIN"); ?>"><?php echo $scope->getVar("L_LOGIN"); ?></a></li><?php endif; ?>
+		<li><a href="faq.php" title="<?php echo $scope->getVar("L_HELP"); ?>"><?php echo $scope->getVar("L_HELP"); ?></a></li>
+<?php if ($scope->getVar("nojs") == 0): ?><?php if ($_SESSION['user']->get('perms') >= MODERATOR): ?><li><a href="?nojs=1#modcp" class="nav_top" id="modpanel_link" title="<?php echo $scope->getVar("L_MODCP"); ?>" style="font-weight: bold;"><?php echo $scope->getVar("L_MODCP"); ?></a></li><?php endif; ?><?php endif; ?>
+<?php if ($_SESSION['user']->get('perms') >= ADMIN): ?><li><a href="admin.php" id="admin_link" target="_blank" title="<?php echo $scope->getVar("L_ADMINPANEL"); ?>" style="font-weight: bold;"><?php echo $scope->getVar("L_ADMINPANEL"); ?></a></li><?php endif; ?>
+	</ul>
+</div>
+<?php if ($file = $runtime->getFile("quicklinks_menu", "quicklinks_menu.html")) $template->render($file, $scope, $runtime); ?>
+<?php if ($file = $runtime->getFile("modpanel_menu", "modpanel.html")) $template->render($file, $scope, $runtime); ?>
+<?php if ($file = $runtime->getFile("search_menu", "search_menu.html")) $template->render($file, $scope, $runtime); ?>
+<!-- / Main Navigation -->

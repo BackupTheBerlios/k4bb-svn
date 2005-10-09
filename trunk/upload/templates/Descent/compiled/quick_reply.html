@@ -1,0 +1,42 @@
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['forums'][$scope->getVar("topic_forum_id")]['replies']['can_add']) && $_MAPS['forums'][$scope->getVar("topic_forum_id")]['replies']['can_add'] <= $_SESSION['user']->get('perms'))): ?>
+<br />
+
+<!-- AJAX Reply Preview -->
+<div id="ajax_post_preview" style="display: none;"></div>
+<!-- / AJAX Reply Preview -->
+<form name="savepost_form" id="savepost_form" action="<?php echo $scope->getVar("newreply_act"); ?>" method="post" enctype="multipart/form-data" onsubmit="return checkForm(this);" onreset="resetErrors();"><script type="text/javascript">resetErrors();</script>
+<input type="hidden" name="topic_id" id="topic_id" value="<?php echo $scope->getVar("topic_topic_id"); ?>" />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle" id="qr_maintitle">
+		<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_quickreply', 'quickreply_form', 'qr_maintitle')" title="<?php echo $scope->getVar("L_EXPANDCOLLAPSE"); ?>"><img id="collapse_quickreply" src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Icons/collapse_thead.gif" alt="<?php echo $scope->getVar("L_EXPANDCOLLAPSE"); ?>" border="0" /></a></div>
+		<?php echo $scope->getVar("L_QUICKREPLY"); ?>
+	</div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table" id="quickreply_form">
+		<tr>
+			<td class="alt3">
+				<div class="outset_box">
+					<!-- Post Message -->
+					<label for="messagecodex" class="smalltext"><?php echo $scope->getVar("L_MESSAGE"); ?></label>
+<?php if ($file = $runtime->getFile("editor", "editor.html")) $template->render($file, $scope, $runtime); ?>
+<script type="text/javascript">addVerification('messagecodex', '(\\\n|\\\r\\\n|\\\r|.)+', 'messagecodex_error', 'inputfailed');</script><div id="messagecodex_error" style="display: none;"><?php echo $scope->getVar("L_INSERTREPLYMESSAGE"); ?></div>
+					<!-- / Post Message -->
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle">
+				<div style="text-align: center;">
+					<input type="hidden" name="submit_type" id="submit_type" value="post" />
+					<input type="<?php if ($scope->getVar("nojs") == 0): ?>button<?php else: ?>submit<?php endif; ?>" class="button" value="<?php echo $scope->getVar("L_SUBMIT"); ?>" accesskey="s" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'post');saveQuickReply('savepost_form', 'messagecodex', '<?php echo $scope->getVar("topic_topic_id"); ?>', '<?php echo $scope->getVar("page"); ?>'); }" />
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['forums'][$scope->getVar("topic_forum_id")]['post_preview']['can_add']) && $_MAPS['forums'][$scope->getVar("topic_forum_id")]['post_preview']['can_add'] <= $_SESSION['user']->get('perms'))): ?>
+						<input type="<?php if ($scope->getVar("nojs") == 0): ?>button<?php else: ?>submit<?php endif; ?>" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'preview');setSendPostPreview('<?php echo $scope->getVar("newreply_act"); ?>'); }" class="button" value="<?php echo $scope->getVar("L_PREVIEW"); ?>" />
+<?php endif; ?>
+					<input type="reset" class="button" value="<?php echo $scope->getVar("L_RESET"); ?>" />
+				</div>
+			</td>
+		</tr>
+	</table>
+</table>
+</div>
+</form>
+<?php endif; ?>

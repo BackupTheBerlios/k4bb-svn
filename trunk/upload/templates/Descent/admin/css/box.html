@@ -1,0 +1,219 @@
+<isadmin>
+<table width="100%" cellpadding="0" cellspacing="1" border="0">
+	<tr>
+		<td>
+			{$L_WIDTH}:&nbsp;
+			<input type="text" class="inputbox" name="width" id="width" value="" size="5" onKeyPress="Enable(this, 'width-measurement')" />&nbsp;
+			<select name="width-measurement" id="width-measurement" disabled="true" class="smalltext">
+				<option value="px">pixels</option>
+				<option value="pt">points</option>
+				<option value="in">in</option>
+				<option value="cm">cm</option>
+				<option value="mm">mm</option>
+				<option value="pc">picas</option>
+				<option value="em">ems</option>
+				<option value="ex">exs</option>
+				<option value="%">%</option>
+			</select>
+		</td>
+		<td>
+			{$L_FLOAT}:&nbsp;
+			<select name="float" id="float" class="smalltext">
+				<option value=""></option>
+				<option value="left">left</option>
+				<option value="right">right</option>
+				<option value="none">none</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			{$L_HEIGHT}:&nbsp;
+			<input type="text" class="inputbox" name="height" id="height" value="" size="5" onKeyPress="Enable(this, 'height-measurement')" />&nbsp;
+			<select name="height-measurement" id="height-measurement" disabled="true" class="smalltext">
+				<option value="px">pixels</option>
+				<option value="pt">points</option>
+				<option value="in">in</option>
+				<option value="cm">cm</option>
+				<option value="mm">mm</option>
+				<option value="pc">picas</option>
+				<option value="em">ems</option>
+				<option value="ex">exs</option>
+				<option value="%">%</option>
+			</select>
+		</td>
+		<td>
+			{$L_CLEAR}:&nbsp;
+			<select name="clear" id="clear" class="smalltext">
+				<option value=""></option>
+				<option value="left">left</option>
+				<option value="right">right</option>
+				<option value="both">both</option>
+				<option value="none">none</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<fieldset>
+			<legend>{$L_PADDING}</legend>
+				<table width="100%" cellpadding="0" cellspacing="1" border="0">
+					<tr>
+						<td colspan="2">
+							<label for="box_same_padding" id="label_box_same_padding"><input type="checkbox" name="box_same_padding" id="box_same_padding" checked="true" onClick="SameForAll(this, new Array('padding-right', 'padding-bottom', 'padding-left'))" />&nbsp;{$L_SAMEFORALL}</label>
+						</td>
+					</tr>
+					<tr>
+						<td>{$L_TOP}:</td>
+						<td>
+							<input type="text" class="inputbox" name="padding-top" id="padding-top" value="" size="5" onKeyPress="Enable(this, 'pt-measurement')" onKeyUp="SetAll('padding-top', 'box_same_padding', new Array('padding-right', 'padding-bottom', 'padding-left'))" />&nbsp;
+							<select name="pt-measurement" id="pt-measurement" disabled="true" class="smalltext">
+								<option value="px">pixels</option>
+								<option value="pt">points</option>
+								<option value="in">in</option>
+								<option value="cm">cm</option>
+								<option value="mm">mm</option>
+								<option value="pc">picas</option>
+								<option value="em">ems</option>
+								<option value="ex">exs</option>
+								<option value="%">%</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>{$L_RIGHT}:</td>
+						<td>
+							<input type="text" class="inputbox" name="padding-right" id="padding-right" value="" size="5" onKeyPress="Enable(this, 'pr-measurement')" disabled="true" />&nbsp;
+							<select name="pr-measurement" id="pr-measurement" disabled="true" class="smalltext">
+								<option value="px">pixels</option>
+								<option value="pt">points</option>
+								<option value="in">in</option>
+								<option value="cm">cm</option>
+								<option value="mm">mm</option>
+								<option value="pc">picas</option>
+								<option value="em">ems</option>
+								<option value="ex">exs</option>
+								<option value="%">%</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>{$L_BOTTOM}:</td>
+						<td>
+							<input type="text" class="inputbox" name="padding-bottom" id="padding-bottom" value="" size="5" onKeyPress="Enable(this, 'pb-measurement')" disabled="true" />&nbsp;
+							<select name="pb-measurement" id="pb-measurement" disabled="true" class="smalltext">
+								<option value="px">pixels</option>
+								<option value="pt">points</option>
+								<option value="in">in</option>
+								<option value="cm">cm</option>
+								<option value="mm">mm</option>
+								<option value="pc">picas</option>
+								<option value="em">ems</option>
+								<option value="ex">exs</option>
+								<option value="%">%</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>{$L_LEFT}:</td>
+						<td>
+							<input type="text" class="inputbox" name="padding-left" id="padding-left" value="" size="5" onKeyPress="Enable(this, 'pl-measurement')" disabled="true" />&nbsp;
+							<select name="pl-measurement" id="pl-measurement" disabled="true" class="smalltext">
+								<option value="px">pixels</option>
+								<option value="pt">points</option>
+								<option value="in">in</option>
+								<option value="cm">cm</option>
+								<option value="mm">mm</option>
+								<option value="pc">picas</option>
+								<option value="em">ems</option>
+								<option value="ex">exs</option>
+								<option value="%">%</option>
+							</select>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+		</td>
+		<td>
+			<fieldset>
+			<legend>{$L_MARGIN}</legend>
+				<table width="100%" cellpadding="0" cellspacing="1" border="0">
+					<tr>
+						<td colspan="2">
+							<label for="box_same_margin" id="label_box_same_margin"><input type="checkbox" name="box_same_margin" id="box_same_margin" checked="true" onClick="SameForAll(this, new Array('margin-right', 'margin-bottom', 'margin-left'))" />&nbsp;{$L_SAMEFORALL}</label>
+						</td>
+					</tr>
+					<tr>
+						<td>{$L_TOP}:</td>
+						<td>
+							<input type="text" class="inputbox" name="margin-top" id="margin-top" value="" size="5" onKeyPress="Enable(this, 'mt-measurement')" onKeyUp="SetAll('margin-top', 'box_same_margin', new Array('margin-right', 'margin-bottom', 'margin-left'))" />&nbsp;
+							<select name="mt-measurement" id="mt-measurement" disabled="true" class="smalltext">
+								<option value="px">pixels</option>
+								<option value="pt">points</option>
+								<option value="in">in</option>
+								<option value="cm">cm</option>
+								<option value="mm">mm</option>
+								<option value="pc">picas</option>
+								<option value="em">ems</option>
+								<option value="ex">exs</option>
+								<option value="%">%</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>{$L_RIGHT}:</td>
+						<td>
+							<input type="text" class="inputbox" name="margin-right" id="margin-right" value="" size="5" onKeyPress="Enable(this, 'mr-measurement')" disabled="true" />&nbsp;
+							<select name="mr-measurement" id="mr-measurement" disabled="true" class="smalltext">
+								<option value="px">pixels</option>
+								<option value="pt">points</option>
+								<option value="in">in</option>
+								<option value="cm">cm</option>
+								<option value="mm">mm</option>
+								<option value="pc">picas</option>
+								<option value="em">ems</option>
+								<option value="ex">exs</option>
+								<option value="%">%</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>{$L_BOTTOM}:</td>
+						<td>
+							<input type="text" class="inputbox" name="margin-bottom" id="margin-bottom" value="" size="5" onKeyPress="Enable(this, 'mb-measurement')" disabled="true" />&nbsp;
+							<select name="mb-measurement" id="mb-measurement" disabled="true" class="smalltext">
+								<option value="px">pixels</option>
+								<option value="pt">points</option>
+								<option value="in">in</option>
+								<option value="cm">cm</option>
+								<option value="mm">mm</option>
+								<option value="pc">picas</option>
+								<option value="em">ems</option>
+								<option value="ex">exs</option>
+								<option value="%">%</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>{$L_LEFT}:</td>
+						<td>
+							<input type="text" class="inputbox" name="margin-left" id="margin-left" value="" size="5" onKeyPress="Enable(this, 'ml-measurement')" disabled="true" />&nbsp;
+							<select name="ml-measurement" id="ml-measurement" disabled="true" class="smalltext">
+								<option value="px">pixels</option>
+								<option value="pt">points</option>
+								<option value="in">in</option>
+								<option value="cm">cm</option>
+								<option value="mm">mm</option>
+								<option value="pc">picas</option>
+								<option value="em">ems</option>
+								<option value="ex">exs</option>
+								<option value="%">%</option>
+							</select>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+</table>
+</isadmin>

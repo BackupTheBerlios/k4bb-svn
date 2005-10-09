@@ -1,0 +1,31 @@
+<!-- Information Table -->
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_INFORMATION"); ?></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr>
+			<td class="alt3">
+				<div class="outset_box" style="text-align: center;">
+					<br />
+					<?php echo $scope->getVar("information"); ?>
+					<br /><br />
+				</div>
+			</td>
+		</tr>
+<?php if ($runtime->isVisible('info_back_button', TRUE)): ?>
+			<tr>
+				<td class="k4_subtitle">
+					<div style="text-align: center;">
+						<input type="button" class="button" value="<?php echo $scope->getVar("L_GOBACK"); ?>" onclick="javascript:history.go(-1)" />
+					</div>
+				</td>
+			</tr>
+<?php endif; ?>
+	</table>
+</div>
+<?php echo $scope->getVar("html_redirect"); ?>
+<script type="text/javascript">
+//<![CDATA[
+<?php echo $scope->getVar("redirect"); ?>
+//]]>
+</script>
+<!-- / Information Table -->

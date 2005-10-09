@@ -1,0 +1,26 @@
+<div id="search_menu" class="k4_borderwrap" style="display: none;">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_SEARCH"); ?></div>
+	<table width="190" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr>
+			<td class="alt1">
+				<form action="search.php?act=find" method="post" enctype="multipart/form-data">
+				<input type="text" name="keywords" value="" class="inputbox" />
+				
+				<input type="hidden" name="viewas" value="topics" />
+				<input type="hidden" name="searchsubforums" value="1" />
+				<input type="hidden" name="forums" value="" />
+
+				<input type="submit" value="<?php echo $scope->getVar("L_GO"); ?>" class="button" />
+				</form>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1"
+				<a href="search.php" title="<?php echo $scope->getVar("L_ADVANCEDSEARCH"); ?>" class="smalltext"><?php echo $scope->getVar("L_ADVANCEDSEARCH"); ?></a>
+			</td>
+		</tr>
+	</table>
+</div>
+<script type="text/javascript">
+	menu_init('search_link', 'search_menu');
+</script>

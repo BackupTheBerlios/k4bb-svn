@@ -1,0 +1,41 @@
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle" id="ub_maintitle">
+		<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_ub', 'usersbrowsing', 'ub_maintitle')" title="<?php echo $scope->getVar("L_EXPANDCOLLAPSE"); ?>"><img id="collapse_ub" src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Icons/collapse_thead.gif" alt="<?php echo $scope->getVar("L_EXPANDCOLLAPSE"); ?>" border="0" /></a></div>
+		<?php echo $scope->getVar("users_browsing"); ?>
+	</div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table" id="usersbrowsing">
+		<tr>
+			<td class="alt3">
+				<div class="minitext" align="left">
+					<strong><?php echo $scope->getVar("L_LEGEND"); ?>:</strong>
+<?php if ($scope->listBegin("usergroups_legend")): ?>
+<?php while($scope->listNext("usergroups_legend")): ?>
+					<a href="usergroups.php?id=<?php echo $scope->getVar("id"); ?>" style="color: #<?php echo $scope->getVar("color"); ?>;font-weight: bold;" title="<?php echo $scope->getVar("name"); ?>"><?php echo $scope->getVar("name"); ?></a><?php if ($scope->listHasNext("usergroups_legend")): ?>,&nbsp;<?php endif; ?>
+<?php $scope->pop(); endwhile; ?>
+<?php endif; ?>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1">
+				<div class="minitext" align="left">
+					<?php echo $scope->getVar("online_stats"); ?>
+					<br />
+<?php if ($scope->getVar("num_online_members") > 0): ?>
+<?php if ($scope->listBegin("users_browsing")): ?>
+						<?php echo $scope->getVar("L_REGISTEREDUSERS"); ?>:
+<?php while($scope->listNext("users_browsing")): ?>
+<?php if ($scope->getVar("name") != ""): ?>
+<?php if ($scope->getVar("invisible") == 0): ?>
+<?php if ($scope->getVar("user_id") != 0): ?><a href="member.php?id=<?php echo $scope->getVar("user_id"); ?>" style="color: #<?php echo $scope->getVar("color"); ?>;font-weight: <?php echo $scope->getVar("font_weight"); ?>;" class="minitext"><?php echo $scope->getVar("name"); ?></a><?php else: ?><strong style="font-style: italic;font-weight: bold;"><?php echo $scope->getVar("name"); ?></strong><?php endif; ?><?php if ($scope->listHasNext("users_browsing")): ?>,&nbsp;<?php endif; ?>
+<?php endif; ?>
+<?php endif; ?>
+<?php $scope->pop(); endwhile; ?>
+<?php endif; ?>
+<?php endif; ?>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>

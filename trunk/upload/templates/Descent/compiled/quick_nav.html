@@ -1,0 +1,31 @@
+<!-- Quick Nav Menu -->
+<div align="right" class="smalltext">
+	<?php echo $scope->getVar("L_JUMPTO"); ?>:&nbsp;<select name="quick_nav" id="quick_nav" onchange="jump_to('quick_nav')">
+		<option value="-1"><?php echo $scope->getVar("L_SELECTAFORUM"); ?></option>
+		<option value="-1">-----------------</option>
+<?php if ($scope->listBegin("all_forums")): ?>
+<?php while($scope->listNext("all_forums")): ?>
+<?php if ($scope->getVar("row_type") == 2): ?>
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['forums'][$scope->getVar("forum_id")]['can_view']) && $_MAPS['forums'][$scope->getVar("forum_id")]['can_view'] <= $_SESSION['user']->get('perms'))): ?>
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['forums'][$scope->getVar("forum_id")]['can_view']) && $_MAPS['forums'][$scope->getVar("forum_id")]['can_view'] <= $_SESSION['user']->get('perms'))): ?>
+<?php if ($scope->getVar("is_forum") >= 0): ?>
+							<option value="viewforum.php?id=<?php echo $scope->getVar("id"); ?>"><?php echo $scope->getVar("indent_level"); ?><?php echo $scope->getVar("name"); ?></option>
+<?php elseif ($scope->getVar("is_link") == 1): ?>
+<?php if ($scope->getVar("link_show_redirects") == 1): ?>
+								<option value="redirect.php?id=<?php echo $scope->getVar("id"); ?>"><?php echo $scope->getVar("indent_level"); ?><?php echo $scope->getVar("name"); ?></option>
+<?php else: ?>
+								<option value="<?php echo $scope->getVar("link_href"); ?>"><?php echo $scope->getVar("indent_level"); ?><?php echo $scope->getVar("name"); ?></option>
+<?php endif; ?>
+<?php endif; ?>
+<?php endif; ?>
+<?php endif; ?>
+<?php else: ?>
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['categories'][$scope->getVar("category_id")]['can_view']) && $_MAPS['categories'][$scope->getVar("category_id")]['can_view'] <= $_SESSION['user']->get('perms'))): ?>
+					<option value="viewforum.php?id=<?php echo $scope->getVar("id"); ?>" style="font-weight: bold;"><?php echo $scope->getVar("indent_level"); ?><?php echo $scope->getVar("name"); ?></option>
+<?php endif; ?>
+<?php endif; ?>
+<?php $scope->pop(); endwhile; ?>
+<?php endif; ?>
+	</select>&nbsp;<input type="button" class="button" value="<?php echo $scope->getVar("L_GO"); ?>" onclick="jump_to('quick_nav')" />
+</div>
+<!-- / Quick Nav Menu -->

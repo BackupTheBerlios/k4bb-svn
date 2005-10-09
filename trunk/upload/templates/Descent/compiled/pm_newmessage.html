@@ -1,0 +1,280 @@
+<?php if ($file = $runtime->getFile("preview", "")) $template->render($file, $scope, $runtime); ?>
+
+<?php if ($runtime->isVisible('br', FALSE)): ?><br /><?php endif; ?>
+
+<form name="savepost_form" id="savepost_form" action="<?php echo $scope->getVar("newpm_action"); ?>" method="post" enctype="multipart/form-data" onsubmit="return checkForm(this);" onreset="resetErrors();"><script type="text/javascript">resetErrors();</script>
+
+<!-- AJAX Reply Preview -->
+<a name="preview" id="preview"></a>
+<div id="ajax_post_preview" style="display: none;"></div>
+<!-- / AJAX Reply Preview -->
+
+<?php if ($runtime->isVisible('pm_id', FALSE)): ?><input type="hidden" name="<?php echo $scope->getVar("edit_type"); ?>" id="<?php echo $scope->getVar("edit_type"); ?>" value="<?php echo $scope->getVar("pm_pm_id"); ?>" /><?php endif; ?>
+
+<!-- Post Topic Form -->
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">
+<?php if ($runtime->isVisible('post_pm', FALSE)): ?>
+		<?php echo $scope->getVar("L_POSTPRIVATEMESSAGE"); ?>
+<?php endif; ?>
+<?php if ($runtime->isVisible('edit_pm', FALSE)): ?>
+		<?php echo $scope->getVar("L_EDITPRIVATEMESSAGE"); ?>: <span style="font-weight: normal;"><?php echo $scope->getVar("pm_name"); ?></span>
+<?php endif; ?>
+	</div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr>
+			<td class="alt3" colspan="2" align="center">
+				
+				<!-- Main Posting Inputs -->
+				<div class="outset_box" align="left">
+					<span class="smalltext" style="float: right;">
+						<?php echo $scope->getVar("L_LOGGEDAS"); ?>
+<?php if ($_SESSION['user']->isMember()): ?>
+						<a href="member.php?id=<?php echo $scope->getVar("user_id"); ?>" style="text-decoration: underline;"><?php echo $scope->getVar("user_name"); ?></a>
+<?php else: ?>
+						<strong><?php echo $scope->getVar("L_GUEST"); ?></strong>
+<?php endif; ?>
+					</span>
+					<table border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td>
+								<!-- To -->
+								<label for="to" class="smalltext"><?php echo $scope->getVar("L_TO"); ?></label> <span class="minitext">(<?php echo $scope->getVar("L_COMMASEPARATENAMES"); ?>)</span>
+								<br />
+								<input type="text" name="to" id="to" value="<?php echo $scope->getVar("pm_pm_to"); ?>" tabindex="1" style="width: 500px;" class="inputbox" maxlength="255" />
+<script type="text/javascript">addVerification('to', '.{<?php echo $scope->getVar("minuserlength"); ?>,255}', 'to_error', 'inputfailed');</script><div id="to_error" style="display: none;"><?php echo $scope->getVar("L_INSERTPMTO"); ?></div>
+								<!-- / To -->
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<!-- Carbon Copy -->
+								<label for="cc" class="smalltext"><?php echo $scope->getVar("L_CC"); ?></label> <span class="minitext">(<?php echo $scope->getVar("L_COMMASEPARATENAMES"); ?>)</span>
+								<br />
+								<input type="text" name="cc" id="cc" value="<?php echo $scope->getVar("pm_pm_cc"); ?>" tabindex="1" style="width: 500px;" class="inputbox" maxlength="255" />
+								<!-- / Carbon Copy -->
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<br />
+								<!-- Post Title -->
+								<label for="name" class="smalltext"><?php echo $scope->getVar("L_SUBJECT"); ?></label><br />
+								<input type="text" name="name" id="name" value="<?php echo $scope->getVar("pm_name"); ?>" tabindex="2" style="width: 500px;" class="inputbox" maxlength="255" />
+<script type="text/javascript">addVerification('name', '.{<?php echo $scope->getVar("topicminchars"); ?>,<?php echo $scope->getVar("topicmaxchars"); ?>}', 'name_error', 'inputfailed');</script><div id="name_error" style="display: none;"><?php echo $scope->getVar("L_PMSUBJECTTOOSHORT"); ?></div>
+								<!-- / Post Title -->
+							</td>
+							<td valign="bottom">
+								<img id="display_posticon" src="tmp/upload/posticons/clear.gif" alt="" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<br />
+								<!-- Post Message -->
+								<label for="messagecodex" class="smalltext"><?php echo $scope->getVar("L_POST"); ?></label><br />
+								
+<?php if ($file = $runtime->getFile("editor", "editor.html")) $template->render($file, $scope, $runtime); ?>
+<script type="text/javascript">addVerification('messagecodex', '(\\\n|\\\r\\\n|\\\r|.)+', 'messagecodex_error', 'inputfailed');</script><div id="messagecodex_error" style="display: none;"><?php echo $scope->getVar("L_INSERTPMMESSAGE"); ?></div>
+
+								<!-- / Post Message -->
+
+							</td>
+							<td valign="bottom">
+<?php if ($scope->getVar("privallowemoticons") == 1): ?>
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['pm_emoticons']) && $_MAPS['pm_emoticons']['can_view'] <= $_SESSION['user']->get('perms'))): ?>
+<?php if ($scope->listBegin("emoticons")): ?>
+								<!-- Emoticons -->
+								<table border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<td>
+											<fieldset>
+												<legend><?php echo $scope->getVar("L_EMOTICONS"); ?></legend>
+												<table cellpadding="3" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" id="posticons">
+													<tr>
+<?php while($scope->listNext("emoticons")): ?>
+														<td align="center">
+															<a href="javascript:emoticon('<?php echo $scope->getVar("typed"); ?>')" title="<?php echo $scope->getVar("description"); ?>"><img src="tmp/upload/emoticons/<?php echo $scope->getVar("image"); ?>" alt="<?php echo $scope->getVar("description"); ?>" border="0" /></a>
+														</td>
+<?php if ($scope->listHasNext("emoticons")): ?>
+<?php if ($scope->listKey("emoticons") % $scope->getVar("emoticons_per_row") == $scope->getVar("emoticons_per_row_remainder")): ?>
+																</tr><tr>
+<?php endif; ?>
+<?php endif; ?>
+<?php $scope->pop(); endwhile; ?>
+													</tr>	
+												</table>
+											</fieldset>
+										</td>
+									</tr>
+								</table>
+								<!-- / Emoticons -->
+<?php endif; ?>
+<?php endif; ?>
+<?php endif; ?>
+							</td>
+						</tr>
+<?php if ($scope->getVar("privallowicons") == 1): ?>
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['pm_posticons']) && $_MAPS['pm_posticons']['can_view'] <= $_SESSION['user']->get('perms'))): ?>
+						<tr>
+							<td colspan="2">
+<?php if ($scope->listBegin("posticons")): ?>
+								<!-- Post Icons -->
+								<table border="0" cellpadding="0" cellspacing="0" width="100%">
+									<tr>
+										<td>
+											<fieldset>
+												<legend><?php echo $scope->getVar("L_POSTICONS"); ?></legend>
+												<span class="smalltext"><?php echo $scope->getVar("L_POSTICONSPOSTCHOOSE"); ?></span>
+												<label for="noicon" style="float: left;margin-top: 10px;"><input type="radio" name="posticon" id="noicon" value="clear.gif" checked="checked" onclick="swap_posticon(null)" />&nbsp;<?php echo $scope->getVar("L_NOICON"); ?></label>
+												<table cellpadding="3" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" id="posticons">
+													<tr>
+<?php while($scope->listNext("posticons")): ?>
+														<td align="center">
+															<label for="pi<?php echo $scope->getVar("id"); ?>">
+																<input type="radio" name="posticon" id="pi<?php echo $scope->getVar("id"); ?>" value="<?php echo $scope->getVar("image"); ?>" style="float: left;padding-right: 5px;" onclick="swap_posticon('pi_<?php echo $scope->getVar("id"); ?>')" />&nbsp;&nbsp;<img src="tmp/upload/posticons/<?php echo $scope->getVar("image"); ?>" alt="<?php echo $scope->getVar("description"); ?>" id="pi_<?php echo $scope->getVar("id"); ?>" style="margin-right:15px;" />
+															</label>
+														</td>
+<?php if ($scope->listHasNext("posticons")): ?>
+<?php if ($scope->listKey("posticons") % 7 == 6): ?>
+																</tr><tr>
+<?php endif; ?>
+<?php endif; ?>
+<?php $scope->pop(); endwhile; ?>
+													</tr>	
+												</table>
+											</fieldset>
+										</td>
+									</tr>
+								</table>
+								<!-- / Post Icons -->
+<?php endif; ?>
+							</td>
+						</tr>
+<?php endif; ?>
+<?php endif; ?>
+					</table>
+				</div>
+				<!-- / Main Posting Inputs -->
+
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" align="center" colspan="2">
+				<input type="hidden" name="submit_type" id="submit_type" value="" />
+				<input <?php if ($scope->getVar("nojs") == 1): ?>name="post"<?php endif; ?> type="submit" class="button" value="<?php echo $scope->getVar("L_SUBMIT"); ?>" accesskey="s" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'post'); }" />
+<?php if ($runtime->isVisible('save_draft', TRUE)): ?>
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['pm_message_save']) && $_MAPS['pm_message_save']['can_add'] <= $_SESSION['user']->get('perms'))): ?>
+					<input <?php if ($scope->getVar("nojs") == 1): ?>name="draft"<?php endif; ?> type="submit" class="button" value="<?php echo $scope->getVar("L_SAVEDRAFT"); ?>" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'draft'); }" />
+<?php endif; ?>
+<?php endif; ?>
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['pm_preview']) && $_MAPS['pm_preview']['can_add'] <= $_SESSION['user']->get('perms'))): ?>
+					<input <?php if ($scope->getVar("nojs") == 1): ?>name="preview"<?php endif; ?> type="<?php if ($scope->getVar("nojs") == 0): ?>button<?php else: ?>submit<?php endif; ?>" class="button" value="<?php echo $scope->getVar("L_PREVIEW"); ?>" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'preview');setSendPostPreview('<?php echo $scope->getVar("newpm_action"); ?>'); }" />
+<?php endif; ?>
+				<input type="reset" class="button" value="<?php echo $scope->getVar("L_RESET"); ?>" />
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- / Post Topic Form -->
+
+<br />
+
+<!-- Additional Post Options -->
+<div class="k4_borderwrap">
+	<div class="k4_maintitle" id="po_maintitle">
+<?php if ($scope->getVar("nojs") == 0): ?><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_po', 'postoptions', 'po_maintitle')" title="<?php echo $scope->getVar("L_EXPANDCOLLAPSE"); ?>"><img id="collapse_po" src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Icons/collapse_thead.gif" alt="<?php echo $scope->getVar("L_EXPANDCOLLAPSE"); ?>" border="0" /></a></div><?php endif; ?>
+		<?php echo $scope->getVar("L_ADDITIONALOPTIONS"); ?>
+	</div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table" id="postoptions">
+		<tr>
+			<td class="alt3">
+				<div class="outset_box">
+					<fieldset>
+						<legend><?php echo $scope->getVar("L_MISCOPTIONS"); ?></legend>
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['pm_html']) && $_MAPS['pm_html']['can_add'] <= $_SESSION['user']->get('perms'))): ?><input type="checkbox" name="disable_html" id="disable_html" checked="checked" />&nbsp;<label for="disable_html"><?php echo $scope->getVar("L_DISABLEHTML"); ?></label><br /><?php endif; ?>
+						<input type="checkbox" name="disable_bbcode" id="disable_bbcode" />&nbsp;<label for="disable_bbcode"><?php echo $scope->getVar("L_DISABLEBBCODE"); ?></label><br />
+						<input type="checkbox" name="disable_emoticons" id="disable_emoticons" />&nbsp;<label for="disable_emoticons"><?php echo $scope->getVar("L_DISABLEEMOTICONS"); ?></label><br />
+						<input type="checkbox" name="disable_aurls" id="disable_aurls" />&nbsp;<label for="disable_aurls"><?php echo $scope->getVar("L_PARSEURLS"); ?></label><br />
+<?php if ($_SESSION['user']->isMember()): ?><input type="checkbox" name="enable_sig" id="enable_sig" checked="checked" />&nbsp;<label for="enable_sig"><?php echo $scope->getVar("L_ATTACHSIGNATURE"); ?></label><br />
+						<input type="checkbox" name="disable_areply" id="disable_areply" />&nbsp;<label for="disable_areply"><?php echo $scope->getVar("L_NOTIFYONREPLY"); ?></label><br /><?php endif; ?>
+<?php if ($runtime->isVisible('post_pm', FALSE)): ?><input type="checkbox" name="save_message" id="save_message" checked="checked" />&nbsp;<label for="save_message"><?php echo $scope->getVar("L_SAVEINSENTITEMS"); ?></label><?php endif; ?>
+					</fieldset>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- / Additional Post Options -->
+
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['pm_attachments']) && $_MAPS['pm_attachments']['can_add'] <= $_SESSION['user']->get('perms'))): ?>
+<!-- Attachments Manager -->
+<!--
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle" id="am_maintitle">
+<?php if ($scope->getVar("nojs") == 0): ?><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_am', 'attachmanage', 'am_maintitle')" title="<?php echo $scope->getVar("L_EXPANDCOLLAPSE"); ?>"><img id="collapse_am" src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Icons/collapse_thead_collapsed.gif" alt="<?php echo $scope->getVar("L_EXPANDCOLLAPSE"); ?>" border="0" /></a></div><?php endif; ?>
+		<?php echo $scope->getVar("L_ATTACHMENTSMANAGER"); ?>
+	</div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table" id="attachmanage" <?php if ($scope->getVar("nojs") == 0): ?>style="display: none;"<?php endif; ?>>
+		<tr>
+			<td class="alt3">
+				<div class="outset_box">
+					<fieldset>
+						<legend><?php echo $scope->getVar("L_SELECTFILES"); ?></legend>
+						<div class="smalltext"><?php echo $scope->getVar("L_VALIDEXTENSIONS"); ?>: <?php echo $scope->getVar("attachextensions"); ?></div>
+						<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $scope->getVar("maxattachsize"); ?>" />
+						<?php echo $scope->getVar("attach_inputs"); ?>
+					</fieldset>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+-->
+<!-- / Attachments Manager -->
+<?php endif; ?>
+
+</form>
+
+
+<?php if ($runtime->isVisible('edit_message', FALSE)): ?>
+<!-- Edit Topic Javascript -->
+<script type="text/javascript">
+//<![CDATA[ 
+
+	/**
+	 * Get the main posting options
+	 */
+	
+	try {
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['pm_html']) && $_MAPS['pm_html']['can_add'] <= $_SESSION['user']->get('perms'))): ?>var disable_html			= d.getElementById('disable_html');<?php endif; ?>
+		var disable_bbcode			= d.getElementById('disable_bbcode');
+		var disable_emoticons		= d.getElementById('disable_emoticons');
+		var disable_aurls			= d.getElementById('disable_aurls');
+		var enable_sig				= d.getElementById('enable_sig');
+		var disable_areply			= d.getElementById('disable_areply');
+		
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['pm_html']) && $_MAPS['pm_html']['can_add'] <= $_SESSION['user']->get('perms'))): ?>disable_html.checked		= (<?php echo $scope->getVar("pm_disable_html"); ?> == 1) ? true : false;<?php endif; ?>
+		disable_bbcode.checked		= (<?php echo $scope->getVar("pm_disable_bbcode"); ?> == 1) ? true : false;
+		disable_emoticons.checked	= (<?php echo $scope->getVar("pm_disable_emoticons"); ?> == 1) ? true : false;
+		disable_aurls.checked		= (<?php echo $scope->getVar("pm_disable_aurls"); ?> == 1) ? true : false;
+		enable_sig.checked			= (<?php echo $scope->getVar("pm_disable_sig"); ?> == 1) ? false : true;
+		disable_areply.checked		= (<?php echo $scope->getVar("pm_disable_areply"); ?> == 1) ? true : false;
+		
+	} catch(e) {
+		alert(e.message);
+	}
+
+	/**
+	 * Get the post icons
+	 */
+	d.setRadio('<?php echo $scope->getVar("pm_posticon"); ?>', 'posticon');
+
+	var pi_image	= d.getElementById('display_posticon');
+	pi_image.src	= 'tmp/upload/posticons/<?php echo $scope->getVar("pm_posticon"); ?>';
+
+//]]>
+</script>
+<!-- / Edit Topic Javascript -->
+<?php endif; ?>

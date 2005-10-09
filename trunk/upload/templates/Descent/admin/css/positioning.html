@@ -1,0 +1,192 @@
+<isadmin>
+<table width="100%" cellpadding="0" cellspacing="1" border="0">
+	<tr>
+		<td>
+			{$L_TYPE}:&nbsp;
+			<select name="position" id="position" class="smalltext">
+				<option value=""></option>
+				<option value="absolute">absolute</option>
+				<option value="relative">relative</option>
+				<option value="static">static</option>
+			</select>
+		</td>
+		<td>
+			{$L_VISIBILITY}:&nbsp;
+			<select name="visibility" id="visibility" class="smalltext">
+				<option value=""></option>
+				<option value="inherit">inherit</option>
+				<option value="visible">visible</option>
+				<option value="hidden">hidden</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			{$L_ZINDEX}:&nbsp;
+			<input type="text" name="z-index" id="z-index" value="" class="inputbox" maxlength="4" size="3" />
+		</td>
+		<td>
+			{$L_OVERFLOW}:&nbsp;
+			<select name="overflow" id="overflow" class="smalltext">
+				<option value=""></option>
+				<option value="visible">visible</option>
+				<option value="hidden">hidden</option>
+				<option value="scroll">scroll</option>
+				<option value="auto">auto</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<fieldset>
+				<legend>{$L_PLACEMENT}</legend>
+				<table width="100%" cellpadding="0" cellspacing="1" border="0">
+					<tr>
+						<td>{$L_TOP}:</td>
+						<td>
+							<input type="text" class="inputbox" name="top" id="top" value="" size="5" onKeyPress="Enable(this, 't-measurment')" />&nbsp;
+							<select name="t-measurment" id="t-measurment" disabled="true" class="smalltext">
+								<option value="px">pixels</option>
+								<option value="pt">points</option>
+								<option value="in">in</option>
+								<option value="cm">cm</option>
+								<option value="mm">mm</option>
+								<option value="pc">picas</option>
+								<option value="em">ems</option>
+								<option value="ex">exs</option>
+								<option value="%">%</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>{$L_RIGHT}:</td>
+						<td>
+							<input type="text" class="inputbox" name="right" id="right" value="" size="5" onKeyPress="Enable(this, 'r-measurment')" />&nbsp;
+							<select name="r-measurment" id="r-measurment" disabled="true" class="smalltext">
+								<option value="px">pixels</option>
+								<option value="pt">points</option>
+								<option value="in">in</option>
+								<option value="cm">cm</option>
+								<option value="mm">mm</option>
+								<option value="pc">picas</option>
+								<option value="em">ems</option>
+								<option value="ex">exs</option>
+								<option value="%">%</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>{$L_BOTTOM}:</td>
+						<td>
+							<input type="text" class="inputbox" name="bottom" id="bottom" value="" size="5" onKeyPress="Enable(this, 'b-measurment')" />&nbsp;
+							<select name="b-measurment" id="b-measurment" disabled="true" class="smalltext">
+								<option value="px">pixels</option>
+								<option value="pt">points</option>
+								<option value="in">in</option>
+								<option value="cm">cm</option>
+								<option value="mm">mm</option>
+								<option value="pc">picas</option>
+								<option value="em">ems</option>
+								<option value="ex">exs</option>
+								<option value="%">%</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>{$L_LEFT}:</td>
+						<td>
+							<input type="text" class="inputbox" name="left" id="left" value="" size="5" onKeyPress="Enable(this, 'l-measurment')" />&nbsp;
+							<select name="l-measurment" id="l-measurment" disabled="true" class="smalltext">
+								<option value="px">pixels</option>
+								<option value="pt">points</option>
+								<option value="in">in</option>
+								<option value="cm">cm</option>
+								<option value="mm">mm</option>
+								<option value="pc">picas</option>
+								<option value="em">ems</option>
+								<option value="ex">exs</option>
+								<option value="%">%</option>
+							</select>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+		</td>
+		<td>
+			<fieldset>
+				<legend>{$L_CLIP}</legend>
+				<table width="100%" cellpadding="0" cellspacing="1" border="0">
+					<tr>
+						<td>{$L_TOP}:</td>
+						<td>
+							<input type="text" class="inputbox" name="t" id="clip-top" value="" size="5" onKeyPress="Enable(this, 'ct-measurment')" />&nbsp;
+							<select name="ct-measurment" id="ct-measurement" disabled="true" class="smalltext">
+								<option value="px">pixels</option>
+								<option value="pt">points</option>
+								<option value="in">in</option>
+								<option value="cm">cm</option>
+								<option value="mm">mm</option>
+								<option value="pc">picas</option>
+								<option value="em">ems</option>
+								<option value="ex">exs</option>
+								<option value="%">%</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>{$L_RIGHT}:</td>
+						<td>
+							<input type="text" class="inputbox" name="r" id="clip-right" value="" size="5" onKeyPress="Enable(this, 'cr-measurment')" />&nbsp;
+							<select name="cr-measurment" id="cr-measurement" disabled="true" class="smalltext">
+								<option value="px">pixels</option>
+								<option value="pt">points</option>
+								<option value="in">in</option>
+								<option value="cm">cm</option>
+								<option value="mm">mm</option>
+								<option value="pc">picas</option>
+								<option value="em">ems</option>
+								<option value="ex">exs</option>
+								<option value="%">%</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>{$L_BOTTOM}:</td>
+						<td>
+							<input type="text" class="inputbox" name="b" id="clip-bottom" value="" size="5" onKeyPress="Enable(this, 'cb-measurment')" />&nbsp;
+							<select name="cb-measurment" id="cb-measurement" disabled="true" class="smalltext">
+								<option value="px">pixels</option>
+								<option value="pt">points</option>
+								<option value="in">in</option>
+								<option value="cm">cm</option>
+								<option value="mm">mm</option>
+								<option value="pc">picas</option>
+								<option value="em">ems</option>
+								<option value="ex">exs</option>
+								<option value="%">%</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>{$L_LEFT}:</td>
+						<td>
+							<input type="text" class="inputbox" name="l" id="clip-left" value="" size="5" onKeyPress="Enable(this, 'cl-measurment')" />&nbsp;
+							<select name="cl-measurment" id="cl-measurement" disabled="true" class="smalltext">
+								<option value="px">pixels</option>
+								<option value="pt">points</option>
+								<option value="in">in</option>
+								<option value="cm">cm</option>
+								<option value="mm">mm</option>
+								<option value="pc">picas</option>
+								<option value="em">ems</option>
+								<option value="ex">exs</option>
+								<option value="%">%</option>
+							</select>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+</table>
+</isadmin>

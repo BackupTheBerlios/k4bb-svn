@@ -1,0 +1,167 @@
+<!-- Advanced Search -->
+<form action="search.php?act=find" method="post" enctype="multipart/form-data">
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_SEARCHPARAMS"); ?></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" width="50%" colspan="2">
+				<strong><?php echo $scope->getVar("L_SEARCHFORKEYWORD"); ?>:</strong><br />
+				<span class="smalltext"><?php echo $scope->getVar("L_WILDCARDSTARINFO"); ?></span>
+			</td>
+			<td class="alt3" width="50%" colspan="2">
+				<input type="text" name="keywords" value="" class="inputbox" maxlength="<?php echo $scope->getVar("maxuserlength"); ?>" />
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%" colspan="2">
+				<strong><?php echo $scope->getVar("L_SEARCHFORAUTHOR"); ?>:</strong><br />
+				<span class="smalltext"><?php echo $scope->getVar("L_WILDCARDSTARINFO"); ?></span>
+			</td>
+			<td class="alt3" width="50%" colspan="2">
+				<input type="text" name="author" value="" class="inputbox" size="<?php echo $scope->getVar("maxuserlength"); ?>" maxlength="<?php echo $scope->getVar("maxuserlength"); ?>" />
+				<label for="exact"><input type="checkbox" value="1" name="exact" id="exact" /> <span class="smalltext"><?php echo $scope->getVar("L_EXACT"); ?></span></label>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%" colspan="2">
+				<strong><?php echo $scope->getVar("L_SEARCHINFORUMS"); ?>:</strong>
+			</td>
+			<td class="alt3" width="50%" colspan="2">
+				
+				<!-- Forum List -->
+				<select name="forums[]" size="5" multiple="multiple" class="inputbox" style="width: 95%;">
+					<option value="-1" selected="selected"> --- <?php echo $scope->getVar("L_ALLFORUMS"); ?> --- </option>
+<?php if ($scope->listBegin("all_forums")): ?>
+<?php while($scope->listNext("all_forums")): ?>
+<?php if ($scope->getVar("row_type") == 2): ?>
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['forums'][$scope->getVar("forum_id")]['can_view']) && $_MAPS['forums'][$scope->getVar("forum_id")]['can_view'] <= $_SESSION['user']->get('perms'))): ?>
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['forums'][$scope->getVar("forum_id")]['can_view']) && $_MAPS['forums'][$scope->getVar("forum_id")]['can_view'] <= $_SESSION['user']->get('perms'))): ?>
+<?php if ($scope->getVar("is_forum") == 1): ?>
+										<option value="f<?php echo $scope->getVar("id"); ?>"><?php echo $scope->getVar("indent_level"); ?><?php echo $scope->getVar("name"); ?></option>
+<?php endif; ?>
+<?php endif; ?>
+<?php endif; ?>
+<?php else: ?>
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['categories'][$scope->getVar("category_id")]['can_view']) && $_MAPS['categories'][$scope->getVar("category_id")]['can_view'] <= $_SESSION['user']->get('perms'))): ?>
+								<option value="c<?php echo $scope->getVar("id"); ?>" style="font-weight: bold;"><?php echo $scope->getVar("indent_level"); ?><?php echo $scope->getVar("name"); ?></option>
+<?php endif; ?>
+<?php endif; ?>
+<?php $scope->pop(); endwhile; ?>
+<?php endif; ?>
+				</select>
+				<!-- / Forum List -->
+			</td>
+		</tr>
+	</table>
+</div>
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_SEARCHOPTIONS"); ?></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" width="25%">
+				<strong><?php echo $scope->getVar("L_SEARCHSUBFORUMS"); ?>:</strong>
+			</td>
+			<td class="alt3" width="25%">
+				<div class="smalltext">
+					<label for="searchsubforums_yes"><input type="radio" checked="checked" name="searchsubforums" id="searchsubforums_yes" value="1" /> <?php echo $scope->getVar("L_YES"); ?></label>
+					&nbsp;&nbsp;&nbsp;
+					<label for="searchsubforums_no"><input type="radio" name="searchsubforums" id="searchsubforums_no" value="0" /> <?php echo $scope->getVar("L_NO"); ?></label>
+				</div>
+			</td>
+			<td class="alt1" width="25%">
+				<strong><?php echo $scope->getVar("L_SEARCHWITHIN"); ?>:</strong>
+			</td>
+			<td class="alt3" width="25%">
+				<div class="smalltext">
+					<label for="searchwhere_1"><input type="radio" checked="checked" name="searchwhere" id="searchwhere_1" value="subjectmessage" /> <?php echo $scope->getVar("L_SEARCHENTIREPOSTS"); ?></label><br />
+					<label for="searchwhere_2"><input type="radio" name="searchwhere" id="searchwhere_2" value="subject" /> <?php echo $scope->getVar("L_SEARCHTITLES"); ?></label><br />
+					<label for="searchwhere_3"><input type="radio" name="searchwhere" id="searchwhere_3" value="message" /> <?php echo $scope->getVar("L_SEARCHPOSTTEXT"); ?></label>
+				</div>
+			</td>
+		</tr>
+		
+		<tr>
+			<td class="alt1" width="25%">
+				<strong><?php echo $scope->getVar("L_SORTRESULTSBY"); ?>:</strong>
+			</td>
+			<td class="alt3" width="25%">
+				<div class="smalltext">
+					<select name="sort" class="smalltext" style="width: 125px;">
+						<option value="created" selected="selected"><?php echo $scope->getVar("L_CREATED"); ?></option>
+						<option value="name"><?php echo $scope->getVar("L_TITLE"); ?></option>
+						<option value="poster_name" ><?php echo $scope->getVar("L_AUTHOR"); ?></option>
+						<option value="forum_id"><?php echo $scope->getVar("L_FORUM"); ?></option>
+					</select> <br />
+					<label for="descending"><input type="radio" checked="checked" name="order" id="searchsubforums_no" value="DESC" /> <?php echo $scope->getVar("L_DESCENDING"); ?></label><br />
+					<label for="ascending"><input type="radio" name="order" id="ascending" value="ASC" /> <?php echo $scope->getVar("L_ASCENDING"); ?></label>
+				</div>
+			</td>
+			<td class="alt1" width="25%">
+				<strong><?php echo $scope->getVar("L_DISPLAYRESULTSAS"); ?>:</strong>
+			</td>
+			<td class="alt3" width="25%">
+				<div class="smalltext">
+					<label for="viewas_posts"><input type="radio" name="viewas" id="viewas_posts" value="posts" /> <?php echo $scope->getVar("L_POSTS"); ?></label>
+					&nbsp;&nbsp;&nbsp;
+					<label for="viewas_topics"><input type="radio" name="viewas" id="viewas_topics" value="topics" checked="checked" /> <?php echo $scope->getVar("L_TOPICS"); ?></label>
+				</div>
+			</td>
+		</tr>
+
+		<tr>
+			<td class="alt1" width="25%">
+				<strong><?php echo $scope->getVar("L_LIMITRESULTSTOPREV"); ?>:</strong>
+			</td>
+			<td class="alt3" width="25%">
+				<select name="daysprune" style="width:125px" class="smalltext">
+					<option value="1"><?php echo $scope->getVar("L_LAST_DAY"); ?></option>
+					<option value="2"><?php echo $scope->getVar("L_LAST_2_DAYS"); ?></option>
+					<option value="7"><?php echo $scope->getVar("L_LAST_WEEK"); ?></option>
+					<option value="10"><?php echo $scope->getVar("L_LAST_10_DAYS"); ?></option>
+					<option value="14"><?php echo $scope->getVar("L_LAST_2_WEEKS"); ?></option>
+					<option value="30"><?php echo $scope->getVar("L_LAST_MONTH"); ?></option>
+					<option value="45"><?php echo $scope->getVar("L_LAST_45_DAYS"); ?></option>
+					<option value="60"><?php echo $scope->getVar("L_LAST_2_MONTHS"); ?></option>
+					<option value="75"><?php echo $scope->getVar("L_LAST_75_DAYS"); ?></option>
+					<option value="100"><?php echo $scope->getVar("L_LAST_100_DAYS"); ?></option>
+					<option value="365"><?php echo $scope->getVar("L_LAST_YEAR"); ?></option>
+					<option value="0" selected="selected"><?php echo $scope->getVar("L_BEGINNING"); ?></option>
+				</select>
+			</td>
+			<td class="alt1" width="25%">
+				<strong><?php echo $scope->getVar("L_RETURNFIRST"); ?>:</strong>
+			</td>
+			<td class="alt3" width="25%">
+				<div class="smalltext">
+					<select name="post_length" style="width:100px" class="smalltext">
+						<option value="<?php echo $scope->getVar("postmaxchars"); ?>"><?php echo $scope->getVar("L_ALLAVAILABLE"); ?></option>
+						<option value="0">0</option>
+						<option value="25">25</option>
+						<option value="50">50</option>
+						<option value="100">100</option>
+						<option value="200" selected="selected">200</option>
+						<option value="300">300</option>
+						<option value="400">400</option>
+						<option value="500">500</option>
+						<option value="600">600</option>
+						<option value="700">700</option>
+						<option value="800">800</option>
+						<option value="900">900</option>
+						<option value="1000">1000</option>
+					</select>
+					<?php echo $scope->getVar("L_CHARACTERSOFPOSTS"); ?>
+				</div>
+			</td>
+		</tr>
+
+		<tr>
+			<td class="k4_subtitle" colspan="4" align="center">
+				<input type="submit" value="<?php echo $scope->getVar("L_SEARCH"); ?>" class="button" />
+				<input type="reset" value="<?php echo $scope->getVar("L_RESET"); ?>" class="button" />
+			</td>
+		</tr>
+	</table>
+</div>
+</form>
+<!-- / Advanced Search -->

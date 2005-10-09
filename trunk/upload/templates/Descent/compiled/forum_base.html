@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
+<?php if ($file = $runtime->getFile("head", "head.html")) $template->render($file, $scope, $runtime); ?>
+<body<?php if ($scope->getVar("modpanel") == 1): ?> onload="InitialiseCheckboxes();"<?php endif; ?>>
+
+<div align="center">
+<div align="left" class="forum_base">
+
+<br />
+
+<div class="forum_main" id="forum_main">
+
+<?php if ($file = $runtime->getFile("header", "header.html")) $template->render($file, $scope, $runtime); ?>
+
+<?php if ($file = $runtime->getFile("menu_global", "menu_global.html")) $template->render($file, $scope, $runtime); ?>
+<?php if ($file = $runtime->getFile("header_breadcrumbs", "header_breadcrumbs.html")) $template->render($file, $scope, $runtime); ?>
+
+	<br />
+	
+<?php if ($scope->getVar("can_see_board") >= 0): ?>
+<?php if ($file = $runtime->getFile("forum_welcome", "welcome.html")) $template->render($file, $scope, $runtime); ?>
+<?php if ($file = $runtime->getFile("content", "")) $template->render($file, $scope, $runtime); ?>
+<?php if ($file = $runtime->getFile("content_extra", "")) $template->render($file, $scope, $runtime); ?>
+<?php if ($file = $runtime->getFile("users_browsing", "")) $template->render($file, $scope, $runtime); ?>
+<?php if ($file = $runtime->getFile("forum_info", "")) $template->render($file, $scope, $runtime); ?>
+<?php if ($file = $runtime->getFile("quick_login", "")) $template->render($file, $scope, $runtime); ?>
+<?php if ($runtime->isVisible('forum_status_icons', FALSE)): ?>
+		
+		<!-- Forum Status Icons -->
+		<br />
+		<div style="text-align: left;" class="inset_box_small">
+			<table cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td><img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Icons/forum_on.gif" alt="<?php echo $scope->getVar("L_FORUMNEWPOSTS"); ?>" /></td>
+					<td><span class="smalltext"><?php echo $scope->getVar("L_FORUMNEWPOSTS"); ?></span></td>
+				</tr>
+				<tr>
+					<td><img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Icons/forum_off.gif" alt="<?php echo $scope->getVar("L_FORUMNONEWPOSTS"); ?>" /></td>
+					<td><span class="smalltext"><?php echo $scope->getVar("L_FORUMNONEWPOSTS"); ?></span></td>
+				</tr>
+				<tr>
+					<td><img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Icons/forum_off_lock.gif" alt="<?php echo $scope->getVar("L_FORUMLOCKED"); ?>" /></td>
+					<td><span class="smalltext"><?php echo $scope->getVar("L_FORUMLOCKED"); ?></span></td>
+				</tr>
+			</table>
+		</div>
+		<!-- / Forum Status Icons -->
+
+<?php endif; ?>
+<?php else: ?>
+
+		<!-- You don't have permission to view the forums -->
+		<div class="k4_borderwrap">
+			<div class="k4_maintitle"><?php echo $scope->getVar("L_INFORMATION"); ?></div>
+			<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+				<tr>
+					<td class="alt3">
+						<div class="outset_box">
+							<?php echo $scope->getVar("L_YOUNEEDPERMS"); ?>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<!-- / You don't have permission to view the forums -->
+<?php endif; ?>
+	<br />
+
+<?php if ($file = $runtime->getFile("quick_nav", "quick_nav.html")) $template->render($file, $scope, $runtime); ?>
+
+	<br />
+	
+<?php if ($file = $runtime->getFile("footer_breadcrumbs", "footer_breadcrumbs.html")) $template->render($file, $scope, $runtime); ?>
+<?php if ($file = $runtime->getFile("footer", "footer.html")) $template->render($file, $scope, $runtime); ?>
+
+</div>
+
+</div>
+</div>
+<br />
+<?php if ($scope->getVar("copyrighttext") != ""): ?><div align="center" class="smalltext"><?php echo $scope->getVar("copyrighttext"); ?></div><?php endif; ?>
+
+<a name="bottom" id="bottom"></a>
+<?php if ($scope->getVar("user_new_pms") != 0): ?><?php if ($scope->getVar("nojs") == 0): ?>
+<script type="text/javascript">show_newmessage_box(<?php echo $scope->getVar("user_new_pms"); ?>, '<?php echo $scope->getVar("L_NEWPMS"); ?>', '<?php echo $scope->getVar("IMG_DIR"); ?>', 'header_menu');</script>
+<?php else: ?>
+<div id="new_pms_box" class="special_panel" style="z-index: 99;border: 0px;position: absolute;top: 0px;right: 0px;padding: 5px;"><span class="smalltext"><a href="member.php?act=usercp&amp;view=pmfolder&amp;folder=1" title=""><img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Icons/icon_latest_reply.gif" alt="" border="0" />&nbsp;<strong><?php echo $scope->getVar("user_new_pms"); ?></strong>&nbsp;<?php echo $scope->getVar("L_NEWPMS"); ?></a></span></div>
+<?php endif; ?><?php endif; ?>
+
+<!--
+COPYRIGHT NOTICE
+
+// Please keep this copyright notice in place
+
+/**
+* k4 Bulletin Board
+*
+* Copyright (c) 2005, Peter Goodman
+*
+* Permission is hereby granted, free of charge, to any person obtaining
+* a copy of this software and associated documentation files (the
+* "Software"), to deal in the Software without restriction, including
+* without limitation the rights to use, copy, modify, merge, publish,
+* distribute, sublicense, and/or sell copies of the Software, and to
+* permit persons to whom the Software is furnished to do so, subject to
+* the following conditions:
+*
+* The above copyright notice and this permission notice shall be
+* included in all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+* NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+* BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+* ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+* CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+*
+* @author Peter Goodman
+* @author Geoffrey Goodman
+*/
+-->
+</body>
+</html>

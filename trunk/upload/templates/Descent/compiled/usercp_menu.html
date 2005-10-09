@@ -1,0 +1,110 @@
+<?php if ($_SESSION['user']->isMember()): ?>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_MYCONTROLS"); ?></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table" id="usercp_menu">
+
+		<!-- Settings & Options -->
+		<tr>
+			<td class="k4_subtitle"><?php echo $scope->getVar("L_SETTINGSOPTIONS"); ?></td>
+		</tr>
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=profile" title="<?php echo $scope->getVar("L_EDITPROFILE"); ?>" class="smalltext"><?php echo $scope->getVar("L_EDITPROFILE"); ?></a></td>
+		</tr>
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=password" title="<?php echo $scope->getVar("L_CHANGEPASSWORD"); ?>" class="smalltext"><?php echo $scope->getVar("L_CHANGEPASSWORD"); ?></a></td>
+		</tr>
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=email" title="<?php echo $scope->getVar("L_CHANGEEMAIL"); ?>" class="smalltext"><?php echo $scope->getVar("L_CHANGEEMAIL"); ?></a></td>
+		</tr>
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=options" title="<?php echo $scope->getVar("L_EDITOPTIONS"); ?>" class="smalltext"><?php echo $scope->getVar("L_EDITOPTIONS"); ?></a></td>
+		</tr>
+<?php if ($scope->getVar("signaturesenabled") == 1): ?>
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=signature" title="<?php echo $scope->getVar("L_EDITSIGNATURE"); ?>" class="smalltext"><?php echo $scope->getVar("L_EDITSIGNATURE"); ?></a></td>
+		</tr>
+<?php endif; ?>
+<?php if ($scope->getVar("avatarenabled") == 1): ?>
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=avatar" title="<?php echo $scope->getVar("L_EDITAVATAR"); ?>" class="smalltext"><?php echo $scope->getVar("L_EDITAVATAR"); ?></a></td>
+		</tr>
+<?php endif; ?>
+<?php if ($scope->getVar("personalpicenabled") == 1): ?>
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=picture" title="<?php echo $scope->getVar("L_EDITPERSONALPIC"); ?>" class="smalltext"><?php echo $scope->getVar("L_EDITPERSONALPIC"); ?></a></td>
+		</tr>
+<?php endif; ?>
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=attachments" title="<?php echo $scope->getVar("L_MANAGEATTACHMENTS"); ?>" class="smalltext"><?php echo $scope->getVar("L_MANAGEATTACHMENTS"); ?></a></td>
+		</tr>
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=subscriptions" title="<?php echo $scope->getVar("L_MANAGESUBSCRIPTIONS"); ?>" class="smalltext"><?php echo $scope->getVar("L_MANAGESUBSCRIPTIONS"); ?></a></td>
+		</tr>
+		<!-- / Settings & Options -->
+<?php if ($scope->getVar("enablepms") == 1): ?>
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['private_messaging']) && $_MAPS['private_messaging']['can_view'] <= $_SESSION['user']->get('perms'))): ?>
+		<!-- Private Messaging -->
+		<tr>
+			<td class="k4_subtitle"><?php echo $scope->getVar("L_PRIVATEMESSAGING"); ?></td>
+		</tr>
+<?php if ($scope->listBegin("pmfolders")): ?>
+<?php while($scope->listNext("pmfolders")): ?>
+		<tr>
+			<td class="alt1">
+<?php if ($scope->getVar("is_global") == 1): ?><img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Icons/folder.gif" alt="" border="" /><?php else: ?><img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Icons/subfolder.gif" alt="" border="" /><?php endif; ?>
+				<a href="member.php?act=usercp&amp;view=pmfolder&amp;folder=<?php echo $scope->getVar("id"); ?>" title="<?php echo $scope->getVar("name"); ?>" class="smalltext"><?php echo $scope->getVar("name"); ?></a>
+			</td>
+		</tr>
+<?php $scope->pop(); endwhile; ?>
+<?php endif; ?>
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=pmnewmessage" title="<?php echo $scope->getVar("L_COMPOSENEWMESSAGE"); ?>" class="smalltext"><?php echo $scope->getVar("L_COMPOSENEWMESSAGE"); ?></a></td>
+		</tr>
+<?php if ($scope->getVar("allowcustomfolders") == 1): ?>
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['pm_customfolders']) && $_MAPS['pm_customfolders']['can_add'] <= $_SESSION['user']->get('perms'))): ?>
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=pmfolders" title="<?php echo $scope->getVar("L_EDITSTORAGEFOLDERS"); ?>" class="smalltext"><?php echo $scope->getVar("L_EDITSTORAGEFOLDERS"); ?></a></td>
+		</tr>
+<?php endif; ?>
+<?php endif; ?>
+<?php if ($scope->getVar("allowtrackpms") == 1): ?>
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['pm_tracking']) && $_MAPS['pm_tracking']['can_view'] <= $_SESSION['user']->get('perms'))): ?>
+		<!--<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=trackpms" title="<?php echo $scope->getVar("L_MESSAGETRACKER"); ?>" class="smalltext"><?php echo $scope->getVar("L_MESSAGETRACKER"); ?></a></td>
+		</tr>-->
+<?php endif; ?>
+<?php endif; ?>
+		<!-- / Private Messaging -->
+<?php endif; ?>
+<?php endif; ?>
+	</table>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+	var menu			= d.getElementById('usercp_menu');
+
+	if(menu) {
+		var rows		= d.getElementsByTagName(menu, 'td');
+
+		if(rows) {
+			var numrows	= d.sizeof(rows);
+			for(var i = 0; i < numrows; i++) {
+				
+				if(rows[i]) {
+					if(rows[i].className == 'alt1') {
+						
+						rows[i].onmouseover		= function() {
+							this.className		= 'alt2';
+						}
+						rows[i].onmouseout		= function() {
+							this.className		= 'alt1';
+						}
+					}
+				}
+			}
+		}
+	}
+
+//]]>
+</script>
+<?php endif; ?>

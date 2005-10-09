@@ -1,0 +1,13 @@
+<?php if ($runtime->isVisible('welcome_msg', FALSE)): ?>
+<!-- Welcome Message -->
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("welcome_title"); ?></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr>
+			<td class="alt3" colspan="5"><?php echo $scope->getVar("L_WELCOMEMESSAGE"); ?></td>
+		</tr>
+	</table>
+</div>
+<br />
+<!-- / Welcome Message -->
+<?php endif; ?>

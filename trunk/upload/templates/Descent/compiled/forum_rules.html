@@ -1,0 +1,20 @@
+<?php if ($scope->getVar("forum_forum_rules") != ""): ?>
+<!-- Forum Rules -->
+<div class="k4_borderwrap">
+	<div class="k4_maintitle" id="fr_maintitle">
+		<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_fr', 'forumrules', 'fr_maintitle')" title="<?php echo $scope->getVar("L_EXPANDCOLLAPSE"); ?>"><img id="collapse_fr" src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Icons/collapse_thead.gif" alt="<?php echo $scope->getVar("L_EXPANDCOLLAPSE"); ?>" border="0" /></a></div>
+		<?php echo $scope->getVar("L_FORUMRULES"); ?>
+	</div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table" id="forumrules">
+		<tr>
+			<td class="alt3">
+				<div class="outset_box">
+					<?php echo $scope->getVar("forum_forum_rules"); ?>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- / Forum Rules -->
+<br />
+<?php endif; ?>

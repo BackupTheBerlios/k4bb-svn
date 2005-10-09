@@ -1,0 +1,72 @@
+<?php if ($_SESSION['user']->get('perms') >= ADMIN): ?>
+
+<br />
+	<!--
+	<thead class="k4_maintitle"><td><?php echo $scope->getVar("L_STYLES"); ?></td></thead>
+	<tr class="alt3"><td><a class="smalltext" target="main" href="admin.php?act=css"><?php echo $scope->getVar("L_CSS"); ?></a></td></tr>
+	-->
+
+<br />	
+	<!--
+	<tr class="alt3"><td><a class="smalltext" target="main" href="admin.php?act=prune"><?php echo $scope->getVar("L_PRUNE"); ?></a></td></tr>
+	<tr class="alt3"><td><a class="smalltext" target="main" href="admin.php?act=permissions"><?php echo $scope->getVar("L_PERMISSIONS"); ?></a></td></tr>
+	-->
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_USERS"); ?></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<!--<tr class="alt3"><td><a class="smalltext" target="main" href="admin.php?act=users"><?php echo $scope->getVar("L_USERS"); ?></a></td></tr>
+		<tr class="alt3"><td><a class="smalltext" target="main" href="admin.php?act=userranks"><?php echo $scope->getVar("L_USERRANKS"); ?></a></td></tr>
+		<tr class="alt3"><td><a class="smalltext" target="main" href="admin.php?act=usertitles"><?php echo $scope->getVar("L_USERTITLES"); ?></a></td></tr>-->
+		<tr class="alt3"><td><a class="smalltext" target="main" href="admin.php?act=usergroups"><?php echo $scope->getVar("L_USERGROUPS"); ?></a></td></tr>
+		<tr class="alt3"><td><a class="smalltext" target="main" href="admin.php?act=userfields"><?php echo $scope->getVar("L_USERPROFILEFIELDS"); ?></a></td></tr>
+		<tr class="alt3"><td><a class="smalltext" target="main" href="admin.php?act=usernames"><?php echo $scope->getVar("L_DISALLOWNAMES"); ?></a></td></tr>
+	</table>
+</div>
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_POSTS"); ?></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr class="alt3"><td><a class="smalltext" target="main" href="admin.php?act=posticons"><?php echo $scope->getVar("L_POSTICONS"); ?></a></td></tr>
+		<tr class="alt3"><td><a class="smalltext" target="main" href="admin.php?act=emoticons"><?php echo $scope->getVar("L_EMOTICONS"); ?></a></td></tr>
+		<tr class="alt3"><td><a class="smalltext" target="main" href="admin.php?act=acronyms"><?php echo $scope->getVar("L_ACRONYMS"); ?></a></td></tr>
+		<tr class="alt3"><td><a class="smalltext" target="main" href="admin.php?act=censors"><?php echo $scope->getVar("L_WORDCENSORS"); ?></a></td></tr>
+	</table>
+</div>
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_STYLES"); ?></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr class="alt3"><td><a class="smalltext" target="main" href="admin.php?act=stylesets"><?php echo $scope->getVar("L_MANAGESTYLESETS"); ?></a></td></tr>
+		<tr class="alt3"><td><a class="smalltext" target="main" href="admin.php?act=css"><?php echo $scope->getVar("L_MANAGECSSSTYLES"); ?></a></td></tr>
+	</table>
+</div>
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_FAQ"); ?></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr class="alt3"><td><a class="smalltext" target="main" href="admin.php?act=faq_categories"><?php echo $scope->getVar("L_FAQCATEGORIES"); ?></a></td></tr>
+		<tr class="alt3"><td><a class="smalltext" target="main" href="admin.php?act=faq_answers"><?php echo $scope->getVar("L_FAQANSWERS"); ?></a></td></tr>
+	</table>
+</div>
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_EMAIL"); ?></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr class="alt3"><td><a class="smalltext" target="main" href="admin.php?act=email"><?php echo $scope->getVar("L_EMAILUSERS"); ?></a></td></tr>
+	</table>
+</div>
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_MISCELLANEOUS"); ?></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr class="alt3"><td><a class="smalltext" target="main" href="admin.php?act=spiders"><?php echo $scope->getVar("L_SEARCHSPIDERS"); ?></a></td></tr>
+	</table>
+</div>
+	<!--
+	<thead class="k4_maintitle"><td><?php echo $scope->getVar("L_PRIVATE_MSGS"); ?></td></thead>
+	<tr class="alt3"><td><a class="smalltext" target="main" href="admin.php?act=globalpm"><?php echo $scope->getVar("L_GLOBALPM"); ?></a></td></tr>
+	
+	<thead class="k4_maintitle"><td><?php echo $scope->getVar("L_FAQ"); ?></td></thead>
+	<tr class="alt3"><td><a class="smalltext" target="main" href="admin.php?act=faq"><?php echo $scope->getVar("L_FAQ"); ?></a></td></tr>
+	-->
+<?php endif; ?>

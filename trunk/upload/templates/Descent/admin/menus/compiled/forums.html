@@ -1,0 +1,11 @@
+<?php if ($_SESSION['user']->get('perms') >= ADMIN): ?>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_FORUMS"); ?></div>
+	<table width="130" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr class="alt3"><td nowrap="nowrap"><a class="smalltext" href="admin.php?act=categories"><?php echo $scope->getVar("L_CATEGORIES"); ?></a></td></tr>
+		<tr class="alt3"><td nowrap="nowrap"><a class="smalltext" href="admin.php?act=categories_add"><?php echo $scope->getVar("L_ADDCATEGORY"); ?></a></td></tr>
+		<tr class="alt3"><td nowrap="nowrap"><a class="smalltext" href="admin.php?act=forums"><?php echo $scope->getVar("L_FORUMS"); ?></a></td></tr>
+		<tr class="alt3"><td nowrap="nowrap"><a class="smalltext" href="admin.php?act=forums_add"><?php echo $scope->getVar("L_ADDFORUM"); ?></a></td></tr>
+	</table>
+</div>
+<?php endif; ?>

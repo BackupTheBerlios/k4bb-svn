@@ -1,0 +1,62 @@
+<?php if ($_SESSION['user']->isMember()): ?>
+<form action="member.php?act=update_email" method="post" enctype="multipart/form-data" onsubmit="return checkForm(this);" onreset="resetErrors();"><script type="text/javascript">resetErrors();</script>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_USERCONTROLPANEL"); ?>: <span style="font-weight: normal;"><?php echo $scope->getVar("L_CHANGEEMAIL"); ?></span></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr class="alt3">
+			<td><span class="smalltext"><?php echo $scope->getVar("L_USERCPEMAILMSG"); ?></span></td>
+		</tr>
+	</table>
+</div>
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_EMAILSETTINGS"); ?></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr>
+			<td class="alt2" colspan="2">
+				<div align="center" class="smalltext"><?php echo $scope->getVar("L_INSERTOLDEMAIL"); ?></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><?php echo $scope->getVar("L_CURRENTEMAIL"); ?></td>
+			<td class="alt3" width="50%">
+				<input type="email" name="email" id="email" value="" maxlength="150" class="inputbox" />
+<script type="text/javascript">addVerification('email', '.+', 'email_error', 'inputfailed');</script><div id="email_error" style="display: none;"><?php echo $scope->getVar("L_SUPPLYEMAIL"); ?></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><?php echo $scope->getVar("L_CHECKCURRENTEMAIL"); ?></td>
+			<td class="alt3" width="50%">
+				<input type="email" name="email2" id="email2" value="" maxlength="150" class="inputbox" />
+<script type="text/javascript">addCompare('email', 'email2', 'email_match_error', 'inputfailed');</script><div id="email_match_error" style="display: none;"><?php echo $scope->getVar("L_EMAILSDONTMATCH"); ?></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt2" colspan="2">
+				<div align="center" class="smalltext"><?php echo $scope->getVar("L_NOWSUPPLYNEWEMAIL"); ?></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><?php echo $scope->getVar("L_NEWEMAIL"); ?></td>
+			<td class="alt3" width="50%">
+				<input type="email" name="newemail" id="newemail" value="" maxlength="150" class="inputbox" />
+<script type="text/javascript">addVerification('newemail', '.+', 'newemail_error', 'inputfailed');</script><div id="newemail_error" style="display: none;"><?php echo $scope->getVar("L_SUPPLYEMAIL"); ?></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><?php echo $scope->getVar("L_CHECKNEWEMAIL"); ?></td>
+			<td class="alt3" width="50%">
+				<input type="email" name="newemail2" id="newemail2" value="" maxlength="150" class="inputbox" />
+<script type="text/javascript">addCompare('newemail', 'newemail2', 'newemail_match_error', 'inputfailed');</script><div id="newemail_match_error" style="display: none;"><?php echo $scope->getVar("L_EMAILSDONTMATCH"); ?></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" colspan="2" align="center">
+				<input type="submit" class="button" value="<?php echo $scope->getVar("L_SAVE"); ?>" />
+				<input type="reset" class="button" value="<?php echo $scope->getVar("L_RESET"); ?>" />
+			</td>
+		</tr>
+	</table>
+</div>
+</form>
+<?php endif; ?>

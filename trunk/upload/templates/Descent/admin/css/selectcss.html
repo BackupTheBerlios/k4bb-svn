@@ -1,0 +1,26 @@
+<isadmin>
+<form action="admin.php?act=edit_css" method="post" enctype="multipart/form-data">
+<table width="100%" cellpadding="0" cellspacing="1" border="0">
+	<tr class="tcat">
+		<td colspan="2">{$L_CSS}</td>
+	</tr>
+	<tr class="panel">
+		<td>{$L_CLASS}</td>
+		<td>
+			<select name="id" id="style">
+				<list:list id="cssstyles">
+				<list:item>
+				<option value="{$id}">{$name}</option>
+				<list:separator>
+				</list:separator>
+				</list:item>
+				</list:list>
+			</select>
+		</td>
+	</tr>
+	<tr class="thead">
+		<td colspan="2"><input type="submit" value="{$L_EDIT}" class="button" /></td>
+	</tr>
+</table>
+</form>
+</isadmin>

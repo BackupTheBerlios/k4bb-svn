@@ -1,0 +1,63 @@
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['can_see_wo']) && $_MAPS['can_see_wo']['can_view'] <= $_SESSION['user']->get('perms'))): ?>
+<!-- General Forum Information -->
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle" id="wto_maintitle">
+		<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_wgo', 'whatsgoingon', 'wto_maintitle')" title="<?php echo $scope->getVar("L_EXPANDCOLLAPSE"); ?>"><img id="collapse_wgo" src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Icons/collapse_thead.gif" alt="<?php echo $scope->getVar("L_EXPANDCOLLAPSE"); ?>" border="0" /></a></div>
+		<?php echo $scope->getVar("L_WHATSGOINGON"); ?>
+	</div>
+	<table width="100%" border="0" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" class="k4_table" id="whatsgoingon">
+		<tr>
+			<td class="alt3" rowspan="3" width="5%" align="center" valign="middle">
+				<img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Icons/forum_stats.gif" alt="<?php echo $scope->getVar("L_WHATSGOINGON"); ?>" />
+			</td>
+			<td class="alt1">
+				<div class="minitext" align="left">
+				<?php echo $scope->getVar("newest_member"); ?>
+				<br />
+				<?php echo $scope->getVar("total_posts"); ?>
+				<br />
+				<?php echo $scope->getVar("total_users"); ?>
+				<br />
+				<?php echo $scope->getVar("most_users_ever"); ?>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt3">
+				<div class="minitext" align="left">
+					<strong><?php echo $scope->getVar("L_LEGEND"); ?>:</strong>
+<?php if ($scope->listBegin("usergroups_legend")): ?>
+<?php while($scope->listNext("usergroups_legend")): ?>
+					<a href="usergroups.php?id=<?php echo $scope->getVar("id"); ?>" style="color: #<?php echo $scope->getVar("color"); ?>;font-weight: bold;" title="<?php echo $scope->getVar("name"); ?>"><?php echo $scope->getVar("name"); ?></a><?php if ($scope->listHasNext("usergroups_legend")): ?>,<?php endif; ?>
+<?php $scope->pop(); endwhile; ?>
+<?php endif; ?>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1">
+				<div class="minitext" align="left">
+				<?php echo $scope->getVar("online_stats"); ?>
+				<br />
+<?php if ($scope->getVar("num_online_members") > 0): ?>
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['can_see_wologgedusers']) && $_MAPS['can_see_wologgedusers']['can_view'] <= $_SESSION['user']->get('perms'))): ?>
+<?php if ($scope->listBegin("online_users")): ?>
+					<?php echo $scope->getVar("L_REGISTEREDUSERS"); ?>:
+<?php while($scope->listNext("online_users")): ?>
+<?php if ($scope->getVar("name") != ""): ?>
+<?php if ($scope->getVar("invisible") == 0): ?>
+<?php if ($scope->getVar("user_id") != 0): ?><a href="member.php?id=<?php echo $scope->getVar("user_id"); ?>" style="color: #<?php echo $scope->getVar("color"); ?>;font-weight: <?php echo $scope->getVar("font_weight"); ?>;" class="minitext"><?php echo $scope->getVar("name"); ?></a><?php else: ?><strong style="font-style: italic;font-weight: bold;"><?php echo $scope->getVar("name"); ?></strong><?php endif; ?><?php if ($scope->listHasNext("online_users")): ?>,&nbsp;<?php endif; ?>
+<?php endif; ?>
+<?php endif; ?>
+<?php $scope->pop(); endwhile; ?>
+<?php endif; ?>
+<?php endif; ?>
+<?php endif; ?>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- / General Forum Information -->
+<?php endif; ?>

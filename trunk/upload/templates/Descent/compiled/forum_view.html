@@ -1,0 +1,68 @@
+<?php if(!isset($_MAPS)) { global $_MAPS; } if(TRUE && (isset($_MAPS['forums'][$scope->getVar("forum_id")]['can_view']) && $_MAPS['forums'][$scope->getVar("forum_id")]['can_view'] <= $_SESSION['user']->get('perms'))): ?>
+<?php if ($scope->getVar("is_forum") == 1): ?>
+		<tr>
+			<td class="alt3" width="5%" align="center"><img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Icons/<?php echo $scope->getVar("forum_icon"); ?>.gif" alt="<?php echo $scope->getVar("forum_alt"); ?>" height="28" width="28" border="0" /></td>
+			<td class="alt1" width="55%">
+				<a href="viewforum.php?f=<?php echo $scope->getVar("forum_id"); ?>" title="<?php echo $scope->getVar("safe_description"); ?>"><strong><?php echo $scope->getVar("name"); ?></strong></a>
+				<!--<?php if ($scope->getVar("num_viewing") > 0): ?><span class="smalltext">(<?php echo $scope->getVar("num_viewing"); ?> <?php echo $scope->getVar("L_VIEWING"); ?>)</span><?php endif; ?>-->
+				<br />
+				<span class="minitext">
+				<?php echo $scope->getVar("description"); ?><br />
+<?php if ($scope->getVar("are_moderators") == 1): ?>
+				<br />
+				<strong><?php echo $scope->getVar("L_MODERATORS"); ?>:</strong>
+<?php if ($scope->listBeginNew("moderators", $scope->getVar("moderators"))): ?>
+<?php while($scope->listNext("moderators")): ?>
+<?php if ($scope->getVar("id") != ""): ?>
+						<a href="usergroups.php?id=<?php echo $scope->getVar("id"); ?>" style="color: #<?php echo $scope->getVar("color"); ?>;font-weight: bold;" title="<?php echo $scope->getVar("name"); ?>"><?php echo $scope->getVar("name"); ?></a><?php if ($scope->listHasNext("moderators")): ?>,<?php endif; ?>
+<?php else: ?>
+						<a href="member.php?id=<?php echo $scope->getVar("user_id"); ?>" title="<?php echo $scope->getVar("L_PROFILE"); ?>"><?php echo $scope->getVar("name"); ?></a>
+<?php endif; ?>
+<?php $scope->pop(); endwhile; ?>
+<?php endif; ?>
+<?php endif; ?>
+<?php if ($scope->getVar("subforums") > 0): ?>
+<?php if ($scope->getVar("showsubforums") == 1): ?>
+				<br />
+				<strong><?php echo $scope->getVar("L_SUBFORUMS"); ?>:</strong>
+<?php if ($scope->listBeginNew("subforums", $scope->getVar("subforums"))): ?>
+<?php while($scope->listNext("subforums")): ?>
+					<img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Icons/<?php echo $scope->getVar("forum_icon"); ?>_small.gif" alt="<?php echo $scope->getVar("forum_alt"); ?>" height="11" width="11" border="0" />
+					<a href="viewforum.php?f=<?php echo $scope->getVar("forum_id"); ?>" title="<?php echo $scope->getVar("description"); ?>"><?php echo $scope->getVar("name"); ?></a><?php if ($scope->listHasNext("subforums")): ?>,<?php endif; ?>
+<?php $scope->pop(); endwhile; ?>
+<?php endif; ?>
+<?php endif; ?>
+<?php endif; ?>
+				</span>
+			</td>
+			<td class="alt3" align="center" width="5%"><span class="smalltext"><?php echo $scope->getVar("posts"); ?></span></td>
+			<td class="alt3" align="center" width="5%"><span class="smalltext"><?php echo $scope->getVar("topics"); ?></span></td>
+			<td class="alt3" nowrap="nowrap" align="center" width="30%">
+<?php if ($scope->getVar("post_id") > 0): ?>
+				<div align="left" class="smalltext">
+<?php if ($scope->getVar("post_posticon") != (!$scope->getVar("clear.gif") ? "clear.gif" : $scope->getVar("clear.gif"))): ?><img src="tmp/upload/posticons/<?php echo $scope->getVar("post_posticon"); ?>" alt="" border="0" /><?php endif; ?>
+					<a href="<?php if ($scope->getVar("post_id") == (!$scope->getVar("topic_id") ? "topic_id" : $scope->getVar("topic_id"))): ?>viewtopic.php?id=<?php echo $scope->getVar("post_id"); ?><?php else: ?>findpost.php?id=<?php echo $scope->getVar("post_id"); ?><?php endif; ?>" title="<?php echo $scope->getVar("post_name"); ?>"><strong><?php ob_start(); $length = "27"; $append = "..."; ?><?php echo $scope->getVar("post_name"); ?><?php $string = ob_get_contents(); ob_end_clean(); echo ((strlen($string) > $length) ? substr($string, 0, $length - strlen($append)) . $append : $string); ?></strong></a>
+					<br />
+					<?php echo $scope->getVar("L_BY"); ?> <?php if ($scope->getVar("post_uname") == ""): ?><?php echo $scope->getVar("L_GUEST"); ?><?php else: ?><?php if ($scope->getVar("post_uid") != 0): ?><a href="member.php?id=<?php echo $scope->getVar("post_uid"); ?>" title="<?php echo $scope->getVar("post_uname"); ?>"><strong><?php echo $scope->getVar("post_uname"); ?></strong></a><?php else: ?><?php echo $scope->getVar("post_uname"); ?><?php endif; ?><?php endif; ?>
+				</div>
+				<div align="right" class="smalltext">
+<?php ob_start(); $format = "%b %d %Y"; ?><?php echo $scope->getVar("post_created"); ?><?php $date = ob_get_contents(); ob_end_clean(); echo strftime($format, bbtime(intval($date))); ?>&nbsp;<span class="date_color"><?php ob_start(); $format = "%I:%M%p"; ?><?php echo $scope->getVar("post_created"); ?><?php $date = ob_get_contents(); ob_end_clean(); echo strftime($format, bbtime(intval($date))); ?></span>
+					<a href="findpost.php?id=<?php echo $scope->getVar("post_id"); ?>" title="<?php echo $scope->getVar("post_name"); ?>"><img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Icons/icon_latest_reply.gif" border="0" alt="<?php echo $scope->getVar("post_name"); ?>" /></a>
+				</div>
+<?php else: ?>
+				--
+<?php endif; ?>
+			</td>
+		</tr>
+<?php elseif ($scope->getVar("is_link") == 1): ?>
+		<tr>
+			<td class="alt3" width="5%" align="center"><img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Icons/forum_link.gif" alt="<?php echo $scope->getVar("forum_alt"); ?>" title="<?php echo $scope->getVar("forum_alt"); ?>" height="28" width="28" border="0" /></td>
+<?php if ($scope->getVar("link_show_redirects") == 1): ?>
+			<td class="alt1" width="55%"><a href="redirect.php?id=<?php echo $scope->getVar("forum_id"); ?>" title="<?php echo $scope->getVar("name"); ?>"><strong><?php echo $scope->getVar("name"); ?></strong></a><br /><span class="minitext"><?php echo $scope->getVar("description"); ?><br /><?php echo $scope->getVar("sub_forums"); ?></span></td>
+			<td class="alt3" width="40%" align="center" colspan="3"><span class="smalltext"><?php echo $scope->getVar("L_REDIRECTS"); ?>: <?php echo $scope->getVar("link_redirects"); ?></span></td>
+<?php else: ?>
+			<td class="alt1" width="95%" colspan="4"><a href="<?php echo $scope->getVar("link_href"); ?>" target="_blank"><strong><?php echo $scope->getVar("name"); ?></strong></a><br /><span class="minitext"><?php echo $scope->getVar("description"); ?><br /><?php echo $scope->getVar("sub_forums"); ?></span></td>
+<?php endif; ?>
+		</tr>
+<?php endif; ?>
+<?php endif; ?>

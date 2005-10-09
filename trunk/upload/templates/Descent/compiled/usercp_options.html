@@ -1,0 +1,224 @@
+<?php if ($_SESSION['user']->isMember()): ?>
+<form action="member.php?act=update_options" method="post" enctype="multipart/form-data" onsubmit="return checkForm(this);" onreset="resetErrors();"><script type="text/javascript">resetErrors();</script>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_USERCONTROLPANEL"); ?>: <span style="font-weight: normal;"><?php echo $scope->getVar("L_EDITOPTIONS"); ?></span></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr>
+			<td class="alt3"><span class="smalltext"><?php echo $scope->getVar("L_USERCPOPTIONSMSG"); ?></span></td>
+		</tr>
+	</table>
+</div>
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_GENERALOPTIONS"); ?></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" width="50%"><label for="templateset"><strong><?php echo $scope->getVar("L_TEMPLATESET"); ?>:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="templateset" id="templateset">
+<?php if ($scope->listBegin("templatesets")): ?>
+<?php while($scope->listNext("templatesets")): ?>
+					<option value="<?php echo $scope->getVar("id"); ?>"><?php echo $scope->getVar("name"); ?></option>
+<?php $scope->pop(); endwhile; ?>
+<?php endif; ?>
+				</select>
+				<script type="text/javascript">d.setIndex(<?php echo $scope->getVar("user_styleset"); ?>, 'styleset');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="styleset"><strong><?php echo $scope->getVar("L_BOARDSTYLESET"); ?>:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="styleset" id="styleset">
+<?php if ($scope->listBegin("stylesets")): ?>
+<?php while($scope->listNext("stylesets")): ?>
+					<option value="<?php echo $scope->getVar("id"); ?>"><?php echo $scope->getVar("name"); ?></option>
+<?php $scope->pop(); endwhile; ?>
+<?php endif; ?>
+				</select>
+				<script type="text/javascript">d.setIndex(<?php echo $scope->getVar("user_styleset"); ?>, 'styleset');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="imageset"><strong><?php echo $scope->getVar("L_BOARDIMAGESET"); ?>:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="imageset" id="imageset">
+<?php if ($scope->listBegin("imagesets")): ?>
+<?php while($scope->listNext("imagesets")): ?>
+					<option value="<?php echo $scope->getVar("name"); ?>"><?php echo $scope->getVar("name"); ?></option>
+<?php $scope->pop(); endwhile; ?>
+<?php endif; ?>
+				</select>
+				<script type="text/javascript">d.setIndex(<?php echo $scope->getVar("user_imageset"); ?>, 'imageset');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="language"><strong><?php echo $scope->getVar("L_BOARDLANGUAGE"); ?>:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="language" id="language">
+<?php if ($scope->listBegin("languages")): ?>
+<?php while($scope->listNext("languages")): ?>
+					<option value="<?php echo $scope->getVar("name"); ?>"><?php echo $scope->getVar("name"); ?></option>
+<?php $scope->pop(); endwhile; ?>
+<?php endif; ?>
+				</select>
+				<script type="text/javascript">d.setIndex(<?php echo $scope->getVar("user_language"); ?>, 'language');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="invisible"><strong><?php echo $scope->getVar("L_INVISIBLEMODE"); ?>:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="invisible" id="invisible">
+					<option value="1"><?php echo $scope->getVar("L_YES"); ?></option>
+					<option value="0"><?php echo $scope->getVar("L_NO"); ?></option>
+				</select>
+				<script type="text/javascript">d.setIndex(<?php echo $scope->getVar("user_invisible"); ?>, 'invisible');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="topic_display"><strong><?php echo $scope->getVar("L_TOPICDISPLAY"); ?>:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="topic_display" id="topic_display">
+					<option value="0"><?php echo $scope->getVar("L_LINEAR"); ?></option>
+					<option value="1"><?php echo $scope->getVar("L_VERTICAL"); ?></option>
+				</select>
+				<script type="text/javascript">d.setIndex(parseInt(<?php echo $scope->getVar("user_topic_display"); ?>), 'topic_display');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="topic_display"><strong><?php echo $scope->getVar("L_TOPICTHREADEDMODE"); ?>:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="topic_threaded" id="topic_threaded">
+					<option value="0"><?php echo $scope->getVar("L_NORMAL"); ?></option>
+					<option value="1"><?php echo $scope->getVar("L_THREADED"); ?></option>
+				</select>
+				<script type="text/javascript">d.setIndex(parseInt(<?php echo $scope->getVar("user_topic_threaded"); ?>), 'topic_threaded');</script>
+			</td>
+		</tr>
+	</table>
+</div>
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_PMOPTIONS"); ?></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" width="50%"><label for="notify_pm"><strong><?php echo $scope->getVar("L_NOTIFYPRIVATEMESSAGE"); ?>:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="notify_pm" id="notify_pm">
+					<option value="1"><?php echo $scope->getVar("L_YES"); ?></option>
+					<option value="0"><?php echo $scope->getVar("L_NO"); ?></option>
+				</select>
+				<script type="text/javascript">d.setIndex(parseInt(<?php echo $scope->getVar("user_notify_pm"); ?>), 'notify_pm');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="popup_pm"><strong><?php echo $scope->getVar("L_POPUPPRIVATEMESSAGE"); ?>:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="popup_pm" id="popup_pm">
+					<option value="1"><?php echo $scope->getVar("L_YES"); ?></option>
+					<option value="0"><?php echo $scope->getVar("L_NO"); ?></option>
+				</select>
+				<script type="text/javascript">d.setIndex(parseInt(<?php echo $scope->getVar("user_popup_pm"); ?>), 'popup_pm');</script>
+			</td>
+		</tr>
+	</table>
+</div>
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_POSTOPTIONS"); ?></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" width="50%">
+				<label for="topicsperpage"><strong><?php echo $scope->getVar("L_TOPICSPERPAGE"); ?>:</strong></label>
+				<br />
+				<span class="smalltext"><?php echo $scope->getVar("L_RESULTSPERPAGEMSG"); ?></span>
+			</td>
+			<td class="alt2" width="50%">
+				<input type="text" name="topicsperpage" id="topicsperpage" value="<?php echo $scope->getVar("user_topicsperpage"); ?>" size="2" maxlength="2" class="inputbox" />
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%">
+				<label for="postsperpage"><strong><?php echo $scope->getVar("L_POSTSPERPAGE"); ?>:</strong></label>
+				<br />
+				<span class="smalltext"><?php echo $scope->getVar("L_RESULTSPERPAGEMSG"); ?></span>
+			</td>
+			<td class="alt2" width="50%">
+				<input type="text" name="postsperpage" id="postsperpage" value="<?php echo $scope->getVar("user_postsperpage"); ?>" size="2" maxlength="2" class="inputbox" />
+			</td>
+		</tr>
+	</table>
+</div>
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_VIEWINGOPTIONS"); ?></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" width="50%"><label for="viewimages"><strong><?php echo $scope->getVar("L_VIEWIMAGES"); ?>:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="viewimages" id="viewimages">
+					<option value="1"><?php echo $scope->getVar("L_YES"); ?></option>
+					<option value="0"><?php echo $scope->getVar("L_NO"); ?></option>
+				</select>
+				<script type="text/javascript">d.setIndex(<?php echo $scope->getVar("user_viewimages"); ?>, 'viewimages');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="viewavatars"><strong><?php echo $scope->getVar("L_VIEWAVATARS"); ?>:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="viewavatars" id="viewavatars">
+					<option value="1"><?php echo $scope->getVar("L_YES"); ?></option>
+					<option value="0"><?php echo $scope->getVar("L_NO"); ?></option>
+				</select>
+				<script type="text/javascript">d.setIndex(<?php echo $scope->getVar("user_viewavatars"); ?>, 'viewavatars');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="viewflash"><strong><?php echo $scope->getVar("L_VIEWFLASH"); ?>:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="viewflash" id="viewflash">
+					<option value="1"><?php echo $scope->getVar("L_YES"); ?></option>
+					<option value="0"><?php echo $scope->getVar("L_NO"); ?></option>
+				</select>
+				<script type="text/javascript">d.setIndex(<?php echo $scope->getVar("user_viewflash"); ?>, 'viewflash');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="viewemoticons"><strong><?php echo $scope->getVar("L_VIEWEMOTICONS"); ?>:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="viewemoticons" id="viewemoticons">
+					<option value="1"><?php echo $scope->getVar("L_YES"); ?></option>
+					<option value="0"><?php echo $scope->getVar("L_NO"); ?></option>
+				</select>
+				<script type="text/javascript">d.setIndex(<?php echo $scope->getVar("user_viewemoticons"); ?>, 'viewemoticons');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="viewsigs"><strong><?php echo $scope->getVar("L_VIEWSIGNATURES"); ?>:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="viewsigs" id="viewsigs">
+					<option value="1"><?php echo $scope->getVar("L_YES"); ?></option>
+					<option value="0"><?php echo $scope->getVar("L_NO"); ?></option>
+				</select>
+				<script type="text/javascript">d.setIndex(<?php echo $scope->getVar("user_viewsigs"); ?>, 'viewsigs');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="viewcensors"><strong><?php echo $scope->getVar("L_VIEWWORDCENSORS"); ?>:</strong></label></td>
+			<td class="alt2" width="50%">
+				<select name="viewcensors" id="viewcensors">
+					<option value="1"><?php echo $scope->getVar("L_YES"); ?></option>
+					<option value="0"><?php echo $scope->getVar("L_NO"); ?></option>
+				</select>
+				<script type="text/javascript">d.setIndex(<?php echo $scope->getVar("user_viewcensors"); ?>, 'viewcensors');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" colspan="2" align="center">
+				<input type="submit" value="<?php echo $scope->getVar("L_SAVE"); ?>" class="button" />
+				<input type="reset" value="<?php echo $scope->getVar("L_RESET"); ?>" class="button" />
+			</td>
+		</tr>
+	</table>
+</div>
+</form>
+<?php endif; ?>

@@ -1,0 +1,143 @@
+<isadmin>
+<table width="100%" cellpadding="0" cellspacing="1" border="0">
+	<tr>
+		<td>
+			<table cellpadding="5" cellspacing="5" border="0" style="float:left;top:45px;position:relative;">
+				<tr>
+					<td class="smalltext">{$L_TOP}:</td>
+				</tr>
+				<tr>
+					<td class="smalltext">{$L_RIGHT}:</td>
+				</tr>
+				<tr>
+					<td class="smalltext">{$L_BOTTOM}:</td>
+				</tr>
+				<tr>
+					<td class="smalltext">{$L_LEFT}:</td>
+				</tr>
+			</table>
+			<fieldset style="float:left;">
+				<legend>{$L_WIDTH}</legend>
+				<label for="border_same_width" id="label_border_same_width"><input type="checkbox" name="border_same_width" id="border_same_width" checked="true" onClick="SameForAll(this, new Array('border-right-width', 'border-bottom-width', 'border-left-width'))" />&nbsp;{$L_SAMEFORALL}</label>
+				<br />
+				<input type="text" class="inputbox" name="border-top-width" id="border-top-width" value="" size="5" onKeyPress="Enable(this, 'bt-measurement')" onKeyUp="SetAll('border-top-width', 'border_same_width', new Array('border-right-width', 'border-bottom-width', 'border-left-width'))" />&nbsp;
+				<select name="bt-measurement" id="bt-measurement" disabled="true" class="smalltext" onChange="SetAll('bt-measurement', 'border_same_width', new Array('br-measurement', 'bb-measurement', 'bl-measurement'))">
+					<option value="px">pixels</option>
+					<option value="pt">points</option>
+					<option value="in">in</option>
+					<option value="cm">cm</option>
+					<option value="mm">mm</option>
+					<option value="pc">picas</option>
+					<option value="em">ems</option>
+					<option value="ex">exs</option>
+					<option value="%">%</option>
+				</select>
+				<br />
+				<input type="text" class="inputbox" disabled="true" name="border-right-width" id="border-right-width" value="" size="5" onKeyPress="Enable(this, 'br-measurement')" />&nbsp;
+				<select name="br-measurement" id="br-measurement" disabled="true" class="smalltext">
+					<option value="px">pixels</option>
+					<option value="pt">points</option>
+					<option value="in">in</option>
+					<option value="cm">cm</option>
+					<option value="mm">mm</option>
+					<option value="pc">picas</option>
+					<option value="em">ems</option>
+					<option value="ex">exs</option>
+					<option value="%">%</option>
+				</select>
+				<br />
+				<input type="text" class="inputbox" disabled="true" name="border-bottom-width" id="border-bottom-width" value="" size="5" onKeyPress="Enable(this, 'bb-measurement')" />&nbsp;
+				<select name="bb-measurement" id="bb-measurement" disabled="true" class="smalltext">
+					<option value="px">pixels</option>
+					<option value="pt">points</option>
+					<option value="in">in</option>
+					<option value="cm">cm</option>
+					<option value="mm">mm</option>
+					<option value="pc">picas</option>
+					<option value="em">ems</option>
+					<option value="ex">exs</option>
+					<option value="%">%</option>
+				</select>
+				<br />
+				<input type="text" class="inputbox" disabled="true" name="border-left-width" id="border-left-width" value="" size="5" onKeyPress="Enable(this, 'bl-measurement')" />&nbsp;
+				<select name="bl-measurement" id="bl-measurement" disabled="true" class="smalltext">
+					<option value="px">pixels</option>
+					<option value="pt">points</option>
+					<option value="in">in</option>
+					<option value="cm">cm</option>
+					<option value="mm">mm</option>
+					<option value="pc">picas</option>
+					<option value="em">ems</option>
+					<option value="ex">exs</option>
+					<option value="%">%</option>
+				</select>
+			</fieldset>
+			<fieldset style="float:left;">
+				<legend>{$L_STYLE}</legend>
+				<label for="border_same_style" id="label_border_same_style"><input type="checkbox" name="border_same_style" id="border_same_style" checked="true" onClick="SameForAll(this, new Array('border-right-style', 'border-bottom-style', 'border-left-style'))" />&nbsp;{$L_SAMEFORALL}</label>
+				<br />
+				&nbsp;<select name="border-top-style" id="border-top-style" class="smalltext" onChange="SetAll('border-top-style', 'border_same_style', new Array('border-right-style', 'border-bottom-style', 'border-left-style'))">
+					<option value=""></option>
+					<option value="none">none</option>
+					<option value="dotted">dotted</option>
+					<option value="dashed">dashed</option>
+					<option value="solid">solid</option>
+					<option value="double">double</option>
+					<option value="groove">groove</option>
+					<option value="ridge">ridge</option>
+					<option value="inset">inset</option>
+					<option value="outset">outset</option>
+				</select>
+				<br />
+				&nbsp;<select name="border-right-style" id="border-right-style" class="smalltext" disabled="true">
+					<option value=""></option>
+					<option value="none">none</option>
+					<option value="dotted">dotted</option>
+					<option value="dashed">dashed</option>
+					<option value="solid">solid</option>
+					<option value="double">double</option>
+					<option value="groove">groove</option>
+					<option value="ridge">ridge</option>
+					<option value="inset">inset</option>
+					<option value="outset">outset</option>
+				</select>
+				<br />
+				&nbsp;<select name="border-bottom-style" id="border-bottom-style" class="smalltext" disabled="true">
+					<option value=""></option>
+					<option value="none">none</option>
+					<option value="dotted">dotted</option>
+					<option value="dashed">dashed</option>
+					<option value="solid">solid</option>
+					<option value="double">double</option>
+					<option value="groove">groove</option>
+					<option value="ridge">ridge</option>
+					<option value="inset">inset</option>
+					<option value="outset">outset</option>
+				</select>
+				<br />
+				&nbsp;<select name="border-left-style" id="border-left-style" class="smalltext" disabled="true">
+					<option value=""></option>
+					<option value="none">none</option>
+					<option value="dotted">dotted</option>
+					<option value="dashed">dashed</option>
+					<option value="solid">solid</option>
+					<option value="double">double</option>
+					<option value="groove">groove</option>
+					<option value="ridge">ridge</option>
+					<option value="inset">inset</option>
+					<option value="outset">outset</option>
+				</select>
+			</fieldset>
+			<fieldset style="float:left;">
+				<legend>{$L_COLOR}</legend>
+				<label for="border_same_color" id="label_border_same_color"><input type="checkbox" name="border_same_color" id="border_same_color" checked="true" onClick="SameForAll(this, new Array('border-right-color', 'border-bottom-color', 'border-left-color'))" />&nbsp;{$L_SAMEFORALL}</label>
+				<br />
+				&nbsp;<label for="border-top-color"><img src="Images/{$IMG_DIR}/Icons/colorpicker.gif" id="bt_color_preview" style="background-color:#FFFFFF; position:relative;" onClick="ShowColorPicker('bt_color_picker', 'bt_color_preview', 'border-top-color')" border="0" alt="" /></label><div id="bt_color_picker" style="display:none;position:absolute;" onClick="this.style.display='none'" ><script type="text/javascript">drawColorPicker();</script></div>&nbsp;<input type="text" style="font-size: 10px;" name="border-top-color" id="border-top-color" value="" class="inputbox" size="10" maxlength="7" onMouseOver="SetAll('border-top-color', 'border_same_color', new Array('border-right-color', 'border-bottom-color', 'border-left-color'))" /><br />
+				&nbsp;<img src="Images/{$IMG_DIR}/Icons/colorpicker.gif" id="br_color_preview" style="background-color:#FFFFFF; position:relative;" onClick="ShowColorPicker('br_color_picker', 'br_color_preview', 'border-right-color')" border="0" alt="" /><div id="br_color_picker" style="display:none;position:absolute;" onClick="this.style.display='none'" ><script type="text/javascript">drawColorPicker();</script></div>&nbsp;<input type="text" style="font-size: 10px;" name="border-right-color" id="border-right-color" value="" class="inputbox" size="10" maxlength="7" disabled="true" /><br />
+				&nbsp;<img src="Images/{$IMG_DIR}/Icons/colorpicker.gif" id="bb_color_preview" style="background-color:#FFFFFF; position:relative;" onClick="ShowColorPicker('bb_color_picker', 'bb_color_preview', 'border-bottom-color')" border="0" alt="" /><div id="bb_color_picker" style="display:none;position:absolute;" onClick="this.style.display='none'" ><script type="text/javascript">drawColorPicker();</script></div>&nbsp;<input type="text" style="font-size: 10px;" name="border-bottom-color" id="border-bottom-color" value="" class="inputbox" size="10" maxlength="7" disabled="true" /><br />
+				&nbsp;<img src="Images/{$IMG_DIR}/Icons/colorpicker.gif" id="bl_color_preview" style="background-color:#FFFFFF; position:relative;" onClick="ShowColorPicker('bl_color_picker', 'bl_color_preview', 'border-left-color')" border="0" alt="" /><div id="bl_color_picker" style="display:none;position:absolute;" onClick="this.style.display='none'" ><script type="text/javascript">drawColorPicker();</script></div>&nbsp;<input type="text" style="font-size: 10px;" name="border-left-color" id="border-left-color" value="" class="inputbox" size="10" maxlength="7" disabled="true" />
+			</fieldset>
+		</td>
+	</tr>
+</table>
+</isadmin>

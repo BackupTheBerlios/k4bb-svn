@@ -1,0 +1,37 @@
+<is:admin>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">
+		<div style="float: right;">
+			<input type="button" class="button" value="{$L_ADDCSSSTYLE}" onclick="document.location='admin.php?act=css_addstyle&id={$styleset_id}'" />
+		</div>
+		{$L_CSSSTYLES}<span style="font-weight: normal;">: {$styleset_name}</span>
+	</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<list:list id="styles">
+		<list:default list="styles">
+		<tr>
+			<td class="alt3">
+				<div class="outset_box" style="text-align: center;">
+					<br /><strong>{$L_NOCSSSTYLES}</strong><br /><br />
+				</div>
+			</td>
+		</tr>
+		</list:default>
+		<list:item list="styles">
+		<list:switch list="styles" var="row_class" a="alt1" b="alt3">
+		<tr>
+			<td width="80%" class="{$row_class}">
+				<strong>{$name}</strong>
+				<span class="smalltext"><br />{$description}</span>
+			</td>
+			<td width="20%" class="alt2" style="text-align: center;">
+				<input type="button" class="button" value="{$L_EDIT}" onclick="document.location='admin.php?act=css_editstyle&id={$style_id}&style_id={$id}'" />
+				<input type="button" class="button" value="{$L_DELETE}" style="color: #FF0000;" onclick="document.location='admin.php?act=css_removestyle&id={$style_id}&style_id={$id}'" />
+			</td>
+		</tr>
+		</list:switch>
+		</list:item>
+		</list:list>
+	</table>
+</div>
+</is:admin>

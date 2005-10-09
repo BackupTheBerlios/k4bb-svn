@@ -1,0 +1,65 @@
+<?php if ($_SESSION['user']->get('perms') >= MODERATOR): ?>
+<?php if ($scope->getVar("nojs") == 0): ?>
+<!-- Moderating Panel -->
+<div id="modpanel_menu" class="k4_borderwrap" style="display: none;">
+	<table cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+<?php if ($scope->getVar("modpanel") == 1): ?><?php if ($scope->getVar("forum_forum_id") != 0): ?>
+		<tr><td class="k4_subtitle"><?php echo $scope->getVar("L_POSTS"); ?></td></tr>
+		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="viewforum.php?id=<?php echo $scope->getVar("forum_forum_id"); ?>&amp;queued=1" title="<?php echo $scope->getVar("L_VIEWQUEUEDTOPICS"); ?>" class="smalltext"><?php echo $scope->getVar("L_VIEWQUEUEDTOPICS"); ?></a></td>
+		</tr>
+		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="viewforum.php?id=<?php echo $scope->getVar("forum_forum_id"); ?>&amp;locked=1" title="<?php echo $scope->getVar("L_VIEWLOCKEDTOPICS"); ?>" class="smalltext"><?php echo $scope->getVar("L_VIEWLOCKEDTOPICS"); ?></a></td>
+		</tr>
+		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=viewbpreports&amp;id=<?php echo $scope->getVar("forum_forum_id"); ?>" title="<?php echo $scope->getVar("L_VIEWBADPOSTREPORTS"); ?>" class="smalltext"><?php echo $scope->getVar("L_VIEWBADPOSTREPORTS"); ?></a></td>
+		</tr>
+<?php endif; ?><?php endif; ?>
+		<tr><td class="k4_subtitle"><?php echo $scope->getVar("L_MISCELLANEOUS"); ?></td></tr>
+		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=baniprange" title="<?php echo $scope->getVar("L_BANIPRANGE"); ?>" class="smalltext"><?php echo $scope->getVar("L_BANIPRANGE"); ?></a></td>
+		</tr>
+<?php if ($scope->getVar("modpanel") == 1): ?><?php if ($scope->getVar("forum_forum_id") != 0): ?>
+		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=manage_attachments&amp;id=<?php echo $scope->getVar("forum_forum_id"); ?>" title="<?php echo $scope->getVar("L_MANAGEATTACHMENTS"); ?>" class="smalltext"><?php echo $scope->getVar("L_MANAGEATTACHMENTS"); ?></a></td>
+		</tr>
+<?php endif; ?><?php endif; ?>
+		<tr><td class="k4_subtitle"><?php echo $scope->getVar("L_USERS"); ?></td></tr>
+		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=bannedips" title="<?php echo $scope->getVar("L_VIEWBANNEDIPS"); ?>" class="smalltext"><?php echo $scope->getVar("L_VIEWBANNEDIPS"); ?></a></td>
+		</tr>
+		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=banuser" title="<?php echo $scope->getVar("L_BANUSER"); ?>" class="smalltext"><?php echo $scope->getVar("L_BANUSER"); ?></a></td>
+		</tr>
+		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=flaguser" title="<?php echo $scope->getVar("L_FLAGUSER"); ?>" class="smalltext"><?php echo $scope->getVar("L_FLAGUSER"); ?></a></td>
+		</tr>
+		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=warnuser" title="<?php echo $scope->getVar("L_WARNUSER"); ?>" class="smalltext"><?php echo $scope->getVar("L_WARNUSER"); ?></a></td>
+		</tr>
+	</table>
+</div>
+<!-- / Moderating Panel -->
+<script type="text/javascript">
+	menu_init('modpanel_link', 'modpanel_menu');
+</script>
+<?php else: ?>
+<div class="alt2" style="text-align: left;">
+	<ul class="menu_global">
+		<li class="first"><strong class="smalltext"><?php echo $scope->getVar("L_MODCP"); ?></strong></li>
+<?php if ($scope->getVar("modpanel") == 1): ?><?php if ($scope->getVar("forum_forum_id") != 0): ?>
+		<li><a href="viewforum.php?id=<?php echo $scope->getVar("forum_forum_id"); ?>&amp;queued=1" title="<?php echo $scope->getVar("L_VIEWQUEUEDTOPICS"); ?>" class="smalltext"><?php echo $scope->getVar("L_VIEWQUEUEDTOPICS"); ?></a></li>
+		<li><a href="viewforum.php?id=<?php echo $scope->getVar("forum_forum_id"); ?>&amp;locked=1" title="<?php echo $scope->getVar("L_VIEWLOCKEDTOPICS"); ?>" class="smalltext"><?php echo $scope->getVar("L_VIEWLOCKEDTOPICS"); ?></a></li>
+		<li><a href="mod.php?act=viewbpreports&amp;id=<?php echo $scope->getVar("forum_forum_id"); ?>" title="<?php echo $scope->getVar("L_VIEWBADPOSTREPORTS"); ?>" class="smalltext"><?php echo $scope->getVar("L_VIEWBADPOSTREPORTS"); ?></a></li>
+<?php endif; ?><?php endif; ?>
+		<li><a href="mod.php?act=baniprange" title="<?php echo $scope->getVar("L_BANIPRANGE"); ?>" class="smalltext"><?php echo $scope->getVar("L_BANIPRANGE"); ?></a></li>
+<?php if ($scope->getVar("modpanel") == 1): ?><?php if ($scope->getVar("forum_forum_id") != 0): ?>
+		<li><a href="mod.php?act=manage_attachments&amp;id=<?php echo $scope->getVar("forum_forum_id"); ?>" title="<?php echo $scope->getVar("L_MANAGEATTACHMENTS"); ?>" class="smalltext"><?php echo $scope->getVar("L_MANAGEATTACHMENTS"); ?></a></li>
+<?php endif; ?><?php endif; ?>
+		<li><a href="mod.php?act=banuser" title="<?php echo $scope->getVar("L_BANUSER"); ?>" class="smalltext"><?php echo $scope->getVar("L_BANUSER"); ?></a></li>
+		<li><a href="mod.php?act=flaguser" title="<?php echo $scope->getVar("L_FLAGUSER"); ?>" class="smalltext"><?php echo $scope->getVar("L_FLAGUSER"); ?></a></li>
+		<li><a href="mod.php?act=warnuser" title="<?php echo $scope->getVar("L_WARNUSER"); ?>" class="smalltext"><?php echo $scope->getVar("L_WARNUSER"); ?></a></li>
+	</ul>
+</div>
+<?php endif; ?>
+<?php endif; ?>

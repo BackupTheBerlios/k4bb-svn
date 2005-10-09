@@ -1,0 +1,67 @@
+<!-- Post Preview -->
+<?php if ($scope->listBegin("topic")): ?>
+<?php while($scope->listNext("topic")): ?>
+<a name="preview" id="preview"></a>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_PREVIEW"); ?></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr>
+			<td class="k4_subtitle" width="20%"><div align="center"><?php echo $scope->getVar("L_AUTHOR"); ?></div></td>
+			<td class="k4_subtitle" width="80%"><div align="center"><?php echo $scope->getVar("L_MESSAGE"); ?></div></td>
+		</tr>
+		<tr>
+			<td class="alt1" width="20%">
+				<div align="center">
+<?php if ($scope->getVar("poster_id") > 0): ?>
+					<strong style="color: #<?php echo $scope->getVar("post_user_group_color"); ?>"><?php echo $scope->getVar("poster_name"); ?></strong>
+<?php else: ?>
+					<strong><?php if ($scope->getVar("poster_name") == ""): ?><?php echo $scope->getVar("L_GUEST"); ?><?php else: ?><?php echo $scope->getVar("poster_name"); ?><?php endif; ?></strong>
+<?php endif; ?>
+				</div>
+			</td>
+			<td class="alt3" width="80%">
+				<div style="float: right" class="smalltext">
+<?php ob_start(); $format = "%b %d %y"; ?><?php echo $scope->getVar("created"); ?><?php $date = ob_get_contents(); ob_end_clean(); echo strftime($format, bbtime(intval($date))); ?>&nbsp;<span class="date_color"><?php ob_start(); $format = "%I:%M%p"; ?><?php echo $scope->getVar("created"); ?><?php $date = ob_get_contents(); ob_end_clean(); echo strftime($format, bbtime(intval($date))); ?></span>
+				</div>
+				<div class="smalltext">
+					<strong><?php echo $scope->getVar("L_POSTSUBJECT"); ?>:</strong> <?php echo $scope->getVar("name"); ?>&nbsp;<img src="tmp/upload/posticons/<?php echo $scope->getVar("posticon"); ?>" alt="" border="0" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="20%" valign="top" rowspan="2">
+				<div class="smalltext">
+<?php if ($scope->getVar("poster_id") > 0): ?>
+<?php if ($scope->getVar("post_user_avatar") == 1): ?><?php if ($scope->getVar("user_viewavatars") == 1): ?>
+					<img src="viewfile.php?act=avatar&amp;id=<?php echo $scope->getVar("poster_id"); ?>" alt="" border="" />
+					<br /><br />
+<?php endif; ?><?php endif; ?>
+					<?php echo $scope->getVar("post_user_group_nicename"); ?><br />
+<?php if ($scope->getVar("post_user_group_avatar") != ""): ?>
+					<img src="tmp/upload/group_avatars/<?php echo $scope->getVar("post_user_group_avatar"); ?>" border="0" alt="<?php echo $scope->getVar("post_user_group_nicename"); ?>" />
+					<br /><br />
+<?php endif; ?>
+					<strong><?php echo $scope->getVar("L_JOINED"); ?>:</strong> <?php ob_start(); $format = "%b %d %y"; ?><?php echo $scope->getVar("post_user_created"); ?><?php $date = ob_get_contents(); ob_end_clean(); echo strftime($format, bbtime(intval($date))); ?><br />
+					<strong><?php echo $scope->getVar("L_POSTS"); ?>:</strong> <?php echo $scope->getVar("post_user_num_posts"); ?>
+<?php if ($scope->getVar("user_location") != ""): ?>
+					<br /><strong><?php echo $scope->getVar("L_LOCATION"); ?>:</strong> <?php echo $scope->getVar("post_user_location"); ?>
+<?php endif; ?>
+<?php endif; ?>
+				</div>
+			</td>
+			<td class="alt3" width="80%" id="topic<?php echo $scope->getVar("id"); ?>" valign="top" style="height: 100px;">
+				<?php echo $scope->getVar("body_text"); ?>
+<?php if ($scope->getVar("disable_sig") == 0): ?>
+<?php if ($scope->getVar("post_user_signature") != ""): ?>
+				<br /><br />
+<?php if ($scope->getVar("user_viewsigs") == 1): ?><?php echo $scope->getVar("signatureseparator"); ?><?php echo $scope->getVar("post_user_signature"); ?><?php endif; ?>
+<?php endif; ?>
+<?php endif; ?>
+			</td>
+		</tr>
+	</table>
+</div>
+<?php $scope->pop(); endwhile; ?>
+<?php endif; ?>
+<!-- / Post Preview -->
+<br />

@@ -1,0 +1,42 @@
+<?php if ($_SESSION['user']->get('perms') >= ADMIN): ?>
+<form action="<?php echo $scope->getVar("css_formaction"); ?>" method="post" enctype="multipart/form-data" onsubmit="return checkForm(this);" onreset="resetErrors();"><script type="text/javascript">resetErrors();</script>
+<div class="k4_borderwrap">
+<?php if ($scope->getVar("edit_style") == 1): ?>
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_EDITCSSSTYLE"); ?><span style="font-weight: normal;">: <?php echo $scope->getVar("style_name"); ?></span></div>
+	<input type="hidden" name="id" value="<?php echo $scope->getVar("styleset_id"); ?>" />
+<?php else: ?>
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_ADDCSSSTYLE"); ?></div>
+<?php endif; ?>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" width="30%"><label for="name"><strong><?php echo $scope->getVar("L_NAME"); ?>:</strong></label></td>
+			<td class="alt3">
+				<input type="text" name="name" id="name" class="inputbox" value="<?php echo $scope->getVar("style_name"); ?>" />
+<script type="text/javascript">addVerification('name', '.+', 'name_error', 'inputfailed');</script><div id="name_error" style="display: none;"><?php echo $scope->getVar("L_INSERTCSSNAME"); ?></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="30%"><label for="description"><strong><?php echo $scope->getVar("L_DESCRIPTION"); ?>:</strong></label></td>
+			<td class="alt3">
+				<input type="text" name="description" id="description" size="40" class="inputbox" value="<?php echo $scope->getVar("style_description"); ?>" />
+<script type="text/javascript">addVerification('description', '.+', 'description_error', 'inputfailed');</script><div id="description_error" style="display: none;"><?php echo $scope->getVar("L_INSERTCSSDESCRIPTION"); ?></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" colspan="2" style="text-align: center;"><strong><?php echo $scope->getVar("L_PROPERTIES"); ?></strong></td>
+		</tr>
+		<tr>
+			<td class="alt3" colspan="2">
+				
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" colspan="2">
+				<input type="submit" class="button" value="<?php echo $scope->getVar("L_SAVE"); ?>" tabindex="15" />
+				<input type="reset" class="button" value="<?php echo $scope->getVar("L_RESET"); ?>" />
+			</td>
+		</tr>
+	</table>
+</div>
+</form>
+<?php endif; ?>

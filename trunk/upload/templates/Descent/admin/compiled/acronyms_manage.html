@@ -1,0 +1,90 @@
+<?php if ($_SESSION['user']->get('perms') >= ADMIN): ?>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">
+		<script type="text/javascript">doHelpButton('acronyms');</script>
+		<?php echo $scope->getVar("L_ACRONYMMANAGEMENT"); ?>
+	</div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr>
+			<td class="k4_subtitle" colspan="4">
+				<script type="text/javascript">doHelpButton('add_badname');</script>
+				<?php echo $scope->getVar("L_ADDACRONYM"); ?>
+			</td>
+		</tr>
+<form name="add_acronym" id="add_acronym" action="admin.php?act=add_acronym" method="post" enctype="multipart/form-data" onsubmit="return checkForm(this);" onreset="resetErrors();"><script type="text/javascript">resetErrors();</script>
+		<tr>
+			<td class="alt1" width="25%" align="center">
+				<label for="acronym"><strong><?php echo $scope->getVar("L_ACRONYM"); ?>:</strong></label>
+			</td>
+			<td class="alt3" width="25%" align="center">
+				<input type="text" name="acronym" id="acronym" value="" class="inputbox" />
+<script type="text/javascript">addVerification('acronym', '.+', 'acronym_error', 'inputfailed');</script><div id="acronym_error" style="display: none;"><?php echo $scope->getVar("L_SUPPLYACRONYM"); ?></div>
+			</td>
+			<td class="alt1" width="25%" align="center">
+				<label for="meaning"><strong><?php echo $scope->getVar("L_MEANING"); ?>:</strong></label>
+			</td>
+			<td class="alt3" width="25%" align="center">
+				<input type="text" name="meaning" id="meaning" value="" class="inputbox" />
+<script type="text/javascript">addVerification('meaning', '.+', 'meaning_error', 'inputfailed');</script><div id="meaning_error" style="display: none;"><?php echo $scope->getVar("L_SUPPLYMEANING"); ?></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt2" colspan="4">
+				<input type="submit" value="<?php echo $scope->getVar("L_SAVE"); ?>" class="button" />
+				<input type="reset" value="<?php echo $scope->getVar("L_RESET"); ?>" class="button" />
+			</td>
+		</tr>
+</form>
+	</table>
+</div>
+<br />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_MANAGECURRENTACRONYMS"); ?></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+<?php if ($scope->listBegin("acronyms")): ?>
+<?php if ($scope->listKey("acronyms") == -1 && !$scope->listHasNext("acronyms")): ?>
+		<tr>
+			<td class="alt3" colspan="4">
+				<div class="outset_box" align="center">
+					<br />
+					<?php echo $scope->getVar("L_NOACTIVEACRONYMS"); ?>
+					<br /><br />
+				</div>
+			</td>
+		</tr>
+<?php endif; ?>
+<?php while($scope->listNext("acronyms")): ?>
+<?php switch($scope->listKey("acronyms") % 2): ?><?php case 0: $scope->push(array('row_class' => 'alt1')); break; ?><?php case 1: $scope->push(array('row_class' => 'alt3')); break; ?><?php default: $scope->push(array()); endswitch; ?>
+<form name="update_acronym" id="update_acronym" action="admin.php?act=update_acronym&amp;id=<?php echo $scope->getVar("id"); ?>" method="post" enctype="multipart/form-data" onsubmit="return checkForm(this);" onreset="resetErrors();"><script type="text/javascript">resetErrors();</script>
+			<tr>
+				<td class="<?php echo $scope->getVar("row_class"); ?>" width="25%" align="center">
+					<label for="acronym<?php echo $scope->getVar("id"); ?>"><strong><?php echo $scope->getVar("L_ACRONYM"); ?>:</strong></label>
+				</td>
+				<td class="alt3" width="25%" align="center">
+					<input type="text" name="acronym" id="acronym<?php echo $scope->getVar("id"); ?>" value="<?php echo $scope->getVar("acronym"); ?>" class="inputbox" />
+				</td>
+				<td class="<?php echo $scope->getVar("row_class"); ?>" width="25%" align="center">
+					<label for="meaning<?php echo $scope->getVar("id"); ?>"><strong><?php echo $scope->getVar("L_MEANING"); ?>:</strong></label>
+				</td>
+				<td class="alt3" width="25%" align="center">
+					<input type="text" name="meaning" id="meaning<?php echo $scope->getVar("id"); ?>" value="<?php echo $scope->getVar("meaning"); ?>" class="inputbox" />
+				</td>
+			</tr>
+			<tr>
+				<td class="<?php echo $scope->getVar("row_class"); ?>" colspan="4">
+					<input type="submit" value="<?php echo $scope->getVar("L_SAVE"); ?>" class="button" />
+					<input type="button" value="<?php echo $scope->getVar("L_REMOVE"); ?>" class="button" onclick="document.location='admin.php?act=acronym_remove&id=<?php echo $scope->getVar("id"); ?>'" />
+					<input type="reset" value="<?php echo $scope->getVar("L_RESET"); ?>" class="button" />
+				</td>
+			</tr>
+</form>
+<?php $scope->pop(); ?>
+		</tr>
+		<tr>
+			<td class="alt2" colspan="4"></td>
+		</tr>
+<?php $scope->pop(); endwhile; ?>
+<?php endif; ?>
+	</table>
+</div>
+<?php endif; ?>

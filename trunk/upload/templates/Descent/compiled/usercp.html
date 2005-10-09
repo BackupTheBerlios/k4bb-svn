@@ -1,0 +1,13 @@
+<?php if ($_SESSION['user']->isMember()): ?>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding: 0px; margin: 0px;">
+	<tr>
+		<td width="19%" valign="top" style="padding: 0px; margin: 0px;">
+<?php if ($file = $runtime->getFile("usercp_menu", "usercp_menu.html")) $template->render($file, $scope, $runtime); ?>
+		</td>
+		<td width="1%">&nbsp;</td>
+		<td width="80%" valign="top" style="padding: 0px; margin: 0px;">
+<?php if ($file = $runtime->getFile("usercp_content", "")) $template->render($file, $scope, $runtime); ?>
+		</td>
+	</tr>
+</table>
+<?php endif; ?>

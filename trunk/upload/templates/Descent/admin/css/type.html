@@ -1,0 +1,119 @@
+<isadmin>
+<table width="100%" cellpadding="0" cellspacing="1" border="0">
+	<tr>
+		<td>
+			{$L_FONT}:&nbsp;
+			<select name="font-family" id="font-family" class="smalltext">
+				<option value=""></option>
+				<option value="Arial, Helvetica, sans-serif">Arial, Helvetica, sans-serif</option>
+				<option value="Times New Roman, Times, serif">Times New Roman, Times, serif</option>
+				<option value="Courier New, Courier, mono">Courier New, Courier, mono</option>
+				<option value="Georgia, Times New Roman, Times, serif">Georgia, Times New Roman, Times, serif</option>
+				<option value="Verdana, Arial, Helvetica, sans-serif">Verdana, Arial, Helvetica, sans-serif</option>
+				<option value="Geneva, Arial, Helvetica, sans-serif">Geneva, Arial, Helvetica, sans-serif</option>
+			</select>
+		</td>
+		<td>
+			{$L_CASE}:&nbsp;
+			<select name="text-transform" id="text-transform" class="smalltext">
+				<option value=""></option>
+				<option value="capitalize">capitalize</option>
+				<option value="uppercase">uppercase</option>
+				<option value="lowercase">lowercase</option>
+				<option value="none">none</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			{$L_SIZE}:&nbsp;
+			<select name="font-size" id="font-size" class="smalltext" onChange="Enable(this, 'size-measurement')">
+				<option value=""></option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+				<option value="12">12</option>
+				<option value="14">14</option>
+				<option value="16">16</option>
+				<option value="18">18</option>
+				<option value="24">24</option>
+				<option value="36">36</option>
+				<option value="xx-small">xx-small</option>
+				<option value="x-small">x-small</option>
+				<option value="small">small</option>
+				<option value="medium">medium</option>
+				<option value="large">large</option>
+				<option value="x-large">x-large</option>
+				<option value="xx-large">xx-large</option>
+				<option value="smaller">smaller</option>
+				<option value="larger">larger</option>
+			</select>
+			&nbsp;
+			<select name="size-measurement" id="size-measurement" disabled="true" class="smalltext">
+				<option value="px">pixels</option>
+				<option value="pt">points</option>
+				<option value="in">in</option>
+				<option value="cm">cm</option>
+				<option value="mm">mm</option>
+				<option value="pc">picas</option>
+				<option value="em">ems</option>
+				<option value="ex">exs</option>
+				<option value="%">%</option>
+			</select>
+		</td>
+		<td>
+			{$L_WEIGHT}:&nbsp;
+			<select name="font-weight" id="font-weight" class="smalltext">
+				<option value=""></option>
+				<option value="normal">normal</option>
+				<option value="bold">bold</option>
+				<option value="bolder">bolder</option>
+				<option value="lighter">lighter</option>
+				<option value="100">100</option>
+				<option value="200">200</option>
+				<option value="300">300</option>
+				<option value="400">400</option>
+				<option value="500">500</option>
+				<option value="600">600</option>
+				<option value="700">700</option>
+				<option value="800">800</option>
+				<option value="900">900</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			{$L_STYLE}:&nbsp;
+			<select name="font-style" id="font-style" class="smalltext">
+				<option value=""></option>
+				<option value="normal">normal</option>
+				<option value="oblique">oblique</option>
+				<option value="italic">italic</option>
+			</select>
+		</td>
+		<td>
+			{$L_VARIANT}:&nbsp;
+			<select name="font-variant" id="font-variant" class="smalltext">
+				<option value=""></option>
+				<option value="normal">normal</option>
+				<option value="small-caps">small-caps</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			{$L_DECORATION}:&nbsp;
+			<select name="text-decoration" id="text-decoration" class="smalltext">
+				<option value=""></option>
+				<option value="underline">underline</option>
+				<option value="overline">overline</option>
+				<option value="line-through">line-through</option>
+				<option value="blink">blink</option>
+				<option value="none">none</option>
+			</select>
+		</td>
+		<td>
+			{$L_COLOR}:&nbsp;<img src="Images/{$IMG_DIR}/Icons/colorpicker.gif" id="color_preview" style="background-color:#FFFFFF; position:relative;" onClick="ShowColorPicker('font_color_picker', 'color_preview', 'color')" border="0" alt="" /><div id="font_color_picker" style="display:none;position:absolute;" onClick="this.style.display='none'" ><script type="text/javascript">drawColorPicker();</script></div>&nbsp;<input type="text" style="font-size: 10px;" name="color" id="color" value="" class="inputbox" size="10" maxlength="7" />
+		</td>
+	</tr>
+</table>
+</isadmin>

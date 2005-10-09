@@ -1,0 +1,103 @@
+<!-- User Profile - <?php echo $scope->getVar("member_name"); ?> -->
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_USERPROFILE"); ?>: <span style="font-weight: normal;"><?php echo $scope->getVar("member_name"); ?></span></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" width="50%" valign="top">
+				<div class="header_text"><strong><?php echo $scope->getVar("L_USERNAME"); ?></strong></div>
+				
+				<table cellpadding="0" cellspacing="0" border="0">
+					<tr>
+<?php if ($scope->getVar("member_avatar") == 1): ?>
+						<td>
+							<img src="viewfile.php?act=avatar&amp;id=<?php echo $scope->getVar("member_id"); ?>" alt="" border="" />
+						</td>
+<?php endif; ?>
+						<td valign="top" nowrap="nowrap">
+							<span style="color: #<?php echo $scope->getVar("member_group_color"); ?>; font-size: 18px;"><?php echo $scope->getVar("member_name"); ?></span><br />
+<?php if ($scope->getVar("member_group_nicename") != ""): ?><span class="smalltext"><?php echo $scope->getVar("member_group_nicename"); ?></span><br /><?php endif; ?>
+<?php if ($scope->getVar("member_group_avatar") != ""): ?>
+							<img src="tmp/upload/group_avatars/<?php echo $scope->getVar("member_group_avatar"); ?>" border="0" alt="<?php echo $scope->getVar("member_group_nicename"); ?>" />
+<?php endif; ?>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td class="alt1" width="50%" valign="top">
+				<div class="header_text"><strong><?php echo $scope->getVar("L_PROFILE"); ?></strong></div>
+				<table cellpadding="0" cellspacing="0" border="0">
+					<tr><td style="padding-bottom: 3px;" class="smalltext"><strong><?php echo $scope->getVar("L_REGISTERED"); ?></strong>:&nbsp;&nbsp;</td><td class="smalltext"><?php ob_start(); $format = "%b %d %Y"; ?><?php echo $scope->getVar("member_created"); ?><?php $date = ob_get_contents(); ob_end_clean(); echo strftime($format, bbtime(intval($date))); ?>&nbsp;<span class="date_color"><?php ob_start(); $format = "%I:%M%p"; ?><?php echo $scope->getVar("member_created"); ?><?php $date = ob_get_contents(); ob_end_clean(); echo strftime($format, bbtime(intval($date))); ?></span></td></tr>
+<?php if ($scope->listBegin("member_profilefields")): ?>
+<?php while($scope->listNext("member_profilefields")): ?>
+					<tr><td style="padding-bottom: 3px;" class="smalltext"><strong><?php echo $scope->getVar("title"); ?></strong>:&nbsp;&nbsp;</td><td class="smalltext"><?php echo $scope->getVar("value"); ?></td></tr>
+<?php $scope->pop(); endwhile; ?>
+<?php endif; ?>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt3" width="50%" valign="top">
+				<div class="header_text"><strong><?php echo $scope->getVar("L_POSTS"); ?></strong></div>
+				<span class="smalltext"><?php echo $scope->getVar("member_num_posts"); ?> (<?php echo $scope->getVar("member_num_topics"); ?> <?php echo $scope->getVar("L_TOPICS"); ?>, <?php echo $scope->getVar("member_num_replies"); ?> <?php echo $scope->getVar("L_REPLIES"); ?>)</span>
+<?php if ($scope->getVar("member_num_posts") >= 1): ?><br /><a href="search.php?act=find&amp;author=<?php echo $scope->getVar("member_name"); ?>&amp;exact=1" class="smalltext" title="<?php echo $scope->getVar("L_FINDPOSTSBYUSER"); ?>" style="font-weight: bold;"><?php echo $scope->getVar("L_FINDPOSTSBYUSER"); ?></a><?php endif; ?>
+			</td>
+			<td class="alt3" width="50%" valign="top">
+				<div class="header_text"><strong><?php echo $scope->getVar("L_POSTINGSTATS"); ?></strong></div>
+				<span class="smalltext">
+				<?php echo $scope->getVar("member_posts_per_day"); ?><br />
+				<?php echo $scope->getVar("member_posts_percent"); ?><br />
+				</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%" valign="top">
+				<div class="header_text"><strong><?php echo $scope->getVar("L_LASTSEEN"); ?></strong></div>
+				<span class="smalltext">
+<?php ob_start(); $format = "%b %d %Y"; ?><?php echo $scope->getVar("member_seen"); ?><?php $date = ob_get_contents(); ob_end_clean(); echo strftime($format, bbtime(intval($date))); ?>&nbsp;<span class="date_color"><?php ob_start(); $format = "%I:%M%p"; ?><?php echo $scope->getVar("member_seen"); ?><?php $date = ob_get_contents(); ob_end_clean(); echo strftime($format, bbtime(intval($date))); ?></span>
+				</span>
+			</td>
+			<td class="alt1" width="50%" valign="top">
+				<div class="header_text"><strong><?php echo $scope->getVar("L_ONLINESTATUS"); ?></strong></div>
+				<img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Buttons/<?php echo $scope->getVar("LANG"); ?>/<?php echo $scope->getVar("member_online"); ?>.gif" border="0" />
+			</td>
+		</tr>
+		<tr>
+			<td class="alt3" width="50%" valign="top">
+				<div class="header_text"><strong><?php echo $scope->getVar("L_USERGROUPS"); ?></strong></div>
+				<span class="smalltext">
+<?php if ($scope->listBegin("member_usergroups")): ?>
+				<select name="member_usergroups" id="member_usergroups">
+<?php while($scope->listNext("member_usergroups")): ?>
+				<option value="<?php echo $scope->getVar("id"); ?>" style="color:#<?php echo $scope->getVar("color"); ?>;font-weight:bold;"><?php echo $scope->getVar("name"); ?></option>
+<?php if ($scope->listHasNext("member_usergroups")): ?><br /><?php endif; ?>
+<?php $scope->pop(); endwhile; ?>
+				</select>
+				<input type="button" value="<?php echo $scope->getVar("L_GO"); ?>" class="button" onclick="var s = document.getElementById('member_usergroups');document.location='usergroups.php?id=' + s[s.selectedIndex].value;" />
+<?php endif; ?>
+				</span>
+			</td>
+			<td class="alt3" width="50%" valign="top">
+				<div class="header_text"><strong><?php echo $scope->getVar("L_COMMUNICATE"); ?></strong></div>
+<?php if ($scope->getVar("member_email") != ""): ?><a href="<?php if ($scope->getVar("secureemail") == 1): ?>member.php?act=mail&id=<?php echo $scope->getVar("member_id"); ?><?php elseif ($scope->getVar("displayemails") == 1): ?>mailto: <?php echo $scope->getVar("member_email"); ?><?php endif; ?>" title="<?php echo $scope->getVar("L_EMAIL"); ?>"><img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Buttons/<?php echo $scope->getVar("LANG"); ?>/email.gif" alt="<?php echo $scope->getVar("L_EMAIL"); ?>" border="0" /></a><br /><?php endif; ?>
+				<a href="member.php?act=usercp&amp;view=pmnewmessage&amp;user=<?php echo $scope->getVar("member_name"); ?>" title="<?php echo $scope->getVar("L_PRIVMSG"); ?>"><img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Buttons/<?php echo $scope->getVar("LANG"); ?>/pm.gif" alt="<?php echo $scope->getVar("L_PRIVMSG"); ?>" border="0" /></a><br />
+<?php if ($scope->getVar("member_aim") != ""): ?><img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Buttons/<?php echo $scope->getVar("LANG"); ?>/aim.gif" border="0" /><br /><?php endif; ?>
+<?php if ($scope->getVar("member_icq") != ""): ?><img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Buttons/<?php echo $scope->getVar("LANG"); ?>/icq.gif" border="0" /><br /><?php endif; ?>
+<?php if ($scope->getVar("member_jabber") != ""): ?><img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Buttons/<?php echo $scope->getVar("LANG"); ?>/jabber.gif" border="0" /><br /><?php endif; ?>
+<?php if ($scope->getVar("member_msn") != ""): ?><img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Buttons/<?php echo $scope->getVar("LANG"); ?>/msn.gif" border="0" /><br /><?php endif; ?>
+<?php if ($scope->getVar("member_yahoo") != ""): ?><img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Buttons/<?php echo $scope->getVar("LANG"); ?>/yahoo.gif" border="0" /><br /><?php endif; ?>
+<?php if ($scope->getVar("member_googletalk") != ""): ?><img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Buttons/<?php echo $scope->getVar("LANG"); ?>/googletalk.gif" border="0" /><?php endif; ?>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" colspan="2">
+				<div class="header_text"><strong><?php echo $scope->getVar("L_SIGNATURE"); ?></strong></div>
+<?php if ($scope->getVar("member_signature") != ""): ?>
+				<?php echo $scope->getVar("member_signature"); ?>
+<?php else: ?>
+				<?php echo $scope->getVar("L_NOINFORMATION"); ?>
+<?php endif; ?>
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- / User Profile -->

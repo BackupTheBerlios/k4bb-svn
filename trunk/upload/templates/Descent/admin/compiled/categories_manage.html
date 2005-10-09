@@ -1,0 +1,66 @@
+<?php if ($_SESSION['user']->get('perms') >= ADMIN): ?>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">
+		<script type="text/javascript">doHelpButton('categories');</script>
+		<?php echo $scope->getVar("L_CATEGORIES"); ?>
+	</div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr>
+			<td class="k4_subtitle" colspan="5"><?php echo $scope->getVar("L_MANAGECATEGORIES"); ?></td>
+		</tr>
+		<tr>
+			<td class="alt3" colspan="5">
+				<div align="center">
+					<script type="text/javascript">doHelpButton('add_category');</script>
+					<input type="button" class="button" style="font-weight: bold;" value="<?php echo $scope->getVar("L_ADDCATEGORY"); ?>" onclick="document.location='admin.php?act=categories_add'" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle"><?php echo $scope->getVar("L_ORDER"); ?></td>
+			<td class="k4_subtitle" colspan="2"><?php echo $scope->getVar("L_MANAGEMENT"); ?></td>
+		</tr>
+<?php if ($scope->listBegin("categories")): ?>
+<?php if ($scope->listKey("categories") == -1 && !$scope->listHasNext("categories")): ?>
+		<tr>
+			<td class="alt3" colspan="2">
+				<div class="outset_box" align="center">
+					<br />
+					<?php echo $scope->getVar("L_NOCATEGORIES"); ?>
+					<br /><br />
+				</div>
+			</td>
+		</tr>
+<?php endif; ?>
+<?php while($scope->listNext("categories")): ?>
+<?php switch($scope->listKey("categories") % 2): ?><?php case 0: $scope->push(array('row_class' => 'alt1')); break; ?><?php case 1: $scope->push(array('row_class' => 'alt3')); break; ?><?php default: $scope->push(array()); endswitch; ?>
+		<tr>
+<form name="update_category" id="update_category" action="admin.php?act=categories_simpleupdate" method="post" enctype="multipart/form-data" onsubmit="return checkForm(this);" onreset="resetErrors();"><script type="text/javascript">resetErrors();</script>
+			<td class="<?php echo $scope->getVar("row_class"); ?>" width="10%" align="center">
+				<input type="hidden" name="id" value="<?php echo $scope->getVar("category_id"); ?>" />
+				<input type="text" size="3" name="row_order" id="row_order" value="<?php echo $scope->getVar("row_order"); ?>" />
+<script type="text/javascript">addVerification('row_order', '.+', 'row_order_error', 'inputfailed');</script><div id="row_order_error" style="display: none;"><span class="minitext"><?php echo $scope->getVar("L_INSERTCATORDER"); ?></span></div>
+<script type="text/javascript">addVerification('row_order', '([0-9])+', 'row_order_num_error', 'inputfailed');</script><div id="row_order_num_error" style="display: none;"><span class="minitext"><?php echo $scope->getVar("L_INSERTCATORDERNUM"); ?></span></div>
+			</td>
+			<td class="<?php echo $scope->getVar("row_class"); ?>" width="80%">
+				<div align="left">
+					<strong><?php echo $scope->getVar("name"); ?></strong>
+					<br />
+					<span class="minitext"><?php echo $scope->getVar("description"); ?></span>
+				</div>
+			</td>
+			<td class="alt2" width="10%" align="center">
+				<input type="submit" class="button" value="<?php echo $scope->getVar("L_SAVE"); ?>" /><input type="button" class="button" value="<?php echo $scope->getVar("L_EDIT"); ?>" onclick="document.location='admin.php?act=categories_edit&id=<?php echo $scope->getVar("category_id"); ?>'" />
+				<br />
+				<input type="button" class="button" value="<?php echo $scope->getVar("L_EDITPERMISSIONS"); ?>" onclick="document.location='admin.php?act=categories_permissions&id=<?php echo $scope->getVar("category_id"); ?>'" />
+				<br />
+				<input type="button" class="button" style="color: #FF0000;" value="<?php echo $scope->getVar("L_DELETE"); ?>" onclick="if(confirm('<?php echo $scope->getVar("L_CHECKDELCAT"); ?>')) { document.location='admin.php?act=categories_remove&id=<?php echo $scope->getVar("category_id"); ?>'; } else { return false; }" />
+			</td>
+</form>
+		</tr>
+<?php $scope->pop(); ?>
+<?php $scope->pop(); endwhile; ?>
+<?php endif; ?>
+	</table>
+</div>
+<?php endif; ?>

@@ -1,0 +1,57 @@
+<br />
+<!-- Similar Topics -->
+<div class="k4_borderwrap">
+	<div class="k4_maintitle"><?php echo $scope->getVar("L_SIMILARTOPICS"); ?></div>
+	<table width="100%" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+		<tr>
+			<td class="k4_subtitle" width="5%">&nbsp;</td>
+			<td class="k4_subtitle" align="center" width="55%"><?php echo $scope->getVar("L_TOPICS"); ?>/<?php echo $scope->getVar("L_AUTHOR"); ?></td>
+			<td class="k4_subtitle" align="center" nowrap="nowrap">&nbsp;<?php echo $scope->getVar("L_REPLIES"); ?>&nbsp;</td>
+			<td class="k4_subtitle" align="center" nowrap="nowrap">&nbsp;<?php echo $scope->getVar("L_VIEWS"); ?>&nbsp;</td>
+			<td class="k4_subtitle" align="center" nowrap="nowrap" width="30%">&nbsp;<?php echo $scope->getVar("L_LASTPOST"); ?>&nbsp;</td>
+		</tr>
+<?php if ($scope->listBegin("similar_topics")): ?>
+<?php while($scope->listNext("similar_topics")): ?>
+<?php switch($scope->listKey("similar_topics") % 2): ?><?php case 0: $scope->push(array('row_class' => 'alt1')); break; ?><?php case 1: $scope->push(array('row_class' => 'alt3')); break; ?><?php default: $scope->push(array()); endswitch; ?>
+		<tr>
+			<td class="<?php echo $scope->getVar("row_class"); ?>" align="center"><img src="tmp/upload/posticons/<?php echo $scope->getVar("posticon"); ?>" alt="" border="0" /></td>
+			<td class="<?php echo $scope->getVar("row_class"); ?>" width="55%">
+<?php if ($scope->getVar("ratings_num") >= 1): ?><img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Icons/Rating/<?php echo $scope->getVar("rating"); ?>stars.gif" alt="(<?php echo $scope->getVar("ratings_num"); ?> <?php echo $scope->getVar("L_VOTES"); ?>)" border="0" style="float: right;" /><?php endif; ?>
+				
+<?php if ($scope->getVar("use_pager") == 1): ?><?php echo $scope->getVar("pager"); ?><?php endif; ?>
+
+				<span class="smalltext">
+<?php if ($scope->getVar("topic_type") == 2): ?><?php echo $scope->getVar("stickytopicprefix"); ?><?php elseif ($scope->getVar("topic_type") >= 3): ?><?php echo $scope->getVar("announcementtopicprefix"); ?><?php endif; ?>
+<?php if ($scope->getVar("is_feature") == 1): ?><?php echo $scope->getVar("featuretopicprefix"); ?><?php endif; ?>
+<?php if ($scope->getVar("poll") == 1): ?><?php echo $scope->getVar("polltopicprefix"); ?><?php endif; ?>
+				</span>
+				<a href="viewtopic.php?id=<?php echo $scope->getVar("topic_id"); ?>" title="<?php echo $scope->getVar("name"); ?>"><?php ob_start(); $length = "40"; $append = "..."; ?><?php echo $scope->getVar("name"); ?><?php $string = ob_get_contents(); ob_end_clean(); echo ((strlen($string) > $length) ? substr($string, 0, $length - strlen($append)) . $append : $string); ?></a>
+				<br />
+				<div style="float:left;" class="smalltext"><a href="member.php?id=<?php echo $scope->getVar("poster_id"); ?>" title="<?php echo $scope->getVar("poster_name"); ?>"><?php echo $scope->getVar("poster_name"); ?></a></div>
+			</td>
+			<td align="center" class="alt2"><?php echo $scope->getVar("num_replies"); ?></td>
+			<td align="center" class="alt1"><?php echo $scope->getVar("views"); ?></td>
+			<td align="center" class="alt2" nowrap="nowrap" width="30%">
+<?php if ($scope->getVar("reply_time") > 0): ?>
+				<span class="minitext">
+<?php ob_start(); $format = "%b %d %y"; ?><?php echo $scope->getVar("reply_time"); ?><?php $date = ob_get_contents(); ob_end_clean(); echo strftime($format, bbtime(intval($date))); ?>&nbsp;<span class="date_color"><?php ob_start(); $format = "%I:%M%p"; ?><?php echo $scope->getVar("reply_time"); ?><?php $date = ob_get_contents(); ob_end_clean(); echo strftime($format, bbtime(intval($date))); ?></span>
+					<br />
+					<?php echo $scope->getVar("L_BY"); ?>&nbsp;<a href="member.php?id=<?php echo $scope->getVar("reply_uid"); ?>" style="text-decoration: underline;" title="<?php echo $scope->getVar("reply_uname"); ?>"><?php echo $scope->getVar("reply_uname"); ?></a>
+					<a href="findpost.php?id=<?php echo $scope->getVar("reply_id"); ?>" title="<?php echo $scope->getVar("reply_name"); ?>"><img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Icons/icon_latest_reply.gif" border="0" alt="<?php echo $scope->getVar("reply_name"); ?>" /></a>
+				</span>
+<?php else: ?>
+				<span class="minitext">
+<?php ob_start(); $format = "%b %d %y"; ?><?php echo $scope->getVar("created"); ?><?php $date = ob_get_contents(); ob_end_clean(); echo strftime($format, bbtime(intval($date))); ?>&nbsp;<span class="date_color"><?php ob_start(); $format = "%I:%M%p"; ?><?php echo $scope->getVar("created"); ?><?php $date = ob_get_contents(); ob_end_clean(); echo strftime($format, bbtime(intval($date))); ?></span>
+					<br />
+					<?php echo $scope->getVar("L_BY"); ?>&nbsp;<a href="member.php?id=<?php echo $scope->getVar("poster_id"); ?>" style="text-decoration: underline;" title="<?php echo $scope->getVar("poster_name"); ?>"><?php echo $scope->getVar("poster_name"); ?></a>
+					<a href="viewtopic.php?id=<?php echo $scope->getVar("id"); ?>" title="<?php echo $scope->getVar("name"); ?>"><img src="Images/<?php echo $scope->getVar("IMG_DIR"); ?>/Icons/icon_latest_reply.gif" border="0" alt="<?php echo $scope->getVar("name"); ?>" /></a>
+				</span>
+<?php endif; ?>
+			</td>
+		</tr>
+<?php $scope->pop(); ?>
+<?php $scope->pop(); endwhile; ?>
+<?php endif; ?>
+	</table>
+</div>
+<!-- / Similar Topics -->
