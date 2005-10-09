@@ -81,12 +81,15 @@ class AdminSettings extends FAAction {
 
 class AdminUpdateOptions extends FAAction {
 	function execute(&$request) {		
-		
-//		// DEMO VERSION
-//		no_perms_error($request);
-//		return TRUE;
 
 		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
+			
+			// DEMO VERSION
+			if(K4DEMOMODE) {
+				no_perms_error($request, 'content');
+				return TRUE;
+			}
+			
 			global $_QUERYPARAMS;
 			
 			$settings		= $request['dba']->executeQuery("SELECT * FROM ". K4SETTINGS ." WHERE settinggroupid = ". intval($_REQUEST['settinggroupid']));
@@ -110,7 +113,7 @@ class AdminUpdateOptions extends FAAction {
 			return $action->execute($request);
 
 		} else {
-			no_perms_error($request);
+			no_perms_error($request, 'content');
 		}
 
 		return TRUE;

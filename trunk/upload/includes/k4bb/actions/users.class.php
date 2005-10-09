@@ -35,68 +35,6 @@ if(!defined('IN_K4')) {
 	return;
 }
 
-/**
- * Get the highest permissioned group that a user belongs to
- */
-function get_user_max_group($temp, $all_groups) {
-	$result				= @unserialize($temp['usergroups']);
-	$groups				= $temp['usergroups'] != '' ? (!$result ? array() : $result) : array();
-	
-	if(is_array($groups)) {
-		
-		/**
-		 * Loop through all of the groups and all of this users groups
-		 * Find the one with the highest permission and use it as the color
-		 * for this person's username. The avatar is separate because not all
-		 * groups will automatically have avatars, so get the highest possible
-		 * set avatar for this user.
-		 */
-		foreach($groups as $g) {
-			
-			/* If the group variable isn't set, set it */
-			if(!isset($group) && isset($all_groups[$g]))
-				$group	= $all_groups[$g];
-			
-			if(!isset($avatar) && isset($all_groups[$g]) && $all_groups[$g]['avatar'] != '')
-				$avatar	= $all_groups[$g]['avatar'];
-
-			/**
-			 * If the perms of this group are greater than that of the $group 'prev group', 
-			 * set is as this users group 
-			 */
-			if(isset($all_groups[$g]['max_perm']) && isset($group['max_perm']) && ($all_groups[$g]['max_perm'] > $group['max_perm'])) {
-				$group	= $all_groups[$g];
-				
-				/* Give this user an appropriate group avatar */
-				if($all_groups[$g]['avatar'] != '')
-					$avatar	= $all_groups[$g]['avatar'];
-			}
-		}
-	}
-	
-	$group['avatar']		= isset($avatar) ? $avatar : '';
-
-	return $group;
-}
-
-/**
- * Get the color corresponding to a users warning level
- */
-function get_warning_color($curr_level) {
-	$color			= 'FFFFFF';
-	if($curr_level == 1) {
-		$color		= 'FFFF00'; // yellow
-	} else if($curr_level == 2) {
-		$color		= 'FF9900'; // orange
-	} else if($curr_level == 3) {
-		$color		= 'FF0000'; // red
-	} else if($curr_level >= 4) {
-		$color		= '000000';
-	}
-
-	return $color;
-}
-
 class ValidateUserByEmail extends FAAction {
 	function execute(&$request) {
 		
@@ -170,7 +108,7 @@ class EmailUser extends FAAction {
 			return $action->execute($request);
 		}
 
-		$member = $request['dba']->getRow("SELECT ". $_QUERYPARAMS['user'] . $_QUERYPARAMS['userinfo'] ." FROM ". K4USERS ." u LEFT JOIN ". K4USERINFO ." ui ON u.id = ui.user_id WHERE u.id = ". intval($_REQUEST['id']));
+		$member		= $request['dba']->getRow("SELECT ". $_QUERYPARAMS['user'] . $_QUERYPARAMS['userinfo'] ." FROM ". K4USERS ." u LEFT JOIN ". K4USERINFO ." ui ON u.id = ui.user_id WHERE u.id = ". intval($_REQUEST['id']));
 
 		if(!$member || !is_array($member) || empty($member)) {
 			/* set the breadcrumbs bit */
@@ -236,7 +174,11 @@ class SendEmailToUser extends FAAction {
 
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_EMAILUSER');
 		
-		if(!email_user($member['email'], htmlentities(stripslashes($_REQUEST['subject']), ENT_QUOTES), htmlentities(stripslashes($_REQUEST['message']), ENT_QUOTES))) {
+		$message_header = "From: ". $request['user']->get('name') ."\n";
+		$message_header .= "User ID: ". $request['user']->get('id') ."\n";
+		$message_header .= "Email: ". $request['user']->get('email') ."\n\n";
+
+		if(!email_user($member['email'], htmlentities(stripslashes($_REQUEST['subject']), ENT_NOQUOTES), $message_header . htmlentities(stripslashes($_REQUEST['message']), ENT_NOQUOTES))) {
 			$action = new K4InformationAction(new K4LanguageElement('L_ERROREMAILING', $member['name']), 'content', FALSE);
 			return $action->execute($request);
 		} else {

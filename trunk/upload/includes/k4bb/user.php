@@ -33,6 +33,68 @@ if (!defined(IN_K4))
 	return;
 
 /**
+ * Get the highest permissioned group that a user belongs to
+ */
+function get_user_max_group($temp, $all_groups) {
+	$result				= @unserialize($temp['usergroups']);
+	$groups				= $temp['usergroups'] != '' ? (!$result ? array() : $result) : array();
+	
+	if(is_array($groups)) {
+		
+		/**
+		 * Loop through all of the groups and all of this users groups
+		 * Find the one with the highest permission and use it as the color
+		 * for this person's username. The avatar is separate because not all
+		 * groups will automatically have avatars, so get the highest possible
+		 * set avatar for this user.
+		 */
+		foreach($groups as $g) {
+			
+			/* If the group variable isn't set, set it */
+			if(!isset($group) && isset($all_groups[$g]))
+				$group	= $all_groups[$g];
+			
+			if(!isset($avatar) && isset($all_groups[$g]) && $all_groups[$g]['avatar'] != '')
+				$avatar	= $all_groups[$g]['avatar'];
+
+			/**
+			 * If the perms of this group are greater than that of the $group 'prev group', 
+			 * set is as this users group 
+			 */
+			if(isset($all_groups[$g]['max_perm']) && isset($group['max_perm']) && ($all_groups[$g]['max_perm'] > $group['max_perm'])) {
+				$group	= $all_groups[$g];
+				
+				/* Give this user an appropriate group avatar */
+				if($all_groups[$g]['avatar'] != '')
+					$avatar	= $all_groups[$g]['avatar'];
+			}
+		}
+	}
+	
+	$group['avatar']		= isset($avatar) ? $avatar : '';
+
+	return $group;
+}
+
+/**
+ * Get the color corresponding to a users warning level
+ */
+function get_warning_color($curr_level) {
+	$color			= 'FFFFFF';
+	if($curr_level == 1) {
+		$color		= 'FFFF00'; // yellow
+	} else if($curr_level == 2) {
+		$color		= 'FF9900'; // orange
+	} else if($curr_level == 3) {
+		$color		= 'FF0000'; // red
+	} else if($curr_level >= 4) {
+		$color		= '000000';
+	}
+
+	return $color;
+}
+
+/**
  * Email a user with the proper noreply email address
  */
 function email_user($to, $subject, $message, $from = 'noreply', $headers = "") {
@@ -45,7 +107,7 @@ function email_user($to, $subject, $message, $from = 'noreply', $headers = "") {
 	$verify_url->scheme			= FALSE;
 	$verify_url->path			= FALSE;
 	$verify_url->host			= preg_replace('~www\.~i', '', $verify_url->host);
-			
+		
 	return @mail($to, $subject, $message, "From: \"". $_SETTINGS['bbtitle'] ." Forums\" <". $from ."@". substr($verify_url->__toString(), 0, -1) .">" . $headers);
 }
 
