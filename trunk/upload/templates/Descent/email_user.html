@@ -1,33 +1,35 @@
 <is:logged>
 <form:form name="email_user" id="email_user" action="member.php?act=email_user" method="post" name="post" enctype="multipart/form-data">
 <input type="hidden" name="id" value="{$member_id}" />
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">{$L_EMAILUSER}: <span style="font-weight:normal;">{$member_name}</span></div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-		<tr>
-			<td class="alt3">
-				<div class="outset_box">
-					<fieldset>
-						<legend>{$L_SUBJECT}</legend>
-						<input type="text" name="subject" id="subject" value="" size="80" class="inputbox" />
-						<form:error id="subject_error" for="subject" setclass="inputfailed" regex=".+">{$L_INSERTMAILSUBJECT}</form:error>
-					</fieldset>
-					<br />
-					<fieldset>
-						<legend>{$L_MESSAGE}</legend>
-						<textarea name="message" id="message" rows="10" cols="100" style="width:500px;" class="inputbox"></textarea>
-						<form:error id="message_error" for="message" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTMAILMESSAGE}</form:error>
-					</fieldset>
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td class="k4_subtitle">
-				<input type="submit" class="button" value="{$L_EMAIL}" />
-				<input type="reset" class="button" value="{$L_RESET}" />
-			</td>
-		</tr>
-	</table>
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_EMAILUSER}: <span style="font-weight:normal;">{$member_name}</span></div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr>
+				<td class="alt3">
+					<div class="outset_box">
+						<fieldset>
+							<legend>{$L_SUBJECT}</legend>
+							<input type="text" name="subject" id="subject" value="" size="80" class="inputbox" />
+							<form:error id="subject_error" for="subject" setclass="inputfailed" regex=".+">{$L_INSERTMAILSUBJECT}</form:error>
+						</fieldset>
+						<br />
+						<fieldset>
+							<legend>{$L_MESSAGE}</legend>
+							<textarea name="message" id="message" rows="10" cols="100" style="width:500px;" class="inputbox"></textarea>
+							<form:error id="message_error" for="message" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTMAILMESSAGE}</form:error>
+						</fieldset>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="k4_subtitle">
+					<input type="submit" class="button" value="{$L_EMAIL}" />
+					<input type="reset" class="button" value="{$L_RESET}" />
+				</td>
+			</tr>
+		</table>
+	</div>
 </div>
 </form:form>
 </is:logged>

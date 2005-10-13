@@ -1,55 +1,59 @@
 <!-- Login Form -->
 <core:block id="no_perms" hidden="yes">
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">{$L_INFORMATION}</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-		<tr>
-			<td class="alt3" colspan="2">
-				<span class="smalltext">{$L_YOUNEEDPERMS}</span>
-			</td>
-		</tr>
-	</table>
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_INFORMATION}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr>
+				<td class="alt3" colspan="2">
+					<span class="smalltext">{$L_YOUNEEDPERMS}</span>
+				</td>
+			</tr>
+		</table>
+	</div>
 </div>
 <br />
 </core:block>
 <is:unlogged>
 <form:form id="login_form" name="login_form" action="{$referer}" method="post" enctype="multipart/form-data">
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">{$L_LOGIN}</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">	
-		<tr>
-			<td colspan="2" class="alt1">
-				{$L_LOGINREGISTERMESSAGE}
-			</td>
-		</tr>
-		<tr>
-			<td width="50%" class="alt3" align="center">
-				<table cellpadding="0" cellspacing="1" border="0" class="alt2">
-					<tr>
-						<td width="50%"><label for="username"><strong>{$L_USERNAME}</strong></label></td>
-						<td width="50%"><input type="text" name="username" id="username" class="inputbox" maxlength="{$maxuserlength}" value="" tabindex="1" /></td>
-					</tr>
-					<tr>
-						<td width="50%"><label for="password"><strong>{$L_PASSWORD}</strong></label></td>
-						<td width="50%"><input type="password" name="password" id="password" class="inputbox" maxlength="{$maxuserlength}" value="" tabindex="2" /></td>
-					</tr>
-					<tr>
-						<td width="50%"><input type="submit" class="button" value="{$L_LOGIN}" tabindex="3" />&nbsp;<input type="reset" class="button" value="{$L_RESET}" /></td>
-						<td width="50%"><input type="checkbox" class="checkbox" name="rememberme" id="rememberme" checked="checked" value="on" /><label for="rememberme">&nbsp;{$L_REMEMBERME}</label></td>
-					</tr>
-				</table>
-			</td>
-			<td width="50%" class="alt3" style="text-align: center;">
-				<br />
-				<a href="member.php?act=forgotpw" title="{$L_FORGOTPW}">{$L_FORGOTPW}</a>
-				<br />
-				<a href="member.php?act=resendemail" title="{$L_RESENDVALIDATIONEMAIL}">{$L_RESENDVALIDATIONEMAIL}</a>
-				<br /><br />
-				<a href="member.php?act=register" title="{$L_REGISTER}" style="font-size:13px;font-weight:bold;" class="">{$L_REGISTERNOW}</a>
-				<br /><br />
-			</td>
-		</tr>
-	</table>
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_LOGIN}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">	
+			<tr>
+				<td colspan="2" class="alt1">
+					{$L_LOGINREGISTERMESSAGE}
+				</td>
+			</tr>
+			<tr>
+				<td width="50%" class="alt3" align="center">
+					<table cellpadding="0" cellspacing="1" border="0" class="alt2">
+						<tr>
+							<td width="50%"><label for="username"><strong>{$L_USERNAME}</strong></label></td>
+							<td width="50%"><input type="text" name="username" id="username" class="inputbox" maxlength="{$maxuserlength}" value="" tabindex="1" /></td>
+						</tr>
+						<tr>
+							<td width="50%"><label for="password"><strong>{$L_PASSWORD}</strong></label></td>
+							<td width="50%"><input type="password" name="password" id="password" class="inputbox" maxlength="{$maxuserlength}" value="" tabindex="2" /></td>
+						</tr>
+						<tr>
+							<td width="50%"><input type="submit" class="button" value="{$L_LOGIN}" tabindex="3" />&nbsp;<input type="reset" class="button" value="{$L_RESET}" /></td>
+							<td width="50%"><input type="checkbox" class="checkbox" name="rememberme" id="rememberme" checked="checked" value="on" /><label for="rememberme">&nbsp;{$L_REMEMBERME}</label></td>
+						</tr>
+					</table>
+				</td>
+				<td width="50%" class="alt3" style="text-align: center;">
+					<br />
+					<a href="member.php?act=forgotpw" title="{$L_FORGOTPW}">{$L_FORGOTPW}</a>
+					<br />
+					<a href="member.php?act=resendemail" title="{$L_RESENDVALIDATIONEMAIL}">{$L_RESENDVALIDATIONEMAIL}</a>
+					<br /><br />
+					<a href="member.php?act=register" title="{$L_REGISTER}" style="font-size:13px;font-weight:bold;" class="">{$L_REGISTERNOW}</a>
+					<br /><br />
+				</td>
+			</tr>
+		</table>
+	</div>
 </div>
 </form:form>
 </is:unlogged>

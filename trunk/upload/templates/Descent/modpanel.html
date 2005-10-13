@@ -6,10 +6,10 @@
 		<if:if var="modpanel" eq="1"><if:if var="forum_forum_id" noteq="0">
 		<tr><td class="k4_subtitle">{$L_POSTS}</td></tr>
 		<tr>
-			<td class="alt1" nowrap="nowrap"><a href="viewforum.php?id={$forum_forum_id}&amp;queued=1" title="{$L_VIEWQUEUEDTOPICS}" class="smalltext">{$L_VIEWQUEUEDTOPICS}</a></td>
+			<td class="alt1" nowrap="nowrap"><a href="viewforum.php?f={$forum_forum_id}&amp;queued=1" title="{$L_VIEWQUEUEDTOPICS}" class="smalltext">{$L_VIEWQUEUEDTOPICS}</a></td>
 		</tr>
 		<tr>
-			<td class="alt1" nowrap="nowrap"><a href="viewforum.php?id={$forum_forum_id}&amp;locked=1" title="{$L_VIEWLOCKEDTOPICS}" class="smalltext">{$L_VIEWLOCKEDTOPICS}</a></td>
+			<td class="alt1" nowrap="nowrap"><a href="viewforum.php?f={$forum_forum_id}&amp;locked=1" title="{$L_VIEWLOCKEDTOPICS}" class="smalltext">{$L_VIEWLOCKEDTOPICS}</a></td>
 		</tr>
 		<tr>
 			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=viewbpreports&amp;id={$forum_forum_id}" title="{$L_VIEWBADPOSTREPORTS}" class="smalltext">{$L_VIEWBADPOSTREPORTS}</a></td>

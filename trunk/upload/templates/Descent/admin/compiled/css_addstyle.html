@@ -27,7 +27,7 @@
 		</tr>
 		<tr>
 			<td class="alt3" colspan="2">
-				
+<?php if ($file = $runtime->getFile("css_editor", "css/editor.html")) $template->render($file, $scope, $runtime); ?>
 			</td>
 		</tr>
 		<tr>

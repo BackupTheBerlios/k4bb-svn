@@ -1,40 +1,44 @@
 <is:logged>
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">{$L_USERCONTROLPANEL}</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-		<tr class="alt3">
-			<td><span class="smalltext">{$L_USERCPWELCOMEMSG}</span></td>
-		</tr>
-	</table>
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_USERCONTROLPANEL}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr class="alt3">
+				<td><span class="smalltext">{$L_USERCPWELCOMEMSG}</span></td>
+			</tr>
+		</table>
+	</div>
 </div>
 <br />
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">{$L_IMPORTANTANNOUNCEMENTS}</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-		<list:list id="announcements">
-		<list:default list="announcements">
-		<tr>
-			<td class="alt3" colspan="6">
-				<div class="outset_box" align="center">
-					<br />
-					<strong>{$L_NOIMPORTANTANNOUNCES}</strong>
-					<br /><br />
-				</div>
-			</td>
-		</tr>
-		</list:default>
-		<tr>
-			<td class="k4_subtitle" width="5%" colspan="2">&nbsp;</td>
-			<td class="k4_subtitle" align="center" width="55%">{$L_TOPICS}{$name_sort}/{$L_AUTHOR}</td>
-			<td class="k4_subtitle" align="center" nowrap="nowrap">&nbsp;{$L_REPLIES}&nbsp;</td>
-			<td class="k4_subtitle" align="center" nowrap="nowrap">&nbsp;{$L_VIEWS}&nbsp;</td>
-			<td class="k4_subtitle" align="center" nowrap="nowrap" width="30%">&nbsp;{$L_LASTPOST}&nbsp;</td>
-		</tr>
-		<list:item list="announcements">
-		<core:import id="topic_view" file="topic_view.html" />
-		</list:item>
-		</list:list>
-	</table>
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_IMPORTANTANNOUNCEMENTS}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<list:list id="announcements">
+			<list:default list="announcements">
+			<tr>
+				<td class="alt3" colspan="6">
+					<div class="outset_box" align="center">
+						<br />
+						<strong>{$L_NOIMPORTANTANNOUNCES}</strong>
+						<br /><br />
+					</div>
+				</td>
+			</tr>
+			</list:default>
+			<tr>
+				<td class="k4_subtitle" width="5%" colspan="2">&nbsp;</td>
+				<td class="k4_subtitle" align="center" width="55%">{$L_TOPICS}{$name_sort}/{$L_AUTHOR}</td>
+				<td class="k4_subtitle" align="center" nowrap="nowrap">&nbsp;{$L_REPLIES}&nbsp;</td>
+				<td class="k4_subtitle" align="center" nowrap="nowrap">&nbsp;{$L_VIEWS}&nbsp;</td>
+				<td class="k4_subtitle" align="center" nowrap="nowrap" width="30%">&nbsp;{$L_LASTPOST}&nbsp;</td>
+			</tr>
+			<list:item list="announcements">
+			<core:import id="topic_view" file="topic_view.html" />
+			</list:item>
+			</list:list>
+		</table>
+	</div>
 </div>
 <br />
 <core:import id="member_profile" file="member_profile.html" />

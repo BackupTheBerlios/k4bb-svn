@@ -1,4 +1,4 @@
-<isadmin>
+<is:admin>
 <form action="admin.php?act=edit_css" method="post" enctype="multipart/form-data">
 <table width="100%" cellpadding="0" cellspacing="1" border="0">
 	<tr class="tcat">
@@ -9,10 +9,8 @@
 		<td>
 			<select name="id" id="style">
 				<list:list id="cssstyles">
-				<list:item>
+				<list:item list="cssstyles">
 				<option value="{$id}">{$name}</option>
-				<list:separator>
-				</list:separator>
 				</list:item>
 				</list:list>
 			</select>
@@ -23,4 +21,4 @@
 	</tr>
 </table>
 </form>
-</isadmin>
+</is:admin>

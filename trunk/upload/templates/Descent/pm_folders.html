@@ -1,36 +1,38 @@
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">
-		{$L_YOURSTORAGEFOLDERS}: <span style="font-weight: normal;">{$user_name}</span>
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">
+			{$L_YOURSTORAGEFOLDERS}: <span style="font-weight: normal;">{$user_name}</span>
+		</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<list:list id="my_pmfolders">
+			<list:default list="my_pmfolders">
+			<tr>
+				<td class="alt3">
+					<div class="outset_box" style="text-align: center;">
+						<br />
+						<strong>{$L_NOCUSTOMPMFOLDERS}</strong>
+						<br /><br />
+					</div>
+				</td>
+			</tr>
+			</list:default>
+			<list:item list="my_pmfolders">
+			<list:switch list="my_pmfolders" var="row_class" a="alt3" b="alt1">
+			<tr>
+				<td class="{$row_class}">
+					<strong>{$name}</strong><br />
+					<span class="smalltext">{$description}</span>
+				</td>
+				<td style="text-align: center;" class="alt2">
+					<a href="member.php?act=editpmfolder&amp;folder={$id}" title="{$L_EDIT}">{$L_EDIT}</a><br />
+					<a href="member.php?act=pm_delchoosefolder&amp;folder={$id}" title="{$L_REMOVE}">{$L_REMOVE}</a>
+				</td>
+			</tr>
+			</list:switch>
+			</list:item>
+			</list:list>
+		</table>
 	</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-		<list:list id="my_pmfolders">
-		<list:default list="my_pmfolders">
-		<tr>
-			<td class="alt3">
-				<div class="outset_box" style="text-align: center;">
-					<br />
-					<strong>{$L_NOCUSTOMPMFOLDERS}</strong>
-					<br /><br />
-				</div>
-			</td>
-		</tr>
-		</list:default>
-		<list:item list="my_pmfolders">
-		<list:switch list="my_pmfolders" var="row_class" a="alt3" b="alt1">
-		<tr>
-			<td class="{$row_class}">
-				<strong>{$name}</strong><br />
-				<span class="smalltext">{$description}</span>
-			</td>
-			<td style="text-align: center;" class="alt2">
-				<a href="member.php?act=editpmfolder&amp;folder={$id}" title="{$L_EDIT}">{$L_EDIT}</a><br />
-				<a href="member.php?act=pm_delchoosefolder&amp;folder={$id}" title="{$L_REMOVE}">{$L_REMOVE}</a>
-			</td>
-		</tr>
-		</list:switch>
-		</list:item>
-		</list:list>
-	</table>
 </div>
 <br />
 <core:import id="newfolder" file="pm_newfolder.html" />

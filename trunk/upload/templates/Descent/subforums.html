@@ -1,22 +1,27 @@
 <!-- Sub-Forums of '{$current_location}' -->
-<div class="k4_borderwrap">
-	<div class="k4_maintitle" id="f{$forum_id}_maintitle">
-		<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_{$forum_id}', 'forums_{$forum_id}', 'f{$forum_id}_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_{$forum_id}" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
-		{$L_SUBFORUMS}: <span style="font-weight: normal;">{$forum_name}</span>
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle" id="f{$forum_id}_maintitle">
+			<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_{$forum_id}', 'forums_{$forum_id}', 'f{$forum_id}_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_{$forum_id}" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+			{$L_SUBFORUMS}: <span style="font-weight: normal;">{$forum_name}</span>
+		</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table" id="forums_{$forum_id}">
+			<tr>
+				<td colspan="2" class="k4_subtitle" width="60%" align="left">&nbsp;{$L_FORUM}</td>
+				<td class="k4_subtitle" align="center">&nbsp;{$L_POSTS}&nbsp;</td>
+				<td class="k4_subtitle" align="center">&nbsp;{$L_TOPICS}&nbsp;</td>
+				<td class="k4_subtitle" width="30%" align="center">{$L_LASTPOST}</td>
+			</tr>
+			<list:list id="forums">
+			<list:item list="forums">
+			<core:import id="forum_view" file="forum_view.html" />
+			</list:item>
+			</list:list>
+			<tr>
+				<td colspan="5" class="alt2" style="font-size: 1px;">&nbsp;</td>
+			</tr>
+		</table>
 	</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table" id="forums_{$forum_id}">
-		<tr>
-			<td colspan="2" class="k4_subtitle" width="60%" align="left">&nbsp;{$L_FORUM}</td>
-			<td class="k4_subtitle" align="center">&nbsp;{$L_POSTS}&nbsp;</td>
-			<td class="k4_subtitle" align="center">&nbsp;{$L_TOPICS}&nbsp;</td>
-			<td class="k4_subtitle" width="30%" align="center">{$L_LASTPOST}</td>
-		</tr>
-		<list:list id="forums">
-		<list:item list="forums">
-		<core:import id="forum_view" file="forum_view.html" />
-		</list:item>
-		</list:list>
-	</table>
 </div>
 <br />
 <!-- / Sub-Forums of '{$current_location}' -->

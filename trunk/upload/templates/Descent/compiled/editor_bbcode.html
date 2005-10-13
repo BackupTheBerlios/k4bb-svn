@@ -1,4 +1,0 @@
-<div id="editorcodex">
-	<textarea name="message" id="messagecodex" class="inputbox" rows="10" cols="100" wrap="SOFT" style="width: 500px;" tabindex="3"><?php echo $scope->getVar("editor_text_reverted"); ?></textarea>
-<?php if ($scope->getVar("allowbbcode") == 1): ?><?php if ($scope->getVar("has_bbcode_perms") == 1): ?><div style="text-align: right;"><img onclick="switch_editor_type((can_wysiwyg ? 'wysiwyg' : 'bbcode'), 'bbcode', 'messagecodex', 'wysiwygcodex')" src="js/editor/switch_format.gif" alt="" border="0" class="alt3" style="padding:0px;border: 1px solid #AAAAAA;" /></div><?php endif; ?><?php endif; ?>
-</div>

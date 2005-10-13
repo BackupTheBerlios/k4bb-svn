@@ -1,12 +1,6 @@
-<isadmin>
+<is:admin>
+<a name="editor" id="editor"></a>
 <script type="text/javascript">
-// <![CDATA[
-
-/*
-* ALL Tabbed menu content and source, All CSS editor content and source (c)Copyright 2004, 2005 Peter Goodman
-* All rights reserved,
-* Please do not reproduce
-*/
 /**
 * k4 Bulletin Board, editor.html
 *
@@ -32,87 +26,72 @@
 * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 *
-* @author Geoffrey Goodman
 * @author Peter Goodman
 * @version $Id$
 * @package k42
 */
 
 /* Tabbed menu functions */
-var menuViews = "css_type css_background css_block css_box css_border css_list css_positioning css_extensions".split(" ");
-var menuLinks = "type background block box border list positioning extensions".split(" ");
+var menuViews	= "css_type css_background css_block css_box css_border css_list css_positioning css_extensions".split(" ");
+var menuLinks	= "type background block box border list positioning extensions".split(" ");
 var prettyNames = new Array('{$L_TYPE}', '{$L_BACKGROUND}', '{$L_BLOCK}', '{$L_BOX}', '{$L_BORDER}', '{$L_LIST}', '{$L_POSITIONING}', '{$L_EXTENSIONS}');
-var Default = "css_type";
-
-var hidden = 'hidden';
-var visible = 'visible';
-
-function AutoLoad() {
-	return HideForMoz();
-}
-AttachEvent(window,'load',AutoLoad,false);
+var Default		= "css_type";
 
 /* Switch tabs on the advanced CSS editor */
 function switchView(this_id) {		
-	var top_name = d.getElementById('curr_location');
-	for(var i=0; i < menuViews.length; i++ ) {
-		d.getElementById(menuViews[i]).className = hidden;
-	}
-	var temp = this_id[this_id.selectedIndex];
-	top_name.value = temp.text;
-	d.getElementById(temp.value).className = visible;
-}
-
-
-/* Set a large numbers array, since I never learnt js, I wasn;t sure if there was a range() function, whatever. */
-var NumbersArray = new Array;
-for(var i=0;i<1000;i++) {
-	NumbersArray[i] = i;
-}
-
-/* This will enable a disabled select html element if the value of the text box which points to it is an integer */
-function Enable(this_id, Id) {
-	var Id = d.getElementById(Id);
-	if(this_id.type == 'select-one') {
-		var result = in_array(this_id[this_id.selectedIndex].value, NumbersArray);
-	} else if(this_id.type == 'text') {
-		var result = in_array(this_id.value, NumbersArray);
-	}
-	if(result) {
-		return Id.disabled = false;
-	} else {
-		return Id.disabled = true;
-	}
-}
-/* This will popup or hide the color picker */
-function ShowColorPicker(cp_id, img_id, txt_id) {
-	var color_picker = fetch_cookie('color_picker');
-
-	if(color_picker != null) {
-		//color_picker = color_picker.split("\n");
-		//color_picker = color_picker[0].split(":");
-		color_picker = color_picker.split(":");
-		if(color_picker[0] != cp_id) {
-			var old_id = color_picker[0];
-			try {
-				var hide_it = eval(d.getElementById(old_id));
-				hide_it.style.display = 'none';
-			} catch(e) {
-				return false;
-			}
-		}
-	}
-	expires = new Date();
-	expires.setTime(expires.getTime() + 7600);
-	set_cookie('color_picker', (cp_id+':'+img_id+':'+txt_id), expires); 
-	var colorizer = d.getElementById(cp_id);
+	var top_name	= d.getElementById('curr_location');
 	
-	if(colorizer.style.display != "block") {
-		return colorizer.style.display = "block";
-	} else {
-		return colorizer.style.display = "none";
+	for(var i=0; i < d.sizeof(menuViews); i++ ) {
+		d.getElementById(menuViews[i]).style.display = 'none';
 	}
+	
+	var temp		= this_id[this_id.selectedIndex];
+	top_name.value	= temp.text;
+	d.getElementById(temp.value).style.display = 'block';
 }
+
+/* This will enable a disabled input element if the value of the text box which points to it is an integer */
+function enable_field(element, select_id) {
+	var input	= d.getElementById(select_id);
+	
+	if(element.type == 'select-one') {
+		var result = parseInt(element[element.selectedIndex].value) >= 0 ? false : true;
+	} else if(element.type == 'text') {
+		var result	= parseInt(element.value) >= 0 ? false : true;
+	}
+	
+	input.disabled = result;
+}
+
+///* This will popup or hide the color picker */
+//function ShowColorPicker(cp_id, img_id, txt_id) {
+//	var color_picker = fetch_cookie('color_picker');
+//
+//	if(color_picker != null) {
+//		//color_picker = color_picker.split("\n");
+//		//color_picker = color_picker[0].split(":");
+//		color_picker = color_picker.split(":");
+//		if(color_picker[0] != cp_id) {
+//			var old_id = color_picker[0];
+//			try {
+//				var hide_it = eval(d.getElementById(old_id));
+//				hide_it.style.display = 'none';
+//			} catch(e) {
+//				return false;
+//			}
+//		}
+//	}
+//	expires = new Date();
+//	expires.setTime(expires.getTime() + 7600);
+//	set_cookie('color_picker', (cp_id+':'+img_id+':'+txt_id), expires); 
+//	var colorizer = d.getElementById(cp_id);
+//	
+//	if(colorizer.style.display != "block") {
+//		return colorizer.style.display = "block";
+//	} else {
+//		return colorizer.style.display = "none";
+//	}
+//}
 
 var css_menu = d.getElementById('css_menu');
 /* This will give the color's preview and auto set the text boxes value */
@@ -154,32 +133,35 @@ function ValidateColor(string) {
 	}
 	return out;
 }
+
 /* If the 'Same For All' checkbox is set, this will disable all of the other text boxes */
-function SameForAll(this_id, id_array) {
-	if(this_id.checked == true) {
-		for(var i=0; i<id_array.length; i++) {
-			d.getElementById(id_array[i]).disabled = true;
-		}
-	} else {
-		for(var i=0; i<id_array.length; i++) {
-			var temp = d.getElementById(id_array[i]).disabled = false;
-		}
+function set_same_for_all(element, id_array) {
+	for(var i = 0; i < d.sizeof(id_array); i++) {
+		d.getElementById(id_array[i]).disabled = element.checked ? true : false;
 	}
 }
+
 /* If the 'Same For All' checkbox is set, this will set all of the values of the other disabled text boxes */
-function SetAll(this_id, checkbox_id, id_array) {
+function set_all_values(this_id, checkbox_id, id_array) {
+	
 	if(d.getElementById(checkbox_id).checked == true) {
+		
 		var item = d.getElementById(this_id);
+		
 		if(item.type == 'text') {
+			
 			var the_value = item.createTextRange().text;
-			for(var i=0; i<id_array.length; i++) {
-				d.getElementById(id_array[i]).value = the_value;
+			
+			for(var i = 0; i < d.sizeof(id_array); i++) {
+				d.getElementById(id_array[i]).value			= the_value;
 			}
 		} else if(item.type == 'select-one') {
+			
 			var index = item.selectedIndex;
+			
 			for(var i=0; i<id_array.length; i++) {
 				d.getElementById(id_array[i]).selectedIndex = index;
-				d.getElementById(id_array[i]).disabled = true;
+				d.getElementById(id_array[i]).disabled		= true;
 			}
 		}
 	}
@@ -204,6 +186,7 @@ var b_imgs = "bt_color_preview br_color_preview bb_color_preview bl_color_previe
 var clip = "clip-top clip-right clip-bottom clip-left".split(" ");
 
 var check_alls = "border_same_color border_same_style border_same_width box_same_padding box_same_margin".split(" ");
+
 /* Hide all of the 'Same for All' checkboxes, and enable all of the auto-disabled fields which went with the same for all functionality */
 function HideForMoz() {
 	if(!d.is_ie) {
@@ -222,203 +205,271 @@ function HideForMoz() {
 		}
 	}
 }
+
 /* This will transform the clip field's into nice css */
-function DoClip() {
-	var css = '';
-	var is_null = 0;
-	for(var i=0;i<clip.length;i++) {
-		var temp = d.getElementById(clip[i]);
-		var select_id = "c" + temp.name + "-measurement";
-		var the_select = d.getElementById(select_id);
-		if(the_select != null) {
-			if(!temp.value) {
-				the_select.selectedIndex = 0;
-				temp.value = 'auto';
-				css = css + 'auto ';
-			} else if(temp.value != 'auto') {
-				css = css + temp.value + the_select[the_select.selectedIndex].value + ' ';
-				is_null++;
+function apply_css_clip() {
+	
+	var css			= '';
+	var is_null		= 0;
+
+	for(var i = 0; i < d.sizeof(clip); i++) {
+		
+		var temp		= d.getElementById(clip[i]);
+		var the_select	= d.getElementById("c" + temp.name + "-measurement");
+		
+		if(temp && the_select) {
+			if(typeof temp.value != 'undefined') {
+				if(temp.value != '') {
+					
+					the_select.selectedIndex	= 0;
+					temp.value					= 'auto';
+					css							+= 'auto ';
+
+				} else if(temp.value != 'auto' && temp.value != '') {
+					css		+= temp.value + the_select[the_select.selectedIndex].value + ' ';
+					is_null++;
+				}
 			}
 		}
 	}
-	css = '\nclip: rect('+css+');';
+	css		= '\nclip: rect(' + css + ');';
+	
 	if(is_null != 0) {
 		return css;
 	} else {
-		for(var i=0;i<clip.length;i++) {
+		for(var i = 0; i < d.sizeof(clip); i++) {
 			d.getElementById(clip[i]).value = '';
 		}
 	}
 	return '';
 }
+
 /* This will take all of the border fields and make them into nice css */
-function DoCSSBorders() {	
+function apply_css_borders() {	
+	
 	var same_color = d.getElementById('border_same_color').checked;
 	var same_style = d.getElementById('border_same_style').checked;
 	var same_width = d.getElementById('border_same_width').checked;
 
 	var css = '';
 	
-	for(var i=0; i< colors.length; i++ ) {
-		var temp_color = d.getElementById(colors[i]);
-		var temp_size = d.getElementById(sizes[i]);
-		var temp_style = d.getElementById(styles[i]);
-		temp_style = temp_style[temp_style.selectedIndex].value;
-		if((same_color == true) && (same_style == true) && (same_width == true)) {
-			if(temp_color.value && temp_size.value && temp_style) {
-				var bm = d.getElementById('bt-measurement');
-				css = '\nborder: ' + temp_size.value + bm[bm.selectedIndex].value + ' ' + temp_style + ' ' + temp_color.value + ';';
-			} else if(temp_color.value || temp_size.value || temp_style) {
-				var bm = d.getElementById('bt-measurement');
-				bm = (temp_size.value) ? bm[bm.selectedIndex].value : '';
-				css = '\nborder: ' + temp_size.value + bm + ' ' + temp_style + ' ' + temp_color.value + ';';
-			}
-		} else {
-			css = (temp_color.value) ? css + '\n' + temp_color.name + ': ' + temp_color.value + ';' : css;
-			var measure_id = "b"+temp_size.name.substr(7,1)+"-measurement";
-			//alert(measure_id);
-			css = (temp_size.value) ? css + '\n' + temp_size.name + ': ' + temp_size.value + d.getElementById(measure_id).value + ';' : css;
-			css = (temp_style.value) ? css + '\n' + temp_style.name + ': ' + temp_style.value + ';' : css;
-		}
+	for(var i = 0; i < d.sizeof(colors); i++ ) {
+		
+		var temp_color		= d.getElementById(colors[i]);
+		var temp_size		= d.getElementById(sizes[i]);
+		var temp_style		= d.getElementById(styles[i]);
+		
+		if(temp_color && temp_size && temp_style) {
 
+			temp_style		= temp_style[temp_style.selectedIndex].value;
+			
+			if((same_color == true) && (same_style == true) && (same_width == true)) {
+				
+				if(temp_color.value && temp_size.value && temp_style) {
+					
+					var bm	= d.getElementById('bt-measurement');
+					css		= '\nborder: ' + temp_size.value + bm[bm.selectedIndex].value + ' ' + temp_style + ' ' + temp_color.value + ';';
+				} else if(temp_color.value || temp_size.value || temp_style) {
+					
+					var bm	= d.getElementById('bt-measurement');
+					bm		= (temp_size.value) ? bm[bm.selectedIndex].value : '';
+					css		= '\nborder: ' + temp_size.value + bm + ' ' + temp_style + ' ' + temp_color.value + ';';
+				}
+			} else {
+				css			= (temp_color.value) ? css + '\n' + temp_color.name + ': ' + temp_color.value + ';' : css;
+				var measure_id = 'b' + temp_size.name.substr(7,1)+ '-measurement';
+
+				css			= (temp_size.value) ? css + '\n' + temp_size.name + ': ' + temp_size.value + d.getElementById(measure_id).value + ';' : css;
+				css			= (temp_style.value) ? css + '\n' + temp_style.name + ': ' + temp_style.value + ';' : css;
+			}
+		}
 	}
 
 	return css;
 }
+
 /* This will take the background-image field and make it into nice css */
-function DoBackgroundImage() {
-	var temp = d.getElementById('background-image');
-	if(temp.value != '') {
-		return 'background-image:url(' + temp.value + ');';
+function apply_css_background() {
+	var temp	= d.getElementById('background-image');
+	var ret		= '';
+
+	if(temp && temp.value != '') {
+		ret		= 'background-image:url(' + temp.value + ');';
 	}
-	return '';
+	return ret;
 }
+
 /* This will take either the Padding or Margin fields and tranform them into applicable CSS */
-function DoPaddingMargin(use) {
-	var elements = (use == 1) ? "padding".split(" ") :  "margin".split(" ");
-	var element_letters = "p m".split(" ");
+function apply_css_padding_margin(use) {
 	
-	var css = '';
-	var value = '';
+	var elements		= (use == 1) ? 'padding' : 'margin';
+	var element_letters = new Array('p', 'm');
 	
-	for(var e=0;e<elements.length;e++) {
+	var css				= '';
+	var value			= '';
+	
+	for(var e = 0; e < d.sizeof(elements); e++) {
+		
 		var element_to_use = (use == 1) ? CSS_padding : CSS_margin;
 		
-		if(d.getElementById('box_same_'+elements[e]).checked == true) {
-			var temp_value = d.getElementById(element_to_use[0]).value;
-			if(temp_value != '') {
-				value = elements[e]+': ';
-				value = value + temp_value;
-				value = (in_array(temp_value, NumbersArray)) ? value + d.getElementById(element_letters[e]+'t-measurement').value : value;
-				value = value + ';\n';
-			}
-		} else {
-			var prev = '';
-			var good = true;
-			var temp_val = '';
-			var only_val = '';
-			for(var i=0;i<element_to_use.length;i++) {
-				var temp = d.getElementById(element_to_use[i]);
-				var to_use_substr =(use == 1) ? temp.id.substr(8,1) : temp.id.substr(7,1);
-				var temp_measure = d.getElementById('p'+ to_use_substr +'-measurement');
-				var val = temp.value+temp_measure.value;
-				if(i != 0 && val != prev) {
-					good = false;
-				} else {
-					only_val = elements[e]+': '+val+';\n';
+		var element		= d.getElementById('box_same_' + elements[e]);
+		
+		if(element) {
+			if(element.checked == true) {
+				
+				var temp_value = d.getElementById(element_to_use[0]).value;
+				
+				if(temp_value != '') {
+					value = elements[e]+': ';
+					value += temp_value;
+					value += typeof temp_value == 'number' ? d.getElementById(element_letters[e]+'t-measurement').value : '';
+					value += ';\n';
 				}
-				if(val != 'px') {
-					temp_val = temp_val + temp.id + ': ' + val + ';\n';
-					prev = temp.value+temp_measure.value;
+			} else {
+				
+				var prev		= '';
+				var good		= true;
+				var temp_val	= '';
+				var only_val	= '';
+				
+				for(var i = 0; i < d.sizeof(element_to_use); i++) {
+					
+					var temp			= d.getElementById(element_to_use[i]);
+					var to_use_substr	=(use == 1) ? temp.id.substr(8,1) : temp.id.substr(7,1);
+					var temp_measure	= d.getElementById('p' + to_use_substr + '-measurement');
+					var val				= temp.value + temp_measure.value;
+					
+					if(i != 0 && val != prev) {
+						good		= false;
+					} else {
+						only_val	= elements[e]+': '+val+';\n';
+					}
+					if(val != 'px') {
+						temp_val	= temp_val + temp.id + ': ' + val + ';\n';
+						prev		= temp.value + temp_measure.value;
+					}
 				}
+				css += !good ? temp_val : only_val;
 			}
-			css = (good == false) ? css+temp_val : css+only_val;
 		}
 		if(value) {
-			css = css+value;
+			css += value;
 		}
 	}
-	return '\n'+css;
+	return '\n' + css;
 }
-/* This will take all of the values from within the advanced CSS Editor, parse them, and then put them together to make some real css! */
-function ApplyCSS() {
-	var attribs = d.getElementById('{$L_ATTRIBUTES}');
 
-	attribs.value = "";
+/**
+ * This will take all of the values from within the advanced CSS Editor, 
+ * parse them, and then put them together to make some real css! 
+ */
+function apply_css() {
 	
-	for(var i=0; i< CSSitems.length; i++) {
-		var temp = d.getElementById(CSSitems[i]);
-		if(temp.value) {
-			var value = temp.value;
-			if(temp.name == 'font-size') {
-				value = (in_array(temp.value, NumbersArray)) ? value + d.getElementById('size-measurement').value : value;
-			} else if(temp.name == 'text-indent') {
-				value = (in_array(temp.value, NumbersArray)) ? value + d.getElementById('block-measurement').value : value;
-			} else if(temp.name == 'word-spacing') {
-				value = (in_array(temp.value, NumbersArray)) ? value + d.getElementById('ws-measurement').value : value;
-			} else if(temp.name == 'letter-spacing') {
-				value = (in_array(temp.value, NumbersArray)) ? value + d.getElementById('ls-measurement').value : value;
-			} else if(temp.name == 'width') {
-				value = (in_array(temp.value, NumbersArray)) ? value + d.getElementById('width-measurement').value : value;
-			} else if(temp.name == 'height') {
-				value = (in_array(temp.value, NumbersArray)) ? value + d.getElementById('height-measurement').value : value;
-			} else if(temp.name == 'cursor' && temp.value == 'hand') {
-				value = value + ';\ncursor: pointer';
+	var attribs = d.getElementById('css_attributes');
+	
+	if(attribs) {
+		attribs.value = "";
+		
+		for(var i = 0; i < d.sizeof(CSSitems); i++) {
+			
+			var temp = d.getElementById(CSSitems[i]);
+			
+			if(temp && temp.value) {
+				var value = temp.value;
+				
+				switch(temp.name) {
+					case 'font-size': {
+						value += typeof temp.value == 'number' ? d.getElementById('size-measurement').value : '';
+						break
+					}
+					case 'text-indent': {
+						value += typeof temp.value == 'number' ? d.getElementById('block-measurement').value : '';
+						break;
+					}
+					case 'word-spacing': {
+						value += typeof temp.value == 'number' ? d.getElementById('ws-measurement').value : '';
+						break;
+					}
+					case 'letter-spacing': {
+						value += typeof temp.value == 'number' ? d.getElementById('ls-measurement').value : '';
+						break;
+					}
+					case 'width': {
+						value += typeof temp.value == 'number' ? d.getElementById('width-measurement').value : '';
+						break;
+					}
+					case 'height': {
+						value += typeof temp.value == 'number' ? d.getElementById('height-measurement').value : '';
+						break;
+					}
+					case 'cursor': {
+						if(temp.value == 'hand')
+							value += ';\ncursor: pointer';
+						break;
+					}
+				}
+				var newline = (i != 0) ? '\n' : '';
+				
+				attribs.value += newline + temp.name + ": " + value + ";";
 			}
-			var newline = (i != 0) ? '\n' : '';
-			attribs.value = attribs.value + newline + temp.name + ": " + value + ";";
 		}
 	}
+	
 	/* Deal with Background alignment */
-	var horiz = d.getElementById('horizauntal').value;
-	var vert = d.getElementById('vertical').value;
+	var horiz	= d.getElementById('horizontal').value;
+	var vert	= d.getElementById('vertical').value;
+	
 	if(horiz || vert) {
-		attribs.value = attribs.value + "\nbackground-position: " + vert + " " + horiz + ";";
+		attribs.value += "\nbackground-position: " + vert + " " + horiz + ";";
 	}
 	try {
-		attribs.value = attribs.value + DoCSSBorders() + DoPaddingMargin(1) + DoPaddingMargin(2) + DoBackgroundImage() + DoClip();
+		attribs.value += apply_css_borders() + apply_css_padding_margin(1) + apply_css_padding_margin(2) + apply_css_background() + apply_css_clip();
 	} catch(e) {
 		alert(e.message);
 	}
-	if(attribs.value == 'undefined')
+
+	if(typeof attribs.value == 'undefined')
 		attribs.value = '';
 }
-/* This will just redirect the page if there is an earlier version of the class to revert to */
-function Revert(class_id) {
-	return window.location = 'admin.php?act=revert_css&id=' + class_id;
-}
+
 /* This will remove, or try to remove unwanted spaces */
-function RemoveSpace(str) {
-	str = str.split(" ");
-	var count = str.length;
-	var new_str = '';
-	//str = (str[0] == '') ? str[1] : str[0];
-	for(var i=0;i<count;i++) {
-		var possible_space = (i == count-1) ? '' : ' ';
-		new_str = (str[i] != '') ? new_str + str[i] + possible_space : '';
-	}
-	return new_str;
+function remove_extra_spaces(str) {
+//	str = str.split(" ");
+//	var count = str.length;
+//	var new_str = '';
+//	//str = (str[0] == '') ? str[1] : str[0];
+//	for(var i=0;i<count;i++) {
+//		var possible_space = (i == count-1) ? '' : ' ';
+//		new_str = (str[i] != '') ? new_str + str[i] + possible_space : '';
+//	}
+//	return new_str;
+	return str;
 }
+
 /* This will get the only part of a string which isn't a space */
-function GetUnspacedStr(str) {
-	var args = str.split(" ");
+function get_unspaced_string(str) {
+	
+	var args	= str.split(" ");
 	var new_str = '';
+	var ret		= str;
+	
 	try {
-		for(var i=0;i<args.length;i++) {
+		for(var i = 0; i < d.sizeof(args); i++) {
 			if(args[i] != '') {
 				new_str = args[i];
 			}
 		}
-		return new_str;
+		ret = new_str;
 	} catch(e) {
-		return false;
+		alert(e.message);
 	}
-	return false;
+	return ret;
 }
 /* an array of the allowed measurements for things */
-var measures = "px pt in cm mm pc em ex %".split(" ");
+var measures = new Array('px','pt','in','cm','mm','pc','em','ex','%');
+
 /* This will take a value and sepearate it into the value and the measurement */
-function GetMeasuredValue(str, border) {
+function get_measured_value(str, border) {
 	var match = null;
 	match = str.match(/px/) ? 'px' : match;
 	match = str.match(/pt/) ? 'pt' : match;
@@ -452,90 +503,116 @@ var exceptions = "word-spacing letter-spacing height width text-indent font-size
 var except_selects = "ws-measurement ls-measurement height-measurement width-measurement block-measurement size-measurement pt-measurement pr-measurement pb-measurement pl-measurement mt-measurement mr-measurement mb-measurement ml-measurement bt-measurement br-measurement bb-measurement bl-measurement".split(" ");
 
 /* Make sense of a string of css */
-function MakeSense(css_str) {
-	var parts = css_str.split(":");
-	var id = parts[0];
-	var value = parts[1];
+function parse_css(css_str) {
+	
+	var parts	= css_str.split(":");
+	var id		= parts[0];
+	var value	= parts[1];
 
-	id = id.replace(/\r\n/g, '');
-	id = id.replace(/\n/g, '');
+	id			= id.replace(/\r\n/g, '');
+	id			= id.replace(/\n/g, '');
+	
+	var id_array = new Array('padding', 'font', 'border', 'margin', 'background-image', 'background-position');
+	
+	var regexs	= {
+				'measurement'	: new RegExp("(.*)(px|pt|in|cm|mm|pc|em|ex|%)", "i"),
+				'border'		: new RegExp("(none|dotted|dashed|solid|double|groove|ridge|inset|outset)", "i"),
+				}
 
-	if(id == 'padding' || id == 'font' || id == 'border' || id == 'margin' || id == 'background-image' || id == 'background-position') {
+	if(d.in_array(id_array, id)) {
+		
 		if(id == 'border') {
 			try {
 			
-				var sects = value.split(" ");
-				var style = '';
-				var color = '';
-				var size = '';
-				/* First we go and find the easy stuff like the width & the style */
+				var sects	= value.split(" ");
+				var style	= '';
+				var color	= '';
+				var size	= '';
+				
+				// First we go and find the easy stuff like the width & the style
 				for(var i=0;i<sects.length;i++) {
-					if(sects[i].match(/(.*)(px|pt|in|cm|mm|pc|em|ex|%)/)) {
-						size = new Array()
-						d.array_push(size, sects[i].replace(/(.*)(px|pt|in|cm|mm|pc|em|ex|%)/, "$1"));
-						d.array_push(size, sects[i].replace(/(.*)(px|pt|in|cm|mm|pc|em|ex|%)/, "$2"));
-					} else if(sects[i].match(/(none|dotted|dashed|solid|double|groove|ridge|inset|outset)/)) {
-						style = sects[i].replace(/(none|dotted|dashed|solid|double|groove|ridge|inset|outset)/, "$1");
+					if(sects[i].match(regexs['measurement'])) {
+						size	= new Array()
+						d.array_push(size, sects[i].replace(regexs['measurement'], "$1"));
+						d.array_push(size, sects[i].replace(regexs['measurement'], "$2"));
+					} else if(sects[i].match(regexs['border'])) {
+						style = sects[i].replace(regexs['border'], "$1");
 					}
-				}
-				/* Since we don't know off hand all of the colors, we'll just try to take what we know and get rid of it :) */
-				color = value.replace(/(none|dotted|dashed|solid|double|groove|ridge|inset|outset)/, '');
-				color = color.replace(/(.*)(px|pt|in|cm|mm|pc|em|ex|%)/, '');
-				//alert(color);
-				if(GetUnspacedStr(color)) {
-					color = GetUnspacedStr(color);
 				}
 				
-				for(var i=0;i<sizes.length;i++) {
+				// Since we don't know off hand all of the colors, we'll just 
+				// try to take what we know and get rid of it :)
+				color = value.replace(regexs['border'], '');
+				color = color.replace(regexs['measurement'], '');
+				color = get_unspaced_string(color);
+				
+				for(var i = 0; i < d.sizeof(sizes); i++) {
+					
 					if(size != '') {
 						d.getElementById(sizes[i]).value = size[0];
-						d.getElementById(sizes_m[i]).selectedIndex = getarrayindex(size[1], d.getElementById(sizes_m[i]));
+						d.getElementById(sizes_m[i]).selectedIndex = d.array_key(d.getElementById(sizes_m[i]), size[1]);
 					}
+					
 					if(color != '') {
 						try {
 							d.getElementById(b_imgs[i]).style.backgroundColor = color;
-						} catch(e) {
-							continue;
-						}
+						} catch(e) { }
 						d.getElementById(colors[i]).value = color;
 					}
+					
 					if(styles != '') {
-						d.getElementById(styles[i]).selectedIndex = getarrayindex(style, d.getElementById(styles[i]));
+						d.getElementById(styles[i]).selectedIndex = d.array_key(d.getElementById(styles[i]), style);
 					}
 				}
 			} catch(e) {
 				alert(e.message);
 			}
+		
 		} else if(id == 'font') {
+			// TODO
 			
 		} else if(id == 'background-image') {
 			try {
+				
 				// this is a very rudimentry check for if it starts with a space
 				var temp_bg = (value.charAt(0) == ' ') ? value.substr(1,value.length) : value;
-				temp_bg = (temp_bg.substr(0,5) == "url('") ? temp_bg.substr(5,temp_bg.length) : temp_bg.substr(4,temp_bg.length);
-				temp_bg = (temp_bg.slice(-2) == "')") ? temp_bg.slice(0, -2) : temp_bg.slice(0, -1);
+				
+				// try to get the background image url
+				temp_bg		= (temp_bg.substr(0,4) == "url('") ? temp_bg.substr(5,temp_bg.length) : temp_bg.substr(4,temp_bg.length);
+				temp_bg		= (temp_bg.slice(-2) == "')") ? temp_bg.slice(0, -2) : temp_bg.slice(0, -1);
+				
+				// set it
 				d.getElementById('background-image').value = temp_bg;
+			
 			} catch(e) {
 				alert(e.message);
 			}
+
 		} else if(id == 'background-position') {
+			
 			try {
-				var bg_pos = (value.charAt(0) == ' ') ? value.substr(1,value.length) : value;
-				bg_pos = value.split(' ');
-				for(var z=0;z<bg_pos.length;z++) {
+				
+				var bg_pos	= (value.charAt(0) == ' ') ? value.substr(1,value.length) : value;
+				bg_pos		= value.split(' ');
+				
+				for(var z = 0; z < d.sizeof(bg_pos); z++) {
 					try {
-						var places = "horizauntal vertical".split(" ");
-						var temp_horiz = d.getElementById(places[0]);
-						var temp_vert = d.getElementById(places[1]);
 						
-						if(getarrayindex(bg_pos[z], temp_horiz) != '0' && getarrayindex(bg_pos[z], temp_horiz) != '') {		
-							temp_horiz.selectedIndex = getarrayindex(bg_pos[z], temp_horiz);
+						var places		= new Array('horizontal', 'vertical');
+						var temp_horiz	= d.getElementById(places[0]);
+						var temp_vert	= d.getElementById(places[1]);
+						
+						var horiz_key	= d.array_key(temp_horiz, bg_pos[z]);
+						var vert_key	= d.array_key(temp_vert, bg_pos[z]);
+
+						if(horiz_key != '0' && horiz_key != '') {		
+							temp_horiz.selectedIndex = horiz_key;
 						}
-						if(getarrayindex(bg_pos[z], temp_vert) != '0' && getarrayindex(bg_pos[z], temp_vert) != '') {	
-							temp_vert.selectedIndex = getarrayindex(bg_pos[z], temp_vert);
+						if(vert_key != '0' && vert_key != '') {	
+							temp_vert.selectedIndex = vert_key;
 						}
 					} catch(e) {
-						return;
+						return '';
 					}
 				}
 			} catch(e) {
@@ -543,15 +620,19 @@ function MakeSense(css_str) {
 			}
 		} else {
 			try {
-				value = RemoveSpace(value);
-				var val = GetMeasuredValue(value);
+				
+				var val		= get_measured_value(remove_extra_spaces(value));
+
 				d.getElementById('box_same_' + id).checked = false;
-				for(var i=0;i<areas.length;i++) {
+
+				for(var i = 0; i < d.sizeof(areas); i++) {
 					try {
+						
 						d.getElementById(id + '-' + areas[i]).value = val[0];
 						d.getElementById(id + '-' + areas[i]).disabled = false;
-						var select = d.getElementById(id.substr(0,1)+areas[i].substr(0,1)+'-measurement');
-						select.selectedIndex = getarrayindex(val[1], select);
+						
+						var select = d.getElementById(id.substr(0,1) + areas[i].substr(0,1) + '-measurement');
+						select.selectedIndex = d.array_key(select, val[1]);
 					} catch(e) {
 						return false;
 					}
@@ -562,44 +643,54 @@ function MakeSense(css_str) {
 		}
 	} else if(id != '') {
 		try {
+			
 			var temp = d.getElementById(id);
-			value = RemoveSpace(value);
+			value = remove_extra_spaces(value);
 
-			if(in_array(id, exceptions)) {
+			if(d.in_array(exceptions, id)) {
+				
 				if(id != 'font-size') {
-					var val = GetMeasuredValue(value);
-					var val_select = d.getElementById(except_selects[getarrayindex(id, exceptions)]);
-					temp.value = val[0];
-					the_select.selectedIndex = getarrayindex(val[1], select);
+					
+					var val			= get_measured_value(value);
+					var val_select	= d.getElementById(except_selects[d.array_key(exceptions, id)]);
+					temp.value		= val[0];
+					the_select.selectedIndex = d.array_key(select, val[1]);
+
 				} else {
-					var val = GetMeasuredValue(value);
-					var select = d.getElementById('font-size');
+					
+					var val			= get_measured_value(value);
+					var select		= d.getElementById('font-size');
 					var was_selected = false;
-					for(var f=0;f<select.length;f++) {
+					
+					for(var f = 0; f < d.sizeof(select); f++) {
 						if(val[0] == select[f].value) {
-							select.selectedIndex = f;
-							was_selected = true;
+							select.selectedIndex	= f;
+							was_selected			= true;
 						}
 					}
 					if(!was_selected) {
 						select[0].value = val[0];
-						select[0].text = val[0];
+						select[0].text	= val[0];
 					}
-					if(in_array(val[0], NumbersArray)) {
-						var s_m = d.getElementById('size-measurement');
-						s_m.selectedIndex = getarrayindex(val[1], s_m);
+					if(typeof val[0] == 'number') {
+						var s_m				= d.getElementById('size-measurement');
+						s_m.selectedIndex	= d.array_key(s_m, val[1]);
 					}
 				}
 			} else {				
+				
 				if(temp.type == 'text') {
 					temp.value = value;
 				} else if(temp.type == 'select-one') {
-					if(getarrayindex(value, temp) != '') {
-						temp.selectedIndex = getarrayindex(value, temp);
+					
+					var temp_key = d.array_key(temp, value);
+
+					if(temp_key != '') {
+						temp.selectedIndex = temp_key;
 					} else {
-						temp[0].value = value;
-						temp[0].text = value;
-						temp.selectedIndex = 0;
+						temp[0].value		= value;
+						temp[0].text		= value;
+						temp.selectedIndex	= 0;
 					}
 				}
 			}
@@ -609,18 +700,25 @@ function MakeSense(css_str) {
 	}
 }
 /* Use or hide the Advanced CSS Editor */
-function ToggleAdvanced(the_button) {
-	the_button.value = (the_button.value == '{$L_GOADVANCED}') ? '{$L_HIDEADVANCED}' : '{$L_GOADVANCED}';
-	var editor = d.getElementById('show_advanced');
-	if(editor) {
+function go_advanced() {
+	var editor			= d.getElementById('advanced_mode');
+	var normal			= d.getElementById('simple_mode');
+	
+	if(editor && normal) {
 		if(editor.style.display == 'none') {
 			editor.style.display = 'block';
-			var css = d.getElementById('{$L_ATTRIBUTES}');
+			normal.style.display = 'none';
+			
+			var css = d.getElementById('css_attributes');
+			
 			if(css) {
-				var text = css.innerHTML.split(";");
-				for(var i=0;i<text.length;i++) {
+				// split the text up by semicolons (all of the endings of css classes
+				var text	= css.innerHTML.split(";");
+				for(var i = 0; i < d.sizeof(text); i++) {
 					if(text['i'] != '') {
-						MakeSense(text[i]);
+						
+						// attempt parse each class
+						parse_css(text[i]);
 					}
 				}
 			} else {
@@ -629,120 +727,80 @@ function ToggleAdvanced(the_button) {
 			}
 		} else {
 			editor.style.display = 'none';
+			normal.style.display = 'block';
+			apply_css();
 		}
 	}
 }
 
 //]]>
 </script>
-<textarea id="colorpicker_table" style="display:none;"><block:import id="color_picker" /></textarea>
+<div class="outset_box" style="display:none;" id="advanced_mode">
+	<table width="100%" cellpadding="0" cellspacing="1" border="0">
+		<tr>
+			<td valign="top">
+				<span class="minitext">{$L_CATEGORIES}</span>
+				<hr />
+				<select name="css_menu" onchange="switchView(this)" id="css_menu" multiple="multiple" size="15" class="inputbox">
+					<option value="css_type">{$L_TYPE}</option>
+					<option value="css_background">{$L_BACKGROUND}</option>
+					<option value="css_block">{$L_BLOCK}</option>
+					<option value="css_box">{$L_BOX}</option>
+					<option value="css_border">{$L_BORDER}</option>
+					<option value="css_list">{$L_LIST}</option>
+					<option value="css_positioning">{$L_POSITIONING}</option>
+					<option value="css_extensions">{$L_EXTENSIONS}</option>
+				</select>
+			</td>
+			<td valign="top" style="width:100%;">
+				<input type="text" value="{$L_TYPE}" class="minitext" style="border:0px;background-color:#FFFFFFF;padding:0px;" id="curr_location" />
+				<hr />
+				<div class="k4_borderwrap" id="css_type" style="padding: 5px;display: block;">
+					<core:import id="css_type" file="css/type.html" />
+				</div>
+
+				<div class="k4_borderwrap" id="css_background" style="padding: 5px;display: none;">
+					<core:import id="css_background" file="css/background.html" />
+				</div>
+
+				<div class="k4_borderwrap" id="css_block" style="padding: 5px;display: none;">
+					<core:import id="css_block" file="css/block.html" />
+				</div>
+
+				<div class="k4_borderwrap" id="css_box" style="padding: 5px;display: none;">
+					<core:import id="css_box" file="css/box.html" />
+				</div>
+
+				<div class="k4_borderwrap" id="css_border" style="padding: 5px;display: none;">
+					<core:import id="css_border" file="css/border.html" />
+				</div>
+
+				<div class="k4_borderwrap" id="css_list" style="padding: 5px;display: none;">
+					<core:import id="css_list" file="css/list.html" />
+				</div>
+
+				<div class="k4_borderwrap" id="css_positioning" style="padding: 5px;display: none;">
+					<core:import id="css_positioning" file="css/positioning.html" />
+				</div>
+
+				<div class="k4_borderwrap" id="css_extensions" style="padding: 5px;display: none;">
+					<core:import id="css_extensions" file="css/extensions.html" />
+				</div>
+			</td>
+		</tr>
+	</table>
+	<div style="text-align: center;">
+		<input type="button" class="button" value="{$L_HIDEADVANCED}" onclick="go_advanced()" style="color:#FF0000;" />
+	</div>
+</div>
+<div id="simple_mode" style="text-align: center;">
+	<textarea name="properties" id="css_attributes" rows="15" class="inputbox" style="width:100%; overflow:scroll;" wrap="off" check="true">{$properties}</textarea>
+	<br />
+	<core:block id="revert_css" hidden="yes"><input type="button" class="button" value="{$L_REVERT}" onclick="document.location='admin.php?act=css_revertstyle&id={$style_style_id}&style_id={$style_id}'" style="color:#FF0000;" /></core:block>
+	<input type="button" class="button" value="{$L_GOADVANCED}" onclick="go_advanced()" style="color:#FF0000;" />
+</div>
+<core:import id="colorpicker" file="css/colorpicker.html" />
 <script type="text/javascript">
-/* Draw the color picker.. keep this here, I hacked out a neat way of not constantly including the whole table for every color picker */
-function drawColorPicker() {
-//alert(d.getElementById('colorpicker_table'));
-	if(d.is_ie) {
-		document.write(d.getElementById('colorpicker_table').createTextRange().text);
-	} else {
-		document.write(d.getElementById('colorpicker_table').innerHTML);
-	}
-}
+menu_init('color_preview', 'colorpicker_menu');
 </script>
-<table width="100%" cellpadding="0" cellspacing="1" border="0">
-	<tr class="tcat">
-		<td>{$L_CSSEDITOR}</td>
-	</tr>
-</table>
-<table width="100%" cellpadding="0" cellspacing="1" border="0" style="display:none;" id="show_advanced">
-	<tr class="panel">
-		<td>
-			<div class="outset_box" style="width: 95%;float:left;">
-			<table width="100%" cellpadding="0" cellspacing="1" border="0">
-				<tr>
-					<td valign="top">
-						<span class="minitext">{$L_CATEGORIES}</span>
-						<hr />
-						<select name="css_menu" onChange="switchView(this)" id="css_menu" multiple="multiple" size="15" class="inputbox">
-							<option value="css_type">{$L_TYPE}</option>
-							<option value="css_background">{$L_BACKGROUND}</option>
-							<option value="css_block">{$L_BLOCK}</option>
-							<option value="css_box">{$L_BOX}</option>
-							<option value="css_border">{$L_BORDER}</option>
-							<option value="css_list">{$L_LIST}</option>
-							<option value="css_positioning">{$L_POSITIONING}</option>
-							<option value="css_extensions">{$L_EXTENSIONS}</option>
-						</select>
-					</td>
-					<td valign="top" style="width:100%;">
-						<input type="text" value="{$L_TYPE}" class="minitext" style="border:0px;background-color:#FFFFFFF;padding:0px;" id="curr_location" />
-						<hr />
-						<div class="visible" id="css_type">
-							<block:import id="css_type" />
-						</div>
-
-						<div class="hidden" id="css_background">
-							<block:import id="css_background" />
-						</div>
-
-						<div class="hidden" id="css_block">
-							<block:import id="css_block" />
-						</div>
-
-						<div class="hidden" id="css_box">
-							<block:import id="css_box" />
-						</div>
-
-						<div class="hidden" id="css_border">
-							<block:import id="css_border" />
-						</div>
-
-						<div class="hidden" id="css_list">
-							<block:import id="css_list" />
-						</div>
-
-						<div class="hidden" id="css_positioning">
-							<block:import id="css_positioning" />
-						</div>
-
-						<div class="hidden" id="css_extensions">
-							<block:import id="css_extensions" />
-						</div>
-					</td>
-				</tr>
-			</table>
-			</div>
-			<br />
-			<br />
-			<input type="button" class="button" value="{$L_APPLY}" onClick="ApplyCSS()" /><input type="button" class="button" value="{$L_HELP}" />
-		</td>
-	</tr>
-</table>
-<table width="100%" cellpadding="0" cellspacing="1" border="0">
-	<tr class="panel">
-		<td>
-			<div id="form_errors" style="">
-				<list:list id="form_errors">
-					<ul>
-						<list:item>
-							<li>{$message}</li>
-						</list:item>
-					</ul>
-				</list:list>
-			</div>
-			<form action="admin.php?act=update_css" method="post" enctype="multipart/form-data" onSubmit="return checkForm(this);" onReset="return Reset(this);">
-			<input type="hidden" name="id" value="{$class_id}" />
-			<div class="outset_box" style="width: 95%; float:left;">
-			<strong>{$L_CSSPREVIEW}</strong><br />
-			{$L_NAME}:&nbsp;<input type="text" name="name" value="{$class_name}" id="{$L_NAME}" class="inputbox" size="100" check="true" />
-			<br />
-			{$L_DESCRIPTION}:&nbsp;{$class_description}
-			<br />
-			{$L_ATTRIBUTES}:&nbsp;<br />
-			<textarea name="properties" id="{$L_ATTRIBUTES}" rows="15" class="inputbox" style="width:100%; overflow:scroll;" wrap="off" check="true">{$properties}</textarea>
-			<br />
-			<block:block id="revert_css"><input type="button" class="button" value="{$L_REVERT}" onClick="Revert('{$class_id}')" style="color:#FF0000;" /></block:block><input type="submit" value="{$L_SAVE}" class="button" /><input type="reset" value="{$L_RESET}" class="button" /><input type="button" class="button" value="{$L_GOADVANCED}" onClick="ToggleAdvanced(this)" style="color:#FF0000;" /><input type="button" class="button" value="{$L_HELP}" />
-			</div>
-			</form>
-		</td>
-	</tr>
-</table>
-</isadmin>
+</is:admin>

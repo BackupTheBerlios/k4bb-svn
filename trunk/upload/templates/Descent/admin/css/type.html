@@ -1,4 +1,4 @@
-<isadmin>
+<is:admin>
 <table width="100%" cellpadding="0" cellspacing="1" border="0">
 	<tr>
 		<td>
@@ -27,7 +27,7 @@
 	<tr>
 		<td>
 			{$L_SIZE}:&nbsp;
-			<select name="font-size" id="font-size" class="smalltext" onChange="Enable(this, 'size-measurement')">
+			<select name="font-size" id="font-size" class="smalltext" onchange="enable_field(this, 'size-measurement')">
 				<option value=""></option>
 				<option value="9">9</option>
 				<option value="10">10</option>
@@ -112,8 +112,10 @@
 			</select>
 		</td>
 		<td>
-			{$L_COLOR}:&nbsp;<img src="Images/{$IMG_DIR}/Icons/colorpicker.gif" id="color_preview" style="background-color:#FFFFFF; position:relative;" onClick="ShowColorPicker('font_color_picker', 'color_preview', 'color')" border="0" alt="" /><div id="font_color_picker" style="display:none;position:absolute;" onClick="this.style.display='none'" ><script type="text/javascript">drawColorPicker();</script></div>&nbsp;<input type="text" style="font-size: 10px;" name="color" id="color" value="" class="inputbox" size="10" maxlength="7" />
+			{$L_COLOR}:
+			<img src="Images/{$IMG_DIR}/Icons/colorpicker.gif" id="color_preview" style="background-color:#FFFFFF; position:relative;" border="0" alt="" />
+			<input type="text" style="font-size: 10px;" name="color" id="color" value="" class="inputbox" size="10" maxlength="7" />
 		</td>
 	</tr>
 </table>
-</isadmin>
+</is:admin>

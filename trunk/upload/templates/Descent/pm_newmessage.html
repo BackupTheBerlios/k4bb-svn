@@ -12,198 +12,202 @@
 <core:block id="pm_id" hidden="yes"><input type="hidden" name="{$edit_type}" id="{$edit_type}" value="{$pm_pm_id}" /></core:block>
 
 <!-- Post Topic Form -->
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">
-		<core:block id="post_pm" hidden="yes">
-		{$L_POSTPRIVATEMESSAGE}
-		</core:block>
-		<core:block id="edit_pm" hidden="yes">
-		{$L_EDITPRIVATEMESSAGE}: <span style="font-weight: normal;">{$pm_name}</span>
-		</core:block>
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">
+			<core:block id="post_pm" hidden="yes">
+			{$L_POSTPRIVATEMESSAGE}
+			</core:block>
+			<core:block id="edit_pm" hidden="yes">
+			{$L_EDITPRIVATEMESSAGE}: <span style="font-weight: normal;">{$pm_name}</span>
+			</core:block>
+		</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr>
+				<td class="alt3" colspan="2" align="center">
+					
+					<!-- Main Posting Inputs -->
+					<div class="outset_box" align="left">
+						<span class="smalltext" style="float: right;">
+							{$L_LOGGEDAS}
+							<is:logged>
+							<a href="member.php?id={$user_id}" style="text-decoration: underline;">{$user_name}</a>
+							<if:else />
+							<strong>{$L_GUEST}</strong>
+							</is:logged>
+						</span>
+						<table border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<!-- To -->
+									<label for="to" class="smalltext">{$L_TO}</label> <span class="minitext">({$L_COMMASEPARATENAMES})</span>
+									<br />
+									<input type="text" name="to" id="to" value="{$pm_pm_to}" tabindex="1" style="width: 500px;" class="inputbox" maxlength="255" />
+									<form:error id="to_error" for="to" setclass="inputfailed" regex=".{{$minuserlength},255}">{$L_INSERTPMTO}</form:error>
+									<!-- / To -->
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<!-- Carbon Copy -->
+									<label for="cc" class="smalltext">{$L_CC}</label> <span class="minitext">({$L_COMMASEPARATENAMES})</span>
+									<br />
+									<input type="text" name="cc" id="cc" value="{$pm_pm_cc}" tabindex="1" style="width: 500px;" class="inputbox" maxlength="255" />
+									<!-- / Carbon Copy -->
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<br />
+									<!-- Post Title -->
+									<label for="name" class="smalltext">{$L_SUBJECT}</label><br />
+									<input type="text" name="name" id="name" value="{$pm_name}" tabindex="2" style="width: 500px;" class="inputbox" maxlength="255" />
+									<form:error id="name_error" for="name" setclass="inputfailed" regex=".{{$topicminchars},{$topicmaxchars}}">{$L_PMSUBJECTTOOSHORT}</form:error>
+									<!-- / Post Title -->
+								</td>
+								<td valign="bottom">
+									<img id="display_posticon" src="tmp/upload/posticons/clear.gif" alt="" />
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<br />
+									<!-- Post Message -->
+									<label for="messagecodex" class="smalltext">{$L_POST}</label><br />
+									
+									<core:import id="editor" file="editor.html" />
+									<form:error id="messagecodex_error" for="messagecodex" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTPMMESSAGE}</form:error>
+
+									<!-- / Post Message -->
+
+								</td>
+								<td valign="bottom">
+									<if:if var="privallowemoticons" eq="1">
+									<maps:if var="pm_emoticons" method="can_view">
+									<list:list id="emoticons">
+									<!-- Emoticons -->
+									<table border="0" cellpadding="0" cellspacing="0">
+										<tr>
+											<td>
+												<fieldset>
+													<legend>{$L_EMOTICONS}</legend>
+													<table cellpadding="3" cellspacing="{$style_cellspacing}" border="0" id="posticons">
+														<tr>
+															<list:item list="emoticons">
+															<td align="center">
+																<a href="javascript:emoticon('{$typed}')" title="{$description}"><img src="tmp/upload/emoticons/{$image}" alt="{$description}" border="0" /></a>
+															</td>
+															<list:separator list="emoticons">
+																<list:alternate list="emoticons" count="{@emoticons_per_row}" remainder="{@emoticons_per_row_remainder}">
+																	</tr><tr>
+																</list:alternate>
+															</list:separator>
+															</list:item>
+														</tr>	
+													</table>
+												</fieldset>
+											</td>
+										</tr>
+									</table>
+									<!-- / Emoticons -->
+									</maps:if>
+									</list:list>
+									</if:if>
+								</td>
+							</tr>
+							<if:if var="privallowicons" eq="1">
+							<maps:if var="pm_posticons" method="can_view">
+							<tr>
+								<td colspan="2">
+									<list:list id="posticons">
+									<!-- Post Icons -->
+									<table border="0" cellpadding="0" cellspacing="0" width="100%">
+										<tr>
+											<td>
+												<fieldset>
+													<legend>{$L_POSTICONS}</legend>
+													<span class="smalltext">{$L_POSTICONSPOSTCHOOSE}</span>
+													<label for="noicon" style="float: left;margin-top: 10px;"><input type="radio" name="posticon" id="noicon" value="clear.gif" checked="checked" onclick="swap_posticon(null)" />&nbsp;{$L_NOICON}</label>
+													<table cellpadding="3" cellspacing="{$style_cellspacing}" border="0" id="posticons">
+														<tr>
+															<list:item list="posticons">
+															<td align="center">
+																<label for="pi{$id}">
+																	<input type="radio" name="posticon" id="pi{$id}" value="{$image}" style="float: left;padding-right: 5px;" onclick="swap_posticon('pi_{$id}')" />&nbsp;&nbsp;<img src="tmp/upload/posticons/{$image}" alt="{$description}" id="pi_{$id}" style="margin-right:15px;" />
+																</label>
+															</td>
+															<list:separator list="posticons">
+																<list:alternate list="posticons" count="7" remainder="6">
+																	</tr><tr>
+																</list:alternate>
+															</list:separator>
+															</list:item>
+														</tr>	
+													</table>
+												</fieldset>
+											</td>
+										</tr>
+									</table>
+									<!-- / Post Icons -->
+									</list:list>
+								</td>
+							</tr>
+							</maps:if>
+							</if:if>
+						</table>
+					</div>
+					<!-- / Main Posting Inputs -->
+
+				</td>
+			</tr>
+			<tr>
+				<td class="k4_subtitle" align="center" colspan="2">
+					<input type="hidden" name="submit_type" id="submit_type" value="" />
+					<input <if:if var="nojs" eq="1">name="post"</if:if> type="submit" class="button" value="{$L_SUBMIT}" accesskey="s" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'post'); }" />
+					<core:block id="save_draft">
+					<maps:if var="pm_message_save" method="can_add">
+						<input <if:if var="nojs" eq="1">name="draft"</if:if> type="submit" class="button" value="{$L_SAVEDRAFT}" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'draft'); }" />
+					</maps:if>
+					</core:block>
+					<maps:if var="pm_preview" method="can_add">
+						<input <if:if var="nojs" eq="1">name="preview"</if:if> type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" class="button" value="{$L_PREVIEW}" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'preview');setSendPostPreview('{$newpm_action}'); }" />
+					</maps:if>
+					<input type="reset" class="button" value="{$L_RESET}" />
+				</td>
+			</tr>
+		</table>
 	</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-		<tr>
-			<td class="alt3" colspan="2" align="center">
-				
-				<!-- Main Posting Inputs -->
-				<div class="outset_box" align="left">
-					<span class="smalltext" style="float: right;">
-						{$L_LOGGEDAS}
-						<is:logged>
-						<a href="member.php?id={$user_id}" style="text-decoration: underline;">{$user_name}</a>
-						<if:else />
-						<strong>{$L_GUEST}</strong>
-						</is:logged>
-					</span>
-					<table border="0" cellpadding="0" cellspacing="0">
-						<tr>
-							<td>
-								<!-- To -->
-								<label for="to" class="smalltext">{$L_TO}</label> <span class="minitext">({$L_COMMASEPARATENAMES})</span>
-								<br />
-								<input type="text" name="to" id="to" value="{$pm_pm_to}" tabindex="1" style="width: 500px;" class="inputbox" maxlength="255" />
-								<form:error id="to_error" for="to" setclass="inputfailed" regex=".{{$minuserlength},255}">{$L_INSERTPMTO}</form:error>
-								<!-- / To -->
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<!-- Carbon Copy -->
-								<label for="cc" class="smalltext">{$L_CC}</label> <span class="minitext">({$L_COMMASEPARATENAMES})</span>
-								<br />
-								<input type="text" name="cc" id="cc" value="{$pm_pm_cc}" tabindex="1" style="width: 500px;" class="inputbox" maxlength="255" />
-								<!-- / Carbon Copy -->
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<br />
-								<!-- Post Title -->
-								<label for="name" class="smalltext">{$L_SUBJECT}</label><br />
-								<input type="text" name="name" id="name" value="{$pm_name}" tabindex="2" style="width: 500px;" class="inputbox" maxlength="255" />
-								<form:error id="name_error" for="name" setclass="inputfailed" regex=".{{$topicminchars},{$topicmaxchars}}">{$L_PMSUBJECTTOOSHORT}</form:error>
-								<!-- / Post Title -->
-							</td>
-							<td valign="bottom">
-								<img id="display_posticon" src="tmp/upload/posticons/clear.gif" alt="" />
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<br />
-								<!-- Post Message -->
-								<label for="messagecodex" class="smalltext">{$L_POST}</label><br />
-								
-								<core:import id="editor" file="editor.html" />
-								<form:error id="messagecodex_error" for="messagecodex" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTPMMESSAGE}</form:error>
-
-								<!-- / Post Message -->
-
-							</td>
-							<td valign="bottom">
-								<if:if var="privallowemoticons" eq="1">
-								<maps:if var="pm_emoticons" method="can_view">
-								<list:list id="emoticons">
-								<!-- Emoticons -->
-								<table border="0" cellpadding="0" cellspacing="0">
-									<tr>
-										<td>
-											<fieldset>
-												<legend>{$L_EMOTICONS}</legend>
-												<table cellpadding="3" cellspacing="{$style_cellspacing}" border="0" id="posticons">
-													<tr>
-														<list:item list="emoticons">
-														<td align="center">
-															<a href="javascript:emoticon('{$typed}')" title="{$description}"><img src="tmp/upload/emoticons/{$image}" alt="{$description}" border="0" /></a>
-														</td>
-														<list:separator list="emoticons">
-															<list:alternate list="emoticons" count="{@emoticons_per_row}" remainder="{@emoticons_per_row_remainder}">
-																</tr><tr>
-															</list:alternate>
-														</list:separator>
-														</list:item>
-													</tr>	
-												</table>
-											</fieldset>
-										</td>
-									</tr>
-								</table>
-								<!-- / Emoticons -->
-								</maps:if>
-								</list:list>
-								</if:if>
-							</td>
-						</tr>
-						<if:if var="privallowicons" eq="1">
-						<maps:if var="pm_posticons" method="can_view">
-						<tr>
-							<td colspan="2">
-								<list:list id="posticons">
-								<!-- Post Icons -->
-								<table border="0" cellpadding="0" cellspacing="0" width="100%">
-									<tr>
-										<td>
-											<fieldset>
-												<legend>{$L_POSTICONS}</legend>
-												<span class="smalltext">{$L_POSTICONSPOSTCHOOSE}</span>
-												<label for="noicon" style="float: left;margin-top: 10px;"><input type="radio" name="posticon" id="noicon" value="clear.gif" checked="checked" onclick="swap_posticon(null)" />&nbsp;{$L_NOICON}</label>
-												<table cellpadding="3" cellspacing="{$style_cellspacing}" border="0" id="posticons">
-													<tr>
-														<list:item list="posticons">
-														<td align="center">
-															<label for="pi{$id}">
-																<input type="radio" name="posticon" id="pi{$id}" value="{$image}" style="float: left;padding-right: 5px;" onclick="swap_posticon('pi_{$id}')" />&nbsp;&nbsp;<img src="tmp/upload/posticons/{$image}" alt="{$description}" id="pi_{$id}" style="margin-right:15px;" />
-															</label>
-														</td>
-														<list:separator list="posticons">
-															<list:alternate list="posticons" count="7" remainder="6">
-																</tr><tr>
-															</list:alternate>
-														</list:separator>
-														</list:item>
-													</tr>	
-												</table>
-											</fieldset>
-										</td>
-									</tr>
-								</table>
-								<!-- / Post Icons -->
-								</list:list>
-							</td>
-						</tr>
-						</maps:if>
-						</if:if>
-					</table>
-				</div>
-				<!-- / Main Posting Inputs -->
-
-			</td>
-		</tr>
-		<tr>
-			<td class="k4_subtitle" align="center" colspan="2">
-				<input type="hidden" name="submit_type" id="submit_type" value="" />
-				<input <if:if var="nojs" eq="1">name="post"</if:if> type="submit" class="button" value="{$L_SUBMIT}" accesskey="s" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'post'); }" />
-				<core:block id="save_draft">
-				<maps:if var="pm_message_save" method="can_add">
-					<input <if:if var="nojs" eq="1">name="draft"</if:if> type="submit" class="button" value="{$L_SAVEDRAFT}" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'draft'); }" />
-				</maps:if>
-				</core:block>
-				<maps:if var="pm_preview" method="can_add">
-					<input <if:if var="nojs" eq="1">name="preview"</if:if> type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" class="button" value="{$L_PREVIEW}" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'preview');setSendPostPreview('{$newpm_action}'); }" />
-				</maps:if>
-				<input type="reset" class="button" value="{$L_RESET}" />
-			</td>
-		</tr>
-	</table>
 </div>
 <!-- / Post Topic Form -->
 
 <br />
 
 <!-- Additional Post Options -->
-<div class="k4_borderwrap">
-	<div class="k4_maintitle" id="po_maintitle">
-		<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_po', 'postoptions', 'po_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_po" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
-		{$L_ADDITIONALOPTIONS}
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle" id="po_maintitle">
+			<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_po', 'postoptions', 'po_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_po" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
+			{$L_ADDITIONALOPTIONS}
+		</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table" id="postoptions">
+			<tr>
+				<td class="alt3">
+					<div class="outset_box">
+						<fieldset>
+							<legend>{$L_MISCOPTIONS}</legend>
+							<maps:if var="pm_html" method="can_add"><input type="checkbox" name="disable_html" id="disable_html" checked="checked" />&nbsp;<label for="disable_html">{$L_DISABLEHTML}</label><br /></maps:if>
+							<input type="checkbox" name="disable_bbcode" id="disable_bbcode" />&nbsp;<label for="disable_bbcode">{$L_DISABLEBBCODE}</label><br />
+							<input type="checkbox" name="disable_emoticons" id="disable_emoticons" />&nbsp;<label for="disable_emoticons">{$L_DISABLEEMOTICONS}</label><br />
+							<input type="checkbox" name="disable_aurls" id="disable_aurls" />&nbsp;<label for="disable_aurls">{$L_PARSEURLS}</label><br />
+							<is:logged><input type="checkbox" name="enable_sig" id="enable_sig" checked="checked" />&nbsp;<label for="enable_sig">{$L_ATTACHSIGNATURE}</label><br />
+							<input type="checkbox" name="disable_areply" id="disable_areply" />&nbsp;<label for="disable_areply">{$L_NOTIFYONREPLY}</label><br /></is:logged>
+							<core:block id="post_pm" hidden="yes"><input type="checkbox" name="save_message" id="save_message" checked="checked" />&nbsp;<label for="save_message">{$L_SAVEINSENTITEMS}</label></core:block>
+						</fieldset>
+					</div>
+				</td>
+			</tr>
+		</table>
 	</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table" id="postoptions">
-		<tr>
-			<td class="alt3">
-				<div class="outset_box">
-					<fieldset>
-						<legend>{$L_MISCOPTIONS}</legend>
-						<maps:if var="pm_html" method="can_add"><input type="checkbox" name="disable_html" id="disable_html" checked="checked" />&nbsp;<label for="disable_html">{$L_DISABLEHTML}</label><br /></maps:if>
-						<input type="checkbox" name="disable_bbcode" id="disable_bbcode" />&nbsp;<label for="disable_bbcode">{$L_DISABLEBBCODE}</label><br />
-						<input type="checkbox" name="disable_emoticons" id="disable_emoticons" />&nbsp;<label for="disable_emoticons">{$L_DISABLEEMOTICONS}</label><br />
-						<input type="checkbox" name="disable_aurls" id="disable_aurls" />&nbsp;<label for="disable_aurls">{$L_PARSEURLS}</label><br />
-						<is:logged><input type="checkbox" name="enable_sig" id="enable_sig" checked="checked" />&nbsp;<label for="enable_sig">{$L_ATTACHSIGNATURE}</label><br />
-						<input type="checkbox" name="disable_areply" id="disable_areply" />&nbsp;<label for="disable_areply">{$L_NOTIFYONREPLY}</label><br /></is:logged>
-						<core:block id="post_pm" hidden="yes"><input type="checkbox" name="save_message" id="save_message" checked="checked" />&nbsp;<label for="save_message">{$L_SAVEINSENTITEMS}</label></core:block>
-					</fieldset>
-				</div>
-			</td>
-		</tr>
-	</table>
 </div>
 <!-- / Additional Post Options -->
 
@@ -211,25 +215,27 @@
 <!-- Attachments Manager -->
 <!--
 <br />
-<div class="k4_borderwrap">
-	<div class="k4_maintitle" id="am_maintitle">
-		<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_am', 'attachmanage', 'am_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_am" src="Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
-		{$L_ATTACHMENTSMANAGER}
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle" id="am_maintitle">
+			<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_am', 'attachmanage', 'am_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_am" src="Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
+			{$L_ATTACHMENTSMANAGER}
+		</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table" id="attachmanage" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
+			<tr>
+				<td class="alt3">
+					<div class="outset_box">
+						<fieldset>
+							<legend>{$L_SELECTFILES}</legend>
+							<div class="smalltext">{$L_VALIDEXTENSIONS}: {$attachextensions}</div>
+							<input type="hidden" name="MAX_FILE_SIZE" value="{$maxattachsize}" />
+							{$attach_inputs}
+						</fieldset>
+					</div>
+				</td>
+			</tr>
+		</table>
 	</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table" id="attachmanage" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
-		<tr>
-			<td class="alt3">
-				<div class="outset_box">
-					<fieldset>
-						<legend>{$L_SELECTFILES}</legend>
-						<div class="smalltext">{$L_VALIDEXTENSIONS}: {$attachextensions}</div>
-						<input type="hidden" name="MAX_FILE_SIZE" value="{$maxattachsize}" />
-						{$attach_inputs}
-					</fieldset>
-				</div>
-			</td>
-		</tr>
-	</table>
 </div>
 -->
 <!-- / Attachments Manager -->

@@ -17,10 +17,12 @@
 
 	<if:if var="row_type" eq="2">
 	<maps:if forum="forum_id" method="can_view">
-		<div class="k4_borderwrap">
-			<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-				<core:import id="forum_view" file="forum_view.html" />
-			</table>
+		<div class="k4_shadow">
+			<div class="k4_borderwrap">
+				<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+					<core:import id="forum_view" file="forum_view.html" />
+				</table>
+			</div>
 		</div>
 		<br />
 	</maps:if>
@@ -28,27 +30,29 @@
 	
 		<maps:if category="category_id" method="can_view">
 			<a href="viewforum.php?c={$category_id}" title="{$safe_description}" class="title_link">{$name}</a>
-			<div class="k4_borderwrap">	
-				<div class="k4_maintitle" id="c{$category_id}_maintitle">
-					<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_{$category_id}', 'forums_{$category_id}', 'c{$category_id}_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_{$category_id}" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
-					<span class="minitext" style="font-weight: normal;">{$description}</span>
+			<div class="k4_shadow">
+				<div class="k4_borderwrap">	
+					<div class="k4_maintitle" id="c{$category_id}_maintitle">
+						<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_{$category_id}', 'forums_{$category_id}', 'c{$category_id}_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_{$category_id}" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+						<span class="minitext" style="font-weight: normal;">{$description}</span>
+					</div>
+					<!-- Forums -->
+					<list:sublist list="categories" id="forums" column="forums">
+					
+					<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table" id="forums_{$category_id}">
+						<tr>
+							<td colspan="2" class="k4_subtitle" width="60%" align="left">&nbsp;{$L_FORUM}</td>
+							<td class="k4_subtitle" width="5%" align="center">&nbsp;{$L_POSTS}&nbsp;</td>
+							<td class="k4_subtitle" width="5%" align="center">&nbsp;{$L_TOPICS}&nbsp;</td>
+							<td class="k4_subtitle" width="30%" align="center">{$L_LASTPOST}</td>
+						</tr>
+						<list:item list="forums">
+							<core:import id="forum_view" file="forum_view.html" />
+						</list:item>
+					</table>
+					</list:sublist>
+				<!-- / Forums -->
 				</div>
-				<!-- Forums -->
-				<list:sublist list="categories" id="forums" column="forums">
-				
-				<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table" id="forums_{$category_id}">
-					<tr>
-						<td colspan="2" class="k4_subtitle" width="60%" align="left">&nbsp;{$L_FORUM}</td>
-						<td class="k4_subtitle" width="5%" align="center">&nbsp;{$L_POSTS}&nbsp;</td>
-						<td class="k4_subtitle" width="5%" align="center">&nbsp;{$L_TOPICS}&nbsp;</td>
-						<td class="k4_subtitle" width="30%" align="center">{$L_LASTPOST}</td>
-					</tr>
-					<list:item list="forums">
-						<core:import id="forum_view" file="forum_view.html" />
-					</list:item>
-				</table>
-				</list:sublist>
-			<!-- / Forums -->
 			</div>
 			<br />
 		</maps:if>

@@ -1,8 +1,8 @@
-<isadmin>
+<is:admin>
 <table width="100%" cellpadding="0" cellspacing="1" border="0">
 	<tr>
 		<td>
-			{$L_BACKGROUNDCOLOR}:&nbsp;<img src="Images/{$IMG_DIR}/Icons/colorpicker.gif" id="bg_color_preview" style="background-color:#FFFFFF; position:relative;" onClick="ShowColorPicker('background_color_picker', 'bg_color_preview', 'background-color')" border="0" alt="" /><div id="background_color_picker" style="display:none;position:absolute;" onClick="this.style.display='none'" ><script type="text/javascript">drawColorPicker();</script></div>&nbsp;<input type="text" style="font-size: 10px;" name="background-color" id="background-color" value="" class="inputbox" size="10" maxlength="7" />
+			{$L_BACKGROUNDCOLOR}:&nbsp;<img src="Images/{$IMG_DIR}/Icons/colorpicker.gif" id="bg_color_preview" style="background-color:#FFFFFF; position:relative;" onclick="ShowColorPicker('background_color_picker', 'bg_color_preview', 'background-color')" border="0" alt="" /><div id="background_color_picker" style="display:none;position:absolute;" onclick="this.style.display='none'" ><script type="text/javascript">drawColorPicker();</script></div>&nbsp;<input type="text" style="font-size: 10px;" name="background-color" id="background-color" value="" class="inputbox" size="10" maxlength="7" />
 		</td>
 	</tr>
 	<tr>
@@ -16,7 +16,7 @@
 			}
 			// ]]>
 			</script>
-			<a href="javascript:;" onClick="popupUpload()">{$L_UPLOADBGIMAGE}</a><br />
+			<a href="javascript:;" onclick="popupUpload()">{$L_UPLOADBGIMAGE}</a><br />
 			{$L_BACKGROUNDIMAGE}:<input type="text" class="inputbox" name="background-image" id="background-image" size="40" value="" />
 		</td>
 	</tr>
@@ -45,7 +45,7 @@
 	<tr>
 		<td>
 			{$L_HORIZPOSITION}:&nbsp;
-			<select id="horizauntal" class="smalltext">
+			<select id="horizontal" class="smalltext">
 				<option value=""></option>
 				<option value="left">left</option>
 				<option value="center">center</option>
@@ -65,4 +65,4 @@
 		</td>
 	</tr>
 </table>
-</isadmin>
+</is:admin>

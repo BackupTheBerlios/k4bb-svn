@@ -1,36 +1,38 @@
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">{$L_VIEWRESULTS}: <span style="font-weight: normal;">{$poll_question}</span></div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-		<list:list id="poll_answers">
-		<list:item list="poll_answers">
-		<list:switch list="poll_answers" var="row_class" a="alt1" b="alt3">
-		<tr>
-			<td class="{$row_class}" width="45%" align="left">{$answer}</td>
-			<td class="{$row_class}" width="45%" align="center">
-				<div style="border: 1px solid #333333;width:99%;height: 18px;background-color: #FFFFFF;"><div style="float: left; height: 18px; width: {$percent}%;background-color: #666666;"></div></div>
-				<div align="left" style="margin-top: 5px;">
-					<list:sublist list="poll_answers" column="users" id="voters">
-					<list:item list="voters">
-					<if:if var="name" noteq="">
-						<if:if var="id" noteq="0"><a href="member.php?id={$id}" style="color: #{$group_color};font-weight: {$font_weight};" class="minitext">{$name}</a><if:else /><strong style="font-style: italic;">{$name}</strong></if:if><list:separator list="voters">,&nbsp;</list:separator>
-					</if:if>
-					</list:item>
-					</list:sublist>
-				</div>
-			</td>
-			<td class="{$row_class}" width="5%" align="center">{$num_votes}</td>
-			<td class="{$row_class}" width="5%" align="center">{$percent}%</td>
-		</tr>
-		</list:switch>
-		</list:item>
-		</list:list>
-		<tr>
-			<td class="alt2" colspan="4" align="center">{$L_TOTALVOTES}: <strong>{$poll_num_votes}</strong>.</td>
-		</tr>
-		<if:if var="can_vote" eq="1">
-		<tr>
-			<td class="k4_subtitle" colspan="4" align="center"><a href="viewpoll.php?id={$poll_id}" title="{$L_VIEWOPTIONS}">{$L_VIEWOPTIONS}</a></td>
-		</tr>
-		</if:if>
-	</table>
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_VIEWRESULTS}: <span style="font-weight: normal;">{$poll_question}</span></div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<list:list id="poll_answers">
+			<list:item list="poll_answers">
+			<list:switch list="poll_answers" var="row_class" a="alt1" b="alt3">
+			<tr>
+				<td class="{$row_class}" width="45%" align="left">{$answer}</td>
+				<td class="{$row_class}" width="45%" align="center">
+					<div style="border: 1px solid #333333;width:99%;height: 18px;background-color: #FFFFFF;"><div style="float: left; height: 18px; width: {$percent}%;background-color: #666666;"></div></div>
+					<div align="left" style="margin-top: 5px;">
+						<list:sublist list="poll_answers" column="users" id="voters">
+						<list:item list="voters">
+						<if:if var="name" noteq="">
+							<if:if var="id" noteq="0"><a href="member.php?id={$id}" style="color: #{$group_color};font-weight: {$font_weight};" class="minitext">{$name}</a><if:else /><strong style="font-style: italic;">{$name}</strong></if:if><list:separator list="voters">,&nbsp;</list:separator>
+						</if:if>
+						</list:item>
+						</list:sublist>
+					</div>
+				</td>
+				<td class="{$row_class}" width="5%" align="center">{$num_votes}</td>
+				<td class="{$row_class}" width="5%" align="center">{$percent}%</td>
+			</tr>
+			</list:switch>
+			</list:item>
+			</list:list>
+			<tr>
+				<td class="alt2" colspan="4" align="center">{$L_TOTALVOTES}: <strong>{$poll_num_votes}</strong>.</td>
+			</tr>
+			<if:if var="can_vote" eq="1">
+			<tr>
+				<td class="k4_subtitle" colspan="4" align="center"><a href="viewpoll.php?id={$poll_id}" title="{$L_VIEWOPTIONS}">{$L_VIEWOPTIONS}</a></td>
+			</tr>
+			</if:if>
+		</table>
+	</div>
 </div>

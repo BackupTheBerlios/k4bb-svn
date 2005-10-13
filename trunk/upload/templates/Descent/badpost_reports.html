@@ -18,109 +18,111 @@
 </div>
 </page:navigator>
 <!-- Bad Post Reports -->
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">
-		{$L_BADPOSTREPORTS}: <span style="font-weight: normal;">{$name}</span>
-	</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-		<list:list id="badpost_reports">
-		<list:default list="badpost_reports">
-		<tr>
-			<td class="alt3" colspan="2">
-				<div class="outset_box" align="center">
-					<br />
-					<strong>{$L_NOBADPOSTREPORTS}</strong>
-					<br /><br />
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">
+			{$L_BADPOSTREPORTS}: <span style="font-weight: normal;">{$name}</span>
+		</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<list:list id="badpost_reports">
+			<list:default list="badpost_reports">
+			<tr>
+				<td class="alt3" colspan="2">
+					<div class="outset_box" align="center">
+						<br />
+						<strong>{$L_NOBADPOSTREPORTS}</strong>
+						<br /><br />
+					</div>
+				</td>
+			</tr>
+			</list:default>
+			<list:item list="badpost_reports">
+			</table>
+				<div class="k4_maintitle">
+					<div class="smalltext">
+						<strong>{$L_FORUM}:</strong> <a href="viewforum.php?f={$forum_id}" title="{$forum_name}" class="smalltext" style="font-weight: normal;">{$forum_name}</a>
+						&nbsp;&nbsp;&nbsp;
+						<strong>{$L_TOPIC}:</strong> <a href="viewtopic.php?id={$topic_id}" title="{$topic_name}" class="smalltext" style="font-weight: normal;">{$topic_name}</a>
+						&nbsp;&nbsp;&nbsp;
+						<strong>{$L_POST}:</strong> <a href="<if:if var="row_type" eq="4">viewtopic.php?id={$topic_id}<if:else />findpost.php?id={$reply_id}</if:if>" title="{$name}" class="smalltext" style="font-weight: normal;">{$name}</a>
+					</div>
 				</div>
-			</td>
-		</tr>
-		</list:default>
-		<list:item list="badpost_reports">
-		</table>
-			<div class="k4_maintitle">
-				<div class="smalltext">
-					<strong>{$L_FORUM}:</strong> <a href="viewforum.php?f={$forum_id}" title="{$forum_name}" class="smalltext" style="font-weight: normal;">{$forum_name}</a>
-					&nbsp;&nbsp;&nbsp;
-					<strong>{$L_TOPIC}:</strong> <a href="viewtopic.php?id={$topic_id}" title="{$topic_name}" class="smalltext" style="font-weight: normal;">{$topic_name}</a>
-					&nbsp;&nbsp;&nbsp;
-					<strong>{$L_POST}:</strong> <a href="<if:if var="row_type" eq="4">viewtopic.php?id={$topic_id}<if:else />findpost.php?id={$reply_id}</if:if>" title="{$name}" class="smalltext" style="font-weight: normal;">{$name}</a>
-				</div>
-			</div>
-			<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-				<tr>
-					<td class="alt3" width="20%" align="center">
-						<if:if var="poster_id" greater="0">
-						<a href="member.php?id={$poster_id}" title="{$L_PROFILE}"><strong style="color: #{$poster_group_color};">{$poster_name}</strong></a>
-						<img src="Images/{$IMG_DIR}/Icons/{$poster_online}_small.gif" alt="" border="0" />
-						<if:else />
-						<strong><if:if var="poster_name" eq="">{$L_GUEST}<if:else />{$poster_name}</if:if></strong>
-						</if:if>
-					</td>
-					<td class="alt3" width="80%">
-						<div style="float: right" class="smalltext">
-							<core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span>
-						</div>
-						<div class="smalltext">
-							<strong>{$L_POSTSUBJECT}:</strong>
-							<span class="smalltext">
-							<if:if var="topic_type" eq="2">{$stickytopicprefix}<else:if var="topic_type" geq="3" />{$announcementtopicprefix}</if:if>
-							<if:if var="is_feature" eq="1">{$featuretopicprefix}</if:if>
-							<if:if var="poll" eq="1">{$polltopicprefix}</if:if>
-							</span>
-							<a href="{$url}" title="{$name}" class="smalltext">{$name}</a>&nbsp;<img src="tmp/upload/posticons/{$posticon}" alt="" border="0" />
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td class="alt3" width="20%" valign="top">
-						<div class="smalltext">
-							<if:if var="poster_avatar" eq="1"><img src="viewfile.php?act=avatar&amp;id={$poster_id}" alt="" border="" /><br /></if:if>
-							<if:if var="poster_group_nicename" noteq="">{$poster_group_nicename}<br /></if:if>
-							<if:if var="poster_group_avatar" noteq="">
-							<img src="tmp/upload/group_avatars/{$poster_group_avatar}" border="0" alt="{$poster_group_nicename}" />
-							<br />
+				<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+					<tr>
+						<td class="alt3" width="20%" align="center">
+							<if:if var="poster_id" greater="0">
+							<a href="member.php?id={$poster_id}" title="{$L_PROFILE}"><strong style="color: #{$poster_group_color};">{$poster_name}</strong></a>
+							<img src="Images/{$IMG_DIR}/Icons/{$poster_online}_small.gif" alt="" border="0" />
+							<if:else />
+							<strong><if:if var="poster_name" eq="">{$L_GUEST}<if:else />{$poster_name}</if:if></strong>
 							</if:if>
-						</div>
-						<br /><br />
-						<div class="outset_box_small">
-							<strong>{$L_MODOPTIONS}</strong>
-							<br />
-							<div class="smalltext">
-								<a href="mod.php?act=deletetopic&amp;id={$topic_id}" title="{$L_DELETETOPIC}">{$L_DELETETOPIC}</a><br />
-								<a href="mod.php?act=locktopic&amp;id={$topic_id}" title="{$L_LOCKTOPIC}">{$L_LOCKTOPIC}</a><br />
-								<if:if var="row_type" eq="8"><a href="mod.php?act=deletereply&amp;id={$reply_id}" title="{$L_DELETEREPLY}">{$L_DELETEREPLY}</a><br /></if:if>
-								<a href="mod.php?act=deletereport&amp;id={$id}" title="{$L_DELETEREPORT}">{$L_DELETEREPORT}</a><br />
-								--------------------
-								<br />
-								<a href="mod.php?act=banuser&amp;id={$poster_id}" title="{$L_BANUSER}">{$L_BANUSER}</a><br />
-								<a href="mod.php?act=flaguser&amp;id={$poster_id}" title="{$L_FLAGUSER}">{$L_FLAGUSER}</a><br />
-								<a href="mod.php?act=warnuser&amp;id={$poster_id}" title="{$L_WARNUSER}">{$L_WARNUSER}</a>
+						</td>
+						<td class="alt3" width="80%">
+							<div style="float: right" class="smalltext">
+								<core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span>
 							</div>
-						</div>
-					</td>
-					<td class="alt3" width="80%" class="alt1" valign="top">
-						<strong>{$L_REPORTER}:</strong> <if:if var="user_id" noteq="0"><a href="member.php?id={$user_id}" title="{$user_name}">{$user_name}</a><if:else />--</if:if>
-						<br />
-						<strong>{$L_REPORTEDON}:</strong> <core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span>
-						<br />
-						<strong>{$L_NUMREQUESTS}:</strong> {$num_requests}
-						<br />
-						<strong>{$L_REPORT}:</strong>
-						<br />
-						{$message}
-						<br /><br />
-						<strong>{$L_POST}:</strong>
-						<div class="inset_box_small">
-							<core:truncate length="200" append="...">{$body_text}</core:truncate>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td class="k4_subtitle" colspan="2"></td>
-				</tr>
-		</list:item>
-		</list:list>
-	</table>
+							<div class="smalltext">
+								<strong>{$L_POSTSUBJECT}:</strong>
+								<span class="smalltext">
+								<if:if var="topic_type" eq="2">{$stickytopicprefix}<else:if var="topic_type" geq="3" />{$announcementtopicprefix}</if:if>
+								<if:if var="is_feature" eq="1">{$featuretopicprefix}</if:if>
+								<if:if var="poll" eq="1">{$polltopicprefix}</if:if>
+								</span>
+								<a href="{$url}" title="{$name}" class="smalltext">{$name}</a>&nbsp;<img src="tmp/upload/posticons/{$posticon}" alt="" border="0" />
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="alt3" width="20%" valign="top">
+							<div class="smalltext">
+								<if:if var="poster_avatar" eq="1"><img src="viewfile.php?act=avatar&amp;id={$poster_id}" alt="" border="" /><br /></if:if>
+								<if:if var="poster_group_nicename" noteq="">{$poster_group_nicename}<br /></if:if>
+								<if:if var="poster_group_avatar" noteq="">
+								<img src="tmp/upload/group_avatars/{$poster_group_avatar}" border="0" alt="{$poster_group_nicename}" />
+								<br />
+								</if:if>
+							</div>
+							<br /><br />
+							<div class="outset_box_small">
+								<strong>{$L_MODOPTIONS}</strong>
+								<br />
+								<div class="smalltext">
+									<a href="mod.php?act=deletetopic&amp;id={$topic_id}" title="{$L_DELETETOPIC}">{$L_DELETETOPIC}</a><br />
+									<a href="mod.php?act=locktopic&amp;id={$topic_id}" title="{$L_LOCKTOPIC}">{$L_LOCKTOPIC}</a><br />
+									<if:if var="row_type" eq="8"><a href="mod.php?act=deletereply&amp;id={$reply_id}" title="{$L_DELETEREPLY}">{$L_DELETEREPLY}</a><br /></if:if>
+									<a href="mod.php?act=deletereport&amp;id={$id}" title="{$L_DELETEREPORT}">{$L_DELETEREPORT}</a><br />
+									--------------------
+									<br />
+									<a href="mod.php?act=banuser&amp;id={$poster_id}" title="{$L_BANUSER}">{$L_BANUSER}</a><br />
+									<a href="mod.php?act=flaguser&amp;id={$poster_id}" title="{$L_FLAGUSER}">{$L_FLAGUSER}</a><br />
+									<a href="mod.php?act=warnuser&amp;id={$poster_id}" title="{$L_WARNUSER}">{$L_WARNUSER}</a>
+								</div>
+							</div>
+						</td>
+						<td class="alt3" width="80%" class="alt1" valign="top">
+							<strong>{$L_REPORTER}:</strong> <if:if var="user_id" noteq="0"><a href="member.php?id={$user_id}" title="{$user_name}">{$user_name}</a><if:else />--</if:if>
+							<br />
+							<strong>{$L_REPORTEDON}:</strong> <core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span>
+							<br />
+							<strong>{$L_NUMREQUESTS}:</strong> {$num_requests}
+							<br />
+							<strong>{$L_REPORT}:</strong>
+							<br />
+							{$message}
+							<br /><br />
+							<strong>{$L_POST}:</strong>
+							<div class="inset_box_small">
+								<core:truncate length="200" append="...">{$body_text}</core:truncate>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="k4_subtitle" colspan="2"></td>
+					</tr>
+			</list:item>
+			</list:list>
+		</table>
+	</div>
 </div>
 <!-- / Bad Post Reports -->
 

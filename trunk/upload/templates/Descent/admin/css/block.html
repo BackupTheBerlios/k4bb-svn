@@ -1,9 +1,9 @@
-<isadmin>
+<is:admin>
 <table width="100%" cellpadding="0" cellspacing="1" border="0">
 	<tr>
 		<td>
 			{$L_WORDSPACING}:&nbsp;
-			<input type="text" class="inputbox" name="word-spacing" id="word-spacing" value="" size="5" onKeyPress="Enable(this, 'ws-measurement')" />&nbsp;
+			<input type="text" class="inputbox" name="word-spacing" id="word-spacing" value="" size="5" onkeypress="enable_field(this, 'ws-measurement')" />&nbsp;
 			<select name="ws-measurement" id="ws-measurement" disabled="true" class="smalltext">
 				<option value="px">pixels</option>
 				<option value="pt">points</option>
@@ -20,7 +20,7 @@
 	<tr>
 		<td>
 			{$L_LETTERSPACING}:&nbsp;
-			<input type="text" class="inputbox" name="letter-spacing" id="letter-spacing" value="" size="5" onKeyPress="Enable(this, 'ls-measurement')" />&nbsp;
+			<input type="text" class="inputbox" name="letter-spacing" id="letter-spacing" value="" size="5" onkeypress="enable_field(this, 'ls-measurement')" />&nbsp;
 			<select name="ls-measurement" id="ls-measurement" disabled="true" class="smalltext">
 				<option value="px">pixels</option>
 				<option value="pt">points</option>
@@ -65,7 +65,7 @@
 	<tr>
 		<td>
 			{$L_TEXTINDENT}:&nbsp;
-			<input type="text" class="inputbox" name="text-indent" id="text-indent" value="" size="5" onKeyPress="Enable(this, 'block-measurement')" />&nbsp;
+			<input type="text" class="inputbox" name="text-indent" id="text-indent" value="" size="5" onkeypress="enable_field(this, 'block-measurement')" />&nbsp;
 			<select name="block-measurement" id="block-measurement" disabled="true" class="smalltext">
 				<option value="px">pixels</option>
 				<option value="pt">points</option>
@@ -116,4 +116,4 @@
 		</td>
 	</tr>
 </table>
-</isadmin>
+</is:admin>

@@ -2,56 +2,58 @@
 <!-- User Ban Settings -->
 <form:form name="banuser" id="banuser" action="mod.php?act=hardbanuser" method="post" enctype="mulitpart/form-data">
 <input type="hidden" name="id" value="{$banuser_id}" />
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">
-		{$L_BANUSER}: <span style="font-weight: normal;"><a href="member.php?id={$banuser_id}" title="{$L_PROFILE}: {$banuser_name}">{$banuser_name}</a></span>
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">
+			{$L_BANUSER}: <span style="font-weight: normal;"><a href="member.php?id={$banuser_id}" title="{$L_PROFILE}: {$banuser_name}">{$banuser_name}</a></span>
+		</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<core:block id="iprange" hidden="yes">
+			<tr>
+				<td width="30%" class="alt3">
+					<strong>{$L_IPRANGE}:</strong><br />
+					<span class="smalltext">{$L_HOWTOBANIPRANGE}</span>
+				</td>
+				<td width="70%" class="alt1">
+					<input type="text" name="user_ip" value="{$iprange}" size="15" maxlength="15" class="inputbox" />
+					<form:error id="name_error" for="name" setclass="inputfailed" regex=".{7,15}">{$L_MUSTINSERTIP}</form:error>
+				</td>
+			</tr>
+			</core:block>
+			<tr>
+				<td width="30%" class="alt3">
+					<strong>{$L_REASON}:</strong><br />
+					<span class="smalltext">{$L_BANREASON}</span>
+				</td>
+				<td width="70%"class="alt1">
+					<textarea name="reason" id="reason" class="inputbox" rows="10" cols="50"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td width="30%" class="alt3">
+					<strong>{$L_FOR}:</strong>
+				</td>
+				<td width="70%" class="alt1">
+					<select name="expiry" id="expiry">
+						<option value="0">{$L_INDEFINETELY}</option>
+						<option value="1">{$L_THENEXT24HOURS}</option>
+						<option value="2">{$L_THENEXT48HOURS}</option>
+						<option value="5">{$L_THENEXTFIVEDAYS}</option>
+						<option value="10">{$L_THENEXTTENDAYS}</option>
+						<option value="14">{$L_THENEXTTWOWEEKS}</option>
+						<option value="30">{$L_THENEXTMONTH}</option>
+						<option value="183">{$L_THENEXTSIXMONTHS}</option>
+						<option value="365">{$L_THENEXTYEAR}</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="k4_subtitle" style="text-align: center;" colspan="2">
+					<input type="submit" value="{$L_BANTHISUSER}" class="button" />
+				</td>
+			</tr>
+		</table>
 	</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-		<core:block id="iprange" hidden="yes">
-		<tr>
-			<td width="30%" class="alt3">
-				<strong>{$L_IPRANGE}:</strong><br />
-				<span class="smalltext">{$L_HOWTOBANIPRANGE}</span>
-			</td>
-			<td width="70%" class="alt1">
-				<input type="text" name="user_ip" value="{$iprange}" size="15" maxlength="15" class="inputbox" />
-				<form:error id="name_error" for="name" setclass="inputfailed" regex=".{7,15}">{$L_MUSTINSERTIP}</form:error>
-			</td>
-		</tr>
-		</core:block>
-		<tr>
-			<td width="30%" class="alt3">
-				<strong>{$L_REASON}:</strong><br />
-				<span class="smalltext">{$L_BANREASON}</span>
-			</td>
-			<td width="70%"class="alt1">
-				<textarea name="reason" id="reason" class="inputbox" rows="10" cols="50"></textarea>
-			</td>
-		</tr>
-		<tr>
-			<td width="30%" class="alt3">
-				<strong>{$L_FOR}:</strong>
-			</td>
-			<td width="70%" class="alt1">
-				<select name="expiry" id="expiry">
-					<option value="0">{$L_INDEFINETELY}</option>
-					<option value="1">{$L_THENEXT24HOURS}</option>
-					<option value="2">{$L_THENEXT48HOURS}</option>
-					<option value="5">{$L_THENEXTFIVEDAYS}</option>
-					<option value="10">{$L_THENEXTTENDAYS}</option>
-					<option value="14">{$L_THENEXTTWOWEEKS}</option>
-					<option value="30">{$L_THENEXTMONTH}</option>
-					<option value="183">{$L_THENEXTSIXMONTHS}</option>
-					<option value="365">{$L_THENEXTYEAR}</option>
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td class="k4_subtitle" style="text-align: center;" colspan="2">
-				<input type="submit" value="{$L_BANTHISUSER}" class="button" />
-			</td>
-		</tr>
-	</table>
 </div>
 </form:form>
 <!-- / User Ban Settings -->

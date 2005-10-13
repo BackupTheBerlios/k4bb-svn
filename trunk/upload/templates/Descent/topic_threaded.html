@@ -1,22 +1,24 @@
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">{$L_TOPIC}: <span style="font-weight: normal;">{$topic_name}</span></div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-		<tr>
-			<td class="alt3">
-				<div class="inset_box" style="height: 100px;overflow: auto;">
-					<div class="alt1" style="font-size: 11px;padding: 1px;">
-						<strong>{$topic_poster_name}</strong>&nbsp;<a href="viewtopic.php?id={$topic_topic_id}#t{$topic_topic_id}" title="{$name}" style="font-size: 13px;font-style: italic;"><core:truncate length="40" append="...">{$topic_name}</core:truncate></a>&nbsp;<core:date format="%b %d %Y">{$topic_created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$topic_created}</core:date></span>
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_TOPIC}: <span style="font-weight: normal;">{$topic_name}</span></div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr>
+				<td class="alt3">
+					<div class="inset_box" style="height: 100px;overflow: auto;">
+						<div class="alt1" style="font-size: 11px;padding: 1px;">
+							<strong>{$topic_poster_name}</strong>&nbsp;<a href="viewtopic.php?id={$topic_topic_id}#t{$topic_topic_id}" title="{$name}" style="font-size: 13px;font-style: italic;"><core:truncate length="40" append="...">{$topic_name}</core:truncate></a>&nbsp;<core:date format="%b %d %Y">{$topic_created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$topic_created}</core:date></span>
+						</div>
+						<list:list id="threaded_replies">
+						<list:item list="threaded_replies">
+						<div class="alt1" style="font-size: 11px;padding: 1px;">
+							{$inset_level}<img src="Images/{$IMG_DIR}/Icons/navbits_finallink.gif" alt="" border="0" />&nbsp;<strong>{$poster_name}</strong>&nbsp;<a href="viewtopic.php?id={$topic_id}&amp;p={$reply_id}#p{$reply_id}" title="{$name}" style="font-size: 13px;font-style: italic;"><core:truncate length="40" append="...">{$name}</core:truncate></a>&nbsp;<core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span>
+						</div>
+						</list:item>
+						</list:list>
 					</div>
-					<list:list id="threaded_replies">
-					<list:item list="threaded_replies">
-					<div class="alt1" style="font-size: 11px;padding: 1px;">
-						{$inset_level}<img src="Images/{$IMG_DIR}/Icons/navbits_finallink.gif" alt="" border="0" />&nbsp;<strong>{$poster_name}</strong>&nbsp;<a href="viewtopic.php?id={$topic_id}&amp;p={$reply_id}#p{$reply_id}" title="{$name}" style="font-size: 13px;font-style: italic;"><core:truncate length="40" append="...">{$name}</core:truncate></a>&nbsp;<core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span>
-					</div>
-					</list:item>
-					</list:list>
-				</div>
-			</td>
-		</tr>
-	</table>
+				</td>
+			</tr>
+		</table>
+	</div>
 </div>
 <br />

@@ -33,33 +33,37 @@
 		</td>
 	</tr>
 </table>
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">
-		<!-- Message Navigation -->
-		<div class="smalltext">
-			<a href="findpost.php?id={$next_oldest}&amp;prev=1" title="{$L_NEXTOLDEST}">&laquo; {$L_NEXTOLDEST}</a>
-			| <a href="findpost.php?id={$next_newest}&amp;next=1" title="{$L_NEXTNEWEST}">{$L_NEXTNEWEST} &raquo;</a>
+
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">
+			<!-- Message Navigation -->
+			<div class="smalltext">
+				<a href="findpost.php?id={$next_oldest}&amp;prev=1" title="{$L_NEXTOLDEST}">&laquo; {$L_NEXTOLDEST}</a>
+				| <a href="findpost.php?id={$next_newest}&amp;next=1" title="{$L_NEXTNEWEST}">{$L_NEXTNEWEST} &raquo;</a>
+			</div>
+			<!-- / Message Navigation -->
 		</div>
-		<!-- / Message Navigation -->
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		
+		<!-- Message {$name} -->
+		<core:import id="message_file" file="pm_message.html" />
+		<!-- / Message {$name} -->
+		
+		<list:sublist list="message" id="replies" column="replies">
+		<list:item list="replies">
+		
+		<!-- Message {$name} -->
+		<core:import id="message_file" file="pm_message.html" />
+		<!-- / Message {$name} -->
+
+		</list:item>
+		</list:sublist>
+
+		</table>
 	</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-	
-	<!-- Message {$name} -->
-	<core:import id="message_file" file="pm_message.html" />
-	<!-- / Message {$name} -->
-	
-	<list:sublist list="message" id="replies" column="replies">
-	<list:item list="replies">
-	
-	<!-- Message {$name} -->
-	<core:import id="message_file" file="pm_message.html" />
-	<!-- / Message {$name} -->
-
-	</list:item>
-	</list:sublist>
-
-	</table>
 </div>
+
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
 	<tr>
 		<td width="50%">

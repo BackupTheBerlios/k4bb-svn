@@ -1,27 +1,29 @@
 <form action="viewpoll.php?act=vote&amp;id={$poll_id}" method="post" enctype="multipart/form-data">
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">{$L_POLL}: <span style="font-weight: normal;">{$poll_question}</span></div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-		<tr>
-			<td class="alt3">
-				<div class="outset_box">
-					<fieldset>
-						<legend>{$L_POLLOPTIONS}</legend>
-						<list:list id="poll_answers">
-						<list:item list="poll_answers">
-						<label for="vote{$id}"><input type="radio" id="vote{$id}" name="vote" value="{$id}" />&nbsp;&nbsp;{$answer}</label>
-						<list:separator list="poll_answers"><br /></list:separator>
-						</list:item>
-						</list:list>
-					</fieldset>
-					<br />
-					<input type="submit" value="{$L_VOTE}" class="button" />
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td class="k4_subtitle" colspan="4" align="center"><a href="viewpoll.php?id={$poll_id}&amp;sr=1" title="{$L_VIEWRESULTS}">{$L_VIEWRESULTS}</a></td>
-		</tr>
-	</table>
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_POLL}: <span style="font-weight: normal;">{$poll_question}</span></div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr>
+				<td class="alt3">
+					<div class="outset_box">
+						<fieldset>
+							<legend>{$L_POLLOPTIONS}</legend>
+							<list:list id="poll_answers">
+							<list:item list="poll_answers">
+							<label for="vote{$id}"><input type="radio" id="vote{$id}" name="vote" value="{$id}" />&nbsp;&nbsp;{$answer}</label>
+							<list:separator list="poll_answers"><br /></list:separator>
+							</list:item>
+							</list:list>
+						</fieldset>
+						<br />
+						<input type="submit" value="{$L_VOTE}" class="button" />
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="k4_subtitle" colspan="4" align="center"><a href="viewpoll.php?id={$poll_id}&amp;sr=1" title="{$L_VIEWRESULTS}">{$L_VIEWRESULTS}</a></td>
+			</tr>
+		</table>
+	</div>
 </div>
 </form>

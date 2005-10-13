@@ -1,167 +1,171 @@
 <!-- Advanced Search -->
 <form action="search.php?act=find" method="post" enctype="multipart/form-data">
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">{$L_SEARCHPARAMS}</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-		<tr>
-			<td class="alt1" width="50%" colspan="2">
-				<strong>{$L_SEARCHFORKEYWORD}:</strong><br />
-				<span class="smalltext">{$L_WILDCARDSTARINFO}</span>
-			</td>
-			<td class="alt3" width="50%" colspan="2">
-				<input type="text" name="keywords" value="" class="inputbox" maxlength="{$maxuserlength}" />
-			</td>
-		</tr>
-		<tr>
-			<td class="alt1" width="50%" colspan="2">
-				<strong>{$L_SEARCHFORAUTHOR}:</strong><br />
-				<span class="smalltext">{$L_WILDCARDSTARINFO}</span>
-			</td>
-			<td class="alt3" width="50%" colspan="2">
-				<input type="text" name="author" value="" class="inputbox" size="{$maxuserlength}" maxlength="{$maxuserlength}" />
-				<label for="exact"><input type="checkbox" value="1" name="exact" id="exact" /> <span class="smalltext">{$L_EXACT}</span></label>
-			</td>
-		</tr>
-		<tr>
-			<td class="alt1" width="50%" colspan="2">
-				<strong>{$L_SEARCHINFORUMS}:</strong>
-			</td>
-			<td class="alt3" width="50%" colspan="2">
-				
-				<!-- Forum List -->
-				<select name="forums[]" size="5" multiple="multiple" class="inputbox" style="width: 95%;">
-					<option value="-1" selected="selected"> --- {$L_ALLFORUMS} --- </option>
-					<list:list id="all_forums">
-					<list:item list="all_forums">
-						<if:if var="row_type" eq="2">
-							<maps:if list="all_forums" forum="forum_id" method="can_view">
-								<maps:if forum="forum_id" method="can_view">
-									<if:if var="is_forum" eq="1">
-										<option value="f{$id}">{$indent_level}{$name}</option>
-									</if:if>
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_SEARCHPARAMS}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr>
+				<td class="alt1" width="50%" colspan="2">
+					<strong>{$L_SEARCHFORKEYWORD}:</strong><br />
+					<span class="smalltext">{$L_WILDCARDSTARINFO}</span>
+				</td>
+				<td class="alt3" width="50%" colspan="2">
+					<input type="text" name="keywords" value="" class="inputbox" maxlength="{$maxuserlength}" />
+				</td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%" colspan="2">
+					<strong>{$L_SEARCHFORAUTHOR}:</strong><br />
+					<span class="smalltext">{$L_WILDCARDSTARINFO}</span>
+				</td>
+				<td class="alt3" width="50%" colspan="2">
+					<input type="text" name="author" value="" class="inputbox" size="{$maxuserlength}" maxlength="{$maxuserlength}" />
+					<label for="exact"><input type="checkbox" value="1" name="exact" id="exact" /> <span class="smalltext">{$L_EXACT}</span></label>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%" colspan="2">
+					<strong>{$L_SEARCHINFORUMS}:</strong>
+				</td>
+				<td class="alt3" width="50%" colspan="2">
+					
+					<!-- Forum List -->
+					<select name="forums[]" size="5" multiple="multiple" class="inputbox" style="width: 95%;">
+						<option value="-1" selected="selected"> --- {$L_ALLFORUMS} --- </option>
+						<list:list id="all_forums">
+						<list:item list="all_forums">
+							<if:if var="row_type" eq="2">
+								<maps:if list="all_forums" forum="forum_id" method="can_view">
+									<maps:if forum="forum_id" method="can_view">
+										<if:if var="is_forum" eq="1">
+											<option value="f{$id}">{$indent_level}{$name}</option>
+										</if:if>
+									</maps:if>
 								</maps:if>
-							</maps:if>
-						<if:else />
-							<maps:if list="all_forums" category="category_id" method="can_view">
-								<option value="c{$id}" style="font-weight: bold;">{$indent_level}{$name}</option>
-							</maps:if>
-						</if:if>
-					</list:item>
-					</list:list>
-				</select>
-				<!-- / Forum List -->
-			</td>
-		</tr>
-	</table>
+							<if:else />
+								<maps:if list="all_forums" category="category_id" method="can_view">
+									<option value="c{$id}" style="font-weight: bold;">{$indent_level}{$name}</option>
+								</maps:if>
+							</if:if>
+						</list:item>
+						</list:list>
+					</select>
+					<!-- / Forum List -->
+				</td>
+			</tr>
+		</table>
+	</div>
 </div>
 <br />
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">{$L_SEARCHOPTIONS}</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-		<tr>
-			<td class="alt1" width="25%">
-				<strong>{$L_SEARCHSUBFORUMS}:</strong>
-			</td>
-			<td class="alt3" width="25%">
-				<div class="smalltext">
-					<label for="searchsubforums_yes"><input type="radio" checked="checked" name="searchsubforums" id="searchsubforums_yes" value="1" /> {$L_YES}</label>
-					&nbsp;&nbsp;&nbsp;
-					<label for="searchsubforums_no"><input type="radio" name="searchsubforums" id="searchsubforums_no" value="0" /> {$L_NO}</label>
-				</div>
-			</td>
-			<td class="alt1" width="25%">
-				<strong>{$L_SEARCHWITHIN}:</strong>
-			</td>
-			<td class="alt3" width="25%">
-				<div class="smalltext">
-					<label for="searchwhere_1"><input type="radio" checked="checked" name="searchwhere" id="searchwhere_1" value="subjectmessage" /> {$L_SEARCHENTIREPOSTS}</label><br />
-					<label for="searchwhere_2"><input type="radio" name="searchwhere" id="searchwhere_2" value="subject" /> {$L_SEARCHTITLES}</label><br />
-					<label for="searchwhere_3"><input type="radio" name="searchwhere" id="searchwhere_3" value="message" /> {$L_SEARCHPOSTTEXT}</label>
-				</div>
-			</td>
-		</tr>
-		
-		<tr>
-			<td class="alt1" width="25%">
-				<strong>{$L_SORTRESULTSBY}:</strong>
-			</td>
-			<td class="alt3" width="25%">
-				<div class="smalltext">
-					<select name="sort" class="smalltext" style="width: 125px;">
-						<option value="created" selected="selected">{$L_CREATED}</option>
-						<option value="name">{$L_TITLE}</option>
-						<option value="poster_name" >{$L_AUTHOR}</option>
-						<option value="forum_id">{$L_FORUM}</option>
-					</select> <br />
-					<label for="descending"><input type="radio" checked="checked" name="order" id="searchsubforums_no" value="DESC" /> {$L_DESCENDING}</label><br />
-					<label for="ascending"><input type="radio" name="order" id="ascending" value="ASC" /> {$L_ASCENDING}</label>
-				</div>
-			</td>
-			<td class="alt1" width="25%">
-				<strong>{$L_DISPLAYRESULTSAS}:</strong>
-			</td>
-			<td class="alt3" width="25%">
-				<div class="smalltext">
-					<label for="viewas_posts"><input type="radio" name="viewas" id="viewas_posts" value="posts" /> {$L_POSTS}</label>
-					&nbsp;&nbsp;&nbsp;
-					<label for="viewas_topics"><input type="radio" name="viewas" id="viewas_topics" value="topics" checked="checked" /> {$L_TOPICS}</label>
-				</div>
-			</td>
-		</tr>
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_SEARCHOPTIONS}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr>
+				<td class="alt1" width="25%">
+					<strong>{$L_SEARCHSUBFORUMS}:</strong>
+				</td>
+				<td class="alt3" width="25%">
+					<div class="smalltext">
+						<label for="searchsubforums_yes"><input type="radio" checked="checked" name="searchsubforums" id="searchsubforums_yes" value="1" /> {$L_YES}</label>
+						&nbsp;&nbsp;&nbsp;
+						<label for="searchsubforums_no"><input type="radio" name="searchsubforums" id="searchsubforums_no" value="0" /> {$L_NO}</label>
+					</div>
+				</td>
+				<td class="alt1" width="25%">
+					<strong>{$L_SEARCHWITHIN}:</strong>
+				</td>
+				<td class="alt3" width="25%">
+					<div class="smalltext">
+						<label for="searchwhere_1"><input type="radio" checked="checked" name="searchwhere" id="searchwhere_1" value="subjectmessage" /> {$L_SEARCHENTIREPOSTS}</label><br />
+						<label for="searchwhere_2"><input type="radio" name="searchwhere" id="searchwhere_2" value="subject" /> {$L_SEARCHTITLES}</label><br />
+						<label for="searchwhere_3"><input type="radio" name="searchwhere" id="searchwhere_3" value="message" /> {$L_SEARCHPOSTTEXT}</label>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td class="alt1" width="25%">
+					<strong>{$L_SORTRESULTSBY}:</strong>
+				</td>
+				<td class="alt3" width="25%">
+					<div class="smalltext">
+						<select name="sort" class="smalltext" style="width: 125px;">
+							<option value="created" selected="selected">{$L_CREATED}</option>
+							<option value="name">{$L_TITLE}</option>
+							<option value="poster_name" >{$L_AUTHOR}</option>
+							<option value="forum_id">{$L_FORUM}</option>
+						</select> <br />
+						<label for="descending"><input type="radio" checked="checked" name="order" id="searchsubforums_no" value="DESC" /> {$L_DESCENDING}</label><br />
+						<label for="ascending"><input type="radio" name="order" id="ascending" value="ASC" /> {$L_ASCENDING}</label>
+					</div>
+				</td>
+				<td class="alt1" width="25%">
+					<strong>{$L_DISPLAYRESULTSAS}:</strong>
+				</td>
+				<td class="alt3" width="25%">
+					<div class="smalltext">
+						<label for="viewas_posts"><input type="radio" name="viewas" id="viewas_posts" value="posts" /> {$L_POSTS}</label>
+						&nbsp;&nbsp;&nbsp;
+						<label for="viewas_topics"><input type="radio" name="viewas" id="viewas_topics" value="topics" checked="checked" /> {$L_TOPICS}</label>
+					</div>
+				</td>
+			</tr>
 
-		<tr>
-			<td class="alt1" width="25%">
-				<strong>{$L_LIMITRESULTSTOPREV}:</strong>
-			</td>
-			<td class="alt3" width="25%">
-				<select name="daysprune" style="width:125px" class="smalltext">
-					<option value="1">{$L_LAST_DAY}</option>
-					<option value="2">{$L_LAST_2_DAYS}</option>
-					<option value="7">{$L_LAST_WEEK}</option>
-					<option value="10">{$L_LAST_10_DAYS}</option>
-					<option value="14">{$L_LAST_2_WEEKS}</option>
-					<option value="30">{$L_LAST_MONTH}</option>
-					<option value="45">{$L_LAST_45_DAYS}</option>
-					<option value="60">{$L_LAST_2_MONTHS}</option>
-					<option value="75">{$L_LAST_75_DAYS}</option>
-					<option value="100">{$L_LAST_100_DAYS}</option>
-					<option value="365">{$L_LAST_YEAR}</option>
-					<option value="0" selected="selected">{$L_BEGINNING}</option>
-				</select>
-			</td>
-			<td class="alt1" width="25%">
-				<strong>{$L_RETURNFIRST}:</strong>
-			</td>
-			<td class="alt3" width="25%">
-				<div class="smalltext">
-					<select name="post_length" style="width:100px" class="smalltext">
-						<option value="{$postmaxchars}">{$L_ALLAVAILABLE}</option>
-						<option value="0">0</option>
-						<option value="25">25</option>
-						<option value="50">50</option>
-						<option value="100">100</option>
-						<option value="200" selected="selected">200</option>
-						<option value="300">300</option>
-						<option value="400">400</option>
-						<option value="500">500</option>
-						<option value="600">600</option>
-						<option value="700">700</option>
-						<option value="800">800</option>
-						<option value="900">900</option>
-						<option value="1000">1000</option>
+			<tr>
+				<td class="alt1" width="25%">
+					<strong>{$L_LIMITRESULTSTOPREV}:</strong>
+				</td>
+				<td class="alt3" width="25%">
+					<select name="daysprune" style="width:125px" class="smalltext">
+						<option value="1">{$L_LAST_DAY}</option>
+						<option value="2">{$L_LAST_2_DAYS}</option>
+						<option value="7">{$L_LAST_WEEK}</option>
+						<option value="10">{$L_LAST_10_DAYS}</option>
+						<option value="14">{$L_LAST_2_WEEKS}</option>
+						<option value="30">{$L_LAST_MONTH}</option>
+						<option value="45">{$L_LAST_45_DAYS}</option>
+						<option value="60">{$L_LAST_2_MONTHS}</option>
+						<option value="75">{$L_LAST_75_DAYS}</option>
+						<option value="100">{$L_LAST_100_DAYS}</option>
+						<option value="365">{$L_LAST_YEAR}</option>
+						<option value="0" selected="selected">{$L_BEGINNING}</option>
 					</select>
-					{$L_CHARACTERSOFPOSTS}
-				</div>
-			</td>
-		</tr>
+				</td>
+				<td class="alt1" width="25%">
+					<strong>{$L_RETURNFIRST}:</strong>
+				</td>
+				<td class="alt3" width="25%">
+					<div class="smalltext">
+						<select name="post_length" style="width:100px" class="smalltext">
+							<option value="{$postmaxchars}">{$L_ALLAVAILABLE}</option>
+							<option value="0">0</option>
+							<option value="25">25</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+							<option value="200" selected="selected">200</option>
+							<option value="300">300</option>
+							<option value="400">400</option>
+							<option value="500">500</option>
+							<option value="600">600</option>
+							<option value="700">700</option>
+							<option value="800">800</option>
+							<option value="900">900</option>
+							<option value="1000">1000</option>
+						</select>
+						{$L_CHARACTERSOFPOSTS}
+					</div>
+				</td>
+			</tr>
 
-		<tr>
-			<td class="k4_subtitle" colspan="4" align="center">
-				<input type="submit" value="{$L_SEARCH}" class="button" />
-				<input type="reset" value="{$L_RESET}" class="button" />
-			</td>
-		</tr>
-	</table>
+			<tr>
+				<td class="k4_subtitle" colspan="4" align="center">
+					<input type="submit" value="{$L_SEARCH}" class="button" />
+					<input type="reset" value="{$L_RESET}" class="button" />
+				</td>
+			</tr>
+		</table>
+	</div>
 </div>
 </form>
 <!-- / Advanced Search -->

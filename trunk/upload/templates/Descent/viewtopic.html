@@ -41,49 +41,61 @@
 </table>
 
 <list:list id="topic">
-<div class="k4_borderwrap">
-	<div class="k4_maintitle" align="right">
-		<!-- Topic Navigation -->
-		<div class="smalltext" style="float: left;">
-			<a href="findpost.php?id={$next_oldest}&amp;prev=1" title="{$L_NEXTOLDEST}">&laquo; {$L_NEXTOLDEST}</a>
-			| <a href="findpost.php?id={$next_newest}&amp;next=1" title="{$L_NEXTNEWEST}">{$L_NEXTNEWEST} &raquo;</a>
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle" align="right">
+			<!-- Topic Navigation -->
+			<div class="smalltext" style="float: left;">
+				<a href="findpost.php?id={$next_oldest}&amp;prev=1" title="{$L_NEXTOLDEST}">&laquo; {$L_NEXTOLDEST}</a>
+				| <a href="findpost.php?id={$next_newest}&amp;next=1" title="{$L_NEXTNEWEST}">{$L_NEXTNEWEST} &raquo;</a>
+			</div>
+			<!-- / Topic Navigation -->
+
+			<!-- Drop Down Menus -->
+			<table cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td>
+						<div class="ddmenu_button" id="topicoptions_link"><span class="nav_top">{$L_TOPICOPTIONS}</span></div>
+					</td>
+					<td>
+						<div class="ddmenu_button" id="ratetopic_link"><span class="nav_top">{$L_RATETOPIC}</span></div>
+					</td>
+				</tr>
+			</table>
+			<!-- / Drop Down Menus -->
 		</div>
-		<!-- / Topic Navigation -->
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<list:item list="topic">
 
-		<!-- Drop Down Menus -->
-		<table cellpadding="0" cellspacing="0" border="0">
-			<tr>
-				<td>
-					<div class="ddmenu_button" id="topicoptions_link"><span class="nav_top">{$L_TOPICOPTIONS}</span></div>
-				</td>
-				<td>
-					<div class="ddmenu_button" id="ratetopic_link"><span class="nav_top">{$L_RATETOPIC}</span></div>
-				</td>
-			</tr>
+		<!-- Topic: {$name} -->
+		<core:import id="topic_file" />
+		<!-- / Topic: {$name} -->
 		</table>
-		<!-- / Drop Down Menus -->
 	</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-	<list:item list="topic">
-
-	<!-- Topic: {$name} -->
-	<core:import id="topic_file" />
-	<!-- / Topic: {$name} -->
-
-	<maps:if var="replies" forum="topic_forum_id" method="can_view">
-	<list:sublist list="topic" id="replies" column="replies">
-	<list:item list="replies">
-	<list:switch list="replies" var="row_class" a="alt1" b="alt3">
-	<!-- Reply: {$name} -->
-	<core:import id="reply_file" />
-	<!-- / Reply: {$name} -->
-	</list:switch>
-	</list:item>
-	</list:sublist>
-	</maps:if>
-	</list:item>
-	</table>
 </div>
+<core:import id="google_adsense_lu" file="google_adsense_lu.html" />
+<br />
+<if:if var="num_replies" greater="0">
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_REPLIES}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<maps:if var="replies" forum="topic_forum_id" method="can_view">
+			<list:sublist list="topic" id="replies" column="replies">
+			<list:item list="replies">
+			<list:switch list="replies" var="row_class" a="alt1" b="alt3">
+			<!-- Reply: {$name} -->
+			<core:import id="reply_file" />
+			<!-- / Reply: {$name} -->
+			</list:switch>
+			</list:item>
+			</list:sublist>
+			</maps:if>
+		</table>
+	</div>
+</div>
+</if:if>
+</list:item>
 </list:list>
 
 <!-- Quick Reply Information -->

@@ -1,60 +1,64 @@
 <is:logged>
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">{$L_USERCONTROLPANEL}: <span style="font-weight: normal;">{$L_MANAGEATTACHMENTS}</span></div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-		<tr>
-			<td class="alt3"><span class="smalltext">{$L_USERCPATTACHMENTSMSG}</span></td>
-		</tr>
-	</table>
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_USERCONTROLPANEL}: <span style="font-weight: normal;">{$L_MANAGEATTACHMENTS}</span></div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr>
+				<td class="alt3"><span class="smalltext">{$L_USERCPATTACHMENTSMSG}</span></td>
+			</tr>
+		</table>
+	</div>
 </div>
 <br />
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">{$L_ATTACHMENTSETTINGS}</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-		<tr>
-			<td class="k4_subtitle">{$L_CURRENTUSAGE}</td>
-		</tr>
-		<tr>
-			<td class="alt1">
-				<div style="float: right;text-align: right;" class="smalltext">
-					<strong>{$L_QUOTA}:</strong> <if:if var="maxattachquota" eq="0"><em?>{$L_NONE}</em><if:else />{$maxattachquota} {$L_BYTES} ({$attach_megs} {$L_MEGABYTES})</if:if>
-					<br />
-					<strong>{$L_CURRENTUSAGE}:</strong> {$attach_percent}%
-				</div>
-				<div class="k4_borderwrap" style="width: 400px;">
-					<div class="alt2" style="width: {$attach_width}px;height:20px;border:1px solid #FFFFFF;"></div>
-				</div>
-			</td>
-		<tr>
-		<tr>
-			<td class="k4_subtitle">{$L_ATTACHMENTS}</td>
-		</tr>
-		<list:list id="attachments">
-		<list:default list="attachments">
-		<tr>
-			<td class="alt3">
-				<div class="outset_box" style="text-align: center;"><br /><strong>{$L_NOATTACHMENTS}</strong><br /><br /></div>
-			</td>
-		</tr>
-		</list:default>
-		<list:item list="attachments">
-		<list:switch list="attachments" var="row_class" a="alt3" b="alt1">
-		<tr>
-			<td class="{$row_class}" valign="middle">
-				<div style="float:right;">
-					<a href="viewfile.php?act=remove_attach&amp;id={$id}&amp;<if:if var="message_id" noteq="0">m={$message_id}<else:if var="reply_id" noteq="0">r={$reply_id}<if:else />t={$topic_id}</if:if>" title="{$L_REMOVEATTACHMENT}">{$L_REMOVEATTACHMENT}</a><br />
-					<a href="viewfile.php?act=attachment&amp;id={$id}&amp;<if:if var="message_id" noteq="0">m={$message_id}<else:if var="reply_id" noteq="0">r={$reply_id}<if:else />t={$topic_id}</if:if>" title="{$L_VIEWATTACHMENT}" target="_blank">{$L_VIEWATTACHMENT}</a>
-				</div>
-				<strong>{$file_name}</strong><br />
-				<span class="smalltext">
-					<strong>{$L_TYPE}:</strong> {$file_type}<br />
-					<strong>{$L_SIZE}:</strong> {$file_size} {$L_BYTES} ({$L_APPROX} {$percent}%)<br />
-				</span>
-			</td>
-		</tr>
-		</list:switch>
-		</list:item>
-		</list:list>
-	</table>
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_ATTACHMENTSETTINGS}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr>
+				<td class="k4_subtitle">{$L_CURRENTUSAGE}</td>
+			</tr>
+			<tr>
+				<td class="alt1">
+					<div style="float: right;text-align: right;" class="smalltext">
+						<strong>{$L_QUOTA}:</strong> <if:if var="maxattachquota" eq="0"><em?>{$L_NONE}</em><if:else />{$maxattachquota} {$L_BYTES} ({$attach_megs} {$L_MEGABYTES})</if:if>
+						<br />
+						<strong>{$L_CURRENTUSAGE}:</strong> {$attach_percent}%
+					</div>
+					<div class="k4_borderwrap" style="width: 400px;">
+						<div class="alt2" style="width: {$attach_width}px;height:20px;border:1px solid #FFFFFF;"></div>
+					</div>
+				</td>
+			<tr>
+			<tr>
+				<td class="k4_subtitle">{$L_ATTACHMENTS}</td>
+			</tr>
+			<list:list id="attachments">
+			<list:default list="attachments">
+			<tr>
+				<td class="alt3">
+					<div class="outset_box" style="text-align: center;"><br /><strong>{$L_NOATTACHMENTS}</strong><br /><br /></div>
+				</td>
+			</tr>
+			</list:default>
+			<list:item list="attachments">
+			<list:switch list="attachments" var="row_class" a="alt3" b="alt1">
+			<tr>
+				<td class="{$row_class}" valign="middle">
+					<div style="float:right;">
+						<a href="viewfile.php?act=remove_attach&amp;id={$id}&amp;<if:if var="message_id" noteq="0">m={$message_id}<else:if var="reply_id" noteq="0">r={$reply_id}<if:else />t={$topic_id}</if:if>" title="{$L_REMOVEATTACHMENT}">{$L_REMOVEATTACHMENT}</a><br />
+						<a href="viewfile.php?act=attachment&amp;id={$id}&amp;<if:if var="message_id" noteq="0">m={$message_id}<else:if var="reply_id" noteq="0">r={$reply_id}<if:else />t={$topic_id}</if:if>" title="{$L_VIEWATTACHMENT}" target="_blank">{$L_VIEWATTACHMENT}</a>
+					</div>
+					<strong>{$file_name}</strong><br />
+					<span class="smalltext">
+						<strong>{$L_TYPE}:</strong> {$file_type}<br />
+						<strong>{$L_SIZE}:</strong> {$file_size} {$L_BYTES} ({$L_APPROX} {$percent}%)<br />
+					</span>
+				</td>
+			</tr>
+			</list:switch>
+			</list:item>
+			</list:list>
+		</table>
+	</div>
 </div>
 </is:logged>

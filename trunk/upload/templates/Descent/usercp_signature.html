@@ -1,52 +1,56 @@
 <is:logged>
 <form:form action="member.php?act=update_signature" method="post" enctype="multipart/form-data">
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">{$L_USERCONTROLPANEL}: <span style="font-weight: normal;">{$L_EDITSIGNATURE}</span></div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-		<tr class="alt3">
-			<td><span class="smalltext">{$L_USERCPSIGNATUREMSG}</span></td>
-		</tr>
-	</table>
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_USERCONTROLPANEL}: <span style="font-weight: normal;">{$L_EDITSIGNATURE}</span></div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr class="alt3">
+				<td><span class="smalltext">{$L_USERCPSIGNATUREMSG}</span></td>
+			</tr>
+		</table>
+	</div>
 </div>
 <br />
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">{$L_SIGNATUREOPTIONS}</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-		<tr>
-			<td class="k4_subtitle">{$L_CURRENTSIGNATURE}</td>
-		</tr>
-		<tr>
-			<td class="alt3">
-				<if:if var="user_signature" noteq="">
-				{$user_signature}
-				<if:else />
-				<div align="center" class="smalltext"><br />{$L_NOINFORMATION}<br /><br /></div>
-				</if:if>
-			</td>
-		</tr>
-		<tr>
-			<td class="k4_subtitle">{$L_EDITSIGNATURE}</td>
-		</tr>
-		<tr>
-			<td class="alt3">
-				<div class="outset_box">
-					<fieldset>
-						<legend><label for="messagecodex" class="smalltext">{$L_SIGNATURE}</label></legend>
-						<core:import id="editor" file="editor.html" />
-					</fieldset>
-					<br />
-					<label for="attachsig"><input type="checkbox" value="1" name="attachsig" id="attachsig" tabindex="2" />&nbsp;{$L_ATTACHSIGNATUREPOSTS}</label>
-					<script type="text/javascript">d.setCheckbox({$user_attachsig}, 'attachsig');</script>
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td class="k4_subtitle" colspan="2" align="center">
-				<input type="submit" value="{$L_SAVE}" class="button" onclick="try{set_message_text();}catch(e){}" />
-				<input type="reset" value="{$L_RESET}" class="button" />
-			</td>
-		</tr>
-	</table>
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_SIGNATUREOPTIONS}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr>
+				<td class="k4_subtitle">{$L_CURRENTSIGNATURE}</td>
+			</tr>
+			<tr>
+				<td class="alt3">
+					<if:if var="user_signature" noteq="">
+					{$user_signature}
+					<if:else />
+					<div align="center" class="smalltext"><br />{$L_NOINFORMATION}<br /><br /></div>
+					</if:if>
+				</td>
+			</tr>
+			<tr>
+				<td class="k4_subtitle">{$L_EDITSIGNATURE}</td>
+			</tr>
+			<tr>
+				<td class="alt3">
+					<div class="outset_box">
+						<fieldset>
+							<legend><label for="messagecodex" class="smalltext">{$L_SIGNATURE}</label></legend>
+							<core:import id="editor" file="editor.html" />
+						</fieldset>
+						<br />
+						<label for="attachsig"><input type="checkbox" value="1" name="attachsig" id="attachsig" tabindex="2" />&nbsp;{$L_ATTACHSIGNATUREPOSTS}</label>
+						<script type="text/javascript">d.setCheckbox({$user_attachsig}, 'attachsig');</script>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="k4_subtitle" colspan="2" align="center">
+					<input type="submit" value="{$L_SAVE}" class="button" onclick="try{set_message_text();}catch(e){}" />
+					<input type="reset" value="{$L_RESET}" class="button" />
+				</td>
+			</tr>
+		</table>
+	</div>
 </div>
 </form:form>
 </is:logged>

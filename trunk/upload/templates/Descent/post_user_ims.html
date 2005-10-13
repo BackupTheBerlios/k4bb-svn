@@ -2,11 +2,11 @@
 <if:if var="post_user_id" noteq="0">
 <div>
 	<is:logged><if:if var="poster_id" greater="0"><a href="member.php?act=usercp&amp;view=pmnewmessage&amp;user={$poster_name}" title="{$L_PRIVMSG}"><img src="Images/{$IMG_DIR}/Buttons/{$LANG}/pm.gif" alt="{$L_PRIVMSG}" border="0" /></a></if:if></is:logged>
-	<if:if var="post_user_aim" noteq="">&nbsp;<img src="Images/{$IMG_DIR}/Buttons/aim_small.gif" border="0" /></if:if>
-	<if:if var="post_user_icq" noteq="">&nbsp;<img src="Images/{$IMG_DIR}/Buttons/icq_small.gif" border="0" /></if:if>
+	<if:if var="post_user_aim" noteq="">&nbsp;<a target="_blank" href="aim:goim?screenname={$post_user_aim}" title="{$L_ICQ}"><img src="Images/{$IMG_DIR}/Buttons/aim_small.gif" border="0" /></a></if:if>
+	<if:if var="post_user_icq" noteq="">&nbsp;<a target="_blank" href="http://wwp.icq.com/scripts/search.dll?to={$post_user_icq}" title="{$L_ICQ}"><img src="Images/{$IMG_DIR}/Buttons/icq_small.gif" border="0" /></a></if:if>
 	<if:if var="post_user_jabber" noteq="">&nbsp;<img src="Images/{$IMG_DIR}/Buttons/jabber_small.gif" border="0" /></if:if>
-	<if:if var="post_user_msn" noteq="">&nbsp;<img src="Images/{$IMG_DIR}/Buttons/msn_small.gif" border="0" /></if:if>
-	<if:if var="post_user_yahoo" noteq="">&nbsp;<img src="Images/{$IMG_DIR}/Buttons/yahoo_small.gif" border="0" /></if:if>
+	<if:if var="post_user_msn" noteq="">&nbsp;<a target="_blank" href="http://members.msn.com/{$post_user_msn}" title="{$L_MSN}"><img src="Images/{$IMG_DIR}/Buttons/msn_small.gif" border="0" /></a></if:if>
+	<if:if var="post_user_yahoo" noteq="">&nbsp;<a target="_blank" href="http://edit.yahoo.com/config/send_webmesg?.target={$post_user_yahoo}&.src=pg" title="{$L_YAHOO}"><img src="Images/{$IMG_DIR}/Buttons/yahoo_small.gif" border="0" /></a></if:if>
 	<if:if var="post_user_googletalk" noteq="">&nbsp;<img src="Images/{$IMG_DIR}/Buttons/googletalk_small.gif" border="0" /></if:if>
 </div>
 </if:if>
