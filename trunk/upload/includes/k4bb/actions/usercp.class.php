@@ -265,11 +265,11 @@ class K4UserCPProfile extends FAAction {
 class K4UserCPPassword extends FAAction {
 	function execute(&$request) {
 		
-		// DEMO VERSION
-		if(K4DEMOMODE) {
-			no_perms_error($request);
-			return TRUE;
-		}
+//		// DEMO VERSION
+//		if(K4DEMOMODE) {
+//			no_perms_error($request);
+//			return TRUE;
+//		}
 
 		$request['template']->setFile('usercp_content', 'usercp_password.html');
 
@@ -438,11 +438,11 @@ class K4UpdateUserProfile extends FAAction {
 class K4UpdateUserPassword extends FAAction {
 	function execute(&$request) {
 		
-		// DEMO VERSION
-		if(K4DEMOMODE) {
-			no_perms_error($request);
-			return TRUE;
-		}
+//		// DEMO VERSION
+//		if(K4DEMOMODE) {
+//			no_perms_error($request);
+//			return TRUE;
+//		}
 
 		global $_URL;
 		

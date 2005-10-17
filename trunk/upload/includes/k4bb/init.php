@@ -84,6 +84,8 @@ require K4_BASE_DIR. '/actions/admin/css.class.php';
 require K4_BASE_DIR. '/actions/admin/faq.class.php';
 require K4_BASE_DIR. '/actions/admin/email.class.php';
 require K4_BASE_DIR. '/actions/admin/posts.class.php';
+require K4_BASE_DIR. '/actions/admin/masks.class.php';
+require K4_BASE_DIR. '/actions/admin/titles.class.php';
 
 /* Important Classes */
 require K4_BASE_DIR . '/database.php';

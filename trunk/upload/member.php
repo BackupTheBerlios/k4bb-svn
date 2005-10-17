@@ -78,8 +78,13 @@ class K4InsertUserFilter extends FAFilter {
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_REGISTER');
 			
 			if(intval($request['template']->getVar('allowregistration')) == 0) {
-				no_perms_error($request);
-				exit;
+				if(!USE_AJAX) {
+					no_perms_error($request);
+					return TRUE;
+				} else {
+					ajax_message('L_YOUNEEDPERMS');
+					exit;
+				}
 			}
 
 			if (!$request['user']->isMember()) {
@@ -230,7 +235,7 @@ class K4InsertUserFilter extends FAFilter {
 				$insert_a->setString(3, md5($_REQUEST['password']));
 				$insert_a->setInt(4, PENDING_MEMBER);
 				$insert_a->setString(5, $reg_key);
-				$insert_a->setString(6, 'a:1:{i:0;i:2;}'); // Registered Users
+				$insert_a->setString(6, '2'); // Registered Users
 				$insert_a->setInt(7, time());
 				
 				$insert_a->executeUpdate();
@@ -266,7 +271,7 @@ class K4InsertUserFilter extends FAFilter {
 					$verify_url->file		= 'member.php';
 					$url					= str_replace('&amp;', '&', $verify_url->__toString());
 
-					$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET usergroups = 'a:1:{i:0;i:1;}' WHERE id = ". intval($user_id));
+					$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET usergroups = '1' WHERE id = ". intval($user_id));
 
 					$email					= sprintf($request['template']->getVar('L_REGISTEREMAILRMSG'), $name, $_SETTINGS['bbtitle'], $url, $_SETTINGS['bbtitle']);
 						
@@ -333,7 +338,7 @@ class K4ProfileAction extends FAAction {
 
 		$member['online']			= (time() - ini_get('session.gc_maxlifetime')) > $member['seen'] ? 'offline' : 'online';
 		
-		$result						= @unserialize(@$member['usergroups']);
+		$result						= explode('|', $member['usergroups']);
 		$groups						= $member['usergroups'] != '' ? (!$result ? force_usergroups($member) : $result) : array();
 		
 		/**

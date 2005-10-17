@@ -961,8 +961,8 @@ class DeleteReply extends FAAction {
 			}
 		}
 		
-		$user_usergroups	= $request['user']->get('usergroups') != '' ? iif(!unserialize($request['user']->get('usergroups')), array(), unserialize($request['user']->get('usergroups'))) : array();
-		$forum_usergroups	= $forum['moderating_groups'] != '' ? iif(!unserialize($forum['moderating_groups']), array(), unserialize($forum['moderating_groups'])) : array();
+		$user_usergroups	= $request['user']->get('usergroups') != '' ? explode('|', $request['user']->get('usergroups')) : array();
+		$forum_usergroups	= $forum['moderating_groups'] != '' ? explode('|', $forum['moderating_groups']) : array();
 		
 		if(!is_moderator($request['user']->getInfoArray(), $forum)) {
 			no_perms_error($request);

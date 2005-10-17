@@ -313,11 +313,11 @@ function collapse_tbody(button_id, element_id, maintitle_id) {
 			if(element.style.display == 'none') {
 				switch_button(true, button);
 				element.style.display = '';
-				maintitle.style.margin = '1px 1px 0px 1px';
+				//maintitle.style.margin = '0px 0px 0px 0px';
 			} else {
 				switch_button(false, button);
 				element.style.display = 'none';
-				maintitle.style.margin = '1px 1px 1px 1px';
+				//maintitle.style.margin = '0px 0px 1px 0px';
 			}
 		}
 	} catch(e) {

@@ -99,6 +99,19 @@ $_LANG += array(
 'L_UPDATEDCATEGORYPERMS'=> 'Successfully update the permissions for the category <strong>%s</strong>.',
 /* / Category Management */
 
+/**
+ * Permission Masks
+ */
+'L_PERMISSIONMASKS'		=> 'Permission Masks',
+'L_PERMISSIONMASK'		=> 'Permission Mask',
+'L_EDITMASK'			=> 'Edit Mask',
+'L_UPDATEDPERMMASK'		=> 'Successfully updated the permission mask for the group <strong>%s</strong> for the forum <strong>%s</strong>',
+'L_DELETEMASK'			=> 'Delete Mask',
+'L_REMOVEDMASK'			=> 'Successfully removed the permission mask for the group <strong>%s</strong> for the forum <strong>%s</strong>',
+/**
+ * / Permission Masks
+ */
+
 
 /**
  * Forum Management 
@@ -598,6 +611,13 @@ $_LANG += array(
 /**
  * CSS editor
  */
+'L_UPDATEDCSSSTYLES'	=> 'Successfully updated all of the CSS styles in the <strong>%s</strong> style set.',
+'L_SAVEALL'				=> 'Save All',
+'L_RESETALL'			=> 'Reset All',
+'L_EDITCSSSTYLE'		=> 'Edit CSS Style',
+'L_EDITALLCLASSES'		=> 'Edit All Classes',
+'L_EDITSTYLES'			=> 'Edit Styles',
+'L_SELECTSTYLESET'		=> 'Select a style set',
 'L_PROPERTIES'			=> 'Properties',
 'L_ADDCSSSTYLE'			=> 'Add CSS Style',
 'L_STARTNEWSS'			=> 'Start new Styleset',

@@ -165,7 +165,7 @@ class AdminInsertUserGroup extends FAAction {
 			
 			$group_id			= $request['dba']->getInsertId(K4USERGROUPS, 'id');
 			
-			$usergroups			= $moderator['usergroups'] != '' ? iif(!unserialize($moderator['usergroups']), array(), unserialize($moderator['usergroups'])) : array();
+			$usergroups			= $moderator['usergroups'] != '' ? explode('|', $moderator['usergroups']) : array();
 			
 			if(is_array($usergroups)) {
 				$usergroups[]	= $group_id;
@@ -173,7 +173,7 @@ class AdminInsertUserGroup extends FAAction {
 				$usergroups		= array($group_id);
 			}
 
-			$update_a->setString(1, serialize($usergroups));
+			$update_a->setString(1, implode('|', $usergroups));
 			$update_a->setInt(2, iif(intval($_REQUEST['min_perm']) > $moderator['perms'], $_REQUEST['min_perm'], $moderator['perms']));
 			$update_a->setInt(3, $moderator['id']);
 			
@@ -226,7 +226,7 @@ class AdminRemoveUserGroup extends FAAction {
 			
 			while($users->next()) {
 				$user	= $users->current();
-				$result	= @unserialize($request['user']->get('usergroups'));
+				$result	= explode('|', $request['user']->get('usergroups'));
 				$groups	= $request['user']->get('usergroups') != '' ? iif(!$result, force_usergroups($user), $result) : array();
 				
 				/* Are we dealing with an array? */
@@ -248,7 +248,7 @@ class AdminRemoveUserGroup extends FAAction {
 					$groups = $new_groups;
 				}
 				
-				$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET usergroups = '". $request['dba']->quote(serialize($groups)) ."' WHERE id = ". intval($user['id']));
+				$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET usergroups = '". $request['dba']->quote(implode('|', $groups)) ."' WHERE id = ". intval($user['id']));
 			}
 			
 			/* Remove the usergroup */
@@ -426,7 +426,7 @@ class AdminUpdateUserGroup extends FAAction {
 
 			$group_id			= $request['dba']->getInsertId(K4USERGROUPS, 'id');
 			
-			$usergroups			= $moderator['usergroups'] != '' ? iif(!unserialize($moderator['usergroups']), array(), unserialize($moderator['usergroups'])) : array();
+			$usergroups			= $moderator['usergroups'] != '' ? explode('|', $moderator['usergroups']) : array();
 
 			if(is_array($usergroups)) {
 				$usergroups[]	= $group_id;
@@ -434,7 +434,7 @@ class AdminUpdateUserGroup extends FAAction {
 				$usergroups		= array($group_id);
 			}
 
-			$update_b->setString(1, serialize($usergroups));
+			$update_b->setString(1, implode('|', $usergroups));
 			$update_b->setInt(2, iif(intval($_REQUEST['min_perm']) > $moderator['perms'], $_REQUEST['min_perm'], $moderator['perms']));
 			$update_b->setInt(3, $moderator['id']);
 			

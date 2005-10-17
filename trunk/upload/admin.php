@@ -52,37 +52,6 @@ class K4DefaultAction extends FAAction {
 	}
 }
 
-class AdminMenu extends FAAction {
-	function execute(&$request) {		
-		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
-			$request['template']->setFile('content', 'admin_menu.html');
-		} else {
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
-			$request['template']->setFile('content', '../login_form.html');
-			$request['template']->setVisibility('no_perms', TRUE);
-			return TRUE;
-		}
-
-		return TRUE;
-	}
-}
-
-class AdminHead extends FAAction {
-	function execute(&$request) {		
-		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
-			$request['template']->setFile('content', 'admin_head.html');
-			$request['template']->setVisibility('content_padding', FALSE);
-		} else {
-			no_perms_error($request);
-			return TRUE;
-		}
-
-		return TRUE;
-	}
-}
-
 $app = new K4controller('admin/admin_base.html');
 
 $app->setAction('', new K4DefaultAction);
@@ -119,7 +88,7 @@ $app->setAction('emoticons_edit', new AdminEditEmoticon);
 $app->setAction('emoticons_insert', new AdminInsertEmoticon);
 $app->setAction('emoticons_remove', new AdminRemoveEmoticon);
 $app->setAction('emoticons_update', new AdminUpdateEmoticon);
-$app->setAction('emoticons_clickable', new AdminUpdateEmoticonClick);
+$app->setAction('emoticons_clickable', new AdminUpdateEmoticonclick);
 
 /* Categories */
 $app->setAction('categories', new AdminCategories);
@@ -156,6 +125,11 @@ $app->setAction('usergroups_remove', new AdminRemoveUserGroup);
 $app->setAction('usergroups_edit', new AdminEditUserGroup);
 $app->setAction('usergroups_update', new AdminUpdateUserGroup);
 
+/* Permission Masks */
+$app->setAction('masks', new AdminPermissionMasks);
+$app->setAction('mask_edit', new AdminEditPermissionMask);
+$app->setAction('masks_updateperms', new AdminUpdatePermissionMasks);
+
 /* Profile Fields */
 $app->setAction('userfields', new AdminUserProfileFields);
 $app->setAction('userfields_add', new AdminAddUserField);
@@ -171,6 +145,9 @@ $app->setAction('usernames', new AdminBadUserNames);
 $app->setAction('usernames_insert', new AdminInsertBadUserName);
 $app->setAction('usernames_update', new AdminUpdateBadUserName);
 $app->setAction('usernames_remove', new AdminRemoveBadUserName);
+
+/* User Titles */
+$app->setAction('usertitles', new AdminUsertTitles);
 
 /* Acronym Management */
 $app->setAction('acronyms', new AdminAcronyms);
@@ -200,6 +177,9 @@ $app->setAction('css_removestyleset', new AdminRemoveStyleSet);
 $app->setAction('css', new AdminManageCSSStyles);
 $app->setAction('css_addstyle', new AdminAddCSSClass);
 $app->setAction('css_insertstyle', new AdminInsertCSSClass);
+$app->setAction('css_editstyle', new AdminEditCSSClass);
+$app->setAction('css_updatestyle', new AdminUpdateCSSClass);
+$app->setAction('css_updateallclasses', new AdminUpdateAllCSSClasses);
 $app->setAction('css_removestyle', new AdminRemoveCSSClass);
 $app->addFilter(new AdminCSSRequestFilter);
 

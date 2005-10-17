@@ -733,6 +733,20 @@ function go_advanced() {
 	}
 }
 
+/**
+ * Function which deal with the k4 ddmenu system
+ */
+var cp_textbox = cp_image = null;
+function init_color_picker(link_id, menu_id, textbox_id, image_id) {
+	menu_init(link_id, menu_id);
+	cp_textbox	= d.getElementById(textbox_id);
+	cp_image	= d.getElementById(image_id);
+}
+function set_cp_color(color, textbox, image) {
+	textbox.value				= color;
+	image.style.backgroundColor = color;
+}
+
 //]]>
 </script>
 <div class="outset_box" style="display:none;" id="advanced_mode">
@@ -794,13 +808,18 @@ function go_advanced() {
 	</div>
 </div>
 <div id="simple_mode" style="text-align: center;">
-	<textarea name="properties" id="css_attributes" rows="15" class="inputbox" style="width:100%; overflow:scroll;" wrap="off" check="true">{$properties}</textarea>
+	<textarea name="properties" id="css_attributes" rows="15" class="inputbox" style="width:100%; overflow:scroll;" wrap="off">{$style_properties}</textarea>
 	<br />
 	<core:block id="revert_css" hidden="yes"><input type="button" class="button" value="{$L_REVERT}" onclick="document.location='admin.php?act=css_revertstyle&id={$style_style_id}&style_id={$style_id}'" style="color:#FF0000;" /></core:block>
 	<input type="button" class="button" value="{$L_GOADVANCED}" onclick="go_advanced()" style="color:#FF0000;" />
 </div>
 <core:import id="colorpicker" file="css/colorpicker.html" />
 <script type="text/javascript">
-menu_init('color_preview', 'colorpicker_menu');
+init_color_picker('color_preview', 'colorpicker_menu', 'color', 'color_preview');
+init_color_picker('bg_color_preview', 'colorpicker_menu', 'background-color', 'bg_color_preview');
+init_color_picker('bt_color_preview', 'colorpicker_menu', 'border-top-color', 'bt_color_preview');
+init_color_picker('br_color_preview', 'colorpicker_menu', 'border-right-color', 'br_color_preview');
+init_color_picker('bb_color_preview', 'colorpicker_menu', 'border-bottom-color', 'bb_color_preview');
+init_color_picker('bl_color_preview', 'colorpicker_menu', 'border-left-color', 'bl_color_preview');
 </script>
 </is:admin>

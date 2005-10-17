@@ -36,7 +36,6 @@ if(!defined('IN_K4')) {
 
 define('K4MPTT', FALSE);
 define('VERSION', '2.0 Beta 8');
-define('K4DEMOMODE', TRUE);
 
 /**
  * Constants that define what a category/forum/thread/etc is
@@ -167,6 +166,7 @@ define('PM_SAVEDITEMS', 3);
 /**
  * The interval between cache reloads, and all of the cache files
  */
+
 define('CACHE_INTERVAL',	86400); // 24 hours
 define('CACHE_FILE',		BB_BASE_DIR .'/tmp/cache/cache.php');
 define('CACHE_EMAIL_FILE',	BB_BASE_DIR .'/tmp/cache/emailqueue.php');

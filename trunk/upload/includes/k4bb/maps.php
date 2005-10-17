@@ -65,7 +65,7 @@ function get_recursive_maps(&$request, &$all_maps, $parents, &$maps, $start_leve
 /**
  * Get a MAP
  */
-function get_map(&$user, $varname, $method, $args) {
+function get_map($user, $varname, $method, $args) {
 	
 	global $_MAPS;
 	
@@ -73,17 +73,43 @@ function get_map(&$user, $varname, $method, $args) {
 	if(is_array($args) && empty($args)) {
 		$perm_needed		= isset($_MAPS[$varname][$method]) ? $_MAPS[$varname][$method] : 0;
 	} else {
+		
+		$usergroups = $user->get('usergroups') != '' ? explode('|', $user->get('usergroups')) : array();
 
 		/* Forum */
 		if(isset($args['forum_id']) && intval($args['forum_id']) != 0) {
 			
+			// do basic
 			if($varname != '') {
 				$perm_needed	= isset($_MAPS['forums'][$args['forum_id']][$varname][$method]) ? $_MAPS['forums'][$args['forum_id']][$varname][$method] : 0;
 			} else {
 				$perm_needed	= isset($_MAPS['forums'][$args['forum_id']][$method]) ? $_MAPS['forums'][$args['forum_id']][$method] : 0;
 			}
+			
+			// now compare with permission masks
+			foreach($usergroups as $id) {
+				
+				// does the mask for this variable exist under this group?
+				if(isset($_MAPS['groups'][$id]['forums'][$args['forum_id']])) {
+					
+					// if so, get a new permission needed
+					if($varname != '') {
+						$i_perm_needed	= isset($_MAPS['groups'][$id]['forums'][$args['forum_id']][$varname][$method]) ? $_MAPS['groups'][$id]['forums'][$args['forum_id']][$varname][$method] : 0;
+					} else {
+						$i_perm_needed	= isset($_MAPS['groups'][$id]['forums'][$args['forum_id']][$method]) ?$_MAPS['groups'][$id]['forums'][$args['forum_id']][$method] : 0;
+					}
+
+					// if there is a perm that is > than what normally is needed, set the level higher.
+					if($i_perm_needed > $perm_needed) {
+						$perm_needed = $i_perm_needed;
+						break;
+					}
+				}
+			}
+
 		/* Group */
 		} else if(isset($args['group_id']) && intval($args['group_id']) != 0) {
+			
 			$perm_needed	= isset($_MAPS['groups'][$args['group_id']][$varname][$method]) ? $_MAPS['groups'][$args['group_id']][$varname][$method] : 0;
 		
 		/* User */
@@ -124,33 +150,42 @@ function get_maps(&$dba) {
 		$val = $result->current();
 
 		if($val['varname'] != '') {
-			if($val['forum_id'] != 0) {
-				if( ($val['varname'] == 'forum'. $val['forum_id']) ) { // !isset($maps['forums'][$val['forum_id']]) &&
-					$maps['forums'][$val['forum_id']] = isset($maps['forums'][$val['forum_id']]) ? array_merge($maps['forums'][$val['forum_id']], $val) : $val;
+			
+			if($val['group_id'] == 0) {
+				 if($val['forum_id'] != 0) {
+					if( ($val['varname'] == 'forum'. $val['forum_id']) ) { // !isset($maps['forums'][$val['forum_id']]) &&
+						$maps['forums'][$val['forum_id']] = isset($maps['forums'][$val['forum_id']]) ? array_merge($maps['forums'][$val['forum_id']], $val) : $val;
+					} else {
+						$maps['forums'][$val['forum_id']][$val['varname']] = $val;
+					}
+				} else if($val['user_id'] != 0) {
+					if(!isset($maps['users'][$val['user_id']]) && ($val['varname'] == 'user'. $val['user_id']) ) {
+						$maps['users'][$val['user_id']] = $val;
+					} else {
+						$maps['users'][$val['user_id']][$val['varname']] = $val;
+					}
+				} else if($val['category_id'] != 0) {
+					if(($val['varname'] == 'category'. $val['category_id']) ) { // !isset($maps['categories'][$val['category_id']]) && 
+						$maps['categories'][$val['category_id']] = isset($maps['categories'][$val['category_id']]) ? array_merge($maps['categories'][$val['category_id']], $val) : $val;
+					} else {
+						$maps['categories'][$val['category_id']][$val['varname']] = $val;
+					}
 				} else {
-					$maps['forums'][$val['forum_id']][$val['varname']] = $val;
+					$maps[$val['varname']] = $val;
 				}
-			} else if($val['group_id'] != 0) {
-				if(($val['varname'] == 'group'. $val['group_id']) ) { // !isset($maps['groups'][$val['group_id']]) && 
-					$maps['groups'][$val['group_id']] = isset($maps['groups'][$val['group_id']]) ? array_merge($maps['groups'][$val['group_id']], $val) : $val;
-				} else {
-					$maps['groups'][$val['group_id']][$val['varname']] = $val;
-				}
-			} else if($val['user_id'] != 0) {
-				if(!isset($maps['users'][$val['user_id']]) && ($val['varname'] == 'user'. $val['user_id']) ) {
-					$maps['users'][$val['user_id']] = $val;
-				} else {
-					$maps['users'][$val['user_id']][$val['varname']] = $val;
-				}
-			} else if($val['category_id'] != 0) {
-				if(($val['varname'] == 'category'. $val['category_id']) ) { // !isset($maps['categories'][$val['category_id']]) && 
-					$maps['categories'][$val['category_id']] = isset($maps['categories'][$val['category_id']]) ? array_merge($maps['categories'][$val['category_id']], $val) : $val;
-				} else {
-					$maps['categories'][$val['category_id']][$val['varname']] = $val;
-				}
+				
+			/**
+			 * Subcategorize into forum permission masks
+			 */
 			} else {
-				$maps[$val['varname']] = $val;
+
+				if(!isset($maps['groups'][$val['group_id']]))
+					$maps['groups'][$val['group_id']] = array();
+				
+				if($val['forum_id'] != 0)
+					$maps['groups'][$val['group_id']]['forums'][$val['forum_id']] = ($val['varname'] == 'forum'. $val['forum_id']) ? $val : array($val['varname'] => $val);
 			}
+		
 		} else {
 			$maps['global'] = $val;
 		}

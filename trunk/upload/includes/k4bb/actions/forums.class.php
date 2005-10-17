@@ -280,7 +280,7 @@ class K4ForumsIterator extends FAProxyIterator {
 		
 		if($temp['moderating_groups'] != '') {
 			
-			$groups					= !unserialize($temp['moderating_groups']) ? array() : unserialize($temp['moderating_groups']);
+			$groups					= explode('|', $temp['moderating_groups']);
 			
 
 			if(is_array($groups)) {

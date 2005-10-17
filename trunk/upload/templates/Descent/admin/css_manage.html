@@ -3,29 +3,22 @@
 	<div class="k4_maintitle">{$L_STYLESETS}</div>
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
 		<tr>
-			<td colspan="2" class="k4_subtitle">
-				<div style="float: right;">
-					<input type="button" class="button" value="{$L_ADDSTYLESET}" onclick="document.location='admin.php?act=css_addstyleset'" />
-				</div>
-				{$L_MANAGESTYLESETS}
+			<td class="alt1" style="text-align: center;">
+				<form action="admin.php" method="get" enctype="multipart/form-data">
+					<input type="hidden" name="act" value="css" />
+					<strong>{$L_SELECTSTYLESET}:</strong>
+					<br /><br />
+					<list:list id="stylesets">
+					<select name="id">
+					<list:item list="stylesets">
+						<option value="{$id}">{$name}</option>
+					</list:item>
+					</select>
+					</list:list>
+					<input type="submit" value="{$L_EDITSTYLES}" class="button" />
+				</form>
 			</td>
 		</tr>
-		<list:list id="stylesets">
-		<list:item list="stylesets">
-		<list:switch list="stylesets" var="row_class" a="alt1" b="alt3">
-		<tr>
-			<td class="{$row_class}" width="80%">
-				<a href="admin.php?act=css&amp;id={$id}" title="{$name}"><strong>{$name}</strong>
-				<span class="smalltext"><br />{$description}</span></a>
-			</td>
-			<td class="alt2" width="30%" align="center">
-				<input type="button" class="button" value="{$L_EDIT}" onclick="document.location='admin.php?act=css_editstyleset&id={$id}'" />
-				<input type="button" class="button" value="{$L_DELETE}" style="color: #FF0000;" onclick="document.location='admin.php?act=css_removestyleset&id={$id}'" />
-			</td>
-		</tr>
-		</list:switch>
-		</list:item>
-		</list:list>
 	</table>
 </div>
 </is:admin>

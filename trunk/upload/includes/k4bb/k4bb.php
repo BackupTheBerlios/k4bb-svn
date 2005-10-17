@@ -34,7 +34,7 @@
 //exit;
 
 define('K4_BASE_DIR', dirname(__FILE__));
-define('BB_BASE_DIR', dirname($_SERVER['SCRIPT_FILENAME']));
+define('BB_BASE_DIR', file_exists(dirname($_SERVER['SCRIPT_FILENAME']) .'/index.php') && is_dir(dirname($_SERVER['SCRIPT_FILENAME']) .'/includes') ? dirname($_SERVER['SCRIPT_FILENAME']) : $_SERVER['DOCUMENT_ROOT']);
 
 define('IN_K4', TRUE);
 
@@ -215,7 +215,7 @@ class K4LanguageElement extends FAObject {
 	function __toString() {
 		global $_LANG;
 		
-		$this->_args[0] = $_LANG[$this->_args[0]];
+		$this->_args[0] = isset($_LANG[$this->_args[0]]) ? $_LANG[$this->_args[0]] : $this->_args[0];
 		
 		if(count($this->_args) > 1) {
 			$return			= call_user_func_array('sprintf', $this->_args);

@@ -131,8 +131,8 @@ class K4CreatePMFolder extends FAAction {
 		$check->execute($request);
 
 		if(intval($request['template']->getVar('allowcustomfolders')) == 0) {
-			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'usercp_content', FALSE);
-			return $action->execute($request);
+			no_perms_error($request);
+			return TRUE;
 		}
 
 		if(get_map($request['user'], 'pm_customfolders', 'can_add', array()) > $request['user']->get('perms')) {
@@ -360,6 +360,11 @@ class K4PreDeleteFolder extends FAAction {
 
 class K4ComposePMessage extends FAAction {
 	function execute(&$request) {
+		
+		if(!$request['user']->isMember()) {
+			no_perms_error($request, 'usercp_content');
+			return TRUE;
+		}
 
 		$check = new K4PMCheckPerms();
 		$check->execute($request);

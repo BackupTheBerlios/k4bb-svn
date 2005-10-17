@@ -33,13 +33,15 @@
  */
 function response_error(response) {
 	try {
-		var str = '';
-		if(response != '' && response.length > 5) {
-			if(response.substring(0, 5) == 'ERROR') {
-				str = response.substring(5, response.length);
+		if(typeof response != 'undefined') {
+			var str = '';
+			if(response != '' && response.length > 5) {
+				if(response.substring(0, 5) == 'ERROR') {
+					str = response.substring(5, response.length);
+				}
 			}
+			return str;
 		}
-		return str;
 	} catch(e) { alert(e.message); }
 }
 
@@ -66,7 +68,7 @@ function textarea_value(textarea) {
 function getTopicTitle(topic_id) {
 	if(r) {
 		r.open("GET", 'mod.php?act=get_topic_title&topic_id=' + parseInt(topic_id), true);
-		r.state_handler = function() { r.change_ready_state(); topicMakeUpdatable(topic_id); };
+		r.state_handler = function() { /*r.change_ready_state();*/ topicMakeUpdatable(topic_id); };
 		r.send(null);
 	} else {
 		alert('Failed at: r (66)');
@@ -78,19 +80,25 @@ function topicMakeUpdatable(topic_id) {
 	
 	if(r && topic_span && topic_area) {
 		try {
-			if(r.r_state == 4) {
-				if(r.r_status == 200) {
-					if(r.r_response != null && r.r_response != '') {
+			if(r.readyState == 4) {
+				if(r.status == 200) {
+					if(r.response != null && r.response != '') {
 						
 						// add an input box into the topic box
-						topic_span.innerHTML	= '<input type="text" name="name" id="topic' + topic_id + '_name" value="' + r.r_response + '" class="alt1" style="padding: 1px;font-size: 11px;" />';
-					
+						topic_span.innerHTML	= '<input type="text" name="name" id="topic' + topic_id + '_name" value="' + r.response + '" class="alt1" style="padding: 1px;font-size: 11px;" />';
+
 						// attach a function to monitor document clicks
 						AttachEvent(document,'click',disable_edit_mode,false);
 						if(document.addEventListener ) {
 							document.addEventListener('click', disable_edit_mode, false);
 						} else if(document.attachEvent ) {
 							document.attachEvent('onclick', disable_edit_mode);
+						}
+
+						// try to get the input and focus it
+						var input = d.getElementById('topic' + topic_id + '_name');
+						if(input) {
+							input.focus();
 						}
 					}
 				} else {
@@ -109,7 +117,7 @@ function updateTopicTitle(textbox_id, topic_id, div_id) {
 	if(r && textbox) {
 		try {
 			r.open("POST", 'mod.php?act=topic_simpleupdate', true);
-			r.state_handler = function() { r.change_ready_state(); topicSimpleUpdate(div_id); }
+			r.state_handler = function() { /*r.change_ready_state();*/ topicSimpleUpdate(div_id); }
 			r.send('use_ajax=1&id=' + parseInt(topic_id) + '&name=' + encodeURIComponent(textbox.value));
 		} catch(e) { alert(e.message); }
 	} else {
@@ -122,12 +130,12 @@ function topicSimpleUpdate(topic_area_id) {
 	
 	if(r && topic_area) {
 		try {
-			if(r.r_state == 4) {
-				if(r.r_status == 200) {
-					if(r.r_response != null && r.r_response != '') {
+			if(r.readyState == 4) {
+				if(r.status == 200) {
+					if(r.response != null && r.response != '') {
 
 						// try to get an error string
-						var errorstr = response_error(r.r_response);
+						var errorstr = response_error(r.response);
 						
 						// if there is an error string
 						if(errorstr != '') {
@@ -135,7 +143,7 @@ function topicSimpleUpdate(topic_area_id) {
 						} else {
 							
 							// put in the new topic title
-							topic_area.innerHTML	= r.r_response;
+							topic_area.innerHTML	= r.response;
 
 							// unset some other things
 							close_edit_mode();
@@ -162,7 +170,7 @@ function updateTopicLocked(icon, topic_id) {
 			var locked		= d.sizeof(icon.src.match(lock_regex)) > 0 ? true : false;
 			
 			r.open("POST", 'mod.php?act=' + (locked == 1 ? 'un' : '') + 'locktopic', true);
-			r.state_handler = function() { r.change_ready_state(); changeLockedIcon(icon); }
+			r.state_handler = function() { /*r.change_ready_state();*/ changeLockedIcon(icon); }
 			r.send('id=' + parseInt(topic_id) + '&use_ajax=1');
 
 		} catch(e) { alert(e.message); }
@@ -173,9 +181,9 @@ function updateTopicLocked(icon, topic_id) {
 // change the topic icon for locked
 function changeLockedIcon(icon) {
 	if(r && icon) {
-		if(r.r_state == 4) {
-			if(r.r_status == 200) {
-				if(r.r_response != '') {
+		if(r.readyState == 4) {
+			if(r.status == 200) {
+				if(r.response != '') {
 					
 					var new_lock	= (locked == 1 ? 0 : 1);
 					
@@ -215,7 +223,7 @@ function saveQuickReply(form_id, textarea_id, topic_id, page) {
 			if(textarea_value(textarea) != '') query_string += 'message=' + encodeURIComponent(textarea_value(textarea));
 			try {
 				r.open("POST", 'newreply.php?act=postreply&use_ajax=1&topic_id=' + parseInt(topic_id) + '&submit_type=post&page=' + parseInt(page), true);
-				r.state_handler = function() { r.change_ready_state(); findQuickReply(); };
+				r.state_handler = function() { /*r.change_ready_state();*/ findQuickReply(); };
 				r.send(query_string);
 			} catch(e) {
 				form.submit();
@@ -233,24 +241,24 @@ function findQuickReply() {
 	var preview			= d.getElementById('ajax_post_preview');
 	
 	if(r && message_holder && container && preview) {
-		if(r.r_state < 4 && preview) {
+		if(r.readyState < 4 && preview) {
 			preview.style.display = 'block';
 			document.location = '#preview';
 			preview.innerHTML = '';
 			preview.innerHTML = '<div style="padding: 30px;text-align: center;font-weight: bold;font-size:18px;font-family: Arial, Helvetica, serif;">Loading...</div>';
 		}		
-		if(r.r_state == 4) {
-			if(r.r_status == 200) {
-				if(r.r_response != '') {
+		if(r.readyState == 4) {
+			if(r.status == 200) {
+				if(r.response != '') {
 					
-					var errorstr = response_error(r.r_response);
+					var errorstr = response_error(r.response);
 					message_holder.style.display = 'block';
 					
 					if(errorstr == '') {
 						
 						if(container) {
 							container.style.display = 'block';
-							container.innerHTML += r.r_response;
+							container.innerHTML += r.response;
 						}
 
 						if(textarea) { textarea.value		= ''; }
@@ -291,10 +299,10 @@ function errorCheckRegistration(button) {
 				if(field) query_string += sep + fields[i] + '=' + encodeURIComponent(field.value);
 				sep = '&';
 			}
-			try {
 
+			try {
 				r.open("POST", 'member.php?act=register_user&use_ajax=1', true);
-				r.state_handler = function() { r.change_ready_state(); handeRegErrors(button); }
+				r.state_handler = function() { /*r.change_ready_state();*/ handleRegErrors(button); }
 				r.send(query_string);
 
 			} catch(e) { form.submit(); return true; }
@@ -307,7 +315,7 @@ function errorCheckRegistration(button) {
 /**
  * Handle any possible registration errors returned from the request
  */
-function handeRegErrors(button) {
+function handleRegErrors(button) {
 
 	// get the message holder, message area and form
 	var message_holder	= d.getElementById('message_holder');
@@ -318,34 +326,41 @@ function handeRegErrors(button) {
 	if(r && message_holder && message_area) {
 
 		// if the request has completed
-		if(r.r_state == 4) {
-			if(r.r_status == 200) {
-				
-				// if the response was nothing
-				if(r.r_response == '') {
+		if(r.readyState == 4) {
+			if(r.status == 200) {
+				if(r.response) {
+					// if the response was nothing
+					if(r.response == '') {
+						
+						// submit the form
+						form.submit();
+						message_area.style.display = 'none';
+						return true;
 					
-					// submit the form
-					form.submit();
-					message_area.style.display = 'none';
-					return true;
-				
-				// otherwise
+					// otherwise
+					} else {
+						
+						// try to get an error string
+						var errorstr = response_error(r.response);
+						
+						// if there is an error string
+						if(errorstr != '') {
+
+							// set the error to message holder
+							message_holder.innerHTML	= errorstr;
+							message_area.style.display	= 'block';
+							document.location			= '#top';
+							d.enableButton(button);
+
+						// Everything's good, submit the form
+						} else { form.submit(); return true; }
+					}
 				} else {
-					
-					// try to get an error string
-					var errorstr = response_error(r.r_response);
-					
-					// if there is an error string
-					if(errorstr != '') {
-
-						// set the error to message holder
-						message_holder.innerHTML	= errorstr;
-						message_area.style.display	= 'block';
-						document.location			= '#top';
-						d.enableButton(button);
-
-					// Everything's good, submit the form
-					} else { form.submit(); return true; }
+					// set the error to message holder
+					message_holder.innerHTML	= 'Error retrieving response. Please contact this forum\'s administrator.';
+					message_area.style.display	= 'block';
+					document.location			= '#top';
+					d.enableButton(button);
 				}
 			} else {
 
@@ -400,7 +415,7 @@ function setSendPostPreview(form_url) {
 
 				// open and send the request
 				r.open("POST", form_url + '&use_ajax=1', true);
-				r.state_handler = function() { r.change_ready_state(); getPostPreview(); }
+				r.state_handler = function() { /*r.change_ready_state();*/ getPostPreview(); }
 				r.send('submit_type=preview' + query_string);
 
 			} catch(e) { form.submit(); }
@@ -425,7 +440,7 @@ function getPostPreview() {
 		try {
 	
 			// if the request is loading
-			if(r.r_state < 4) {
+			if(r.readyState < 4) {
 				
 				// display the preview holder
 				preview_holder.style.display = 'block';
@@ -438,13 +453,13 @@ function getPostPreview() {
 			}
 
 			// if the request is complete
-			if(r.r_state == 4) {
+			if(r.readyState == 4) {
 
 				// if there were no errors
-				if(r.r_status == 200) {
+				if(r.status == 200) {
 					
 					// if there is no response
-					if(r.r_response == null || r.r_response == '') {
+					if(r.response == null || r.response == '') {
 						
 						form.submit();
 						preview_holder.style.display = 'none';
@@ -453,7 +468,7 @@ function getPostPreview() {
 					} else {
 
 						// get an error string if any
-						var errorstr = response_error(r.r_response);
+						var errorstr = response_error(r.response);
 							
 						// if there is an error
 						if(errorstr != '') {
@@ -462,7 +477,7 @@ function getPostPreview() {
 						// otherwise
 						} else {
 							preview_holder.style.display = 'block';
-							preview_holder.innerHTML = r.r_response;
+							preview_holder.innerHTML = r.response;
 						}
 					}
 				} else {
@@ -529,7 +544,7 @@ function switch_editor_type(switch_to, curr_type, textarea_id, iframe_id) {
 				
 				// open and send a request
 				r.open("POST", 'misc.php?act=switch_editor&switchto=' + switch_to, true);
-				r.state_handler = function() { r.change_ready_state(); createEditor(); }
+				r.state_handler = function() { /*r.change_ready_state();*/ createEditor(); }
 				r.send('use_ajax=1' + query_string + '&switchto=' + switch_to);
 			} catch(e) { alert(e.message); }
 		}
@@ -543,21 +558,21 @@ function createEditor() {
 	if(r && editorcodex) {
 
 		// if the request is still loading
-		if(r.r_state == 1) {
+		if(r.readyState == 1) {
 			editorcodex.innerHTML = '';
 			editorcodex.innerHTML = '<div style="padding: 30px;text-align: center;font-weight: bold;font-size:18px;font-family: Arial, Helvetica, serif;">Loading...</div>';
 		}
 
 		// if the request is complete
-		if(r.r_state == 4) {
+		if(r.readyState == 4) {
 			
 			// if the request status is good
-			if(r.r_status == 200) {
+			if(r.status == 200) {
 				
-				if(r.r_response != '' && r.r_response != null) { 
+				if(r.response != '' && r.response != null) { 
 
 					// get an error string if any
-					var errorstr = response_error(r.r_response);
+					var errorstr = response_error(r.response);
 					
 					// if there was an error
 					if(errorstr != '') {
@@ -587,7 +602,7 @@ function createEditor() {
 						// if we have a response..
 						if(editorcodex) {
 							editorcodex.innerHTML = '';
-							editorcodex.innerHTML = r.r_response; // set the editor's inner value to the response
+							editorcodex.innerHTML = r.response; // set the editor's inner value to the response
 						}
 						
 						// if we are switching to wysiwyg
@@ -623,7 +638,7 @@ function quickEditPost(post_type, post_id, div_id) {
 		
 		// send a request via the GET method
 		r.open("GET", 'misc.php?act=revert_text&' + post_type + '=' + post_id + '&use_ajax=1', true);
-		r.state_handler = function() { r.change_ready_state(); showQuickEditForm(quickedit_div, quickedit_height, post_type, post_id, false); }
+		r.state_handler = function() { /*r.change_ready_state();*/ showQuickEditForm(quickedit_div, quickedit_height, post_type, post_id, false); }
 		r.send(null);
 	}
 }
@@ -636,23 +651,23 @@ function showQuickEditForm(quickedit_div, quickedit_height, post_type, post_id, 
 		try {
 			
 			// if the request is still loading
-			if(r.r_state == 1) {
+			if(r.readyState == 1) {
 				quickedit_div.innerHTML = '<div style="padding: 30px;text-align: center;font-weight: bold;font-size:18px;font-family: Arial, Helvetica, serif;">Loading...</div>';
 			}
 
 			// if the request is sending stuff back
-			if(r.r_state == 4) {
+			if(r.readyState == 4) {
 
 				// if there are no errors
-				if(r.r_status == 200) {
+				if(r.status == 200) {
 					
 					// if the response is nothing
-					if(r.r_response == null || r.r_response == '') {
+					if(r.response == null || r.response == '') {
 						alert('Failed at rs (694)');
 					} else {
 						
 						// see if there is a back-end error sent with this response
-						var errorstr = response_error(r.r_response);
+						var errorstr = response_error(r.response);
 						
 						// display an error
 						if(errorstr != '') {
@@ -663,9 +678,9 @@ function showQuickEditForm(quickedit_div, quickedit_height, post_type, post_id, 
 							
 							if(!hide) {
 								// insert the textarea
-								quickedit_div.innerHTML = '<textarea id="' + post_type + '' + post_id + '_message" rows="10" cols="100" style="width: 100%;height: ' + quickedit_height + 'px;" class="inputbox">' + r.r_response + '</textarea>';
+								quickedit_div.innerHTML = '<textarea id="' + post_type + '' + post_id + '_message" rows="10" cols="100" style="width: 100%;height: ' + quickedit_height + 'px;" class="inputbox">' + r.response + '</textarea>';
 							} else {
-								quickedit_div.innerHTML = r.r_response;	
+								quickedit_div.innerHTML = r.response;	
 							}
 
 							// try to get the button pallette for the quick edit
@@ -706,7 +721,7 @@ function cancelQuickEdit(post_type, post_id, div_id) {
 				
 				// send a request via the GET method
 				r.open("GET", 'misc.php?act=original_text&' + post_type + '=' + post_id + '&use_ajax=1', true);
-				r.state_handler = function() { r.change_ready_state(); showQuickEditForm(quickedit_div, 0, post_type, post_id, true); }
+				r.state_handler = function() { /*r.change_ready_state();*/ showQuickEditForm(quickedit_div, 0, post_type, post_id, true); }
 				r.send(null);
 
 			} catch(e) { alert(e.message); }
@@ -735,7 +750,7 @@ function saveQuickEdit(post_type, post_id, div_id) {
 
 				// send a request via the GET method
 				r.open("POST", 'misc.php?act=save_text&' + post_type + '=' + post_id + '&use_ajax=1', true);
-				r.state_handler = function() { r.change_ready_state(); showQuickEditForm(quickedit_div, 0, post_type, post_id, true); }
+				r.state_handler = function() { /*r.change_ready_state();*/ showQuickEditForm(quickedit_div, 0, post_type, post_id, true); }
 				r.send('message=' + encodeURIComponent(edited_msg));
 
 			} catch(e) { alert(e.message); }

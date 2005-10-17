@@ -371,10 +371,11 @@ class AdminFAQAnswers extends FAAction {
 				}
 			}
 			
-			$it = &new AdminFAQCategoriesIterator($request['dba'], $request['template']->getVar('IMG_DIR'));
+			$it			= &new AdminFAQCategoriesIterator($request['dba'], $request['template']->getVar('IMG_DIR'));
+			$answers	= $request['dba']->executeQuery("SELECT * FROM ". K4FAQANSWERS ." WHERE category_id = $category_id ORDER BY row_order ASC");
 
 			$request['template']->setList('categories', $it);
-			$request['template']->setList('answers', $request['dba']->executeQuery("SELECT * FROM ". K4FAQANSWERS ." WHERE category_id = $category_id ORDER BY row_order ASC"));
+			$request['template']->setList('answers', $answers);
 
 			$request['template']->setFile('content', 'faq_answercategories.html');
 		} else {

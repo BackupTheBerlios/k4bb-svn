@@ -66,7 +66,7 @@ class MarkCategoryForumsRead extends FAAction {
 			/* Get the forums of this Category */
 			$result						= $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE category_id = ". intval($forum['category_id']));
 			
-			$forums						= isset($_REQUEST['forums']) && $_REQUEST['forums'] != null && $_REQUEST['forums'] != '' ? iif(!unserialize($_REQUEST['forums']), array(), nserialize($_REQUEST['forums'])) : array();
+			$forums						= isset($_REQUEST['forums']) && $_REQUEST['forums'] != null && $_REQUEST['forums'] != '' ? (!unserialize($_REQUEST['forums']) ? array() : unserialize($_REQUEST['forums'])) : array();
 			$cookiestr						= '';
 			$cookieinfo						= get_forum_cookies();
 

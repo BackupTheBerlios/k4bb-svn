@@ -40,7 +40,7 @@ class K4DefaultAction extends FAAction {
 		//return $action->execute($request);
 
 		global $_DATASTORE, $_USERGROUPS, $_QUERYPARAMS;
-				
+		
 		// Member/Guest specifics
 		if(!$request['user']->isMember()) {
 			$request['template']->setVar('welcome_title', sprintf($request['template']->getVar('L_WELCOMETITLE'), $request['template']->getVar('bbtitle')));

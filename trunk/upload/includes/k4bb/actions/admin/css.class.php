@@ -40,7 +40,7 @@ class AdminManageStyleSets extends FAAction {
 			$request['template']->setVar('styles_on', '_on');
 			$request['template']->setFile('sidebar_menu', 'menus/styles.html');
 
-			$request['template']->setFile('content', 'css_manage.html');
+			$request['template']->setFile('content', 'css_managess.html');
 		} else {
 			no_perms_error($request);
 		}
@@ -292,8 +292,10 @@ class AdminManageCSSStyles extends FAAction {
 
 				foreach($styleset as $key=>$val)
 					$request['template']->setVar('styleset_'. $key, $val);
+				
+				$request['template']->setVar('edit_all', isset($_REQUEST['edit']) ? 1 : 0);
 
-				$request['template']->setList('styles', $styles);
+				$request['template']->setList('styles', new AdminCSSIterator($styles));
 				$request['template']->setFile('content', 'css_styles.html');
 			}
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_MANAGECSSSTYLES');
@@ -354,6 +356,24 @@ class AdminInsertCSSClass extends FAAction {
 	}
 }
 
+class AdminEditCSSClass extends FAAction {
+	function execute(&$request) {
+		
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
+			
+			$request['template']->setFile('content', 'css_addstyle.html');
+			$request['template']->setVar('edit_style', 1);
+			$request['template']->setVar('css_formaction', 'admin.php?act=css_updatestyle');
+			
+			foreach($request['style'] as $key=>$val) {
+				$request['template']->setVar('style_'. $key, $val);
+			}
+		} else {
+			no_perms_error($request);
+		}
+	}
+}
+
 class AdminUpdateCSSClass extends FAAction {
 	function execute(&$request) {
 		
@@ -387,6 +407,30 @@ class AdminUpdateCSSClass extends FAAction {
 		} else {
 			no_perms_error($request);
 		}
+	}
+}
+
+class AdminUpdateAllCSSClasses extends FAAction {
+	function execute(&$request) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
+			
+			$styles = $request['dba']->executeQuery("SELECT * FROM ". K4CSS ." WHERE style_id = ". intval($request['styleset']['id']));
+			
+			while($styles->next()) {
+				$css = $styles->current();
+				if(isset($_REQUEST['properties'. $css['id']]) && $_REQUEST['properties'. $css['id']] != '') {
+					$properties		= $request['dba']->quote(preg_replace("~(\r\n|\r|\n)~i", "", $_REQUEST['properties'. $css['id']]));
+					$request['dba']->executeUpdate("UPDATE ". K4CSS ." SET properties='{$properties}' WHERE id=". intval($css['id']));
+				}
+			}
+			
+			if(file_exists(BB_BASE_DIR .'/tmp/stylesets/'. preg_replace("~\s~i", '_', $request['styleset']['name']) .'.css'))
+				unlink(BB_BASE_DIR .'/tmp/stylesets/'. preg_replace("~\s~i", '_', $request['styleset']['name']) .'.css');
+
+			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDCSSSTYLES', $request['styleset']['name']), 'content', FALSE, 'admin.php?act=css&id='. $request['styleset']['id'], 3);
+			return $action->execute($request);
+		}
+		return TRUE;
 	}
 }
 
@@ -437,6 +481,7 @@ class AdminCSSRequestFilter extends FAFilter {
 						'css_updatestyle',
 						'css_addstyle',
 						'css_insertstyle',
+						'css_updateallclasses',
 						);
 		
 		if(in_array($request['event'], $events)) {
@@ -459,7 +504,7 @@ class AdminCSSRequestFilter extends FAFilter {
 					return TRUE;
 				}
 				
-				if($request['event'] != 'css_insertstyle' && $request['event'] != 'css_addstyle') {
+				if($request['event'] != 'css_insertstyle' && $request['event'] != 'css_addstyle' && $request['event'] != 'css_updateallclasses') {
 					
 					if(!isset($_REQUEST['style_id']) || intval($_REQUEST['style_id']) == 0) {
 						$action = new K4InformationAction(new K4LanguageElement('L_CSSCLASSDOESNTEXIST'), 'content', FALSE);
@@ -478,10 +523,32 @@ class AdminCSSRequestFilter extends FAFilter {
 				$request['style']		= isset($style) ? $style : array();
 
 			} else {
-				$action = new K4InformationAction(new K4LanguageElement('L_NEEDPERMS'), 'content', FALSE);
+				no_perms_error($request);
 				return TRUE;
 			}
 		}		
+	}
+}
+
+class AdminCSSIterator extends FAProxyIterator {
+	var $result;
+
+	function AdminCSSIterator(&$result) {
+		$this->result		= &$result;
+
+		parent::__construct($this->result);
+	}
+
+	function &current() {
+		$temp = parent::current();
+		
+		$temp['properties'] = trim(str_replace(';', ";\n", $temp['properties']), "\s\n\r");
+		
+		/* Should we free the result? */
+		if(!$this->hasNext())
+			$this->result->free();
+
+		return $temp;
 	}
 }
 

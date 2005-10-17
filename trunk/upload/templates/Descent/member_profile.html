@@ -80,7 +80,7 @@
 				<td class="alt3" width="50%" valign="top">
 					<div class="header_text"><strong>{$L_COMMUNICATE}</strong></div>
 					<if:if var="member_email" noteq=""><a href="<if:if var="secureemail" eq="1">member.php?act=mail&id={$member_id}<else:if var="displayemails" eq="1" />mailto: {$member_email}</if:if>" title="{$L_EMAIL}"><img src="Images/{$IMG_DIR}/Buttons/{$LANG}/email.gif" alt="{$L_EMAIL}" border="0" /></a><br /></if:if>
-					<a href="member.php?act=usercp&amp;view=pmnewmessage&amp;user={$member_name}" title="{$L_PRIVMSG}"><img src="Images/{$IMG_DIR}/Buttons/{$LANG}/pm.gif" alt="{$L_PRIVMSG}" border="0" /></a><br />
+					<is:logged><a href="member.php?act=usercp&amp;view=pmnewmessage&amp;user={$member_name}" title="{$L_PRIVMSG}"><img src="Images/{$IMG_DIR}/Buttons/{$LANG}/pm.gif" alt="{$L_PRIVMSG}" border="0" /></a><br /></is:logged>
 					<if:if var="member_aim" noteq=""><img src="Images/{$IMG_DIR}/Buttons/{$LANG}/aim.gif" border="0" /><br /></if:if>
 					<if:if var="member_icq" noteq=""><img src="Images/{$IMG_DIR}/Buttons/{$LANG}/icq.gif" border="0" /><br /></if:if>
 					<if:if var="member_jabber" noteq=""><img src="Images/{$IMG_DIR}/Buttons/{$LANG}/jabber.gif" border="0" /><br /></if:if>

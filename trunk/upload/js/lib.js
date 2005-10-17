@@ -396,6 +396,18 @@ k4lib.prototype.preload_images	= function() {
 	}
 }
 
+/* Get the event target, function from QuirksMode */
+k4lib.prototype.get_event_target = function(e) {
+	var targ;
+	if (!e) var e = window.event;
+	if (e.target) targ = e.target;
+	else if (e.srcElement) targ = e.srcElement;
+	if (targ.nodeType == 3) // defeat Safari bug
+		targ = targ.parentNode;
+
+	return targ;
+}
+
 /**
  * k4 AJAX/XML-RPC object handler
  */

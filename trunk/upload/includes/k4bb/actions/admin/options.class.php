@@ -84,11 +84,11 @@ class AdminUpdateOptions extends FAAction {
 
 		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
-			// DEMO VERSION
-			if(K4DEMOMODE) {
-				no_perms_error($request, 'content');
-				return TRUE;
-			}
+//			// DEMO VERSION
+//			if(K4DEMOMODE) {
+//				no_perms_error($request, 'content');
+//				return TRUE;
+//			}
 			
 			global $_QUERYPARAMS;
 			

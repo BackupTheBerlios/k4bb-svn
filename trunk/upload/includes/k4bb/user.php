@@ -36,7 +36,7 @@ if (!defined(IN_K4))
  * Get the highest permissioned group that a user belongs to
  */
 function get_user_max_group($temp, $all_groups) {
-	$result				= @unserialize($temp['usergroups']);
+	$result				= explode('|', $temp['usergroups']);
 	$groups				= $temp['usergroups'] != '' ? (!$result ? array() : $result) : array();
 	
 	if(is_array($groups)) {
@@ -159,11 +159,137 @@ function k4_set_logout(&$dba, &$user) {
 	$user = new K4Guest();
 }
 
+/**
+ * Function to force the usergroups out of a malformed serialized array
+ */
+function force_usergroups($user) {
+
+	/* Auto-set our groups array so we can default back on it */
+	$groups = array();
+	
+	/* If the usergroups variable is not equal to nothing */
+	if(isset($user['usergroups']) && $user['usergroups'] != '') {
+		
+		/* Look for something that identifies the scope of this serialized array */
+		preg_match("~\{(.*?)\}~ise", $user['usergroups'], $matches);
+
+		/* Check the results of our search */
+		if(is_array($matches) && isset($matches[1])) {
+			
+			/* Explode the matched value into its parts */
+			$parts	= explode(";", $matches[1]);
+			
+			if(count($parts) > 0) {
+				for($i = 0; $i < count($parts); $i++) {
+					preg_match("~i\:([0-9])\;i\:([0-9])~is", $parts[$i], $_matches);
+					
+					/** 
+					 * If the number of matches is greater than 3, means that there is 1 key and 1 val 
+					 * at least 
+					 */
+					if(count($_matches) > 3) {
+
+						/* loop through the matches, skip [0] because it represents the pattern */
+						for($i = 1; $i < count($_matches); $i++) {
+							
+							/**
+							 * This will remove this usergroup, and any ninexistant ones from this 
+							 * user's array 
+							 */
+							if($_matches[$i+1] != $group['id'] && $_matches[$i+1] != 0) {
+								$groups[$_matches[$i]] = $_matches[$i+1];
+							}
+
+							/* Increment, (+1) so that we always increment by odd numbers */
+							$i++;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return $groups;
+}
+
+/**
+ * Function to check if a user belongs to a usergroup
+ */
+function is_in_group($my_groups, $groups, $my_perms) {
+	
+	if($my_perms >= ADMIN)
+		return TRUE;
+
+	$my_groups			= !is_array($my_groups) || empty($my_groups) ? explode('|', $my_groups) : $my_groups;
+	$groups				= !is_array($groups) || empty($groups) ? explode('|', $groups) : $groups;
+	
+	if(is_array($my_groups) && is_array($groups) && !empty($my_groups)) {
+		foreach($my_groups as $group_id) {
+			if(in_array($group_id, $groups)) {
+				return TRUE;
+			}
+		}
+	}
+
+	return FALSE;
+}
+
+/**
+ * Function to check if a user is a moderator of a forum
+ */
+function is_moderator($user, $forum) {
+	global $_USERGROUPS;
+	
+	if(is_a($user, 'FAUser')) {
+		$user		= $user->getInfoArray();
+	} 
+	if(!is_array($user)) {
+		trigger_error('Invalid $user call for is_moderator.', E_USER_ERROR);
+	}
+	
+	if($user['perms'] >= ADMIN)
+		return TRUE;
+
+	$result				= explode('|', $forum['moderating_groups']);
+	$moderators			= !$result ? force_usergroups($forum['moderating_groups']) : $result;
+	
+					
+	$groups				= array();
+
+	foreach($moderators as $g) {
+		if(isset($_USERGROUPS[$g]))
+			$groups[]	= $g;
+	}
+	
+	if(isset($user['usergroups'])) {
+		
+		$unserialize		= explode('|', $user['usergroups']);
+		$my_groups			= !$unserialize ? force_usergroups($user['usergroups']) : $unserialize;
+
+		/* Do we toggle our moderator's panel? */
+		if(is_in_group($my_groups, $groups, $user['perms'])) {
+			return TRUE;
+		}
+	}
+
+	if($forum['moderating_users'] != '') {
+		$users					= unserialize($forum['moderating_users']);
+		if(is_array($users)) {
+			foreach($users as $user_id => $username) {
+				if($user['name'] == $username && $user['id'] == $user_id)
+					return TRUE;
+			}
+		}
+	}
+
+	return FALSE;
+}
+
 class K4Guest extends FAUser {
 	function guestInfo() {
 		global $_SPIDERS, $_SPIDERAGENTS;
 		
-		$info	= array('name' => '', 'email' => '', 'id' => 0, 'usergroups' => serialize(array()), 'perms' => 1, 'styleset' => '', 'topicsperpage' => 0, 'postsperpage' => 0, 'viewavatars' => 0,'viewflash'=>1,'viewemoticons'=>1,'viewsigs'=>1,'viewavatars'=> 1,'viewimages'=>1,'viewcensors'=>1,'invisible'=>0,'seen'=>time(),'last_seen'=>time(),'spider'=>FALSE);
+		$info	= array('name' => '', 'email' => '', 'id' => 0, 'usergroups' => '', 'perms' => 1, 'styleset' => '', 'topicsperpage' => 0, 'postsperpage' => 0, 'viewavatars' => 0,'viewflash'=>1,'viewemoticons'=>1,'viewsigs'=>1,'viewavatars'=> 1,'viewimages'=>1,'viewcensors'=>1,'invisible'=>0,'seen'=>time(),'last_seen'=>time(),'spider'=>FALSE);
 		
 		/* Check if this person is a search engine */
 		if(preg_match("~(". $_SPIDERAGENTS .")~is", USER_AGENT)) {

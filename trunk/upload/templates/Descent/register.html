@@ -53,7 +53,8 @@
 			</tr>
 			<tr>
 				<td class="k4_subtitle" align="center">
-					<input type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" value="{$L_REGISTER}" class="button" onclick="if(checkForm(d.getElementById('register_form'))) { register(this); }" />
+					<input type="submit" value="{$L_REGISTER}" class="button" />
+					<!--<input type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" value="{$L_REGISTER}" class="button" onclick="if(checkForm(d.getElementById('register_form'))) { register(this); }" />-->
 					<input type="reset" value="{$L_RESET}" class="button" />
 				</td>
 			</tr>
@@ -115,7 +116,8 @@
 			</tr>
 			<tr>
 				<td class="k4_subtitle" align="center">
-					<input type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" value="{$L_REGISTER}" class="button" onclick="if(checkForm(d.getElementById('register_form'))) { register(this); }" />
+					<input type="submit" value="{$L_REGISTER}" class="button" />
+					<!--<input type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" value="{$L_REGISTER}" class="button" onclick="if(checkForm(d.getElementById('register_form'))) { register(this); }" />-->
 					<input type="reset" value="{$L_RESET}" class="button" />
 				</td>
 			</tr>
@@ -124,7 +126,7 @@
 </div>
 </form:form>
 <script type="text/javascript">
-	function register(button) {
+	/*function register(button) {
 		try {
 			d.disableButton(button);
 			if(r) { 
@@ -133,6 +135,6 @@
 				return true;
 			}
 		} catch(e) { alert(e.messgae); }
-	}
+	}*/
 </script>
 </is:unlogged>

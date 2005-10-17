@@ -92,32 +92,33 @@ class Maps_If_Compiler extends FATemplateTagCompiler {
 		
 		if((isset($this->attribs['var']) || isset($this->attribs['group']) || isset($this->attribs['category']) || isset($this->attribs['forum'])) && isset($this->attribs['method'])) {
 			
-			$query = "TRUE";
+			$attribs = array('group', 'category', 'forum', 'user');
 
-			$attribs = array('groups' => 'group', 'categories' => 'category', 'forums' => 'forum', 'users' => 'user');
-			
+			$query = "if(\$_SESSION['user']->get('perms') >= get_map(\$_SESSION['user'], ";
+			$query .= isset($this->attribs['var']) ? "'". $this->attribs['var'] ."', " : "'', ";
+			$query .= "'". $this->attribs['method'] ."', ";
+			$query .= "array(";
 			
 			if((isset($this->attribs['group']) || isset($this->attribs['category']) || isset($this->attribs['forum'])) && isset($this->attribs['method'])) {
 
 				// These attributes are special because they need $scope->getVar() and the attrib name in them
-				foreach($attribs as $key => $val) {
-					if(isset($this->attribs[$val])) {
-						$var		= "";
-						if(isset($this->attribs['var']))
-							$var	= "['". $this->attribs['var'] ."']";
-						
-						// Make the *query* to check the permissions
-						$query		.= " && (isset(\$_MAPS['". $key ."'][\$scope->getVar(\"". $this->attribs[$val] ."\")]". $var ."['". $this->attribs['method'] ."'])";
-						$query		.= " && \$_MAPS['". $key ."'][\$scope->getVar(\"". $this->attribs[$val] ."\")]". $var ."['". $this->attribs['method'] ."'] <= \$_SESSION['user']->get('perms'))";
+				foreach($attribs as $attrib) {
+					if(isset($this->attribs[$attrib])) {
+						$query .= "'". $attrib ."_id'=>intval(\$scope->getVar('". $this->attribs[$attrib] ."')),";
 					}
 				}
-			} else if(isset($this->attribs['var'])) {
-				$query .= " && (isset(\$_MAPS['". $this->attribs['var'] ."']) && \$_MAPS['". $this->attribs['var'] ."']['". $this->attribs['method'] ."'] <= \$_SESSION['user']->get('perms'))";
-			} else {
-				$this->write("<h1>Missing VAR</h1>");
 			}
-			
-			$this->writePHP("if(!isset(\$_MAPS)) { global \$_MAPS; } if($query):");
+			$query .= "))):";
+//			
+//			
+
+//			} else if(isset($this->attribs['var'])) {
+//				$query .= " && (isset(\$_MAPS['". $this->attribs['var'] ."']) && \$_MAPS['". $this->attribs['var'] ."']['". $this->attribs['method'] ."'] <= \$_SESSION['user']->get('perms'))";
+//			} else {
+//				$this->write("<h1>Missing VAR</h1>");
+//			}
+//			
+			$this->writePHP($query);
 		} else {
 			$this->write("<h1>Missing (VAR, CATEGORY, FORUM, GROUP) or METHOD for conditional MAPS statement.</h1>");
 		}

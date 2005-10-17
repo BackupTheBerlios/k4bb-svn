@@ -3,7 +3,7 @@
 <div class="k4_borderwrap">
 	<if:if var="edit_styleset" eq="1">
 	<div class="k4_maintitle">{$L_EDITSTYLESET}<span style="font-weight: normal;">: {$styleset_name}</span></div>
-	<input type="hidden" name="id" value="{$styleset_id}" />
+	<input type="hidden" name="id" value="{$style_style_id}" />
 	<if:else />
 	<div class="k4_maintitle">{$L_ADDSTYLESET}</div>
 	</if:if>
@@ -11,23 +11,23 @@
 		<tr>
 			<td class="alt1" width="30%"><label for="name"><strong>{$L_NAME}:</strong></label></td>
 			<td class="alt3">
-				<input type="text" name="name" id="name" class="inputbox" value="{$styleset_name}" />
+				<input type="text" name="name" id="name" class="inputbox" value="{$styleset_name}" tabindex="1" />
 				<form:error id="name_error" for="name" setclass="inputfailed" regex=".+">{$L_INSERTSSNAME}</form:error>
 			</td>
 		</tr>
 		<tr>
 			<td class="alt1" width="30%"><label for="description"><strong>{$L_DESCRIPTION}:</strong></label></td>
 			<td class="alt3">
-				<input type="text" name="description" id="description" size="40" class="inputbox" value="{$styleset_description}" />
+				<input type="text" name="description" id="description" size="40" class="inputbox" value="{$styleset_description}" tabindex="2" />
 				<form:error id="description_error" for="description" setclass="inputfailed" regex=".+">{$L_INSERTSSDESCRIPTION}</form:error>
 			</td>
 		</tr>
 		<tr>
 			<td class="alt1" width="30%"><strong>{$L_SETTINGS}:</strong></td>
 			<td class="alt3">
-				<input type="checkbox" name="use_templateset" id="use_templateset" value="1" /> {$L_USETEMPLATESET}
+				<input type="checkbox" name="use_templateset" id="use_templateset" value="1" tabindex="3" /> {$L_USETEMPLATESET}
 				<br />
-				<input type="checkbox" name="use_imageset" id="use_imageset" value="1" /> {$L_USEIMAGESET}
+				<input type="checkbox" name="use_imageset" id="use_imageset" value="1" tabindex="4" /> {$L_USEIMAGESET}
 				<if:if var="edit_styleset" eq="1">
 				<script type="text/javascript">
 				d.setCheckbox({$styleset_use_templateset}, 'use_templateset');
@@ -37,7 +37,7 @@
 				<br /><br />
 				<strong>{$L_STYLESETTOCLONE}</strong><br />
 				<span class="smalltext">{$L_STYLESETTOCLONEHOWTO}</span><br />
-				<select name="clone_styleset" class="inputbox">
+				<select name="clone_styleset" class="inputbox" tabindex="5">
 					<option value="0"> - {$L_STARTNEWSS} - </option>
 					<list:list id="stylesets">
 					<list:item list="stylesets">
@@ -50,8 +50,8 @@
 		</tr>
 		<tr>
 			<td class="k4_subtitle" colspan="2">
-				<input type="submit" class="button" value="{$L_SAVE}" tabindex="15" />
-				<input type="reset" class="button" value="{$L_RESET}" />
+				<input type="submit" class="button" value="{$L_SAVE}" tabindex="6" />
+				<input type="reset" class="button" value="{$L_RESET}" tabindex="7" />
 			</td>
 		</tr>
 	</table>

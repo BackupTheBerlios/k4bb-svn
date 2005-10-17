@@ -340,10 +340,14 @@ class K4TemplateFilter extends FAFilter {
 		$templateset	= intval($_STYLESETS[$styleset]['use_templateset']) == 0 ? (($request['user']->isMember()) ? $request['user']->get('templateset') : $styleset) : $styleset;
 		$imageset		= intval($_STYLESETS[$styleset]['use_imageset']) == 0 ? (($request['user']->isMember()) ? $request['user']->get('imageset') : $styleset) : $styleset;
 		
-		if($request['user']->get('spider') == TRUE)
+		$request['user']->set('templateset', $templateset);
+		
+		if($request['user']->get('spider') == TRUE || isset($_REQUEST['archive']))
 			$templateset = 'Archive';
 
-		// TODO: query the user to determine the theme		
+		// set the main file
+		// *** IF SOMEONE IS GOING TO MAKE A PORTAL, $request['template_file'] IS THE
+		// *** VARIABLE TO CHANGE
 		$request['template_file'] = BB_BASE_DIR . "/templates/$templateset/{$this->_filename}";
 		
 		// Load k4 custom compilers
@@ -442,6 +446,9 @@ class K4InformationAction extends FAAction {
 	}
 
 	function execute(&$request) {
+		
+		$request['template_file'] = BB_BASE_DIR . "/templates/". $request['user']->get('templateset') ."/information_base.html";
+
 		$js = '';
 		
 		$this->_url			= str_replace('&amp;', '&', $this->_url);
@@ -462,7 +469,7 @@ class K4InformationAction extends FAAction {
 		$request['template']->setVar('redirect', $js);
 		$request['template']->setVar('html_redirect', $this->_url && $this->_timeout ? '<meta http-equiv="refresh" content="'. intval($this->_timeout) .';url='. $this->_url .'" />' : '');
 		$request['template']->setVisibility('info_back_button', $this->_show_button);		
-		$request['template']->setFile($this->_block_id, 'information.html');
+		$request['template']->setFile('content', 'information.html'); //$this->_block_id
 	}
 }
 

@@ -233,7 +233,7 @@ class AdminInsertForum extends FAAction {
 			$insert_a->setInt(11, $_REQUEST['postsperpage']);
 			$insert_a->setInt(12, $_REQUEST['maxpolloptions']);
 			$insert_a->setString(13, $_REQUEST['defaultlang']);
-			$insert_a->setString(14, iif((isset($_REQUEST['moderators']) && is_array($_REQUEST['moderators']) && !empty($_REQUEST['moderators'])), serialize(@$_REQUEST['moderators']), ''));
+			$insert_a->setString(14, iif((isset($_REQUEST['moderators']) && is_array($_REQUEST['moderators']) && !empty($_REQUEST['moderators'])), implode('|', $_REQUEST['moderators']), ''));
 			$insert_a->setInt(15, $_REQUEST['prune_auto']);
 			$insert_a->setInt(16, $_REQUEST['prune_frequency']);
 			$insert_a->setInt(17, $_REQUEST['prune_post_age']);
@@ -445,7 +445,7 @@ class AdminEditForum extends FAAction {
 				}
 			}
 
-			$groups		= $forum['moderating_groups'] != '' ? iif(!unserialize($forum['moderating_groups']), array(), unserialize($forum['moderating_groups'])) : array();
+			$groups		= $forum['moderating_groups'] != '' ? explode('|', $forum['moderating_groups']) : array();
 			$groups_str	= '';
 
 			if(is_array($groups)) {
@@ -565,7 +565,7 @@ class AdminUpdateForum extends FAAction {
 			$update_a->setInt(10, $_REQUEST['postsperpage']);
 			$update_a->setInt(11, $_REQUEST['maxpolloptions']);
 			$update_a->setString(12, $_REQUEST['defaultlang']);
-			$update_a->setString(13, (isset($_REQUEST['moderators']) && is_array($_REQUEST['moderators']) && !empty($_REQUEST['moderators']) ? serialize($_REQUEST['moderators']) : ''));
+			$update_a->setString(13, (isset($_REQUEST['moderators']) && is_array($_REQUEST['moderators']) && !empty($_REQUEST['moderators']) ? implode('|', $_REQUEST['moderators']) : ''));
 			$update_a->setInt(14, $_REQUEST['prune_auto']);
 			$update_a->setInt(15, $_REQUEST['prune_frequency']);
 			$update_a->setInt(16, $_REQUEST['prune_post_age']);
@@ -711,7 +711,7 @@ class AdminForumPermissions extends FAAction {
 			}
 						
 			$all_maps = array();
-			$maps = &$request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE forum_id = ". intval($forum['forum_id']));
+			$maps = &$request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE group_id = 0 AND forum_id = ". intval($forum['forum_id']));
 			
 			// get the map's
 			get_recursive_maps($request, $all_maps, $parents, $maps, 2);

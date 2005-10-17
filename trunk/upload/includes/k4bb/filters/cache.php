@@ -232,7 +232,7 @@ class K4GeneralCacheFilter extends FAFilter {
 				DBCache::createCache($cache, CACHE_FILE);
 			}
 
-		} 
+		}
 		
 		if(file_exists(CACHE_FILE) && !rewrite_file(CACHE_FILE, CACHE_INTERVAL) && USE_CACHE) {
 			

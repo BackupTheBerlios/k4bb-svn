@@ -3,7 +3,8 @@
 <div class="k4_borderwrap">
 <?php if ($scope->getVar("edit_style") == 1): ?>
 	<div class="k4_maintitle"><?php echo $scope->getVar("L_EDITCSSSTYLE"); ?><span style="font-weight: normal;">: <?php echo $scope->getVar("style_name"); ?></span></div>
-	<input type="hidden" name="id" value="<?php echo $scope->getVar("styleset_id"); ?>" />
+	<input type="hidden" name="id" value="<?php echo $scope->getVar("style_style_id"); ?>" />
+	<input type="hidden" name="style_id" value="<?php echo $scope->getVar("style_id"); ?>" />
 <?php else: ?>
 	<div class="k4_maintitle"><?php echo $scope->getVar("L_ADDCSSSTYLE"); ?></div>
 <?php endif; ?>

@@ -47,7 +47,7 @@ function menu_init(link_id, menu_id) {
 		//menu_positions(menu, link);
 
 		menu.style.display	= 'none';
-		menu.style.zIndex	= 1000;
+		menu.style.zIndex	= 99;
 		link.unselectable	= true;
 		
 		/* Add the link cursor */
@@ -87,7 +87,7 @@ function menu_init(link_id, menu_id) {
 				}
 			}
 
-			if(!use_click) {
+			if(typeof use_click == 'undefined' || !use_click) {
 				
 				// enforce the link id
 				menu.link_id		= this.id;
@@ -103,7 +103,7 @@ function menu_init(link_id, menu_id) {
 			}
 		}
 		
-		if(!use_click) {
+		if(typeof use_click == 'undefined' || !use_click) {
 			link.onmouseout = function(event) {
 				hidemenuclick(event);
 			}
@@ -181,12 +181,12 @@ function closemenu(menu) {
 
 /* show/hide a menu when someone clicks the page */
 
-if(!use_click) {
-	AttachEvent(document,'mousemove',hidemenuclick,false);
-	//document.onmousemove	= hidemenuclick;
-}
-AttachEvent(document,'click',hidemenuclick,false);
-//document.onclick		= hidemenuclick;
+//if(!use_click) {
+//	AttachEvent(document,'mousemove',hidemenuclick,false);
+//	//document.onmousemove	= hidemenuclick;
+//}
+//AttachEvent(document,'click',hidemenuclick,false);
+////document.onclick		= hidemenuclick;
 
 function hidemenuclick(e) {
 	
@@ -236,10 +236,10 @@ function hidemenuclick(e) {
 		
 		keep_open		= true;
 		
-		if(posY > d.bottom(open_menu)) { keep_open = false; }
+		if(posY > d.bottom(open_menu))	keep_open = false;
 		if(posY < d.top(open_menulink)) keep_open = false;
-		if(posX < d.left(open_menu)) keep_open = false;
-		if(posX > d.right(open_menu)) keep_open = false;
+		if(posX < d.left(open_menu))	keep_open = false;
+		if(posX > d.right(open_menu))	keep_open = false;
 
 		if(!keep_open && open_menu) {
 			open_menu.style.display = 'none';
@@ -271,8 +271,14 @@ function highlightmenurows(menu) {
 						this.className = 'alt1';
 					}
 
-					rows[i].onclick = function() {
-						menu.style.display = 'none';
+					rows[i].onclick = function(e) {
+						target	= d.get_event_target(e);
+						
+						// only close the menu if the target element is NOT an input field
+						if((target.type != 'text' && target.type != 'radio') || typeof target.type == 'undefined') {
+							menu.style.display = 'none';
+							open_menu = false;
+						}
 					}
 
 				}
@@ -300,7 +306,6 @@ function menu_positions(menu, link) {
 		menu.style.top		= parseInt(d.top(link) + d.height(link)) + 'px';
 	}
 }
-
 
 /**
  * Deal with the events

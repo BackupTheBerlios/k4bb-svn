@@ -1,8 +1,10 @@
 <is:admin>
+<form action="admin.php?act=css_updateallclasses&amp;id={$styleset_id}" method="post" enctype="multipart/form-data">
 <div class="k4_borderwrap">
 	<div class="k4_maintitle">
 		<div style="float: right;">
 			<input type="button" class="button" value="{$L_ADDCSSSTYLE}" onclick="document.location='admin.php?act=css_addstyle&id={$styleset_id}'" />
+			<input type="button" class="button" value="{$L_EDITALLCLASSES}" onclick="document.location='admin.php?act=css&edit=1&id={$styleset_id}'" />
 		</div>
 		{$L_CSSSTYLES}<span style="font-weight: normal;">: {$styleset_name}</span>
 	</div>
@@ -29,9 +31,33 @@
 				<input type="button" class="button" value="{$L_DELETE}" style="color: #FF0000;" onclick="document.location='admin.php?act=css_removestyle&id={$style_id}&style_id={$id}'" />
 			</td>
 		</tr>
+		<if:if var="edit_all" eq="1">
+		<tr>
+			<td class="{$row_class}" colspan="2">
+				<textarea name="properties{$id}" rows="5" cols="70" class="inputbox" style="width:100%; overflow:scroll;" wrap="off">{$properties}</textarea>
+			</td>
+		</tr>
+		<list:alternate list="styles" count="5" remainder="4">
+		<tr>
+			<td colspan="2" class="k4_subtitle" style="text-align: center">
+				<input type="submit" value="{$L_SAVEALL}" class="button" />
+				<input type="reset" value="{$L_RESETALL}" class="button" />
+			</td>
+		</tr>
+		</list:alternate>
+		</if:if>
 		</list:switch>
 		</list:item>
 		</list:list>
+		<if:if var="edit_all" eq="1">
+		<tr>
+			<td colspan="2" class="k4_subtitle" style="text-align: center">
+				<input type="submit" value="{$L_SAVEALL}" class="button" />
+				<input type="reset" value="{$L_RESETALL}" class="button" />
+			</td>
+		</tr>
+		</if:if>
 	</table>
 </div>
+</form>
 </is:admin>
