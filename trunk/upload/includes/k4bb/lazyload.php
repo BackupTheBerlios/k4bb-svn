@@ -34,95 +34,6 @@ error_reporting(E_ALL);
 if(!defined('IN_K4')) {
 	return;
 }
-/*
-class LazyLoad {
-
-	var $dba;
-	var $loads;
-	var $load_num;
-	var $load;
-
-	function LazyLoad() {
-		global $_DBA, $_LAZYLOAD;
-		
-		$this->dba		= &$_DBA;
-		$this->loads	= $_LAZYLOAD;
-		$this->load_num	= FALSE;
-	}
-	
-	//
-	// Find out which 'lazy' load this user should start with
-	//
-	function getLoad() {
-		foreach($this->loads as $l) {
-			if($l['load_current'] < $l['load_num']) {
-				
-				// Update the load current factor with the load interval _right_ away
-				$this->dba->executeUpdate("UPDATE ". LAZYLOAD ." SET load_current=load_current+". intval($l['load_interval']));
-				
-				// Set which load this user will be dealing with
-				return $this->load_num = $l['id'];
-			
-			// Weed out any finished loads
-			} else {
-
-				// Set the load status to completed, and clear the load args to save sql memory
-				$this->dba->executeUpdate("UPDATE ". LOADTRACKER ." SET load_status = 'completed' WHERE load_id = ". l($load['id']));
-				$this->dba->executeUpdate("UPDATE ". LAZYLOAD ." SET load_args = '' WHERE id = ". intval($l['id']));
-				
-				if(!@touch(CACHE_FILE, time()-86460)) {
-					@unlink(CACHE_FILE);
-				}
-			}
-		}
-	}
-
-	//
-	// * Find out what parts of this load this user should execute
-	//
-	function executeLoad() {
-
-		$this->getLoad();
-		
-		if($this->load_num) {
-
-			$load		= $this->loads[$this->load_num];
-			
-			$args		= explode($load['load_separator'], $load['load_args']);
-			
-			for($i = $load['load_current']; $i < ($load['load_current'] + $load['load_interval']); $i++) {
-				
-				if(isset($args[$i]) && $args[$i] != '') {
-					
-					if($load['load_type'] == 'SQL') {
-
-						@$this->dba->executeUpdate($args[$i]);
-					} else if($load['load_type'] == 'PHP') {
-
-						@eval($args[$i]);
-					}
-				}
-			}
-			
-			// Set the load status to completed
-			if(($load['load_current'] + $load['load_interval']) > $load['load_num']) {
-
-				// Set the load status to completed, and clear the load args to save sql memory
-				$this->dba->executeUpdate("UPDATE ". LOADTRACKER ." SET load_status = 'completed' WHERE load_id = ". intval($load['id']));
-				$this->dba->executeUpdate("UPDATE ". LAZYLOAD ." SET load_args = '' WHERE id = ". intval($load['id']));
-			
-				if(!@touch(CACHE_FILE, time()-86460)) {
-					@unlink(CACHE_FILE);
-				}
-			}
-		}
-
-		return TRUE;
-	}
-}
-
-*/
-
 
 /**
  * This sets the mail queue items for emails that need to be sent out
@@ -175,7 +86,7 @@ function set_send_topic_mail($forum_id, $poster_name) {
 			/* Memory saving */
 			unset($_SETTINGS, $lang, $_QUERYPARAMS, $_DBA);
 
-			reset_cache(CACHE_EMAIL_FILE);
+			reset_cache('email_queue');
 		}
 	}
 }
@@ -231,7 +142,7 @@ function set_send_reply_mail($topic_id, $poster_name) {
 			/* Memory saving */
 			unset($_SETTINGS, $_LANG, $_QUERYPARAMS, $_DBA);
 
-			reset_cache(CACHE_EMAIL_FILE);
+			reset_cache('email_queue');
 		}
 	}
 }
@@ -305,75 +216,9 @@ function execute_mail_queue(&$dba, $mailqueue) {
 			} else {
 				$dba->executeUpdate("DELETE FROM ". K4MAILQUEUE ." WHERE id = ". intval($mailqueue[0]['id']));
 			}
-			reset_cache(CACHE_EMAIL_FILE);
+			reset_cache('email_queue');
 		}
 	}
 }
-
-///**
-// * Execute our topic queue to delete moderated topics
-// */
-//function execute_topic_queue(&$dba, $topicqueue) {
-//	
-//	if(is_array($topicqueue) && !empty($topicqueue)) {
-//		
-//		// TODO: Make this work!!
-//		trigger_error("This feature is off limits for now.", E_USER_ERROR);
-//
-//		array_values($topicqueue);
-//		
-//		if(isset($topicqueue[0])) {
-//			
-//			$queue			= $topicqueue[0];
-//			
-//			$topics			= unserialize($topicqueue[0]['topicinfo']);
-//			
-//			if(is_array($topics) && !empty($topics)) {
-//				
-//				/* Reset the starting point of this array */
-//				$topics		= array_values($topics);
-//				$count		= count($topics);
-//				
-//				/* Loop through the users */
-//				for($i = 0; $i < TOPIC_INTERVAL; $i++) {
-//					
-//					if(isset($topics[$i]) && intval($topics[$i]) != 0) {
-//						
-//						/* Remove this topic */
-//						remove_item(intval($topics[$i]), 'topic_id');
-//						
-//						unset($topics[$i]);
-//					}
-//
-//				}
-//				
-//				/* If we have finished with this queue item */
-//				if($count <= TOPIC_INTERVAL) {
-//					$dba->executeUpdate("DELETE FROM ". K4TOPICQUEUE ." WHERE id = ". intval($topicqueue[0]['id']));
-//				} else {
-//					
-//					$topics		= array_values($topics);
-//					$update		= $dba->prepareStatement("UPDATE ". K4TOPICQUEUE ." SET topicinfo=? WHERE id=?");
-//					$update->setString(1, serialize($topics));
-//					$update->setInt(2, $topicqueue[0]['id']);
-//					$update->executeUpdate();
-//				}
-//				
-//				/* Reset the filetime on our email cache file */
-//				if(!@touch(CACHE_TOPIC_FILE, time()-86460)) {
-//					@unlink(CACHE_TOPIC_FILE);
-//				}
-//
-//			} else {
-//				$dba->executeUpdate("DELETE FROM ". K4TOPICQUEUE ." WHERE id = ". intval($topicqueue[0]['id']));
-//					
-//				/* Reset the filetime on our email cache file */
-//				if(!@touch(CACHE_TOPIC_FILE, time()-86460)) {
-//					@unlink(CACHE_TOPIC_FILE);
-//				}
-//			}
-//		}
-//	}
-//}
 
 ?>

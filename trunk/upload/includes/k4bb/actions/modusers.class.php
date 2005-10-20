@@ -63,9 +63,7 @@ class ModBanUser extends FAAction {
 				$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET banned = 0 WHERE id = ". intval($user['id']));
 				$request['dba']->executeUpdate("DELETE FROM ". K4BANNEDUSERS ." WHERE user_id = ". intval($user['id']));
 				
-				if(!@touch(CACHE_FILE, time()-86460)) {
-					@unlink(CACHE_FILE);
-				}
+				reset_cache('banned_users');
 
 				$action = new K4InformationAction(new K4LanguageElement('L_UNBANNEDUSER', $user['name']), 'content', TRUE, 'index.php', 3);
 				return $action->execute($request);
@@ -128,9 +126,7 @@ class HardBanUser extends FAAction {
 				$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET banned = 0 WHERE id = ". intval($user['id']));
 				$request['dba']->executeUpdate("DELETE FROM ". K4BANNEDUSERS ." WHERE user_id = ". intval($user['id']));
 				
-				if(!@touch(CACHE_FILE, time()-86460)) {
-					@unlink(CACHE_FILE);
-				}
+				reset_cache('banned_users');
 
 				$action = new K4InformationAction(new K4LanguageElement('L_UNBANNEDUSER', $user['name']), 'content', TRUE, 'index.php', 3);
 				return $action->execute($request);
@@ -158,9 +154,7 @@ class HardBanUser extends FAAction {
 					$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET banned = 1 WHERE id = ". intval($user['id']));
 				
 
-				if(!@touch(CACHE_FILE, time()-86460)) {
-					@unlink(CACHE_FILE);
-				}
+				reset_cache('banned_users');
 
 				$action = new K4InformationAction(new K4LanguageElement((!isset($_REQUEST['user_ip']) ? 'L_BANNEDUSER' : 'L_BANNEDIPRANGE'), $user['name']), 'content', TRUE, 'index.php', 3);
 				return $action->execute($request);
@@ -240,9 +234,7 @@ class LiftIPBan extends FAAction {
 		
 		$request['dba']->executeUpdate("DELETE FROM ". K4BANNEDUSERS ." WHERE id = ". intval($ban['id']));
 		
-		if(!@touch(CACHE_FILE, time()-86460)) {
-			@unlink(CACHE_FILE);
-		}
+		reset_cache('banned_users');
 		
 		$ban['user_ip']		= str_replace('\.', '.', $ban['user_ip']);
 		$ban['user_ip']		= str_replace('([0-9]+?)', '*', $ban['user_ip']);
@@ -301,9 +293,7 @@ class ModFlagUser extends FAAction {
 				return $action->execute($request);
 			}
 			
-			if(!@touch(CACHE_FILE, time()-86460)) {
-				@unlink(CACHE_FILE);
-			}
+			reset_cache('flagged_users');
 
 			if($user['flag_level'] == 0) {
 				$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET flag_level = 1 WHERE id = ". intval($user['id']));

@@ -224,45 +224,6 @@ class Heirarchy {
 		$update_a->executeUpdate();
 		$update_b->executeUpdate();
 	}
-	function moveUp($parent_node, $table) {
-		
-		if(K4MPTT) {
-			$num_children		= @(($parent_node['row_right'] - $parent_node['row_left'] - 1) / 2);
-			
-			if($num_children > 0) {
-	
-				/**
-				 * Create the Queries
-				 */
-				$delete				= &$this->dba->prepareStatement("DELETE FROM ". $table ." WHERE row_left = ? AND row_right = ?");
-				$update_a			= &$this->dba->prepareStatement("UPDATE ". $table ." SET row_left=row_left-1, row_right=row_right-1 WHERE row_left > ? AND row_right < ?");
-				$update_b			= &$this->dba->prepareStatement("UPDATE ". $table ." SET row_right=row_right-2 WHERE row_right > ?");
-				
-				/**
-				 * Populate the queries
-				 */
-				$delete->setInt(1, $parent_node['row_left']);
-				$delete->setInt(2, $parent_node['row_right']);
-	
-				$update_a->setInt(1, $parent_node['row_left']);
-				$update_a->setInt(2, $parent_node['row_right']); // row_left ?
-	
-				$update_b->setInt(1, $parent_node['row_right']);
-				
-				/**
-				 * Execute the queries
-				 */
-				$delete->executeUpdate();
-				$update_a->executeUpdate();
-				$update_b->executeUpdate();
-			
-			} else {
-				$this->removeNode($parent_node, $table);
-			}
-		} else {
-			// TODO: make the move up function for recursion
-		}
-	}
 }
 
 ?>

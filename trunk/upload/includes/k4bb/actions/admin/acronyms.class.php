@@ -80,7 +80,7 @@ class AdminInsertAcronym extends FAAction {
 			
 			$action = new K4InformationAction(new K4LanguageElement('L_ADDEDACRONYM', $_REQUEST['acronym']), 'content', FALSE, 'admin.php?act=acronyms', 3);
 			
-			reset_cache(CACHE_FILE);
+			reset_cache('acronyms');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_ACRONYMS');
 			$request['template']->setVar('posts_on', '_on');
@@ -138,7 +138,7 @@ class AdminUpdateAcronym extends FAAction {
 			
 			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDACRONYM', $acronym['acronym']), 'content', FALSE, 'admin.php?act=acronyms', 3);
 
-			reset_cache(CACHE_FILE);
+			reset_cache('acronyms');
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_ACRONYMS');
 			$request['template']->setVar('posts_on', '_on');
@@ -179,7 +179,7 @@ class AdminRemoveAcronym extends FAAction {
 			
 			$action = new K4InformationAction(new K4LanguageElement('L_REMOVEDACRONYM', $acronym['acronym']), 'content', FALSE, 'admin.php?act=acronyms', 3);
 			
-			reset_cache(CACHE_FILE);
+			reset_cache('acronyms');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_ACRONYMS');
 			$request['template']->setVar('posts_on', '_on');

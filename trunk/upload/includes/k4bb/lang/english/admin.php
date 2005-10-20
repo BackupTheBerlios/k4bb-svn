@@ -552,7 +552,7 @@ $_LANG += array(
 'L_TOPICMAXCHARS'			=> 'Maximum character length for a topic title.',
 'L_SIGNATURESEPARATOR'		=> 'Signature Separator',
 'L_HOWTOSIGNATURESEPARATOR'	=> 'This is what separates signatures from posts.',
-'L_UPDATEDOPTIONS'			=> 'Successfuly upated the forum settings.',
+'L_UPDATEDOPTIONS'			=> 'Successfuly updated the forum settings.',
 /* / Admin General Settings */
 
 /* Acronym Management */

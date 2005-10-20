@@ -340,10 +340,7 @@ class ModerateForum extends FAAction {
 				$forum_update->executeUpdate();
 				$datastore_update->executeUpdate();
 				
-				// change the file execution time on the datastore file
-				if(!@touch(CACHE_DS_FILE, time()-86460)) {
-					@unlink(CACHE_DS_FILE);
-				}
+				reset_cache('datastore');
 
 				k4_bread_crumbs($request['template'], $request['dba'], 'L_DELETETOPICS', $forum);
 				$action = new K4InformationAction(new K4LanguageElement('L_DELETEDTOPICS'), 'content', TRUE, referer(), 5);

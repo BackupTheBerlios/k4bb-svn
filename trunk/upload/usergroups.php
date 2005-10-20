@@ -87,10 +87,7 @@ class K4DefaultAction extends FAAction {
 				$admin		= $request['dba']->getRow("SELECT * FROM ". K4USERS ." WHERE perms >= ". intval(ADMIN) ." ORDER BY perms,id ASC LIMIT 1");
 				$request['dba']->executeUpdate("UPDATE ". K4USERGROUPS  ." SET mod_name = '". $request['dba']->quote($admin['name']) ."', mod_id = ". intval($admin['id']) ." WHERE id = ". intval($group['id']));
 				
-				/* Change the file modification time of our cache file */
-				if(!@touch(CACHE_FILE, time()-86460)) {
-					@unlink(CACHE_FILE);
-				}
+				reset_cache('usergroups');
 				
 				/* Add this info to the group array so that we can access it later */
 				$group['mod_name']	= $admin['name'];

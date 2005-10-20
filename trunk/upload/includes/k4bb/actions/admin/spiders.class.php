@@ -84,7 +84,7 @@ class AdminInsertSpider extends FAAction {
 			
 			$action = new K4InformationAction(new K4LanguageElement('L_ADDEDSPIDER', $_REQUEST['useragent']), 'content', FALSE, 'admin.php?act=spiders', 3);
 			
-			reset_cache(CACHE_FILE);
+			reset_cache('spiders');
 			
 			return $action->execute($request);
 		} else {
@@ -142,7 +142,7 @@ class AdminUpdateSpider extends FAAction {
 			
 			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDSPIDER', $spider['spidername']), 'content', FALSE, 'admin.php?act=spiders', 3);
 
-			reset_cache(CACHE_FILE);			
+			reset_cache('spiders');
 
 			return $action->execute($request);
 		} else {
@@ -180,7 +180,7 @@ class AdminRemoveSpider extends FAAction {
 			
 			$action = new K4InformationAction(new K4LanguageElement('L_REMOVEDSPIDER', $spider['spidername']), 'content', FALSE, 'admin.php?act=spiders', 3);
 			
-			reset_cache(CACHE_FILE);
+			reset_cache('spiders');
 			
 			return $action->execute($request);
 		} else {

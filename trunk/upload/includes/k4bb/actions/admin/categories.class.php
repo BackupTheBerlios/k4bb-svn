@@ -87,10 +87,10 @@ class AdminInsertCategory extends FAAction {
 				return $action->execute($request);
 			}
 						
-			if(!isset($_REQUEST['description']) || $_REQUEST['description'] == '') {
-				$action = new K4InformationAction(new K4LanguageElement('L_INSERTCATDESC'), 'content', TRUE);
-				return $action->execute($request);
-			}
+//			if(!isset($_REQUEST['description']) || $_REQUEST['description'] == '') {
+//				$action = new K4InformationAction(new K4LanguageElement('L_INSERTCATDESC'), 'content', TRUE);
+//				return $action->execute($request);
+//			}
 			
 			if(!isset($_REQUEST['row_order']) || $_REQUEST['row_order'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTCATORDER'), 'content', TRUE);
@@ -109,7 +109,7 @@ class AdminInsertCategory extends FAAction {
 			
 			/* Build the query for the categories table */
 			$insert_a->setString(1, $_REQUEST['name']);
-			$insert_a->setString(2, $_REQUEST['description']);
+			$insert_a->setString(2, @$_REQUEST['description']);
 			$insert_a->setInt(3, CATEGORY);
 			$insert_a->setInt(4, 1);
 			$insert_a->setInt(5, time());
@@ -122,7 +122,7 @@ class AdminInsertCategory extends FAAction {
 			
 			$request['dba']->commitTransaction();
 
-			reset_cache(CACHE_FILE);
+			reset_cache('forums');
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_CATEGORIES');
 			$request['template']->setVar('forums_on', '_on');
@@ -183,7 +183,7 @@ class AdminInsertCategoryMaps extends FAAction {
 				}
 			}
 			
-			reset_cache(CACHE_FILE);
+			reset_cache('forums');
 			
 			$request['dba']->commitTransaction();
 			
@@ -238,7 +238,7 @@ class AdminSimpleCategoryUpdate extends FAAction {
 
 			$update->executeUpdate();
 			
-			reset_cache(CACHE_FILE);
+			reset_cache('forums');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_CATEGORIES');
 			$request['template']->setVar('forums_on', '_on');
@@ -315,10 +315,10 @@ class AdminUpdateCategory extends FAAction {
 				return $action->execute($request);
 			}
 						
-			if(!isset($_REQUEST['description']) || $_REQUEST['description'] == '') {
-				$action = new K4InformationAction(new K4LanguageElement('L_INSERTCATDESC'), 'content', TRUE);
-				return $action->execute($request);
-			}
+//			if(!isset($_REQUEST['description']) || $_REQUEST['description'] == '') {
+//				$action = new K4InformationAction(new K4LanguageElement('L_INSERTCATDESC'), 'content', TRUE);
+//				return $action->execute($request);
+//			}
 			
 			if(!isset($_REQUEST['row_order']) || $_REQUEST['row_order'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTCATORDER'), 'content', TRUE);
@@ -336,7 +336,7 @@ class AdminUpdateCategory extends FAAction {
 			
 			/* Build the query for the categories table */
 			$update_a->setString(1, $_REQUEST['name']);
-			$update_a->setString(2, $_REQUEST['description']);
+			$update_a->setString(2, @$_REQUEST['description']);
 			$update_a->setInt(3, $_REQUEST['row_order']);
 			$update_a->setInt(4, $category['category_id']);
 			
@@ -348,7 +348,7 @@ class AdminUpdateCategory extends FAAction {
 			$update_a->executeUpdate();
 			$update_b->executeUpdate();
 						
-			reset_cache(CACHE_FILE);
+			reset_cache('forums');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_CATEGORIES');
 			$request['template']->setVar('forums_on', '_on');
@@ -403,8 +403,8 @@ class AdminRemoveCategory extends FAAction {
 			/* Commit the current transaction */
 			$request['dba']->commitTransaction();
 
-			reset_cache(CACHE_FILE);
-			reset_cache(CACHE_EMAIL_FILE);
+			reset_cache('forums');
+			reset_cache('email_queue');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_CATEGORIES');
 			$request['template']->setVar('forums_on', '_on');
@@ -517,7 +517,7 @@ class AdminUpdateCategoryPermissions extends FAAction {
 				}
 			}
 			
-			reset_cache(CACHE_FILE);
+			reset_cache('forums');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_CATEGORIES');
 			$request['template']->setVar('forums_on', '_on');

@@ -35,6 +35,8 @@ CREATE TABLE k4_userinfo (
 	field3			VARCHAR(100) NOT NULL DEFAULT '',
 	field4			VARCHAR(255) NOT NULL DEFAULT '',
 	field5			VARCHAR(255) NOT NULL DEFAULT '',
+
+	user_title		VARCHAR(50) NOT NULL DEFAULT '',
 	
 	icq			VARCHAR(255) NOT NULL DEFAULT '',
 	aim			VARCHAR(255) NOT NULL DEFAULT '',
@@ -403,6 +405,14 @@ CREATE TABLE k4_datastore (
 	PRIMARY KEY(varname)
 );
 
+CREATE TABLE k4_cache (
+	varname			CHAR(30) NOT NULL DEFAULT '',
+	data			LONGTEXT,
+	modified		INTEGER UNSIGNED NOT NULL DEFAULT 0,
+
+	PRIMARY KEY(varname)
+);
+
 CREATE TABLE k4_posticons (
 	id			INTEGER UNSIGNED,
 	description		VARCHAR(100) NOT NULL DEFAULT '',
@@ -712,3 +722,12 @@ CREATE TABLE k4_faqanswers (
 	PRIMARY KEY(answer_id)
 );
 CREATE INDEX answer_id ON k4_faqanswers (answer_id);
+
+CREATE TABLE k4_usertitles (
+	title_id		INTEGER UNSIGNED,
+	num_posts		INTEGER UNSIGNED NOT NULL DEFAULT 0,
+	title_text		VARCHAR(50) NOT NULL DEFAULT '',
+	
+	PRIMARY KEY(title_id)
+);
+CREATE INDEX num_posts ON k4_usertitles (num_posts);

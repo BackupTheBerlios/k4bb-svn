@@ -29,8 +29,8 @@
 * @package k42
 */
 
-require "includes/filearts/filearts.php";
-require "includes/k4bb/k4bb.php";
+require "../includes/filearts/filearts.php";
+require "../includes/k4bb/k4bb.php";
 
 //INSERT INTO k4_maps ( row_level, name, varname, value, is_global, category_id, forum_id, user_id, group_id, parent_id, can_view, can_add, can_edit, can_del, inherit, num_children, can_view_condition, can_edit_condition, can_add_condition, can_del_condition) VALUES ( 1, 'Private Messaging', 'private_messaging', '', 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 15, 1, 1, 1, 1);
 //INSERT INTO k4_maps ( row_level, name, varname, value, is_global, category_id, forum_id, user_id, group_id, parent_id, can_view, can_add, can_edit, can_del, inherit, num_children, can_view_condition, can_edit_condition, can_add_condition, can_del_condition) VALUES ( 2, 'User Avatars', 'pm_avatars', '', 0, 0, 0, 0, 0, ". $parent_id .", 5, 0, 0, 0, 0, 0, 1, 1, 1, 1);
@@ -59,37 +59,37 @@ require "includes/k4bb/k4bb.php";
 class K4DefaultAction extends FAAction {
 	function execute(&$request) {
 		
-
-		/**
-		 * Update the MAPs table
-		 */
-		$request['dba']->alterTable(K4MAPS, 'ADD num_children INT UNSIGNED NOT NULL DEFAULT 0');
-		$request['dba']->alterTable(K4MAPS, 'ADD can_view_condition INT UNSIGNED NOT NULL DEFAULT 1');
-		$request['dba']->alterTable(K4MAPS, 'ADD can_edit_condition INT UNSIGNED NOT NULL DEFAULT 1');
-		$request['dba']->alterTable(K4MAPS, 'ADD can_add_condition INT UNSIGNED NOT NULL DEFAULT 1');
-		$request['dba']->alterTable(K4MAPS, 'ADD can_del_condition INT UNSIGNED NOT NULL DEFAULT 1');
-		$maps = $request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." ORDER BY row_left ASC");
-		while($maps->next()) {
-			$map = $maps->current();
-
-			$num_children = @(($map['row_right'] - $map['row_left'] - 1) / 2);
-			if($num_children > 0) {
-				$request['dba']->executeUpdate("UPDATE ". K4MAPS ." SET num_children = ". intval($num_children) ." WHERE id = ". intval($map['id']));
-			}
-		}
-		$request['dba']->alterTable(K4MAPS, 'DROP row_left');
-		$request['dba']->alterTable(K4MAPS, 'DROP row_right');
-		
-
-		/**
-		 * Do some other stuff
-		 */
-		$request['dba']->alterTable(K4REPLIES, 'ADD row_order INT UNSIGNED NOT NULL DEFAULT 0');
-		$request['dba']->alterTable(K4USERS, 'ADD new_pms INT UNSIGNED NOT NULL DEFAULT 0');
-		$request['dba']->alterTable(K4USERINFO, "ADD googletalk VARCHAR(255) NOT NULL DEFAULT ''");
-		
-		$action = &new K4InformationAction('Successfully updated your k4 Bulletin Board version from BETA 6 to BETA 7. <strong>Please remove this file immediately</strong>. If you wish to change your version number, go into /includes/k4bb/common.php and switch it on line 38.', 'content', FALSE);
-		return $action->execute($request);
+		$request['dba']->executeUpdate("INSERT INTO k4_css (name, properties, style_id, description) VALUES ('.k4_ddmenutable', 'position: relative;top: -7px;background-color: #FFFFFF;border-left: 2px solid #4A7CB1;border-right: 2px solid #4A7CB1;border-bottom: 2px solid #4A7CB1;', 1, 'A table that holds drop down menus inside of a k4_maintitle element');");
+//		/**
+//		 * Update the MAPs table
+//		 */
+//		$request['dba']->alterTable(K4MAPS, 'ADD num_children INT UNSIGNED NOT NULL DEFAULT 0');
+//		$request['dba']->alterTable(K4MAPS, 'ADD can_view_condition INT UNSIGNED NOT NULL DEFAULT 1');
+//		$request['dba']->alterTable(K4MAPS, 'ADD can_edit_condition INT UNSIGNED NOT NULL DEFAULT 1');
+//		$request['dba']->alterTable(K4MAPS, 'ADD can_add_condition INT UNSIGNED NOT NULL DEFAULT 1');
+//		$request['dba']->alterTable(K4MAPS, 'ADD can_del_condition INT UNSIGNED NOT NULL DEFAULT 1');
+//		$maps = $request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." ORDER BY row_left ASC");
+//		while($maps->next()) {
+//			$map = $maps->current();
+//
+//			$num_children = @(($map['row_right'] - $map['row_left'] - 1) / 2);
+//			if($num_children > 0) {
+//				$request['dba']->executeUpdate("UPDATE ". K4MAPS ." SET num_children = ". intval($num_children) ." WHERE id = ". intval($map['id']));
+//			}
+//		}
+//		$request['dba']->alterTable(K4MAPS, 'DROP row_left');
+//		$request['dba']->alterTable(K4MAPS, 'DROP row_right');
+//		
+//
+//		/**
+//		 * Do some other stuff
+//		 */
+//		$request['dba']->alterTable(K4REPLIES, 'ADD row_order INT UNSIGNED NOT NULL DEFAULT 0');
+//		$request['dba']->alterTable(K4USERS, 'ADD new_pms INT UNSIGNED NOT NULL DEFAULT 0');
+//		$request['dba']->alterTable(K4USERINFO, "ADD googletalk VARCHAR(255) NOT NULL DEFAULT ''");
+//		
+//		$action = &new K4InformationAction('Successfully updated your k4 Bulletin Board version from BETA 6 to BETA 7. <strong>Please remove this file immediately</strong>. If you wish to change your version number, go into /includes/k4bb/common.php and switch it on line 38.', 'content', FALSE);
+//		return $action->execute($request);
 	}
 }
 

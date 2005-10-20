@@ -37,11 +37,18 @@ if(!defined('IN_K4'))
 /**
  * Change the last modified time on a cache file or remove it
  */
-function reset_cache($cache) {
-	if(file_exists($cache)) {
-		if(!touch($cache, time()-86460)) {
-			@unlink($cache);
+function reset_cache($cache_varname) {
+	if(!CACHE_IN_DB) {
+		if(file_exists(CACHE_DIR . $cache_varname .'.php')) {
+			if(!touch(CACHE_DIR . $cache_varname .'.php', time()-86460) &&
+				!touch(CACHE_DIR, time()-86460)) {
+				@unlink(CACHE_DIR . $cache_varname .'.php');
+			}
 		}
+	} else {
+		global $_DBA;
+
+		//$update = $_DBA->executeUpdate("UPDATE ". K4CACHE ." SET ");
 	}
 }
 
@@ -197,62 +204,71 @@ function bb_execute_topiccache() {
  * then compile it to a monstrous PHP array
  */
 class DBCache {
-	function newArray($array) {
-		if(is_array($array)) {
-			$contents				= "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tarray(";
-			foreach($array as $column => $val) {
-				if(is_array($val)) {
-					$contents	.= "'". $column ."' => ". DBCache::newArray($val) .", ";
+	function createCache($cache) {
+		
+		/**
+		 * Are we caching on the fileserver?
+		 */
+		if(!CACHE_IN_DB) {
+			
+			foreach($cache as $id => $data) {
+				
+				$filename	= CACHE_DIR . $id .'.php';
+
+				$contents	= "<?php \nerror_reporting(E_ALL); \n\nif(!defined('IN_K4')) { \n\treturn; \n}";
+				$contents	.= "\n\n\$cache += " . var_export($data, TRUE) .";";
+				$contents	.= "\n?>";
+				
+				/* Create our file */
+				if(file_exists($filename)) {
+					unlink($filename);
+				}
+				
+				$handle = @fopen($filename, "w");
+				__chmod($filename, 0777);
+				@fwrite($handle, $contents);
+				@fclose($handle);
+				
+				@touch($filename, time() - 86400);
+				
+				/* Error checking on our newly created file */
+				if(!file_exists($filename) || !is_readable($filename) || !is_writeable($filename)) {
+					
+					trigger_error('An error occured while trying to create the forum cache file.', E_USER_ERROR);
 				} else {
-					$contents	.= "'". $column ."' => '". htmlentities($val, ENT_QUOTES) ."', ";
+					
+					$lines = file($filename);
+
+					if(count($lines) <= 1 || empty($lines)) {
+						trigger_error('An error occured while trying to create the forum cache file. It appears to be empty.', E_USER_ERROR);
+					}
+					
+					return TRUE;
+
+					/**
+					 * Need the touch here because for some reason the file changes the mod time in
+					 * some php versions
+					 */
+					@touch($filename, time());
 				}
 			}
-			$contents				.= ")";
-		} else {
-			$contents				= "'". htmlentities($array, ENT_QUOTES) ."', ";
-		}
-
-		return $contents;
-	}
-	function createCache($allinfo, $filename) {
-		
-		$contents				= "<?php \nerror_reporting(E_ALL); \n\nif(!defined('IN_K4')) { \n\treturn; \n}";
-		
-		$contents				.= "\n\n\$cache += " . var_export($allinfo, TRUE) .";";
-
-		$contents				.= "\n?>";
-		
-		/* Create our file */
-		if(file_exists($filename)) {
-			unlink($filename);
-		}
-		
-		$handle = @fopen($filename, "w");
-		__chmod($filename, 0777);
-		@fwrite($handle, $contents);
-		__chmod($filename, 0777);
-		@fclose($handle);
-		
-		@touch($filename);
-		
-		/* Error checking on our newly created file */
-		if(!file_exists($filename) || !is_readable($filename) || !is_writeable($filename)) {
-			
-			trigger_error('An error occured while trying to create the forum cache file.', E_USER_ERROR);
 		} else {
 			
-			$lines = file($filename);
+			global $_DBA;
 
-			if(count($lines) <= 1 || empty($lines)) {
-				trigger_error('An error occured while trying to create the forum cache file. It appears to be empty.', E_USER_ERROR);
+			/**
+			 * Are we caching in the database?
+			 */
+			
+			$delete		= $_DBA->executeUpdate("DELETE FROM ". K4CACHE);
+			$update		= $_DBA->prepareStatement("INSERT INTO ". K4CACHE ." (varname, data) VALUES (?,?)");
+			foreach($cache as $varname => $data) {
+				
+				$update->setString(1, $varname);
+				$update->setString(2, serialize($data));
+				$update->executeUpdate();
 			}
 			
-			return TRUE;
-			/**
-			 * Need the touch here because for some reason the file changes the mod time in
-			 * some php versions
-			 */
-			@touch($filename);
 		}
 	}
 }

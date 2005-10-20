@@ -96,7 +96,7 @@ class K4DefaultAction extends FAAction {
 			$query->setString(2, 'maxloggedin');
 			$query->executeUpdate();
 
-			reset_cache(CACHE_DS_FILE);
+			reset_cache('datastore');
 		}
 		
 		// Show the forum status icons

@@ -80,7 +80,7 @@ class AdminInsertCensor extends FAAction {
 			
 			$action = new K4InformationAction(new K4LanguageElement('L_ADDEDWORDCENSOR', $_REQUEST['word']), 'content', FALSE, 'admin.php?act=censors', 3);
 						
-			reset_cache(CACHE_FILE);
+			reset_cache('censors');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_WORDCENSORS');
 			$request['template']->setVar('posts_on', '_on');
@@ -138,7 +138,7 @@ class AdminUpdateCensor extends FAAction {
 			
 			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDWORDCENSOR', $censor['word']), 'content', FALSE, 'admin.php?act=censors', 3);
 			
-			reset_cache(CACHE_FILE);
+			reset_cache('censors');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_WORDCENSORS');
 			$request['template']->setVar('posts_on', '_on');
@@ -176,7 +176,7 @@ class AdminRemoveCensor extends FAAction {
 			
 			$action = new K4InformationAction(new K4LanguageElement('L_REMOVEDWORDCENSOR', $censor['word']), 'content', FALSE, 'admin.php?act=censors', 3);
 			
-			reset_cache(CACHE_FILE);
+			reset_cache('censors');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_WORDCENSORS');
 			$request['template']->setVar('posts_on', '_on');

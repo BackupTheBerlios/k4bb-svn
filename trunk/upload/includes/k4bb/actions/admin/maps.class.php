@@ -99,7 +99,7 @@ class AdminMapsUpdate extends FAAction {
 
 			$stmt->executeUpdate();
 			
-			reset_cache(CACHE_FILE);
+			reset_cache('maps');
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_PERMISSIONS');
 			$request['template']->setVar('options_on', '_on');
@@ -235,7 +235,7 @@ class AdminMapsInsertNode extends FAAction {
 				$request['dba']->executeUpdate("UPDATE ". K4MAPS ." SET num_children=num_children+1 WHERE id = ". intval($parent['id']));
 			}
 
-			reset_cache(CACHE_FILE);
+			reset_cache('maps');
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_PERMISSIONS');
 			$request['template']->setVar('options_on', '_on');
@@ -330,7 +330,7 @@ class AdminMapsRemoveNode extends FAAction {
 				$this->recursive_remove($map['id']);
 			}
 
-			reset_cache(CACHE_FILE);
+			reset_cache('maps');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_PERMISSIONS');
 			$request['template']->setVar('options_on', '_on');

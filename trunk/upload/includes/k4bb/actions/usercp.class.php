@@ -1018,7 +1018,7 @@ class K4ManageAttachments extends FAAction {
 		
 		global $_ALLFORUMS, $_SETTINGS;
 
-		$attachments	= $request['dba']->executeQuery("SELECT * FROM ". K4ATTACHMENTS ." ORDER BY created DESC");
+		$attachments	= $request['dba']->executeQuery("SELECT * FROM ". K4ATTACHMENTS ." WHERE user_id = ". intval($request['user']->get('id')) ." ORDER BY created DESC");
 		$atms			= array();
 
 		$size = 0;

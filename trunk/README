@@ -32,7 +32,7 @@ SOFTWARE.
 
 To install k4 BB, upload the 'upload' folder found in the file/folder
 that you downloaded. Once it is uploaded, make sure that you have created
-a database (MySQL/MySQLi/SQLite) and have assigned READ/WRITE/EXECUTE
+a database (MySQL/MySQLi/SQLite/PostgreSQL) and have assigned READ/WRITE/EXECUTE
 permissions to the database user.
 
 Once you have uploaded all of the files, use your FTP program to CHMOD the
@@ -42,6 +42,8 @@ following directories:
 	upload/includes/k4bb
 	upload/templates/Descent/.compiled
 	upload/templates/Descent/admin/.compiled
+	upload/templates/Descent/admin/css/.compiled
+	upload/templates/Descent/admin/menus/.compiled
 
 CHMOD all of these files with 0777 permissions.
 

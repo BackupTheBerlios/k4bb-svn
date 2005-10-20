@@ -34,7 +34,6 @@ if(!defined('IN_K4')) {
 	return;
 }
 
-define('K4MPTT', FALSE);
 define('VERSION', '2.0 Beta 8');
 
 /**
@@ -58,6 +57,7 @@ define('FAQANSWER', 128);
  * DO NOT CHANGE these if you don't know what you're doing
  */
 
+define('K4CACHE',			'k4_cache');
 define('K4SESSIONS',		'k4_sessions');
 define('K4SETTINGGROUPS',	'k4_settinggroups');
 define('K4SETTINGS',		'k4_settings');
@@ -98,6 +98,7 @@ define('K4PRIVMSGDRAFTS',	'k4_privmessagedrafts');
 define('K4PRIVMSGTRACKER',	'k4_privmessagetracker');
 define('K4FAQCATEGORIES',	'k4_faqcategories');
 define('K4FAQANSWERS',		'k4_faqanswers');
+define('K4USERTITLES',		'k4_usertitles');
 
 define('K4TEMPTABLE',		'k4_'. substr(md5(uniqid(rand(), true)), 0, 16)); // special table
 
@@ -133,7 +134,6 @@ define('USER_AGENT',		isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_A
 define('USER_IP',			get_ip());
 define('USE_AJAX',			allow_AJAX());
 define('USE_WYSIWYG',		(FALSE && allow_WYSIWYG()));
-define('USE_CACHE',			TRUE);
 
 /**
  * The current k4 Url
@@ -167,11 +167,10 @@ define('PM_SAVEDITEMS', 3);
  * The interval between cache reloads, and all of the cache files
  */
 
+define('USE_CACHE',			TRUE);
 define('CACHE_INTERVAL',	86400); // 24 hours
-define('CACHE_FILE',		BB_BASE_DIR .'/tmp/cache/cache.php');
-define('CACHE_EMAIL_FILE',	BB_BASE_DIR .'/tmp/cache/emailqueue.php');
-define('CACHE_TOPIC_FILE',	BB_BASE_DIR .'/tmp/cache/topicqueue.php');
-define('CACHE_DS_FILE',		BB_BASE_DIR .'/tmp/cache/datastore.php');
+define('CACHE_IN_DB',		TRUE); // only true if you have a SMALL forum
+define('CACHE_DIR',			BB_BASE_DIR .'/tmp/cache/');
 define('POST_IMPULSE_LIMIT',45); // seconds allowed between posts, 15 at least
 define('EMAIL_INTERVAL',	500); // 1000 at most (frequency).
 define('TOPIC_INTERVAL',	15); // 20 at most (frequency).

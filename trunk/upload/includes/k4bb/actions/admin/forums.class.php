@@ -177,10 +177,10 @@ class AdminInsertForum extends FAAction {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTFORUMNAME'), 'content', TRUE);
 				return $action->execute($request);
 			}
-			if(!isset($_REQUEST['description']) || $_REQUEST['description'] == '') {
-				$action = new K4InformationAction(new K4LanguageElement('L_INSERTFORUMDESC'), 'content', TRUE);
-				return $action->execute($request);
-			}
+//			if(!isset($_REQUEST['description']) || $_REQUEST['description'] == '') {
+//				$action = new K4InformationAction(new K4LanguageElement('L_INSERTFORUMDESC'), 'content', TRUE);
+//				return $action->execute($request);
+//			}
 			if(!isset($_REQUEST['row_order']) || $_REQUEST['row_order'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTFORUMORDER'), 'content', TRUE);
 				return $action->execute($request);
@@ -217,7 +217,7 @@ class AdminInsertForum extends FAAction {
 			$insert_a			= &$request['dba']->prepareStatement("INSERT INTO ". K4FORUMS ." (name,category_id,description,pass,is_forum,is_link,link_href,link_show_redirects,forum_rules,topicsperpage,postsperpage,maxpolloptions,defaultlang,moderating_groups,prune_auto,prune_frequency,prune_post_age,prune_post_viewed_age,prune_old_polls,prune_announcements,prune_stickies,row_type,row_level,created,row_order,parent_id,moderating_users) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			
 			$forum_rules		= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['forum_rules'], FALSE, TRUE, TRUE, TRUE, TRUE);
-			$description		= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['description'], FALSE, TRUE, TRUE, TRUE, TRUE);
+			$description		= &new BBCodex($request['dba'], $request['user']->getInfoArray(), @$_REQUEST['description'], FALSE, TRUE, TRUE, TRUE, TRUE);
 			
 			/* Build the query for the forums table */
 			$insert_a->setString(1, $_REQUEST['name']);
@@ -260,7 +260,7 @@ class AdminInsertForum extends FAAction {
 			
 			$request['dba']->commitTransaction();
 
-			reset_cache(CACHE_FILE);
+			reset_cache('forums');
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_FORUMS');
 			$request['template']->setVar('forums_on', '_on');
@@ -335,7 +335,7 @@ class AdminInsertForumMaps extends FAAction {
 			// commit the sql transaction
 			$request['dba']->commitTransaction();
 
-			reset_cache(CACHE_FILE);
+			reset_cache('forums');
 
 			/**
 			 * If we've gotten to this point.. redirect
@@ -390,7 +390,7 @@ class AdminSimpleForumUpdate extends FAAction {
 
 			$update->executeUpdate();
 			
-			reset_cache(CACHE_FILE);
+			reset_cache('forums');
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_FORUMS');
 			$request['template']->setVar('forums_on', '_on');
@@ -506,22 +506,22 @@ class AdminUpdateForum extends FAAction {
 			}
 
 			if(!isset($_REQUEST['name']) || $_REQUEST['name'] == '') {
-				$action = new K4InformationAction(new K4LanguageElement('L_INSERTCATNAME'), 'content', TRUE);
+				$action = new K4InformationAction(new K4LanguageElement('L_INSERTFORUMNAME'), 'content', TRUE);
 				return $action->execute($request);
 			}
 						
-			if(!isset($_REQUEST['description']) || $_REQUEST['description'] == '') {
-				$action = new K4InformationAction(new K4LanguageElement('L_INSERTCATDESC'), 'content', TRUE);
-				return $action->execute($request);
-			}
+//			if(!isset($_REQUEST['description']) || $_REQUEST['description'] == '') {
+//				$action = new K4InformationAction(new K4LanguageElement('L_INSERTFORUMDESC'), 'content', TRUE);
+//				return $action->execute($request);
+//			}
 			
 			if(!isset($_REQUEST['row_order']) || $_REQUEST['row_order'] == '') {
-				$action = new K4InformationAction(new K4LanguageElement('L_INSERTCATORDER'), 'content', TRUE);
+				$action = new K4InformationAction(new K4LanguageElement('L_INSERTFORUMORDER'), 'content', TRUE);
 				return $action->execute($request);
 			}
 
 			if(!ctype_digit($_REQUEST['row_order'])) {
-				$action = new K4InformationAction(new K4LanguageElement('L_INSERTCATORDERNUM'), 'content', TRUE);
+				$action = new K4InformationAction(new K4LanguageElement('L_INSERTFORUMORDERNUM'), 'content', TRUE);
 				return $action->execute($request);
 			}
 
@@ -550,7 +550,7 @@ class AdminUpdateForum extends FAAction {
 			$update_b			= &$request['dba']->prepareStatement("UPDATE ". K4MAPS ." SET name=? WHERE varname=?");
 						
 			$forum_rules		= new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['forum_rules'], $forum['forum_id'], TRUE, TRUE, TRUE, TRUE);
-			$description		= new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['description'], $forum['forum_id'], TRUE, TRUE, TRUE, TRUE);
+			$description		= new BBCodex($request['dba'], $request['user']->getInfoArray(), @$_REQUEST['description'], $forum['forum_id'], TRUE, TRUE, TRUE, TRUE);
 			
 			/* Build the query for the forums table */
 			$update_a->setString(1, $_REQUEST['name']);
@@ -585,7 +585,7 @@ class AdminUpdateForum extends FAAction {
 			$update_a->executeUpdate();
 			$update_b->executeUpdate();
 						
-			reset_cache(CACHE_FILE);
+			reset_cache('forums');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_FORUMS');
 			$request['template']->setVar('forums_on', '_on');
@@ -661,9 +661,9 @@ class AdminRemoveForum extends FAAction {
 						
 			$request['dba']->commitTransaction();
 
-			reset_cache(CACHE_FILE);
-			reset_cache(CACHE_EMAIL_FILE);
-			reset_cache(CACHE_DS_FILE);
+			reset_cache('forums');
+			reset_cache('email_queue');
+			reset_cache('datastore');
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_FORUMS');
 			$request['template']->setVar('forums_on', '_on');
@@ -780,7 +780,7 @@ class AdminUpdateForumPermissions extends FAAction {
 				}
 			}
 			
-			reset_cache(CACHE_FILE);
+			reset_cache('forums');
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_FORUMS');
 			$request['template']->setVar('forums_on', '_on');

@@ -294,7 +294,7 @@ class PostReply extends FAAction {
 			$datastore_update->executeUpdate();
 			
 			/* Added the reply */
-			reset_cache(CACHE_DS_FILE);
+			reset_cache('datastore');
 			
 			// deal with attachments
 			attach_files($request, $forum, $topic['topic_id'], $reply_id);
@@ -1055,7 +1055,7 @@ class DeleteReply extends FAAction {
 		
 		$request['dba']->commitTransaction();
 
-		reset_cache(CACHE_DS_FILE);
+		reset_cache('datastore');
 		
 		/* Redirect the user */
 		$action = new K4InformationAction(new K4LanguageElement('L_DELETEDREPLY', $reply['name'], $topic['name']), 'content', FALSE, 'viewtopic.php?id='. $topic['topic_id'], 3);

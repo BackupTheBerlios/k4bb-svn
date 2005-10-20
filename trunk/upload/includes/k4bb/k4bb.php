@@ -69,8 +69,6 @@ class K4Controller extends FAController {
 
 		// cache filters
 		$this->addFilter(new K4GeneralCacheFilter);
-		$this->addFilter(new K4MailCacheFilter); // send out emails to people
-		$this->addFilter(new K4DatastoreCacheFilter);
 
 		$this->addFilter(new K4SessionFilter);
 		$this->addFilter(new K4UserFilter);

@@ -37,6 +37,21 @@ if(!defined('IN_K4')) {
 }
 
 /**
+ * Function to include all of the files in a directory
+ */
+function include_dir($dirname) {
+	
+	$dirname = dirname($dirname);
+
+	if(file_exists($dirname)) {
+		$d = dir($dirname);
+		while (false !== ($file = $d->read())) {
+			include_once $dirname .'/'. $file;
+		}
+	}
+}
+
+/**
  * Function to get the current domain
  */
 function get_domain() {
@@ -547,7 +562,7 @@ if(!function_exists('one_dir_up')) {
 function rewrite_file($filename, $time_interval) {
 	$return = FALSE;
 	
-	if(file_exists($filename) && is_readable($filename) && is_writable($filename)) {
+	if(file_exists($filename)) { //  && is_readable($filename) && is_writable($filename)
 
 		//if(time() > (filemtime($filename) + $time_interval)) {
 		if((time() - (filemtime($filename) + $time_interval)) > 0) {

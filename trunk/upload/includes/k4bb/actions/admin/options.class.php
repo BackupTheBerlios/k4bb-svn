@@ -105,7 +105,7 @@ class AdminUpdateOptions extends FAAction {
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_OPTIONS');
 
-			reset_cache(CACHE_FILE);
+			reset_cache('settings');
 			$request['template']->setVar('options_on', '_on');
 			
 			$request['template']->setFile('sidebar_menu', 'menus/options.html');

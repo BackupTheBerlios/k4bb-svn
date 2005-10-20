@@ -187,7 +187,7 @@ class AdminFAQCategorySimpleUpdate extends FAAction {
 			
 			if($order != $category['row_order']) {
 				$request['dba']->executeUpdate("UPDATE ". K4FAQCATEGORIES ." SET row_order = ". intval($order) ." WHERE category_id = ". intval($category['category_id']));
-				reset_cache(CACHE_FILE);
+				reset_cache('faq_categories');
 			}
 			
 			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDFAQCATEGORY', $category['name']), 'content', FALSE, 'admin.php?act=faq_categories', 3);
@@ -280,7 +280,7 @@ class AdminUpdateFAQCategory extends FAAction {
 
 			$request['dba']->commitTransaction();
 
-			reset_cache(CACHE_FILE);
+			reset_cache('faq_categories');
 			
 			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDFAQCATEGORY', $category['name']), 'content', FALSE, 'admin.php?act=faq_categories', 3);
 			return $action->execute($request);
@@ -334,7 +334,7 @@ class AdminRemoveFAQCategory extends FAAction {
 
 			$request['dba']->commitTransaction();
 
-			reset_cache(CACHE_FILE);
+			reset_cache('faq_categories');
 
 			$action = new K4InformationAction(new K4LanguageElement('L_REMOVEDFAQCATEGORY', $category['name']), 'content', FALSE, 'admin.php?act=faq_categories', 3);
 			return $action->execute($request);

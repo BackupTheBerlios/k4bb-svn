@@ -101,7 +101,6 @@ INSERT INTO k4_css (name, properties, style_id, description) VALUES ('.phpconten
 INSERT INTO k4_css (name, properties, style_id, description) VALUES ('.forumrules', 'text-align:left;padding: 5px;font-size: 11px;background-color: #E4E7F5; border: 1px solid #045975;', 1, 'Forum rules box.');
 INSERT INTO k4_css (name, properties, style_id, description) VALUES ('.forummessage', 'padding: 5px;font-size: 11px;background-color: #E4E7F5; border: 1px solid #045975;', 1, 'Forum special message box.');
 INSERT INTO k4_css (name, properties, style_id, description) VALUES ('.header_text', 'padding: 5px;border-bottom: 1px dashed #CCCCCC;margin-bottom: 10px;width: 95%;', 1, 'Used in the member profile area.');
-INSERT INTO k4_css (name, properties, style_id, description) VALUES ('div.ddmenu_button', 'padding: 3px;color: #000000;font-weight:bold;background-color: #DEE0ED;border: 1px solid #4C6699;width: auto;', 1, 'Drop-Down menu button openers.');
 INSERT INTO k4_css (name, properties, style_id, description) VALUES ('acronym', 'cursor:default;color: #336699;border-bottom: 1px dashed #336699;', 1, 'Acronyms.');
 INSERT INTO k4_css (name, properties, style_id, description) VALUES ('div.menu_global', 'background-color: #E5E5E5; padding: 5px; background: #E5E5E5 url(Images/{$IMG_DIR}/Icons/menu_corner.gif) left top no-repeat;', 1, 'The box around main navigation menus');
 INSERT INTO k4_css (name, properties, style_id, description) VALUES ('ul.menu_global', 'color: #333333;margin-left: 0;padding-left: 0;display: inline;', 1, 'The unordered list in main navigation menus');
@@ -118,6 +117,9 @@ INSERT INTO k4_css (name, properties, style_id, description) VALUES ('.header_br
 INSERT INTO k4_css (name, properties, style_id, description) VALUES ('.header_breadcrumbs a:hover', 'background-color: #F4F4F4; text-decoration: none;', 1, 'Hovered links in the breadcrumb bit box at the top and the menu bit at the bottom');
 INSERT INTO k4_css (name, properties, style_id, description) VALUES ('.title_link', 'color: #C83636; font-size: 20px; font-weight: normal;', 1, 'The class for big text that shows category/forum/topic names.');
 INSERT INTO k4_css (name, properties, style_id, description) VALUES ('a.title_link:hover', 'text-decoration: none;', 1, 'The class for big text that shows category/forum/topic names when it is a link and when hovered.');
+INSERT INTO k4_css (name, properties, style_id, description) VALUES ('.k4_ddmenutable', 'position: relative;top: -7px;background-color: #F7F7F7;border-left: 2px solid #4A7CB1;border-right: 2px solid #4A7CB1;border-bottom: 2px solid #4A7CB1;', 1, 'A table that holds drop down menus inside of a k4_maintitle element');
+INSERT INTO k4_css (name, properties, style_id, description) VALUES ('div.ddmenu_button', 'padding: 3px;color: #000000;font-weight:bold;width: auto;', 1, 'Drop-Down menu button openers.');
+INSERT INTO k4_css (name, properties, style_id, description) VALUES ('.k4_ddmenutable td', 'padding: 2px;', 1, 'Table cells in drop down menu link openers inside of a k4_maintitle element');
 
 
 INSERT INTO k4_acronyms (id, acronym, meaning, replace_type) VALUES (1, 'lol', 'laughing out loud', 2);

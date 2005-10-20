@@ -37,10 +37,10 @@
 		<div class="k4_maintitle" align="right">
 			<div style="float: left;text-align: left;">
 				{$L_TOPICSINFORUM}: <span style="font-weight: normal;">{$name}</span><br />
-				<span class="minitext" style="font-weight: normal;">{$description}</span>
+				<if:if var="description" noteq=""><span class="minitext" style="font-weight: normal;">{$description}</span></if:if>
 			</div>
 			<!-- Drop Down Menus -->
-			<table cellpadding="0" cellspacing="0" border="0">
+			<table cellpadding="0" cellspacing="0" border="0" class="k4_ddmenutable">
 				<tr>
 					<td>
 						<div class="ddmenu_button" id="forumoptions_link"><span class="nav_top">{$L_FORUMOPTIONS}</span></div>

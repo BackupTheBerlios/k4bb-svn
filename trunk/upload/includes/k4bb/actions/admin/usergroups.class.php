@@ -187,7 +187,7 @@ class AdminInsertUserGroup extends FAAction {
 				@move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $dir .'/'. $filename);
 			}
 			
-			reset_cache(CACHE_FILE);
+			reset_cache('usergroups');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERGROUPS');
 			$request['template']->setVar('users_on', '_on');
@@ -254,7 +254,7 @@ class AdminRemoveUserGroup extends FAAction {
 			/* Remove the usergroup */
 			$request['dba']->executeUpdate("DELETE FROM ". K4USERGROUPS ." WHERE id = ". intval($group['id']));
 			
-			reset_cache(CACHE_FILE);
+			reset_cache('usergroups');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERGROUPS');
 			$request['template']->setVar('users_on', '_on');
@@ -435,7 +435,7 @@ class AdminUpdateUserGroup extends FAAction {
 			}
 
 			$update_b->setString(1, implode('|', $usergroups));
-			$update_b->setInt(2, iif(intval($_REQUEST['min_perm']) > $moderator['perms'], $_REQUEST['min_perm'], $moderator['perms']));
+			$update_b->setInt(2, (intval($_REQUEST['min_perm']) > $moderator['perms'] ? $_REQUEST['min_perm'] : $moderator['perms']));
 			$update_b->setInt(3, $moderator['id']);
 			
 			/**
@@ -444,14 +444,14 @@ class AdminUpdateUserGroup extends FAAction {
 			 */
 			$update_b->executeUpdate();
 			
-			if(isset($_FILES['avatar_upload']) && is_array($_FILES['avatar_upload']) && $_FILES['avatar_upload']['tmp_name'] != $group['avatar']) {
+			if(isset($_FILES['avatar_upload']) && is_array($_FILES['avatar_upload'])) {
 				$dir		= BB_BASE_DIR . '/tmp/upload/group_avatars';
 				
 				@chmod($dir, 0777);
-				@move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $dir .'/'. $filename);
+				move_uploaded_file($_FILES['avatar_upload']['tmp_name'], $dir .'/'. $filename);
 			}
 			
-			reset_cache(CACHE_FILE);
+			reset_cache('usergroups');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERGROUPS');
 			$request['template']->setVar('users_on', '_on');

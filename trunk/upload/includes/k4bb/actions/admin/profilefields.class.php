@@ -166,7 +166,7 @@ class AdminInsertUserField extends FAAction {
 			$request['dba']->alterTable(K4USERINFO, "$update_type $name $params");
 			$insert->executeUpdate();
 			
-			reset_cache(CACHE_FILE);
+			reset_cache('profile_fields');
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERPROFILEFIELDS');
 			$request['template']->setVar('users_on', '_on');
@@ -215,7 +215,7 @@ class AdminRemoveUserField extends FAAction {
 			/* Remove the last of the profile field info if we've made it this far */
 			$request['dba']->executeUpdate("DELETE FROM ". K4PROFILEFIELDS ." WHERE name = '". $request['dba']->quote($field['name']) ."'");
 			
-			reset_cache(CACHE_FILE);
+			reset_cache('profile_fields');
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERPROFILEFIELDS');
 			$request['template']->setVar('users_on', '_on');
@@ -357,7 +357,7 @@ class AdminUpdateUserField extends FAAction {
 
 			$update->executeUpdate();
 			
-			reset_cache(CACHE_FILE);
+			reset_cache('profile_fields');
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERPROFILEFIELDS');
 			$request['template']->setVar('users_on', '_on');

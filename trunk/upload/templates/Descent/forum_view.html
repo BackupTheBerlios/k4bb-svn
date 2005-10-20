@@ -7,7 +7,7 @@
 				<!--<if:if var="num_viewing" greater="0"><span class="smalltext">({$num_viewing} {$L_VIEWING})</span></if:if>-->
 				<br />
 				<span class="minitext">
-				{$description}<br />
+				<if:if var="showforumdescription" eq="1"><if:if var="description" noteq="">{$description}<br /></if:if></if:if>
 				<if:if var="are_moderators" eq="1">
 				<br />
 				<strong>{$L_MODERATORS}:</strong>

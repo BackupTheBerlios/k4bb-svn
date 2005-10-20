@@ -1,0 +1,19 @@
+{$xml_definition}
+<rss version="0.92">
+	<channel>
+		<title><![CDATA[{$bbtitle} - <core:truncate length="40" append="...">{$current_location}</core:truncate> - Powered by k4 BB]]></title>
+		<link>{$forum_url}</link>
+		<description><![CDATA[{$bbtitle} - <core:truncate length="40" append="...">{$current_location}</core:truncate> - Powered by k4 BB]]></description>
+		<language>{$LANGSHORT}</language>
+		<list:list id="topics">
+		<list:item list="topics">
+		<item>
+			<title><![CDATA[{$name}]]></title>
+			<author><![CDATA[{$poster_name}]]></author>
+			<description><![CDATA[{$body_text}]]></description>
+			<link>{$forum_url}viewtopic.php?id={$topic_id}</link>
+		</item>
+		</list:item>
+		</list:list>
+	</channel>
+</rss>

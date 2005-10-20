@@ -1,3 +1,19 @@
+-- 2.0 Beta 8 --
+New theme!
+RSS feeds for topics and forums
+Archive view added -- forced on all search engine bots listed in the database
+Changed database usergroup info from serialized to '|' separated
+Added CSS ACP section
+Added Permission Masks ACP section
+Added `user_title` column to `k4_userinfo` table and `k4_usertitles` table
+Added User Titles ACP section
+Added the `k4_cache` table
+Added variable names to all reset_cache() functions
+Removed the datastore and email queue cache filters and merged them with the general cache
+Removed the CACHE_DS_FILE, CACHE_EMAIL_FILE and CACHE_TOPIC_FILE constants
+Added boolean CACHE_IN_DB constant to set whether the cache should be db driven or not
+
+
 -- 2.0 Beta 7 --
 Added the `k4_privmessages`, `k4_privmessagedrafts` and `k4_privmessagetracker` tables
 Fixed the bug with infinite while() loops in the bbcode parser

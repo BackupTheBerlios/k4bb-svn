@@ -546,7 +546,7 @@ class K4MasMailFilter extends FAFilter {
 				$request['dba']->executeUpdate("DELETE FROM ". K4DATASTORE ." WHERE varname = 'massmail'");
 			}
 			
-			reset_cache(CACHE_DS_FILE);
+			reset_cache('datastore');
 
 		}		
 	}

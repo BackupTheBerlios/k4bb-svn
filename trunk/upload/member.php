@@ -261,7 +261,7 @@ class K4InsertUserFilter extends FAFilter {
 
 				$datastore_update->executeUpdate();
 
-				reset_cache(CACHE_DS_FILE);
+				reset_cache('datastore');
 				
 				/* Do we need to validate their email by having them follow a url? */
 				if(intval($_SETTINGS['verifyemail']) == 1) {

@@ -104,7 +104,7 @@ class AdminSetSendEmails extends FAAction {
 		
 			$update->executeUpdate();
 
-			reset_cache(CACHE_DS_FILE);
+			reset_cache('email_queue');
 				
 			// success
 			$action = new K4InformationAction(new K4LanguageElement('L_EMAILSSENTTOUSERS'), 'content', FALSE);

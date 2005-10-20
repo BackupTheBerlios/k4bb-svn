@@ -1,6 +1,6 @@
 <?php
- /**
-* k4 Bulletin Board, k4_template.php
+/**
+* k4 Bulletin Board, titles.class.php
 *
 * Copyright (c) 2005, Peter Goodman
 *
@@ -24,30 +24,27 @@
 * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 *
-* @author Geoffrey Goodman
-* @version $Id: config.php 132 2005-06-23 17:04:42Z Peter Goodman $
+* @author Peter Goodman
+* @version $Id$
 * @package k42
 */
 
-$_CONFIG = array();
-$_CONFIG['application']['action_var']	= 'act';
-$_CONFIG['application']['lang']			= 'english';
-//$_CONFIG['application']['dba_name']	= '';
+class AdminUsertTitles extends FAAction {
+	function execute(&$request) {		
+		
+		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERS');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
 
-//$_CONFIG['template']['path']			= dirname(__FILE__) . '/templates';
-$_CONFIG['template']['force_compile']	= FALSE;
-$_CONFIG['template']['ignore_white']	= FALSE;
+			$request['template']->setFile('content', 'titles_manage.html');
+		} else {
+			no_perms_error($request);
+		}
 
-$_CONFIG['ftp']['use_ftp']				= FALSE;
-$_CONFIG['ftp']['username']				= '.';
-$_CONFIG['ftp']['password']				= '.';
-//$_CONFIG['ftp']['server']				= '';
-
-$_CONFIG['dba']['driver']				= 'mysqli';
-$_CONFIG['dba']['database']				= 'k4_forum';
-$_CONFIG['dba']['directory']			= 'c:/documents and settings/peter goodman/my documents/my websites/k4-2.0-dev/upload/tmp/sqlite';
-$_CONFIG['dba']['server']				= 'localhost';
-$_CONFIG['dba']['user']					= 'test';
-$_CONFIG['dba']['pass']					= 'test';
+		return TRUE;
+	}
+}
 
 ?>

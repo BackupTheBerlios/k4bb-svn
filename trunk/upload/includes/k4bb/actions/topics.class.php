@@ -285,9 +285,7 @@ class PostTopic extends FAAction {
 				/* Update the user post count */
 				$request['dba']->executeUpdate("UPDATE ". K4USERINFO ." SET num_posts=num_posts+1,total_posts=total_posts+1 WHERE user_id=". intval($request['user']->get('id')));
 
-				if(!@touch(CACHE_DS_FILE, time()-86460)) {
-					@unlink(CACHE_DS_FILE);
-				}
+				reset_cache('datastore');
 				
 
 				/**
@@ -609,9 +607,7 @@ class PostDraft extends FAAction {
 			$forum_update->executeUpdate();
 			$datastore_update->executeUpdate();
 			
-			if(!@touch(CACHE_DS_FILE, time()-86460)) {
-				@unlink(CACHE_DS_FILE);
-			}
+			reset_cache('datastore');
 
 			/**
 			 * Subscribe this user to the topic
@@ -1277,8 +1273,8 @@ class DeleteTopic extends FAAction {
 		// delete any possible moved topic redirectors
 		$request['dba']->executeUpdate("DELETE FROM ". K4TOPICS ." WHERE moved_new_topic_id = ". intval($topic['topic_id']));
 
-		reset_cache(CACHE_DS_FILE);
-		reset_cache(CACHE_EMAIL_FILE);
+		reset_cache('datastore');
+		reset_cache('email_queue');
 		
 		/* Redirect the user */
 		$action = new K4InformationAction(new K4LanguageElement('L_DELETEDTOPIC', $topic['name'], $forum['name']), 'content', FALSE, 'viewforum.php?f='. $forum['forum_id'], 3);

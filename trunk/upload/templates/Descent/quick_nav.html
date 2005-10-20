@@ -9,10 +9,10 @@
 				<maps:if forum="forum_id" method="can_view">
 					<maps:if forum="forum_id" method="can_view">
 						<if:if var="is_forum" geq="0">
-							<option value="viewforum.php?id={$id}">{$indent_level}{$name}</option>
+							<option value="viewforum.php?f={$forum_id}">{$indent_level}{$name}</option>
 						<else:if var="is_link" eq="1" />
 							<if:if var="link_show_redirects" eq="1">
-								<option value="redirect.php?id={$id}">{$indent_level}{$name}</option>
+								<option value="redirect.php?id={$forum_id}">{$indent_level}{$name}</option>
 								<if:else />
 								<option value="{$link_href}">{$indent_level}{$name}</option>
 							</if:if>
