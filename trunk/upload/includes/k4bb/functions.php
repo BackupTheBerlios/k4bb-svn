@@ -41,12 +41,15 @@ if(!defined('IN_K4')) {
  */
 function include_dir($dirname) {
 	
-	$dirname = dirname($dirname);
-
-	if(file_exists($dirname)) {
+	//$dirname = dirname($dirname);
+	
+	if(file_exists($dirname) && is_dir($dirname)) {
 		$d = dir($dirname);
+		
 		while (false !== ($file = $d->read())) {
-			include_once $dirname .'/'. $file;
+			if(!is_dir($dirname .'/'. $file) && substr($file, -3) == 'php') {
+				require_once $dirname .'/'. $file;
+			}
 		}
 	}
 }

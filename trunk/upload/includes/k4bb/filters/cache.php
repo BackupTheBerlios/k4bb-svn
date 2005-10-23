@@ -39,9 +39,12 @@ class K4GeneralCacheFilter extends FAFilter {
 		while($result->next()) {
 			$temp						= $result->current();
 			$forums['f'. $temp['forum_id']]	= $temp;
-
+			
 			if($temp['subforums'] > 0) {
-				$this->loop_forums($forums, $dba, $dba->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE row_level = ". intval($temp['row_level'] + 1) ." AND parent_id = ". intval($temp['forum_id']) ." ORDER BY row_order ASC"));
+				
+				$temp_category_id = $temp['category_id'] > 0 ? " AND category_id = ". intval($temp['category_id']) ." " : " AND category_id = 0 ";
+
+				$this->loop_forums($forums, $dba, $dba->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE row_level = ". intval($temp['row_level'] + 1) ." AND parent_id = ". intval($temp['forum_id']) ." ". $temp_category_id ." ORDER BY row_order ASC"));
 			}
 		}
 
@@ -148,8 +151,8 @@ class K4GeneralCacheFilter extends FAFilter {
 	/**
 	 * Get ALL of the categories/forums
 	 */
-	function cache_forums(&$cache, &$request) {
-		$cache['forums']						= array();
+	function cache_all_forums(&$cache, &$request) {
+		$cache['allforums']						= array();
 		$categories								= $request['dba']->executeQuery("SELECT * FROM ". K4CATEGORIES ." ORDER BY row_order ASC");
 		
 		$forums									= $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE parent_id = 0 AND row_level = 1 ORDER BY row_order ASC");
@@ -158,16 +161,17 @@ class K4GeneralCacheFilter extends FAFilter {
 		/* We want to get these top level forums in their proper order */
 		while($forums->next()) {
 			$temp								= $forums->current();
-			$cache['forums']['f'. intval($temp['forum_id'])]		= $temp;
+			$cache['allforums']['f'. intval($temp['forum_id'])]		= $temp;
+			$this->loop_forums($cache['allforums'], $request['dba'], $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE row_level = 2 AND category_id = 0 AND parent_id = ". intval($temp['forum_id']) ." ORDER BY row_order ASC"));
 		}
 		
 		if($categories->hasNext()) {
 			while($categories->next()) {
 				$temp										= $categories->current();
 				
-				$cache['forums']['c'. intval($temp['category_id'])]	= $temp;
+				$cache['allforums']['c'. intval($temp['category_id'])]	= $temp;
 				
-				$this->loop_forums($cache['forums'], $request['dba'], $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE row_level = 2 AND category_id = ". intval($temp['category_id']) ." ORDER BY row_order ASC"));
+				$this->loop_forums($cache['allforums'], $request['dba'], $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE row_level = 2 AND category_id = ". intval($temp['category_id']) ." ORDER BY row_order ASC"));
 				
 			}
 		}
@@ -178,6 +182,9 @@ class K4GeneralCacheFilter extends FAFilter {
 	 * Get ALL of the custom user profile fields
 	 */
 	function cache_profile_fields(&$cache, &$request) {
+		
+		global $_QUERYPARAMS;
+
 		$cache['profile_fields']					= array();
 		$result									= $request['dba']->executeQuery("SELECT * FROM ". K4PROFILEFIELDS);
 		while($result->next()) {
@@ -241,47 +248,41 @@ class K4GeneralCacheFilter extends FAFilter {
 		}
 		$result->free();
 	}
-	function execute(&$action, &$request) {
-		
-		$cache = array();
-		global $_QUERYPARAMS;
-
-		/**
-		 * Should we have to rewrite the cache file? 
-		 */
-		// TODO: make it so that the db can recache itself //  || CACHE_IN_DB
-		if(!CACHE_IN_DB && (!file_exists(CACHE_FILE) || rewrite_file(CACHE_DIR, CACHE_INTERVAL))) {
-
-
-
-	
-	
-
-	
-	
-
-	
-
 	/**
 	 * Get all of the lazy loads that need to be executed
 	 */
-	$cache['mail_queue']						= array();
-	
-	$result									= $request['dba']->executeQuery("SELECT * FROM ". K4MAILQUEUE ." WHERE finished = 0 LIMIT 1");
-	while($result->next()) {
-		$temp								= $result->current();
+	function cache_mail_queue(&$cache, &$request) {
+		$cache['mail_queue']					= array();
 		
-		$cache['mail_queue'][]				= $temp;
+		$result									= $request['dba']->executeQuery("SELECT * FROM ". K4MAILQUEUE ." WHERE finished = 0 LIMIT 1");
+		while($result->next()) {
+			$temp								= $result->current();
+			
+			$cache['mail_queue'][]				= $temp;
+		}
+		$result->free();
 	}
-	$result->free();
-			
-			/* Memory saving */
-			unset($result);
-			
+	function execute(&$action, &$request, $do_overwrite = FALSE) {
+				
+		$cache = array();
+
+		/**
+		 * Should we have to rewrite the cache file/database? 
+		 */
+		// TODO: make it so that the db can recache itself //  || CACHE_IN_DB
+		//if((!CACHE_IN_DB && (!file_exists(CACHE_DIR) || rewrite_file(CACHE_DIR, CACHE_INTERVAL))) || $do_overwrite) {
+		if(FALSE) {	
+			$methods = get_class_methods($this);
+
+			foreach($methods as $function) {
+				if(substr($function, 0, 6) == 'cache_') {
+					$this->$function($cache, $request);
+				}	
+			}
+
 			/* Create the cache file */
 			if(USE_CACHE)
 				DBCache::createCache($cache);
-
 		}
 		
 		/**
@@ -291,10 +292,10 @@ class K4GeneralCacheFilter extends FAFilter {
 			
 			/* Include the cache file */
 			include_dir(CACHE_DIR);
-			
-			if(!isset($cache) || !is_array($cache) || empty($cache)) {
-				trigger_error('FILE: The cache array does not exist or it is empty.', E_USER_ERROR);
-			}
+
+//			if(!isset($cache) || !is_array($cache) || empty($cache)) {
+//				trigger_error('FILE: The cache array does not exist or it is empty.', E_USER_ERROR);
+//			}
 		}
 		
 		/**
@@ -315,35 +316,33 @@ class K4GeneralCacheFilter extends FAFilter {
 
 				unset($temp); // memory saving
 			}
-
-		}
-
-		
-		/* Set the Global variables */
-		$GLOBALS['_SETTINGS']				= $cache['settings'];
-		$GLOBALS['_MAPS']					= $cache['maps'];
-		$GLOBALS['_USERGROUPS']				= $cache['usergroups'];
-		$GLOBALS['_ACRONYMS']				= $cache['acronyms'];
-		$GLOBALS['_CENSORS']				= $cache['censors'];
-		$GLOBALS['_SPIDERS']				= $cache['spiders'];
-		$GLOBALS['_SPIDERAGENTS']			= $cache['spider_agents'];
-		$GLOBALS['_USERFIELDS']				= $cache['profile_fields'];
-		$GLOBALS['_ALLFORUMS']				= $cache['forums'];
-		$GLOBALS['_FLAGGEDUSERS']			= $cache['flagged_users'];
-		$GLOBALS['_BANNEDUSERIDS']			= $cache['banned_user_ids'];
-		$GLOBALS['_BANNEDUSERIPS']			= $cache['banned_user_ips'];
-		$GLOBALS['_STYLESETS']				= $cache['styles'];
-		$GLOBALS['_FAQCATEGORIES']			= $cache['faq_categories'];
-		$GLOBALS['_MAILQUEUE']				= isset($cache['mail_queue']) ? $cache['mail_queue'] : array();
-		$GLOBALS['_DATASTORE']				= isset($cache['datastore']) ? $cache['datastore'] : array();
-
-		
-		$all_forums							= &new AllForumsIterator($cache['forums']);
+			
+			/* Set the Global variables */
+			$GLOBALS['_SETTINGS']				= $cache['settings'];
+			$GLOBALS['_MAPS']					= $cache['maps'];
+			$GLOBALS['_USERGROUPS']				= $cache['usergroups'];
+			$GLOBALS['_ACRONYMS']				= $cache['acronyms'];
+			$GLOBALS['_CENSORS']				= $cache['censors'];
+			$GLOBALS['_SPIDERS']				= $cache['spiders'];
+			$GLOBALS['_SPIDERAGENTS']			= $cache['spider_agents'];
+			$GLOBALS['_USERFIELDS']				= $cache['profile_fields'];
+			$GLOBALS['_ALLFORUMS']				= $cache['allforums'];
+			$GLOBALS['_FLAGGEDUSERS']			= $cache['flagged_users'];
+			$GLOBALS['_BANNEDUSERIDS']			= $cache['banned_user_ids'];
+			$GLOBALS['_BANNEDUSERIPS']			= $cache['banned_user_ips'];
+			$GLOBALS['_STYLESETS']				= $cache['styles'];
+			$GLOBALS['_FAQCATEGORIES']			= $cache['faq_categories'];
+			$GLOBALS['_MAILQUEUE']				= isset($cache['mail_queue']) ? $cache['mail_queue'] : array();
+			$GLOBALS['_DATASTORE']				= isset($cache['datastore']) ? $cache['datastore'] : array();
+		}	
 		
 		/* Execute the queue after we get/check the cached file(s) */
-		execute_mail_queue($request['dba'], $cache['mail_queue']);
+		//execute_mail_queue($request['dba'], $cache['mail_queue']);
 
 		/* Add all of the forums to the template */
+		global $_ALLFORUMS;
+		
+		$all_forums	 = new AllForumsIterator($_ALLFORUMS);
 		$request['template']->setList('all_forums', $all_forums);
 	}
 

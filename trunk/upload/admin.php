@@ -65,6 +65,10 @@ $app->setAction('options', new AdminOptionGroups);
 $app->setAction('options_view', new AdminSettings);
 $app->setAction('update_options', new AdminUpdateOptions);
 
+/* Cache Control */
+$app->setAction('cache', new AdminManageCache);
+$app->setAction('cache_refresh', new AdminRefreshCache);
+
 /* The GUI for the K4MAPS permission system */
 $app->setAction('permissions_gui', new AdminMapsGui);
 //$app->setAction('maps_inherit', new AdminMapsInherit);

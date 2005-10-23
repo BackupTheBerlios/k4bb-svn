@@ -254,10 +254,14 @@ class K4BannedUsersFilter extends FAFilter {
 				$ban	= $request['dba']->getRow("SELECT * FROM ". K4BANNEDUSERS ." WHERE user_id = ". intval($request['user']->get('id')));
 				
 				if(is_array($ban) && !empty($ban)) {
-
-					$action = new K4InformationAction(new K4LanguageElement('L_BANNEDUSERID', $request['user']->get('name'), $ban['reason'], ($ban['expiry'] == 0 ? $_LANG['L_YOURDEATH'] : strftime("%m/%d/%Y", bbtime($ban['expiry']))) ), 'content', FALSE);
 					
-					$banned	= TRUE;
+					if($ban['expiry'] > time()) {
+
+						$action = new K4InformationAction(new K4LanguageElement('L_BANNEDUSERID', $request['user']->get('name'), $ban['reason'], ($ban['expiry'] == 0 ? $_LANG['L_YOURDEATH'] : strftime("%m/%d/%Y", bbtime($ban['expiry']))) ), 'content', FALSE);
+						$banned	= TRUE;
+					} else {
+						$request['dba']->executeUpdate("DELETE FROM ". K4BANNEDUSERS ." WHERE user_id = ". intval($request['user']->get('id')));
+					}
 				} else {
 					// TODO: should I put anything here...?
 				}

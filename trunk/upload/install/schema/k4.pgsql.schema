@@ -405,15 +405,9 @@ CREATE TABLE k4_maps (
 	num_children		INT NOT NULL DEFAULT 0,
 	
 	can_view		INT NOT NULL DEFAULT 1,
-	can_view_condition	INT NOT NULL DEFAULT 1,
 	can_add			INT NOT NULL DEFAULT 2,
-	can_add_condition	INT NOT NULL DEFAULT 1,
 	can_edit		INT NOT NULL DEFAULT 2,
-	can_edit_condition	INT NOT NULL DEFAULT 1,
 	can_del			INT NOT NULL DEFAULT 7,
-	can_del_condition	INT NOT NULL DEFAULT 1,
-
-	inherit			INT NOT NULL DEFAULT 1,
 
 	PRIMARY KEY(id)
 );

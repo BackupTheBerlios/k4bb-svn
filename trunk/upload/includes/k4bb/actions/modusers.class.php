@@ -52,7 +52,7 @@ class ModBanUser extends FAAction {
 				return TRUE;
 			}
 
-			if($user['id'] > $request['user']->get('id')) {
+			if($user['id'] == $request['user']->get('id')) {
 				no_perms_error($request);
 				return TRUE;
 			}

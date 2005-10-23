@@ -1,0 +1,43 @@
+<is:admin>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_CACHECONTROL}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" colspan="3" style="text-align: center;">
+				<br />
+				<input type="button" class="button" onclick="document.location='admin.php?act=cache_refresh'" value="{$L_REFRESHALL}" />
+				<br /><br />
+			</td>
+		</tr>
+		<list:list id="cache_items">
+		<tr>
+			<td class="k4_subtitle">{$L_NAME}/{$L_SIZE}</td>
+			<td class="k4_subtitle">{$L_LASTMODIFIED}</td>
+			<td class="k4_subtitle">{$L_REFRESH}</td>
+		</tr>
+		<list:item list="cache_items">
+		<list:switch list="cache_items" var="row_class" a="alt3" b="alt1">
+		<tr>
+			<td width="95%" class="{$row_class}">
+				
+				<strong>{$name}</strong>
+				<span class="smalltext">(<em>{$size} b</em>)</span>
+			</td>
+			<td class="alt2" style="text-align: center;" nowrap="nowrap">
+				<if:if var="modified" greater="0"><div class="smalltext"><core:date format="%b %d %Y">{$modified}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$modified}</core:date></span></div><if:else />--</if:if>
+			</td>
+			<td class="alt4" style="text-align: center;">
+				<input type="button" class="button" onclick="document.location='admin.php?act=cache_refresh&amp;varname={$varname}'" value="{$L_REFRESH}" />
+			</td>
+		</tr>
+		</list:switch>		
+		</list:item>
+		</list:list>
+		<tr>
+			<td class="alt4" colspan="3">
+				{$L_TOTALCACHESIZE}: <em><strong>{$total_cache_size}</strong><span class="smalltext"> b ({$total_cache_size_mb} MB)</span></em>
+			</td>
+		</tr>
+	</table>
+</div>
+</is:admin>

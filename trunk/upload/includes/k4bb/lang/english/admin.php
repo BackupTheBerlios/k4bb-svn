@@ -116,6 +116,7 @@ $_LANG += array(
 /**
  * Forum Management 
  */
+'L_PARENT'				=> 'Parent',
 'L_NONE'				=> 'None',
 'L_ALL'					=> 'All',
 'L_LINKING'				=> 'Linking',
@@ -140,6 +141,8 @@ $_LANG += array(
 'L_INVALIDTOPICVIEW'	=> 'You have specified an invalid topic.',
 'L_ADDEDFORUMPERMS'		=> 'Successfuly added the forum permissions for <strong>%s</strong>.',
 'L_UPDATEDFORUM'		=> 'Successfully updated the forum <strong>%s</strong>.',
+'L_EDITMASTERPERMISSIONS'=> 'Edit Master Permissions',
+'L_MASTERPERMISSIONS'	=> 'Master Permissions',
 'L_FORUMPERMISSIONS'	=> 'Forum Permissions',
 'L_EDITFORUM'			=> 'Edit Forum',
 'L_NOFORUMPERMS'		=> 'This forum does not have any permissions assigned to it',
@@ -766,6 +769,16 @@ $_LANG += array(
 'L_EMAILINPROGRESS'		=> 'There is currently a mass email in progress.',
 'L_EMAILSSENTTOUSERS'	=> 'Successfully queued up emails to be sent to all of the members of the forum.',
 /* / Mass Emailer */
+
+/* Cache Control */
+'L_CACHECONTROL'		=> 'Cache Control',
+'L_LASTMODIFIED'		=> 'Last Modified',
+'L_REFRESH'				=> 'Refresh',
+'L_REFRESHEDCACHE'		=> 'Successfully refreshed the entire cache.',
+'L_REFRESHEDCACHEITEM'	=> 'Successfully refreshed the <strong>%s</strong> cache.',
+'L_REFRESHALL'			=> 'Refresh All',
+'L_TOTALCACHESIZE'		=> 'Total Cache Size',
+/* / Cache Control */
 
 );
 

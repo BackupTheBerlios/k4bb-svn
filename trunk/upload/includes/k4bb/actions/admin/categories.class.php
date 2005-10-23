@@ -122,7 +122,7 @@ class AdminInsertCategory extends FAAction {
 			
 			$request['dba']->commitTransaction();
 
-			reset_cache('forums');
+			reset_cache('all_forums');
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_CATEGORIES');
 			$request['template']->setVar('forums_on', '_on');
@@ -183,7 +183,7 @@ class AdminInsertCategoryMaps extends FAAction {
 				}
 			}
 			
-			reset_cache('forums');
+			reset_cache('all_forums');
 			
 			$request['dba']->commitTransaction();
 			
@@ -238,7 +238,7 @@ class AdminSimpleCategoryUpdate extends FAAction {
 
 			$update->executeUpdate();
 			
-			reset_cache('forums');
+			reset_cache('all_forums');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_CATEGORIES');
 			$request['template']->setVar('forums_on', '_on');
@@ -348,7 +348,7 @@ class AdminUpdateCategory extends FAAction {
 			$update_a->executeUpdate();
 			$update_b->executeUpdate();
 						
-			reset_cache('forums');
+			reset_cache('all_forums');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_CATEGORIES');
 			$request['template']->setVar('forums_on', '_on');
@@ -403,7 +403,7 @@ class AdminRemoveCategory extends FAAction {
 			/* Commit the current transaction */
 			$request['dba']->commitTransaction();
 
-			reset_cache('forums');
+			reset_cache('all_forums');
 			reset_cache('email_queue');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_CATEGORIES');
@@ -517,7 +517,7 @@ class AdminUpdateCategoryPermissions extends FAAction {
 				}
 			}
 			
-			reset_cache('forums');
+			reset_cache('all_forums');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_CATEGORIES');
 			$request['template']->setVar('forums_on', '_on');

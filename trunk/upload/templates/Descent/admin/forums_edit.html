@@ -7,6 +7,24 @@
 		<tr>
 			<td class="k4_subtitle" colspan="2">{$L_GENERAL}</td>
 		</tr>
+		<tr class="alt3">
+			<td width="30%"><strong>{$L_PARENT}:</strong></td>
+			<td>
+				<select name="parent" id="parent" class="inputbox">
+					<option value="0">-- {$L_NONE} --</option>
+					<list:list id="all_forums">
+					<list:item list="all_forums">
+						<if:if var="row_type" eq="2">
+							<if:if var="forum_id" noteq="forum_forum_id"><option value="f{$forum_id}">{$indent_level}{$name}</option></if:if>
+						<if:else />
+							<option value="c{$category_id}" style="font-weight: bold;">{$indent_level}{$name}</option>
+						</if:if>
+					</list:item>
+					</list:list>
+				</select>
+				<script type="text/javascript">d.setIndex('{$forum_parent}', 'parent');</script>
+			</td>
+		</tr>
 		<tr class="alt1">
 			<td width="30%"><strong>{$L_NAME}:</strong></td>
 			<td>
@@ -15,7 +33,7 @@
 				<form:error id="name_error" for="name" setclass="inputfailed" regex=".+">{$L_INSERTFORUMNAME}</form:error>
 			</td>
 		</tr>
-		<tr class="alt2">
+		<tr class="alt3">
 			<td width="30%"><strong>{$L_DESCRIPTION}:</strong></td>
 			<td>
 				<script type="text/javascript">doHelpButton('forum_description');</script>
@@ -32,11 +50,11 @@
 				<form:error id="row_order_num_error" for="row_order" setclass="inputfailed" regex="([0-9])+">{$L_INSERTFORUMORDERNUM}</form:error>
 			</td>
 		</tr>
-		<tr class="alt2">
+		<tr class="alt3">
 			<td width="30%"><strong>{$L_FORUMPASSWORD}</strong></td>
 			<td><input type="text" name="pass" class="inputbox" value="{$forum_pass}" maxlength="32" tabindex="4" /></td>
 		</tr>
-		<tr class="alt2">
+		<tr class="alt3">
 			<td width="30%"><strong>{$L_FORUMRULES}:</strong></td>
 			<td>
 				<script type="text/javascript">doHelpButton('forum_forumrules');</script>
@@ -59,7 +77,7 @@
 				<script type="text/javascript">d.setIndex({$forum_is_link}, 'is_link');</script>
 			</td>
 		</tr>
-		<tr class="alt2">
+		<tr class="alt3">
 			<td width="30%"><strong>{$L_LINKURL}:</strong></td>
 			<td><input type="text" name="link_href" value="{$forum_link_href}" class="inputbox" tabindex="6" /></td>
 		</tr>
@@ -88,7 +106,7 @@
 				<script type="text/javascript">d.setIndex({$forum_prune_auto}, 'prune_auto');</script>
 			</td>
 		</tr>
-		<tr class="alt2">
+		<tr class="alt3">
 			<td width="30%"><strong>{$L_AUTOPRUNEFREQUENCY}:</strong></td>
 			<td>
 				<script type="text/javascript">doHelpButton('forum_autoprunefrequency');</script>
@@ -104,7 +122,7 @@
 				{$L_DAYS}
 			</td>
 		</tr>
-		<tr class="alt2">
+		<tr class="alt3">
 			<td width="30%"><strong>{$L_AUTOPRUNEPOSTVIEWAGE}:</strong></td>
 			<td>
 				<script type="text/javascript">doHelpButton('forum_autoprunepostviewage');</script>
@@ -123,7 +141,7 @@
 				<script type="text/javascript">d.setIndex({$forum_prune_old_polls}, 'prune_old_polls');</script>
 			</td>
 		</tr>
-		<tr class="alt2">
+		<tr class="alt3">
 			<td width="30%"><strong>{$L_PRUNEANNOUNCEMENTS}:</strong></td>
 			<td>
 				<script type="text/javascript">doHelpButton('forum_pruneannouncements');</script>
@@ -148,7 +166,7 @@
 		<tr>
 			<td class="k4_subtitle" colspan="2">{$L_VIEWING}</td>
 		</tr>
-		<tr class="alt2">
+		<tr class="alt3">
 			<td width="30%"><strong>{$L_TOPICSPERPAGE}:</strong></td>
 			<td>
 				<script type="text/javascript">doHelpButton('forum_topicsperpage');</script>
@@ -169,7 +187,7 @@
 		<tr>
 			<td class="k4_subtitle" colspan="2">{$L_SETTINGS}</td>
 		</tr>
-		<tr class="alt2">
+		<tr class="alt3">
 			<td width="30%"><strong>{$L_MAXPOLLOPTIONS}:</strong></td>
 			<td>
 				<script type="text/javascript">doHelpButton('forum_maxpolloptions');</script>
@@ -194,7 +212,7 @@
 		<tr>
 			<td class="k4_subtitle" colspan="2">{$L_MODERATORS}</td>
 		</tr>
-		<tr class="alt2">
+		<tr class="alt3">
 			<td width="30%"><strong>{$L_MODERATORS}:</strong></td>
 			<td>
 				<script type="text/javascript">doHelpButton('forum_moderators');</script>

@@ -52,10 +52,13 @@ define('INSTALLER_BASE_DIR', dirname(__FILE__));
 define('FORUM_BASE_DIR', one_dir_up(INSTALLER_BASE_DIR));
 define('INCLUDE_BASE_DIR', one_dir_up(INSTALLER_BASE_DIR) . '/includes');
 
+define('K4_BASE_DIR', FORUM_BASE_DIR .'/includes/k4bb');
+define('BB_BASE_DIR', FORUM_BASE_DIR);
+
 define('IN_K4', TRUE);
 
-include INCLUDE_BASE_DIR . '/filearts/filearts.php';
-include INCLUDE_BASE_DIR . '/k4bb/functions.php';
+require_once INCLUDE_BASE_DIR . '/filearts/filearts.php';
+require_once INCLUDE_BASE_DIR . '/k4bb/init.php';
 
 class K4Installer extends FAController {
 	function execute() {
@@ -209,9 +212,20 @@ class ConfigWriterAction extends FAAction {
 			if ($query)
 				$request['dba']->executeUpdate($query);
 		}
-
-		$template = &$request['template'];
-		$template->render(INSTALLER_BASE_DIR . '/templates/success.html');
+		
+		// create the cache
+		$general_cache	= new K4GeneralCacheFilter;
+		$cache			= array();
+		$methods		= get_class_methods($general_cache);
+		foreach($methods as $function) {
+			if(substr($function, 0, 6) == 'cache_') {
+				$general_cache->$function($cache, $request);
+			}
+		}
+		DBCache::createCache($cache);
+		
+		// all done :D
+		$request['template']->render(INSTALLER_BASE_DIR . '/templates/success.html');
 	}
 }
 

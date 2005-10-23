@@ -1,0 +1,44 @@
+<is:admin>
+<form action="admin.php" method="get" enctype="multipart/form-data">
+<input type="hidden" name="act" value="mask_edit" />
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_PERMISSIONMASKS}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0">
+		<tr>
+			<td class="alt1" style="text-align: center;">
+				<br />
+				<strong>{$L_USERGROUP}:</strong>
+				<br />
+				<select name="g">
+					<list:list id="usergroups">
+					<list:item list="usergroups">
+					<option value="{$id}">{$name}</option>
+					</list:item>
+					</list:list>
+				</select>
+				<br /><br />
+				<strong>{$L_FORUM}:</strong>
+				<br />
+				<select name="f">
+					<list:list id="forums">
+					<list:item list="forums">
+					<if:if var="row_type" eq="1">
+					<optgroup label="{$name}" />
+					<if:else />
+					<option value="{$forum_id}">{$name}</option>
+					</if:if>
+					</list:item>
+					</list:list>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" style="text-align: center;">
+				<input type="submit" name="edit" class="button" value="{$L_EDITMASK}" />
+				<input type="submit" name="delete" class="button" value="{$L_DELETEMASK}" style="color: #FF0000;" />
+			</td>
+		</tr>
+	</table>
+</div>
+</form>
+</is:admin>

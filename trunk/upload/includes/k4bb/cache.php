@@ -38,17 +38,47 @@ if(!defined('IN_K4'))
  * Change the last modified time on a cache file or remove it
  */
 function reset_cache($cache_varname) {
-	if(!CACHE_IN_DB) {
-		if(file_exists(CACHE_DIR . $cache_varname .'.php')) {
-			if(!touch(CACHE_DIR . $cache_varname .'.php', time()-86460) &&
-				!touch(CACHE_DIR, time()-86460)) {
-				@unlink(CACHE_DIR . $cache_varname .'.php');
-			}
-		}
-	} else {
-		global $_DBA;
+	global $_DBA;
 
-		//$update = $_DBA->executeUpdate("UPDATE ". K4CACHE ." SET ");
+	$cache	= array();
+	$c		= new K4GeneralCacheFilter();
+
+	$cache_func = 'cache_'. $cache_varname;
+	
+	if(method_exists($c, $cache_func)) {
+		
+		$request = array('dba' => $_DBA);
+
+		$c->$cache_func($cache, $request);
+		
+		if(!CACHE_IN_DB) {
+			
+			
+			$contents	= "<?php \nerror_reporting(E_ALL); \n\nif(!defined('IN_K4')) { \n\treturn; \n}";
+			foreach($cache as $id => $data) {
+				$id			= '_'. strtoupper(implode('', explode('_', $id)));
+				$contents	.= "\n\n\$cache['{$id}'] = " . var_export($data, TRUE) .";";
+			}
+			$contents	.= "\n?>";
+
+			$filename = CACHE_DIR . $cache_varname .'.php';
+			$handle = @fopen($filename, "w");
+			__chmod($filename, 0777);
+			@fwrite($handle, $contents);
+			@fclose($handle);
+			@touch($filename);
+
+		} else {
+
+			$update		= $_DBA->prepareStatement("UPDATE ". K4CACHE ." SET data=?,modified=? WHERE varname=?");
+			foreach($cache as $varname => $data) {
+				$update->setString(1, serialize($data));
+				$update->setString(2, time());
+				$update->setString(3, $varname);
+				$update->executeUpdate();
+			}
+			unset($cache); // memory saving
+		}
 	}
 }
 
@@ -215,42 +245,39 @@ class DBCache {
 				
 				$filename	= CACHE_DIR . $id .'.php';
 
+				$id			= '_'. strtoupper(implode('', explode('_', $id)));
+
 				$contents	= "<?php \nerror_reporting(E_ALL); \n\nif(!defined('IN_K4')) { \n\treturn; \n}";
-				$contents	.= "\n\n\$cache += " . var_export($data, TRUE) .";";
+				$contents	.= "\n\n\$GLOBALS['{$id}'] = " . var_export($data, TRUE) .";";
 				$contents	.= "\n?>";
 				
 				/* Create our file */
-				if(file_exists($filename)) {
-					unlink($filename);
-				}
+				//if(file_exists($filename)) {
+				//	unlink($filename);
+				//}
 				
 				$handle = @fopen($filename, "w");
-				__chmod($filename, 0777);
+				@chmod($filename, 0777); // @__chmod
 				@fwrite($handle, $contents);
 				@fclose($handle);
+				@touch($filename, time());
 				
-				@touch($filename, time() - 86400);
-				
-				/* Error checking on our newly created file */
-				if(!file_exists($filename) || !is_readable($filename) || !is_writeable($filename)) {
-					
-					trigger_error('An error occured while trying to create the forum cache file.', E_USER_ERROR);
-				} else {
-					
-					$lines = file($filename);
-
-					if(count($lines) <= 1 || empty($lines)) {
-						trigger_error('An error occured while trying to create the forum cache file. It appears to be empty.', E_USER_ERROR);
-					}
-					
-					return TRUE;
-
-					/**
-					 * Need the touch here because for some reason the file changes the mod time in
-					 * some php versions
-					 */
-					@touch($filename, time());
-				}
+//				/* Error checking on our newly created file */
+//				if(!file_exists($filename)) { //  || !is_readable($filename) || !is_writeable($filename)
+//					
+//					trigger_error('An error occured while trying to create one of the forum cache files. ('. basename($filename) .')', E_USER_ERROR);
+//				} else {
+//					
+//					if(strlen(file_get_contents($filename)) == 0) {
+//						trigger_error('An error occured while trying to create one of the forum cache files. '. basename($filename) .' appears to be empty.', E_USER_ERROR);
+//					}
+//
+//					/**
+//					 * Need the touch here because for some reason the file changes the mod time in
+//					 * some php versions
+//					 */
+//					
+//				}
 			}
 		} else {
 			
@@ -260,12 +287,13 @@ class DBCache {
 			 * Are we caching in the database?
 			 */
 			
-			$delete		= $_DBA->executeUpdate("DELETE FROM ". K4CACHE);
-			$update		= $_DBA->prepareStatement("INSERT INTO ". K4CACHE ." (varname, data) VALUES (?,?)");
+			//$delete		= $_DBA->executeUpdate("DELETE FROM ". K4CACHE);
+			//$update		= $_DBA->prepareStatement("INSERT INTO ". K4CACHE ." (varname, data) VALUES (?,?)");
+			$update		= $_DBA->prepareStatement("UPDATE ". K4CACHE ." SET data=?,modified=? WHERE varname=?");
 			foreach($cache as $varname => $data) {
-				
-				$update->setString(1, $varname);
-				$update->setString(2, serialize($data));
+				$update->setString(1, serialize($data));
+				$update->setString(2, time());
+				$update->setString(3, $varname);
 				$update->executeUpdate();
 			}
 			

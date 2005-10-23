@@ -166,8 +166,13 @@ function follow_forum_ids($breadcrumbs, $forum) {
 	if(isset($forum['parent_id']) && $forum['parent_id'] > 0) {
 		global $_ALLFORUMS;
 
-		$prefix				= $forum['row_level'] == 2 ? 'c' : 'f';
+		//$prefix				= $forum['row_level'] == 2 && $forum['row_type'] == FORUM ? 'c' : 'f';
+		//$all_forums			= ($prefix == 'c') ? (isset($_ALLFORUMS['c'. $forum['parent_id']]) ? $_ALLFORUMS['c'. $forum['parent_id']] : $_ALLFORUMS['f'. $forum['parent_id']]) : $_ALLFORUMS['f' . $forum['parent_id']];
+		$prefix			= $forum['row_level'] == 2 ? ($forum['category_id'] > 0 ? 'c' : 'f') : 'f';
+		
 		$breadcrumbs		= follow_forum_ids($breadcrumbs, $_ALLFORUMS[$prefix . $forum['parent_id']]);
+
+		unset($all_forums);
 	}
 
 	return $breadcrumbs;

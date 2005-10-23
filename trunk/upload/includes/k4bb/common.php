@@ -34,7 +34,7 @@ if(!defined('IN_K4')) {
 	return;
 }
 
-define('VERSION', '2.0 Beta 8');
+define('VERSION', '2.0 Beta 7.1');
 
 /**
  * Constants that define what a category/forum/thread/etc is
@@ -154,6 +154,7 @@ define('TOPIC_ANNOUNCE',	3);
  */
 define('GLBL_ANNOUNCEMENTS', 1);
 define('GARBAGE_BIN', 2);
+define('MASTER_FORUM_PERM', 39); // TODO: make a better solution for this map item
 
 
 /**
@@ -169,7 +170,7 @@ define('PM_SAVEDITEMS', 3);
 
 define('USE_CACHE',			TRUE);
 define('CACHE_INTERVAL',	86400); // 24 hours
-define('CACHE_IN_DB',		TRUE); // only true if you have a SMALL forum
+define('CACHE_IN_DB',		FALSE); // only true if you have a SMALL forum
 define('CACHE_DIR',			BB_BASE_DIR .'/tmp/cache/');
 define('POST_IMPULSE_LIMIT',45); // seconds allowed between posts, 15 at least
 define('EMAIL_INTERVAL',	500); // 1000 at most (frequency).
@@ -207,35 +208,35 @@ define('MAPS_LEQ',			16);
 $_MAPITEMS['category'][]	= array('can_view' => GUEST, 'can_add' => SUPERADMIN, 'can_edit' => SUPERADMIN, 'can_del' => SUPERADMIN);
 
 $_MAPITEMS['forum'][]		= array('can_view' => GUEST,			'can_add' => SUPERADMIN, 'can_edit' => SUPERADMIN, 'can_del' => SUPERADMIN);
-$_MAPITEMS['forum'][]		= array('varname' => 'topics',			'can_view' => GUEST, 'can_add' => MEMBER, 'can_edit' => MEMBER, 'can_del' => SUPERMEMBER);
-$_MAPITEMS['forum'][]		= array('varname' => 'other_topics',	'can_view' => 0, 'can_add' => 0, 'can_edit' => SUPERMEMBER, 'can_del' => SUPERMEMBER);
-$_MAPITEMS['forum'][]		= array('varname' => 'polls',			'can_view' => GUEST, 'can_add' => MEMBER, 'can_edit' => MEMBER, 'can_del' => SUPERMEMBER);
-$_MAPITEMS['forum'][]		= array('varname' => 'other_polls',		'can_view' => 0, 'can_add' => 0, 'can_edit' => SUPERMEMBER, 'can_del' => SUPERMEMBER);
-$_MAPITEMS['forum'][]		= array('varname' => 'replies',			'can_view' => GUEST, 'can_add' => MEMBER, 'can_edit' => MEMBER, 'can_del' => SUPERMEMBER);
-$_MAPITEMS['forum'][]		= array('varname' => 'other_replies',	'can_view' => 0, 'can_add' => 0, 'can_edit' => SUPERMEMBER, 'can_del' => SUPERMEMBER);
-$_MAPITEMS['forum'][]		= array('varname' => 'attachments',		'can_view' => GUEST, 'can_add' => MEMBER, 'can_edit' => MEMBER, 'can_del' => MODERATOR);
-$_MAPITEMS['forum'][]		= array('varname' => 'vote_on_poll',	'can_view' => 0, 'can_add' => MEMBER, 'can_edit' => 0, 'can_del' => 0);
-$_MAPITEMS['forum'][]		= array('varname' => 'rate_topic',		'can_view' => 0, 'can_add' => MEMBER, 'can_edit' => 0, 'can_del' => MODERATOR);
-$_MAPITEMS['forum'][]		= array('varname' => 'sticky',			'can_view' => GUEST, 'can_add' => MODERATOR, 'can_edit' => MODERATOR, 'can_del' => MODERATOR);
-$_MAPITEMS['forum'][]		= array('varname' => 'announce',		'can_view' => GUEST, 'can_add' => ADMIN, 'can_edit' => ADMIN, 'can_del' => ADMIN);
-//$_MAPITEMS['forum'][]		= array('varname' => 'global',			'can_view' => GUEST, 'can_add' => ADMIN, 'can_edit' => ADMIN, 'can_del' => ADMIN);
-$_MAPITEMS['forum'][]		= array('varname' => 'feature',			'can_view' => GUEST, 'can_add' => ADMIN, 'can_edit' => ADMIN, 'can_del' => ADMIN);
-$_MAPITEMS['forum'][]		= array('varname' => 'move',			'can_view' => 0, 'can_add' => MODERATOR, 'can_edit' => 0, 'can_del' => 0);
-$_MAPITEMS['forum'][]		= array('varname' => 'queue',			'can_view' => 0, 'can_add' => MODERATOR, 'can_edit' => 0, 'can_del' => 0);
-$_MAPITEMS['forum'][]		= array('varname' => 'normalize',		'can_view' => 0, 'can_add' => MODERATOR, 'can_edit' => 0, 'can_del' => 0);
-$_MAPITEMS['forum'][]		= array('varname' => 'delete',			'can_view' => 0, 'can_add' => MODERATOR, 'can_edit' => 0, 'can_del' => 0);
-$_MAPITEMS['forum'][]		= array('varname' => 'closed',			'can_view' => GUEST, 'can_add' => SUPERMEMBER, 'can_edit' => SUPERMEMBER, 'can_del' => SUPERMEMBER);
-$_MAPITEMS['forum'][]		= array('varname' => 'avatars',			'can_view' => GUEST, 'can_add' => 0, 'can_edit' => 0, 'can_del' => 0);
-$_MAPITEMS['forum'][]		= array('varname' => 'signatures',		'can_view' => GUEST, 'can_add' => 0, 'can_edit' => 0, 'can_del' => 0);
-$_MAPITEMS['forum'][]		= array('varname' => 'html',			'can_view' => 0, 'can_add' => ADMIN, 'can_edit' => 0, 'can_del' => 0, 'value' => 'br,a,pre,ul,li,ol,p');
-$_MAPITEMS['forum'][]		= array('varname' => 'bbcode',			'can_view' => 0, 'can_add' => MEMBER, 'can_edit' => 0, 'can_del' => 0);
-$_MAPITEMS['forum'][]		= array('varname' => 'bbimgcode',		'can_view' => 0, 'can_add' => MEMBER, 'can_edit' => 0, 'can_del' => 0);
-$_MAPITEMS['forum'][]		= array('varname' => 'bbflashcode',		'can_view' => 0, 'can_add' => MEMBER, 'can_edit' => 0, 'can_del' => 0);
-$_MAPITEMS['forum'][]		= array('varname' => 'emoticons',		'can_view' => 0, 'can_add' => MEMBER, 'can_edit' => 0, 'can_del' => 0);
-$_MAPITEMS['forum'][]		= array('varname' => 'posticons',		'can_view' => 0, 'can_add' => MEMBER, 'can_edit' => 0, 'can_del' => 0);
-$_MAPITEMS['forum'][]		= array('varname' => 'post_save',		'can_view' => 0, 'can_add' => MEMBER, 'can_edit' => 0, 'can_del' => 0);
-$_MAPITEMS['forum'][]		= array('varname' => 'post_preview',	'can_view' => 0, 'can_add' => MEMBER, 'can_edit' => 0, 'can_del' => 0);
-$_MAPITEMS['forum'][]		= array('varname' => 'rss_feed',		'can_view' => GUEST, 'can_add' => 0, 'can_edit' => 0, 'can_del' => 0);
+//$_MAPITEMS['forum'][]		= array('varname' => 'topics',			'can_view' => GUEST, 'can_add' => MEMBER, 'can_edit' => MEMBER, 'can_del' => SUPERMEMBER);
+//$_MAPITEMS['forum'][]		= array('varname' => 'other_topics',	'can_view' => 0, 'can_add' => 0, 'can_edit' => SUPERMEMBER, 'can_del' => SUPERMEMBER);
+//$_MAPITEMS['forum'][]		= array('varname' => 'polls',			'can_view' => GUEST, 'can_add' => MEMBER, 'can_edit' => MEMBER, 'can_del' => SUPERMEMBER);
+//$_MAPITEMS['forum'][]		= array('varname' => 'other_polls',		'can_view' => 0, 'can_add' => 0, 'can_edit' => SUPERMEMBER, 'can_del' => SUPERMEMBER);
+//$_MAPITEMS['forum'][]		= array('varname' => 'replies',			'can_view' => GUEST, 'can_add' => MEMBER, 'can_edit' => MEMBER, 'can_del' => SUPERMEMBER);
+//$_MAPITEMS['forum'][]		= array('varname' => 'other_replies',	'can_view' => 0, 'can_add' => 0, 'can_edit' => SUPERMEMBER, 'can_del' => SUPERMEMBER);
+//$_MAPITEMS['forum'][]		= array('varname' => 'attachments',		'can_view' => GUEST, 'can_add' => MEMBER, 'can_edit' => MEMBER, 'can_del' => MODERATOR);
+//$_MAPITEMS['forum'][]		= array('varname' => 'vote_on_poll',	'can_view' => 0, 'can_add' => MEMBER, 'can_edit' => 0, 'can_del' => 0);
+//$_MAPITEMS['forum'][]		= array('varname' => 'rate_topic',		'can_view' => 0, 'can_add' => MEMBER, 'can_edit' => 0, 'can_del' => MODERATOR);
+//$_MAPITEMS['forum'][]		= array('varname' => 'sticky',			'can_view' => GUEST, 'can_add' => MODERATOR, 'can_edit' => MODERATOR, 'can_del' => MODERATOR);
+//$_MAPITEMS['forum'][]		= array('varname' => 'announce',		'can_view' => GUEST, 'can_add' => ADMIN, 'can_edit' => ADMIN, 'can_del' => ADMIN);
+////$_MAPITEMS['forum'][]		= array('varname' => 'global',			'can_view' => GUEST, 'can_add' => ADMIN, 'can_edit' => ADMIN, 'can_del' => ADMIN);
+//$_MAPITEMS['forum'][]		= array('varname' => 'feature',			'can_view' => GUEST, 'can_add' => ADMIN, 'can_edit' => ADMIN, 'can_del' => ADMIN);
+//$_MAPITEMS['forum'][]		= array('varname' => 'move',			'can_view' => 0, 'can_add' => MODERATOR, 'can_edit' => 0, 'can_del' => 0);
+//$_MAPITEMS['forum'][]		= array('varname' => 'queue',			'can_view' => 0, 'can_add' => MODERATOR, 'can_edit' => 0, 'can_del' => 0);
+//$_MAPITEMS['forum'][]		= array('varname' => 'normalize',		'can_view' => 0, 'can_add' => MODERATOR, 'can_edit' => 0, 'can_del' => 0);
+//$_MAPITEMS['forum'][]		= array('varname' => 'delete',			'can_view' => 0, 'can_add' => MODERATOR, 'can_edit' => 0, 'can_del' => 0);
+//$_MAPITEMS['forum'][]		= array('varname' => 'closed',			'can_view' => GUEST, 'can_add' => SUPERMEMBER, 'can_edit' => SUPERMEMBER, 'can_del' => SUPERMEMBER);
+//$_MAPITEMS['forum'][]		= array('varname' => 'avatars',			'can_view' => GUEST, 'can_add' => 0, 'can_edit' => 0, 'can_del' => 0);
+//$_MAPITEMS['forum'][]		= array('varname' => 'signatures',		'can_view' => GUEST, 'can_add' => 0, 'can_edit' => 0, 'can_del' => 0);
+//$_MAPITEMS['forum'][]		= array('varname' => 'html',			'can_view' => 0, 'can_add' => ADMIN, 'can_edit' => 0, 'can_del' => 0, 'value' => 'br,a,pre,ul,li,ol,p');
+//$_MAPITEMS['forum'][]		= array('varname' => 'bbcode',			'can_view' => 0, 'can_add' => MEMBER, 'can_edit' => 0, 'can_del' => 0);
+//$_MAPITEMS['forum'][]		= array('varname' => 'bbimgcode',		'can_view' => 0, 'can_add' => MEMBER, 'can_edit' => 0, 'can_del' => 0);
+//$_MAPITEMS['forum'][]		= array('varname' => 'bbflashcode',		'can_view' => 0, 'can_add' => MEMBER, 'can_edit' => 0, 'can_del' => 0);
+//$_MAPITEMS['forum'][]		= array('varname' => 'emoticons',		'can_view' => 0, 'can_add' => MEMBER, 'can_edit' => 0, 'can_del' => 0);
+//$_MAPITEMS['forum'][]		= array('varname' => 'posticons',		'can_view' => 0, 'can_add' => MEMBER, 'can_edit' => 0, 'can_del' => 0);
+//$_MAPITEMS['forum'][]		= array('varname' => 'post_save',		'can_view' => 0, 'can_add' => MEMBER, 'can_edit' => 0, 'can_del' => 0);
+//$_MAPITEMS['forum'][]		= array('varname' => 'post_preview',	'can_view' => 0, 'can_add' => MEMBER, 'can_edit' => 0, 'can_del' => 0);
+//$_MAPITEMS['forum'][]		= array('varname' => 'rss_feed',		'can_view' => GUEST, 'can_add' => 0, 'can_edit' => 0, 'can_del' => 0);
 
 
 $_MAPITEMS['blog'][]		= array('can_view' => GUEST,			'can_add' => MEMBER, 'can_edit' => MEMBER, 'can_del' => MEMBER);

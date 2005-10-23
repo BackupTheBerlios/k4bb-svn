@@ -52,7 +52,7 @@ class AdminMapsGui extends FAAction {
 						
 			$all_maps = array();
 
-			$maps = &$request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE row_level = 1 AND (varname <> 'forums' AND varname <> 'categories') ORDER BY name ASC");
+			$maps = &$request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE row_level = 1 AND (varname <> 'forums' AND varname <> 'categories' AND varname <> 'forum0') ORDER BY name ASC");
 			
 			get_recursive_maps($request, $all_maps, $parents, $maps, 1);
 			

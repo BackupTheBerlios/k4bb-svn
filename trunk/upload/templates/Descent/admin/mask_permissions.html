@@ -1,13 +1,14 @@
 <is:admin>
+<form action="admin.php?act=masks_updateperms" method="post" enctype="multipart/form-data">
+<input type="hidden" name="f" value="{$forum_forum_id}" />
+<input type="hidden" name="g" value="{$group_id}" />
 <div class="k4_borderwrap">
 	<div class="k4_maintitle">
-		<script type="text/javascript">doHelpButton('forum_permissions');</script>
-		{$L_FORUMPERMISSIONS}: <span style="font-weight: normal;">{$forum_name}</span>
+		{$L_PERMISSIONMASK}: <span style="font-weight: normal;"><em>{$forum_name} -> {$group_name}</em></span>
 	</div>
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-		<form name="update_forum_perms" id="update_forum_perms" action="admin.php?act=forums_updateperms" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="id" value="{$forum_forum_id}" />
-		<list:list id="forum_maps">
+		<list:list id="mask_maps">
 		<tr class="k4_subtitle">
 			<td>{$L_NAME}</td>
 			<td align="center">{$L_VIEW}</td>
@@ -15,18 +16,7 @@
 			<td align="center">{$L_EDIT}</td>
 			<td align="center">{$L_DELETE}</td>
 		</tr>
-		<list:default list="forum_maps">
-		<tr class="alt3">
-			<td colspan="5">
-				<div class="outset_box" align="center">
-					<br />
-					{$L_NOFORUMMAPS}
-					<br /><br />
-				</div>
-			</td>
-		</tr>
-		</list:default>
-		<list:item list="forum_maps">
+		<list:item list="mask_maps">
 		<tr class="{$row_class}">
 			<td nowrap="nowrap">{$level}<strong>{$name}</strong></td>
 			<td align="center">
@@ -87,14 +77,14 @@
 			</td>
 		</tr>
 		</list:item>
-		<tr class="k4_subtitle">
-			<td align="left" colspan="5">
+		<tr>
+			<td align="left" colspan="5" class="k4_subtitle">
 				<input type="submit" class="button" value="{$L_SAVE}" accesskey="s" />
 				<input type="reset" class="button" value="{$L_RESET}" />
 			</td>
 		</tr>
 		</list:list>
-		</form>
 	</table>
 </div>
+</form>
 </is:admin>

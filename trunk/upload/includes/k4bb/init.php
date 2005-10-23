@@ -36,6 +36,7 @@ if(!defined('IN_K4'))
 
 /* Functions */
 require K4_BASE_DIR. '/functions.php';
+require K4_BASE_DIR. '/fatal_error.php';
 require K4_BASE_DIR. '/mimetype.php';
 require K4_BASE_DIR. '/cache.php';
 require K4_BASE_DIR. '/maps.php';
@@ -86,6 +87,7 @@ require K4_BASE_DIR. '/actions/admin/email.class.php';
 require K4_BASE_DIR. '/actions/admin/posts.class.php';
 require K4_BASE_DIR. '/actions/admin/masks.class.php';
 require K4_BASE_DIR. '/actions/admin/titles.class.php';
+require K4_BASE_DIR. '/actions/admin/cache.class.php';
 
 /* Important Classes */
 require K4_BASE_DIR . '/database.php';

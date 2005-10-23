@@ -62,6 +62,8 @@ class AdminAddForum extends FAAction {
 			
 			global $_QUERYPARAMS;
 			
+			$parent = 0; // the direct parent of this forum
+
 			if(isset($_REQUEST['category_id']) && intval($_REQUEST['category_id']) != 0) {
 
 				/* Error checking */
@@ -70,7 +72,7 @@ class AdminAddForum extends FAAction {
 					return $action->execute($request);
 				}
 
-				$category					= $request['dba']->getRow("SELECT * FROM ". K4CATEGORIES ." WHERE category_id = ". intval(@$_REQUEST['category_id']));			
+				$category					= $request['dba']->getRow("SELECT * FROM ". K4CATEGORIES ." WHERE category_id = ". intval(@$_REQUEST['category_id']));
 
 				if(!is_array($category) || empty($category)) {
 					$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
@@ -78,21 +80,23 @@ class AdminAddForum extends FAAction {
 				}
 				
 				$request['template']->setVar('category_id', $category['category_id']);
-				
-				/* Do we have a parent forum Id? */
-				if(intval($_REQUEST['category_id']) != 0) {
-					if(isset($_REQUEST['forum_id']) && intval($_REQUEST['forum_id']) != 0) {
-						$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval(@$_REQUEST['forum_id']));			
 
-						if(!is_array($forum) || empty($forum)) {
-							$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
-							return $action->execute($request);
-						}
-						
-						$request['template']->setVar('forum_id', $forum['forum_id']);
-					}
-				}
+				$parent = 'c'. intval($_REQUEST['category_id']);
 			}
+
+			/* Do we have a parent forum Id? */
+			if(isset($_REQUEST['forum_id']) && intval($_REQUEST['forum_id']) != 0) {
+				$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval(@$_REQUEST['forum_id']));			
+
+				if(!is_array($forum) || empty($forum)) {
+					$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
+					return $action->execute($request);
+				}
+				
+				$parent = 'f'. intval($_REQUEST['forum_id']);
+				$request['template']->setVar('forum_id', $forum['forum_id']);
+			}
+
 
 			$languages					= array();
 			
@@ -108,6 +112,7 @@ class AdminAddForum extends FAAction {
 			$languages					= &new FAArrayIterator($languages);
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_FORUMS');
+			$request['template']->setVar('forum_parent', $parent);
 			$request['template']->setVar('forums_on', '_on');
 			
 			$request['template']->setFile('sidebar_menu', 'menus/forums.html');
@@ -133,15 +138,16 @@ class AdminInsertForum extends FAAction {
 			
 			global $_QUERYPARAMS;
 			
+			/*
 			if((isset($_REQUEST['category_id']) && intval($_REQUEST['category_id']) != 0) || (isset($_REQUEST['forum_id']) && intval($_REQUEST['forum_id']) != 0)) {
 
-				/* Error checking */
+				// Error checking
 				if(!isset($_REQUEST['category_id']) || intval($_REQUEST['category_id']) == 0) {
 					$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
 					return $action->execute($request);
 				}
 				
-				/* Attempt to get this category */
+				// Attempt to get this category
 				$category					= $request['dba']->getRow("SELECT * FROM ". K4CATEGORIES ." WHERE category_id = ". intval(@$_REQUEST['category_id']));			
 
 				if(!is_array($category) || empty($category)) {
@@ -151,25 +157,75 @@ class AdminInsertForum extends FAAction {
 				
 				$forum						= $category;
 
-				/* Do we have a parent forum Id? */
-				if(isset($_REQUEST['forum_id']) && intval($_REQUEST['forum_id']) != 0) {
-					
-					/* Attempt to get this forum */
-					$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval(@$_REQUEST['forum_id']));			
 
-					if(!is_array($forum) || empty($forum)) {
-						$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
-						return $action->execute($request);
-					}
-				}
-
-				/* Set the parent id */
+				// Set the parent id
 				$parent_id					= $forum == $category ? $forum['category_id'] : $forum['forum_id'];
 			} else {
 				
 				$category					= array('category_id' => 0, 'row_level' => 0, 'row_type' => CATEGORY, 'parent_id' => 0);
 				$forum						= array('forum_id' => 0, 'row_level' => 0, 'row_type' => FORUM, 'parent_id' => 0);
 				$parent_id					= 0;
+			}
+
+			// Do we have a parent forum Id?
+			if(isset($_REQUEST['forum_id']) && intval($_REQUEST['forum_id']) != 0) {
+				
+				// Attempt to get this forum
+				$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval(@$_REQUEST['forum_id']));			
+
+				if(!is_array($forum) || empty($forum)) {
+					$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
+					return $action->execute($request);
+				}
+			}
+
+			*/
+			
+			if(isset($_REQUEST['parent']) && (strpos($_REQUEST['parent'], 'f') !== FALSE || strpos($_REQUEST['parent'], 'c') !== FALSE)) {
+				
+				/* Forum */
+				if(strpos($_REQUEST['parent'], 'f') !== FALSE) {
+				
+					$forum_id = substr($_REQUEST['parent'], 1);
+
+					$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($forum_id));			
+
+					if(!is_array($forum) || empty($forum)) {
+						$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
+						return $action->execute($request);
+					}
+					
+					if($forum['category_id'] > 0) {
+						$category					= $request['dba']->getRow("SELECT * FROM ". K4CATEGORIES ." WHERE category_id = ". intval($forum['category_id']));			
+						
+						if(!is_array($category) || empty($category)) {
+							$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
+							return $action->execute($request);
+						}
+					} else {
+						$category		= array('category_id' => 0, 'row_level' => 0, 'row_type' => CATEGORY, 'parent_id' => 0);
+					}
+					$parent_id		= $forum['forum_id'];
+
+				/* Category */
+				} else {
+
+					$category_id = substr($_REQUEST['parent'], 1);
+					
+					$category					= $request['dba']->getRow("SELECT * FROM ". K4CATEGORIES ." WHERE category_id = ". intval($category_id));			
+					
+					if(!is_array($category) || empty($category)) {
+						$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
+						return $action->execute($request);
+					}
+
+					$forum			= $category;
+					$parent_id		= $category['category_id'];
+				}
+			} else {
+				$category		= array('category_id' => 0, 'row_level' => 0, 'row_type' => CATEGORY, 'parent_id' => 0);
+				$forum			= array('forum_id' => 0, 'row_level' => 0, 'row_type' => FORUM, 'parent_id' => 0);
+				$parent_id		= 0;
 			}
 
 			/* Error checking on the fields */
@@ -233,7 +289,7 @@ class AdminInsertForum extends FAAction {
 			$insert_a->setInt(11, $_REQUEST['postsperpage']);
 			$insert_a->setInt(12, $_REQUEST['maxpolloptions']);
 			$insert_a->setString(13, $_REQUEST['defaultlang']);
-			$insert_a->setString(14, iif((isset($_REQUEST['moderators']) && is_array($_REQUEST['moderators']) && !empty($_REQUEST['moderators'])), implode('|', $_REQUEST['moderators']), ''));
+			$insert_a->setString(14, ((isset($_REQUEST['moderators']) && is_array($_REQUEST['moderators']) && !empty($_REQUEST['moderators'])) ? implode('|', $_REQUEST['moderators']) : ''));
 			$insert_a->setInt(15, $_REQUEST['prune_auto']);
 			$insert_a->setInt(16, $_REQUEST['prune_frequency']);
 			$insert_a->setInt(17, $_REQUEST['prune_post_age']);
@@ -260,7 +316,7 @@ class AdminInsertForum extends FAAction {
 			
 			$request['dba']->commitTransaction();
 
-			reset_cache('forums');
+			reset_cache('all_forums');
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_FORUMS');
 			$request['template']->setVar('forums_on', '_on');
@@ -335,7 +391,8 @@ class AdminInsertForumMaps extends FAAction {
 			// commit the sql transaction
 			$request['dba']->commitTransaction();
 
-			reset_cache('forums');
+			reset_cache('all_forums');
+			reset_cache('maps');
 
 			/**
 			 * If we've gotten to this point.. redirect
@@ -390,7 +447,7 @@ class AdminSimpleForumUpdate extends FAAction {
 
 			$update->executeUpdate();
 			
-			reset_cache('forums');
+			reset_cache('all_forums');
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_FORUMS');
 			$request['template']->setVar('forums_on', '_on');
@@ -430,9 +487,6 @@ class AdminEditForum extends FAAction {
 			$forum['forum_rules']		= $forum_rules->revert();
 			$description				= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $forum['description'], FALSE, TRUE, TRUE, TRUE, TRUE);
 			$forum['description']		= $description->revert();
-
-			foreach($forum as $key => $val)
-				$request['template']->setVar('forum_'. $key, $val);
 			
 			$languages					= array();
 			
@@ -466,11 +520,26 @@ class AdminEditForum extends FAAction {
 					$moderating_users	= implode("\n", $users);
 				}
 			}
+			
+			// set the direct parent
+			if($forum['parent_id'] != $forum['category_id'] && $forum['parent_id'] > 0) {
+				$forum['parent'] = 'f'. intval($forum['parent_id']);
+			} else {
+				if($forum['parent_id'] == 0)
+					$forum['parent'] = 0;
+				else 
+					$forum['parent'] = 'c'. $forum['category_id'];
+			}
 
 			$request['template']->setVar('forum_moderating_users', $moderating_users);
-
+			
+			// forum languages
 			$languages					= &new FAArrayIterator($languages);
 			
+			// set the forum info to the template
+			foreach($forum as $key => $val)
+				$request['template']->setVar('forum_'. $key, $val);
+
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_FORUMS');
 			$request['template']->setVar('forums_on', '_on');
 			
@@ -504,7 +573,80 @@ class AdminUpdateForum extends FAAction {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
 				return $action->execute($request);
 			}
+			
+			if($forum['category_id'] > 0) {
+				$category					= $request['dba']->getRow("SELECT * FROM ". K4CATEGORIES ." WHERE category_id = ". intval($forum['category_id']));			
+							
+				if(!is_array($category) || empty($category)) {
+					$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
+					return $action->execute($request);
+				}
+			} else {
+				$category		= array('category_id' => 0, 'row_level' => 0, 'row_type' => CATEGORY, 'parent_id' => 0);
+			}
 
+			if(isset($_REQUEST['parent']) && (strpos($_REQUEST['parent'], 'f') !== FALSE || strpos($_REQUEST['parent'], 'c') !== FALSE)) {
+				
+				if($_REQUEST['parent'] != 'f'. $forum['forum_id']) {
+
+					/* Forum */
+					if(strpos($_REQUEST['parent'], 'f') !== FALSE) {
+					
+						$pforum_id = substr($_REQUEST['parent'], 1);
+
+						$pforum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($pforum_id));			
+
+						if(!is_array($pforum) || empty($pforum)) {
+							$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
+							return $action->execute($request);
+						}
+						
+						if($pforum['category_id'] > 0) {
+							$pcategory					= $request['dba']->getRow("SELECT * FROM ". K4CATEGORIES ." WHERE category_id = ". intval($pforum['category_id']));			
+							
+							if(!is_array($pcategory) || empty($pcategory)) {
+								$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
+								return $action->execute($request);
+							}
+						} else {
+							$pcategory		= array('category_id' => 0, 'row_level' => 0, 'row_type' => CATEGORY, 'parent_id' => 0);
+						}
+						$parent_id		= $pforum['forum_id'];
+
+					/* Category */
+					} else {
+						
+						$pcategory_id = substr($_REQUEST['parent'], 1);
+						
+						$pcategory					= $request['dba']->getRow("SELECT * FROM ". K4CATEGORIES ." WHERE category_id = ". intval($pcategory_id));			
+						
+						if(!is_array($pcategory) || empty($pcategory)) {
+							$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
+							return $action->execute($request);
+						}
+
+						$pforum			= array('category_id' => 0, 'forum_id' => 0, 'row_level' => 0, 'row_type' => FORUM, 'parent_id' => 0);
+						$parent_id		= $pcategory['category_id'];
+					}
+				} else {
+					$pcategory		= array('category_id' => 0, 'row_level' => 0, 'row_type' => CATEGORY, 'parent_id' => 0);
+					$pforum			= $forum;
+					$parent_id		= 0;
+				}
+			} else {
+				$pcategory		= array('category_id' => 0, 'row_level' => 0, 'row_type' => CATEGORY, 'parent_id' => 0);
+				$pforum			= array('category_id' => 0, 'forum_id' => 0, 'row_level' => 0, 'row_type' => FORUM, 'parent_id' => 0);
+				$parent_id		= 0;
+			}
+
+			if($pforum['forum_id'] == 0 && $pcategory['category_id'] == 0) {
+				$parent			= array('forum_id' => 0, 'row_level' => 0, 'row_type' => FORUM, 'parent_id' => 0);
+			} else if($pforum['forum_id'] > 0 && $pcategory['category_id'] == 0) {
+				$parent			= $pforum;
+			} else {
+				$parent			= $pcategory;
+			}
+			
 			if(!isset($_REQUEST['name']) || $_REQUEST['name'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTFORUMNAME'), 'content', TRUE);
 				return $action->execute($request);
@@ -546,7 +688,7 @@ class AdminUpdateForum extends FAAction {
 			}
 
 			/* Build the queries */
-			$update_a			= &$request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET name=?,description=?,pass=?,is_forum=?,is_link=?,link_href=?,link_show_redirects=?,forum_rules=?,topicsperpage=?,postsperpage=?,maxpolloptions=?,defaultlang=?,moderating_groups=?,prune_auto=?,prune_frequency=?,prune_post_age=?,prune_post_viewed_age=?,prune_old_polls=?,prune_announcements=?,prune_stickies=?,row_order=?,moderating_users=? WHERE forum_id=?");
+			$update_a			= &$request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET name=?,description=?,pass=?,is_forum=?,is_link=?,link_href=?,link_show_redirects=?,forum_rules=?,topicsperpage=?,postsperpage=?,maxpolloptions=?,defaultlang=?,moderating_groups=?,prune_auto=?,prune_frequency=?,prune_post_age=?,prune_post_viewed_age=?,prune_old_polls=?,prune_announcements=?,prune_stickies=?,row_order=?,moderating_users=?,parent_id=?,category_id=?,row_level=? WHERE forum_id=?");
 			$update_b			= &$request['dba']->prepareStatement("UPDATE ". K4MAPS ." SET name=? WHERE varname=?");
 						
 			$forum_rules		= new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['forum_rules'], $forum['forum_id'], TRUE, TRUE, TRUE, TRUE);
@@ -575,7 +717,10 @@ class AdminUpdateForum extends FAAction {
 			$update_a->setInt(20, $_REQUEST['prune_stickies']);
 			$update_a->setInt(21, $_REQUEST['row_order']);
 			$update_a->setString(22, $users_array);
-			$update_a->setInt(23, $forum['forum_id']);
+			$update_a->setInt(23, $parent_id);
+			$update_a->setInt(24, $pcategory['category_id']);
+			$update_a->setInt(25, $parent['row_level']+1);
+			$update_a->setInt(26, $forum['forum_id']);
 			
 			/* Simple update on the maps table */
 			$update_b->setString(1, $_REQUEST['name']);
@@ -584,8 +729,21 @@ class AdminUpdateForum extends FAAction {
 			/* Do all of the updates */
 			$update_a->executeUpdate();
 			$update_b->executeUpdate();
-						
-			reset_cache('forums');
+			
+			if($forum['parent_id'] != $parent_id) {
+				$request['dba']->executeUpdate("UPDATE ". K4FORUMS ." SET parent_id=". $parent_id ." WHERE forum_id=". $forum['forum_id']);
+			}
+			if($forum['category_id'] != $pcategory['category_id']) {
+				
+				$request['dba']->executeUpdate("UPDATE ". K4TOPICS ." SET row_level=". ($pforum['row_level']+1) .", category_id=". $pforum['category_id'] ." WHERE forum_id=". $forum['forum_id']);
+				$request['dba']->executeUpdate("UPDATE ". K4REPLIES ." SET row_level=row_level+". ($pforum['row_level'] < $forum['row_level'] ? $forum['row_level'] - $pforum['row_level'] : $pforum['row_level'] - $forum['row_level']) .", category_id=". $pforum['category_id'] ." WHERE forum_id=". $forum['forum_id']);
+				$request['dba']->executeUpdate("UPDATE ". K4MAPS ." SET category_id=". $pforum['category_id'] ." WHERE forum_id=". $forum['forum_id']);
+				$request['dba']->executeUpdate("UPDATE ". K4SUBSCRIPTIONS ." SET category_id=". $pforum['category_id'] ." WHERE forum_id=". $forum['forum_id']);
+				$request['dba']->executeUpdate("UPDATE ". K4BADPOSTREPORTS ." SET category_id=". $pforum['category_id'] ." WHERE forum_id=". $forum['forum_id']);
+				reset_cache('maps');
+			}
+
+			reset_cache('all_forums');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_FORUMS');
 			$request['template']->setVar('forums_on', '_on');
@@ -661,7 +819,7 @@ class AdminRemoveForum extends FAAction {
 						
 			$request['dba']->commitTransaction();
 
-			reset_cache('forums');
+			reset_cache('all_forums');
 			reset_cache('email_queue');
 			reset_cache('datastore');
 			
@@ -686,41 +844,71 @@ class AdminForumPermissions extends FAAction {
 		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
 			global $_QUERYPARAMS;
+			
+			$all_maps	= array();
 
 			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
-				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
-				return $action->execute($request);
-			}
+				//$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
+				//return $action->execute($request);
+				
+				$maps		= &$request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE group_id = 0 AND forum_id = 0 AND varname = 'forum0'");
+				
+				// get the map's
+				get_recursive_maps($request, $all_maps, FALSE, $maps, 1);
 
-			$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['id']));
+				$all_maps = &new FAArrayIterator($all_maps);
+			} else {
 
-			if(!is_array($forum) || empty($forum)) {
-				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
-				return $action->execute($request);
-			}
-			
-			foreach($forum as $key => $val)
-				$request['template']->setVar('forum_'. $key, $val);
-						
-			/* Get the parent id's */
-			$parents = array();
-			foreach($_COOKIE as $key => $val) {
-				if(strpos($key, 'mapsgui') !== FALSE) {
-					$parents[] = intval($_COOKIE[$key]);
+				$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['id']));
+
+				if(!is_array($forum) || empty($forum)) {
+					$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
+					return $action->execute($request);
 				}
+				
+				foreach($forum as $key => $val)
+					$request['template']->setVar('forum_'. $key, $val);
+
+				$maps		= &$request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE group_id = 0 AND forum_id = 0 AND varname = 'forum0'");
+				get_recursive_maps($request, $all_maps, FALSE, $maps, 1);
+				
+				$mask		= $request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE forum_id = ". intval($forum['forum_id']) ." AND group_id = 0");
+				
+				$mask_array = array();
+				while($mask->next()) {
+					$temp = $mask->current();
+					$mask_array[$temp['varname']] = $temp;
+				}
+							
+				$maps_array		= array();
+				foreach($all_maps as $temp) {
+					
+					$temp['row_class']		= 'alt2';
+					
+					if(isset($mask_array[$temp['varname']])) {
+						$temp			= $mask_array[$temp['varname']];
+						$temp['row_class']	= 'alt1';
+					}
+
+					if($temp['varname'] == 'forum0') {
+						$temp			= $mask_array['forum'. intval($forum['forum_id'])];
+						$temp['row_class']	= 'alt1';
+					}
+					
+					if($temp['row_level']-2 > 0) {
+						$temp['level']	= str_repeat('<img src="Images/'. $request['template']->getVar('IMG_DIR') .'/Icons/threaded_bit.gif" alt="" border="0" />', $temp['row_level']-2);
+					}
+				
+					$maps_array[] = $temp;
+				}
+
+				$all_maps = &new FAArrayIterator($maps_array);
 			}
-						
-			$all_maps = array();
-			$maps = &$request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE group_id = 0 AND forum_id = ". intval($forum['forum_id']));
 			
-			// get the map's
-			get_recursive_maps($request, $all_maps, $parents, $maps, 2);
 			
-			$all_maps = &new FAArrayIterator($all_maps);
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_FORUMS');
 			$request['template']->setVar('forums_on', '_on');
-			
 			$request['template']->setFile('sidebar_menu', 'menus/forums.html');
 			$request['template']->setList('forum_maps', $all_maps);
 			$request['template']->setFile('content', 'forums_permissions.html');
@@ -740,47 +928,116 @@ class AdminUpdateForumPermissions extends FAAction {
 			global $_QUERYPARAMS;
 
 			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
-				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
-				return $action->execute($request);
+				
+				$offset = 0;
+				$get_mask_maps = FALSE;
+
+			} else {
+
+				$forum							= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['id']));
+
+				if(!is_array($forum) || empty($forum)) {
+					$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
+					return $action->execute($request);
+				}
+				
+				$get_mask_maps = TRUE;
+				$offset = 2;
 			}
 
-			$forum							= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['id']));
-
-			if(!is_array($forum) || empty($forum)) {
-				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
-				return $action->execute($request);
+//			$forum_map						= $request['dba']->getRow("SELECT * FROM ". K4MAPS ." WHERE varname = 'forum". $forum['forum_id'] ."' AND forum_id = ". intval($forum['forum_id']));
+//			$forum_maps						= $request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE forum_id = ". intval($forum['forum_id']));
+//			
+//			/* Loop through the forum map items */
+//			while($forum_maps->next()) {
+//				$f							= $forum_maps->current();
+//
+//				if(isset($_REQUEST[$f['varname'] .'_can_view']) && isset($_REQUEST[$f['varname'] .'_can_add']) && isset($_REQUEST[$f['varname'] .'_can_edit']) && isset($_REQUEST[$f['varname'] .'_can_del'])) {
+//					
+//					if(($_REQUEST[$f['varname'] .'_can_view'] != $f['can_view']) || ($_REQUEST[$f['varname'] .'_can_add'] != $f['can_add']) || ($_REQUEST[$f['varname'] .'_can_edit'] != $f['can_edit']) || ($_REQUEST[$f['varname'] .'_can_del'] != $f['can_del'])) {
+//
+//						$update				= &$request['dba']->prepareStatement("UPDATE ". K4MAPS ." SET can_view=?,can_add=?,can_edit=?,can_del=? WHERE varname=? AND forum_id=?");
+//						$update->setInt(1, $_REQUEST[$f['varname'] .'_can_view']);
+//						$update->setInt(2, $_REQUEST[$f['varname'] .'_can_add']);
+//						$update->setInt(3, $_REQUEST[$f['varname'] .'_can_edit']);
+//						$update->setInt(4, $_REQUEST[$f['varname'] .'_can_del']);
+//						$update->setString(5, $f['varname']);
+//						$update->setInt(6, $forum['forum_id']);
+//
+//						$update->executeUpdate();
+//
+//						unset($update);
+//					}
+//				}
+//			}
+			
+			$all_maps	= array();
+			$maps		= &$request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE group_id = 0 AND forum_id = 0 AND varname = 'forum0'");
+			get_recursive_maps($request, $all_maps, FALSE, $maps, 1);
+			
+			// delete all of the perms because we are going to readd them
+			// by doing this, we are guranteed to store the minimum number 
+			// of changed permissions
+			
+			$forum_map_id		= 0;
+			
+			if($get_mask_maps) {
+				$request['dba']->executeUpdate("DELETE FROM ". K4MAPS ." WHERE group_id = 0 AND forum_id = ". intval($forum['forum_id']));
+				$insert			= $request['dba']->prepareStatement("INSERT INTO ". K4MAPS ." (row_level,name,varname,category_id,forum_id,user_id,can_view,can_add,can_edit,can_del,value,parent_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+			} else {
+				$insert			= $request['dba']->prepareStatement("UPDATE ". K4MAPS ." SET row_level=?,name=?,varname=?,category_id=?,forum_id=?,user_id=?,can_view=?,can_add=?,can_edit=?,can_del=?,value=?,parent_id=? WHERE id=?");
 			}
-			
-			foreach($forum as $key => $val)
-				$request['template']->setVar('forum_'. $key, $val);
-			
-			$forum_map						= $request['dba']->getRow("SELECT * FROM ". K4MAPS ." WHERE varname = 'forum". $forum['forum_id'] ."' AND forum_id = ". intval($forum['forum_id']));
-			$forum_maps						= $request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE forum_id = ". intval($forum['forum_id']));
-			
-			/* Loop through the forum map items */
-			while($forum_maps->next()) {
-				$f							= $forum_maps->current();
+			foreach($all_maps as $temp) {
+				
+				// make an adjustment for the master forum perm varname
+				if($get_mask_maps) {
+					if($temp['varname'] == 'forum0') {
+						$add				= TRUE;
+						$temp['varname']	= 'forum'. intval($forum['forum_id']);
+						$temp['name']		= $forum['name'];
+					} else {
+						$add		= FALSE;
+					}
+				} else {
+					$add = TRUE;
+				}
+				
+				if(!$get_mask_maps)
+					$forum = $temp;
+				
+				if(isset($_REQUEST[$temp['varname'] .'_can_view']) && $_REQUEST[$temp['varname'] .'_can_view'] != $temp['can_view']) $add = TRUE;
+				if(isset($_REQUEST[$temp['varname'] .'_can_add']) && $_REQUEST[$temp['varname'] .'_can_add'] != $temp['can_add']) $add = TRUE;
+				if(isset($_REQUEST[$temp['varname'] .'_can_edit']) && $_REQUEST[$temp['varname'] .'_can_edit'] != $temp['can_edit']) $add = TRUE;
+				if(isset($_REQUEST[$temp['varname'] .'_can_del']) && $_REQUEST[$temp['varname'] .'_can_del'] != $temp['can_del']) $add = TRUE;
+				
+				if($add) {
 
-				if(isset($_REQUEST[$f['varname'] .'_can_view']) && isset($_REQUEST[$f['varname'] .'_can_add']) && isset($_REQUEST[$f['varname'] .'_can_edit']) && isset($_REQUEST[$f['varname'] .'_can_del'])) {
+					$insert->setInt(1, $temp['row_level']+$offset);
+					$insert->setString(2, $temp['name']);
+					$insert->setString(3, $temp['varname']);
+					$insert->setInt(4, $forum['category_id']);
+					$insert->setInt(5, $forum['forum_id']);
+					$insert->setInt(6, $temp['user_id']);
+					$insert->setInt(7, $_REQUEST[$temp['varname'] .'_can_view']);
+					$insert->setInt(8, $_REQUEST[$temp['varname'] .'_can_add']);
+					$insert->setInt(9, $_REQUEST[$temp['varname'] .'_can_edit']);
+					$insert->setInt(10, $_REQUEST[$temp['varname'] .'_can_del']);
+					$insert->setString(11, $temp['value']);
+					$insert->setInt(12, $forum_map_id);
 					
-					if(($_REQUEST[$f['varname'] .'_can_view'] != $f['can_view']) || ($_REQUEST[$f['varname'] .'_can_add'] != $f['can_add']) || ($_REQUEST[$f['varname'] .'_can_edit'] != $f['can_edit']) || ($_REQUEST[$f['varname'] .'_can_del'] != $f['can_del'])) {
+					if(!$get_mask_maps)
+						$insert->setInt(13, $temp['id']);
 
-						$update				= &$request['dba']->prepareStatement("UPDATE ". K4MAPS ." SET can_view=?,can_add=?,can_edit=?,can_del=? WHERE varname=? AND forum_id=?");
-						$update->setInt(1, $_REQUEST[$f['varname'] .'_can_view']);
-						$update->setInt(2, $_REQUEST[$f['varname'] .'_can_add']);
-						$update->setInt(3, $_REQUEST[$f['varname'] .'_can_edit']);
-						$update->setInt(4, $_REQUEST[$f['varname'] .'_can_del']);
-						$update->setString(5, $f['varname']);
-						$update->setInt(6, $forum['forum_id']);
+					$insert->executeUpdate();
 
-						$update->executeUpdate();
-
-						unset($update);
+					if($temp['varname'] == 'forum'. intval($forum['forum_id'])) {
+						$forum_map_id		= $request['dba']->getValue("SELECT * FROM ". K4MAPS ." WHERE varname = 'forum". intval($forum['forum_id']) ."'");
 					}
 				}
 			}
 			
-			reset_cache('forums');
+			reset_cache('all_forums');
+			reset_cache('maps');
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_FORUMS');
 			$request['template']->setVar('forums_on', '_on');
