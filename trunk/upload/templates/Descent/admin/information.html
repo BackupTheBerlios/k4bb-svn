@@ -1,28 +1,34 @@
 <!-- Information Table -->
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">{$L_INFORMATION}</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-		<tr>
-			<td class="alt3">
-				<div class="outset_box">
-					{$information}
-				</div>
-			</td>
-		</tr>
-		<core:block id="info_back_button">
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_INFORMATION}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
 			<tr>
-				<td class="k4_subtitle">
-					<div align="center">
-						<input type="button" class="button" value="{$L_GOBACK}" onClick="javascript:history.go(-1)" />
+				<td class="alt3">
+					<div class="outset_box" style="text-align: center;">
+						<br />
+						{$information}
+						<br /><br />
+						<if:if var="redirect_url" noteq=""><br />(<a href="{$redirect_url}" title="{$L_CLICKTONOTWAIT}" class="smalltext">{$L_CLICKTONOTWAIT}</a>)</if:if>
 					</div>
 				</td>
 			</tr>
-		</core:block>
-	</table>
+			<core:block id="info_back_button">
+				<tr>
+					<td class="k4_subtitle">
+						<div style="text-align: center;">
+							<input type="button" class="button" value="{$L_GOBACK}" onclick="javascript:history.go(-1)" />
+						</div>
+					</td>
+				</tr>
+			</core:block>
+		</table>
+	</div>
 </div>
+{$redirect_html}
 <script type="text/javascript">
 //<![CDATA[
-{$redirect}
+setTimeout("document.location.href='{$redirect_url}';", {$redirect_time});
 //]]>
 </script>
 <!-- / Information Table -->

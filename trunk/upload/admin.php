@@ -107,7 +107,9 @@ $app->setAction('categories_permissions', new AdminCategoryPermissions);
 $app->setAction('categories_updateperms', new AdminUpdateCategoryPermissions);
 
 /* Forums */
+$app->setAction('forums_home', new AdminForumsHome);
 $app->setAction('forums', new AdminForums);
+$app->setAction('forum_select', new AdminForumSelect);
 $app->setAction('forums_add', new AdminAddForum);
 $app->setAction('forums_insert', new AdminInsertForum);
 $app->setAction('forums_insertmaps', new AdminInsertForumMaps);

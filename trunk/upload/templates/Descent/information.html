@@ -9,6 +9,7 @@
 						<br />
 						{$information}
 						<br /><br />
+						<if:if var="redirect_url" noteq=""><br />(<a href="{$redirect_url}" title="{$L_CLICKTONOTWAIT}" class="smalltext">{$L_CLICKTONOTWAIT}</a>)</if:if>
 					</div>
 				</td>
 			</tr>
@@ -24,10 +25,10 @@
 		</table>
 	</div>
 </div>
-{$html_redirect}
+{$redirect_html}
 <script type="text/javascript">
 //<![CDATA[
-{$redirect}
+setTimeout("document.location.href='{$redirect_url}';", {$redirect_time});
 //]]>
 </script>
 <!-- / Information Table -->

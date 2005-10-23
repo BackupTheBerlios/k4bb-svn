@@ -34,9 +34,13 @@ class AdminUsertTitles extends FAAction {
 		
 		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			
+			global $_USERTITLES;
+
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERS');
 			$request['template']->setVar('users_on', '_on');
 			$request['template']->setFile('sidebar_menu', 'menus/users.html');
+			
+			$request['template']->setList('usertitles', new FAArrayIterator($_USERTITLES));
 
 			$request['template']->setFile('content', 'titles_manage.html');
 		} else {

@@ -54,6 +54,10 @@ class SQLiteResultIterator extends FADBResult {
 		return ($this->row + 1 < $this->size) ? TRUE : FALSE;
 	}
 
+	function hasPrev() {
+		return ($this->row - 1 >= 0) ? TRUE : FALSE;
+	}
+
 	function key() {
 		return $this->row;
 	}

@@ -35,6 +35,25 @@ if(!defined('IN_K4')) {
 	return;
 }
 
+class AdminForumsHome extends FAAction {
+	function execute(&$request) {		
+		
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
+			global $_QUERYPARAMS, $_ALLFORUMS;
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_FORUMS');
+			$request['template']->setVar('forums_on', '_on');
+			
+			$request['template']->setFile('sidebar_menu', 'menus/forums.html');
+			$request['template']->setList('forums', new FAArrayIterator($_ALLFORUMS));
+		} else {
+			no_perms_error($request);
+		}
+
+		return TRUE;
+	}
+}
+
 class AdminForums extends FAAction {
 	function execute(&$request) {		
 		
@@ -47,6 +66,26 @@ class AdminForums extends FAAction {
 			$request['template']->setFile('sidebar_menu', 'menus/forums.html');
 			$request['template']->setList('forums', new FAArrayIterator($_ALLFORUMS));
 			$request['template']->setFile('content', 'forums_manage.html');
+		} else {
+			no_perms_error($request);
+		}
+
+		return TRUE;
+	}
+}
+
+class AdminForumSelect extends FAAction {
+	function execute(&$request) {		
+		
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
+			global $_QUERYPARAMS, $_ALLFORUMS;
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_FORUMS');
+			$request['template']->setVar('forums_on', '_on');
+			
+			$request['template']->setFile('sidebar_menu', 'menus/forums.html');
+			$request['template']->setList('forums', new FAArrayIterator($_ALLFORUMS));
+			$request['template']->setFile('content', 'forums_select.html');
 		} else {
 			no_perms_error($request);
 		}
@@ -419,12 +458,12 @@ class AdminSimpleForumUpdate extends FAAction {
 			
 			global $_MAPITEMS, $_QUERYPARAMS;
 
-			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
+			if(!isset($_REQUEST['forum_id']) || intval($_REQUEST['forum_id']) == 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
 				return $action->execute($request);
 			}
 
-			$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['id']));
+			$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['forum_id']));
 
 			if(!is_array($forum) || empty($forum)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
@@ -471,12 +510,12 @@ class AdminEditForum extends FAAction {
 			
 			global $_QUERYPARAMS, $_USERGROUPS;
 
-			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
+			if(!isset($_REQUEST['forum_id']) || intval($_REQUEST['forum_id']) == 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
 				return $action->execute($request);
 			}
 
-			$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['id']));
+			$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['forum_id']));
 
 			if(!is_array($forum) || empty($forum)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
@@ -786,12 +825,12 @@ class AdminRemoveForum extends FAAction {
 			
 			global $_QUERYPARAMS;
 
-			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
+			if(!isset($_REQUEST['forum_id']) || intval($_REQUEST['forum_id']) == 0) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
 				return $action->execute($request);
 			}
 
-			$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['id']));
+			$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['forum_id']));
 
 			if(!is_array($forum) || empty($forum)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
@@ -847,7 +886,7 @@ class AdminForumPermissions extends FAAction {
 			
 			$all_maps	= array();
 
-			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
+			if(!isset($_REQUEST['forum_id']) || intval($_REQUEST['forum_id']) == 0) {
 				//$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
 				//return $action->execute($request);
 				
@@ -859,7 +898,7 @@ class AdminForumPermissions extends FAAction {
 				$all_maps = &new FAArrayIterator($all_maps);
 			} else {
 
-				$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['id']));
+				$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['forum_id']));
 
 				if(!is_array($forum) || empty($forum)) {
 					$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);

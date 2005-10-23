@@ -289,7 +289,7 @@ class DBCache {
 			
 			//$delete		= $_DBA->executeUpdate("DELETE FROM ". K4CACHE);
 			//$update		= $_DBA->prepareStatement("INSERT INTO ". K4CACHE ." (varname, data) VALUES (?,?)");
-			$update		= $_DBA->prepareStatement("UPDATE ". K4CACHE ." SET data=?,modified=? WHERE varname=?");
+			$update			= $_DBA->prepareStatement("UPDATE ". K4CACHE ." SET data=?,modified=? WHERE varname=?");
 			foreach($cache as $varname => $data) {
 				$update->setString(1, serialize($data));
 				$update->setString(2, time());

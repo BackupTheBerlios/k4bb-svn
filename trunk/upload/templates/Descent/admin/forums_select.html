@@ -1,4 +1,17 @@
 <is:admin>
+<script type="text/javascript">
+	function check_delete_forum() {
+		var obj = d.getElementById('forum_action');
+		if(obj[obj.selectedIndex].value == 'forums_remove') {
+			if(confirm('{$L_CHECKDELFORUM}')) { 
+				return true 
+			} else { 
+				return false; 
+			}
+		}
+	}
+</script>
+<form action="admin.php" method="get" enctype="multipart/form-data" onsubmit="return check_delete_forum();">
 <div class="k4_borderwrap">
 	<div class="k4_maintitle">
 		<script type="text/javascript">doHelpButton('categories');</script>
@@ -10,7 +23,6 @@
 				<br />
 				<strong>{$L_FORUM}</strong><br />
 				<select name="forum_id" id="forum_id" class="inputbox">
-					<option value="0">-- {$L_NONE} --</option>
 					<list:list id="all_forums">
 					<list:item list="all_forums">
 						<if:if var="row_type" eq="2">
@@ -21,6 +33,14 @@
 					</list:item>
 					</list:list>
 				</select>
+				<br /><br />
+				<strong>{$L_ACTION}</strong><br />
+				<select name="act" class="inputbox" id="forum_action">
+					<option value="forums_edit">{$L_EDIT}</option>
+					<option value="forums_add">{$L_ADDSUBFORUM}</option>
+					<option value="forums_permissions">{$L_EDITPERMISSIONS}</option>
+					<option value="forums_remove" style="color: #FF0000;">{$L_DELETE}</option>
+				</select>
 			</td>
 		</tr>
 		<tr>
@@ -30,4 +50,5 @@
 		</tr>
 	</table>
 </div>
+</form>
 </is:admin>

@@ -98,6 +98,8 @@ $_LANG += array(
 'L_RSSFEED'				=> 'RSS Feed',
 'L_ADVANCEDSEARCH'		=> 'Advanced Search',
 'L_GOTOINBOX'			=> 'Go to Inbox',
+'L_CLICKTONOTWAIT'		=> 'Click here to proceed without waiting.',
+'L_PMUSER'				=> 'Private Message User',
 
 /* User Titles */
 'L_JUNIORMEMBER'		=> 'Junior Member',
@@ -155,8 +157,6 @@ $_LANG += array(
 'L_UNSUSPEND'			=> 'Unsuspend',
 'L_LOCK'				=> 'Lock',
 'L_UNLOCK'				=> 'Unlock',
-
-
 
 'L_SELCATEGORY'			=> 'Select a Category',
 'L_POSITION'			=> 'Position',

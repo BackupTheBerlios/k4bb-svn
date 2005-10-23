@@ -186,6 +186,7 @@ class ConfigWriterAction extends FAAction {
 		$_CONFIG['ftp']['password']	= $request['ftp_info']['pass'];
 
 		$GLOBALS['_CONFIG']			= $_CONFIG;
+		$GLOBALS['_DBA']			= $request['dba'];
 
 		$buffer						= $config->run(dirname(__FILE__) . '/templates/config.php');
 

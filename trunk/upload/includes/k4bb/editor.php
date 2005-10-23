@@ -54,7 +54,7 @@ function create_editor(&$request, $text, $place, $forum = FALSE) {
 	}
 
 	$request['template']->setVar('has_bbcode_perms', $can_bbcode);
-	
+	$request['template']->setVar('input_id', 'wysiwygcodex');
 	$request['template']->setFile('start_editor', (USE_WYSIWYG ? 'editor_wysiwyg.html' : 'editor_bbcode.html'));
 	$request['template']->setVar('start_wysiwyg', (USE_WYSIWYG ? 1 : 0));
 	$request['template']->setVar('can_wysiwyg', (USE_WYSIWYG ? 1 : 0));

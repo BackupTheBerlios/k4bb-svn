@@ -152,7 +152,7 @@ class K4GeneralCacheFilter extends FAFilter {
 	 * Get ALL of the categories/forums
 	 */
 	function cache_all_forums(&$cache, &$request) {
-		$cache['allforums']						= array();
+		$cache['all_forums']						= array();
 		$categories								= $request['dba']->executeQuery("SELECT * FROM ". K4CATEGORIES ." ORDER BY row_order ASC");
 		
 		$forums									= $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE parent_id = 0 AND row_level = 1 ORDER BY row_order ASC");
@@ -161,17 +161,17 @@ class K4GeneralCacheFilter extends FAFilter {
 		/* We want to get these top level forums in their proper order */
 		while($forums->next()) {
 			$temp								= $forums->current();
-			$cache['allforums']['f'. intval($temp['forum_id'])]		= $temp;
-			$this->loop_forums($cache['allforums'], $request['dba'], $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE row_level = 2 AND category_id = 0 AND parent_id = ". intval($temp['forum_id']) ." ORDER BY row_order ASC"));
+			$cache['all_forums']['f'. intval($temp['forum_id'])]		= $temp;
+			$this->loop_forums($cache['all_forums'], $request['dba'], $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE row_level = 2 AND category_id = 0 AND parent_id = ". intval($temp['forum_id']) ." ORDER BY row_order ASC"));
 		}
 		
 		if($categories->hasNext()) {
 			while($categories->next()) {
 				$temp										= $categories->current();
 				
-				$cache['allforums']['c'. intval($temp['category_id'])]	= $temp;
+				$cache['all_forums']['c'. intval($temp['category_id'])]	= $temp;
 				
-				$this->loop_forums($cache['allforums'], $request['dba'], $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE row_level = 2 AND category_id = ". intval($temp['category_id']) ." ORDER BY row_order ASC"));
+				$this->loop_forums($cache['all_forums'], $request['dba'], $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE row_level = 2 AND category_id = ". intval($temp['category_id']) ." ORDER BY row_order ASC"));
 				
 			}
 		}
@@ -262,6 +262,18 @@ class K4GeneralCacheFilter extends FAFilter {
 		}
 		$result->free();
 	}
+	/**
+	 * Get all of the user titles
+	 */
+	function cache_user_titles(&$cache, &$request) {
+		$cache['user_titles']					= array();
+		$result									= $request['dba']->executeQuery("SELECT * FROM ". K4USERTITLES ." ORDER BY num_posts ASC");
+		while($result->next()) {
+			$temp								= $result->current();
+			$cache['user_titles'][]				= $temp;
+		}
+		$result->free();
+	}
 	function execute(&$action, &$request, $do_overwrite = FALSE) {
 				
 		$cache = array();
@@ -325,8 +337,8 @@ class K4GeneralCacheFilter extends FAFilter {
 			$GLOBALS['_CENSORS']				= $cache['censors'];
 			$GLOBALS['_SPIDERS']				= $cache['spiders'];
 			$GLOBALS['_SPIDERAGENTS']			= $cache['spider_agents'];
-			$GLOBALS['_USERFIELDS']				= $cache['profile_fields'];
-			$GLOBALS['_ALLFORUMS']				= $cache['allforums'];
+			$GLOBALS['_PROFILEFIELDS']			= $cache['profile_fields'];
+			$GLOBALS['_ALLFORUMS']				= $cache['all_forums'];
 			$GLOBALS['_FLAGGEDUSERS']			= $cache['flagged_users'];
 			$GLOBALS['_BANNEDUSERIDS']			= $cache['banned_user_ids'];
 			$GLOBALS['_BANNEDUSERIPS']			= $cache['banned_user_ips'];
@@ -334,6 +346,7 @@ class K4GeneralCacheFilter extends FAFilter {
 			$GLOBALS['_FAQCATEGORIES']			= $cache['faq_categories'];
 			$GLOBALS['_MAILQUEUE']				= isset($cache['mail_queue']) ? $cache['mail_queue'] : array();
 			$GLOBALS['_DATASTORE']				= isset($cache['datastore']) ? $cache['datastore'] : array();
+			$GLOBALS['_USERTITLES']				= $cache['user_titles'];
 		}	
 		
 		/* Execute the queue after we get/check the cached file(s) */

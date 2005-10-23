@@ -454,8 +454,14 @@ class K4InformationAction extends FAAction {
 		
 		$this->_url			= str_replace('&amp;', '&', $this->_url);
 
-		if ($this->_timeout && $this->_url)
-			$js = "setTimeout(\"location.href='{$this->_url}'\", ". intval($this->_timeout * 1000) .");";
+		if ($this->_timeout && $this->_url) {
+			$request['template']->setVarArray(
+											array(
+												'redirect_url' => $this->_url, 
+												'redirect_time' => intval($this->_timeout * 1000),
+												'redirect_html' => '<meta http-equiv="refresh" content="'. intval($this->_timeout) .';url='. $this->_url .'" />',
+											));
+		}
 		
 		if(!$request['template']->getVar('current_location')) {
 			
@@ -465,10 +471,8 @@ class K4InformationAction extends FAAction {
 		}
 		
 		$message = is_a($this->_message, 'K4LanguageElement') ? $this->_message->__toString() : $this->_message;
-
+		
 		$request['template']->setVar('information', $message);
-		$request['template']->setVar('redirect', $js);
-		$request['template']->setVar('html_redirect', $this->_url && $this->_timeout ? '<meta http-equiv="refresh" content="'. intval($this->_timeout) .';url='. $this->_url .'" />' : '');
 		$request['template']->setVisibility('info_back_button', $this->_show_button);		
 		$request['template']->setFile('content', 'information.html'); //$this->_block_id
 	}

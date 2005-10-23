@@ -63,6 +63,7 @@ class AdminAddUserGroup extends FAAction {
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERGROUPS');
 			$request['template']->setVar('users_on', '_on');
 			$request['template']->setFile('sidebar_menu', 'menus/users.html');
+			$request['template']->setVar('input_id', 'color');
 		} else {
 			no_perms_error($request);
 		}
@@ -83,8 +84,11 @@ class AdminInsertUserGroup extends FAAction {
 			}
 
 			if(!isset($_REQUEST['nicename']) || $_REQUEST['nicename'] == '') {
-				$action = new K4InformationAction(new K4LanguageElement('L_INSERTGROUPNICENAME'), 'content', TRUE);
-				return $action->execute($request);
+				//$action = new K4InformationAction(new K4LanguageElement('L_INSERTGROUPNICENAME'), 'content', TRUE);
+				//return $action->execute($request);
+				
+				// makes it not require the nice name
+				$_REQUEST['nicename'] = '';
 			}
 			
 			$g = $request['dba']->getRow("SELECT * FROM ". K4USERGROUPS ." WHERE name = '". $request['dba']->quote($_REQUEST['name']) ."'");			
@@ -308,7 +312,8 @@ class AdminEditUserGroup extends FAAction {
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERGROUPS');
 			$request['template']->setVar('users_on', '_on');
 			$request['template']->setFile('sidebar_menu', 'menus/users.html');
-
+			
+			$request['template']->setVar('input_id', 'color');
 			$request['template']->setFile('content', 'usergroups_edit.html');
 		} else {
 			no_perms_error($request);
@@ -342,8 +347,11 @@ class AdminUpdateUserGroup extends FAAction {
 			}
 
 			if(!isset($_REQUEST['nicename']) || $_REQUEST['nicename'] == '') {
-				$action = new K4InformationAction(new K4LanguageElement('L_INSERTGROUPNICENAME'), 'content', TRUE);
-				return $action->execute($request);
+				//$action = new K4InformationAction(new K4LanguageElement('L_INSERTGROUPNICENAME'), 'content', TRUE);
+				//return $action->execute($request);
+
+				// makes it not require the nice name
+				$_REQUEST['nicename'] = '';
 			}
 			
 			$g = $request['dba']->getRow("SELECT * FROM ". K4USERGROUPS ." WHERE name = '". $request['dba']->quote($_REQUEST['name']) ."' AND id != ". intval($group['id']));			

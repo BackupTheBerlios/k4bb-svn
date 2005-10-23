@@ -1734,9 +1734,12 @@ class TopicIterator extends FAArrayIterator {
 		$temp							= parent::current();
 
 		$temp['posticon']				= @$temp['posticon'] != '' ? (file_exists(BB_BASE_DIR .'/tmp/upload/posticons/'. @$temp['posticon']) ? @$temp['posticon'] : 'clear.gif') : 'clear.gif';
+		$temp['post_id']				= 't'. $temp['topic_id'];
 
 		if($temp['poster_id'] > 0) {
 			
+			$temp['post_display_user_ddmenu'] = 1;
+
 			if(!isset($this->users[$temp['poster_id']])) {
 				$user						= $this->dba->getRow("SELECT ". $this->qp['user'] . $this->qp['userinfo'] ." FROM ". K4USERS ." u LEFT JOIN ". K4USERINFO ." ui ON u.id=ui.user_id WHERE u.id=". intval($temp['poster_id']));
 				

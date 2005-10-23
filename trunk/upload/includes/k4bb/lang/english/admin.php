@@ -116,6 +116,7 @@ $_LANG += array(
 /**
  * Forum Management 
  */
+'L_ACTION'				=> 'Action',
 'L_PARENT'				=> 'Parent',
 'L_NONE'				=> 'None',
 'L_ALL'					=> 'All',
@@ -192,6 +193,7 @@ $_LANG += array(
  */
 'L_NOUSERGROUPS'		=> 'There are currently no active user groups.',
 'L_ADDUSERGROUP'		=> 'Add New User Group',
+'L_EDITUSERGROUP'		=> 'Edit User Group',
 'L_MANAGEUSERGROUPS'	=> 'Manage User Groups',
 'L_CHECKDELGROUP'		=> 'Are you sure that you want to remove this usergroup?',
 'L_INSERTGROUPDESC'		=> 'Please insert a description for this user group.',
@@ -779,6 +781,15 @@ $_LANG += array(
 'L_REFRESHALL'			=> 'Refresh All',
 'L_TOTALCACHESIZE'		=> 'Total Cache Size',
 /* / Cache Control */
+
+/* User Titles */
+'L_MANAGETITLES'		=> 'Manage User Titles',
+'L_MINREQUIREDPOSTS'	=> 'Min Required Posts',
+'L_MANAGE'				=> 'Manage',
+'L_ADDUSERTITLE'		=> 'Add New User Title',
+'L_EDITUSERTITLE'		=> 'Edit User Title',
+'L_NOUSERTITLES'		=> 'There are currently no active user titles.',
+/* / User Titles */
 
 );
 

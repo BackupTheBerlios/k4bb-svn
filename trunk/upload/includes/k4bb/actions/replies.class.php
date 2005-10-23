@@ -1117,12 +1117,13 @@ class RepliesIterator extends FAProxyIterator {
 		$temp					= parent::current();
 		
 		$temp['posticon']		= isset($temp['posticon']) && @$temp['posticon'] != '' ? iif(file_exists(BB_BASE_DIR .'/tmp/upload/posticons/'. @$temp['posticon']), @$temp['posticon'], 'clear.gif') : 'clear.gif';
-		
+		$temp['post_id']		= 'r'. $temp['reply_id'];
+
 		if($temp['poster_id'] > 0) {
 			
 			if(!isset($this->users[$temp['poster_id']])) {
-			
-				$user						= $this->dba->getRow("SELECT ". $this->qp['user'] . $this->qp['userinfo'] ." FROM ". K4USERS ." u LEFT JOIN ". K4USERINFO ." ui ON u.id=ui.user_id WHERE u.id=". intval($temp['poster_id']));
+				$temp['post_display_user_ddmenu'] = 1; // display a ddmenu
+				$user							= $this->dba->getRow("SELECT ". $this->qp['user'] . $this->qp['userinfo'] ." FROM ". K4USERS ." u LEFT JOIN ". K4USERINFO ." ui ON u.id=ui.user_id WHERE u.id=". intval($temp['poster_id']));
 				
 				if(is_array($user) && !empty($user)) {
 					$group						= get_user_max_group($user, $this->groups);
@@ -1134,6 +1135,7 @@ class RepliesIterator extends FAProxyIterator {
 					$this->users[$user['id']]	= $user;
 				}
 			} else {
+				$temp['post_display_user_ddmenu'] = $this->hasPrev() ? 0 : 1; // use a different ddmenu
 				$user						= $this->users[$temp['poster_id']];
 			}
 			
