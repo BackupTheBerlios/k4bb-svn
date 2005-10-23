@@ -1,0 +1,33 @@
+<is:admin>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">
+		<script type="text/javascript">doHelpButton('categories');</script>
+		{$L_FORUMS}
+	</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="alt1" colspan="5" style="text-align: center;">
+				<br />
+				<strong>{$L_FORUM}</strong><br />
+				<select name="forum_id" id="forum_id" class="inputbox">
+					<option value="0">-- {$L_NONE} --</option>
+					<list:list id="all_forums">
+					<list:item list="all_forums">
+						<if:if var="row_type" eq="2">
+							<option value="{$forum_id}">{$indent_level}{$name}</option>
+						<if:else />
+							<optgroup label="c{$category_id}" />
+						</if:if>
+					</list:item>
+					</list:list>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="k4_subtitle" style="text-align: center;">
+				<input type="submit" value="{$L_SELECT}" class="button" />
+			</td>
+		</tr>
+	</table>
+</div>
+</is:admin>
