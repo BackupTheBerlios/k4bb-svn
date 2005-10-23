@@ -169,8 +169,8 @@ class K4PollAnswersIterator extends FAProxyIterator {
 		
 		$temp					= parent::current();
 
-		//$result					= &$this->dba->getValue("SELECT * FROM ". K4POLLVOTES ." WHERE answer_id = ". intval($temp['id']));
-		$result					= &$this->dba->executeQuery("SELECT ". $_QUERYPARAMS['user'] .", u.id as user_id FROM ". K4POLLVOTES ." pv LEFT JOIN ". K4USERS ." u ON u.id=pv.user_id WHERE pv.answer_id = ". intval($temp['id']));
+		//$result					= $this->dba->getValue("SELECT * FROM ". K4POLLVOTES ." WHERE answer_id = ". intval($temp['id']));
+		$result					= $this->dba->executeQuery("SELECT ". $_QUERYPARAMS['user'] .", u.id as user_id FROM ". K4POLLVOTES ." pv LEFT JOIN ". K4USERS ." u ON u.id=pv.user_id WHERE pv.answer_id = ". intval($temp['id']));
 
 		$temp['users']			= &new UsersIterator($result);
 		$temp['num_votes']		= intval($result->numRows());

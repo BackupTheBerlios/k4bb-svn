@@ -283,10 +283,10 @@ class K4SearchEverything extends FAAction {
 		} else {
 
 			/* get the topics */
-			$topics				= &$request['dba']->executeQuery($queries['topics_only']);
+			$topics				= $request['dba']->executeQuery($queries['topics_only']);
 			
 			$num_results		= $topics->numrows();
-			$topics				= &$request['dba']->executeQuery($queries['topics_only'] ." LIMIT {$start},". $queries['limit']);
+			$topics				= $request['dba']->executeQuery($queries['topics_only'] ." LIMIT {$start},". $queries['limit']);
 			
 			/* Apply the topics iterator */
 			$it					= &new TopicsIterator($request['dba'], $request['user'], $topics, $request['template']->getVar('IMG_DIR'), array('postsperpage' => $queries['limit']));

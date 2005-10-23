@@ -68,8 +68,8 @@ function remove_item($id, $id_type) {
 			 * Update the forum and the datastore
 			 */
 						
-			$forum_update		= &$_DBA->prepareStatement("UPDATE ". K4FORUMS ." SET topics=topics-1,posts=posts-?,replies=replies-?,topic_created=?,topic_name=?,topic_uname=?,topic_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
-			$datastore_update	= &$_DBA->prepareStatement("UPDATE ". K4DATASTORE ." SET data=? WHERE varname=?");
+			$forum_update		= $_DBA->prepareStatement("UPDATE ". K4FORUMS ." SET topics=topics-1,posts=posts-?,replies=replies-?,topic_created=?,topic_name=?,topic_uname=?,topic_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
+			$datastore_update	= $_DBA->prepareStatement("UPDATE ". K4DATASTORE ." SET data=? WHERE varname=?");
 				
 			/* Set the forum values */
 			$forum_update->setInt(1, intval($num_replies)+1);
@@ -199,9 +199,9 @@ class Heirarchy {
 		/**
 		 * Create the Queries
 		 */
-		$delete		= &$this->dba->prepareStatement("DELETE FROM ". $table ." WHERE row_left >= ? AND row_right <= ?");
-		$update_a	= &$this->dba->prepareStatement("UPDATE ". $table ." SET row_right = row_right-? WHERE row_left < ? AND row_right > ?");
-		$update_b	= &$this->dba->prepareStatement("UPDATE ". $table ." SET row_left = row_left-?, row_right=row_right-? WHERE row_left > ?");
+		$delete		= $this->dba->prepareStatement("DELETE FROM ". $table ." WHERE row_left >= ? AND row_right <= ?");
+		$update_a	= $this->dba->prepareStatement("UPDATE ". $table ." SET row_right = row_right-? WHERE row_left < ? AND row_right > ?");
+		$update_b	= $this->dba->prepareStatement("UPDATE ". $table ." SET row_left = row_left-?, row_right=row_right-? WHERE row_left > ?");
 		
 		/**
 		 * Populate the queries

@@ -42,7 +42,7 @@ class K4DefaultAction extends FAAction {
 		 */
 		if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
 			$result			= explode('|', $request['user']->get('usergroups'));
-			$groups			= $request['user']->get('usergroups') && $request['user']->get('usergroups') != '' ? iif(!$result, force_usergroups($request['user']->getInfoArray()), $result) : array();
+			$groups			= $request['user']->get('usergroups') &$request['user']->get('usergroups') != '' ? iif(!$result, force_usergroups($request['user']->getInfoArray()), $result) : array();
 			
 			$query			= "SELECT * FROM ". K4USERGROUPS ." WHERE display_legend = 1";
 			
@@ -134,7 +134,7 @@ class K4DefaultAction extends FAAction {
 			$start				= ($page - 1) * $perpage;
 			
 			/* Get the members of this usergroup */
-			$result				= &$request['dba']->executeQuery("SELECT ". $_QUERYPARAMS['user'] . $_QUERYPARAMS['userinfo'] ." FROM ". K4USERS ." u LEFT JOIN ". K4USERINFO ." ui ON u.id=ui.user_id WHERE u.usergroups LIKE '%;i:". intval($group['id']) .";%' AND u.id <> ". intval($group['mod_id']) ." LIMIT ". intval($start) .", ". intval($perpage));
+			$result				= $request['dba']->executeQuery("SELECT ". $_QUERYPARAMS['user'] . $_QUERYPARAMS['userinfo'] ." FROM ". K4USERS ." u LEFT JOIN ". K4USERINFO ." ui ON u.id=ui.user_id WHERE u.usergroups LIKE '%;i:". intval($group['id']) .";%' AND u.id <> ". intval($group['mod_id']) ." LIMIT ". intval($start) .", ". intval($perpage));
 			$users				= &new UsersIterator($result);
 
 			$request['template']->setVar('num_group_members', $num_results);

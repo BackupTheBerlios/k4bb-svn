@@ -38,7 +38,7 @@ class AdminWordCensors extends FAAction {
 		
 		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			
-			$censors	= &$request['dba']->executeQuery("SELECT * FROM ". K4WORDCENSORS ." ORDER BY word ASC");
+			$censors	= $request['dba']->executeQuery("SELECT * FROM ". K4WORDCENSORS ." ORDER BY word ASC");
 			$request['template']->setList('censors', $censors);
 			
 			$request['template']->setFile('content', 'wordcensors_manage.html');

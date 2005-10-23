@@ -85,13 +85,13 @@ class K4DefaultAction extends FAAction {
 			
 			
 			if($page == 1) {
-				$announcements		= &$request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE (is_draft=0 AND display=1) AND topic_type = ". TOPIC_ANNOUNCE ." AND (forum_id = ". intval($forum['forum_id']) ." OR forum_id = ". GLBL_ANNOUNCEMENTS .") ORDER BY last_post DESC");
+				$announcements		= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE (is_draft=0 AND display=1) AND topic_type = ". TOPIC_ANNOUNCE ." AND (forum_id = ". intval($forum['forum_id']) ." OR forum_id = ". GLBL_ANNOUNCEMENTS .") ORDER BY last_post DESC");
 			}
 			
-			$importants			= &$request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE is_draft=0 AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (topic_type <> ". TOPIC_ANNOUNCE .") AND (topic_type = ". TOPIC_STICKY ." OR is_feature = 1) ORDER BY last_post DESC");
+			$importants			= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE is_draft=0 AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (topic_type <> ". TOPIC_ANNOUNCE .") AND (topic_type = ". TOPIC_STICKY ." OR is_feature = 1) ORDER BY last_post DESC");
 			
 			/* get the topics */
-			$result				= &$request['dba']->prepareStatement("SELECT * FROM ". K4TOPICS ." WHERE created>=? AND is_draft=0 AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (topic_type <> ". TOPIC_ANNOUNCE ." AND topic_type <> ". TOPIC_STICKY ." AND is_feature = 0) ORDER BY $sortedby $sortorder LIMIT ?,?");
+			$result				= $request['dba']->prepareStatement("SELECT * FROM ". K4TOPICS ." WHERE created>=? AND is_draft=0 AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (topic_type <> ". TOPIC_ANNOUNCE ." AND topic_type <> ". TOPIC_STICKY ." AND is_feature = 0) ORDER BY $sortedby $sortorder LIMIT ?,?");
 
 			/* Set the query values */
 			$result->setInt(1, $daysprune);

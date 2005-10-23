@@ -144,8 +144,8 @@ class AdminInsertUserGroup extends FAAction {
 			}
 			
 			/* Build the queries */
-			$insert_a			= &$request['dba']->prepareStatement("INSERT INTO ". K4USERGROUPS ." (name,nicename,description,mod_name,mod_id,created,min_perm,max_perm,display_legend,color,avatar) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
-			$update_a			= &$request['dba']->prepareStatement("UPDATE ". K4USERS ." SET usergroups=?,perms=? WHERE id=?");
+			$insert_a			= $request['dba']->prepareStatement("INSERT INTO ". K4USERGROUPS ." (name,nicename,description,mod_name,mod_id,created,min_perm,max_perm,display_legend,color,avatar) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+			$update_a			= $request['dba']->prepareStatement("UPDATE ". K4USERS ." SET usergroups=?,perms=? WHERE id=?");
 
 			/* Set the query values */
 			$insert_a->setString(1, $_REQUEST['name']);
@@ -222,7 +222,7 @@ class AdminRemoveUserGroup extends FAAction {
 			}
 
 			/* Get all users of this usergroup */
-			$users		= &$request['dba']->executeQuery("SELECT * FROM ". K4USERS ." WHERE usergroups LIKE '%;i:". intval($group['id']) .";%'");
+			$users		= $request['dba']->executeQuery("SELECT * FROM ". K4USERS ." WHERE usergroups LIKE '%;i:". intval($group['id']) .";%'");
 			
 			while($users->next()) {
 				$user	= $users->current();
@@ -405,8 +405,8 @@ class AdminUpdateUserGroup extends FAAction {
 			}
 			
 			/* Build the queries */
-			$update_a			= &$request['dba']->prepareStatement("UPDATE ". K4USERGROUPS ." SET name=?,nicename=?,description=?,mod_name=?,mod_id=?,min_perm=?,max_perm=?,display_legend=?,color=?,avatar=? WHERE id=?");
-			$update_b			= &$request['dba']->prepareStatement("UPDATE ". K4USERS ." SET usergroups=?,perms=? WHERE id=?");
+			$update_a			= $request['dba']->prepareStatement("UPDATE ". K4USERGROUPS ." SET name=?,nicename=?,description=?,mod_name=?,mod_id=?,min_perm=?,max_perm=?,display_legend=?,color=?,avatar=? WHERE id=?");
+			$update_b			= $request['dba']->prepareStatement("UPDATE ". K4USERS ." SET usergroups=?,perms=? WHERE id=?");
 
 			/* Set the query values */
 			$update_a->setString(1, $_REQUEST['name']);

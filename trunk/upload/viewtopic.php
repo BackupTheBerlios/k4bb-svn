@@ -263,10 +263,10 @@ class K4DefaultAction extends FAAction {
 		$topic['postsperpage']		= $perpage;
 		
 		/* Do we set the similar topics? */
-		$similar_topics					= &$request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE ((lower(name) LIKE lower('%". $request['dba']->quote($topic['name']) ."%') OR lower(name) LIKE lower('%". $request['dba']->quote($topic['body_text']) ."%')) OR (lower(body_text) LIKE lower('%". $request['dba']->quote($topic['name']) ."%') OR lower(body_text) LIKE lower('%". $request['dba']->quote($topic['body_text']) ."%'))) AND is_draft = 0 AND topic_id <> ". intval($topic['topic_id']) ." ORDER BY last_post DESC LIMIT 10");
+		$similar_topics					= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE ((lower(name) LIKE lower('%". $request['dba']->quote($topic['name']) ."%') OR lower(name) LIKE lower('%". $request['dba']->quote($topic['body_text']) ."%')) OR (lower(body_text) LIKE lower('%". $request['dba']->quote($topic['name']) ."%') OR lower(body_text) LIKE lower('%". $request['dba']->quote($topic['body_text']) ."%'))) AND is_draft = 0 AND topic_id <> ". intval($topic['topic_id']) ." ORDER BY last_post DESC LIMIT 10");
 		
 		if($similar_topics->numrows() > 0) {
-			$it							= &new TopicsIterator($request['dba'], $request['user'], $similar_topics, $request['template']->getVar('IMG_DIR'), $forum);
+			$it					= new TopicsIterator($request['dba'], $request['user'], $similar_topics, $request['template']->getVar('IMG_DIR'), $forum);
 			$request['template']->setList('similar_topics', $it);
 			$request['template']->setFile('similar_topics', 'similar_topics.html');
 		}
@@ -277,7 +277,7 @@ class K4DefaultAction extends FAAction {
 		$single_reply = $request['user']->get('topic_threaded') == 1 && isset($_REQUEST['p']) && intval($_REQUEST['p']) > 0 ? intval($_REQUEST['p']) : FALSE;
 
 		/* set the topic iterator */
-		$topic_list					= &new TopicIterator($request['dba'], $request['user'], $topic, $show_replies, $single_reply);
+		$topic_list			= new TopicIterator($request['dba'], $request['user'], $topic, $show_replies, $single_reply);
 		$request['template']->setList('topic', $topic_list);
 		
 		$request['template']->setVar('next_oldest', intval($request['dba']->getValue("SELECT topic_id FROM ". K4TOPICS ." WHERE topic_id < ". $topic['topic_id'] ." LIMIT 1")));
@@ -299,7 +299,7 @@ class K4DefaultAction extends FAAction {
 		 * Topic subscription stuff
 		 */
 		if($request['user']->isMember()) {
-			$subscribed					= $request['dba']->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE topic_id = ". intval($topic['topic_id']) ." AND user_id = ". $request['user']->get('id'));
+			$subscribed		= $request['dba']->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE topic_id = ". intval($topic['topic_id']) ." AND user_id = ". $request['user']->get('id'));
 			$request['template']->setVar('is_subscribed', iif($subscribed->numRows() > 0, 1, 0));
 		}
 		
@@ -354,7 +354,7 @@ class K4DefaultAction extends FAAction {
 		}
 		/* Create our editor for the quick reply */
 		create_editor($request, '', 'post', $forum);
-		
+
 		return TRUE;
 	}
 }

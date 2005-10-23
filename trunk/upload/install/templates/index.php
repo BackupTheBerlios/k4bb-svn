@@ -139,7 +139,7 @@ class DatabaseSetupAction extends FAAction {
 		$url = &new FAUrl($_SERVER['PHP_SELF']);
 		$url->args[FA_EVENT_VAR] = 'dbverify';
 
-		$template = &$request['template'];
+		$template = $request['template'];
 		$template->setVar('install_action', $url->__toString());
 		$template->render(INSTALLER_BASE_DIR . '/templates/installer.html');
 	}
@@ -183,7 +183,7 @@ class ConfigWriterAction extends FAAction {
 				$request['dba']->executeUpdate($query);
 		}
 
-		$template = &$request['template'];
+		$template = $request['template'];
 		$template->render(INSTALLER_BASE_DIR . '/templates/success.html');
 	}
 }

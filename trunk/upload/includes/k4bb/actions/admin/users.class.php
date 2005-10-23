@@ -56,7 +56,7 @@ class AdminBadUserNames extends FAAction {
 		
 		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			
-			$badnames	= &$request['dba']->executeQuery("SELECT * FROM ". K4BADUSERNAMES ." ORDER BY name ASC");
+			$badnames	= $request['dba']->executeQuery("SELECT * FROM ". K4BADUSERNAMES ." ORDER BY name ASC");
 			$request['template']->setList('badnames', $badnames);
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_DISALLOWNAMES');

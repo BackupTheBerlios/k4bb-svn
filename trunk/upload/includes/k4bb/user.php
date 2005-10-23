@@ -117,7 +117,7 @@ function email_user($to, $subject, $message, $from = 'noreply', $headers = "") {
 function k4_set_login(&$dba, &$user, $remember) {
 
 	// TODO: change last_seen in k4_users to last_login
-	$stmt = &$dba->prepareStatement("UPDATE ". K4USERS ." SET seen=?,last_seen=?,priv_key=? WHERE id=?");
+	$stmt = $dba->prepareStatement("UPDATE ". K4USERS ." SET seen=?,last_seen=?,priv_key=? WHERE id=?");
 
 	$seen = time();
 	$priv_key = md5(uniqid(microtime()));
@@ -141,9 +141,10 @@ function k4_set_login(&$dba, &$user, $remember) {
 }
 
 function k4_set_logout(&$dba, &$user) {
-	$stmt = &$dba->prepareStatement("UPDATE ". K4USERS ." SET seen=?,priv_key='' WHERE id=?");
+	
+	$stmt	= $dba->prepareStatement("UPDATE ". K4USERS ." SET seen=?,priv_key='' WHERE id=?");
 
-	$seen = time();
+	$seen	= time();
 
 	$stmt->setInt(1, $seen);
 	$stmt->setInt(2, $user->get('id'));
@@ -170,43 +171,45 @@ function force_usergroups($user) {
 	/* If the usergroups variable is not equal to nothing */
 	if(isset($user['usergroups']) && $user['usergroups'] != '') {
 		
-		/* Look for something that identifies the scope of this serialized array */
-		preg_match("~\{(.*?)\}~ise", $user['usergroups'], $matches);
-
-		/* Check the results of our search */
-		if(is_array($matches) && isset($matches[1])) {
-			
-			/* Explode the matched value into its parts */
-			$parts	= explode(";", $matches[1]);
-			
-			if(count($parts) > 0) {
-				for($i = 0; $i < count($parts); $i++) {
-					preg_match("~i\:([0-9])\;i\:([0-9])~is", $parts[$i], $_matches);
-					
-					/** 
-					 * If the number of matches is greater than 3, means that there is 1 key and 1 val 
-					 * at least 
-					 */
-					if(count($_matches) > 3) {
-
-						/* loop through the matches, skip [0] because it represents the pattern */
-						for($i = 1; $i < count($_matches); $i++) {
-							
-							/**
-							 * This will remove this usergroup, and any ninexistant ones from this 
-							 * user's array 
-							 */
-							if($_matches[$i+1] != $group['id'] && $_matches[$i+1] != 0) {
-								$groups[$_matches[$i]] = $_matches[$i+1];
-							}
-
-							/* Increment, (+1) so that we always increment by odd numbers */
-							$i++;
-						}
-					}
-				}
-			}
-		}
+//		/* Look for something that identifies the scope of this serialized array */
+//		preg_match("~\{(.*?)\}~ise", $user['usergroups'], $matches);
+//
+//		/* Check the results of our search */
+//		if(is_array($matches) && isset($matches[1])) {
+//			
+//			/* Explode the matched value into its parts */
+//			$parts	= explode(";", $matches[1]);
+//			
+//			if(count($parts) > 0) {
+//				for($i = 0; $i < count($parts); $i++) {
+//					preg_match("~i\:([0-9])\;i\:([0-9])~is", $parts[$i], $_matches);
+//					
+//					/** 
+//					 * If the number of matches is greater than 3, means that there is 1 key and 1 val 
+//					 * at least 
+//					 */
+//					if(count($_matches) > 3) {
+//
+//						/* loop through the matches, skip [0] because it represents the pattern */
+//						for($i = 1; $i < count($_matches); $i++) {
+//							
+//							/**
+//							 * This will remove this usergroup, and any ninexistant ones from this 
+//							 * user's array 
+//							 */
+//							if($_matches[$i+1] != $group['id'] && $_matches[$i+1] != 0) {
+//								$groups[$_matches[$i]] = $_matches[$i+1];
+//							}
+//
+//							/* Increment, (+1) so that we always increment by odd numbers */
+//							$i++;
+//						}
+//					}
+//				}
+//			}
+//		}
+		
+		$groups	= explode('|', $user['usergroups']);
 	}
 
 	return $groups;
@@ -322,7 +325,7 @@ class K4UserManager extends FAObject {
 	function __construct(&$dba) {
 		global $_QUERYPARAMS;
 		
-		$this->_info = &$dba->prepareStatement("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']}{$_QUERYPARAMS['usersettings']} FROM ". K4USERS ." u, ". K4USERINFO ." ui, ". K4USERSETTINGS ." us WHERE u.id=ui.user_id AND us.user_id=u.id AND u.id=? LIMIT 1");
+		$this->_info = $dba->prepareStatement("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']}{$_QUERYPARAMS['usersettings']} FROM ". K4USERS ." u, ". K4USERINFO ." ui, ". K4USERSETTINGS ." us WHERE u.id=ui.user_id AND us.user_id=u.id AND u.id=? LIMIT 1");
 	}
 
 	function getInfo($id) {
@@ -330,7 +333,7 @@ class K4UserManager extends FAObject {
 
 		$this->_info->setInt(1, $id);
 
-		$result = &$this->_info->executeQuery();
+		$result = $this->_info->executeQuery();
 
 		if ($result->next())
 			$ret = $result->current();
@@ -349,7 +352,7 @@ class K4CookieValidator extends FAUserValidator {
 	function __construct(&$dba) {
 		global $_QUERYPARAMS;
 
-		$this->_stmt = &$dba->prepareStatement("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']}{$_QUERYPARAMS['usersettings']} FROM ". K4USERS ." u, ". K4USERINFO ." ui, ". K4USERSETTINGS ." us WHERE u.id=ui.user_id AND us.user_id=u.id AND u.id=? AND u.priv_key=? LIMIT 1");
+		$this->_stmt = $dba->prepareStatement("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']}{$_QUERYPARAMS['usersettings']} FROM ". K4USERS ." u, ". K4USERINFO ." ui, ". K4USERSETTINGS ." us WHERE u.id=ui.user_id AND us.user_id=u.id AND u.id=? AND u.priv_key=? LIMIT 1");
 	}
 
 	function validateLoginKey() {
@@ -380,7 +383,7 @@ class K4RequestValidator extends FAUserValidator {
 	function __construct(&$dba) {
 		global $_QUERYPARAMS;
 
-		$this->_stmt = &$dba->prepareStatement("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']}{$_QUERYPARAMS['usersettings']} FROM ". K4USERS ." u, ". K4USERINFO ." ui, ". K4USERSETTINGS ." us WHERE u.id=ui.user_id AND us.user_id=u.id AND u.name=? AND u.pass=? LIMIT 1");
+		$this->_stmt = $dba->prepareStatement("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']}{$_QUERYPARAMS['usersettings']} FROM ". K4USERS ." u, ". K4USERINFO ." ui, ". K4USERSETTINGS ." us WHERE u.id=ui.user_id AND us.user_id=u.id AND u.name=? AND u.pass=? LIMIT 1");
 	}
 
 	function validateLoginKey() {

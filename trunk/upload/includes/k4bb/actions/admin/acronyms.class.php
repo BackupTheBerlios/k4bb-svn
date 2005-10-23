@@ -38,7 +38,7 @@ class AdminAcronyms extends FAAction {
 		
 		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			
-			$acronyms	= &$request['dba']->executeQuery("SELECT * FROM ". K4ACRONYMS ." ORDER BY acronym ASC");
+			$acronyms	= $request['dba']->executeQuery("SELECT * FROM ". K4ACRONYMS ." ORDER BY acronym ASC");
 			$request['template']->setList('acronyms', $acronyms);
 			
 			$request['template']->setFile('content', 'acronyms_manage.html');

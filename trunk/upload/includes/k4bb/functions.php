@@ -82,6 +82,9 @@ function get_domain() {
  * Get Profile Field info for iterators such as topics and replies
  */
 function get_profile_fields($fields, $temp) {
+	
+	$fs = array();
+	
 	foreach($fields as $field) {
 				
 		if($field['display_topic'] == 1) {
@@ -103,10 +106,12 @@ function get_profile_fields($fields, $temp) {
 						break;
 					}
 				}
-				$fields[] = $field;
+				$fs[] = $field;
 			}
 		}
 	}
+	
+	return $fs;
 }
 
 /**

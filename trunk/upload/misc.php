@@ -145,11 +145,11 @@ class RevertHTMLText extends FAAction {
 				}
 				
 				/* Check if this user has these permissions */
-				if($request['user']->get('id') == $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') == $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
-				if($request['user']->get('id') != $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'other_topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') != $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'other_topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
@@ -163,11 +163,11 @@ class RevertHTMLText extends FAAction {
 				}
 
 				/* Check if this user has these permissions */
-				if($request['user']->get('id') == $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') == $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
-				if($request['user']->get('id') != $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'other_topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') != $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'other_topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
@@ -199,11 +199,11 @@ class PostBodyText extends FAAction {
 				}
 				
 				/* Check if this user has these permissions */
-				if($request['user']->get('id') == $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'topics', 'can_view', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') == $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'topics', 'can_view', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
-				if($request['user']->get('id') != $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'other_topics', 'can_view', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') != $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'other_topics', 'can_view', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
@@ -217,11 +217,11 @@ class PostBodyText extends FAAction {
 				}
 
 				/* Check if this user has these permissions */
-				if($request['user']->get('id') == $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'replies', 'can_view', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') == $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'replies', 'can_view', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
-				if($request['user']->get('id') != $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'other_replies', 'can_view', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') != $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'other_replies', 'can_view', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
@@ -252,11 +252,11 @@ class changePostBodyText extends FAAction {
 				}
 				
 				/* Check if this user has these permissions */
-				if($request['user']->get('id') == $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') == $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
-				if($request['user']->get('id') != $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'other_topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') != $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'other_topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
@@ -272,11 +272,11 @@ class changePostBodyText extends FAAction {
 				}
 
 				/* Check if this user has these permissions */
-				if($request['user']->get('id') == $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'replies', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') == $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'replies', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
-				if($request['user']->get('id') != $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'other_replies', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') != $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'other_replies', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 

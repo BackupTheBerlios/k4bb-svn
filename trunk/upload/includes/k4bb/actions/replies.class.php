@@ -42,7 +42,7 @@ class PostReply extends FAAction {
 	function execute(&$request) {
 		global $_QUERYPARAMS, $_DATASTORE, $_SETTINGS;
 
-		$this->dba			= &$request['dba'];
+		$this->dba			= $request['dba'];
 		
 		/* Prevent post flooding */
 		$last_topic		= $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE poster_ip = '". USER_IP ."' ". ($request['user']->isMember() ? "OR poster_id = ". intval($request['user']->get('id')) : '') ." ORDER BY created DESC LIMIT 1");
@@ -52,14 +52,14 @@ class PostReply extends FAAction {
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 
 		if(is_array($last_topic) && !empty($last_topic)) {
-			if(intval($last_topic['created']) + POST_IMPULSE_LIMIT > time() && $request['user']->get('perms') < MODERATOR) {
+			if(intval($last_topic['created']) + POST_IMPULSE_LIMIT > time() &$request['user']->get('perms') < MODERATOR) {
 				$action = new K4InformationAction(new K4LanguageElement('L_MUSTWAITSECSTOPOST'), 'content', TRUE);
 				return !USE_AJAX ? $action->execute($request) : ajax_message('L_MUSTWAITSECSTOPOST');
 			}
 		}
 
 		if(is_array($last_reply) && !empty($last_reply)) {
-			if(intval($last_reply['created']) + POST_IMPULSE_LIMIT > time() && $request['user']->get('perms') < MODERATOR) {
+			if(intval($last_reply['created']) + POST_IMPULSE_LIMIT > time() &$request['user']->get('perms') < MODERATOR) {
 				$action = new K4InformationAction(new K4LanguageElement('L_MUSTWAITSECSTOPOST'), 'content', TRUE);
 				return !USE_AJAX ? $action->execute($request) : ajax_message('L_MUSTWAITSECSTOPOST');
 			}
@@ -217,7 +217,7 @@ class PostReply extends FAAction {
 			$request['dba']->beginTransaction();
 
 			/* Prepare the query */
-			$insert_a			= &$request['dba']->prepareStatement("INSERT INTO ". K4REPLIES ." (name,topic_id,forum_id,category_id,poster_name,poster_id,poster_ip,body_text,posticon,disable_html,disable_bbcode,disable_emoticons,disable_sig,disable_areply,disable_aurls,is_poll,row_type,row_level,created,parent_id,row_order) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			$insert_a			= $request['dba']->prepareStatement("INSERT INTO ". K4REPLIES ." (name,topic_id,forum_id,category_id,poster_name,poster_id,poster_ip,body_text,posticon,disable_html,disable_bbcode,disable_emoticons,disable_sig,disable_areply,disable_aurls,is_poll,row_type,row_level,created,parent_id,row_order) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			
 			$poster_name		= iif($request['user']->get('id') <= 0, htmlentities((isset($_REQUEST['poster_name']) ? $_REQUEST['poster_name'] : '') , ENT_QUOTES), $request['user']->get('name'));
 			
@@ -254,9 +254,9 @@ class PostReply extends FAAction {
 			 */
 
 			//topic_created,topic_name,topic_uname,topic_id,topic_uid,post_created,post_name,post_uname,post_id,post_uid
-			$forum_update		= &$request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET replies=replies+1,posts=posts+1,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
-			$topic_update		= &$request['dba']->prepareStatement("UPDATE ". K4TOPICS ." SET num_replies=?,reply_time=?,reply_uname=?,reply_id=?,reply_uid=?,last_post=? WHERE topic_id=?");
-			$datastore_update	= &$request['dba']->prepareStatement("UPDATE ". K4DATASTORE ." SET data=? WHERE varname=?");
+			$forum_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET replies=replies+1,posts=posts+1,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
+			$topic_update		= $request['dba']->prepareStatement("UPDATE ". K4TOPICS ." SET num_replies=?,reply_time=?,reply_uname=?,reply_id=?,reply_uid=?,last_post=? WHERE topic_id=?");
+			$datastore_update	= $request['dba']->prepareStatement("UPDATE ". K4DATASTORE ." SET data=? WHERE varname=?");
 			$request['dba']->executeUpdate("UPDATE ". K4USERINFO ." SET num_posts=num_posts+1,total_posts=total_posts+1 WHERE user_id=". intval($request['user']->get('id')));
 			
 			/* Update the forums and datastore tables */
@@ -307,7 +307,7 @@ class PostReply extends FAAction {
 			$is_subscribed		= $request['dba']->getRow("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE user_id = ". intval($request['user']->get('id')) ." AND topic_id = ". intval($topic['topic_id']));
 			if(isset($_REQUEST['disable_areply']) && $_REQUEST['disable_areply']) {
 				if(!is_array($is_subscribed) || empty($is_subscribed)) {
-					$subscribe			= &$request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,topic_id,forum_id,email,category_id) VALUES (?,?,?,?,?,?)");
+					$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,topic_id,forum_id,email,category_id) VALUES (?,?,?,?,?,?)");
 					$subscribe->setInt(1, $request['user']->get('id'));
 					$subscribe->setString(2, $request['user']->get('name'));
 					$subscribe->setInt(3, $topic['topic_id']);
@@ -350,10 +350,10 @@ class PostReply extends FAAction {
 				/* Display fancy template */
 				} else {
 					
-					global $_QUERYPARAMS, $_USERGROUPS, $_USERFIELDS;
+					global $_QUERYPARAMS, $_USERGROUPS, $_PROFILEFIELDS;
 
 					$result	= $request['dba']->executeQuery("SELECT * FROM ". K4REPLIES ." WHERE reply_id = {$reply_id} LIMIT 1");
-					$it		= &new RepliesIterator($request['user'], $request['dba'], $result, $_QUERYPARAMS, array(), $_USERGROUPS, $_USERFIELDS);
+					$it		= &new RepliesIterator($request['user'], $request['dba'], $result, $_QUERYPARAMS, array(), $_USERGROUPS, $_PROFILEFIELDS);
 					$reply	= $it->next();
 					
 					$reply['topic_row'] = 1;
@@ -389,8 +389,8 @@ class PostReply extends FAAction {
 				$request['template']->setVar('L_TITLETOOSHORT', sprintf($request['template']->getVar('L_TITLETOOSHORT'), $request['template']->getVar('topicminchars'), $request['template']->getVar('topicmaxchars')));
 
 				/* Get and set the emoticons and post icons to the template */
-				$emoticons	= &$request['dba']->executeQuery("SELECT * FROM ". K4EMOTICONS ." WHERE clickable = 1");
-				$posticons	= &$request['dba']->executeQuery("SELECT * FROM ". K4POSTICONS);
+				$emoticons	= $request['dba']->executeQuery("SELECT * FROM ". K4EMOTICONS ." WHERE clickable = 1");
+				$posticons	= $request['dba']->executeQuery("SELECT * FROM ". K4POSTICONS);
 
 				$request['template']->setList('emoticons', $emoticons);
 				$request['template']->setList('posticons', $posticons);
@@ -478,7 +478,7 @@ class PostReply extends FAAction {
 				k4_bread_crumbs($request['template'], $request['dba'], 'L_POSTREPLY', $parent, $forum);
 				
 				/* Get replies that are above this point */
-				$replies	= &$request['dba']->executeQuery("SELECT * FROM ". K4REPLIES ." WHERE topic_id = ". intval($topic['topic_id']) ." ORDER BY created DESC LIMIT 10");
+				$replies	= $request['dba']->executeQuery("SELECT * FROM ". K4REPLIES ." WHERE topic_id = ". intval($topic['topic_id']) ." ORDER BY created DESC LIMIT 10");
 				
 				$it = &new TopicReviewIterator($request['dba'], $topic, $replies, $request['user']->getInfoArray());
 				$request['template']->setList('topic_review', $it);
@@ -561,8 +561,8 @@ class EditReply extends FAAction {
 		$bbcode				= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $reply['body_text'], $forum['forum_id'], TRUE, TRUE, TRUE, TRUE);
 		
 		/* Get and set the emoticons and post icons to the template */
-		$emoticons			= &$request['dba']->executeQuery("SELECT * FROM ". K4EMOTICONS ." WHERE clickable = 1");
-		$posticons			= &$request['dba']->executeQuery("SELECT * FROM ". K4POSTICONS);
+		$emoticons			= $request['dba']->executeQuery("SELECT * FROM ". K4EMOTICONS ." WHERE clickable = 1");
+		$posticons			= $request['dba']->executeQuery("SELECT * FROM ". K4POSTICONS);
 
 		$request['template']->setList('emoticons', $emoticons);
 		$request['template']->setList('posticons', $posticons);
@@ -593,7 +593,7 @@ class EditReply extends FAAction {
 		$request['template']->setVar('newreply_act', 'newreply.php?act=updatereply');
 		
 		/* Get 10 replies that are above this reply */
-		$replies	= &$request['dba']->executeQuery("SELECT * FROM ". K4REPLIES ." WHERE topic_id = ". intval($topic['topic_id']) ." AND reply_id < ". intval($reply['reply_id']) ." ORDER BY created DESC LIMIT 10");
+		$replies	= $request['dba']->executeQuery("SELECT * FROM ". K4REPLIES ." WHERE topic_id = ". intval($topic['topic_id']) ." AND reply_id < ". intval($reply['reply_id']) ." ORDER BY created DESC LIMIT 10");
 
 		/* Set the topic preview for this reply editing */
 		$it = &new TopicReviewIterator($request['dba'], $topic, $replies, $request['user']->getInfoArray());
@@ -775,7 +775,7 @@ class UpdateReply extends FAAction {
 			$is_subscribed		= $request['dba']->getRow("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE user_id = ". intval($request['user']->get('id')) ." AND topic_id = ". intval($topic['topic_id']));
 			if(isset($_REQUEST['disable_areply']) && $_REQUEST['disable_areply']) {
 				if(!is_array($is_subscribed) || empty($is_subscribed)) {
-					$subscribe			= &$request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,topic_id,forum_id,email,category_id) VALUES (?,?,?,?,?,?)");
+					$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,topic_id,forum_id,email,category_id) VALUES (?,?,?,?,?,?)");
 					$subscribe->setInt(1, $request['user']->get('id'));
 					$subscribe->setString(2, $request['user']->get('name'));
 					$subscribe->setInt(3, $topic['topic_id']);
@@ -786,7 +786,7 @@ class UpdateReply extends FAAction {
 				}
 			} else if(!isset($_REQUEST['disable_areply']) || !$_REQUEST['disable_areply']) {
 				if(is_array($is_subscribed) && !empty($is_subscribed)) {
-					$subscribe			= &$request['dba']->prepareStatement("DELETE FROM ". K4SUBSCRIPTIONS ." WHERE user_id=? AND topic_id=?");
+					$subscribe			= $request['dba']->prepareStatement("DELETE FROM ". K4SUBSCRIPTIONS ." WHERE user_id=? AND topic_id=?");
 					$subscribe->setInt(1, $request['user']->get('id'));
 					$subscribe->setInt(2, $topic['topic_id']);
 					$subscribe->executeUpdate();
@@ -817,8 +817,8 @@ class UpdateReply extends FAAction {
 				$request['template']->setVar('L_TITLETOOSHORT', sprintf($request['template']->getVar('L_TITLETOOSHORT'), $request['template']->getVar('topicminchars'), $request['template']->getVar('topicmaxchars')));
 				
 				/* Get and set the emoticons and post icons to the template */
-				$emoticons	= &$request['dba']->executeQuery("SELECT * FROM ". K4EMOTICONS ." WHERE clickable = 1");
-				$posticons	= &$request['dba']->executeQuery("SELECT * FROM ". K4POSTICONS);
+				$emoticons	= $request['dba']->executeQuery("SELECT * FROM ". K4EMOTICONS ." WHERE clickable = 1");
+				$posticons	= $request['dba']->executeQuery("SELECT * FROM ". K4POSTICONS);
 
 				$request['template']->setList('emoticons', $emoticons);
 				$request['template']->setList('posticons', $posticons);
@@ -880,7 +880,7 @@ class UpdateReply extends FAAction {
 
 				/* Get replies that are above this point */
 				$query	= "SELECT * FROM ". K4REPLIES ." WHERE topic_id = ". intval($topic['topic_id']) ." AND reply_id < ". intval($reply['reply_id']) ." AND row_type = ". REPLY ." ORDER BY created DESC LIMIT 10";
-				$replies	= &$request['dba']->executeQuery($query);
+				$replies	= $request['dba']->executeQuery($query);
 				$it = &new TopicReviewIterator($request['dba'], $topic, $replies, $request['user']->getInfoArray());
 				
 				$request['template']->setList('topic_review', $it);
@@ -988,7 +988,7 @@ class DeleteReply extends FAAction {
 		 */
 		if($topic['num_replies'] > 0) {
 			$topic_last_reply	= $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE reply_id <> ". intval($reply['reply_id']) ." AND topic_id=". intval($topic['topic_id']) ." ORDER BY created DESC LIMIT 1");
-			$topic_update		= &$request['dba']->prepareStatement("UPDATE ". K4TOPICS ." SET reply_time=?,reply_uname=?,reply_uid=?,reply_id=?,num_replies=? WHERE topic_id=?");
+			$topic_update		= $request['dba']->prepareStatement("UPDATE ". K4TOPICS ." SET reply_time=?,reply_uname=?,reply_uid=?,reply_id=?,num_replies=? WHERE topic_id=?");
 			$topic_update->setInt(1, $topic_last_reply['created']);
 			$topic_update->setString(2, $topic_last_reply['poster_name']);
 			$topic_update->setInt(3, $topic_last_reply['poster_id']);
@@ -1009,8 +1009,8 @@ class DeleteReply extends FAAction {
 		
 		$request['dba']->beginTransaction();
 
-		$forum_update		= &$request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET posts=posts-?,replies=replies-?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
-		$datastore_update	= &$request['dba']->prepareStatement("UPDATE ". K4DATASTORE ." SET data=? WHERE varname=?");
+		$forum_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET posts=posts-?,replies=replies-?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
+		$datastore_update	= $request['dba']->prepareStatement("UPDATE ". K4DATASTORE ." SET data=? WHERE varname=?");
 			
 		/* Set the forum values */
 		$forum_update->setInt(1, 1);

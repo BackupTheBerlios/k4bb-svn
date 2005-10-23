@@ -42,7 +42,7 @@ class AdminSpiders extends FAAction {
 			$request['template']->setVar('misc_on', '_on');
 			$request['template']->setFile('sidebar_menu', 'menus/misc.html');
 
-			$spiders	= &$request['dba']->executeQuery("SELECT * FROM ". K4SPIDERS ." ORDER BY spidername ASC");
+			$spiders	= $request['dba']->executeQuery("SELECT * FROM ". K4SPIDERS ." ORDER BY spidername ASC");
 			$request['template']->setList('spiders', $spiders);
 			
 			$request['template']->setFile('content', 'spiders_manage.html');

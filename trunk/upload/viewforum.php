@@ -284,7 +284,7 @@ class K4DefaultAction extends FAAction {
 				 */
 
 				/* get the topics */
-				$topics				= &$request['dba']->prepareStatement("SELECT * FROM ". K4TOPICS ." WHERE created>=? AND is_draft=0 AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (topic_type <> ". TOPIC_ANNOUNCE ." AND topic_type <> ". TOPIC_STICKY ." AND is_feature = 0) $extra ORDER BY $sortedby $sortorder LIMIT ?,?");
+				$topics				= $request['dba']->prepareStatement("SELECT * FROM ". K4TOPICS ." WHERE created>=? AND is_draft=0 AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (topic_type <> ". TOPIC_ANNOUNCE ." AND topic_type <> ". TOPIC_STICKY ." AND is_feature = 0) $extra ORDER BY $sortedby $sortorder LIMIT ?,?");
 				
 				/* Set the query values */
 				$topics->setInt(1, $daysprune);
@@ -303,7 +303,7 @@ class K4DefaultAction extends FAAction {
 				 * Get announcement/global topics
 				 */
 				if($page == 1) {
-					$announcements		= &$request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE (is_draft=0 AND display=1) AND topic_type = ". TOPIC_ANNOUNCE ." AND (forum_id = ". intval($forum['forum_id']) ." OR forum_id = ". GLBL_ANNOUNCEMENTS .") $extra ORDER BY last_post DESC");
+					$announcements		= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE (is_draft=0 AND display=1) AND topic_type = ". TOPIC_ANNOUNCE ." AND (forum_id = ". intval($forum['forum_id']) ." OR forum_id = ". GLBL_ANNOUNCEMENTS .") $extra ORDER BY last_post DESC");
 					if($announcements->hasNext()) {
 						$a_it				= &new TopicsIterator($request['dba'], $request['user'], $announcements, $request['template']->getVar('IMG_DIR'), $forum);
 						$request['template']->setList('announcements', $a_it);
@@ -313,7 +313,7 @@ class K4DefaultAction extends FAAction {
 				/**
 				 * Get sticky/feature topics
 				 */
-				$importants			= &$request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE is_draft=0 AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (topic_type <> ". TOPIC_ANNOUNCE .") AND (topic_type = ". TOPIC_STICKY ." OR is_feature = 1) $extra ORDER BY last_post DESC");
+				$importants			= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE is_draft=0 AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (topic_type <> ". TOPIC_ANNOUNCE .") AND (topic_type = ". TOPIC_STICKY ." OR is_feature = 1) $extra ORDER BY last_post DESC");
 				if($importants->hasNext()) {
 					$i_it				= &new TopicsIterator($request['dba'], $request['user'], $importants, $request['template']->getVar('IMG_DIR'), $forum);
 					$request['template']->setList('importants', $i_it);

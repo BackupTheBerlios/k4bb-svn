@@ -102,7 +102,7 @@ class K4UserControlPanel extends FAAction {
 			default: {
 				
 				/* Get the most recent current announcements */
-				$announcements		= &$request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE (is_draft=0 AND queue=0 AND display=1) AND row_type=". TOPIC ." AND topic_type = ". TOPIC_ANNOUNCE ." ORDER BY created DESC");
+				$announcements		= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE (is_draft=0 AND queue=0 AND display=1) AND row_type=". TOPIC ." AND topic_type = ". TOPIC_ANNOUNCE ." ORDER BY created DESC");
 				$a_it				= &new TopicsIterator($request['dba'], $request['user'], $announcements, $request['template']->getVar('IMG_DIR'), array('postsperpage' => $request['user']->get('postsperpage') ) );
 				$request['template']->setList('announcements', $a_it);
 				
@@ -172,7 +172,7 @@ class K4UserControlPanel extends FAAction {
 class K4UserCPProfile extends FAAction {
 	function execute(&$request) {
 		
-		global $_USERFIELDS;
+		global $_PROFILEFIELDS;
 		
 		$member			= $request['user']->getInfoArray();
 
@@ -180,7 +180,7 @@ class K4UserCPProfile extends FAAction {
 		 * Get the custom user fields for this member
 		 */
 		$fields = array();
-		foreach($_USERFIELDS as $field) {
+		foreach($_PROFILEFIELDS as $field) {
 				
 			if($field['is_editable'] == 1) {
 				
@@ -350,7 +350,7 @@ class K4UserCPPersonalPicture extends FAAction {
 class K4UpdateUserProfile extends FAAction {
 	function execute(&$request) {
 		
-		global $_USERFIELDS;
+		global $_PROFILEFIELDS;
 		
 		foreach($_REQUEST as $key => $val)
 			$_REQUEST[$key]		= htmlentities(strip_tags($val), ENT_QUOTES);
@@ -380,7 +380,7 @@ class K4UpdateUserProfile extends FAAction {
 		/**
 		 * Get the custom user fields for this member
 		 */
-		foreach($_USERFIELDS as $field) {
+		foreach($_PROFILEFIELDS as $field) {
 				
 			if($field['is_editable'] == 1) {
 				
@@ -972,7 +972,7 @@ class K4UpdateUserFile extends FAAction {
 				}
 				
 				// add/update the file
-				$insert			= &$request['dba']->prepareStatement($query);
+				$insert			= $request['dba']->prepareStatement($query);
 											
 				//(user_id,file_type,mime_type,file_size,in_db,file_contents,avatar_url)
 				$insert->setString(1, $filetype);

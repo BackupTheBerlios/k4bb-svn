@@ -52,7 +52,7 @@ function set_send_topic_mail($forum_id, $poster_name) {
 			/**
 			 * Get the subscribers of this forum
 			 */
-			$users			= &$_DBA->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE topic_id = 0 AND forum_id = ". intval($forum['forum_id']));
+			$users			= $_DBA->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE topic_id = 0 AND forum_id = ". intval($forum['forum_id']));
 			
 			$subscribers	= array();
 
@@ -74,7 +74,7 @@ function set_send_topic_mail($forum_id, $poster_name) {
 			$message			= sprintf($lang['L_FORUMSUBSCRIBEEMAIL'], "%s", "%s", $forum['name'], $forum['forum_id'], $_SETTINGS['bbtitle'], $forum['forum_id']);
 			$userinfo			= serialize($subscribers);
 			
-			$insert				= &$_DBA->prepareStatement("INSERT INTO ". K4MAILQUEUE ." (subject,message,row_id,row_type,userinfo) VALUES (?,?,?,?,?)");
+			$insert				= $_DBA->prepareStatement("INSERT INTO ". K4MAILQUEUE ." (subject,message,row_id,row_type,userinfo) VALUES (?,?,?,?,?)");
 			$insert->setString(1, $subject);
 			$insert->setString(2, $message);
 			$insert->setInt(3, $forum['forum_id']);
@@ -109,7 +109,7 @@ function set_send_reply_mail($topic_id, $poster_name) {
 			/**
 			 * Get the subscribers of this topic
 			 */
-			$users			= &$_DBA->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE topic_id = ". intval($topic['topic_id']) ." AND requires_revisit = 0");
+			$users			= $_DBA->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE topic_id = ". intval($topic['topic_id']) ." AND requires_revisit = 0");
 			
 			$subscribers	= array();
 
@@ -130,7 +130,7 @@ function set_send_reply_mail($topic_id, $poster_name) {
 			$message			= sprintf($_LANG['L_TOPICSUBSCRIBEEMAIL'], "%s", "%s", $topic['name'], $topic['topic_id'], $_SETTINGS['bbtitle'], $topic['topic_id']);
 			$userinfo			= serialize($subscribers);
 			
-			$insert				= &$_DBA->prepareStatement("INSERT INTO ". K4MAILQUEUE ." (subject,message,row_id,row_type,userinfo) VALUES (?,?,?,?,?)");
+			$insert				= $_DBA->prepareStatement("INSERT INTO ". K4MAILQUEUE ." (subject,message,row_id,row_type,userinfo) VALUES (?,?,?,?,?)");
 			$insert->setString(1, $subject);
 			$insert->setString(2, $message);
 			$insert->setInt(3, $topic['topic_id']);

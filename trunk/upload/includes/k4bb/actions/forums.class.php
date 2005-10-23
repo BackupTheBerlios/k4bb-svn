@@ -148,7 +148,7 @@ class SubscribeForum extends FAAction {
 			return TRUE;
 		}
 		
-		$subscribe			= &$request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,forum_id,email,category_id) VALUES (?,?,?,?,?)");
+		$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,forum_id,email,category_id) VALUES (?,?,?,?,?)");
 		$subscribe->setInt(1, $request['user']->get('id'));
 		$subscribe->setString(2, $request['user']->get('name'));
 		$subscribe->setInt(3, $forum['forum_id']);
@@ -201,7 +201,7 @@ class UnsubscribeForum extends FAAction {
 			return TRUE;
 		}
 		
-		$subscribe			= &$request['dba']->prepareStatement("DELETE FROM ". K4SUBSCRIPTIONS ." WHERE user_id=? AND topic_id=0 AND forum_id=?");
+		$subscribe			= $request['dba']->prepareStatement("DELETE FROM ". K4SUBSCRIPTIONS ." WHERE user_id=? AND topic_id=0 AND forum_id=?");
 		$subscribe->setInt(1, $request['user']->get('id'));
 		$subscribe->setInt(2, $forum['forum_id']);
 		$subscribe->executeUpdate();
@@ -238,7 +238,7 @@ class K4ForumsIterator extends FAProxyIterator {
 		$this->usergroups	= $_USERGROUPS;
 		$this->settings		= $_SETTINGS;
 		$this->do_recurse	= $do_recurse;
-		$this->result		= &$this->dba->executeQuery($query);
+		$this->result		= $this->dba->executeQuery($query);
 		
 		parent::__construct($this->result);
 	}

@@ -161,7 +161,7 @@ function get_maps(&$dba) {
 	/* Get everything from the maps table, this is only executed once per cache */
 	$query	= "SELECT * FROM ". K4MAPS;
 	
-	$result = &$dba->executeQuery($query);
+	$result = $dba->executeQuery($query);
 
 	while($result->next()) {
 		$val = $result->current();

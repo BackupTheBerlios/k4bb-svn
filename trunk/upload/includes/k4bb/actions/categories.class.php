@@ -117,7 +117,7 @@ class K4CategoriesIterator extends FAProxyIterator {
 		
 		$query				= $query == NULL ? "SELECT * FROM ". K4CATEGORIES ." ORDER BY row_order ASC" : $query;
 		
-		$this->result		= &$this->dba->executeQuery($query);
+		$this->result		= $this->dba->executeQuery($query);
 
 		parent::__construct($this->result);
 	}

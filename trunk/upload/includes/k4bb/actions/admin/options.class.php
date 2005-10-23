@@ -131,7 +131,7 @@ class K4OptionsIterator extends FAProxyIterator {
 	function __construct(&$dba, $setting_group = FALSE) {
 		global $_LANG;
 		
-		$result				= &$dba->executeQuery("SELECT * FROM ". K4SETTINGGROUPS ." ". (!$setting_group ? '' : "WHERE id = ". intval($setting_group)) ." ORDER BY displayorder ASC");
+		$result				= $dba->executeQuery("SELECT * FROM ". K4SETTINGGROUPS ." ". (!$setting_group ? '' : "WHERE id = ". intval($setting_group)) ." ORDER BY displayorder ASC");
 		$this->dba			= &$dba;
 		$this->lang			= $_LANG;
 
@@ -141,7 +141,7 @@ class K4OptionsIterator extends FAProxyIterator {
 	function &current() {
 		$temp = parent::current();
 		
-		$result				= &$this->dba->executeQuery("SELECT * FROM ". K4SETTINGS ." WHERE settinggroupid = ". intval($temp['id']) ." ORDER BY displayorder ASC");
+		$result				= $this->dba->executeQuery("SELECT * FROM ". K4SETTINGS ." WHERE settinggroupid = ". intval($temp['id']) ." ORDER BY displayorder ASC");
 		
 		$temp['num_settings'] = $result->numrows();
 		$temp['settings']	= &new K4SettingsIterator($this->dba, $this->lang, $result);

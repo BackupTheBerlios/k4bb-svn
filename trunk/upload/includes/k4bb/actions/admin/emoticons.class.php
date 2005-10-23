@@ -40,7 +40,7 @@ class AdminEmoticons extends FAAction {
 		
 		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			
-			$icons			= &$request['dba']->executeQuery("SELECT * FROM ". K4EMOTICONS);
+			$icons			= $request['dba']->executeQuery("SELECT * FROM ". K4EMOTICONS);
 
 			$request['template']->setList('emoticons', $icons);
 			
@@ -127,7 +127,7 @@ class AdminInsertEmoticon extends FAAction {
 			/**
 			 * Add the icon finally
 			 */
-			$query		= &$request['dba']->prepareStatement("INSERT INTO ". K4EMOTICONS ." (description, typed, image, clickable) VALUES (?,?,?,?)");
+			$query		= $request['dba']->prepareStatement("INSERT INTO ". K4EMOTICONS ." (description, typed, image, clickable) VALUES (?,?,?,?)");
 			$query->setString(1, $_REQUEST['description']);
 			$query->setString(2, $_REQUEST['typed']);
 			$query->setString(3, $filename);
@@ -297,7 +297,7 @@ class AdminUpdateEmoticon extends FAAction {
 			/**
 			 * Add the icon finally
 			 */
-			$query		= &$request['dba']->prepareStatement("UPDATE ". K4EMOTICONS ." SET description=?,typed=?,image=?,clickable=? WHERE id=?");
+			$query		= $request['dba']->prepareStatement("UPDATE ". K4EMOTICONS ." SET description=?,typed=?,image=?,clickable=? WHERE id=?");
 			$query->setString(1, $_REQUEST['description']);
 			$query->setString(2, $_REQUEST['typed']);
 			$query->setString(3, $filename);

@@ -40,7 +40,7 @@ class AdminUserProfileFields extends FAAction {
 		
 		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			
-			$fields			= &$request['dba']->executeQuery("SELECT * FROM ". K4PROFILEFIELDS ." ORDER BY display_order ASC");
+			$fields			= $request['dba']->executeQuery("SELECT * FROM ". K4PROFILEFIELDS ." ORDER BY display_order ASC");
 
 			$request['template']->setList('fields', $fields);
 			
@@ -122,7 +122,7 @@ class AdminInsertUserField extends FAAction {
 				$name		= 'field'. (intval(substr($last_field, -1)) + 1);
 			}
 						
-			$insert			= &$request['dba']->prepareStatement("INSERT INTO ". K4PROFILEFIELDS ." (name,title,description,default_value,inputtype,user_maxlength,inputoptions,min_perm,display_register,display_profile,display_topic,display_post,display_memberlist,display_image,display_size,display_rows,display_order,is_editable,is_private,is_required,special_pcre) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			$insert			= $request['dba']->prepareStatement("INSERT INTO ". K4PROFILEFIELDS ." (name,title,description,default_value,inputtype,user_maxlength,inputoptions,min_perm,display_register,display_profile,display_topic,display_post,display_memberlist,display_image,display_size,display_rows,display_order,is_editable,is_private,is_required,special_pcre) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 			$insert->setString(1, $name);
 			$insert->setString(2, @$_REQUEST['title']);
@@ -331,7 +331,7 @@ class AdminUpdateUserField extends FAAction {
 				return $action->execute($request);
 			}
 
-			$update			= &$request['dba']->prepareStatement("UPDATE ". K4PROFILEFIELDS ." SET title=?, description=?, default_value=?, inputtype=?, user_maxlength=?, inputoptions=?, min_perm=?, display_register=?, display_profile=?, display_topic=?, display_post=?, display_memberlist=?, display_image=?, display_size=?, display_rows=?, display_order=?, is_editable=?, is_private=?, is_required=?, special_pcre=? WHERE name=?");
+			$update			= $request['dba']->prepareStatement("UPDATE ". K4PROFILEFIELDS ." SET title=?, description=?, default_value=?, inputtype=?, user_maxlength=?, inputoptions=?, min_perm=?, display_register=?, display_profile=?, display_topic=?, display_post=?, display_memberlist=?, display_image=?, display_size=?, display_rows=?, display_order=?, is_editable=?, is_private=?, is_required=?, special_pcre=? WHERE name=?");
 
 			$update->setString(1, @$_REQUEST['title']);
 			$update->setString(2, @$_REQUEST['description']);
@@ -379,14 +379,14 @@ class AdminSimpleUpdateUserFields extends FAAction {
 		
 		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			
-			$fields = &$request['dba']->executeQuery("SELECT * FROM ". K4PROFILEFIELDS ." ORDER BY name ASC");
+			$fields = $request['dba']->executeQuery("SELECT * FROM ". K4PROFILEFIELDS ." ORDER BY name ASC");
 			
 			while($fields->next()) {
 
 				$field = $fields->current();
 
 				if(isset($_REQUEST['display_order_'. $field['name']]) && intval($_REQUEST['display_order_'. $field['name']]) >= 0) {
-					$update = &$request['dba']->prepareStatement("UPDATE ". K4PROFILEFIELDS ." SET display_order=? WHERE name=?");
+					$update = $request['dba']->prepareStatement("UPDATE ". K4PROFILEFIELDS ." SET display_order=? WHERE name=?");
 					$update->setInt(1, $_REQUEST['display_order_'. $field['name']]);
 					$update->setString(2, $field['name']);
 					$update->executeUpdate();

@@ -52,7 +52,7 @@ class AdminMapsGui extends FAAction {
 						
 			$all_maps = array();
 
-			$maps = &$request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE row_level = 1 AND (varname <> 'forums' AND varname <> 'categories' AND varname <> 'forum0') ORDER BY name ASC");
+			$maps = $request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE row_level = 1 AND (varname <> 'forums' AND varname <> 'categories' AND varname <> 'forum0') ORDER BY name ASC");
 			
 			get_recursive_maps($request, $all_maps, $parents, $maps, 1);
 			
@@ -89,7 +89,7 @@ class AdminMapsUpdate extends FAAction {
 				return $action->execute($request);
 			}
 			
-			$stmt	= &$request['dba']->prepareStatement("UPDATE ". K4MAPS ." SET can_view=?,can_add=?,can_edit=?,can_del=? WHERE id=?");
+			$stmt	= $request['dba']->prepareStatement("UPDATE ". K4MAPS ." SET can_view=?,can_add=?,can_edit=?,can_del=? WHERE id=?");
 			
 			$stmt->setInt(1, $_REQUEST['can_view']);
 			$stmt->setInt(2, $_REQUEST['can_add']);
@@ -206,7 +206,7 @@ class AdminMapsInsertNode extends FAAction {
 			 */
 
 			/* Prepare the queries */
-			$insert				= &$request['dba']->prepareStatement("INSERT INTO ". K4MAPS ." (row_level,name,varname,category_id,forum_id,user_id,group_id,can_view,can_add,can_edit,can_del,value,parent_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			$insert				= $request['dba']->prepareStatement("INSERT INTO ". K4MAPS ." (row_level,name,varname,category_id,forum_id,user_id,group_id,can_view,can_add,can_edit,can_del,value,parent_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			
 			/* Set the inserts for adding the actual node */
 			$insert->setInt(1, $level);
@@ -256,7 +256,7 @@ class K4Maps {
 	function add(&$request, $info, $parent, $level) {
 		
 		/* Prepare the queries */
-		$insert				= &$request['dba']->prepareStatement("INSERT INTO ". K4MAPS ." (row_level,name,varname,category_id,forum_id,user_id,group_id,can_view,can_add,can_edit,can_del,value,parent_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		$insert				= $request['dba']->prepareStatement("INSERT INTO ". K4MAPS ." (row_level,name,varname,category_id,forum_id,user_id,group_id,can_view,can_add,can_edit,can_del,value,parent_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		
 		/* Set the inserts for adding the actual node */
 		$insert->setInt(1, $level);

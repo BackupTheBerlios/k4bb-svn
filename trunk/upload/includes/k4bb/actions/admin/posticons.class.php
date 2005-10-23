@@ -37,7 +37,7 @@ class AdminPostIcons extends FAAction {
 		
 		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			
-			$icons			= &$request['dba']->executeQuery("SELECT * FROM ". K4POSTICONS);
+			$icons			= $request['dba']->executeQuery("SELECT * FROM ". K4POSTICONS);
 
 			$request['template']->setList('posticons', $icons);
 			
@@ -122,7 +122,7 @@ class AdminInsertPostIcon extends FAAction {
 			/**
 			 * Add the icon finally
 			 */
-			$query		= &$request['dba']->prepareStatement("INSERT INTO ". K4POSTICONS ." (description, image) VALUES (?,?)");
+			$query		= $request['dba']->prepareStatement("INSERT INTO ". K4POSTICONS ." (description, image) VALUES (?,?)");
 			$query->setString(1, $_REQUEST['description']);
 			$query->setString(2, $filename);
 
@@ -286,7 +286,7 @@ class AdminUpdatePostIcon extends FAAction {
 			/**
 			 * Update the icon finally
 			 */
-			$query		= &$request['dba']->prepareStatement("UPDATE ". K4POSTICONS ." SET description=?,image=? WHERE id=?");
+			$query		= $request['dba']->prepareStatement("UPDATE ". K4POSTICONS ." SET description=?,image=? WHERE id=?");
 			$query->setString(1, $_REQUEST['description']);
 			$query->setString(2, $filename);
 			$query->setInt(3, $icon['id']);

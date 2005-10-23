@@ -96,14 +96,14 @@ class K4DefaultAction extends FAAction {
 		$last_reply		= $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE poster_ip = '". USER_IP ."' ORDER BY created DESC LIMIT 1");
 		
 		if(is_array($last_topic) && !empty($last_topic)) {
-			if(intval($last_topic['created']) + POST_IMPULSE_LIMIT > time() && $request['user']->get('perms') < MODERATOR) {
+			if(intval($last_topic['created']) + POST_IMPULSE_LIMIT > time() &$request['user']->get('perms') < MODERATOR) {
 				$action = new K4InformationAction(new K4LanguageElement('L_MUSTWAITSECSTOPOST'), 'content', TRUE);
 				return $action->execute($request);
 			}
 		}
 
 		if(is_array($last_reply) && !empty($last_reply)) {
-			if(intval($last_reply['created']) + POST_IMPULSE_LIMIT > time() && $request['user']->get('perms') < MODERATOR) {
+			if(intval($last_reply['created']) + POST_IMPULSE_LIMIT > time() &$request['user']->get('perms') < MODERATOR) {
 				$action = new K4InformationAction(new K4LanguageElement('L_MUSTWAITSECSTOPOST'), 'content', TRUE);
 				return $action->execute($request);
 			}
@@ -116,8 +116,8 @@ class K4DefaultAction extends FAAction {
 		 */
 
 		/* Get and set the emoticons and post icons to the template */
-		$emoticons	= &$request['dba']->executeQuery("SELECT * FROM ". K4EMOTICONS ." WHERE clickable = 1");
-		$posticons	= &$request['dba']->executeQuery("SELECT * FROM ". K4POSTICONS);
+		$emoticons	= $request['dba']->executeQuery("SELECT * FROM ". K4EMOTICONS ." WHERE clickable = 1");
+		$posticons	= $request['dba']->executeQuery("SELECT * FROM ". K4POSTICONS);
 
 		$request['template']->setList('emoticons', $emoticons);
 		$request['template']->setList('posticons', $posticons);
@@ -209,7 +209,7 @@ class K4DefaultAction extends FAAction {
 		
 		$query				= "SELECT * FROM ". K4REPLIES ." WHERE topic_id = ". intval($topic['topic_id']) ." ORDER BY created DESC LIMIT 10";
 		
-		$replies			= &$request['dba']->executeQuery($query);
+		$replies			= $request['dba']->executeQuery($query);
 		
 		/* Set the form actiob */
 		$request['template']->setVar('newreply_act', 'newreply.php?act=postreply');

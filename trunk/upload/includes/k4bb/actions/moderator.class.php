@@ -229,7 +229,7 @@ class ModerateForum extends FAAction {
 				foreach($topics as $topic_id) {
 					$is_subscribed		= $request['dba']->getRow("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE user_id = ". intval($request['user']->get('id')) ." AND topic_id = ". intval($topic_id));
 					if(!is_array($is_subscribed) || empty($is_subscribed)) {
-						$subscribe			= &$request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,topic_id,forum_id,email,category_id) VALUES (?,?,?,?,?,?)");
+						$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,topic_id,forum_id,email,category_id) VALUES (?,?,?,?,?,?)");
 						$subscribe->setInt(1, $request['user']->get('id'));
 						$subscribe->setString(2, $request['user']->get('name'));
 						$subscribe->setInt(3, $topic_id);
@@ -261,7 +261,7 @@ class ModerateForum extends FAAction {
 				$users			= array();
 
 				// find the users for topics first
-				$t				= &$request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE ($query_extra)");
+				$t				= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE ($query_extra)");
 				while($t->next()) {
 					$temp		= $t->current();
 					$users[$temp['poster_id']] = isset($users[$temp['poster_id']]) ? $users[$temp['poster_id']] + 1 : 1;
@@ -272,7 +272,7 @@ class ModerateForum extends FAAction {
 				$t->free();
 				
 				// find them for replies
-				$r				= &$request['dba']->executeQuery("SELECT * FROM ". K4REPLIES ." WHERE ($query_extra)");
+				$r				= $request['dba']->executeQuery("SELECT * FROM ". K4REPLIES ." WHERE ($query_extra)");
 				while($t->next()) {
 					$temp		= $t->current();
 					$users[$temp['poster_id']] = isset($users[$temp['poster_id']]) ? $users[$temp['poster_id']] + 1 : 1;
@@ -307,8 +307,8 @@ class ModerateForum extends FAAction {
 				 * Update the forum and the datastore
 				 */
 							
-				$forum_update		= &$request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topics=topics-?,posts=posts-?,replies=replies-?,topic_created=?,topic_name=?,topic_uname=?,topic_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
-				$datastore_update	= &$request['dba']->prepareStatement("UPDATE ". K4DATASTORE ." SET data=? WHERE varname=?");
+				$forum_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topics=topics-?,posts=posts-?,replies=replies-?,topic_created=?,topic_name=?,topic_uname=?,topic_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
+				$datastore_update	= $request['dba']->prepareStatement("UPDATE ". K4DATASTORE ." SET data=? WHERE varname=?");
 					
 				/* Set the forum values */
 				$forum_update->setInt(1, $num_topics);
@@ -368,7 +368,7 @@ class ModerateForum extends FAAction {
 				}
 
 				/* Get the topics */
-				$result				= &$request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE is_draft=0 AND queue = 0 AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (". $query_extra .") ORDER BY created DESC");
+				$result				= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE is_draft=0 AND queue = 0 AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (". $query_extra .") ORDER BY created DESC");
 				
 				/* Apply the topics iterator */
 				$it					= &new TopicsIterator($request['dba'], $request['user'], $result, $request['template']->getVar('IMG_DIR'), $forum);
@@ -534,7 +534,7 @@ class MoveTopics extends FAAction {
 				$num_topics			= count($topics);
 				
 				// find the number of replies
-				$r					= &$request['dba']->executeQuery("SELECT * FROM ". K4REPLIES ." WHERE $query_extra");
+				$r					= $request['dba']->executeQuery("SELECT * FROM ". K4REPLIES ." WHERE $query_extra");
 				$num_replies		= $r->numRows();				
 				
 				// get the last topic & reply in our initial forum
@@ -544,7 +544,7 @@ class MoveTopics extends FAAction {
 				$last_post			= !$last_post || !is_array($last_post) ? $last_topic : array_merge($last_post, array('id' => $last_post['reply_id']));
 				
 				// Update this forum
-				$forum_update		= &$request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topics=?,posts=?,replies=?,topic_created=?,topic_name=?,topic_uname=?,topic_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
+				$forum_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topics=?,posts=?,replies=?,topic_created=?,topic_name=?,topic_uname=?,topic_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
 				
 				$num_topics			= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4TOPICS ." WHERE queue=0 AND is_draft=0 AND display=1 AND forum_id = ". intval($forum['forum_id']));
 				$num_replies		= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4REPLIES ." WHERE forum_id = ". intval($forum['forum_id']));	
@@ -578,7 +578,7 @@ class MoveTopics extends FAAction {
 				$last_post			= !$last_post || !is_array($last_post) ? $last_topic : array_merge($last_post, array('id' => $last_post['reply_id']));
 
 				// update the destination forum
-				$forum_update		= &$request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topics=?,posts=?,replies=?,topic_created=?,topic_name=?,topic_uname=?,topic_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
+				$forum_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topics=?,posts=?,replies=?,topic_created=?,topic_name=?,topic_uname=?,topic_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
 				
 				$num_topics			= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4TOPICS ." WHERE queue=0 AND is_draft=0 AND display=1 AND forum_id = ". intval($destination['forum_id']));
 				$num_replies		= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4REPLIES ." WHERE forum_id = ". intval($destination['forum_id']));
@@ -720,7 +720,7 @@ class MoveTopics extends FAAction {
 				$last_post			= !$last_post || !is_array($last_post) ? $last_topic : array_merge($last_post, array('id' => $last_post['reply_id']));
 				
 				// Update this forum
-				$forum_update		= &$request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET posts=posts-?,replies=replies-?,topic_created=?,topic_name=?,topic_uname=?,topic_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
+				$forum_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET posts=posts-?,replies=replies-?,topic_created=?,topic_name=?,topic_uname=?,topic_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
 					
 				/* Set the forum values */
 				$forum_update->setInt(1, ($track ? $num_replies : 0));
@@ -750,7 +750,7 @@ class MoveTopics extends FAAction {
 				$last_post			= !$last_post || !is_array($last_post) ? $last_topic : array_merge($last_post, array('id' => $last_post['reply_id']));
 
 				// update the destination forum
-				$forum_update		= &$request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topics=topics+?,posts=posts+?,replies=replies+?,topic_created=?,topic_name=?,topic_uname=?,topic_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
+				$forum_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topics=topics+?,posts=posts+?,replies=replies+?,topic_created=?,topic_name=?,topic_uname=?,topic_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
 					
 				/* Set the forum values */
 				$forum_update->setInt(1, $num_topics);
@@ -921,7 +921,7 @@ class SimpleUpdateTopic extends FAAction {
 
 			/* If this topic is a redirect/ connects to one, update the original */
 			if($topic['moved_new_topic_id'] > 0 || $topic['moved_old_topic_id'] > 0) {
-				$redirect		= &$request['dba']->prepareStatement("UPDATE ". K4TOPICS ." SET name=?,edited_time=?,edited_username=?,edited_userid=? WHERE topic_id=?");
+				$redirect		= $request['dba']->prepareStatement("UPDATE ". K4TOPICS ." SET name=?,edited_time=?,edited_username=?,edited_userid=? WHERE topic_id=?");
 			
 				$redirect->setString(1, $name);
 				$redirect->setInt(2, time());
@@ -931,7 +931,7 @@ class SimpleUpdateTopic extends FAAction {
 				$redirect->executeUpdate();
 			}
 
-			$update_a		= &$request['dba']->prepareStatement("UPDATE ". K4TOPICS ." SET name=?,edited_time=?,edited_username=?,edited_userid=? WHERE topic_id=?");
+			$update_a		= $request['dba']->prepareStatement("UPDATE ". K4TOPICS ." SET name=?,edited_time=?,edited_username=?,edited_userid=? WHERE topic_id=?");
 			
 			$update_a->setString(1, $name);
 			$update_a->setInt(2, time());
@@ -942,7 +942,7 @@ class SimpleUpdateTopic extends FAAction {
 			$update_a->executeUpdate();
 			
 			if($forum['topic_id'] == $topic['topic_id']) {
-				$update_c	= &$request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topic_name=? WHERE forum_id=?");
+				$update_c	= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topic_name=? WHERE forum_id=?");
 				$update_c->setString(1, $name);
 				$update_c->setInt(2, $forum['forum_id']);
 				$update_c->executeUpdate();
@@ -950,7 +950,7 @@ class SimpleUpdateTopic extends FAAction {
 			
 			// id this is the last post in a forum
 			if($forum['post_id'] == $topic['topic_id'] && $forum['post_created'] == $topic['created']) {
-				$update_d	= &$request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET post_name=? WHERE forum_id=?");
+				$update_d	= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET post_name=? WHERE forum_id=?");
 				$update_d->setString(1, $name);
 				$update_d->setInt(2, $forum['forum_id']);
 				$update_d->executeUpdate();

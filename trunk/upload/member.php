@@ -40,9 +40,9 @@ class K4UserActionFilter extends FAFilter {
 			$ret			= FALSE;
 			$valid_user		= FALSE;
 
-			$dba			= &$request['dba'];
-			$template		= &$request['template'];
-			$user_manager	= &$request['user_manager'];
+			$dba			= $request['dba'];
+			$template		= $request['template'];
+			$user_manager	= $request['user_manager'];
 
 			if ($this->runGetFilter('id', new FARequiredFilter)) {
 				$info = $user_manager->getInfo($_GET['id']);
@@ -89,7 +89,7 @@ class K4InsertUserFilter extends FAFilter {
 
 			if (!$request['user']->isMember()) {
 				
-				global $_USERFIELDS, $_SETTINGS, $_URL, $_DATASTORE;
+				global $_PROFILEFIELDS, $_SETTINGS, $_URL, $_DATASTORE;
 				
 				/* If we are not allowed to register */
 				if(isset($_SETTINGS['allowregistration']) && $_SETTINGS['allowregistration'] == 0) {
@@ -101,7 +101,7 @@ class K4InsertUserFilter extends FAFilter {
 				$query_fields	= '';
 				$query_params	= '';
 			
-				foreach($_USERFIELDS as $field) {
+				foreach($_PROFILEFIELDS as $field) {
 					if($field['display_register'] == 1) {
 						
 						/* This insures that we only put in what we need to */
@@ -228,7 +228,7 @@ class K4InsertUserFilter extends FAFilter {
 				$name						= htmlentities(strip_tags($_REQUEST['username']), ENT_QUOTES);
 				$reg_key					= md5(uniqid(rand(), TRUE));
 
-				$insert_a					= &$request['dba']->prepareStatement("INSERT INTO ". K4USERS ." (name,email,pass,perms,reg_key,usergroups,created) VALUES (?,?,?,?,?,?,?)");
+				$insert_a					= $request['dba']->prepareStatement("INSERT INTO ". K4USERS ." (name,email,pass,perms,reg_key,usergroups,created) VALUES (?,?,?,?,?,?,?)");
 				
 				$insert_a->setString(1, $name);
 				$insert_a->setString(2, $_REQUEST['email']);
@@ -242,7 +242,7 @@ class K4InsertUserFilter extends FAFilter {
 				
 				$user_id					= intval($request['dba']->getInsertId(K4USERS, 'id'));
 
-				$insert_b					= &$request['dba']->prepareStatement("INSERT INTO ". K4USERINFO ." (user_id,timezone". $query_fields .") VALUES (?,?". $query_params .")");
+				$insert_b					= $request['dba']->prepareStatement("INSERT INTO ". K4USERINFO ." (user_id,timezone". $query_fields .") VALUES (?,?". $query_params .")");
 				$insert_b->setInt(1, $user_id);
 				$insert_b->setInt(2, intval(@$_REQUEST['timezone']));
 
@@ -250,7 +250,7 @@ class K4InsertUserFilter extends FAFilter {
 
 				$insert_b->executeUpdate();
 				
-				$datastore_update	= &$request['dba']->prepareStatement("UPDATE ". K4DATASTORE ." SET data=? WHERE varname=?");
+				$datastore_update	= $request['dba']->prepareStatement("UPDATE ". K4DATASTORE ." SET data=? WHERE varname=?");
 				
 				/* Set the datastore values */
 				$datastore					= $_DATASTORE['forumstats'];
@@ -303,7 +303,7 @@ class K4InsertUserFilter extends FAFilter {
 class K4ProfileAction extends FAAction {
 	function execute(&$request) {
 		
-		global $_QUERYPARAMS, $_DATASTORE, $_USERGROUPS, $_USERFIELDS;
+		global $_QUERYPARAMS, $_DATASTORE, $_USERGROUPS, $_PROFILEFIELDS;
 		
 		/* unset any search queries if we are about to go look at this users posts */
 		unset($_SESSION['search_queries']);	
@@ -361,7 +361,7 @@ class K4ProfileAction extends FAAction {
 		 * Get the custom user fields for this member
 		 */
 		$fields = array();
-		foreach($_USERFIELDS as $field) {
+		foreach($_PROFILEFIELDS as $field) {
 				
 			if($field['display_profile'] == 1) {
 
@@ -414,7 +414,7 @@ class K4RegisterAction extends FAAction {
 
 		if (!$request['user']->isMember()) {
 			
-			global $_USERFIELDS, $_SETTINGS;
+			global $_PROFILEFIELDS, $_SETTINGS;
 			
 			/* If we are not allowed to register */
 			if(isset($_SETTINGS['allowregistration']) && $_SETTINGS['allowregistration'] == 0) {
@@ -434,7 +434,7 @@ class K4RegisterAction extends FAAction {
 			/* Collect the custom profile fields to display */
 			$fields = array();
 		
-			foreach($_USERFIELDS as $field) {
+			foreach($_PROFILEFIELDS as $field) {
 				if($field['display_register'] == 1) {
 					$fields[] = $field;
 				}

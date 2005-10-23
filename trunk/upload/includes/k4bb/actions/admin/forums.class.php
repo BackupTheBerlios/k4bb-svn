@@ -132,7 +132,7 @@ class AdminInsertForum extends FAAction {
 
 	function execute(&$request) {		
 		
-		$this->dba			= &$request['dba'];
+		$this->dba			= $request['dba'];
 
 		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
@@ -270,7 +270,7 @@ class AdminInsertForum extends FAAction {
 						
 			$request['dba']->beginTransaction();
 
-			$insert_a			= &$request['dba']->prepareStatement("INSERT INTO ". K4FORUMS ." (name,category_id,description,pass,is_forum,is_link,link_href,link_show_redirects,forum_rules,topicsperpage,postsperpage,maxpolloptions,defaultlang,moderating_groups,prune_auto,prune_frequency,prune_post_age,prune_post_viewed_age,prune_old_polls,prune_announcements,prune_stickies,row_type,row_level,created,row_order,parent_id,moderating_users) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			$insert_a			= $request['dba']->prepareStatement("INSERT INTO ". K4FORUMS ." (name,category_id,description,pass,is_forum,is_link,link_href,link_show_redirects,forum_rules,topicsperpage,postsperpage,maxpolloptions,defaultlang,moderating_groups,prune_auto,prune_frequency,prune_post_age,prune_post_viewed_age,prune_old_polls,prune_announcements,prune_stickies,row_type,row_level,created,row_order,parent_id,moderating_users) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			
 			$forum_rules		= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['forum_rules'], FALSE, TRUE, TRUE, TRUE, TRUE);
 			$description		= &new BBCodex($request['dba'], $request['user']->getInfoArray(), @$_REQUEST['description'], FALSE, TRUE, TRUE, TRUE, TRUE);
@@ -441,7 +441,7 @@ class AdminSimpleForumUpdate extends FAAction {
 				return $action->execute($request);
 			}
 
-			$update		= &$request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET row_order=? WHERE forum_id=?");
+			$update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET row_order=? WHERE forum_id=?");
 			$update->setInt(1, $_REQUEST['row_order']);
 			$update->setInt(2, $forum['forum_id']);
 
@@ -688,8 +688,8 @@ class AdminUpdateForum extends FAAction {
 			}
 
 			/* Build the queries */
-			$update_a			= &$request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET name=?,description=?,pass=?,is_forum=?,is_link=?,link_href=?,link_show_redirects=?,forum_rules=?,topicsperpage=?,postsperpage=?,maxpolloptions=?,defaultlang=?,moderating_groups=?,prune_auto=?,prune_frequency=?,prune_post_age=?,prune_post_viewed_age=?,prune_old_polls=?,prune_announcements=?,prune_stickies=?,row_order=?,moderating_users=?,parent_id=?,category_id=?,row_level=? WHERE forum_id=?");
-			$update_b			= &$request['dba']->prepareStatement("UPDATE ". K4MAPS ." SET name=? WHERE varname=?");
+			$update_a			= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET name=?,description=?,pass=?,is_forum=?,is_link=?,link_href=?,link_show_redirects=?,forum_rules=?,topicsperpage=?,postsperpage=?,maxpolloptions=?,defaultlang=?,moderating_groups=?,prune_auto=?,prune_frequency=?,prune_post_age=?,prune_post_viewed_age=?,prune_old_polls=?,prune_announcements=?,prune_stickies=?,row_order=?,moderating_users=?,parent_id=?,category_id=?,row_level=? WHERE forum_id=?");
+			$update_b			= $request['dba']->prepareStatement("UPDATE ". K4MAPS ." SET name=? WHERE varname=?");
 						
 			$forum_rules		= new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['forum_rules'], $forum['forum_id'], TRUE, TRUE, TRUE, TRUE);
 			$description		= new BBCodex($request['dba'], $request['user']->getInfoArray(), @$_REQUEST['description'], $forum['forum_id'], TRUE, TRUE, TRUE, TRUE);
@@ -762,7 +762,7 @@ class AdminUpdateForum extends FAAction {
 
 class AdminRemoveForum extends FAAction {
 	function removeForums($forum, &$dba) {
-		$forums			= &$dba->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE parent_id = ". $forum['forum_id']);
+		$forums			= $dba->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE parent_id = ". $forum['forum_id']);
 		
 		/* Deal with this forum and any sub-forums */
 		while($forums->next()) {
@@ -851,7 +851,7 @@ class AdminForumPermissions extends FAAction {
 				//$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
 				//return $action->execute($request);
 				
-				$maps		= &$request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE group_id = 0 AND forum_id = 0 AND varname = 'forum0'");
+				$maps		= $request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE group_id = 0 AND forum_id = 0 AND varname = 'forum0'");
 				
 				// get the map's
 				get_recursive_maps($request, $all_maps, FALSE, $maps, 1);
@@ -869,7 +869,7 @@ class AdminForumPermissions extends FAAction {
 				foreach($forum as $key => $val)
 					$request['template']->setVar('forum_'. $key, $val);
 
-				$maps		= &$request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE group_id = 0 AND forum_id = 0 AND varname = 'forum0'");
+				$maps		= $request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE group_id = 0 AND forum_id = 0 AND varname = 'forum0'");
 				get_recursive_maps($request, $all_maps, FALSE, $maps, 1);
 				
 				$mask		= $request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE forum_id = ". intval($forum['forum_id']) ." AND group_id = 0");
@@ -956,7 +956,7 @@ class AdminUpdateForumPermissions extends FAAction {
 //					
 //					if(($_REQUEST[$f['varname'] .'_can_view'] != $f['can_view']) || ($_REQUEST[$f['varname'] .'_can_add'] != $f['can_add']) || ($_REQUEST[$f['varname'] .'_can_edit'] != $f['can_edit']) || ($_REQUEST[$f['varname'] .'_can_del'] != $f['can_del'])) {
 //
-//						$update				= &$request['dba']->prepareStatement("UPDATE ". K4MAPS ." SET can_view=?,can_add=?,can_edit=?,can_del=? WHERE varname=? AND forum_id=?");
+//						$update				= $request['dba']->prepareStatement("UPDATE ". K4MAPS ." SET can_view=?,can_add=?,can_edit=?,can_del=? WHERE varname=? AND forum_id=?");
 //						$update->setInt(1, $_REQUEST[$f['varname'] .'_can_view']);
 //						$update->setInt(2, $_REQUEST[$f['varname'] .'_can_add']);
 //						$update->setInt(3, $_REQUEST[$f['varname'] .'_can_edit']);
@@ -972,7 +972,7 @@ class AdminUpdateForumPermissions extends FAAction {
 //			}
 			
 			$all_maps	= array();
-			$maps		= &$request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE group_id = 0 AND forum_id = 0 AND varname = 'forum0'");
+			$maps		= $request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE group_id = 0 AND forum_id = 0 AND varname = 'forum0'");
 			get_recursive_maps($request, $all_maps, FALSE, $maps, 1);
 			
 			// delete all of the perms because we are going to readd them

@@ -133,7 +133,7 @@ class AdminInsertFAQCategory extends FAAction {
 			$request['dba']->beginTransaction();
 
 			/* Build the queries */
-			$insert_a			= &$request['dba']->prepareStatement("INSERT INTO ". K4FAQCATEGORIES ." (name,row_level,created,row_order,parent_id,can_view) VALUES (?,?,?,?,?,?)");
+			$insert_a			= $request['dba']->prepareStatement("INSERT INTO ". K4FAQCATEGORIES ." (name,row_level,created,row_order,parent_id,can_view) VALUES (?,?,?,?,?,?)");
 			
 			/* Build the query for the categories table */
 			$insert_a->setString(1, $_REQUEST['name']);
@@ -267,7 +267,7 @@ class AdminUpdateFAQCategory extends FAAction {
 			$request['dba']->beginTransaction();
 
 			/* Build the queries */
-			$update			= &$request['dba']->prepareStatement("UPDATE ". K4FAQCATEGORIES ." SET name=?,row_order=?,can_view=? WHERE category_id=?");
+			$update			= $request['dba']->prepareStatement("UPDATE ". K4FAQCATEGORIES ." SET name=?,row_order=?,can_view=? WHERE category_id=?");
 			
 			/* Build the query for the categories table */
 			$update->setString(1, $_REQUEST['name']);
@@ -602,7 +602,7 @@ class AdminFAQCategoriesIterator extends FAProxyIterator {
 	var $dba, $result;
 
 	function AdminFAQCategoriesIterator(&$dba, $image_dir) {
-		$this->result		= &$dba->executeQuery("SELECT * FROM ". K4FAQCATEGORIES ." ORDER BY row_order ASC");
+		$this->result		= $dba->executeQuery("SELECT * FROM ". K4FAQCATEGORIES ." ORDER BY row_order ASC");
 		$this->dba			= &$dba;
 		$this->image_dir	= $image_dir;
 

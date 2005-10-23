@@ -52,7 +52,7 @@ function attach_files(&$request, $forum, $topic_id, $reply_id = FALSE) {
 		$upload_dir		= BB_BASE_DIR .'/tmp/upload/attachments/';
 
 		// change the upload director if we need to
-		if(!$in_db && $request['user']->isMember()) {
+		if(!$in_db &$request['user']->isMember()) {
 			$upload_dir	= BB_BASE_DIR .'/tmp/upload/attachments/'. $request['user']->get('id') .'/';
 		}
 		
@@ -120,7 +120,7 @@ function attach_files(&$request, $forum, $topic_id, $reply_id = FALSE) {
 										__chmod($upload_dir . $_FILES['attach'. $i]['name'], 0777);
 										
 										// prepare the sql query to insert it into the db
-										$insert			= &$request['dba']->prepareStatement("INSERT INTO ". K4ATTACHMENTS ." (topic_id,user_id,user_name,file_type,mime_type,file_size,file_contents,mdfive,file_name,in_db,created,reply_id,forum_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+										$insert			= $request['dba']->prepareStatement("INSERT INTO ". K4ATTACHMENTS ." (topic_id,user_id,user_name,file_type,mime_type,file_size,file_contents,mdfive,file_name,in_db,created,reply_id,forum_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
 										$insert->setInt(1, $topic_id);
 										$insert->setInt(2, $request['user']->get('id'));
 										$insert->setString(3, $request['user']->get('name'));
@@ -210,7 +210,7 @@ function post_attachment_options(&$request, $forum, $topic, $reply = FALSE) {
 
 		// do we have any current attachments?
 		if($post['attachments'] > 0) {
-			$post_attachments	= &$request['dba']->executeQuery("SELECT * FROM ". K4ATTACHMENTS ." WHERE topic_id = ". intval($post['topic_id']) ." $extra");
+			$post_attachments	= $request['dba']->executeQuery("SELECT * FROM ". K4ATTACHMENTS ." WHERE topic_id = ". intval($post['topic_id']) ." $extra");
 			while($post_attachments->next()) {
 				$temp			= $post_attachments->current();
 				$attach_inputs	.= '<br /><span class="smalltext">'. htmlentities($temp['file_name'], ENT_QUOTES) . '&nbsp;-&nbsp;<a href="viewfile.php?act=remove_attach?id='. $temp['id'] .'&amp;'. (!$reply ? 't' : 'r') .'='. $post['topic_id'] .'" title="'. $request['template']->getVar('L_REMOVEATTACHMENT') .'">'. $request['template']->getVar('L_REMOVEATTACHMENT') .'</a></span>';
@@ -324,7 +324,7 @@ class K4ViewAttachment extends FAAction {
 		$upload_dir		= BB_BASE_DIR .'/tmp/upload/attachments/';
 
 		// change the upload director if we need to
-		if($attachment['in_db'] == 0 && $request['user']->isMember()) {
+		if($attachment['in_db'] == 0 &$request['user']->isMember()) {
 			$upload_dir	= BB_BASE_DIR .'/tmp/upload/attachments/'. $request['user']->get('id') .'/';
 		}
 		
@@ -417,7 +417,7 @@ class K4RemoveAttachment extends FAAction {
 			return TRUE;
 		}
 
-		if(($request['user']->get('id') != 0 && $request['user']->get('id') == $attachment['user_id']) || is_moderator($request['user']->getInfoArray(), $forum)) {
+		if(($request['user']->get('id') != 0 &$request['user']->get('id') == $attachment['user_id']) || is_moderator($request['user']->getInfoArray(), $forum)) {
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_REMOVEATTACHMENT');
 			$request['dba']->executeUpdate("DELETE FROM ". K4ATTACHMENTS ." WHERE id = ". intval($attachment['id']));	
 			$request['dba']->executeUpdate("UPDATE ". K4TOPICS ." SET total_attachments=total_attachments-1 WHERE topic_id = ". intval($post['topic_id']));
@@ -455,7 +455,7 @@ class K4AttachmentsIterator extends FAProxyIterator {
 
 		$this->images		= array('jpe', 'jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff');
 		
-		$result				= &$dba->executeQuery("SELECT * FROM ". K4ATTACHMENTS ." WHERE topic_id = ". intval($topic_id) ." AND reply_id = ". intval($reply_id));
+		$result				= $dba->executeQuery("SELECT * FROM ". K4ATTACHMENTS ." WHERE topic_id = ". intval($topic_id) ." AND reply_id = ". intval($reply_id));
 
 		parent::__construct($result);
 	}

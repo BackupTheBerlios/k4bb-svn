@@ -116,7 +116,7 @@ class K4UserFilter extends FAFilter {
 		}
 
 		$user		= &$_SESSION['user'];
-		$session	= &$request['session'];
+		$session	= $request['session'];
 		
 		if (!$user->isMember() && $session->isNew()) {
 			$factory = &new K4UserFactory;
@@ -188,7 +188,7 @@ class K4LoginFilter extends FAFilter {
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_LOGIN');
 
-			$user = &$request['user'];
+			$user = $request['user'];
 
 			if ($user->isMember()) {
 				// Oops, trying to login when already logged in
@@ -202,7 +202,7 @@ class K4LoginFilter extends FAFilter {
 
 				if ($user->isMember()) {
 					
-					if(($user->get('reg_key') == '') || ($user->get('reg_key') != '' && $request['template']->getVar('canloginunverified') == 1) ) {
+					if(($user->get('reg_key') == '') || ($user->get('reg_key') != '' &$request['template']->getVar('canloginunverified') == 1) ) {
 					
 						// User successfully logged in
 						
@@ -301,16 +301,13 @@ class K4LogoutFilter extends FAFilter {
 
 			$url = &new FAUrl($_SERVER['REQUEST_URI']);
 			unset($url->args['logout']);
-
-			$user = &$request['user'];
-
-			if (!$user->isMember()) {
+			
+			if (!$request['user']->isMember()) {
 				// Oops, trying to login when already logged in
 
 				$action = new K4InformationAction(new K4LanguageElement('L_NEEDLOGGEDIN'), 'content');
 			} else {
-				k4_set_logout($request['dba'], $user);
-
+				k4_set_logout($request['dba'], $request['user']);
 				$action = new K4InformationAction(new K4LanguageElement('L_LOGGEDOUTSUCCESS'), 'content', FALSE, $url->__toString(), 3);
 			}			
 		}
@@ -355,7 +352,7 @@ class K4TemplateFilter extends FAFilter {
 		$request['template_file'] = BB_BASE_DIR . "/templates/$templateset/{$this->_filename}";
 		
 		// Load k4 custom compilers
-		$compiler		= &$request['template']->getTemplateCompiler();
+		$compiler		= $request['template']->getTemplateCompiler();
 		$compiler->loadCompilers(K4_BASE_DIR . '/compilers/');
 		
 		// Set Theme specific template variables

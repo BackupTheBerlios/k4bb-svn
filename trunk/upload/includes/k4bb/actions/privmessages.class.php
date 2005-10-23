@@ -112,7 +112,7 @@ class K4ShowPMFolder extends FAAction {
 			return $action->execute($request);
 		}
 		
-		$result		= &$request['dba']->executeQuery("SELECT * FROM ". K4PRIVMESSAGES ." WHERE member_id = ". intval($request['user']->get('id')) ." AND folder_id = ". intval($folder['id']) ." ORDER BY created DESC LIMIT $start,$resultsperpage");
+		$result		= $request['dba']->executeQuery("SELECT * FROM ". K4PRIVMESSAGES ." WHERE member_id = ". intval($request['user']->get('id')) ." AND folder_id = ". intval($folder['id']) ." ORDER BY created DESC LIMIT $start,$resultsperpage");
 		$it 		= &new K4PrivMessageIterator($request['dba'], $result, $request['template']->getVar('IMG_DIR'), $request['template']->getVar('pmrepliesperpage') );
 
 		$request['template']->setVar('pm_usedpercent', ceil(($num_pms / $max_pms) * 100));
@@ -441,8 +441,8 @@ class K4ComposePMessage extends FAAction {
 		}
 		
 		/* Get and set the emoticons and post icons to the template */
-		$emoticons	= &$request['dba']->executeQuery("SELECT * FROM ". K4EMOTICONS ." WHERE clickable = 1");
-		$posticons	= &$request['dba']->executeQuery("SELECT * FROM ". K4POSTICONS);
+		$emoticons	= $request['dba']->executeQuery("SELECT * FROM ". K4EMOTICONS ." WHERE clickable = 1");
+		$posticons	= $request['dba']->executeQuery("SELECT * FROM ". K4POSTICONS);
 		
 		/* Add the emoticons and the post icons to the template */
 		$request['template']->setList('emoticons', $emoticons);
@@ -643,10 +643,10 @@ class K4SendPMessage extends FAAction {
 			foreach($valid_users as $user) {
 				
 				/* Make sure to add a limit to how many messages can be sent if there is one */
-				if($i < $request['template']->getVar('maxsendtopms') && $request['template']->getVar('maxsendtopms') > 0) {
+				if($i < $request['template']->getVar('maxsendtopms') &$request['template']->getVar('maxsendtopms') > 0) {
 					
 					/* Prepare the inserting statement */
-					$insert_a			= &$request['dba']->prepareStatement("INSERT INTO ". K4PRIVMESSAGES ." (name,folder_id,poster_name,poster_id,body_text,posticon,disable_html,disable_bbcode,disable_emoticons,disable_sig,disable_areply,disable_aurls,is_draft,created,member_id,member_name,member_has_read,tracker_id,sending_id,parent_id,message_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+					$insert_a			= $request['dba']->prepareStatement("INSERT INTO ". K4PRIVMESSAGES ." (name,folder_id,poster_name,poster_id,body_text,posticon,disable_html,disable_bbcode,disable_emoticons,disable_sig,disable_areply,disable_aurls,is_draft,created,member_id,member_name,member_has_read,tracker_id,sending_id,parent_id,message_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 									
 					$insert_a->setString(1, htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
 					$insert_a->setInt(2, (($user['id'] != $request['user']->get('id') || $is_draft == 1) ? $folder : PM_SENTITEMS));
@@ -756,8 +756,8 @@ class K4SendPMessage extends FAAction {
 				$request['template']->setVar('newpm_action', 'member.php?act=pm_savemessage');
 
 				/* Get and set the emoticons and post icons to the template */
-				$emoticons	= &$request['dba']->executeQuery("SELECT * FROM ". K4EMOTICONS ." WHERE clickable = 1");
-				$posticons	= &$request['dba']->executeQuery("SELECT * FROM ". K4POSTICONS);
+				$emoticons	= $request['dba']->executeQuery("SELECT * FROM ". K4EMOTICONS ." WHERE clickable = 1");
+				$posticons	= $request['dba']->executeQuery("SELECT * FROM ". K4POSTICONS);
 				
 				/* Add the emoticons and the post icons to the template */
 				$request['template']->setList('emoticons', $emoticons);
@@ -908,7 +908,7 @@ class K4SelectPMMoveFolder extends FAAction {
 			$prefix = 'OR';
 		}
 
-		$result		= &$request['dba']->executeQuery("SELECT * FROM ". K4PRIVMESSAGES ." WHERE member_id = ". intval($request['user']->get('id')) ." AND ($pm_ids)");
+		$result		= $request['dba']->executeQuery("SELECT * FROM ". K4PRIVMESSAGES ." WHERE member_id = ". intval($request['user']->get('id')) ." AND ($pm_ids)");
 		$it 		= &new K4PrivMessageIterator($request['dba'], $result, $request['template']->getVar('IMG_DIR'), $request['template']->getVar('pmrepliesperpage') );
 		
 		// set the folders list and template
@@ -1053,14 +1053,14 @@ class K4PrivMsgIterator extends FAArrayiterator {
 
 	function __construct(&$dba, &$user, $message, $show_replies = TRUE) {
 		
-		global $_QUERYPARAMS, $_USERGROUPS, $_USERFIELDS;
+		global $_QUERYPARAMS, $_USERGROUPS, $_PROFILEFIELDS;
 		
 		$this->qp						= $_QUERYPARAMS;
 		$this->sr						= (bool)$show_replies;
 		$this->dba						= &$dba;
 		$this->user						= &$user;
 		$this->groups					= $_USERGROUPS;
-		$this->fields					= $_USERFIELDS;
+		$this->fields					= $_PROFILEFIELDS;
 				
 		parent::__construct(array(0 => $message));
 	}
@@ -1130,7 +1130,7 @@ class K4PrivMsgIterator extends FAArrayiterator {
 			$poster_extra					= $temp['poster_id'] == $this->user->get('id') ? ' AND folder_id <> '. PM_SENTITEMS : '';
 			$member_extra					= $temp['member_id'] == $this->user->get('id') ? '' : ' AND folder_id = '. PM_SENTITEMS;
 			
-//			$this->result					= &$this->dba->executeQuery("SELECT * FROM ". K4PRIVMESSAGES ." WHERE message_id = ". intval($temp['pm_id']) ." ORDER BY created ASC"); // ." AND ((poster_id = ". intval($temp['poster_id']) ." $poster_extra) OR (member_id = ". intval($temp['member_id']) ." $member_extra))
+//			$this->result					= $this->dba->executeQuery("SELECT * FROM ". K4PRIVMESSAGES ." WHERE message_id = ". intval($temp['pm_id']) ." ORDER BY created ASC"); // ." AND ((poster_id = ". intval($temp['poster_id']) ." $poster_extra) OR (member_id = ". intval($temp['member_id']) ." $member_extra))
 //			$temp['replies']				= &new K4PrivMsgRepliesIterator($this->user, $this->dba, $this->result, $this->qp, $this->users, $this->groups, $this->fields);
 		}
 		

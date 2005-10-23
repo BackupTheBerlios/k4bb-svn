@@ -42,7 +42,7 @@ class AdminCategories extends FAAction {
 			global $_QUERYPARAMS;
 
 
-			$categories			= &$request['dba']->executeQuery("SELECT * FROM ". K4CATEGORIES ." ORDER BY row_order ASC");
+			$categories			= $request['dba']->executeQuery("SELECT * FROM ". K4CATEGORIES ." ORDER BY row_order ASC");
 
 			$request['template']->setList('categories', $categories);
 			
@@ -105,7 +105,7 @@ class AdminInsertCategory extends FAAction {
 			$request['dba']->beginTransaction();
 
 			/* Build the queries */
-			$insert_a			= &$request['dba']->prepareStatement("INSERT INTO ". K4CATEGORIES ." (name,description,row_type,row_level,created,row_order) VALUES (?,?,?,?,?,?)");
+			$insert_a			= $request['dba']->prepareStatement("INSERT INTO ". K4CATEGORIES ." (name,description,row_type,row_level,created,row_order) VALUES (?,?,?,?,?,?)");
 			
 			/* Build the query for the categories table */
 			$insert_a->setString(1, $_REQUEST['name']);
@@ -232,7 +232,7 @@ class AdminSimpleCategoryUpdate extends FAAction {
 				return $action->execute($request);
 			}
 
-			$update		= &$request['dba']->prepareStatement("UPDATE ". K4CATEGORIES ." SET row_order=? WHERE category_id=?");
+			$update		= $request['dba']->prepareStatement("UPDATE ". K4CATEGORIES ." SET row_order=? WHERE category_id=?");
 			$update->setInt(1, $_REQUEST['row_order']);
 			$update->setInt(2, $category['category_id']);
 
@@ -331,8 +331,8 @@ class AdminUpdateCategory extends FAAction {
 			}
 						
 			/* Build the queries */
-			$update_a			= &$request['dba']->prepareStatement("UPDATE ". K4CATEGORIES ." SET name=?,description=?, row_order=? WHERE category_id=?");
-			$update_b			= &$request['dba']->prepareStatement("UPDATE ". K4MAPS ." SET name=? WHERE varname=?");
+			$update_a			= $request['dba']->prepareStatement("UPDATE ". K4CATEGORIES ." SET name=?,description=?, row_order=? WHERE category_id=?");
+			$update_b			= $request['dba']->prepareStatement("UPDATE ". K4MAPS ." SET name=? WHERE varname=?");
 			
 			/* Build the query for the categories table */
 			$update_a->setString(1, $_REQUEST['name']);
@@ -452,7 +452,7 @@ class AdminCategoryPermissions extends FAAction {
 			}
 						
 			$all_maps = array();
-			$maps = &$request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE category_id = ". intval($category['category_id']) ." AND forum_id = 0");
+			$maps = $request['dba']->executeQuery("SELECT * FROM ". K4MAPS ." WHERE category_id = ". intval($category['category_id']) ." AND forum_id = 0");
 			get_recursive_maps($request, $all_maps, $parents, $maps, 2);
 			$all_maps = &new FAArrayIterator($all_maps);
 			
@@ -502,7 +502,7 @@ class AdminUpdateCategoryPermissions extends FAAction {
 					
 					if(($_REQUEST[$c['varname'] .'_can_view'] != $c['can_view']) || ($_REQUEST[$c['varname'] .'_can_add'] != $c['can_add']) || ($_REQUEST[$c['varname'] .'_can_edit'] != $c['can_edit']) || ($_REQUEST[$c['varname'] .'_can_del'] != $c['can_del'])) {
 
-						$update				= &$request['dba']->prepareStatement("UPDATE ". K4MAPS ." SET can_view=?,can_add=?,can_edit=?,can_del=? WHERE varname=? AND category_id=?");
+						$update				= $request['dba']->prepareStatement("UPDATE ". K4MAPS ." SET can_view=?,can_add=?,can_edit=?,can_del=? WHERE varname=? AND category_id=?");
 						$update->setInt(1, $_REQUEST[$c['varname'] .'_can_view']);
 						$update->setInt(2, $_REQUEST[$c['varname'] .'_can_add']);
 						$update->setInt(3, $_REQUEST[$c['varname'] .'_can_edit']);
@@ -540,7 +540,7 @@ class AdminCategoriesIterator extends FAProxyIterator {
 	function AdminCategoriesIterator(&$dba, $query = NULL) {
 		$query				= $query == NULL ? "SELECT * FROM ". K4CATEGORIES ." ORDER BY row_order ASC" : $query;
 		
-		$this->result		= &$dba->executeQuery($query);
+		$this->result		= $dba->executeQuery($query);
 		$this->dba			= &$dba;
 
 		parent::__construct($this->result);
