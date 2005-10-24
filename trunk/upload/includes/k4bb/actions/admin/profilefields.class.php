@@ -129,14 +129,14 @@ class AdminInsertUserField extends FAAction {
 			$insert->setString(3, @$_REQUEST['description']);
 			$insert->setString(4, @$_REQUEST['default_value']);
 			$insert->setString(5, @$_REQUEST['inputtype']);
-			$insert->setInt(6, iif(intval(@$_REQUEST['user_maxlength']) > 0, intval(@$_REQUEST['user_maxlength']), 255));
-			$insert->setString(7, iif(isset($_REQUEST['inputoptions']) && @$_REQUEST['inputoptions'] != '', serialize(explode('\r\n', preg_replace("~(\r|\n|\r\n)~is", "\r\n", @$_REQUEST['inputoptions']))), ''));
+			$insert->setInt(6, (intval(@$_REQUEST['user_maxlength']) > 0 ? intval(@$_REQUEST['user_maxlength']) : 255));
+			$insert->setString(7, (isset($_REQUEST['inputoptions']) && @$_REQUEST['inputoptions'] != '' ? serialize(explode('\n', preg_replace("~(\r|\n|\r\n)~is", "\n", @$_REQUEST['inputoptions']))) : ''));
 			$insert->setInt(8, @$_REQUEST['min_perm']);
-			$insert->setInt(9, iif(isset($_REQUEST['display_register']) && @$_REQUEST['display_register'] == 'yes', 1, 0));
-			$insert->setInt(10, iif(isset($_REQUEST['display_profile']) && @$_REQUEST['display_profile'] == 'yes', 1, 0));
-			$insert->setInt(11, iif(isset($_REQUEST['display_topic']) && @$_REQUEST['display_topic'] == 'yes', 1, 0));
-			$insert->setInt(12, iif(isset($_REQUEST['display_post']) && @$_REQUEST['display_post'] == 'yes', 1, 0));
-			$insert->setInt(13, iif(isset($_REQUEST['display_memberlist']) && @$_REQUEST['display_memberlist'] == 'yes', 1, 0));
+			$insert->setInt(9, (isset($_REQUEST['display_register']) && @$_REQUEST['display_register'] == 'yes' ? 1 : 0));
+			$insert->setInt(10, (isset($_REQUEST['display_profile']) && @$_REQUEST['display_profile'] == 'yes' ? 1 : 0));
+			$insert->setInt(11, (isset($_REQUEST['display_topic']) && @$_REQUEST['display_topic'] == 'yes' ? 1 : 0));
+			$insert->setInt(12, (isset($_REQUEST['display_post']) && @$_REQUEST['display_post'] == 'yes' ? 1 : 0));
+			$insert->setInt(13, (isset($_REQUEST['display_memberlist']) && @$_REQUEST['display_memberlist'] == 'yes' ? 1 : 0));
 			$insert->setString(14, @$_REQUEST['display_image']);
 			$insert->setInt(15, @$_REQUEST['display_size']);
 			$insert->setInt(16, @$_REQUEST['display_rows']);
@@ -200,7 +200,7 @@ class AdminRemoveUserField extends FAAction {
 				return $action->execute($request);
 			}
 
-			if(!$request['dba']->query("SELECT ". $field['name'] ." FROM ". K4USERINFO ." LIMIT 1")) {
+			if(!$request['dba']->executeQuery("SELECT ". $field['name'] ." FROM ". K4USERINFO ." LIMIT 1")) {
 
 				/* Delete the profile field version of this because obviously it shouldn't exist */
 				$request['dba']->executeUpdate("DELETE FROM ". K4PROFILEFIELDS ." WHERE name = '". $request['dba']->quote($field['name']) ."'");
@@ -261,24 +261,14 @@ class AdminEditUserField extends FAAction {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDUSERFIELD'), 'content', TRUE);
 				return $action->execute($request);
 			}
-			
+						
 			foreach($field as $key => $val) {
 				
 				/* If these are options, format them */
 				if($key == 'inputoptions') {
 					$val = $val != '' ? iif(!unserialize($val), array(), unserialize($val)) : array();
 					if(is_array($val) && !empty($val)) {
-						
-						$new_val = "";
-						
-						$i = 0;
-						foreach($val as $option) {
-							if($option != '') {
-								$new_val .= $i != 0 ? "\n". $option : $option;
-								$i++;
-							}
-						}
-						$val = $new_val;
+						$val = str_replace("\n\n", "\n", implode("\n", $val));
 					} else {
 						$val = "";
 					}
@@ -337,14 +327,14 @@ class AdminUpdateUserField extends FAAction {
 			$update->setString(2, @$_REQUEST['description']);
 			$update->setString(3, @$_REQUEST['default_value']);
 			$update->setString(4, @$_REQUEST['inputtype']);
-			$update->setInt(5, iif(intval(@$_REQUEST['user_maxlength']) > 0, intval(@$_REQUEST['user_maxlength']), 255));
-			$update->setString(6, iif(isset($_REQUEST['inputoptions']) && @$_REQUEST['inputoptions'] != '', serialize(explode('\r\n', preg_replace("~(\r|\n|\r\n)~is", "\r\n", @$_REQUEST['inputoptions']))), ''));
+			$update->setInt(5, (intval(@$_REQUEST['user_maxlength']) > 0 ? intval(@$_REQUEST['user_maxlength']) : 255));
+			$update->setString(6, (isset($_REQUEST['inputoptions']) && @$_REQUEST['inputoptions'] != '' ? serialize(explode('\n', preg_replace("~(\r|\n|\r\n)~is", "\n", @$_REQUEST['inputoptions']))) : ''));
 			$update->setInt(7, @$_REQUEST['min_perm']);
-			$update->setInt(8, iif(isset($_REQUEST['display_register']) && @$_REQUEST['display_register'] == 'yes', 1, 0));
-			$update->setInt(9, iif(isset($_REQUEST['display_profile']) && @$_REQUEST['display_profile'] == 'yes', 1, 0));
-			$update->setInt(10, iif(isset($_REQUEST['display_topic']) && @$_REQUEST['display_topic'] == 'yes', 1, 0));
-			$update->setInt(11, iif(isset($_REQUEST['display_post']) && @$_REQUEST['display_post'] == 'yes', 1, 0));
-			$update->setInt(12, iif(isset($_REQUEST['display_memberlist']) && @$_REQUEST['display_memberlist'] == 'yes', 1, 0));
+			$update->setInt(8, (isset($_REQUEST['display_register']) && @$_REQUEST['display_register'] == 'yes' ? 1 : 0));
+			$update->setInt(9, (isset($_REQUEST['display_profile']) && @$_REQUEST['display_profile'] == 'yes' ? 1 : 0));
+			$update->setInt(10, (isset($_REQUEST['display_topic']) && @$_REQUEST['display_topic'] == 'yes' ? 1 : 0));
+			$update->setInt(11, (isset($_REQUEST['display_post']) && @$_REQUEST['display_post'] == 'yes' ? 1 : 0));
+			$update->setInt(12, (isset($_REQUEST['display_memberlist']) && @$_REQUEST['display_memberlist'] == 'yes' ? 1 : 0));
 			$update->setString(13, @$_REQUEST['display_image']);
 			$update->setInt(14, @$_REQUEST['display_size']);
 			$update->setInt(15, @$_REQUEST['display_rows']);

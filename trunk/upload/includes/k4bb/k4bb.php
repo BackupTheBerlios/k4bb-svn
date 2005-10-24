@@ -99,9 +99,12 @@ class K4Controller extends FAController {
 		$request['template']->setVar('load_time', $request['load_timer']->__toString());
 		
 		$url = new FAUrl($_URL->__toString());
+		
 		$request['template']->setVar('curr_url', $url->__toString());
+		
 		$url->args = array();
 		$url->anchor = $url->file = FALSE;
+		
 		$request['template']->setVar('forum_url', $url->__toString());
 
 		$request['template']->setVar('style_cellspacing', K4_TABLE_CELLSPACING);
@@ -189,6 +192,20 @@ class K4Controller extends FAController {
 			$request['template']->setVar('enablegzip', 0);
 			$request['template']->render($request['template_file']);
 		}
+	}
+}
+
+/**
+ * A basic controller
+ */
+class K4BasicController extends FAController {
+	function execute() {
+		$request = &$this->getRequest();
+
+		$request['template'] = &new FATemplate();
+		$this->addFilter(new K4DatabaseFilter);
+
+		parent::execute();
 	}
 }
 

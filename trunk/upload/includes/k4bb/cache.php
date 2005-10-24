@@ -57,7 +57,7 @@ function reset_cache($cache_varname) {
 			$contents	= "<?php \nerror_reporting(E_ALL); \n\nif(!defined('IN_K4')) { \n\treturn; \n}";
 			foreach($cache as $id => $data) {
 				$id			= '_'. strtoupper(implode('', explode('_', $id)));
-				$contents	.= "\n\n\$cache['{$id}'] = " . var_export($data, TRUE) .";";
+				$contents	.= "\n\n\$GLOBALS['{$id}'] = " . var_export($data, TRUE) .";";
 			}
 			$contents	.= "\n?>";
 

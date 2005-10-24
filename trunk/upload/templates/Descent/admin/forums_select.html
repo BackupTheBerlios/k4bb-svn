@@ -28,7 +28,7 @@
 						<if:if var="row_type" eq="2">
 							<option value="{$forum_id}">{$indent_level}{$name}</option>
 						<if:else />
-							<optgroup label="c{$category_id}" />
+							<optgroup label="{$name}" />
 						</if:if>
 					</list:item>
 					</list:list>

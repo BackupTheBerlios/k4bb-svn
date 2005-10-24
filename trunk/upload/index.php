@@ -105,9 +105,11 @@ class K4DefaultAction extends FAAction {
 		$groups				= array();
 
 		// Set the usergroups legend list
-		foreach($_USERGROUPS as $group) {
-			if($group['display_legend'] == 1)
-				$groups[]	= $group;
+		if(is_array($_USERGROUPS) && !empty($_USERGROUPS)) {
+			foreach($_USERGROUPS as $group) {
+				if($group['display_legend'] == 1)
+					$groups[]	= $group;
+			}
 		}
 
 		$groups				= &new FAArrayIterator($groups);
