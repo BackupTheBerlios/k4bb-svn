@@ -315,14 +315,14 @@
 	
 	try {
 		<maps:if forum="forum_forum_id" var="html" method="can_add">var disable_html			= document.getElementById('disable_html');</maps:if>
-		var disable_bbcode			= d.getElementById('disable_bbcode');
+		//var disable_bbcode			= d.getElementById('disable_bbcode');
 		var disable_emoticons		= d.getElementById('disable_emoticons');
 		var disable_aurls			= d.getElementById('disable_aurls');
 		var enable_sig				= d.getElementById('enable_sig');
 		var disable_areply			= d.getElementById('disable_areply');
 		
 		<maps:if forum="forum_forum_id" var="html" method="can_add">disable_html.checked		= ({$reply_disable_html} == 1) ? true : false;</maps:if>
-		disable_bbcode.checked		= ({$reply_disable_bbcode} == 1) ? true : false;
+		//disable_bbcode.checked		= ({$reply_disable_bbcode} == 1) ? true : false;
 		disable_emoticons.checked	= ({$reply_disable_emoticons} == 1) ? true : false;
 		disable_aurls.checked		= ({$reply_disable_aurls} == 1) ? true : false;
 		enable_sig.checked			= ({$reply_disable_sig} == 1) ? false : true;

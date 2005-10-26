@@ -412,12 +412,13 @@ function setSendPostPreview(form_url) {
 			}
 			
 			try {
-
+				
 				// open and send the request
 				r.open("POST", form_url + '&use_ajax=1', true);
-				r.state_handler = function() { /*r.change_ready_state();*/ getPostPreview(); }
+				//r.state_handler = getPostPreview;
+				r.state_handler = getPostPreview;
 				r.send('submit_type=preview' + query_string);
-
+				
 			} catch(e) { form.submit(); }
 		} else {
 			if(form) form.submit();
@@ -429,7 +430,7 @@ function setSendPostPreview(form_url) {
  * Get the post preview and display it
  */
 function getPostPreview() {
-	
+
 	// try to get the form and preview holder
 	var form			= d.getElementById('savepost_form'); // get the current form
 	var preview_holder	= d.getElementById('ajax_post_preview'); // get the preview holder
@@ -438,9 +439,9 @@ function getPostPreview() {
 	if(r && preview_holder && form) {
 		
 		try {
-	
+			
 			// if the request is loading
-			if(r.readyState < 4) {
+			if(r.request.readyState < 4) {
 				
 				// display the preview holder
 				preview_holder.style.display = 'block';
@@ -453,14 +454,13 @@ function getPostPreview() {
 			}
 
 			// if the request is complete
-			if(r.readyState == 4) {
+			if(r.request.readyState == 4) {
 
 				// if there were no errors
-				if(r.status == 200) {
+				if(r.request.status == 200) {
 					
 					// if there is no response
 					if(r.response == null || r.response == '') {
-						
 						form.submit();
 						preview_holder.style.display = 'none';
 					
@@ -483,7 +483,7 @@ function getPostPreview() {
 				} else {
 
 					// abort the request
-					r.close();
+					r.request.close();
 				}
 			}
 		} catch(e) { alert(e.message); }

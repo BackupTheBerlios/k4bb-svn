@@ -81,17 +81,19 @@ function checkForm(form)
 					valid = false;
 					break;
 				}
-				if (matches[j]) {
-					var match = document.getElementById(matches[j]);
+				if(typeof matches != 'undefined' && matches) {
+					if (matches[j]) {
+						var match = document.getElementById(matches[j]);
 
-					if (element.value != match.value)
-					{
-						element.value = '';
-						match.value = '';
+						if (element.value != match.value)
+						{
+							element.value = '';
+							match.value = '';
 
-						showError(j);
-						valid = false;
-						break;
+							showError(j);
+							valid = false;
+							break;
+						}
 					}
 				}
 			}

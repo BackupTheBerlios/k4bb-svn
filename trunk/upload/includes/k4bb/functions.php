@@ -735,7 +735,7 @@ function bbtime($timestamp = FALSE) {
 		$timestamp = time();
 
 	if(isset($_SESSION['user']) && $_SESSION['user']->isMember())
-		return $timestamp + ($_SESSION['user']->get('timezone') * 3600);
+		return $timestamp + (intval($_SESSION['user']->get('timezone')) * 3600);
 	else
 		return $timestamp;
 }

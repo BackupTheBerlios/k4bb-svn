@@ -991,13 +991,15 @@ class K4FontColor_Compiler extends K4BBCodeTag {
 	var $font_color = '';
 	function parse_open($matches) {
 		
+		$ret = '';
 		$params = $this->get_params($matches);
 		
-		$this->font_color = ($params[0] != '' ? $params[0] : isset($params[1]) ? $params[1] : '');
+		$this->font_color = (isset($params[0]) && $params[0] != '' ? $params[0] : (isset($params[1]) && $params[1] != '' ? $params[1] : ''));
 		
-		if($this->font_color != '') {
-			return '<!-- COLOR --><span style="color: #'. $this->font_color .';">';
-		}
+		if($this->font_color != '')
+			$ret = '<!-- COLOR --><span style="color: '. (ctype_alpha($this->font_color) && preg_match("~([a-f0-9]+)~i", $this->font_color) && strlen($this->font_color) <= 6 ? '#'. strtoupper($this->font_color) : $this->font_color) .';">';
+		
+		return $ret;
 	}
 	function parse_close() {
 		if($this->font_color != '') {
