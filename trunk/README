@@ -40,10 +40,10 @@ following directories:
 
 	upload/tmp (this directory and all sub-directories)
 	upload/includes/k4bb
-	upload/templates/Descent/.compiled
-	upload/templates/Descent/admin/.compiled
-	upload/templates/Descent/admin/css/.compiled
-	upload/templates/Descent/admin/menus/.compiled
+	upload/templates/Descent/compiled
+	upload/templates/Descent/admin/compiled
+	upload/templates/Descent/admin/css/compiled
+	upload/templates/Descent/admin/menus/compiled
 
 CHMOD all of these files with 0777 permissions.
 
