@@ -1,0 +1,39 @@
+<is:admin>
+<div class="k4_borderwrap">
+	<div class="k4_maintitle">{$L_UTMATCHEDNAMES}<span style="font-weight: normal;">: {$search_name}</span></div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="k4_subtitle">{$L_USERNAME}</td>
+			<td class="k4_subtitle">{$L_USERTITLE}</td>
+			<td class="k4_subtitle">{$L_MANAGE}</td>
+		</tr>
+		<list:list id="matched_users">
+		<list:default list="matched_users">
+		<tr class="alt3">
+			<td colspan="5">
+				<div class="outset_box" align="center">
+					<br />
+					<strong>{$L_NOMATCHEDUSERS}</strong>
+					<br /><br />
+				</div>
+			</td>
+		</tr>
+		</list:default>
+		<list:item list="matched_users">
+		<list:switch list="matched_users" var="row_class" a="alt3" b="alt1">
+		<form action="admin.php?act=titles_updateuser" method="post" enctype="multipart/form-data">
+		<tr>
+			<td class="{$row_class}" width="20%" style="text-align: center;"><strong>{$name}</strong></td>
+			<td class="{$row_class}" width="20%" style="text-align: center;">
+				<input type="hidden" name="user_id" value="{$id}" />
+				<input type="text" name="user_title" value="{$user_title}" maxlength="50" class="inputbox" />
+			</td>
+			<td class="alt2" width="20%" style="text-align: center;"><input type="submit" class="button" value="{$L_SAVE}" /></td>
+		</tr>
+		</form>
+		</list:switch>
+		</list:item>
+		</list:list>
+	</table>
+</div>
+</is:admin>

@@ -48,3 +48,5 @@ $_CONFIG['dba']['directory']			= '{$db_directory}';
 $_CONFIG['dba']['server']				= '{$db_server}';
 $_CONFIG['dba']['user']					= '{$db_user}';
 $_CONFIG['dba']['pass']					= '{$db_pass}';
+
+define('CACHE_IN_DB', {$cache_in_db}); // only true if you have a SMALL forum

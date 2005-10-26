@@ -34,14 +34,19 @@ var hidden_selects			= new Array()
 var tempX					= 0;
 var tempY					= 0;
 var use_click				= true; // should the menus be opened by clicking them, or hovering?
+var allow_follow_urls		= false; // if the link is an <a> tag, allow it to follow the url?
 
 
 /* Initialize a menu object */
-function menu_init(link_id, menu_id) {
+function menu_init(link_id, menu_id, c_p) {
 	
 	var menu				= d.getElementById(menu_id);
 	var link				= d.getElementById(link_id);
 	
+	if(typeof c_p != 'undefined') {
+		menu.c_p = c_p;
+	}
+
 	if(menu && link) {
 		
 		//menu_positions(menu, link);
@@ -56,8 +61,9 @@ function menu_init(link_id, menu_id) {
 		/* Onclick function for the current link */
 		link.onclick = function() {
 			
-			if(link.href)
+			if(link.href && !allow_follow_urls) {
 				link.href = '#' + link.id;
+			}
 
 			// enforce the link id
 			menu.link_id		= this.id;
@@ -67,6 +73,10 @@ function menu_init(link_id, menu_id) {
 				openmenu(menu, this);
 			} else {
 				closemenu(menu);
+			}
+			
+			if(allow_follow_urls && !use_click) {
+				document.location.href = link.href;
 			}
 
 			return false;
@@ -298,12 +308,20 @@ function menu_positions(menu, link) {
 		//}
 		
 		menu.style.position	= 'absolute';
+		
 
 		/* set some menu position stuff */
 		force_right			= parseInt(d.left(link) + d.width(menu)) >= document.body.clientWidth ? true : false;
 		
 		menu.style.left		= (force_right ? (d.left(link) - (d.width(menu) - d.width(link))) : d.left(link)) + 'px';
 		menu.style.top		= parseInt(d.top(link) + d.height(link)) + 'px';
+
+		if(typeof menu.c_p != 'undefined') {
+			for(var i = 0; i < d.sizeof(menu.c_p); i++) {
+				eval("menu.style." + menu.c_p[i] + "='" + menu.c_p[i+1] + "';");
+				i++;
+			}
+		}
 	}
 }
 

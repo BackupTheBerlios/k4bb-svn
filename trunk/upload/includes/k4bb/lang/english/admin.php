@@ -64,6 +64,24 @@ $_LANG += array(
 'L_FAQANSWERS'			=> 'FAQ Answers',
 /* / Admin CP Menu */
 
+'L_PRUNEMESSAGE'		=> 'This will delete any topic which has not been posted to within the number of days you select. If you do not enter a number then all topics will be deleted. It will not remove topics in which polls are still running nor will it remove announcements or sticky topics. You will need to remove these topics manually.',
+'L_RANKSMESSAGE'		=> 'Ranks are displayed in topics and posts. They can be a way to say that a certain person or group is banned, that someone has won something or that someone is an exceptional user. Feel free to have fun with this feature.',
+'L_ICONSMESSAGE'		=> 'Icons are fun; they allow users to add emotion to their posts, and to the display of their topics in a forum. Emoticons are displayed from within posts whereas Post Icons are displayed beside the title in a forum view and in a few other places.',
+'L_STYLESMESSAGE'		=> 'From here you can manage your style sets and CSS styles. CSS (Cascading Style Sheets) are what\'s going to make your board look good or bad. If you have any sense at all, you won\'t fool around with them, but on the other hand, with the advanced CSS editor, editing them is a cinch! So go have fun.',
+'L_CENSORINGMESSAGE'	=> 'Word censoring is paramount to a forum. If there are younger users, and their parents actually think that they haven\'t been exposed to \'words of profanity\' then this is a good option for you to fill out.',
+'L_PERMSMESSAGE'		=> 'This function will allow you to go and edit a forums permissions, there will be a lot more options on the next version.. it\'s all about time though.',
+'L_FAQMESSAGE'			=> 'FAQ (Frequently Asked Questions) are articles which help people understand the use and needs of a forum. It lets them know how to do very basic things which are not hard to figure out anyway, but that\'s not the issue here. From this section you can add and modify FAQ categories and answers.',
+'L_OPTIONSMESSAGE'		=> 'These are your board options. From here, lots of stuff is decided. You can turn your board on and off and do other things. The general idea of this is to be able to manage all of the little aspects of your forum. So have fun!',
+'L_GROUPSMESSAGE'		=> 'User Groups are both great and utterly useless. It allows you to add ranks and stuff to many people, and then apply permissions to a wide range of people, but that\'s about it.',
+'L_FORUMSMESSAGE'		=> 'Forums are those things that people post in. So just go ahead and create one! From this section you can create and manage your forums and categories, create forum annoucements, etc. If you are starting a new forum, just remember to start off small!',
+'L_CATEGORIESMESSAGE'	=> 'Categories always come first. You can\'t have a forum without a category! Categories are a generalisation of what the forums within them are about.',
+'L_GLOBALPMMESSAGE'		=> 'This will send out a private message to everyone. They will not be able to remove it. (they can\'t remove it because you need to spread a sense of authority)',
+'L_USERSMESSAGE'		=> 'This area allows you to dissallow usernames, find users so you can go ad edit their settings without them knowing, ban users (because you have to deal with the annoying ones), manage usergroups (to go against society and separate your community into classes), manage custom progfile fields, user titles and ranks, etc.',
+'L_POSTSMESSAGE'		=> 'From here you can manage things like emoticons (smilies), post icons, acronyms and word censors. All of these things are useful. If you want to censor those naugty litty kiddies, go here! If you want to make it so that you can make faces at people over the internet, this is the place to be. All of this and more!',
+'L_OPTIONSMESSAGE'		=> 'This section allows you to edit the boards general settings, control the k4BB cache and manage general forum permissions. These options are critical to managing your forums.',
+'L_SPIDERSMESSAGE'		=> 'From here you can manage those information loving search engine spiders. Set some info and k4 will manage search engine spiders for you.. woohoo!',
+'L_GLOBALEMAILMESSAGE'	=> 'Here\'s a nifty way to bug your members at home: send them emails! From this section, you can send emails to EVERY member of your forum. Amazing eh?',
+
 /* Admin CP */
 'L_WELCOME'				=> 'Welcome',
 'L_ADMINISTRATION'		=> 'Administration',
@@ -789,6 +807,23 @@ $_LANG += array(
 'L_ADDUSERTITLE'		=> 'Add New User Title',
 'L_EDITUSERTITLE'		=> 'Edit User Title',
 'L_NOUSERTITLES'		=> 'There are currently no active user titles.',
+'L_INSERTUTITLE'		=> 'You must insert a title to give to users with >= this many posts.',
+'L_INSERTUMINPOSTS'		=> 'You must insert the minimum number of posts a user must have to gain this user titles (numric value).',
+'L_ADDEDUSERTITLE'		=> 'Successfully added the user title <strong>%s</strong>.',
+'L_CHECKDELUTITLE'		=> 'Are you sure that you want to remove this user title? It could apply to countless users!',
+'L_BADUSERTITLE'		=> 'The selected user title does not exist.',
+'L_UPDATEDUSERTITLE'	=> 'Successfully update the user title <strong>%s</strong>.',
+'L_DELETEDUSERTITLE'	=> 'Successfully removed the user title <strong>%s</strong>.',
+'L_CUSTOMUSERTITLES'	=> 'Custom User Titles',
+'L_NUMPIPSTOSHOW'		=> 'Number of pips to show',
+'L_NUMPIPSTOSHOWHOWTO'	=> 'Pips are little stars or images that denote a scale of how many posts you have made.',
+'L_UTITLEIMAGE'			=> 'Image to show en lieu of Pips',
+'L_UTITLEIMAGEHOWTO'	=> 'If you choose to use a custom image, write the path to that image (relative to your forum home) or write a url here.',
+'L_NUMPIPS'				=> 'Num Pips',
+'L_UTMATCHEDNAMES'		=> 'User Titles - Matched Names',
+'L_USERTITLE'			=> 'User Title',
+'L_NOMATCHEDUSERS'		=> 'Your search matched no users.',
+'L_UPDATEDUSERTITLE'	=> 'Successfully update the user title for <strong>%s</strong>.',
 /* / User Titles */
 
 );

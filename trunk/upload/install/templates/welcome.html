@@ -87,6 +87,7 @@
 <body>
 <div align="center" style="padding: 20px 100px 0px 100px;">
 	<div class="k4_shadow" style="text-align: left;">
+		
 		<!-- Header -->
 		<table width="100%" cellpadding="0" cellspacing="0" border="0">
 			<tr>
@@ -95,18 +96,118 @@
 			</tr>
 		</table>
 		<!-- / Header -->
+		
 		<div class="k4_borderwrap">
-			<div class="k4_maintitle">Successfully Installed!</div>
+			<div class="k4_maintitle">General Checking</div>
 			<table width="100%" cellpadding="0" cellspacing="1" border="0" class="k4_table">
+				<tr>
+					<td colspan="2" class="alt4">
+						<p class="smalltext">
+							In order to safely and fully <strong>install/upgrade</strong> k4 Bulletin Board on your server, the following conditions must be met:
+						</p>
+					</td>
+				</tr>
+				
+				<!-- Database Check -->
+				<tr>
+					<td colspan="2" class="k4_subtitle">Databases</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="alt3">
+						<p class="smalltext">
+							k4 Bulletin Board can run on several database types. The following will check if your server has at 
+							least one of the four databases installed that k4BB works with.
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td class="alt1" width="50%"><strong>MySQL</strong></td>
+					<td class="alt2" width="50%"><strong>{$has_mysql}</strong></td>
+				</tr>
+				<tr>
+					<td class="alt1" width="50%"><strong>MySQLi</strong></td>
+					<td class="alt2" width="50%"><strong>{$has_mysqli}</strong></td>
+				</tr>
+				<tr>
+					<td class="alt1" width="50%"><strong>SQLite</strong></td>
+					<td class="alt2" width="50%"><strong>{$has_sqlite}</strong></td>
+				</tr>
+				<tr>
+					<td class="alt1" width="50%"><strong>PostgreSQL</strong></td>
+					<td class="alt2" width="50%"><strong>{$has_pgsql}</strong></td>
+				</tr>
+				<tr>
+					<td class="alt2" colspan="2" style="text-align: center;font-size: 16px;font-weight: bold;">Passed: {$db_passed}</td>
+				</tr>
+				<!-- / Database Check -->
+				
+				<!-- Fileserver Check -->
+				<tr>
+					<td colspan="2" class="k4_subtitle">Fileserver</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="alt3">
+						<p class="smalltext">
+							In order to run k4 Bulletin Board at peak efficiency and properly, several folders on your file
+							server must have their permissions changed. The following files must have their CHMOD permissions
+							changed to 0777. This means that these files have read, write and remove access. 
+						</p>
+						<p class="smalltext">
+							If you don't understand what CHMOD is or how to change the permissions on a file, please visit this website:
+							<a href="http://en.wikipedia.org/wiki/Chmod" title="About CHMOD" target="_blank">Wikipedia - CHMOD</a>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td class="alt1" width="50%"><strong>/upload/tmp</strong> (This directory and ALL sub-directories)</td>
+					<td class="alt2" width="50%"><strong>{$has_chmod_tmp}</strong></td>
+				</tr>
+				<tr>
+					<td class="alt1" width="50%"><strong>/upload/includes/k4bb</strong></td>
+					<td class="alt2" width="50%"><strong>{$has_chmod_k4bb}</strong></td>
+				</tr>
+				<tr>
+					<td class="alt1" width="50%"><strong>/upload/templates/Descent/compiled</strong></td>
+					<td class="alt2" width="50%"><strong>{$has_chmod_tc}</strong></td>
+				</tr>
+				<tr>
+					<td class="alt1" width="50%"><strong>/upload/templates/Descent/admin/compiled</strong></td>
+					<td class="alt2" width="50%"><strong>{$has_chmod_tac}</strong></td>
+				</tr>
+				<tr>
+					<td class="alt1" width="50%"><strong>/upload/templates/Descent/admin/menus/compiled</strong></td>
+					<td class="alt2" width="50%"><strong>{$has_chmod_tamc}</strong></td>
+				</tr>
+				<tr>
+					<td class="alt1" width="50%"><strong>/upload/templates/Descent/admin/css/compiled</strong></td>
+					<td class="alt2" width="50%"><strong>{$has_chmod_tacc}</strong></td>
+				</tr>
+				<tr>
+					<td class="alt1" width="50%"><strong>/upload/templates/Archive/compiled</strong></td>
+					<td class="alt2" width="50%"><strong>{$has_chmod_ac}</strong></td>
+				</tr>
+				<tr>
+					<td class="alt1" width="50%"><strong>/upload/templates/RSS/</strong> (all sub-directories of this directory)</td>
+					<td class="alt2" width="50%"><strong>{$has_chmod_rc}</strong></td>
+				</tr>
+				<tr>
+					<td class="alt2" colspan="2" style="text-align: center;font-size: 16px;font-weight: bold;">Passed: {$fs_passed}</td>
+				</tr>
+				<!-- Fileserver Check -->
+				
 				<tr>
 					<td class="alt4" colspan="2">
 						<p class="smalltext">
-							Congratulations, k4 Bulletin Board has been successfully installed on your server. Please be sure to delete the install directory located in the forum directory.  If you fail to do so, anyone could easily whipe your k4 Bulletin Board installation.  If you do not feel comfortable deleting the directory, it is suggested that you move it 
-							above your document root to prevent outsiders from accessing its contents.
+							You can choose to continue this setup whether or not you have passed the above tests. It is
+							required that you pass the database tests; however, you might very well be adventurous and
+							be prepared to hit a brick wall.. so who knows!
 						</p>
-						<p class="smalltext">
-							To view your forum immediately, <a href="../index.php">click here</a>.
-						</p>
+					</td>
+				</tr>
+				<tr>
+					<td class="k4_subtitle" colspan="2" style="text-align: center;">
+						<input type="button" class="button" value="INSTALL" onclick="document.location.href='index.php?act=dbsetup'" />
+						<!--<input type="button" class="button" value="UPGRADE" onclick="document.location.href='index.php?act=upgrade'" />-->
 					</td>
 				</tr>
 			</table>

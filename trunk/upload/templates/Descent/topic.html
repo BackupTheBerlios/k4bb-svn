@@ -36,35 +36,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td width="20%" valign="top" <if:if var="topic_row" eq="1">rowspan="2"</if:if> class="alt1">
-			<div class="smalltext">
-				<if:if var="poster_id" eq="0">
-				{$L_GUEST}
-				<if:else />
-					<if:if var="avatarenabled" eq="1"><if:if var="post_user_avatar" eq="1"><if:if var="user_viewavatars" eq="1">
-					<img src="viewfile.php?act=avatar&amp;id={$poster_id}" alt="" border="" />
-					<br /><br />
-					</if:if></if:if></if:if>
-					<if:if var="post_user_group_nicename" noteq="">{$post_user_group_nicename}<br /></if:if>
-					<if:if var="post_user_group_avatar" noteq="">
-					<img src="tmp/upload/group_avatars/{$post_user_group_avatar}" border="0" alt="{$post_user_group_nicename}" />
-					<br /><br />
-					</if:if>
-					<strong>{$L_JOINED}:</strong> <core:date format="%b %d %Y">{$post_user_created}</core:date><br />
-					<strong>{$L_POSTS}:</strong> <a href="search.php?act=find&author={$post_user_name}" title="{$L_FINDPOSTSBYUSER}">{$post_user_num_posts}</a>
-					<if:if var="user_location" noteq="">
-					<br /><strong>{$L_LOCATION}:</strong> {$post_user_location}
-					</if:if>
-					<list:sublist list="topic" id="profilefields" column="profilefields">
-					<list:item list="profilefields">
-					<br /><strong>{$title}:</strong></label>
-					{$value}
-					</list:item>
-					</list:sublist>
-				</if:if>
-				<core:import id="post_user_ims" file="post_user_ims.html" />
-			</div>
-		</td>
+		<core:import id="post_user_section" file="post_user_section.html" />
 		<td class="alt3" width="80%" id="topic{$topic_id}" valign="top">
 			
 			<!-- Body Text -->

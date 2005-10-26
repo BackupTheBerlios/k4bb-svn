@@ -2,18 +2,27 @@
 <table cellpadding="0" cellspacing="0" border="0" class="admin_menu">
 	<tr>
 		<td><a href="admin.php" title="k4 Bulletin Board {$L_ADMINISTRATION}"><img src="Images/admin/k4.gif" alt="k4 Bulletin Board" border="0" alt="k4 Bulletin Board {$L_ADMINISTRATION}" /></td>
-		<td style="border-left: 1px solid #CCCCCC;"><a href="admin.php?act=options" title="{$L_OPTIONS}"><img src="Images/admin/Buttons/options{$options_on}.gif" alt="{$L_OPTIONS}" border="0" /></a></td>
-		<td style="border-left: 1px solid #CCCCCC;"><a href="admin.php?act=forums_home" title="{$L_FORUMS}"><img src="Images/admin/Buttons/forums{$forums_on}.gif" alt="{$L_FORUMS}" border="0" /></a></td>
-		<td style="border-left: 1px solid #CCCCCC;"><a href="admin.php?act=users" title="{$L_USERS}"><img src="Images/admin/Buttons/users{$users_on}.gif" alt="{$L_USERS}" border="0" /></a></td>
-		<td style="border-left: 1px solid #CCCCCC;"><a href="admin.php?act=posts" title="{$L_POSTS}"><img src="Images/admin/Buttons/posts{$posts_on}.gif" alt="{$L_POSTS}" border="0" /></a></td>
-		<td style="border-left: 1px solid #CCCCCC;"><a href="admin.php?act=stylesets" title="{$L_STYLES}"><img src="Images/admin/Buttons/styles{$styles_on}.gif" alt="{$L_STYLES}" border="0" /></a></td>
-		<td style="border-left: 1px solid #CCCCCC;" valign="top">
+		<td><a href="admin.php?act=options" title="{$L_OPTIONS}" id="options_link"><img src="Images/admin/Buttons/options{$options_on}.gif" alt="{$L_OPTIONS}" border="0" /></a></td>
+		<td><a href="admin.php?act=forums_home" title="{$L_FORUMS}" id="forums_link"><img src="Images/admin/Buttons/forums{$forums_on}.gif" alt="{$L_FORUMS}" border="0" /></a></td>
+		<td><a href="admin.php?act=users" title="{$L_USERS}" id="users_link"><img src="Images/admin/Buttons/users{$users_on}.gif" alt="{$L_USERS}" border="0" /></a></td>
+		<td><a href="admin.php?act=posts" title="{$L_POSTS}" id="posts_link"><img src="Images/admin/Buttons/posts{$posts_on}.gif" alt="{$L_POSTS}" border="0" /></a></td>
+		<td><a href="admin.php?act=stylesets" title="{$L_STYLES}" id="styles_link"><img src="Images/admin/Buttons/styles{$styles_on}.gif" alt="{$L_STYLES}" border="0" /></a></td>
+		<td valign="top">
 			<img src="Images/admin/Buttons/miscellaneous.gif" alt="{$L_MISCELLANEOUS}" border="0" /><br />
-			<a href="admin.php?act=spiders" title="{$L_SEARCHSPIDERS}"><img src="Images/admin/Buttons/spiders{$spiders_on}.gif" alt="{$L_SEARCHSPIDERS}" border="0" /></a><br />
-			<a href="admin.php?act=email" title="{$L_EMAILUSERS}"><img src="Images/admin/Buttons/email{$email_on}.gif" alt="{$L_EMAILUSERS}" border="0" /></a><br />
-			<a href="admin.php?act=email" title="{$L_GLOBALPM}"><img src="Images/admin/Buttons/pmusers{$pmusers_on}.gif" alt="{$L_GLOBALPM}" border="0" /></a><br />
+			<a href="admin.php?act=spiders" title="{$L_SEARCHSPIDERS}" id="spiders_link"><img src="Images/admin/Buttons/spiders{$spiders_on}.gif" alt="{$L_SEARCHSPIDERS}" border="0" /></a><br />
+			<a href="admin.php?act=email" title="{$L_EMAILUSERS}" id="email_link"><img src="Images/admin/Buttons/email{$email_on}.gif" alt="{$L_EMAILUSERS}" border="0" /></a><br />
+			<a href="admin.php?act=email" title="{$L_GLOBALPM}" id="pm_link"><img src="Images/admin/Buttons/pmusers{$pmusers_on}.gif" alt="{$L_GLOBALPM}" border="0" /></a><br />
 		</td>
-		<td style="border-left: 1px solid #CCCCCC;"><a href="admin.php?act=faq_categories" title="{$L_FAQ}"><img src="Images/admin/Buttons/faq{$faq_on}.gif" alt="{$L_FAQ}" border="0" /></a></td>
+		<td><a href="admin.php?act=faq_categories" title="{$L_FAQ}" id="faq_link"><img src="Images/admin/Buttons/faq{$faq_on}.gif" alt="{$L_FAQ}" border="0" /></a></td>
 	</tr>
 </table>
+<!-- Options Menu --><div class="trans_ddmenu" id="options_menu" style="display:none;"><div class="admin_ddmenu"><span>{$L_OPTIONSMESSAGE}</span></div></div><!-- / Options Menu -->
+<!-- Forums Menu --><div class="trans_ddmenu" id="forums_menu" style="display:none;"><div class="admin_ddmenu"><span>{$L_FORUMSMESSAGE}</span></div></div><!-- / Forums Menu -->
+<!-- Users Menu --><div class="trans_ddmenu" id="users_menu" style="display:none;"><div class="admin_ddmenu"><span>{$L_USERSMESSAGE}</span></div></div><!-- / Users Menu -->
+<!-- Posts Menu --><div class="trans_ddmenu" id="posts_menu" style="display:none;"><div class="admin_ddmenu"><span>{$L_POSTSMESSAGE}</span></div></div><!-- / Posts Menu -->
+<!-- Styles Menu --><div class="trans_ddmenu" id="styles_menu" style="display:none;"><div class="admin_ddmenu"><span>{$L_STYLESMESSAGE}</span></div></div><!-- / Styles Menu -->
+<!-- FAQ Menu --><div class="trans_ddmenu" id="faq_menu" style="display:none;"><div class="admin_ddmenu"><span>{$L_FAQMESSAGE}</span></div></div><!-- / FAQ Menu -->
+<!-- Spiders Menu --><div class="trans_ddmenu" id="spiders_menu" style="display:none;"><div class="admin_ddmenu"><span>{$L_SPIDERSMESSAGE}</span></div></div><!-- / Spiders Menu -->
+<!-- Email Menu --><div class="trans_ddmenu" id="email_menu" style="display:none;"><div class="admin_ddmenu"><span>{$L_GLOBALEMAILMESSAGE}</span></div></div><!-- / Email Menu -->
+<!-- PM Menu --><div class="trans_ddmenu" id="pm_menu" style="display:none;"><div class="admin_ddmenu"><span>{$L_GLOBALPMMESSAGE}</span></div></div><!-- / PM Menu -->
 </is:admin>

@@ -12,7 +12,10 @@
 	<style type="text/css">
 		
 		{$css_styles}
-
+		
+		body {
+			overflow: hidden;
+		}
 		/* Drop Down menus */
 		.nav_top {
 			padding-right: 15px;
@@ -38,12 +41,39 @@
 		}
 		.admin_main {
 			border-top: 1px solid #999999;
-			border-right: 1px solid #999999;
+			/*border-right: 1px solid #999999;*/
 			border-bottom: 1px solid #999999;
 			padding: 5px 5px 5px 5px;
-			margin: 0px 10px 10px 0px;
+			/*margin: 0px 10px 10px 0px;*/
 			background-color: #FFFFFF;
 		}
+		.trans_ddmenu {
+			border-top: 1px solid #124376;
+			border-bottom: 1px solid #124376;
+			width: 100%;
+			float: left;
+			padding: 10px;
+			font-size: 12px;
+			font-family: Verdana, Arial, Helvetica, sans-serif;
+			color: #FFFFFF;
+
+			/* Mozilla ignores crazy MS image filters, so it will skip the following */
+			filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale, src='Images/admin/transparent_png.png');
+		}
+		/* IE ignores styles with [attributes], so it will skip the following. */
+		.trans_ddmenu[class] {
+			float: left;
+			background-image:url('Images/admin/transparent_png.png');
+		}
+		.admin_ddmenu {
+			width: 90%;
+			padding-left: 30px;
+			background-image: url('Images/admin/help.gif');
+			background-position:  left center;
+			background-repeat: no-repeat;
+			cursor: default;
+		}
+		.admin_ddmenu span { /*background-color: #FFFFF;*/font-weight: bold; }
 	</style>
 	<script type="text/javascript">
 		var d = new k4lib();
@@ -54,10 +84,10 @@
 	</script>
 	<core:import id="admin_js" file="admin.js" />
 </head>
-<body style="background-color: #C4CAD9;">
+<body style="background-color: #C4CAD9;overflow: hidden;">
 <is:admin>
 <core:import id="admin_head" file="admin_head.html" />
-<div class="admin_main">
+<div class="admin_main" id="admin_main">
 	<table width="100%" cellpadding="0" cellspacing="0" border="0">
 		<tr>
 			<td valign="top">
@@ -71,6 +101,22 @@
 	<br />
 	<core:import id="footer" file="../footer.html" />
 </div>
+<script type="text/javascript">
+use_click = false;
+allow_follow_urls = true;
+menu_init('options_link', 'options_menu', new Array('left', '0px','top', '71px'));
+menu_init('forums_link', 'forums_menu', new Array('left', '0px','top', '71px'));
+menu_init('users_link', 'users_menu', new Array('left', '0px','top', '71px'));
+menu_init('posts_link', 'posts_menu', new Array('left', '0px','top', '71px'));
+menu_init('styles_link', 'styles_menu', new Array('left', '0px','top', '71px'));
+menu_init('faq_link', 'faq_menu', new Array('left', '0px','top', '71px'));
+menu_init('email_link', 'email_menu', new Array('left', '0px','top', '71px'));
+menu_init('pm_link', 'pm_menu', new Array('left', '0px','top', '71px'));
+menu_init('spiders_link', 'spiders_menu', new Array('left', '0px','top', '71px'));
+
+</script>
+
+
 </is:admin>
 </body>
 </html>

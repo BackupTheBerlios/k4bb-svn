@@ -154,6 +154,13 @@ $app->setAction('usernames_remove', new AdminRemoveBadUserName);
 
 /* User Titles */
 $app->setAction('usertitles', new AdminUsertTitles);
+$app->setAction('titles_add', new AdminAddUserTitle);
+$app->setAction('titles_insert', new AdminInsertUserTitle);
+$app->setAction('titles_edit', new AdminEditUserTitle);
+$app->setAction('titles_update', new AdminUpdateUserTitle);
+$app->setAction('titles_remove', new AdminDeleteUserTitle);
+$app->setAction('titles_finduser', new AdminUserTitleFindUsers);
+$app->setAction('titles_updateuser', new AdminUserTitleUpdateUser);
 
 /* Acronym Management */
 $app->setAction('acronyms', new AdminAcronyms);
@@ -210,6 +217,9 @@ $app->setAction('email_users', new AdminSetSendEmails);
 
 /* Posts */
 $app->setAction('posts', new AdminPosts);
+
+/* Announcements */
+$app->setAction('announcements', new AdminManageAnnouncements);
 
 $app->execute();
 

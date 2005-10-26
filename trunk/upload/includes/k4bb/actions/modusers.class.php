@@ -331,8 +331,6 @@ class ModFindUsers extends FAAction {
 		
 		// include the wildcards in the valid username match
 		if(!isset($_REQUEST['username']) || $_REQUEST['username'] == '' || !preg_match('~^[a-zA-Z]([a-zA-Z0-9]*[-_ \*\%]?)*[a-zA-Z0-9]*$~', $_REQUEST['username'])) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_BADUSERS'), 'content', TRUE);
 			return $action->execute($request);
 		}

@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
 <head>
-	<title>k4 v2.0 - Install - Powered by k4 BB</title>
+	<title>k4BB 2.0 - Install - Powered by k4BB</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-15" />
 	<meta http-equiv="Content-Style-Type" content="text/css" />
 	<meta name="generator" content="k4 Bulletin Board 2.0" />
@@ -16,116 +16,72 @@
 	<meta name="rating" content="general" />
 	<link rel="icon" href="favicon.ico" type="image/x-icon" />
 	<style type="text/css">
-	* {
-		font-family: Arial, Helvetica, Sans-Serif;
-	}
-	body {
-		background-color: #FFFFFF;
-		padding: 0px;
-		margin: 0px;
-	}
-	a {
-		font-size: 12px;
-		color: #00000;
-		text-decoration: none;
-	}
-	h5 {
-		color: #045975;
-		padding: 0px;
-		margin: 0px;
-		font-weight: bold;
-		font-size: 18px;
-	}
-	h3 {
-		padding-left: 15px;
-		font-size: 16px;
-		color: #E07591;
-	}
-	form {
-		padding: 0px;
-		margin: 0px;
-	}
-	.info_box {
-		width: auto;
-		padding: 10px;
-		text-align: justify;
-	}
-	.main_box_header {
-		width: 545px;
-		height: 10px;
-		background-image: url('images/main_box_header.gif');
-		background-position: left bottom;
-		background-repeat: repeat-x;
-		position: relative;
-		top: 3px;
-	}
-	.main_box_footer {
-		width: 545px;
-		height: 10px;
-		background-image: url('images/main_box_footer.gif');
-		background-position: left top;
-		background-repeat: repeat-x;
-		position: relative;
-		top: -3px;
-	}
-	.main_box {
-		width: 545px;
-		background-color: #FEF4F7;
-		background-image: url('images/main_box_gradient.gif');
-		background-position: left bottom;
-		background-repeat: repeat-x;
-		border-left: 1px solid #FEEAEF;
-		border-right: 1px solid #FEE4EB;
-		padding-bottom: 5px;
-		text-align: left;
-	}
-	.main_box td {
-		text-align: left;
-		font-size: 13px;
-		padding: 5px;
-		border-bottom: 1px solid #FFFFFF;
-		background-color: #FEEAEF;
-	}
-	.search_box {
-		border: 1px solid #666666;
-	}
-	.button { 
-		background-image: url('images/background_button.gif');
-		background-position: left top;
-		background-repeat: repeat-x;
-		font-size: 11px;
-		font-family: verdana, geneva, lucida, arial, helvetica, sans-serif;
-		border-right: 1px solid #B3B3B3;
-		border-left: 1px solid #B3B3B3;
-		border-top: 1px solid #F6F6F7;
-		border-bottom: 1px solid #919194;
-		margin-top: 5px;
-	}
-	.copyright {
-		width: 175px;
-		color: #666666;
-		border-top: 1px dashed #666666;
-		padding-top: 2px;
-		font-size: 10px;
-	}
-	.copyright a {
-		color: #000000;
-		font-size: 10px;
-	}
-	.smalltext {
-		font-size: 12px;
-		color: #333333;
-	}
-	.inputbox {
-		border: 1px solid #666666;
-	}
-	.inputfailed {
-		border: 1px solid #FF0000;
-	}
-	.header {
-		border-left: 1px solid #FEEAEF;
-		border-right: 1px solid #FEE4EB;
-	}
+		* { font-family: verdana, geneva, lucida, arial, helvetica, sans-serif; }
+		.alt1 { padding: 4px;border: 0px;background-color: #f7f7f7;color: #000000; }
+		.alt2 { padding: 4px;border: 0px;background-color: #dedfdf;color: #000000; }
+		.alt3 { padding: 4px;border: 0px;background-color: #E4E7F5;color: #000000; }
+		.alt4 { padding: 4px;border: 0px;background-color: #FAFBC7;color: #000000; }
+		.answer { border: 1px solid #999999;list-style-type: none;background-color: #FFFFFF;padding: 5px;top:-2px;position: relative;width: 90%;text-align: left; }
+		.button { background: url(images/background_button.gif) left top repeat-x;font-size: 11px;font-family: verdana, geneva, lucida, arial, helvetica, sans-serif;border-right: 1px solid #B3B3B3;border-left: 1px solid #B3B3B3;border-top: 1px solid #F6F6F7;border-bottom: 1px solid #919194; }
+		.inputbox {  border : 1px solid #999999;font-size:11px; }
+		.inputbox:focus { border : 1px solid #666666;font-size:11px; }
+		.inputfailed { border: 1px solid #FF0000;font-size:11px;background-color:#FFEEFF; }
+		.inputnone { background-color: #E4E7F5;font-size:11px;text-decoration: underline;border: 0px;color: #003366; }
+		.inset_box { border: 1px inset;padding: 10px;background-color: #f7f7f7;border-bottom: 2px solid #B2B2B2;border-right: 2px solid #B2B2B2;border-top: 2px solid #000000;border-left: 2px solid #000000; }
+		.inset_box_small { border: 1px inset;padding: 5px;background-color: #f7f7f7;border-bottom: 1px solid #B2B2B2;border-right: 1px solid #B2B2B2;border-top: 1px solid #000000;border-left: 1px solid #000000; }
+		.k4_borderwrap { padding: 0px; border: 2px solid #4A7CB1; background-color: #FFFFFF; }
+		.k4_ddmenutable { position: relative;top: -7px;background-color: #F7F7F7;border-left: 2px solid #4A7CB1;border-right: 2px solid #4A7CB1;border-bottom: 2px solid #4A7CB1; }
+		.k4_ddmenutable td { padding: 2px; }
+		.k4_maintitle { border-bottom: 2px solid #6699AA;padding: 5px;background: #4A7CB1 url(images/background_thead.gif) left top repeat-x;color: #FFFFFF;font-weight: bold;font-family: tahoma, verdana, geneva, lucida, arial, helvetica, sans-serif; }
+		.k4_maintitle a { font-size: 12px;color: #FFFFFF; }
+		.k4_maintitle a:hover { font-size: 12px;color: #FFFFFF; }
+		.k4_modmaintitle { background-image:url(images/background_mod.gif);background-position:left top;background-repeat:repeat-x;background-color: #045975;color: #FFFFFF;font-weight: bold;font-family: tahoma, verdana, geneva, lucida, arial, helvetica, sans-serif; }
+		.k4_modmaintitle a, .k4_maintitle div { font-size: 12px;color: #FFFFFF; }
+		.k4_shadow { padding-bottom: 10px; background: url(images/background_shadow.gif) left bottom repeat-x; }
+		.k4_subtitle { border-bottom: 2px solid #999999;font-family: arial, helvetica, sans-serif;color: #336699;font-size: 11px;font-weight: bold;background: #DCEAF8 url(/*Images/Descent/background_tcat.gif*/) left top repeat-x;padding: 5px;cursor: default; }
+		.k4_subtitle a:hover { color: #336699;font-family: arial, helvetica, sans-serif;font-size: 11px;font-weight: bold;text-decoration: underline; }
+		.k4_subtitle a:link, .k4_subtitle a:visited, .k4_subtitle a:active { color: #336699;font-family: arial, helvetica, sans-serif;font-size: 11px;font-weight: bold;text-decoration: none; }
+		.k4_table { background-color: #FFFFFF; }
+		.logo_header td { background-color: #E1E1E2;margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px; }
+		.menu_global a:hover { background-color: #F4F4F4; color: #C83636; text-decoration: none; }
+		.menu_global li { margin-left: 0;padding: 0px 5px 0px 7px;border-left: 1px solid #999999;list-style: none;display: inline; }
+		.menu_global li.first { margin-left: 0;border-left: none;list-style: none;display: inline; }
+		.minitext, .minitext *, *.minitext { font-size:10px; padding:0px; }
+		.outset_box { background: #f7f7f7 url(Images/Descent/background_panel.gif) left bottom repeat-x;border: 1px outset;padding: 10px;border-top: 2px solid #B2B2B2;border-left: 2px solid #B2B2B2;border-bottom: 2px solid #000000;border-right: 2px solid #000000; }
+		.outset_box_small { border: 1px outset;padding: 5px;background-color: #f7f7f7;border-top: 1px solid #B2B2B2;border-left: 1px solid #B2B2B2;border-bottom: 1px solid #000000;border-right: 1px solid #000000; }
+		.pagination td { border: 1px solid #CCCCCC; }
+		.panel { border: 0px;background-color: #E4E7F5;color: #000000; }
+		.panelsurround { background-color: #D5D8E5;color: #000000; }
+		.phpcontent { font-family: Courier, sans-serif;text-align:left;width: 90%;font-size: 11px;color: #000000;background-color: #FFFFFF; border: 1px solid #A9B8C2;padding: 3px; }
+		.phpcontent * { font-family: Courier, sans-serif; }
+		.phptitle { text-align:left;width: 90%;font-weight: bold;font-size: 11px;color: #000000;background-color: #A9B8C2; border: 1px solid #A9B8C2;padding: 3px; }
+		.question { list-style-type: none;margin: 0px 0px 1px 0px;background-color: #fcfcfc;padding: 5px;border: 1px solid #999999;color: #000000;font-size: 11px;width: 90%; }
+		.quote { border: 1px solid #999999; }
+		.quote * { font-size: 11px;color: #666666; }
+		.quote legend { font-weight: bold;color: #333333; }
+		.quotecontent { text-align:left;width: 90%;font-size: 11px;color: #000000;background-color: #FFFFFF; border: 1px solid #A9B8C2;padding: 3px; }
+		.quotetitle { text-align:left;width: 90%;font-weight: bold;font-size: 11px;color: #000000;background-color: #A9B8C2; border: 1px solid #A9B8C2;padding: 3px; }
+		.smalltext, .smalltext *, *.smalltext { font-size:11px; padding:0px; }
+		.special_panel { background-color: #B7CEE1;color: #000000;padding: 10px;border: outset 2px; }
+		.title_link { color: #C83636; font-size: 20px; font-weight: normal; }
+		.topiced_off td { background-color: #FEFEFE;padding: 0px;margin:0px;color: #000000; }
+		.topiced_on, .topiced_on td { background-color: #CCCCCC;padding: 0px;margin:0px;height: 20px; }
+		.visible { display: block;border: 1px solid #BDD786;padding: 3px;width: 95%; }
+		a { color: #000000;text-decoration: none; }
+		a.bbcode_url { border-bottom: 1px dashed #CCCCCC; }
+		a.title_link:hover { text-decoration: none; }
+		a:hover { text-decoration: underline; color: #C83636; }
+		acronym { cursor:default;color: #336699;border-bottom: 1px dashed #336699; }
+		body { background-color: #FFFFFF;padding: 0px;margin: 0px;font-size: 12px; }
+		div.ddmenu_button { padding: 3px;color: #000000;font-weight:bold;width: auto; }
+		div.menu_global { background-color: #E5E5E5; padding: 5px; background: #E5E5E5 url(Images/Descent/Icons/menu_corner.gif) left top no-repeat; }
+		fieldset { border: 1px solid #003366;padding: 5px;margin: 0px; }
+		form { margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px; }
+		h1 { margin: 0px;padding: 0px;font-size: 20px; }
+		legend { color: #22229C;font: 11px tahoma, verdana, geneva, lucida, arial, helvetica, sans-serif; }
+		td { padding: 3px; }
+		td, th, p, li { font-size: 10pt;font-family: verdana, geneva, lucida, arial, helvetica, sans-serif; }
+		ul.menu_global { color: #333333;margin-left: 0;padding-left: 0;display: inline; }
 	</style>
 	<script type="text/javascript">
 	function document_location(url) {
@@ -245,195 +201,270 @@
 		error_classes[num] = (classname) ? classname : element.className;
 	}
 	</script>
-
 </head>
 <body>
-<div align="center">
-	<div class="info_box" style="width: 520px;">
-		<div style="text-align: center;">
-			<h5>Install</h5>
+<form action="index.php?act=dbverify" method="post" enctype="multipart/form-data" onsubmit="return checkForm(this);" onreset="resetErrors();">
+<script type="text/javascript">resetErrors();</script>
+<div align="center" style="padding: 20px 100px 0px 100px;">
+	<div class="k4_shadow" style="text-align: left;">
+		
+		<!-- Header -->
+		<table width="100%" cellpadding="0" cellspacing="0" border="0">
+			<tr>
+				<td align="left"><img src="images/k4.gif" alt="k4BB Logo" border="0" /></td>
+				<td align="right"><span class="title_link">Welcome to the k4BB 2.0 beta 7.1 Installer</span></td>
+			</tr>
+		</table>
+		<!-- / Header -->
+		
+		<div class="k4_borderwrap">
+			<div class="k4_maintitle">General Checking</div>
+				<table width="100%" cellpadding="0" cellspacing="1" border="0" class="k4_table">
+					<tr>
+						<td class="alt4" colspan="2">
+							<p class="smalltext">
+								For this installation to work, you will be required to fill in fields concerning your server 
+								setup and where k4 will be located therein. If you do not feel that you will be able to fill 
+								these fields in, please contact your hosting service and ask them kindly for help.
+							</p>
+						</td>
+					</tr>
+
+					<!-- General Info -->
+					<tr>
+						<td class="k4_subtitle" colspan="2">General Information</td>
+					</tr>
+					<tr>
+						<td class="alt1" width="50%"><strong>Board Name:</strong></td>
+						<td class="alt3" width="50%">
+							<input type="text" name="bb_title" id="bb_title" value="" class="inputbox" />
+							<script type="text/javascript">addVerification('bb_title', '.+', 'bbtitle_error', 'inputfailed');</script>
+
+							<div id="bbtitle_error" style="display: none;">Please insert a name for your forum.</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="alt1" width="50%"><strong>Board Description:</strong></td>
+						<td class="alt2" width="50%">
+							<input type="text" name="bb_description" id="bb_description" value="" class="inputbox" />
+							<script type="text/javascript">addVerification('bb_description', '.+', 'bbdescription_error', 'inputfailed');</script>
+
+							<div id="bbdescription_error" style="display: none;">Please insert a short description of your forum.</div>
+						</td>
+					</tr>
+					<!-- / General Info -->
+					
+					<!-- Database Settings -->
+					<tr>
+						<td class="k4_subtitle" colspan="2">General Information</td>
+					</tr>
+					<tr>
+						<td class="alt3" colspan="2">
+							<p class="smalltext">
+								The database connection is an integral part of the k4 Bulletin Board. For installation
+								purposes, k4 requires that the account information provided refers to an account with 
+								administrator permissions on the given database.
+							</p>
+							<p class="smalltext">
+								If you are wondering why there are two MySQL drivers, that is due to a newer 'improved' 
+								MySQL extension strictly for PHP 5 and up.  If you are running PHP 5 and your MySQL 
+								version is greater than 4.1.1, please chose the MySQLi driver if you wish to take advantage 
+								of the additional features unique to that build.
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td width="50%"><strong>Database Type:</strong></td>
+						<td width="50%">
+							<script type="text/javascript">var db_type = 'mysql';</script>
+							<select name="dba_driver" id="dba_driver" onchange="db_type = this[this.selectedIndex].value;" onselect="db_type = this[this.selectedIndex].value;">
+								<option value="mysql">MySQL</option>
+								<option value="mysqli">MySQLi</option>
+								<option value="sqlite">SQLite</option>
+								<option value="pgsql">PostgreSQL</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td width="50%"><strong>Database User Name:</strong></td>
+						<td width="50%">
+							<input type="text" name="dba_username" id="dba_username" value="" class="inputbox" />
+							<script type="text/javascript">if(db_type != 'sqlite') { addVerification('dba_username', '.+', 'dba_username_error', 'inputfailed'); } </script>
+							<div id="dba_username_error" style="display: none;">Please insert a Database User Name.</div>
+						</td>
+					</tr>
+					<tr>
+						<td width="50%"><strong>Database User Password:</strong></td>
+						<td width="50%">
+							<input type="password" name="dba_password" id="dba_password" value="" class="inputbox" />
+							<script type="text/javascript">if(db_type != 'sqlite') { addVerification('dba_password', '.+', 'dba_password_error', 'inputfailed'); } </script>
+							<div id="dba_password_error" style="display: none;">Please insert a Database Password.</div>
+						</td>
+					</tr>
+					<tr>
+						<td width="50%"><strong>Database Name:</strong></td>
+						<td width="50%">
+							<input type="text" name="dba_name" id="dba_name" value="" class="inputbox" />
+							<script type="text/javascript">addVerification('dba_name', '.+', 'dba_name_error', 'inputfailed');</script>
+							<div id="dba_name_error" style="display: none;">Please insert a Database Name.</div>
+						</td>
+					</tr>
+					<tr>
+						<td width="50%"><strong>Database Server:</strong></td>
+						<td width="50%">
+							<input type="text" name="dba_server" id="dba_server" value="localhost" class="inputbox" />
+							<script type="text/javascript">addVerification('dba_server', '.+', 'dba_server_error', 'inputfailed');</script>
+							<div id="dba_server_error" style="display: none;">Please insert a Database Server.</div>
+						</td>
+					</tr>
+					<!-- / Database Settings -->
+					
+					<!-- FTP Settings -->
+					<tr>
+						<td class="k4_subtitle" colspan="2">General Information</td>
+					</tr>
+					<tr>
+						<td class="alt3" colspan="2">
+							<p class="smalltext">
+								<strong>If you are running k4BB on the internet</strong>, then FTP is essential 
+								for it to work. If you don't know your server's FTP information, please consult 
+								your hosting provider.
+							</p>
+							<p class="smalltext">
+								If you set this to 'No' and it still requires you to fill in the values, simply
+								put dummy values in.. such as periods or random letters.
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td width="50%"><strong>Use FTP?:</strong></td>
+						<td width="50%">
+							<script type="text/javascript">var use_ftp = 'TRUE';</script>
+							<select name="use_ftp" id="use_ftp" onchange="use_ftp = this[this.selectedIndex].value;" onselect="use_ftp = this[this.selectedIndex].value;">
+								<option value="TRUE">Yes</option>
+								<option value="FALSE">No</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td width="50%"><strong>FTP Username:</strong></td>
+						<td width="50%">
+							<input type="text" name="ftp_name" id="ftp_name" value="" class="inputbox" />
+							<script type="text/javascript">if(use_ftp != 'FALSE') { addVerification('ftp_name', '.+', 'username_error', 'inputfailed'); }</script>
+							<div id="username_error" style="display: none;">Please insert an FTP Username.</div>
+						</td>
+					</tr>
+					<tr>
+						<td width="50%"><strong>FTP Password:</strong></td>
+						<td width="50%">
+							<input type="password" name="ftp_pass" id="ftp_pass" value="" class="inputbox" />
+							<script type="text/javascript">if(use_ftp != 'FALSE') { addVerification('ftp_pass', '.+', 'password_error', 'inputfailed'); }</script>
+							<div id="password_error" style="display: none;">Please insert an FTP Password.</div>
+						</td>
+					</tr>
+					<tr>
+						<td width="50%"><strong>FTP Password: (check)</strong></td>
+						<td width="50%">
+							<input type="password" name="ftp_pass_check" id="ftp_pass_check" value="" class="inputbox" />
+							<script type="text/javascript">if(use_ftp != 'FALSE') { addCompare('ftp_pass_check', 'ftp_pass', 'ftp_password_error', 'inputfailed'); }</script>
+							<div id="ftp_password_error" style="display: none;">Your FTP password needs to match the password check.</div>
+						</td>
+					</tr>
+					<!-- / FTP Settings -->
+					
+					<!-- Cache Settings -->
+					<tr>
+						<td class="k4_subtitle" colspan="2">Cache Settings</td>
+					</tr>
+					<tr>
+						<td class="alt3" colspan="2">
+							<p class="smalltext">
+								This option lets you choose where you want to store a 'stored' version of the bulk of k4BB's data. The cache
+								lets you optimize your board. You can store it on the fileserver (generally faster, requires less queries, but
+								sometimes people have problems with it) OR you can store it in the database (slower, more queries, almost no 
+								problems). Make your decision wisely.
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td width="50%"><strong>Store cache in:</strong></td>
+						<td width="50%">
+							<select name="store_cache" class="inputbox">
+								<option value="db">the database</option>
+								<option value="fs">the fileserver</option>
+							</select>
+						</td>
+					</tr>
+					<!--  / Cache Settings -->
+
+					<!-- Administrator Settings -->
+					<tr>
+						<td class="k4_subtitle" colspan="2">Administrator Information</td>
+					</tr>
+					<tr>
+						<td class="alt3" colspan="2">
+							<p class="smalltext">
+								This is your forum user profile. With this information you will be able to log
+								into your board and administrate everything. Make sure that the password is not
+								and easy one to guess!
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td width="50%"><strong>Administrator Username:</strong></td>
+						<td width="50%">
+							<input type="text" name="admin_name" id="admin_name" value="" class="inputbox" />
+							<script type="text/javascript">addVerification('admin_name', '.+', 'username_error', 'inputfailed');</script>
+
+							<div id="username_error" style="display: none;">Please insert an Administrator Username.</div>
+						</td>
+					</tr>
+					<tr>
+						<td width="50%"><strong>Administrator Password:</strong></td>
+						<td width="50%">
+							<input type="password" name="admin_pass" id="admin_pass" value="" class="inputbox" />
+							<script type="text/javascript">addVerification('admin_pass', '.+', 'password_error', 'inputfailed');</script>
+
+							<div id="password_error" style="display: none;">Please insert an Administrator Password.</div>
+						</td>
+					</tr>
+					<tr>
+						<td width="50%"><strong>Administrator Password: (check)</strong></td>
+						<td width="50%">
+							<input type="password" name="admin_pass_check" id="admin_pass_check" value="" class="inputbox" />
+							<script type="text/javascript">if(use_ftp != 'FALSE') { addCompare('admin_pass_check', 'admin_pass', 'admin_password_error', 'inputfailed'); }</script>
+							<div id="admin_password_error" style="display: none;">Your administrator password needs to match the password check.</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td width="50%"><strong>Administrator Email:</strong></td>
+						<td width="50%">
+							<input type="text" name="admin_email" id="admin_email" value="" class="inputbox" />
+							<script type="text/javascript">addVerification('admin_email', '.+', 'email_error', 'inputfailed');</script>
+
+							<div id="email_error" style="display: none;">Please insert an Administrator Email.</div>
+						</td>
+					</tr>
+					<!-- / Administrator Settings -->
+					
+					<tr>
+						<td class="k4_subtitle" colspan="2" style="text-align: center;">
+							<input type="submit" class="button" value="INSTALL" onclick="resetErrors()" />
+						</td>
+					</tr>
+				</table>
+			</div>
 		</div>
-		<span class="smalltext">
-			For this installation to work, you will be required to fill in fields concerning your server setup and where k4 will be located therein. If you do not feel that you will be able to fill these fields in, please contact your hosting service and ask them kindly for help.
-			<br /><br />
-			<strong>Make sure to read the README file before installing k4 Bulletin Board.</strong>
-		</span>
 	</div>
-	<div class="main_box_header">&nbsp;</div>
-	<table cellpadding="0" cellspacing="0" border="0" class="header">
-		<tr>
-			<td><img src="images/k4.gif" alt="k4 Bulletin Board" border="0" /></td>
-			<td><img src="images/header.gif" alt="k4 Bulletin Board" border="0" /></td>
-		</tr>
-	</table>
-	<div class="main_box" align="center">
-		<br />
-		<h3>General Information</h3>
-		<form action="index.php?act=dbverify" method="post" enctype="multipart/form-data" onsubmit="return checkForm(this);" onreset="resetErrors();">
-		<script type="text/javascript">resetErrors();</script>
-		<table width="100%" cellpadding="0" cellspacing="0" border="0">
-			<tr>
-				<td width="50%"><strong>Board Name:</strong></td>
-				<td width="50%">
-					<input type="text" name="bb_title" id="bb_title" value="" class="inputbox" />
-					<script type="text/javascript">addVerification('bb_title', '.+', 'bbtitle_error', 'inputfailed');</script>
-
-					<div id="bbtitle_error" style="display: none;">Please insert a name for your forum.</div>
-				</td>
-			</tr>
-			<tr>
-				<td width="50%"><strong>Board Description:</strong></td>
-				<td width="50%">
-					<input type="text" name="bb_description" id="bb_description" value="" class="inputbox" />
-					<script type="text/javascript">addVerification('bb_description', '.+', 'bbdescription_error', 'inputfailed');</script>
-
-					<div id="bbdescription_error" style="display: none;">Please insert a short description of your forum.</div>
-				</td>
-			</tr>
-		</table>
-		<br />
-		<h3>Database Information</h3>
-		<div class="info_box">
-			<p class="smalltext">The database connection is an integral part of the k4 Bulletin Board. For installation purposes, k4 requires that the account information provided refers to an account with administrator permissions on the given database.</p>
-			<p class="smalltext">If you are wondering why there are two MySQL drivers, that is due to a newer 'improved' MySQL extension strictly for PHP 5 and up.  If you are running PHP 5 and your MySQL version is greater than 4.1.1, please chose the MySQLi driver if you wish to take advantage of the additional features unique to that build.</p>
-		</div>
-		<table width="100%" cellpadding="0" cellspacing="0" border="0">
-
-			<tr>
-				<td width="50%"><strong>Database Type:</strong></td>
-				<td width="50%">
-					<script type="text/javascript">var db_type = 'mysql';</script>
-					<select name="dba_driver" id="dba_driver" onchange="db_type = this[this.selectedIndex].value;" onselect="db_type = this[this.selectedIndex].value;">
-						<option value="mysql">MySQL</option>
-						<option value="mysqli">MySQLi</option>
-						<option value="sqlite">SQLite</option>
-						<option value="pgsql">PostgreSQL</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td width="50%"><strong>Database User Name:</strong></td>
-				<td width="50%">
-					<input type="text" name="dba_username" id="dba_username" value="" class="inputbox" />
-
-					<script type="text/javascript">if(db_type != 'sqlite') { addVerification('dba_username', '.+', 'dba_username_error', 'inputfailed'); } </script>
-					<div id="dba_username_error" style="display: none;">Please insert a Database User Name.</div>
-				</td>
-			</tr>
-			<tr>
-				<td width="50%"><strong>Database User Password:</strong></td>
-				<td width="50%">
-
-					<input type="password" name="dba_password" id="dba_password" value="" class="inputbox" />
-					<script type="text/javascript">if(db_type != 'sqlite') { addVerification('dba_password', '.+', 'dba_password_error', 'inputfailed'); } </script>
-					<div id="dba_password_error" style="display: none;">Please insert a Database Password.</div>
-				</td>
-			</tr>
-			<tr>
-				<td width="50%"><strong>Database Name:</strong></td>
-
-				<td width="50%">
-					<input type="text" name="dba_name" id="dba_name" value="" class="inputbox" />
-					<script type="text/javascript">addVerification('dba_name', '.+', 'dba_name_error', 'inputfailed');</script>
-					<div id="dba_name_error" style="display: none;">Please insert a Database Name.</div>
-				</td>
-			</tr>
-			<tr>
-				<td width="50%"><strong>Database Server:</strong></td>
-
-				<td width="50%">
-					<input type="text" name="dba_server" id="dba_server" value="localhost" class="inputbox" />
-					<script type="text/javascript">addVerification('dba_server', '.+', 'dba_server_error', 'inputfailed');</script>
-					<div id="dba_server_error" style="display: none;">Please insert a Database Server.</div>
-				</td>
-			</tr>
-		</table>
-		<br />
-
-		<h3>FTP Information</h3>
-		<div class="info_box">
-			<p class="smalltext">If you are running k4 on the internet, then FTP is essential for it to work. If you don't know your server's FTP information, please consult your hosting provider.</p>
-		</div>
-		<table width="100%" cellpadding="0" cellspacing="0" border="0">
-			<tr>
-				<td width="50%"><strong>Use FTP?:</strong></td>
-				<td width="50%">
-					<script type="text/javascript">var use_ftp = 'TRUE';</script>
-					<select name="use_ftp" id="use_ftp" onchange="use_ftp = this[this.selectedIndex].value;" onselect="use_ftp = this[this.selectedIndex].value;">
-						<option value="TRUE">Yes</option>
-						<option value="FALSE">No</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td width="50%"><strong>FTP Username:</strong></td>
-				<td width="50%">
-					<input type="text" name="ftp_name" id="ftp_name" value="" class="inputbox" />
-					<script type="text/javascript">if(use_ftp != 'FALSE') { addVerification('ftp_name', '.+', 'username_error', 'inputfailed'); }</script>
-
-					<div id="username_error" style="display: none;">Please insert an FTP Username.</div>
-				</td>
-			</tr>
-			<tr>
-				<td width="50%"><strong>FTP Password:</strong></td>
-				<td width="50%">
-					<input type="password" name="ftp_pass" id="ftp_pass" value="" class="inputbox" />
-					<script type="text/javascript">if(use_ftp != 'FALSE') { addVerification('ftp_pass', '.+', 'password_error', 'inputfailed'); }</script>
-
-					<div id="password_error" style="display: none;">Please insert an FTP Password.</div>
-				</td>
-			</tr>
-		</table>
-
-		<br />
-
-		<h3>Administrator Information</h3>
-		<table width="100%" cellpadding="0" cellspacing="0" border="0">
-			<tr>
-				<td width="50%"><strong>Administrator Username:</strong></td>
-				<td width="50%">
-					<input type="text" name="admin_name" id="admin_name" value="" class="inputbox" />
-					<script type="text/javascript">addVerification('admin_name', '.+', 'username_error', 'inputfailed');</script>
-
-					<div id="username_error" style="display: none;">Please insert an Administrator Username.</div>
-				</td>
-			</tr>
-			<tr>
-				<td width="50%"><strong>Administrator Password:</strong></td>
-				<td width="50%">
-					<input type="password" name="admin_pass" id="admin_pass" value="" class="inputbox" />
-					<script type="text/javascript">addVerification('admin_pass', '.+', 'password_error', 'inputfailed');</script>
-
-					<div id="password_error" style="display: none;">Please insert an Administrator Password.</div>
-				</td>
-			</tr>
-			<tr>
-				<td width="50%"><strong>Administrator Email:</strong></td>
-				<td width="50%">
-					<input type="text" name="admin_email" id="admin_email" value="" class="inputbox" />
-					<script type="text/javascript">addVerification('admin_email', '.+', 'email_error', 'inputfailed');</script>
-
-					<div id="email_error" style="display: none;">Please insert an Administrator Email.</div>
-				</td>
-			</tr>
-		</table>
-		<br />
-
-		<div align="center">
-			<input type="submit" value="Install Forum" class="button" />
-		</div>
-
-		</form>		
-	</div>
-	<div class="main_box_footer">&nbsp;</div>
 </div>
+</form>
 <br /><br />
 <div align="center">
 	<span class="copyright">
 		[ <a href="http://www.k4bb.org" title="k4 Bulletin Board" target="_blank">Powered By: k4 Bulletin Board</a> ]
 	</span>
 	<br />
-
 </div>
 </body>
 </html>

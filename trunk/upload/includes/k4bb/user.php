@@ -33,6 +33,28 @@ if (!defined(IN_K4))
 	return;
 
 /**
+ * Get someone's user titles
+ */
+function get_user_title($user_title, $num_posts) {
+	
+	if($user_title == '') {
+
+		global $_USERTITLES;
+		
+		$user_title = '';
+
+		for($i = 0; $i < count($_USERTITLES); $i++) {
+			if(intval($num_posts) >= intval($_USERTITLES[$i]['num_posts'])) {
+				$user_title = $_USERTITLES[$i]['final_title'];
+				break;
+			}
+		}
+	}
+
+	return $user_title;
+}
+
+/**
  * Get the highest permissioned group that a user belongs to
  */
 function get_user_max_group($temp, $all_groups) {

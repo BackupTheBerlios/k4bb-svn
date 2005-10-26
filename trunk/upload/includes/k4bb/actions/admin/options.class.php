@@ -92,15 +92,17 @@ class AdminUpdateOptions extends FAAction {
 			
 			global $_QUERYPARAMS;
 			
-			$settings		= $request['dba']->executeQuery("SELECT * FROM ". K4SETTINGS ." WHERE settinggroupid = ". intval($_REQUEST['settinggroupid']));
+			if(isset($_REQUEST['settinggroupid']) && intval($_REQUEST['settinggroupid']) > 0) {
+				$settings		= $request['dba']->executeQuery("SELECT * FROM ". K4SETTINGS ." WHERE settinggroupid = ". intval($_REQUEST['settinggroupid']));
 
-			while($settings->next()) {
-				
-				$setting	= $settings->current();
+				while($settings->next()) {
+					
+					$setting	= $settings->current();
 
-				$new_val	= ctype_digit($_REQUEST[$setting['varname']]) && $_REQUEST[$setting['varname']] != '' ? intval($_REQUEST[$setting['varname']]) : $request['dba']->quote($_REQUEST[$setting['varname']]);
-				
-				$request['dba']->executeUpdate("UPDATE ". K4SETTINGS ." SET value = '$new_val' WHERE varname = '". $request['dba']->quote($setting['varname']) ."'");
+					$new_val	= ctype_digit($_REQUEST[$setting['varname']]) && $_REQUEST[$setting['varname']] != '' ? intval($_REQUEST[$setting['varname']]) : $request['dba']->quote($_REQUEST[$setting['varname']]);
+					
+					$request['dba']->executeUpdate("UPDATE ". K4SETTINGS ." SET value = '$new_val' WHERE varname = '". $request['dba']->quote($setting['varname']) ."'");
+				}
 			}
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_OPTIONS');

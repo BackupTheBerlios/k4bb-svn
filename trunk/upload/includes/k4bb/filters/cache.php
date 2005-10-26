@@ -270,6 +270,8 @@ class K4GeneralCacheFilter extends FAFilter {
 		$result									= $request['dba']->executeQuery("SELECT * FROM ". K4USERTITLES ." ORDER BY num_posts ASC");
 		while($result->next()) {
 			$temp								= $result->current();
+			$temp['image']						= $temp['image'] != '' ? '<img src="'. $temp['image'] .'" border="0" alt="'. $temp['title_text'] .'" />' : ($temp['num_pips'] > 0 ? str_repeat('<img src="Images/'. $_SESSION['user']->get('styleset') .'/Icons/pip.gif" border="0" alt="'. $temp['title_text'] .'" />', intval($temp['num_pips'])) : '');
+			$temp['final_title']				= $temp['image'] != '' ? $temp['image'] : $temp['title_text'];
 			$cache['user_titles'][]				= $temp;
 		}
 		$result->free();

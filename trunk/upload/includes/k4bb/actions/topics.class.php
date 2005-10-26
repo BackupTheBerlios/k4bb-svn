@@ -1764,6 +1764,7 @@ class TopicIterator extends FAArrayIterator {
 					$temp['post_user_'. $key] = $val;
 				
 				$temp['profilefields']	= &new FAArrayIterator(get_profile_fields($this->fields, $temp));
+				$temp['post_user_user_title'] = get_user_title($user['user_title'], $user['num_posts']);
 			}
 
 			if(!isset($temp['post_user_online']))

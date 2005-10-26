@@ -25,6 +25,7 @@
 * SOFTWARE.
 *
 * @author Geoffrey Goodman
+* @author Peter Goodman
 * @version $Id: index.php 144 2005-07-05 02:29:07Z Peter Goodman $
 * @package k42
 */
@@ -92,8 +93,8 @@ class DatabaseVerifyFilter extends FAFilter {
 			$this->addPostFilter('admin_pass', new FARequiredFilter);
 
 			if ($this->hasFailures()) {
-				print_r($_POST);
-				print_r($this->getFailures());
+				//print_r($_POST);
+				//print_r($this->getFailures());
 				trigger_error("Missing, or incomplete POST data");
 			}
 
@@ -154,6 +155,70 @@ class DatabaseVerifyFilter extends FAFilter {
 	}
 }
 
+class DatabaseAndFileChecks extends FAAction {
+	function tpl_ret($bool) {
+		$str	= $bool ? '<strong style="color: #009900;">YES</strong>' : '<strong style="color: #FF0000;">NO</strong>';
+		return $str;
+	}
+	function execute(&$request) {
+		$url = &new FAUrl($_SERVER['PHP_SELF']);
+		$url->args[FA_EVENT_VAR] = 'setup';
+		
+		$db_check = array(
+								'has_mysql'		=> $this->tpl_ret(function_exists('mysql_connect')),
+								'has_mysqli'	=> $this->tpl_ret(function_exists('mysqli_connect')),
+								'has_sqlite'	=> $this->tpl_ret(function_exists('sqlite_open')),
+								'has_pgsql'		=> $this->tpl_ret(function_exists('pg_connect')),
+								);
+		
+		$db_passed = FALSE;
+		foreach($db_check as $check) {
+			if($check == $this->tpl_ret(TRUE)) {
+				$db_passed = TRUE;
+				break;
+			}
+		}
+		
+		$tmp_dir = is_readable('../tmp') && is_writable('../tmp') 
+			&& is_readable('../tmp/cache') && is_writable('../tmp/cache') 
+			&& is_readable('../tmp/upload') && is_writable('../tmp/upload')
+			&& is_readable('../tmp/cache') && is_writable('../tmp/cache')
+			&& is_readable('../tmp/sqlite') && is_writable('../tmp/sqlite')
+			&& is_readable('../tmp/stylesets') && is_writable('../tmp/stylesets');
+		
+		$rss_dir = is_readable('../upload/templates/RSS/rss-0.92/compiled') && is_writable('../upload/templates/RSS/rss-0.92/compiled')
+			&& is_readable('../upload/templates/RSS/rss-2.0/compiled') && is_writable('../upload/templates/RSS/rss-2.0/compiled');
+
+		$fs_check = array(
+								'has_chmod_tmp'		=> $this->tpl_ret($tmp_dir),
+								'has_chmod_k4bb'	=> $this->tpl_ret(is_readable('../includes/k4bb') && is_writable('../includes/k4bb')),
+								'has_chmod_tc'		=> $this->tpl_ret(is_readable('../templates/Descent/compiled') && is_writable('../templates/Descent/compiled')),
+								'has_chmod_tac'		=> $this->tpl_ret(is_readable('../templates/Descent/admin/compiled') && is_writable('../templates/Descent/admin/compiled')),
+								'has_chmod_tamc'	=> $this->tpl_ret(is_readable('../templates/Descent/admin/menus/compiled') && is_writable('../templates/Descent/admin/menus/compiled')),
+								'has_chmod_tacc'	=> $this->tpl_ret(is_readable('../templates/Descent/admin/css/compiled') && is_writable('../templates/Descent/admin/css/compiled')),
+								'has_chmod_ac'		=> $this->tpl_ret(is_readable('../templates/Archive/compiled') && is_writable('../templates/Archive/compiled')),
+								'has_chmod_rc'		=> $this->tpl_ret($rss_dir),
+								);
+
+		$fs_passed = TRUE;
+		foreach($fs_check as $check) {
+			if($check == $this->tpl_ret(FALSE)) {
+				$fs_passed = FALSE;
+				break;
+			}
+		}
+		
+		$request['template']->setVar('db_passed', $this->tpl_ret($db_passed));
+		$request['template']->setVar('fs_passed', $this->tpl_ret($fs_passed));
+		$request['template']->setVarArray($db_check);
+		$request['template']->setVarArray($fs_check);
+
+		$template = $request['template'];
+		$template->setVar('install_action', $url->__toString());
+		$template->render(INSTALLER_BASE_DIR . '/templates/welcome.html');
+	}
+}
+
 class DatabaseSetupAction extends FAAction {
 	function execute(&$request) {
 		$url = &new FAUrl($_SERVER['PHP_SELF']);
@@ -179,6 +244,8 @@ class ConfigWriterAction extends FAAction {
 		$config->setVar('use_ftp', $request['ftp_info']['use']);
 		$config->setVar('ftp_user', $request['ftp_info']['user']);
 		$config->setVar('ftp_pass', $request['ftp_info']['pass']);
+
+		$config->setVar('cache_in_db', $_POST['store_cache'] == 'db' ? 'TRUE' : 'FALSE');
 				
 		$_CONFIG					= array();
 		$_CONFIG['ftp']['use_ftp']	= $request['ftp_info']['use'] == 'TRUE' ? TRUE : FALSE;
@@ -223,6 +290,9 @@ class ConfigWriterAction extends FAAction {
 				$general_cache->$function($cache, $request);
 			}
 		}
+		
+		define('CACHE_IN_DB', $_POST['store_cache'] == 'db' ? TRUE : FALSE);
+
 		DBCache::createCache($cache);
 		
 		// all done :D
@@ -236,7 +306,9 @@ $app->addFilter(new DatabaseVerifyFilter);
 
 $app->setAction('dbsetup', new DatabaseSetupAction);
 
-$app->setDefaultEvent('dbsetup');
+$app->setAction('welcome', new DatabaseAndFileChecks);
+$app->setDefaultEvent('welcome');
+
 
 $app->execute();
 
