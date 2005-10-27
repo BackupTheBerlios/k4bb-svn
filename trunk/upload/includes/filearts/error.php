@@ -122,11 +122,11 @@ class FAErrorHandler {
 	}
 	
 	function handleError($type, $message, $file, $line) {
-		$instance = &$this->getInstance();
+		$instance = $this->getInstance();
 
 		if ($type & error_reporting()) {
 			$backtrace = array_slice(debug_backtrace(), 2);
-			$error = &new FAError($type, $message, $file, $line, $backtrace);
+			$error = new FAError($type, $message, $file, $line, $backtrace);
 
 			foreach ($instance->handlers as $handler) {
 				if (call_user_func($handler, $error))
@@ -160,12 +160,12 @@ class FAErrorHandler {
 }
 
 function push_error_handler($handler) {
-	$instance = &FAErrorHandler::getInstance();
+	$instance = FAErrorHandler::getInstance();
 	$instance->pushHandler($handler);
 }
 
 function pop_error_handler() {
-	$instance = &FAErrorHandler::getInstance();
+	$instance = FAErrorHandler::getInstance();
 	$instance->popHandler();
 }
 

@@ -54,11 +54,11 @@ class FAController extends FAObject {
 	
 	function getAction($event) {
 		// Start with an invalid action
-		$action = &$this->_invalidAction;
+		$action = $this->_invalidAction;
 		
 		// Attempt to set a valid action
 		if (isset($this->_actions[$event]))
-			$action = &$this->_actions[$event];
+			$action = $this->_actions[$event];
 			
 		return $action;
 	}
@@ -146,7 +146,7 @@ class FAController extends FAObject {
 		
 		// Start with the default event
 		$event		= $this->_defaultEvent;
-		$request	= &$this->getRequest();
+		$request	= $this->getRequest();
 
 		if (isset($_GET[FA_EVENT_VAR])) {
 			$event = $_GET[FA_EVENT_VAR];
@@ -154,7 +154,7 @@ class FAController extends FAObject {
 		
 		$request['event'] = $event;
 		
-		$action = &$this->getAction($event);
+		$action = $this->getAction($event);
 		
 		if (!empty($this->_unsatisfied)) {
 			list($filter, $unsatisfied) = each($this->_unsatisfied);

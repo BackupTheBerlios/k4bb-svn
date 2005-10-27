@@ -52,7 +52,7 @@ function attach_files(&$request, $forum, $topic_id, $reply_id = FALSE) {
 		$upload_dir		= BB_BASE_DIR .'/tmp/upload/attachments/';
 
 		// change the upload director if we need to
-		if(!$in_db &$request['user']->isMember()) {
+		if(!$in_db && $request['user']->isMember()) {
 			$upload_dir	= BB_BASE_DIR .'/tmp/upload/attachments/'. $request['user']->get('id') .'/';
 		}
 		

@@ -414,7 +414,7 @@ class K4DefaultAction extends FAAction {
 				
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_CALENDAR');
 		
-		$calendar	= &new K4Calendar();
+		$calendar	= new K4Calendar();
 	}
 }
 

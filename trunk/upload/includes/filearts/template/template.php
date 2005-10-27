@@ -163,7 +163,7 @@ class FATemplateCompiler extends FAObject {
 	function compileTag($matches) {
 		$name = $matches[3];
 		$attribs = array();
-		$compiler = &$this->getCompiler($name);
+		$compiler = $this->getCompiler($name);
 		
 		// Parse through the tag's attributes
 		if ($count = preg_match_all('~\s([a-zA-Z]+)="([^"]*)"~', $matches[4], $attrib_matches)) {
@@ -398,7 +398,7 @@ class FATemplate extends FAObject {
 		if (!$this->_force && $this->isCompiled($filename)) {
 			include $this->getCompiledFilename($filename);
 		} else {
-			$compiler = &$this->getTemplateCompiler();
+			$compiler = $this->getTemplateCompiler();
 			$buffer = $compiler->compile($filename);
 
 			$compiled_file = $this->getCompiledFilename($filename);

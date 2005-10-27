@@ -551,7 +551,7 @@ class AdminCategoriesIterator extends FAProxyIterator {
 		
 		$forums = &new K4ForumsIterator($this->dba, "SELECT * FROM ". K4FORUMS ." WHERE category_id = ". $temp['category_id'] ." ORDER BY row_order ASC");
 		if($forums->hasNext()) {
-			$temp['forums'] =& $forums;
+			$temp['forums'] = &$forums;
 		} else {
 			$forums->free();
 			unset($forums);

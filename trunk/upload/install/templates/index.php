@@ -42,7 +42,7 @@ include INCLUDE_BASE_DIR . '/k4bb/functions.php';
 
 class K4Installer extends FAController {
 	function execute() {
-		$request = &$this->getRequest();
+		$request = $this->getRequest();
 		$request['template'] = &new FATemplate(FA_FORCE | FA_NOCACHE);
 
 		parent::execute();

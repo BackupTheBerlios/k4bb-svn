@@ -54,9 +54,9 @@ class FAUserFactory extends FAObject {
 		$info = $validator->validateLoginKey();
 		
 		if (is_array($info))
-			$user = &$this->createMember($info);
+			$user = $this->createMember($info);
 		else
-			$user = &$this->createGuest();
+			$user = $this->createGuest();
 
 		return $user;
 	}

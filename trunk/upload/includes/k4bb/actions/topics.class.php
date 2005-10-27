@@ -52,14 +52,14 @@ class PostTopic extends FAAction {
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 		
 		if(is_array($last_topic) && !empty($last_topic)) {
-			if(intval($last_topic['created']) + POST_IMPULSE_LIMIT > time() &$request['user']->get('perms') < MODERATOR) {
+			if(intval($last_topic['created']) + POST_IMPULSE_LIMIT > time() && $request['user']->get('perms') < MODERATOR) {
 				$action = new K4InformationAction(new K4LanguageElement('L_MUSTWAITSECSTOPOST'), 'content', TRUE);
 				return !USE_AJAX ? $action->execute($request) : ajax_message('L_MUSTWAITSECSTOPOST');
 			}
 		}
 
 		if(is_array($last_reply) && !empty($last_reply)) {
-			if(intval($last_reply['created']) + POST_IMPULSE_LIMIT > time() &$request['user']->get('perms') < MODERATOR) {
+			if(intval($last_reply['created']) + POST_IMPULSE_LIMIT > time() && $request['user']->get('perms') < MODERATOR) {
 				$action = new K4InformationAction(new K4LanguageElement('L_MUSTWAITSECSTOPOST'), 'content', TRUE);
 				return !USE_AJAX ? $action->execute($request) : ajax_message('L_MUSTWAITSECSTOPOST');
 			}
@@ -146,15 +146,15 @@ class PostTopic extends FAAction {
 		 */
 		$topic_type			= isset($_REQUEST['topic_type']) && intval($_REQUEST['topic_type']) != 0 ? $_REQUEST['topic_type'] : TOPIC_NORMAL;
 
-		if($topic_type == TOPIC_STICKY &$request['user']->get('perms') < get_map($request['user'], 'sticky', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		if($topic_type == TOPIC_STICKY && $request['user']->get('perms') < get_map($request['user'], 'sticky', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$topic_type		= TOPIC_NORMAL;
-		} else if($topic_type == TOPIC_ANNOUNCE &$request['user']->get('perms') < get_map($request['user'], 'announce', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		} else if($topic_type == TOPIC_ANNOUNCE && $request['user']->get('perms') < get_map($request['user'], 'announce', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$topic_type		= TOPIC_NORMAL;
 		}
 		
 		$is_feature			= isset($_REQUEST['is_feature']) && $_REQUEST['is_feature'] ? 1 : 0;
 		
-		if($is_feature == 1 &$request['user']->get('perms') < get_map($request['user'], 'feature', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		if($is_feature == 1 && $request['user']->get('perms') < get_map($request['user'], 'feature', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$is_feature		= 0;
 		}
 		
@@ -214,12 +214,12 @@ class PostTopic extends FAAction {
 			$insert_a->setString(6, USER_IP);
 			$insert_a->setString(7, $body_text);
 			$insert_a->setString(8, iif(($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'));
-			$insert_a->setInt(9, iif((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']), 1, 0));
-			$insert_a->setInt(10, iif((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']), 1, 0));
-			$insert_a->setInt(11, iif((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']), 1, 0));
-			$insert_a->setInt(12, iif((isset($_REQUEST['enable_sig']) && $_REQUEST['enable_sig']), 0, 1));
-			$insert_a->setInt(13, iif((isset($_REQUEST['disable_areply']) && $_REQUEST['disable_areply']), 1, 0));
-			$insert_a->setInt(14, iif((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']), 1, 0));
+			$insert_a->setInt(9, ((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']) ? 1 : 0));
+			$insert_a->setInt(10, ((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']) ? 1 : 0));
+			$insert_a->setInt(11, ((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']) ? 1 : 0));
+			$insert_a->setInt(12, ((isset($_REQUEST['enable_sig']) && $_REQUEST['enable_sig']) ? 0 : 1));
+			$insert_a->setInt(13, ((isset($_REQUEST['disable_areply']) && $_REQUEST['disable_areply']) ? 1 : 0));
+			$insert_a->setInt(14, ((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']) ? 1 : 0));
 			$insert_a->setInt(15, $is_draft);
 			// DO THIS 16 -> topic_type, 17 -> topic_expire
 			$insert_a->setInt(16, $topic_type);
@@ -364,13 +364,13 @@ class PostTopic extends FAAction {
 								'row_right' => 0,
 								'topic_type' => $topic_type,
 								'is_feature' => $is_feature,
-								'posticon' => iif(($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'),
-								'disable_html' => iif((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']), 1, 0),
-								'disable_sig' => iif((isset($_REQUEST['enable_sig']) && $_REQUEST['enable_sig']), 0, 1),
-								'disable_bbcode' => iif((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']), 1, 0),
-								'disable_emoticons' => iif((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']), 1, 0),
-								'disable_areply' => iif((isset($_REQUEST['disable_areply']) && $_REQUEST['disable_areply']), 1, 0),
-								'disable_aurls' => iif((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']), 1, 0)
+								'posticon' => (($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))) ? (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif') : 'clear.gif'),
+								'disable_html' => ((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']) ? 1 : 0),
+								'disable_sig' => ((isset($_REQUEST['enable_sig']) && $_REQUEST['enable_sig']) ? 0 : 1),
+								'disable_bbcode' => ((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']) ? 1 : 0),
+								'disable_emoticons' => ((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']) ? 1 : 0),
+								'disable_areply' => ((isset($_REQUEST['disable_areply']) && $_REQUEST['disable_areply']) ? 1 : 0),
+								'disable_aurls' => ((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']) ? 1 : 0)
 								);
 
 			/* Add the topic information to the template */
@@ -499,10 +499,10 @@ class PostDraft extends FAAction {
 		/* Initialize the bbcode parser with the topic message */
 		$_REQUEST['message']	= substr($_REQUEST['message'], 0, $_SETTINGS['postmaxchars']);
 		$bbcode	= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['message'], $forum['forum_id'], 
-			iif((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']), FALSE, TRUE), 
-			iif((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']), FALSE, TRUE), 
-			iif((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']), FALSE, TRUE), 
-			iif((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']), FALSE, TRUE));
+			((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']) ? FALSE : TRUE), 
+			((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']) ? FALSE : TRUE), 
+			((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']) ? FALSE : TRUE), 
+			((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']) ? FALSE : TRUE));
 		
 		/* Parse the bbcode */
 		$body_text	= $bbcode->parse();
@@ -515,15 +515,15 @@ class PostDraft extends FAAction {
 		 */
 		$topic_type			= isset($_REQUEST['topic_type']) && intval($_REQUEST['topic_type']) != 0 ? $_REQUEST['topic_type'] : TOPIC_NORMAL;
 
-		if($topic_type == TOPIC_STICKY &$request['user']->get('perms') < get_map($request['user'], 'sticky', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		if($topic_type == TOPIC_STICKY && $request['user']->get('perms') < get_map($request['user'], 'sticky', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$topic_type		= TOPIC_NORMAL;
-		} else if($topic_type == TOPIC_ANNOUNCE &$request['user']->get('perms') < get_map($request['user'], 'announce', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		} else if($topic_type == TOPIC_ANNOUNCE && $request['user']->get('perms') < get_map($request['user'], 'announce', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$topic_type		= TOPIC_NORMAL;
 		}
 
 		$is_feature			= isset($_REQUEST['is_feature']) && $_REQUEST['is_feature'] == 'yes' ? 1 : 0;
 		
-		if($is_feature == 1 &$request['user']->get('perms') < get_map($request['user'], 'feature', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		if($is_feature == 1 && $request['user']->get('perms') < get_map($request['user'], 'feature', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$is_feature		= 0;
 		}
 		
@@ -554,13 +554,13 @@ class PostDraft extends FAAction {
 			/* Set the topic information */
 			$update_a->setString(1, htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
 			$update_a->setString(2, $body_text);
-			$update_a->setString(3, iif(($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'));
-			$update_a->setInt(4, iif((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']), 1, 0));
-			$update_a->setInt(5, iif((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']), 1, 0));
-			$update_a->setInt(6, iif((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']), 1, 0));
-			$update_a->setInt(7, iif((isset($_REQUEST['enable_sig']) && $_REQUEST['enable_sig']), 0, 1));
-			$update_a->setInt(8, iif((isset($_REQUEST['disable_areply']) && $_REQUEST['disable_areply']), 1, 0));
-			$update_a->setInt(9, iif((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']), 1, 0));
+			$update_a->setString(3, (($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))) ? (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif') : 'clear.gif'));
+			$update_a->setInt(4, ((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']) ? 1 : 0));
+			$update_a->setInt(5, ((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']) ? 1 : 0));
+			$update_a->setInt(6, ((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']) ? 1 : 0));
+			$update_a->setInt(7, ((isset($_REQUEST['enable_sig']) && $_REQUEST['enable_sig']) ? 0 : 1));
+			$update_a->setInt(8, ((isset($_REQUEST['disable_areply']) && $_REQUEST['disable_areply']) ? 1 : 0));
+			$update_a->setInt(9, ((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']) ? 1 : 0));
 			$update_a->setInt(10, 0);
 			$update_a->setInt(11, $topic_type);
 			$update_a->setInt(12, $is_feature);
@@ -681,17 +681,17 @@ class PostDraft extends FAAction {
 								'row_right' => 0,
 								'topic_type' => $topic_type,
 								'is_feature' => $is_feature,
-								'posticon' => iif(($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'),
-								'disable_html' => iif((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']), 1, 0),
-								'disable_sig' => iif((isset($_REQUEST['enable_sig']) && $_REQUEST['enable_sig']), 0, 1),
-								'disable_bbcode' => iif((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']), 1, 0),
-								'disable_emoticons' => iif((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']), 1, 0),
-								'disable_areply' => iif((isset($_REQUEST['disable_areply']) && $_REQUEST['disable_areply']), 1, 0),
-								'disable_aurls' => iif((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']), 1, 0)
+								'posticon' => (($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))) ? (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif') : 'clear.gif'),
+								'disable_html' => ((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']) ? 1 : 0),
+								'disable_sig' => ((isset($_REQUEST['enable_sig']) && $_REQUEST['enable_sig']) ? 0 : 1),
+								'disable_bbcode' => ((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']) ? 1 : 0),
+								'disable_emoticons' => ((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']) ? 1 : 0),
+								'disable_areply' => ((isset($_REQUEST['disable_areply']) && $_REQUEST['disable_areply']) ? 1 : 0),
+								'disable_aurls' => ((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']) ? 1 : 0)
 								);
 
 			/* Add the topic information to the template */
-			$topic_iterator = &new TopicIterator($request['dba'], $request['user'], $topic_preview, FALSE);
+			$topic_iterator = new TopicIterator($request['dba'], $request['user'], $topic_preview, FALSE);
 			$request['template']->setList('topic', $topic_iterator);
 			
 			/* Assign the topic preview values to the template */
@@ -985,15 +985,15 @@ class UpdateTopic extends FAAction {
 		$topic_type			= isset($_REQUEST['topic_type']) && intval($_REQUEST['topic_type']) != 0 ? $_REQUEST['topic_type'] : TOPIC_NORMAL;
 		
 		/* Check the topic type and check if this user has permission to post that type of topic */
-		if($topic_type == TOPIC_STICKY &$request['user']->get('perms') < get_map($request['user'], 'sticky', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		if($topic_type == TOPIC_STICKY && $request['user']->get('perms') < get_map($request['user'], 'sticky', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$topic_type		= TOPIC_NORMAL;
-		} else if($topic_type == TOPIC_ANNOUNCE &$request['user']->get('perms') < get_map($request['user'], 'announce', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		} else if($topic_type == TOPIC_ANNOUNCE && $request['user']->get('perms') < get_map($request['user'], 'announce', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$topic_type		= TOPIC_NORMAL;
 		}
 		
 		/* Is this a featured topic? */
 		$is_feature			= isset($_REQUEST['is_feature']) && $_REQUEST['is_feature'] == 'yes' ? 1 : 0;
-		if($is_feature == 1 &$request['user']->get('perms') < get_map($request['user'], 'feature', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		if($is_feature == 1 && $request['user']->get('perms') < get_map($request['user'], 'feature', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$is_feature		= 0;
 		}
 
@@ -1024,12 +1024,12 @@ class UpdateTopic extends FAAction {
 			$update_a->setString(1, $name);
 			$update_a->setString(2, $body_text);
 			$update_a->setString(3, $posticon);
-			$update_a->setInt(4, iif((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']), 1, 0));
-			$update_a->setInt(5, iif((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']), 1, 0));
-			$update_a->setInt(6, iif((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']), 1, 0));
-			$update_a->setInt(7, iif((isset($_REQUEST['enable_sig']) && $_REQUEST['enable_sig']), 0, 1));
-			$update_a->setInt(8, iif((isset($_REQUEST['disable_areply']) && $_REQUEST['disable_areply']), 1, 0));
-			$update_a->setInt(9, iif((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']), 1, 0));
+			$update_a->setInt(4, ((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']) ? 1 : 0));
+			$update_a->setInt(5, ((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']) ? 1 : 0));
+			$update_a->setInt(6, ((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']) ? 1 : 0));
+			$update_a->setInt(7, ((isset($_REQUEST['enable_sig']) && $_REQUEST['enable_sig']) ? 0 : 1));
+			$update_a->setInt(8, ((isset($_REQUEST['disable_areply']) && $_REQUEST['disable_areply']) ? 1 : 0));
+			$update_a->setInt(9, ((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']) ? 1 : 0));
 			$update_a->setInt(10, 0);
 			$update_a->setInt(11, $time);
 			$update_a->setString(12, iif($request['user']->get('id') <= 0,  htmlentities((isset($_REQUEST['poster_name']) ? $_REQUEST['poster_name'] : '') , ENT_QUOTES), $request['user']->get('name')));

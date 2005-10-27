@@ -52,7 +52,7 @@ class K4SqlDebugger extends FAObject {
 	}
 
 	function executeUpdate($stmt) {
-		$result =& $this->_obj->executeUpdate($stmt);
+		$result = $this->_obj->executeUpdate($stmt);
 
 		$this->_queries[] = $stmt;
 		$this->_results[] = $result;
@@ -61,7 +61,7 @@ class K4SqlDebugger extends FAObject {
 	}
 
 	function executeQuery($stmt, $mode = DBA_ASSOC) {
-		$result =& $this->_obj->executeQuery($stmt, $mode);
+		$result = $this->_obj->executeQuery($stmt, $mode);
 
 		$this->_queries[] = $stmt;
 		$this->_results[] = $result;

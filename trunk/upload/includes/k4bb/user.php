@@ -385,7 +385,7 @@ class K4CookieValidator extends FAUserValidator {
 			$this->_stmt->setInt(1, $_COOKIE[K4COOKIE_ID]);
 			$this->_stmt->setString(2, $_COOKIE[K4COOKIE_KEY]);
 
-			$result = &$this->_stmt->executeQuery();
+			$result = $this->_stmt->executeQuery();
 
 			if ($result->next())
 				$ret = $result->current();
@@ -415,7 +415,7 @@ class K4RequestValidator extends FAUserValidator {
 			$this->_stmt->setString(1, $_POST['username']);
 			$this->_stmt->setString(2, md5($_POST['password']));
 
-			$result = &$this->_stmt->executeQuery();
+			$result = $this->_stmt->executeQuery();
 
 			if ($result->next())
 				$ret = $result->current();

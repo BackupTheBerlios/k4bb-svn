@@ -34,7 +34,7 @@ class Page_Navigator_Compiler extends FATemplateTagCompiler {
 		$this->requireAttributes('id');
 		$pager = $this->getAttribute('id');
 
-		$this->writePHP("if (\$pager = &\$runtime->getPager(\"$pager\")):");
+		$this->writePHP("if (\$pager = \$runtime->getPager(\"$pager\")):");
 		$this->writePHP("if(\$scope->getVar(\"num_pages\") == \"\") { \$scope->setVar(\"num_pages\", ceil(\$pager->count / \$pager->page_size)); }");
 	}
 	function parseClose() {

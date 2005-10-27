@@ -58,9 +58,9 @@ class K4Controller extends FAController {
 
 		parent::__construct();
 
-		$request					= &$this->getRequest();
-		$request['load_timer']		= &new FATimer(3);
-		$request['template']		= &new K4Template();
+		$request					= $this->getRequest();
+		$request['load_timer']		= new FATimer(3);
+		$request['template']		= new K4Template();
 		
 		$this->addFilter(new K4RequestFilter);
 
@@ -120,7 +120,7 @@ class K4Controller extends FAController {
 		
 		parent::execute();
 				
-		$request	= &$this->getRequest();
+		$request	= $this->getRequest();
 		
 		/**
 		 * Set some other important info to the template
@@ -200,7 +200,7 @@ class K4Controller extends FAController {
  */
 class K4BasicController extends FAController {
 	function execute() {
-		$request = &$this->getRequest();
+		$request = $this->getRequest();
 
 		$request['template'] = &new FATemplate();
 		$this->addFilter(new K4DatabaseFilter);

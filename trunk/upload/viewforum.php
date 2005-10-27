@@ -292,7 +292,7 @@ class K4DefaultAction extends FAAction {
 				$topics->setInt(3, $perpage);
 				
 				/* Execute the query */
-				$result				= &$topics->executeQuery();
+				$result				= $topics->executeQuery();
 				
 				/* Apply the topics iterator */
 				$it					= &new TopicsIterator($request['dba'], $request['user'], $result, $request['template']->getVar('IMG_DIR'), $forum);

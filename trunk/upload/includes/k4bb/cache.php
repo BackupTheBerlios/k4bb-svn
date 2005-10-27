@@ -128,7 +128,7 @@ function get_cached_styleset(&$request, $styleset, $default_styleset) {
 		$query->setString(1, $styleset);
 		
 		/* Get the result */
-		$result			= &$query->executeQuery();
+		$result			= $query->executeQuery();
 		
 		/* If this styleset doesn't exist, use the default one instead */
 		if($result->numrows() == 0) {
@@ -139,7 +139,7 @@ function get_cached_styleset(&$request, $styleset, $default_styleset) {
 			$query->setString(1, $default_styleset);
 			
 			/* Get the result */
-			$result		= &$query->executeQuery();
+			$result		= $query->executeQuery();
 		}
 		
 		/* Loop through the result iterator */

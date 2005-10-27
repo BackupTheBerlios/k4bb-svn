@@ -122,7 +122,7 @@ class K4UserFilter extends FAFilter {
 			$factory = &new K4UserFactory;
 			$validator = &new K4CookieValidator($request['dba']);
 			
-			$user = &$factory->getUser($validator);
+			$user = $factory->getUser($validator);
 			
 			if ($user->isMember())
 				k4_set_login($request['dba'], $user, TRUE);
@@ -202,7 +202,7 @@ class K4LoginFilter extends FAFilter {
 
 				if ($user->isMember()) {
 					
-					if(($user->get('reg_key') == '') || ($user->get('reg_key') != '' &$request['template']->getVar('canloginunverified') == 1) ) {
+					if(($user->get('reg_key') == '') || ($user->get('reg_key') != '' && $request['template']->getVar('canloginunverified') == 1) ) {
 					
 						// User successfully logged in
 						
