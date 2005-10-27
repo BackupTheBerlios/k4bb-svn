@@ -243,7 +243,7 @@ class K4ForumsIterator extends FAProxyIterator {
 		parent::__construct($this->result);
 	}
 
-	function &current() {
+	function current() {
 		$temp	= parent::current();
 
 		/* Cache this forum in the session */
@@ -337,7 +337,7 @@ class AllForumsIterator extends FAArrayIterator {
 		parent::__construct($forums);
 	}
 
-	function &current() {
+	function current() {
 		$temp	= parent::current();
 		
 		/* Cache this forum in the session */

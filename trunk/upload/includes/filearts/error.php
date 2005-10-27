@@ -113,7 +113,7 @@ class FAErrorHandler {
 		set_error_handler(array($this, 'handleError'));
 	}
 	
-	function &getInstance() {
+	function getInstance() {
 		static $instance = NULL;
 		
 		if ($instance == NULL) $instance = new FAErrorHandler();

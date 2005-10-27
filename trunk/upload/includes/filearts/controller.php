@@ -52,7 +52,7 @@ class FAController extends FAObject {
 		$this->_invalidAction = &new FAInvalidAction();
 	}
 	
-	function &getAction($event) {
+	function getAction($event) {
 		// Start with an invalid action
 		$action = &$this->_invalidAction;
 		
@@ -63,7 +63,7 @@ class FAController extends FAObject {
 		return $action;
 	}
 
-	function &getRequest() {
+	function getRequest() {
 		$ret = &$this->_request;
 		return $ret;
 	}

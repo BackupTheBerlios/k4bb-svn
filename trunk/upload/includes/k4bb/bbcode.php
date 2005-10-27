@@ -180,7 +180,7 @@ class K4BBCodeParser {
 			$buffer		= $matches[0];
 
 			// the compiler for the current tag
-			$compiler	= &$this->get_compiler($name);
+			$compiler	= $this->get_compiler($name);
 
 			// what will become the finished text with compiled tags
 			$new_text	= '';
@@ -1074,7 +1074,7 @@ class K4Url_Compiler extends K4BBCodeTag {
 		
 		if($buffer != '') {
 			
-			$url = &new FAUrl(($this->url != '' ? $this->url : $buffer));
+			$url = new FAUrl(($this->url != '' ? $this->url : $buffer));
 			
 			/* If we can't use dynamic urls, remove the query string */
 			if(!$this->dynamic_url) {
@@ -1127,7 +1127,7 @@ class K4Image_Compiler extends K4BBCodeTag {
 		
 		if($buffer != '') {
 			
-			$url = &new FAUrl(($this->url != '' ? $this->url : $buffer));
+			$url = new FAUrl(($this->url != '' ? $this->url : $buffer));
 			
 			/* If we can't use dynamic urls, remove the query string */
 			if(!$this->dynamic_url) {
@@ -1221,7 +1221,7 @@ class K4Poll_Compiler extends K4BBCodeTag {
 		$this->can_poll			= (bool)$can_poll;
 		$this->max_poll_answers = (int)$max_poll_answers;
 		$this->max_polls		= (int)$max_polls;
-		$this->dba				= &$dba;
+		$this->dba				= $dba;
 	}
 
 	function parse_open($matches) {
@@ -1298,8 +1298,8 @@ class BBEmoticons {
 
 	function BBEmoticons(&$instance) {
 
-		$this->instance		= &$instance;
-		$this->emoticons	= &$this->instance->dba->executeQuery("SELECT * FROM ". K4EMOTICONS);
+		$this->instance		= $instance;
+		$this->emoticons	= $this->instance->dba->executeQuery("SELECT * FROM ". K4EMOTICONS);
 	}
 
 	function to_html() {
@@ -1359,7 +1359,7 @@ class BBCodex extends FAObject {
 		
 		$this->settings		= $_SETTINGS;
 
-		$this->dba			= &$dba;
+		$this->dba			= $dba;
 
 		$this->user			= $user;
 		$this->text			= ' '. $text .' ';
@@ -1373,7 +1373,7 @@ class BBCodex extends FAObject {
 		$this->omit			= $omit;
 		
 		/* Initialize the parser */
-		$this->bbcode_parser = &new K4BBCodeParser();
+		$this->bbcode_parser = new K4BBCodeParser();
 	}
 
 	/**
@@ -1408,7 +1408,7 @@ class BBCodex extends FAObject {
 		$this->bbcode_parser->set_compiler('url',		new K4Url_Compiler((bool)intval($this->settings['allowdynurl']), (bool)intval($this->auto_urls))); // true/false to allow dynamic urls
 		$this->bbcode_parser->set_compiler('img',		new K4Image_Compiler((bool)intval($this->settings['allowdynimg']))); // true/false to allow dynamic urls
 		
-		$this->emoticon_parser = &new BBEmoticons($this);
+		$this->emoticon_parser = new BBEmoticons($this);
 
 	}
 
@@ -1543,7 +1543,7 @@ class K4BBPolls extends FAObject {
 		$this->forum		= $forum;
 
 		/* Initialize the parser */
-		$this->bbcode_parser = &new K4BBCodeParser();
+		$this->bbcode_parser = new K4BBCodeParser();
 		$this->bbcode_parser->clear_omit_tags();
 		$this->bbcode_parser->set_omit_tags(array('*', 'poll', 'hr'));
 	}

@@ -55,7 +55,7 @@ class FASession extends FAObject {
 		$this->_gc_stmt			= $dba->prepareStatement("DELETE FROM $table WHERE seen<?");
 	}
 
-	function &start(&$dba, $table) {
+	function start(&$dba, $table) {
 		static $instance;
 
 		if (empty($instance)) {

@@ -209,7 +209,7 @@ class UsersIterator extends FAProxyIterator {
 		parent::__construct($this->result);
 	}
 
-	function &current() {
+	function current() {
 		$temp					= parent::current();
 		$group					= get_user_max_group($temp, $this->groups);
 		

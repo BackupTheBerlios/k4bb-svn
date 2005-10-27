@@ -1065,7 +1065,7 @@ class K4PrivMsgIterator extends FAArrayiterator {
 		parent::__construct(array(0 => $message));
 	}
 
-	function &current() {
+	function current() {
 		$temp							= parent::current();
 				
 		$temp['posticon']				= @$temp['posticon'] != '' ? (file_exists(BB_BASE_DIR .'/tmp/upload/posticons/'. @$temp['posticon']) ? @$temp['posticon'] : 'clear.gif') : 'clear.gif';
@@ -1158,7 +1158,7 @@ class K4PrivMsgRepliesIterator extends FAProxyIterator {
 		parent::__construct($this->result);
 	}
 
-	function &current() {
+	function current() {
 		$temp					= parent::current();
 		
 		//if( ($temp['folder_id'] == PM_SENTITEMS && $temp['member_id'] != $this->user->get('id')) || ($temp['member_id'] == $this->user->get('id')) ) {

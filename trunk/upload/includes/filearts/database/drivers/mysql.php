@@ -46,7 +46,7 @@ class MysqlResultIterator extends FADBResult {
 		$this->size = mysql_num_rows($this->id);
 	}
 
-	function &current() {
+	function current() {
 		$current = $this->current;
 		return $current;
 	}
@@ -63,7 +63,7 @@ class MysqlResultIterator extends FADBResult {
 		return $this->row;
 	}
 
-	function &next() {
+	function next() {
 		$ret = FALSE;
 		if ($this->hasNext()) {
 			$this->current = mysql_fetch_array($this->id, $this->mode);
@@ -142,7 +142,7 @@ class MysqlConnection extends FADBConnection {
 		return $ret;
 	}
 
-	function &prepareStatement($sql) {
+	function prepareStatement($sql) {
 		$ret = $this->createStatement($sql, $this);
 		return $ret;
 	}

@@ -1730,7 +1730,7 @@ class TopicIterator extends FAArrayIterator {
 		parent::__construct(array(0 => $topic));
 	}
 
-	function &current() {
+	function current() {
 		$temp							= parent::current();
 
 		$temp['posticon']				= @$temp['posticon'] != '' ? (file_exists(BB_BASE_DIR .'/tmp/upload/posticons/'. @$temp['posticon']) ? @$temp['posticon'] : 'clear.gif') : 'clear.gif';

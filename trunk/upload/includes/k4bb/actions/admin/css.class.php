@@ -539,7 +539,7 @@ class AdminCSSIterator extends FAProxyIterator {
 		parent::__construct($this->result);
 	}
 
-	function &current() {
+	function current() {
 		$temp = parent::current();
 		
 		$temp['properties'] = trim(str_replace(';', ";\n", $temp['properties']), "\s\n\r");

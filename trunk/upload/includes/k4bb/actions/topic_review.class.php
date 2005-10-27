@@ -69,7 +69,7 @@ class TopicReviewIterator extends FAArrayIterator {
 		parent::__construct(array($topic));
 	}
 
-	function &current() {
+	function current() {
 		$temp							= parent::current();
 
 		$temp['posticon']				= @$temp['posticon'] != '' ? iif(file_exists(BB_BASE_DIR .'/tmp/upload/posticons/'. @$temp['posticon']), @$temp['posticon'], 'clear.gif') : 'clear.gif';
@@ -145,7 +145,7 @@ class RepliesReviewIterator extends FAProxyIterator {
 		parent::__construct($this->result);
 	}
 
-	function &current() {
+	function current() {
 		$temp					= parent::current();
 		
 		$temp['posticon']		= isset($temp['posticon']) && $temp['posticon'] != '' ? (file_exists(BB_BASE_DIR .'/tmp/upload/posticons/'. $temp['posticon']) ? $temp['posticon'] : 'clear.gif') : 'clear.gif';

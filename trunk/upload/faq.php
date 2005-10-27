@@ -76,7 +76,7 @@ class K4FAQIterator extends FAProxyIterator {
 		parent::__construct($this->result);
 	}
 
-	function &current() {
+	function current() {
 		$temp = parent::current();
 		
 		// if there are more than one answers

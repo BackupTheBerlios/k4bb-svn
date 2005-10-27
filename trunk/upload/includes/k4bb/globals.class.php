@@ -57,13 +57,13 @@ class GlobalsStack {
 		return $this->globals[$varname] = $value;
 	}
 
-	function &pop($varname) {
+	function pop($varname) {
 		return array_pop($this->globals);
 	}
 }
 
 class Globals {
-	function &getStack() {
+	function getStack() {
 		static $instance = NULL;
 
 		if ($instance == NULL)

@@ -45,7 +45,7 @@ class SQLiteResultIterator extends FADBResult {
 		$this->size = sqlite_num_rows($this->id);
 	}
 
-	function &current() {
+	function current() {
 		$current = $this->current;
 		return $current;
 	}
@@ -63,7 +63,7 @@ class SQLiteResultIterator extends FADBResult {
 	}
 
 
-	function &next() {
+	function next() {
 		$ret = FALSE;
 		if ($this->hasNext()) {
 			$this->current = sqlite_fetch_array($this->id, $this->mode);
@@ -145,7 +145,7 @@ class SQLiteConnection extends FADBConnection {
 		return TRUE;
 	}
 
-	function &prepareStatement($sql) {
+	function prepareStatement($sql) {
 		$ret = $this->createStatement($sql, $this);
 		return $ret;
 	}

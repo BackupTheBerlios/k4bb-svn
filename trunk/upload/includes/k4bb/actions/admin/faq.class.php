@@ -609,7 +609,7 @@ class AdminFAQCategoriesIterator extends FAProxyIterator {
 		parent::__construct($this->result);
 	}
 
-	function &current() {
+	function current() {
 		$temp = parent::current();
 		
 		$temp['level']	= str_repeat('<img src="Images/'. $this->image_dir .'/Icons/threaded_bit.gif" alt="" border="0" />', $temp['row_level']-1);

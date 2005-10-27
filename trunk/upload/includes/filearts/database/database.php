@@ -34,7 +34,7 @@ if (!defined('FILEARTS'))
 
 define('DBA_BASE_DIR', dirname(__FILE__));
 
-function &db_connect($info) {
+function db_connect($info) {
 	static $connections = array();
 
 	$name = serialize($info);
@@ -74,7 +74,7 @@ class FADBConnection extends FAObject {
 
 	function connect($info) {}
 
-	function &createStatement($stmt, &$dba) {
+	function createStatement($stmt, &$dba) {
 		$ret = &new FADBStatement($stmt, $dba);
 		return $ret;
 	}
@@ -152,7 +152,7 @@ class FADBStatement extends FAObject {
 		$this->db = &$db;
 	}
 
-	function &executeQuery($mode = DBA_ASSOC) {
+	function executeQuery($mode = DBA_ASSOC) {
 		$ret = $this->db->executeQuery($this->getSql(), $mode);
 		return $ret;
 	}

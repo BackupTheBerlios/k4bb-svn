@@ -62,7 +62,7 @@ class K4OnlineUsersIterator extends FAProxyIterator {
 		parent::__construct($this->result);
 	}
 
-	function &current() {
+	function current() {
 		$temp = parent::current();
 		
 		if($temp['invisible'] == 1)

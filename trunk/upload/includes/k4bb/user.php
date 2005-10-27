@@ -427,13 +427,13 @@ class K4RequestValidator extends FAUserValidator {
 
 class K4UserFactory extends FAUserFactory {
 
-	function &createGuest() {
+	function createGuest() {
 		$ret = &new K4Guest();
 
 		return $ret;
 	}
 
-	function &createMember($info) {
+	function createMember($info) {
 		$ret = &new K4Member($info);
 		return $ret;
 	}

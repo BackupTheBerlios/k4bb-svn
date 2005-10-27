@@ -122,7 +122,7 @@ class K4CategoriesIterator extends FAProxyIterator {
 		parent::__construct($this->result);
 	}
 
-	function &current() {
+	function current() {
 		$temp = parent::current();
 		
 		cache_forum($temp);

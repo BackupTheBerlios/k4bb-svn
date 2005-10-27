@@ -35,11 +35,11 @@ if(!defined('FILEARTS'))
 	return;
 
 class FAIterator extends FAObject {
-	function &current() { trigger_error("Pure virtual function", E_USER_ERROR); }
+	function current() { trigger_error("Pure virtual function", E_USER_ERROR); }
 	function hasNext() { trigger_error("Pure virtual function", E_USER_ERROR); }
 	function hasPrev() { trigger_error("Pure virtual function", E_USER_ERROR); }
 	function key() { trigger_error("Pure virtual function", E_USER_ERROR); }
-	function &next() { trigger_error("Pure virtual function", E_USER_ERROR); }
+	function next() { trigger_error("Pure virtual function", E_USER_ERROR); }
 	function reset() { trigger_error("Pure virtual function", E_USER_ERROR); }
 }
 
@@ -62,7 +62,7 @@ class FAArrayIterator extends FAIterator {
 		$this->data = array_values($data);
 	}
 
-	function &current() {
+	function current() {
 		$data = $this->data[$this->key];
 		return $data;
 	}
@@ -75,7 +75,7 @@ class FAArrayIterator extends FAIterator {
 	function key() {
 		return $this->key;
 	}
-	function &next() {
+	function next() {
 		$ret = FALSE;
 		if ($this->hasNext()) {
 			$this->key++;
@@ -109,7 +109,7 @@ class FAProxyIterator extends FAIterator {
 		$this->it	= &$it;
 	}
 
-	function &current() {
+	function current() {
 		$current = $this->it->current();
 		return $current;
 	}
@@ -126,7 +126,7 @@ class FAProxyIterator extends FAIterator {
 		return $key;
 	}
 
-	function &next() {
+	function next() {
 		$ret = FALSE;
 		if ($this->hasNext()) {
 			$this->it->next();

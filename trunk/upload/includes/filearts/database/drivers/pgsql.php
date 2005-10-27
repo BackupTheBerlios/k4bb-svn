@@ -46,7 +46,7 @@ class PgSQLResultIterator extends FADBResult {
 		$this->size = pg_num_rows($this->id);
 	}
 
-	function &current() {
+	function current() {
 		$current = $this->current;
 		return $current;
 	}
@@ -63,7 +63,7 @@ class PgSQLResultIterator extends FADBResult {
 		return $this->row;
 	}
 
-	function &next() {
+	function next() {
 		$ret = FALSE;
 		if ($this->hasNext()) {
 			$this->current = pg_fetch_array($this->id, $this->mode);
@@ -138,7 +138,7 @@ class PgSQLConnection extends FADBConnection {
 		return $ret;
 	}
 
-	function &prepareStatement($sql) {
+	function prepareStatement($sql) {
 		$ret = $this->createStatement($sql, $this);
 		return $ret;
 	}

@@ -184,7 +184,7 @@ class FATemplateCompiler extends FAObject {
 		return $compiled;
 	}
 	
-	function &getCompiler($tag) {
+	function getCompiler($tag) {
 		$compiler = &$this->default_compiler;
 
 		if (isset($this->compilers[$tag])) {
@@ -242,7 +242,7 @@ class FATemplateRuntime extends FAObject {
 		return $file;
 	}
 
-	function &getPager($id) {
+	function getPager($id) {
 		$ret = FALSE;
 		if (isset($this->_pagers[$id])) {
 			$ret = &$this->_pagers[$id];
@@ -262,7 +262,7 @@ class FATemplateScope extends FAObject {
 		$this->_keys = array();
 	}
 	
-	function &getVar($name) {
+	function getVar($name) {
 		$ret = FALSE;
 		
 		for ($i = count($this->_scope) - 1; $i >= 0; $i--) {
@@ -370,7 +370,7 @@ class FATemplate extends FAObject {
 		return dirname($filename) . '/compiled/' . basename($filename);
 	}
 
-	function &getTemplateCompiler() {
+	function getTemplateCompiler() {
 		$ret = &$this->_compiler;
 		return $ret;
 	}

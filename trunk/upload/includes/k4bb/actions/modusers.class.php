@@ -432,7 +432,7 @@ class BannedIPsIterator extends FAProxyIterator {
 		parent::__construct($this->result);
 	}
 
-	function &current() {
+	function current() {
 		$temp					= parent::current();
 		
 		$temp['user_ip']		= str_replace('\.', '.', $temp['user_ip']);

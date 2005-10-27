@@ -140,7 +140,7 @@ class K4OptionsIterator extends FAProxyIterator {
 		parent::__construct($result);
 	}
 
-	function &current() {
+	function current() {
 		$temp = parent::current();
 		
 		$result				= $this->dba->executeQuery("SELECT * FROM ". K4SETTINGS ." WHERE settinggroupid = ". intval($temp['id']) ." ORDER BY displayorder ASC");
@@ -168,7 +168,7 @@ class K4SettingsIterator extends FAProxyIterator {
 		parent::__construct(&$result);
 	}
 
-	function &current() {
+	function current() {
 		$temp = parent::current();
 		
 		$temp['title']		= isset($this->lang['L_'. strtoupper($temp['varname'])]) ? $this->lang['L_'. strtoupper($temp['varname'])] : '';

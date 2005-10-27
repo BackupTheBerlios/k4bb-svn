@@ -40,17 +40,17 @@ class FAUserValidator extends FAObject {
 }
 
 class FAUserFactory extends FAObject {
-	function &createGuest() {
+	function createGuest() {
 		$user = &new FAUser();
 		return $user;
 	}
 
-	function &createMember($info) {
+	function createMember($info) {
 		$member = &new FAMember($info);
 		return $member;
 	}
 
-	function &getUser(&$validator) {
+	function getUser(&$validator) {
 		$info = $validator->validateLoginKey();
 		
 		if (is_array($info))

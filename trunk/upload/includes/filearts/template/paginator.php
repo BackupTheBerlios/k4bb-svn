@@ -57,7 +57,7 @@ class FAPageIterator extends FAIterator {
 		$this->reset();
 	}
 
-	function &current() {
+	function current() {
 		$ret = array('pagelink' => $this->pager->getPage($this->current), 'pagenum' => $this->current);
 		return $ret;
 	}
@@ -73,7 +73,7 @@ class FAPageIterator extends FAIterator {
 		return $this->current;
 	}
 
-	function &next() {
+	function next() {
 		$ret = FALSE;
 		if ($this->hasNext()) {
 			$this->current++;
@@ -162,7 +162,7 @@ class FAPaginator extends FAObject {
 		return FALSE;
 	}
 
-	function &getIterator($before, $after) {
+	function getIterator($before, $after) {
 		$ret = &new FAPageIterator($this, $before, $after);
 		return $ret;
 	}

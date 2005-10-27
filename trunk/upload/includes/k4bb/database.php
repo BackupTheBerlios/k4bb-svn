@@ -46,7 +46,7 @@ class K4SqlDebugger extends FAObject {
 		return $this->_obj->connect($info);
 	}
 
-	function &prepareStatement($sql) {
+	function prepareStatement($sql) {
 		$ret = $this->_obj->createStatement($sql, $this);
 		return $ret;
 	}
@@ -107,7 +107,7 @@ class K4SqlDebugger extends FAObject {
 		return $result;
 	}
 
-	function &getDebugIterator() {
+	function getDebugIterator() {
 		$ret = &new K4SqlDebuggerIterator($this->_queries, $this->_results);
 		return $ret;
 	}
