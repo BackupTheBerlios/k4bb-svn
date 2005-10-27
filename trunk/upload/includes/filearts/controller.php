@@ -63,7 +63,7 @@ class FAController extends FAObject {
 		return $action;
 	}
 
-	function getRequest() {
+	function &getRequest() {
 		$ret = &$this->_request;
 		return $ret;
 	}
