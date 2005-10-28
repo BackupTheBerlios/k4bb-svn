@@ -67,7 +67,10 @@ class FAController extends FAObject {
 		$ret = &$this->_request;
 		return $ret;
 	}
-	
+	function setRequest(&$request) {
+		$this->_request = &$request;
+	}
+		
 	function addFilter(&$filter) {
 		assert(is_a($filter, 'FAFilter'));
 		
@@ -170,6 +173,8 @@ class FAController extends FAObject {
 		}
 				
 		$this->_runAction($action, $request);
+
+		$this->setRequest($request);
 	}
 	
 	function _runAction(&$action, &$request) {

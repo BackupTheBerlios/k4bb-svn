@@ -40,7 +40,6 @@ define('IN_K4', TRUE);
 
 @set_time_limit(0);
 set_magic_quotes_runtime(0);
-
 error_reporting(E_ALL);
 
 ini_set('session.name',			'sid');
@@ -59,8 +58,8 @@ class K4Controller extends FAController {
 		parent::__construct();
 
 		$request					= $this->getRequest();
-		$request['load_timer']		= new FATimer(3);
-		$request['template']		= new K4Template();
+		$request['load_timer']		= &new FATimer(3);
+		$request['template']		= &new K4Template();
 		
 		$this->addFilter(new K4RequestFilter);
 
@@ -98,12 +97,12 @@ class K4Controller extends FAController {
 		 */
 		$request['template']->setVar('load_time', $request['load_timer']->__toString());
 		
-		$url = new FAUrl($_URL->__toString());
+		$url			= &new FAUrl($_URL->__toString());
 		
 		$request['template']->setVar('curr_url', $url->__toString());
 		
-		$url->args = array();
-		$url->anchor = $url->file = FALSE;
+		$url->args		= array();
+		$url->anchor	= $url->file = FALSE;
 		
 		$request['template']->setVar('forum_url', $url->__toString());
 
@@ -113,13 +112,16 @@ class K4Controller extends FAController {
 		$request['template']->setVar('nojs', (isset($url->args['nojs']) && intval($url->args['nojs']) == 1 ? 1 : 0));
 		$request['template']->setVar('anchor', (isset($url->anchor) && $url->anchor != '' ? $url->anchor : ''));
 		$request['template']->setVar('domain', get_domain());
-
+		
+		$this->setRequest($request);
+		
+		return TRUE;
 	}
 
 	function execute() {
 		
 		parent::execute();
-				
+		
 		$request	= $this->getRequest();
 		
 		/**
@@ -204,6 +206,8 @@ class K4BasicController extends FAController {
 
 		$request['template'] = &new FATemplate();
 		$this->addFilter(new K4DatabaseFilter);
+		
+		$this->setRequest($request);
 
 		parent::execute();
 	}

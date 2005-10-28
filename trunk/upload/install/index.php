@@ -65,6 +65,8 @@ class K4Installer extends FAController {
 	function execute() {
 		$request = $this->getRequest();
 		$request['template'] = &new FATemplate(FA_FORCE | FA_NOCACHE);
+		
+		$this->setRequest($request);
 
 		parent::execute();
 	}

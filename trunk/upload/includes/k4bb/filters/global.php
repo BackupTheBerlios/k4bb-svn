@@ -36,27 +36,27 @@ if (!defined('IN_K4'))
 class K4RequestFilter extends FAFilter {
 	function execute(&$action, &$request) {
 
-		set_magic_quotes_runtime(0);
-
 		foreach($_REQUEST as $key => $val) {
-			if(!is_array($val))
+			if(!is_array($val)) {
 				$_REQUEST[$key] = stripslashes($val);
+			}
 		}
 	}
 }
 
 class K4DatabaseFilter extends FAFilter {
 	function execute(&$action, &$request) {
+		
 		global $_CONFIG;
 
 		push_error_handler('k4_fatal_error');
-		$dba = &db_connect($_CONFIG['dba']);
+		$dba = db_connect($_CONFIG['dba']);
 		pop_error_handler();
 
 		if (false)
 			$dba = &new K4SqlDebugger($dba);
 
-		$request['dba'] =& $dba;
+		$request['dba'] = &$dba;
 		
 		// TODO: This should not be needed in the final version
 		$GLOBALS['_DBA'] = &$dba;
@@ -74,7 +74,7 @@ class K4SqlDebugPreFilter extends FAFilter {
 
 		$url		= &new FAUrl($_URL->__toString());
 		$url->args['debug'] = 1;
-
+		
 		$request['template']->setVar('debug_url', $url->__toString());
 		
 		if (isset($_GET['debug'])) {
