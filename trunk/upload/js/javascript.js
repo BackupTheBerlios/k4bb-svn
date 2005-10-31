@@ -41,7 +41,7 @@ function show_newmessage_box(num_messages, text_to_write, img_dir, menu_id) {
 		document.write('<div id="new_pms_box" class="special_panel" style="z-index: 99;border: 0px;position: absolute;top: ' + d.bottom(menu) + 'px;padding: 5px;"><span class="smalltext"><a href="member.php?act=usercp&amp;view=pmfolder&amp;folder=1" title=""><img src="Images/' + img_dir + '/Icons/icon_latest_reply.gif" alt="" border="0" />&nbsp;<strong>' + parseInt(num_messages) + '</strong> ' + text_to_write + '</a></span></div>');
 		new_pms_box = d.getElementById('new_pms_box');
 		if(new_pms_box) {
-			new_pms_box.style.left = parseInt(d.right(menu) - d.width(new_pms_box) - 1) + 'px'; // -1 for the border
+			new_pms_box.style.left = parseInt(d.width(new_pms_box) - d.width(menu) - 1) + 'px'; // -1 for the border
 		}
 	}
 }

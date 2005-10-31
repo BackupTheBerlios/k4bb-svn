@@ -133,7 +133,7 @@ define('WARN_RED',			3);
 define('USER_AGENT',		isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? @gethostbyaddr($_SERVER['HTTP_X_FORWARDED_FOR']) : ''));
 define('USER_IP',			get_ip());
 define('USE_AJAX',			allow_AJAX());
-define('USE_WYSIWYG',		(FALSE && allow_WYSIWYG()));
+define('USE_WYSIWYG',		(TRUE && allow_WYSIWYG()));
 
 /**
  * The current k4 Url

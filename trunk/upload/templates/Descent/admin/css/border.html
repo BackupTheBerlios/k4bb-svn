@@ -5,14 +5,14 @@
 			<table cellpadding="0" cellspacing="1" border="0">
 				<tr>
 					<td>&nbsp;</td>
-					<td><label for="border_same_width" id="label_border_same_width"><input type="checkbox" name="border_same_width" id="border_same_width" checked="true" onclick="set_same_for_all(this, new Array('border-right-width', 'border-bottom-width', 'border-left-width'))" /> {$L_WIDTH}</label>
+					<td><label for="border_same_width" id="label_border_same_width"><input type="checkbox" name="border_same_width" id="border_same_width" checked="true" onclick="set_same_for_all(this, new Array('border-right', 'border-bottom', 'border-left'))" /> {$L_WIDTH}</label>
 					<td><label for="border_same_style" id="label_border_same_style"><input type="checkbox" name="border_same_style" id="border_same_style" checked="true" onclick="set_same_for_all(this, new Array('border-right-style', 'border-bottom-style', 'border-left-style'))" /> {$L_STYLE}</label></td>
 					<td><label for="border_same_color" id="label_border_same_color"><input type="checkbox" name="border_same_color" id="border_same_color" checked="true" onclick="set_same_for_all(this, new Array('border-right-color', 'border-bottom-color', 'border-left-color'))" /> {$L_COLOR}</label></td>
 				</tr>
 				<tr>
 					<td class="smalltext">{$L_TOP}:</td>
 					<td>
-						<input type="text" class="inputbox" name="border-top-width" id="border-top-width" value="" size="5" onkeypress="enable_field(this, 'bt-measurement')" onKeyUp="set_all_values('border-top-width', 'border_same_width', new Array('border-right-width', 'border-bottom-width', 'border-left-width'))" />&nbsp;
+						<input type="text" class="inputbox" name="border-top" id="border-top" value="" size="5" onkeypress="enable_field(this, 'bt-measurement')" onKeyUp="set_all_values('border-top', 'border_same_width', new Array('border-right', 'border-bottom', 'border-left'))" />&nbsp;
 						<select name="bt-measurement" id="bt-measurement" disabled="true" class="smalltext" onchange="set_all_values('bt-measurement', 'border_same_width', new Array('br-measurement', 'bb-measurement', 'bl-measurement'))">
 							<option value="px">pixels</option>
 							<option value="pt">points</option>
@@ -47,7 +47,7 @@
 				<tr>
 					<td class="smalltext">{$L_RIGHT}:</td>
 					<td>
-						<input type="text" class="inputbox" disabled="true" name="border-right-width" id="border-right-width" value="" size="5" onkeypress="enable_field(this, 'br-measurement')" />&nbsp;
+						<input type="text" class="inputbox" disabled="true" name="border-right" id="border-right" value="" size="5" onkeypress="enable_field(this, 'br-measurement')" />&nbsp;
 						<select name="br-measurement" id="br-measurement" disabled="true" class="smalltext">
 							<option value="px">pixels</option>
 							<option value="pt">points</option>
@@ -82,7 +82,7 @@
 				<tr>
 					<td class="smalltext">{$L_BOTTOM}:</td>
 					<td>
-						<input type="text" class="inputbox" disabled="true" name="border-bottom-width" id="border-bottom-width" value="" size="5" onkeypress="enable_field(this, 'bb-measurement')" />&nbsp;
+						<input type="text" class="inputbox" disabled="true" name="border-bottom" id="border-bottom" value="" size="5" onkeypress="enable_field(this, 'bb-measurement')" />&nbsp;
 						<select name="bb-measurement" id="bb-measurement" disabled="true" class="smalltext">
 							<option value="px">pixels</option>
 							<option value="pt">points</option>
@@ -117,7 +117,7 @@
 				<tr>
 					<td class="smalltext">{$L_LEFT}:</td>
 					<td>
-						<input type="text" class="inputbox" disabled="true" name="border-left-width" id="border-left-width" value="" size="5" onkeypress="enable_field(this, 'bl-measurement')" />&nbsp;
+						<input type="text" class="inputbox" disabled="true" name="border-left" id="border-left" value="" size="5" onkeypress="enable_field(this, 'bl-measurement')" />&nbsp;
 						<select name="bl-measurement" id="bl-measurement" disabled="true" class="smalltext">
 							<option value="px">pixels</option>
 							<option value="pt">points</option>

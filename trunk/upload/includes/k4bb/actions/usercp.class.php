@@ -352,8 +352,10 @@ class K4UpdateUserProfile extends FAAction {
 		
 		global $_PROFILEFIELDS;
 		
-		foreach($_REQUEST as $key => $val)
-			$_REQUEST[$key]		= htmlentities(strip_tags($val), ENT_QUOTES);
+		foreach($_REQUEST as $key => $val) {
+			if(!is_array($_REQUEST[$key]))
+				$_REQUEST[$key]		= htmlentities(html_entity_decode(strip_tags($val), ENT_QUOTES), ENT_QUOTES);
+		}
 
 		/* Check if the user is logged in or not */
 		if(!$request['user']->isMember()) {

@@ -40,7 +40,8 @@ class K4DefaultAction extends FAAction {
 		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_WELCOME');
-			
+			$request['template']->setVar('adv_view', 1);
+
 		} else {
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$request['template']->setFile('content', '../login_form.html');
@@ -194,6 +195,7 @@ $app->setAction('css_editstyle', new AdminEditCSSClass);
 $app->setAction('css_updatestyle', new AdminUpdateCSSClass);
 $app->setAction('css_updateallclasses', new AdminUpdateAllCSSClasses);
 $app->setAction('css_removestyle', new AdminRemoveCSSClass);
+$app->setAction('css_editor', new AdminCSSEditor);
 $app->addFilter(new AdminCSSRequestFilter);
 
 /* Frequently Asked Questions */

@@ -245,8 +245,8 @@ function is_in_group($my_groups, $groups, $my_perms) {
 	if($my_perms >= ADMIN)
 		return TRUE;
 
-	$my_groups			= !is_array($my_groups) || empty($my_groups) ? explode('|', $my_groups) : $my_groups;
-	$groups				= !is_array($groups) || empty($groups) ? explode('|', $groups) : $groups;
+	$my_groups			= !is_array($my_groups) ? explode('|', $my_groups) : $my_groups;
+	$groups				= !is_array($groups) ? explode('|', $groups) : $groups;
 	
 	if(is_array($my_groups) && is_array($groups) && !empty($my_groups)) {
 		foreach($my_groups as $group_id) {

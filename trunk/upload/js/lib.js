@@ -175,6 +175,22 @@ k4lib.prototype.setIndex				= function(element, array) {
 	}
 }
 
+/* Set the index on a select form field and if the index doesn't exist,
+ * set the first option to be it. */
+k4lib.prototype.forceSetIndex			= function(element, array) {
+	var temp				= this.getElementById(array);
+
+	if(temp) {
+		temp.selectedIndex	= this.getSelectedIndex(element, temp);
+
+		if(temp.selectedIndex == 0) {
+			temp[0].value	= element;
+			temp[0].text	= element;
+		}
+		temp.disabled		= false;
+	}
+}
+
 /* Set the indices on a multi-select select field */
 k4lib.prototype.setIndices				= function(values_array, select) {
 	var temp				= this.getElementById(select);
@@ -213,6 +229,17 @@ k4lib.prototype.selectAll				= function(select) {
 		}
 	}			
 }
+
+/* Set a text box */
+k4lib.prototype.setText		= function(text, textbox) {
+	var temp				= this.getElementById(textbox);
+
+	if(temp) {
+		temp.value			= text;
+		temp.disabled		= false;
+	}
+}
+
 
 /* Set a radio button */
 k4lib.prototype.setRadio				= function(value, name) {

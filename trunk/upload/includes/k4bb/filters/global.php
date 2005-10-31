@@ -93,7 +93,7 @@ class K4SqlDebugPreFilter extends FAFilter {
 
 class K4SessionFilter extends FAFilter {
 	function execute(&$action, &$request) {
-		$session = &FASession::start($request['dba'], K4SESSIONS);
+		$session = FASession::start($request['dba'], K4SESSIONS);
 		$request['session'] = &$session;
 	}
 

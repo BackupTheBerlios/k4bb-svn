@@ -174,7 +174,7 @@
 		</tr>
 		</is:logged>
 		<tr>
-			<td class="alt1" nowrap="nowrap"><a href="{$curr_url}&amp;print=1" title="{$L_PRINTERVERSION}" class="smalltext">{$L_PRINTERVERSION}</a></td>
+			<td class="alt1" nowrap="nowrap"><a href="{$curr_url}&amp;archive=1" title="{$L_PRINTERVERSION}" class="smalltext">{$L_PRINTERVERSION}</a></td>
 		</tr>
 		<tr>
 			<td class="alt1" nowrap="nowrap"><a href="{$curr_url}&amp;email=1" title="{$L_EMAILTHISPAGE}" class="smalltext">{$L_EMAILTHISPAGE}</a></td>
@@ -245,29 +245,3 @@
 <!-- / Rate Topic Drop Down Menu -->
 
 <core:import id="page_jumper" file="page_jumper.html" />
-<script type="text/javascript">
-//<![CDATA[
-	resize_bbimgs('ruler');
-	menu_init('topicoptions_link', 'topicoptions_menu');
-	menu_init('ratetopic_link', 'ratetopic_menu');
-	menu_init('page_jump1', 'page_jump_menu');
-	menu_init('page_jump2', 'page_jump_menu');
-
-	// show/hide the emoticons/images
-	var bbcode_images		= d.getElementsByTagName(document, 'img');
-	for(var i = 0; i < d.sizeof(bbcode_images); i++) {
-		if(bbcode_images[i]) {
-			<if:if var="user_viewemoticons" eq="0">
-			if(bbcode_images[i].className == 'emoticon_image') {
-				bbcode_images[i].style.display = 'none';
-			}
-			</if:if>
-			<if:if var="user_viewimages" eq="0">
-			if(bbcode_images[i].className == 'bbcode_img') {
-				bbcode_images[i].style.display = 'none';
-			}
-			</if:if>
-		}
-	}
-//]]>
-</script>

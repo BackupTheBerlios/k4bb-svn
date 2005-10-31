@@ -29,6 +29,68 @@
 * @package k42
 */
 
+function get_css_rules($str) {
+	/**
+	 * Get and format the source code of the CSS file
+	 */
+	$str	= preg_replace("~(\r\n|\r|\n)~i", "\n", $str);
+	$str	= preg_replace("~(\t)~i", "", $str);
+	$str	= preg_replace("~/\*(.+?)\*/~is", "", $str);
+
+	/* Set/get our main arrays */
+	$css		= array();
+	$lines		= explode("\n", $str);
+
+	if(is_array($lines) && !empty($lines)) {
+		
+		foreach($lines as $number => $source) {
+			$source = trim($source);
+
+			if($source != '') {
+
+				preg_match('~([^\{]*)\{([^\}]*)\}~i', $source, $matches);
+				
+				if(isset($matches[1]) && isset($matches[2])) {
+					
+					$selector	= trim($matches[1]); // anything before the first {
+					$rules		= trim($matches[2]); // everything between the { and }
+					
+					if($selector && $rules) {
+						
+						/* Split apart all of the rules */
+						$defs	= explode(';', $rules);
+						
+						/**
+						 * @rule		=> The rule, e.g. url() bottom right; (this is and example for background)
+						 */
+						while(list(, $rule) = each($defs)) {
+							
+							/* Get the property and definition from the rule */
+							$rule_parts = explode(':', $rule);
+							
+							if(count($rule_parts) >= 2) {
+								list($property, $definition) = $rule_parts;
+								
+								$property	= trim($property);
+								$definition = trim($definition);
+								
+								if($property != '' && $definition != '') {
+
+									/* Add it all to the css array */
+									$css[$selector][$property] = $definition;
+									
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	return $css;
+}
+
 class AdminManageStyleSets extends FAAction {
 	function execute(&$request) {
 		
@@ -356,6 +418,512 @@ class AdminInsertCSSClass extends FAAction {
 	}
 }
 
+define('CSS_NUM', 0);
+define('CSS_ALPHA', 2); // includes '-', ','
+define('CSS_ALPHANUM', 4);
+define('CSS_ALL', 8);
+
+class AdminCSSEditor extends FAAction {
+	/**
+	 * Now this looks really ugly. What it's doing is separating
+	 * the various parts of these three css things and adding them
+	 * to the css array
+	 */
+	function sort_box_parts(&$css, &$positions, $property, $parts) {
+		foreach($parts as $p) {
+			preg_match("~([0-9]+)(px|pt|in|cm|mm|pc|em|ex|\%)~i", $p, $matches);
+			
+			if(isset($matches[1]) && isset($matches[2])) {
+				if(isset($positions[0])) {
+					$css[substr($property, 0, 1) . substr($positions[0], 0, 1) .'-measurement'] = $matches[2];
+					$css[$property .'-'. $positions[0]] = $matches[1];
+				}
+			}
+			$first			= array_shift($positions);
+			$positions[]	= $first;
+		}
+	}
+	
+	/**
+	 * this is specific for border sorting
+	 */
+	function sort_border_parts(&$css, &$positions, $property, $parts) {
+		foreach($parts as $p) {
+			if(isset($positions[0])) {
+				$css['border-'. $positions[0] .'-'. $property] = $p;
+			}
+			$first			= array_shift($positions);
+			$positions[]	= $first;
+		}
+	}
+
+	/**
+	 * Create a shortened version of a porperty name
+	 */
+	function alt_property($property) {
+		$ret = '';
+		if(strpos($property, '-') !== FALSE) {
+			list($parta, $partb) = explode("-", $property);
+			$ret = substr($parta, 0, 1) . substr($partb, 0, 1);
+		} else {
+			$ret = substr($property, 0, 1);
+		}
+
+		return $ret;
+	}
+
+	function execute(&$request) {
+		
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
+			$request['template']->setFile('content', 'css_editor.html');
+			
+			foreach($request['style'] as $key=>$val) {
+				$request['template']->setVar('style_'. $key, $val);
+			}
+
+			$str	= preg_replace("~(\r\n|\r|\n)~i", "\n", $request['style']['properties']);
+			$str	= preg_replace("~(\t)~i", "", $str);
+			$str	= preg_replace("~/\*(.+?)\*/\n~is", "", $str);
+
+			$props	= explode(';', $str);
+			
+			// Remake the css into a nice formatted thing
+			$css	= "";
+			foreach($props as $rule) {
+				if($rule != '')
+					$css .= "{$rule};\n";
+			}
+			
+			$request['template']->setVar('style_properties', $css);
+			
+			$mode		= !isset($_REQUEST['mode']) ? '' : ($_REQUEST['mode'] == 'normal' ? 'normal' : 'advanced');
+			
+			/**
+			 * Define all of the inputs and selects in the CSS editor
+			 */
+			$text_boxes = array(
+								'background-color'		=> CSS_ALPHANUM,
+								'background-image'		=> CSS_ALL,
+								'word-spacing'			=> CSS_NUM,
+								'letter-spacing'		=> CSS_NUM,
+								'text-indent'			=> CSS_NUM,
+								'border-top'		=> CSS_NUM, //5
+								'border-top-color'		=> CSS_ALPHANUM,
+								'border-right'	=> CSS_NUM,
+								'border-right-color'	=> CSS_ALPHANUM,
+								'border-bottom'	=> CSS_NUM,
+								'border-bottom-color'	=> CSS_ALPHANUM,
+								'border-left'		=> CSS_NUM,
+								'border-left-color'		=> CSS_ALPHANUM, // 12
+								'width'					=> CSS_NUM,
+								'height'				=> CSS_NUM,
+								'padding-top'			=> CSS_NUM, // 15
+								'padding-right'			=> CSS_NUM,
+								'padding-bottom'		=> CSS_NUM,
+								'padding-left'			=> CSS_NUM, // 18
+								'margin-top'			=> CSS_NUM,
+								'margin-right'			=> CSS_NUM,
+								'margin-bottom'			=> CSS_NUM,
+								'margin-left'			=> CSS_NUM,
+								'z-index'				=> CSS_NUM,
+								'top'					=> CSS_NUM,
+								'right'					=> CSS_NUM,
+								'bottom'				=> CSS_NUM,
+								'left'					=> CSS_NUM,
+								'clip-top'				=> CSS_NUM,
+								'clip-right'			=> CSS_NUM,
+								'clip-bottom'			=> CSS_NUM,
+								'clip-left'				=> CSS_NUM,
+								'color'					=> CSS_ALPHANUM,
+							);
+
+			$select_menus = array(
+								'background-repeat'		=> CSS_ALL,
+								'background-attachment' => CSS_ALPHA,
+								'background-position-h' => CSS_ALPHA,
+								'background-position-v' => CSS_ALPHA,
+								'ws-measurement'		=> CSS_NUM, // word spacing
+								'ls-measurement'		=> CSS_NUM, // letter spacing
+								'vertical-align'		=> CSS_ALPHA,
+								'text-align'			=> CSS_ALPHA,
+								'ti-measurement'		=> CSS_ALL, // text indent measurement
+								'white-space'			=> CSS_ALPHA,
+								'display'				=> CSS_ALPHA,
+								'bt-measurement'		=> CSS_ALL, // border-top 11
+								'border-top-style'		=> CSS_ALPHA,
+								'br-measurement'		=> CSS_ALL, // border-right
+								'border-right-style'	=> CSS_ALPHA,
+								'bb-measurement'		=> CSS_ALL, // border-bottom
+								'border-bottom-style'	=> CSS_ALPHA,
+								'bl-measurement'		=> CSS_ALL, // border-left
+								'border-left-style'		=> CSS_ALPHA, // 18
+								'width-measurement'		=> CSS_ALL,
+								'float'					=> CSS_ALPHA,
+								'height-measurement'	=> CSS_ALL,
+								'clear'					=> CSS_ALPHA,
+								'pt-measurement'		=> CSS_ALL, // top padding 23
+								'pr-measurement'		=> CSS_ALL,
+								'pb-measurement'		=> CSS_ALL,
+								'pl-measurement'		=> CSS_ALL, // 26
+								'mt-measurement'		=> CSS_ALL, // top margin 27
+								'mr-measurement'		=> CSS_ALL,
+								'mb-measurement'		=> CSS_ALL,
+								'ml-measurement'		=> CSS_ALL, // 30
+								'page-break-before'		=> CSS_ALPHA,
+								'page-break-after'		=> CSS_ALPHA,
+								'cursor'				=> CSS_ALPHA,
+								'list-style-type'		=> CSS_ALPHA,
+								'list-style-position'	=> CSS_ALPHA,
+								'position'				=> CSS_ALPHA,
+								'visibility'			=> CSS_ALPHA,
+								'overflow'				=> CSS_ALPHA,
+								't-measurment'			=> CSS_ALL, // top measurement
+								'r-measurment'			=> CSS_ALL,
+								'b-measurment'			=> CSS_ALL,
+								'l-measurment'			=> CSS_ALL,
+								'ct-measurment'			=> CSS_ALL, // top clip measurement
+								'cr-measurment'			=> CSS_ALL,
+								'cb-measurment'			=> CSS_ALL,
+								'cl-measurment'			=> CSS_ALL,
+								'font-family'			=> CSS_ALPHA,
+								'text-transform'		=> CSS_ALPHA,
+								'font-size'				=> CSS_NUM,
+								'size-measurement'		=> CSS_ALL,
+								'font-weight'			=> CSS_ALPHA,
+								'font-style'			=> CSS_ALPHA,
+								'font-variant'			=> CSS_ALPHA,
+								'text-decoration'		=> CSS_ALPHA,
+							);
+			
+			$border_styles = array(
+								'none', 
+								'hidden', 
+								'dotted', 
+								'dashed', 
+								'solid', 
+								'double', 
+								'groove', 
+								'ridge', 
+								'inset', 
+								'outset',
+							);
+			$positions = array(
+							'top', 
+							'right', 
+							'bottom', 
+							'left',
+						);
+			$vert_positions = array(
+							'top', 
+							'center', 
+							'bottom', 
+						);
+			$horiz_positions = array(
+							'left',
+							'center',
+							'right',
+						);
+			$repeat_types = array(
+							'repeat',
+							'no-repeat',
+							'repeat-x',
+							'repeat-y',
+						);
+
+			switch($mode) {
+				case 'normal': {
+					
+					$text_boxes_keys	= array_keys($text_boxes);
+					$select_menus_keys	= array_keys($select_menus);
+					// FIX ME
+					$border_related		= array_slice($text_boxes_keys, 5, 12) + array_slice($select_menus_keys, 11, 18);
+					$padding_related	= array_slice($text_boxes_keys, 15, 18) + array_slice($select_menus_keys, 23, 26);
+					$margin_related		= array_slice($text_boxes_keys, 19, 22) + array_slice($select_menus_keys, 27, 30);
+					
+					$css				= "";
+					$postvar			= $_REQUEST;
+					
+					/**
+					 * Add css to the postvar array if they don't exist
+					 */
+					foreach($text_boxes_keys as $tbk)
+						$postvar[$tbk] = !isset($postvar[$tbk]) ? '' : $postvar[$tbk];
+					
+					foreach($select_menus_keys as $smk)
+						$postvar[$smk] = !isset($postvar[$smk]) ? '' : $postvar[$smk];
+					
+					/**
+					 * Loop through the array of css
+					 */
+					foreach($postvar as $property => $definition) {
+						
+						/**
+						 * is this part of our css defined stuff?
+						 */
+						if(in_array($property, $text_boxes_keys) || in_array($property, $select_menus_keys)) { // $postvar[$property] != '' && 
+							
+							/**
+							 * Look for Border, Padding and Margin
+							 */
+							if(in_array($property, $border_related) || in_array($property, $padding_related) || in_array($property, $margin_related)) {
+								
+								$start	= in_array($property, $padding_related) ? 'padding' : (in_array($property, $margin_related) ? 'margin' : 'border');
+								$s		= $start == 'padding' ? 'p' : ($start == 'margin' ? 'm' : 'b');
+								$array_to_use = $start == 'padding' ? $padding_related : ($start == 'margin' ? $margin_related : $border_related);
+								
+								if(isset($postvar[$start .'-top']) 
+									&& isset($postvar[$start .'-right']) 
+									&& isset($postvar[$start .'-bottom']) 
+									&& isset($postvar[$start .'-left'])) {
+									
+									// are they all the same?
+									if($postvar[$start .'-top'] == $postvar[$start .'-right']
+										&& $postvar[$start .'-right'] == $postvar[$start .'-bottom']
+										&& $postvar[$start .'-bottom'] == $postvar[$start .'-left']) {
+										
+										if($postvar[$start .'-top'] != '' && $postvar[$start .'-right'] != '' && $postvar[$start .'-bottom'] != '' && $postvar[$start .'-left'] != '') {
+											
+											// for borders
+											if($start == 'border') {
+												$css .= "border: ". $postvar['border-top'] . $postvar['bt-measurement'] ." ". $postvar['border-top-style'] ." ". $postvar['border-top-color'] .";\n";
+											
+											// for padding and margins
+											} else {
+												$css .= $start ." ". $postvar[$start .'-top'] . $postvar[$s .'t-measurement'] .";\n";
+											}
+										}
+										
+									// the borders/paddings/margins are all different
+									} else {
+										
+										if($postvar[$start .'-top'] != '')
+											$css .= $start ."-top: ". intval($postvar[$start .'-top']) . $postvar[$s .'t-measurement'] ." ". ($s == 'b' ? $postvar['border-top-style'] ." ". $postvar['border-top-color'] : '') .";\n";
+										if($postvar[$start .'-right'] != '')
+											$css .= $start ."-right: ". intval($postvar[$start .'-right']) . $postvar[$s .'r-measurement'] ." ". ($s == 'b' ? $postvar['border-right-style'] ." ". $postvar['border-right-color'] : '') .";\n";
+										if($postvar[$start .'-bottom'] != '')
+											$css .= $start ."-bottom: ". intval($postvar[$start .'-bottom']) . $postvar[$s .'b-measurement'] ." ". ($s == 'b' ? $postvar['border-bottom-style'] ." ". $postvar['border-bottom-color'] : '') .";\n";
+										if($postvar[$start .'-left'] != '')
+											$css .= $start ."-left: ". intval($postvar[$start .'-left']) . $postvar[$s .'l-measurement'] ." ". ($s == 'b' ? $postvar['border-left-style'] ." ". $postvar['border-left-color'] : '') .";\n";
+									}
+									
+									// this removes all of the border/padding/margin-related things from 
+									// request now that we're done parsing them.
+									foreach($array_to_use as $br) {
+										unset($postvar[$br]);
+									}
+								}
+
+							/**
+							 * The who-cares properties.. they are fine either way :P
+							 */
+							} else {
+								
+								if($definition != '')
+									$css .= "{$property}: {$definition};\n";
+							}
+						}
+					}
+					echo $css; exit;
+					unset($array_to_use, $border_related, $padding_related, $margin_related, $text_boxes, $select_menus);
+					
+					$request['template']->setVisibility('mode_text', TRUE);
+					break;
+				}
+				case 'advanced': {
+					
+					$css			= array(); // an array of all of our expanded css
+					$css_unknown	= array(); // unknown css elements
+					$css_def		= '';
+					
+					// separate the properties
+					$props = explode(";", $_REQUEST['properties']);
+					
+					// loop through the rules
+					while(list(, $rule) = each($props)) {
+						
+						/* Get the property and definition from the rule */
+						$rule_parts = explode(':', $rule);
+						
+						if(count($rule_parts) >= 2) {
+							list($property, $definition) = $rule_parts;
+							
+							$property	= strtolower(trim($property));
+							$definition = trim($definition);
+							
+							if($property != '' && $definition != '') {
+								
+								$border_pos = strpos($property, 'border') === TRUE;
+								$padding_pos = strpos($property, 'border') === TRUE;
+								$margin_pos = strpos($property, 'border') === TRUE;
+
+								/**
+								 * Manage padding, margins and borders
+								 */
+								if($border_pos || $padding_pos || $margin_pos) {
+								
+									
+									$parts = explode(" ", $definition);
+									
+									if($border_pos) { // $property == 'border'
+										
+										if(count($parts) == 3) {
+											list($width, $style, $color) = $parts;
+											
+											// if this is the case, this means that we need to parse this part
+											// differently. This is just a mini check to see if we have the
+											// right thing.. 
+											if(in_array(trim($style), $border_styles)) {
+
+												// add all of the border stylr properties
+												$parts = explode(" ", trim(str_repeat($style . " ", 4)));
+												$this->sort_border_parts($css, $positions, 'style', $parts);
+
+												// add all of the border color properies
+												$parts = explode(" ", trim(str_repeat($color . " ", 4)));
+												$this->sort_border_parts($css, $positions, 'color', $parts);
+												
+												// finally, reset the parts array so that it can be formatted below
+												$parts = array($width);
+											}
+										}
+									}
+
+									if(count($parts) == 1) {
+										$parts = explode(" ", trim(str_repeat($parts[0] . " ", 4)));
+									}
+
+									$this->sort_box_parts($css, $positions, $property, $parts);
+
+								}
+
+								/**
+								 * Manage clip
+								 */
+								else if($property == 'clip') {
+									preg_match("~(rect|shape|auto)\((.*?)\)~i", $definition, $ms);
+									if(isset($ms[1])) {
+										if($ms[1] == 'rect' || $ms[1] == 'shape') {
+											
+											$parts = explode(",", $definition);
+											$this->sort_box_parts($css, $positions, $property, $parts);
+										} else {
+											$css_unknown['clip'] = 'auto';
+										}
+									}
+								}
+
+								/**
+								 * Manage the background element
+								 */
+								else if($property == 'background') {
+									
+									$parts = explode(" ", $definition);
+									
+									foreach($parts as $p) {
+										
+										$p = trim($p);
+										
+										/**
+										 * Figure out what's what. I don't use an elseif because then
+										 * the some of the positions could override themselves, etc.
+										 */
+										if(!isset($css['background-attachment']) && preg_match("~(fixed|scroll)~is", $p)) {
+											$css['background-attachment'] = $p;
+										} 
+										if(!isset($css['background-color']) && preg_match("~\#([a-fA-F0-9]+)~is", $p)) {
+											$css['background-color'] = $p;
+										} 
+										if(!isset($css['background-image']) && preg_match("~url\((.+?)\)~is", $p, $matches)) {
+											$css['background-image'] = trim($matches[1], "'");
+										} 
+										if(!isset($css['background-position-h']) && in_array(strtolower($p), $horiz_positions)) {
+											$css['background-position-h'] = $p;
+										} 
+										if(!isset($css['background-position-v']) && in_array(strtolower($p), $vert_positions)) {
+											$css['background-position-v'] = $p;
+										} 
+										if(!isset($css['background-repeat']) && in_array(strtolower($p), $repeat_types)) {
+											$css['background-repeat'] = $p;
+										}
+									}
+
+									break;
+								}
+
+								/**
+								 * The 'who cares' properties that work anyway
+								 */
+								else {
+
+									// look for a number and a measurement
+									preg_match("~((\-)?[0-9]+)(px|pt|in|cm|mm|pc|em|ex|\%)~i", $definition, $matches);
+									
+									$count = count($matches);
+
+									// this means that we have found a number and a measurement
+									if($count >= 3) {
+										$css[$property] = $matches[1];
+										$css[$this->alt_property($property) .'-measurement'] = $count == 4 ? $matches[3] : $matches[2];
+									} else {
+										$css[$property] = $definition;
+									}
+									break;
+								}
+									
+							}
+						}
+						
+					}
+					
+					/**
+					 * Compile some javascript to deal with putting info into the editor
+					 */
+					$text_boxes		= array_keys($text_boxes);
+					$select_menus	= array_keys($select_menus);
+					
+					$javascript		= '<script type="text/javascript">';
+					
+					foreach($css as $def => $prop) {
+						
+						if(in_array($def, $text_boxes)) {
+							$javascript		.= "\nd.setText('". $prop ."', '". $def ."');";
+						
+						} else if(in_array($def, $select_menus)) {
+							$javascript		.= "\nd.forceSetIndex('". $prop ."', '". $def ."');";
+						} else {
+							$css_unknown[$def] = $prop;
+						}
+					}
+					$javascript		.= "\n</script>";
+					
+					/**
+					 * Remake the css that is not known by the editor
+					 */
+					$unknown_css = '';
+					foreach($css_unknown as $def => $prop) {
+						$unknown_css .= "{$def}: {$prop};\n";
+					}
+					
+					$request['template']->setVar('unknown_css', $unknown_css);
+					$request['template']->setVar('adv_javascript', $javascript);
+					$request['template']->setVisibility('mode_advanced', TRUE);
+					break;
+				}
+				default: {
+					$request['template']->setVisibility('mode_text', TRUE);
+					break;
+				}
+			}
+
+
+		} else {
+			no_perms_error($request);
+		}
+
+		return TRUE;
+	}
+}
+
 class AdminEditCSSClass extends FAAction {
 	function execute(&$request) {
 		
@@ -482,6 +1050,7 @@ class AdminCSSRequestFilter extends FAFilter {
 						'css_addstyle',
 						'css_insertstyle',
 						'css_updateallclasses',
+						'css_editor',
 						);
 		
 		if(in_array($request['event'], $events)) {

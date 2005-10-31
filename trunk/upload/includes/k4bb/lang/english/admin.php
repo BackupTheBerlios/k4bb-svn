@@ -62,6 +62,7 @@ $_LANG += array(
 'L_FILEMANAGER'			=> 'File Manager',
 'L_FAQCATEGORIES'		=> 'FAQ Categories',
 'L_FAQANSWERS'			=> 'FAQ Answers',
+'L_SPIDERS'				=> 'Search Spiders',
 /* / Admin CP Menu */
 
 'L_PRUNEMESSAGE'		=> 'This will delete any topic which has not been posted to within the number of days you select. If you do not enter a number then all topics will be deleted. It will not remove topics in which polls are still running nor will it remove announcements or sticky topics. You will need to remove these topics manually.',
@@ -701,6 +702,8 @@ $_LANG += array(
 'L_LIST'				=> 'List',
 'L_POSITIONING'			=> 'Positioning',
 'L_EXTENSIONS'			=> 'Extensions',
+'L_UNKNOWN'				=> 'Unknown',
+'L_UNRECOGNIZEDCSS'		=> 'Unrecognized CSS',
 'L_CSSEDITOR'			=> 'CSS Editor (Cascading Style Sheets)',
 'L_FONT'				=> 'Font',
 'L_SIZE'				=> 'Size',

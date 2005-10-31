@@ -1,0 +1,844 @@
+<is:admin>
+<a name="editor" id="editor"></a>
+<script type="text/javascript">
+/**
+* k4 Bulletin Board, editor.html
+*
+* Copyright (c) 2005, Peter Goodman
+*
+* Permission is hereby granted, free of charge, to any person obtaining
+* a copy of this software and associated documentation files (the
+* "Software"), to deal in the Software without restriction, including
+* without limitation the rights to use, copy, modify, merge, publish,
+* distribute, sublicense, and/or sell copies of the Software, and to
+* permit persons to whom the Software is furnished to do so, subject to
+* the following conditions:
+*
+* The above copyright notice and this permission notice shall be
+* included in all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+* NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+* BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+* ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+* CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+*
+* @author Peter Goodman
+* @version $Id$
+* @package k42
+*/
+
+/* Tabbed menu functions */
+var menuViews	= "css_type css_background css_block css_box css_border css_list css_positioning css_extensions css_unknown".split(" ");
+var menuLinks	= "type background block box border list positioning extensions".split(" ");
+var prettyNames = new Array('{$L_TYPE}', '{$L_BACKGROUND}', '{$L_BLOCK}', '{$L_BOX}', '{$L_BORDER}', '{$L_LIST}', '{$L_POSITIONING}', '{$L_EXTENSIONS}');
+var Default		= "css_type";
+
+/* Switch tabs on the advanced CSS editor */
+function switchView(this_id) {		
+	var top_name	= d.getElementById('curr_location');
+	
+	for(var i=0; i < d.sizeof(menuViews); i++ ) {
+		d.getElementById(menuViews[i]).style.display = 'none';
+	}
+	
+	var temp		= this_id[this_id.selectedIndex];
+	top_name.value	= temp.text;
+	d.getElementById(temp.value).style.display = 'block';
+}
+
+/* This will enable a disabled input element if the value of the text box which points to it is an integer */
+function enable_field(element, select_id) {
+	var input	= d.getElementById(select_id);
+	
+	if(element.type == 'select-one') {
+		var result = parseInt(element[element.selectedIndex].value) >= 0 ? false : true;
+	} else if(element.type == 'text') {
+		var result	= parseInt(element.value) >= 0 ? false : true;
+	}
+	
+	input.disabled = result;
+}
+
+///* This will popup or hide the color picker */
+//function ShowColorPicker(cp_id, img_id, txt_id) {
+//	var color_picker = fetch_cookie('color_picker');
+//
+//	if(color_picker != null) {
+//		//color_picker = color_picker.split("\n");
+//		//color_picker = color_picker[0].split(":");
+//		color_picker = color_picker.split(":");
+//		if(color_picker[0] != cp_id) {
+//			var old_id = color_picker[0];
+//			try {
+//				var hide_it = eval(d.getElementById(old_id));
+//				hide_it.style.display = 'none';
+//			} catch(e) {
+//				return false;
+//			}
+//		}
+//	}
+//	expires = new Date();
+//	expires.setTime(expires.getTime() + 7600);
+//	set_cookie('color_picker', (cp_id+':'+img_id+':'+txt_id), expires); 
+//	var colorizer = d.getElementById(cp_id);
+//	
+//	if(colorizer.style.display != "block") {
+//		return colorizer.style.display = "block";
+//	} else {
+//		return colorizer.style.display = "none";
+//	}
+//}
+
+var css_menu = d.getElementById('css_menu');
+/* This will give the color's preview and auto set the text boxes value */
+function View(color) {
+	var color_picker = fetch_cookie('color_picker');
+	if(color_picker != null) {
+		color_picker = color_picker.split("\n");
+		color_picker = color_picker[0].split(":");
+
+		d.getElementById(color_picker[1]).style.backgroundColor = '#' + color;
+		d.getElementById(color_picker[2]).value = '#' + color;
+	}
+}
+/* This will set the color, and show the preview */
+function Set(string) {
+	var color = ValidateColor(string);
+	if (color == null) { 
+		alert("Invalid color code: " + string); 
+	} else {
+		View(color);
+	}
+}
+/* This will check if it is a valid hex color code */
+function ValidateColor(string) {
+	string = string || '';
+	string = string + "";
+	string = string.toUpperCase();
+	chars = '0123456789ABCDEF';
+	out   = '';
+
+	for (i=0; i<string.length; i++) {
+		schar = string.charAt(i);
+		if (chars.indexOf(schar) != -1) { 
+			out += schar; 
+		}
+	}
+	if (out.length != 6) { 
+		return null; 
+	}
+	return out;
+}
+
+///* If the 'Same For All' checkbox is set, this will disable all of the other text boxes */
+//function set_same_for_all(element, id_array) {
+//	for(var i = 0; i < d.sizeof(id_array); i++) {
+//		d.getElementById(id_array[i]).disabled = element.checked ? true : false;
+//	}
+//}
+//
+///* If the 'Same For All' checkbox is set, this will set all of the values of the other disabled text boxes */
+//function set_all_values(this_id, checkbox_id, id_array) {
+//	
+//	if(d.getElementById(checkbox_id).checked == true) {
+//		
+//		var item = d.getElementById(this_id);
+//		
+//		if(item.type == 'text') {
+//			
+//			var the_value = item.createTextRange().text;
+//			
+//			for(var i = 0; i < d.sizeof(id_array); i++) {
+//				d.getElementById(id_array[i]).value			= the_value;
+//			}
+//		} else if(item.type == 'select-one') {
+//			
+//			var index = item.selectedIndex;
+//			
+//			for(var i=0; i<id_array.length; i++) {
+//				d.getElementById(id_array[i]).selectedIndex = index;
+//				d.getElementById(id_array[i]).disabled		= true;
+//			}
+//		}
+//	}
+//}
+///* Set a whole bunch of arrays */
+//var CSS_type = "font-family text-transform font-size font-weight font-style font-variant text-decoration color";
+//var CSS_background = " background-color background-repeat background-attachment";
+//var CSS_block = " word-spacing letter-spacing vertical-align text-align text-indent white-space display";
+//var CSS_box = " width float height clear";
+//var CSS_padding = "padding-top padding-right padding-bottom padding-left".split(" ");
+//var CSS_margin = "margin-top margin-right margin-bottom margin-left".split(" ");
+//var CSS_list = " list-style-type list-style-position";
+//var CSS_position = " position visibility z-index overflow top right bottom left";
+//var CSS_extensions = " page-break-before page-break-after cursor";
+//var CSSitems = (CSS_type + CSS_background + CSS_block + CSS_box + CSS_list + CSS_position + CSS_extensions).split(" ");
+//
+//var colors = "border-top-color border-right-color border-bottom-color border-left-color".split(" ");
+//var sizes = "border-top-width border-right-width border-bottom-width border-left-width".split(" ");
+//var sizes_m = "bt-measurement br-measurement bb-measurement bl-measurement".split(" ");
+//var styles = "border-top-style border-right-style border-bottom-style border-left-style".split(" ");
+//var b_imgs = "bt_color_preview br_color_preview bb_color_preview bl_color_preview".split(" ");
+//var clip = "clip-top clip-right clip-bottom clip-left".split(" ");
+//
+//var check_alls = "border_same_color border_same_style border_same_width box_same_padding box_same_margin".split(" ");
+//
+///* Hide all of the 'Same for All' checkboxes, and enable all of the auto-disabled fields which went with the same for all functionality */
+//function HideForMoz() {
+//	if(!d.is_ie) {
+//		for(var i=0; i<check_alls.length;i++) {
+//			d.getElementById(check_alls[i]).checked = false;
+//			d.getElementById('label_'+check_alls[i]).style.display = 'none';
+//		}
+//		for(var i=0;i<colors.length;i++) {
+//			d.getElementById(colors[i]).disabled = false;
+//			d.getElementById(sizes[i]).disabled = false;
+//			d.getElementById(styles[i]).disabled = false;
+//		}
+//		for(var i=0;i<CSS_padding.length;i++) {
+//			d.getElementById(CSS_padding[i]).disabled = false;
+//			d.getElementById(CSS_margin[i]).disabled = false;
+//		}
+//	}
+//}
+//
+///* This will transform the clip field's into nice css */
+//function apply_css_clip() {
+//	
+//	var css			= '';
+//	var is_null		= 0;
+//
+//	for(var i = 0; i < d.sizeof(clip); i++) {
+//		
+//		var temp		= d.getElementById(clip[i]);
+//		var the_select	= d.getElementById("c" + temp.name + "-measurement");
+//		
+//		if(temp && the_select) {
+//			if(typeof temp.value != 'undefined') {
+//				if(temp.value != '') {
+//					
+//					the_select.selectedIndex	= 0;
+//					temp.value					= 'auto';
+//					css							+= 'auto ';
+//
+//				} else if(temp.value != 'auto' && temp.value != '') {
+//					css		+= temp.value + the_select[the_select.selectedIndex].value + ' ';
+//					is_null++;
+//				}
+//			}
+//		}
+//	}
+//	css		= '\nclip: rect(' + css + ');';
+//	
+//	if(is_null != 0) {
+//		return css;
+//	} else {
+//		for(var i = 0; i < d.sizeof(clip); i++) {
+//			d.getElementById(clip[i]).value = '';
+//		}
+//	}
+//	return '';
+//}
+//
+///* This will take all of the border fields and make them into nice css */
+//function apply_css_borders() {	
+//	
+//	var same_color = d.getElementById('border_same_color').checked;
+//	var same_style = d.getElementById('border_same_style').checked;
+//	var same_width = d.getElementById('border_same_width').checked;
+//
+//	var css = '';
+//	
+//	for(var i = 0; i < d.sizeof(colors); i++ ) {
+//		
+//		var temp_color		= d.getElementById(colors[i]);
+//		var temp_size		= d.getElementById(sizes[i]);
+//		var temp_style		= d.getElementById(styles[i]);
+//		
+//		if(temp_color && temp_size && temp_style) {
+//
+//			temp_style		= temp_style[temp_style.selectedIndex].value;
+//			
+//			if((same_color == true) && (same_style == true) && (same_width == true)) {
+//				
+//				if(temp_color.value && temp_size.value && temp_style) {
+//					
+//					var bm	= d.getElementById('bt-measurement');
+//					css		= '\nborder: ' + temp_size.value + bm[bm.selectedIndex].value + ' ' + temp_style + ' ' + temp_color.value + ';';
+//				} else if(temp_color.value || temp_size.value || temp_style) {
+//					
+//					var bm	= d.getElementById('bt-measurement');
+//					bm		= (temp_size.value) ? bm[bm.selectedIndex].value : '';
+//					css		= '\nborder: ' + temp_size.value + bm + ' ' + temp_style + ' ' + temp_color.value + ';';
+//				}
+//			} else {
+//				css			= (temp_color.value) ? css + '\n' + temp_color.name + ': ' + temp_color.value + ';' : css;
+//				var measure_id = 'b' + temp_size.name.substr(7,1)+ '-measurement';
+//
+//				css			= (temp_size.value) ? css + '\n' + temp_size.name + ': ' + temp_size.value + d.getElementById(measure_id).value + ';' : css;
+//				css			= (temp_style.value) ? css + '\n' + temp_style.name + ': ' + temp_style.value + ';' : css;
+//			}
+//		}
+//	}
+//
+//	return css;
+//}
+//
+///* This will take the background-image field and make it into nice css */
+//function apply_css_background() {
+//	var temp	= d.getElementById('background-image');
+//	var ret		= '';
+//
+//	if(temp && temp.value != '') {
+//		ret		= 'background-image:url(' + temp.value + ');';
+//	}
+//	return ret;
+//}
+//
+///* This will take either the Padding or Margin fields and tranform them into applicable CSS */
+//function apply_css_padding_margin(use) {
+//	
+//	var elements		= (use == 1) ? 'padding' : 'margin';
+//	var element_letters = new Array('p', 'm');
+//	
+//	var css				= '';
+//	var value			= '';
+//	
+//	for(var e = 0; e < d.sizeof(elements); e++) {
+//		
+//		var element_to_use = (use == 1) ? CSS_padding : CSS_margin;
+//		
+//		var element		= d.getElementById('box_same_' + elements[e]);
+//		
+//		if(element) {
+//			if(element.checked == true) {
+//				
+//				var temp_value = d.getElementById(element_to_use[0]).value;
+//				
+//				if(temp_value != '') {
+//					value = elements[e]+': ';
+//					value += temp_value;
+//					value += typeof temp_value == 'number' ? d.getElementById(element_letters[e]+'t-measurement').value : '';
+//					value += ';\n';
+//				}
+//			} else {
+//				
+//				var prev		= '';
+//				var good		= true;
+//				var temp_val	= '';
+//				var only_val	= '';
+//				
+//				for(var i = 0; i < d.sizeof(element_to_use); i++) {
+//					
+//					var temp			= d.getElementById(element_to_use[i]);
+//					var to_use_substr	=(use == 1) ? temp.id.substr(8,1) : temp.id.substr(7,1);
+//					var temp_measure	= d.getElementById('p' + to_use_substr + '-measurement');
+//					var val				= temp.value + temp_measure.value;
+//					
+//					if(i != 0 && val != prev) {
+//						good		= false;
+//					} else {
+//						only_val	= elements[e]+': '+val+';\n';
+//					}
+//					if(val != 'px') {
+//						temp_val	= temp_val + temp.id + ': ' + val + ';\n';
+//						prev		= temp.value + temp_measure.value;
+//					}
+//				}
+//				css += !good ? temp_val : only_val;
+//			}
+//		}
+//		if(value) {
+//			css += value;
+//		}
+//	}
+//	return '\n' + css;
+//}
+//
+///**
+// * This will take all of the values from within the advanced CSS Editor, 
+// * parse them, and then put them together to make some real css! 
+// */
+//function apply_css() {
+//	
+//	var attribs = d.getElementById('css_attributes');
+//	
+//	if(attribs) {
+//		attribs.value = "";
+//		
+//		for(var i = 0; i < d.sizeof(CSSitems); i++) {
+//			
+//			var temp = d.getElementById(CSSitems[i]);
+//			
+//			if(temp && temp.value) {
+//				var value = temp.value;
+//				
+//				switch(temp.name) {
+//					case 'font-size': {
+//						value += typeof temp.value == 'number' ? d.getElementById('size-measurement').value : '';
+//						break
+//					}
+//					case 'text-indent': {
+//						value += typeof temp.value == 'number' ? d.getElementById('block-measurement').value : '';
+//						break;
+//					}
+//					case 'word-spacing': {
+//						value += typeof temp.value == 'number' ? d.getElementById('ws-measurement').value : '';
+//						break;
+//					}
+//					case 'letter-spacing': {
+//						value += typeof temp.value == 'number' ? d.getElementById('ls-measurement').value : '';
+//						break;
+//					}
+//					case 'width': {
+//						value += typeof temp.value == 'number' ? d.getElementById('width-measurement').value : '';
+//						break;
+//					}
+//					case 'height': {
+//						value += typeof temp.value == 'number' ? d.getElementById('height-measurement').value : '';
+//						break;
+//					}
+//					case 'cursor': {
+//						if(temp.value == 'hand')
+//							value += ';\ncursor: pointer';
+//						break;
+//					}
+//				}
+//				var newline = (i != 0) ? '\n' : '';
+//				
+//				attribs.value += newline + temp.name + ": " + value + ";";
+//			}
+//		}
+//	}
+//	
+//	/* Deal with Background alignment */
+//	var horiz	= d.getElementById('horizontal').value;
+//	var vert	= d.getElementById('vertical').value;
+//	
+//	if(horiz || vert) {
+//		attribs.value += "\nbackground-position: " + vert + " " + horiz + ";";
+//	}
+//	try {
+//		attribs.value += apply_css_borders() + apply_css_padding_margin(1) + apply_css_padding_margin(2) + apply_css_background() + apply_css_clip();
+//	} catch(e) {
+//		alert(e.message);
+//	}
+//
+//	if(typeof attribs.value == 'undefined')
+//		attribs.value = '';
+//}
+//
+///* This will remove, or try to remove unwanted spaces */
+//function remove_extra_spaces(str) {
+////	str = str.split(" ");
+////	var count = str.length;
+////	var new_str = '';
+////	//str = (str[0] == '') ? str[1] : str[0];
+////	for(var i=0;i<count;i++) {
+////		var possible_space = (i == count-1) ? '' : ' ';
+////		new_str = (str[i] != '') ? new_str + str[i] + possible_space : '';
+////	}
+////	return new_str;
+//	return str;
+//}
+//
+///* This will get the only part of a string which isn't a space */
+//function get_unspaced_string(str) {
+//	
+//	var args	= str.split(" ");
+//	var new_str = '';
+//	var ret		= str;
+//	
+//	try {
+//		for(var i = 0; i < d.sizeof(args); i++) {
+//			if(args[i] != '') {
+//				new_str = args[i];
+//			}
+//		}
+//		ret = new_str;
+//	} catch(e) {
+//		alert(e.message);
+//	}
+//	return ret;
+//}
+///* an array of the allowed measurements for things */
+//var measures = new Array('px','pt','in','cm','mm','pc','em','ex','%');
+//
+///* This will take a value and sepearate it into the value and the measurement */
+//function get_measured_value(str, border) {
+//	var match = null;
+//	match = str.match(/px/) ? 'px' : match;
+//	match = str.match(/pt/) ? 'pt' : match;
+//	match = str.match(/in/) ? 'in' : match;
+//	match = str.match(/mm/) ? 'mm' : match;
+//	match = str.match(/pc/) ? 'pc' : match;
+//	match = str.match(/em/) ? 'em' : match;
+//	match = str.match(/ex/) ? 'ex' : match;
+//	match = str.match(/\%/) ? '%' : match;
+//	
+//	//alert(match.length);
+//
+//	return new Array(str.substr(0,(str.length - match.length)), match);
+//}
+///* Get the positiong of an element in an array */
+//function getarrayindex(element, array) {
+//	var pos = '';
+//	for(var i=0;i<array.length;i++) {
+//		if(array[i].value == element) {
+//			pos = i;
+//		}
+//	}
+//	return pos;
+//}
+//
+///* The possible locations per se for paddings, margins, borders, etc */
+//var areas = "top left bottom right".split(" ");
+//
+///* Exceptions for the simpler part */
+//var exceptions = "word-spacing letter-spacing height width text-indent font-size padding-top padding-right padding-bottom padding-left margin-top margin-right margin-bottom margin-left border-top-width border-right-width border-bottom-width border-left-width".split(" ");
+//var except_selects = "ws-measurement ls-measurement height-measurement width-measurement block-measurement size-measurement pt-measurement pr-measurement pb-measurement pl-measurement mt-measurement mr-measurement mb-measurement ml-measurement bt-measurement br-measurement bb-measurement bl-measurement".split(" ");
+//
+///* Make sense of a string of css */
+//function parse_css(css_str) {
+//	
+//	var parts	= css_str.split(":");
+//	
+//	var id		= parts[0];
+//	var value	= parts[1];
+//
+//	id			= id.replace(/\r\n/g, '');
+//	id			= id.replace(/\n/g, '');
+//	
+//	var id_array = new Array('padding', 'font', 'border', 'margin', 'background-image', 'background-position');
+//	
+//	var regexs	= {
+//				'measurement'	: new RegExp("(.*)(px|pt|in|cm|mm|pc|em|ex|%)", "i"),
+//				'border'		: new RegExp("(none|dotted|dashed|solid|double|groove|ridge|inset|outset)", "i"),
+//				}
+//
+//	if(d.in_array(id_array, id)) {
+//		
+//		if(id == 'border') {
+//			try {
+//			
+//				var sects	= value.split(" ");
+//				var style	= '';
+//				var color	= '';
+//				var size	= '';
+//				
+//				// First we go and find the easy stuff like the width & the style
+//				for(var i = 0; i < d.sizeof(sects); i++) {
+//					if(sects[i].match(regexs['measurement'])) {
+//						size	= new Array()
+//						d.array_push(size, sects[i].replace(regexs['measurement'], "$1"));
+//						d.array_push(size, sects[i].replace(regexs['measurement'], "$2"));
+//					} else if(sects[i].match(regexs['border'])) {
+//						style = sects[i].replace(regexs['border'], "$1");
+//					}
+//				}
+//				
+//				// Since we don't know off hand all of the colors, we'll just 
+//				// try to take what we know and get rid of it :)
+//				color = value.replace(regexs['border'], '');
+//				color = color.replace(regexs['measurement'], '');
+//				color = get_unspaced_string(color);
+//				
+//				for(var i = 0; i < d.sizeof(sizes); i++) {
+//					
+//					if(size != '') {
+//						d.getElementById(sizes[i]).value = size[0];
+//						d.getElementById(sizes_m[i]).selectedIndex = d.array_key(d.getElementById(sizes_m[i]), size[1]);
+//					}
+//					
+//					if(color != '') {
+//						try {
+//							d.getElementById(b_imgs[i]).style.backgroundColor = color;
+//						} catch(e) { }
+//						d.getElementById(colors[i]).value = color;
+//					}
+//					
+//					if(styles != '') {
+//						d.getElementById(styles[i]).selectedIndex = d.array_key(d.getElementById(styles[i]), style);
+//					}
+//				}
+//			} catch(e) {
+//				alert(e.message);
+//			}
+//		
+//		} else if(id == 'font') {
+//			// TODO
+//			
+//		} else if(id == 'background-image') {
+//			try {
+//				
+//				// this is a very rudimentry check for if it starts with a space
+//				var temp_bg = (value.charAt(0) == ' ') ? value.substr(1,value.length) : value;
+//				
+//				// try to get the background image url
+//				temp_bg		= (temp_bg.substr(0,4) == "url('") ? temp_bg.substr(5,temp_bg.length) : temp_bg.substr(4,temp_bg.length);
+//				temp_bg		= (temp_bg.slice(-2) == "')") ? temp_bg.slice(0, -2) : temp_bg.slice(0, -1);
+//				
+//				// set it
+//				d.getElementById('background-image').value = temp_bg;
+//			
+//			} catch(e) {
+//				alert(e.message);
+//			}
+//
+//		} else if(id == 'background-position') {
+//			
+//			try {
+//				
+//				var bg_pos	= (value.charAt(0) == ' ') ? value.substr(1,value.length) : value;
+//				bg_pos		= value.split(' ');
+//				
+//				for(var z = 0; z < d.sizeof(bg_pos); z++) {
+//					try {
+//						
+//						var places		= new Array('horizontal', 'vertical');
+//						var temp_horiz	= d.getElementById(places[0]);
+//						var temp_vert	= d.getElementById(places[1]);
+//						
+//						var horiz_key	= d.array_key(temp_horiz, bg_pos[z]);
+//						var vert_key	= d.array_key(temp_vert, bg_pos[z]);
+//
+//						if(horiz_key != '0' && horiz_key != '') {		
+//							temp_horiz.selectedIndex = horiz_key;
+//						}
+//						if(vert_key != '0' && vert_key != '') {	
+//							temp_vert.selectedIndex = vert_key;
+//						}
+//					} catch(e) {
+//						return '';
+//					}
+//				}
+//			} catch(e) {
+//				alert(e.message);
+//			}
+//		} else {
+//			try {
+//				
+//				var val		= get_measured_value(remove_extra_spaces(value));
+//
+//				d.getElementById('box_same_' + id).checked = false;
+//
+//				for(var i = 0; i < d.sizeof(areas); i++) {
+//					try {
+//						
+//						d.getElementById(id + '-' + areas[i]).value = val[0];
+//						d.getElementById(id + '-' + areas[i]).disabled = false;
+//						
+//						var select = d.getElementById(id.substr(0,1) + areas[i].substr(0,1) + '-measurement');
+//						select.selectedIndex = d.array_key(select, val[1]);
+//					} catch(e) {
+//						return false;
+//					}
+//				}
+//			} catch(e) {
+//				alert(e.message);
+//			}
+//		}
+//	} else if(id != '') {
+//		try {
+//			
+//			var temp = d.getElementById(id);
+//			
+//			if(typeof temp == 'object') {
+//			
+//				value = remove_extra_spaces(value);
+//
+//				if(d.in_array(exceptions, id)) {
+//					
+//					if(id != 'font-size') {
+//						
+//						var val			= get_measured_value(value);
+//						var val_select	= d.getElementById(except_selects[d.array_key(exceptions, id)]);
+//						temp.value		= val[0];
+//						the_select.selectedIndex = d.array_key(select, val[1]);
+//
+//					} else {
+//						
+//						var val			= get_measured_value(value);
+//						var select		= d.getElementById('font-size');
+//						var was_selected = false;
+//						
+//						for(var f = 0; f < d.sizeof(select); f++) {
+//							if(val[0] == select[f].value) {
+//								select.selectedIndex	= f;
+//								was_selected			= true;
+//							}
+//						}
+//						if(!was_selected) {
+//							select[0].value = val[0];
+//							select[0].text	= val[0];
+//						}
+//						if(typeof val[0] == 'number') {
+//							var s_m				= d.getElementById('size-measurement');
+//							s_m.selectedIndex	= d.array_key(s_m, val[1]);
+//						}
+//					}
+//				} else {				
+//					
+//					if(temp.type == 'text') {
+//						temp.value = value;
+//					} else if(temp.type == 'select-one') {
+//						
+//						var temp_key = d.array_key(temp, value);
+//
+//						if(temp_key != '') {
+//							temp.selectedIndex = temp_key;
+//						} else {
+//							temp[0].value		= value;
+//							temp[0].text		= value;
+//							temp.selectedIndex	= 0;
+//						}
+//					}
+//				}
+//			}
+//		} catch(e) { /* error here will be if temp has no properties */ }
+//	}
+//}
+//
+///* Use or hide the Advanced CSS Editor */
+//function go_advanced() {
+//	var editor			= d.getElementById('advanced_mode');
+//	var normal			= d.getElementById('simple_mode');
+//	
+//	if(editor && normal) {
+//		if(editor.style.display == 'none') {
+//			editor.style.display = 'block';
+//			normal.style.display = 'none';
+//			
+//			var css = d.getElementById('css_attributes');
+//			
+//			if(css) {
+//				// split the text up by semicolons (all of the endings of css classes
+//				var text	= css.innerHTML.split(";");
+//				for(var i = 0; i < d.sizeof(text); i++) {
+//					if(text['i'] != '') {
+//						
+//						// attempt parse each class
+//						parse_css(text[i]);
+//					}
+//				}
+//			} else {
+//				editor.style.display = 'none';
+//				return alert("{$L_ERRORWITHATTRIBS}");
+//			}
+//		} else {
+//			editor.style.display = 'none';
+//			normal.style.display = 'block';
+//			apply_css();
+//		}
+//	}
+//}
+
+/**
+ * Function which deal with the k4 ddmenu system
+ */
+var cp_textbox = cp_image = null;
+function init_color_picker(link_id, menu_id, textbox_id, image_id) {
+	menu_init(link_id, menu_id);
+	cp_textbox	= d.getElementById(textbox_id);
+	cp_image	= d.getElementById(image_id);
+}
+function set_cp_color(color, textbox, image) {
+	textbox.value				= color;
+	image.style.backgroundColor = color;
+}
+
+//]]>
+</script>
+<core:block id="mode_advanced" hidden="yes">
+<form action="admin.php?act=css_editor&amp;id={$style_style_id}&amp;style_id={$style_id}&amp;mode=normal" method="post" enctype="multipart/form-data">
+<div class="outset_box" id="advanced_mode">
+	<table width="100%" cellpadding="0" cellspacing="1" border="0">
+		<tr>
+			<td valign="top">
+				<span class="minitext">{$L_CATEGORIES}</span>
+				<hr />
+				<select name="css_menu" onchange="switchView(this)" id="css_menu" size="15" class="inputbox">
+					<option value="css_type">{$L_TYPE}</option>
+					<option value="css_background">{$L_BACKGROUND}</option>
+					<option value="css_block">{$L_BLOCK}</option>
+					<option value="css_box">{$L_BOX}</option>
+					<option value="css_border">{$L_BORDER}</option>
+					<option value="css_list">{$L_LIST}</option>
+					<option value="css_positioning">{$L_POSITIONING}</option>
+					<option value="css_extensions">{$L_EXTENSIONS}</option>
+					<option value="css_unknown">{$L_UNKNOWN}</option>
+				</select>
+			</td>
+			<td valign="top" style="width:100%;">
+				<input type="text" value="{$L_TYPE}" class="minitext" style="border:0px;background-color:#FFFFFFF;padding:0px;" id="curr_location" />
+				<hr />
+				<div class="k4_borderwrap" id="css_type" style="padding: 5px;display: block;">
+					<core:import id="css_type" file="css/type.html" />
+				</div>
+
+				<div class="k4_borderwrap" id="css_background" style="padding: 5px;display: none;">
+					<core:import id="css_background" file="css/background.html" />
+				</div>
+
+				<div class="k4_borderwrap" id="css_block" style="padding: 5px;display: none;">
+					<core:import id="css_block" file="css/block.html" />
+				</div>
+
+				<div class="k4_borderwrap" id="css_box" style="padding: 5px;display: none;">
+					<core:import id="css_box" file="css/box.html" />
+				</div>
+
+				<div class="k4_borderwrap" id="css_border" style="padding: 5px;display: none;">
+					<core:import id="css_border" file="css/border.html" />
+				</div>
+
+				<div class="k4_borderwrap" id="css_list" style="padding: 5px;display: none;">
+					<core:import id="css_list" file="css/list.html" />
+				</div>
+
+				<div class="k4_borderwrap" id="css_positioning" style="padding: 5px;display: none;">
+					<core:import id="css_positioning" file="css/positioning.html" />
+				</div>
+
+				<div class="k4_borderwrap" id="css_extensions" style="padding: 5px;display: none;">
+					<core:import id="css_extensions" file="css/extensions.html" />
+				</div>
+
+				<div class="k4_borderwrap" id="css_unknown" style="padding: 5px;display: none;">
+					<core:import id="css_unknown" file="css/unknown.html" />
+				</div>
+			</td>
+		</tr>
+	</table>
+	<div style="text-align: center;">
+		<input type="submit" class="button" value="{$L_HIDEADVANCED}" onclick="go_advanced()" style="color:#FF0000;" />
+	</div>
+</div>
+{$adv_javascript}
+</form>
+<core:import id="colorpicker" file="css/colorpicker.html" />
+<script type="text/javascript">
+init_color_picker('color_preview', 'colorpicker_menu', 'color', 'color_preview');
+init_color_picker('bg_color_preview', 'colorpicker_menu', 'background-color', 'bg_color_preview');
+init_color_picker('bt_color_preview', 'colorpicker_menu', 'border-top-color', 'bt_color_preview');
+init_color_picker('br_color_preview', 'colorpicker_menu', 'border-right-color', 'br_color_preview');
+init_color_picker('bb_color_preview', 'colorpicker_menu', 'border-bottom-color', 'bb_color_preview');
+init_color_picker('bl_color_preview', 'colorpicker_menu', 'border-left-color', 'bl_color_preview');
+</script>
+</core:block>
+
+<core:block id="mode_text" hidden="yes">
+<form action="admin.php?act=css_editor&amp;id={$style_style_id}&amp;style_id={$style_id}&amp;mode=advanced" method="post" enctype="multipart/form-data">
+<div id="simple_mode" style="text-align: center;">
+	<textarea name="properties" id="css_attributes" rows="15" class="inputbox" style="width:100%; overflow:scroll;" wrap="off">{$style_properties}</textarea>
+	<br />
+	<core:block id="revert_css" hidden="yes"><input type="button" class="button" value="{$L_REVERT}" onclick="document.location='admin.php?act=css_revertstyle&id={$style_style_id}&style_id={$style_id}'" style="color:#FF0000;" /></core:block>
+	<input type="submit" class="button" value="{$L_GOADVANCED}" onclick="go_advanced()" style="color:#FF0000;" />
+</div>
+</form>
+</core:block>
+</is:admin>
