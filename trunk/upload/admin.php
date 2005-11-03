@@ -29,7 +29,7 @@
 * @package k42
 */
 
-error_reporting(E_ALL);
+error_reporting(E_ALL ^ E_NOTICE);
 
 require "includes/filearts/filearts.php";
 require "includes/k4bb/k4bb.php";

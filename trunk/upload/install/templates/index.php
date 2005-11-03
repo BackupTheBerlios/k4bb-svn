@@ -29,7 +29,7 @@
 * @package k42
 */
 	
-error_reporting(E_ALL);
+error_reporting(E_ALL ^ E_NOTICE);
 ignore_user_abort(TRUE);
 @set_time_limit(0);
 

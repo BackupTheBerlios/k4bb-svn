@@ -30,7 +30,7 @@
 * @package k42
 */
 
-error_reporting(E_ALL);
+error_reporting(E_ALL ^ E_NOTICE);
 
 if(!defined('IN_K4')) {
 	return;

@@ -40,7 +40,7 @@ define('IN_K4', TRUE);
 
 @set_time_limit(0);
 set_magic_quotes_runtime(0);
-error_reporting(E_ALL);
+error_reporting(E_ALL ^ E_NOTICE);
 
 ini_set('session.name',			'sid');
 ini_set('session.auto_start',	0);

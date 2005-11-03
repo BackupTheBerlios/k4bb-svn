@@ -29,7 +29,7 @@
 * @package k42
 */
 
-error_reporting(E_ALL);
+error_reporting(E_ALL ^ E_NOTICE);
 
 if(!defined('IN_K4')) {
 	return;
@@ -204,10 +204,12 @@ class RemoveUserFromGroup extends FAAction {
 		
 		$perms					= 5;
 		
-		if($request['user']->get('perms') > @$newgroup['max_perms']) {
-			$perms				= @$newgroup['max_perms'];
-		} else if($request['user']->get('perms') < @$newgroup['min_perms']) {
-			$perms				= @$newgroup['min_perms'];
+		if(isset($newgroup['max_perms'])) {
+			if($request['user']->get('perms') > $newgroup['max_perms']) {
+				$perms				= $newgroup['max_perms'];
+			} else if($request['user']->get('perms') < $newgroup['min_perms']) {
+				$perms				= $newgroup['min_perms'];
+			}
 		}
 		
 		/* Add this user to the group and change his perms if we need to */

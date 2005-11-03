@@ -29,7 +29,7 @@
 * @package k42
 */
 
-error_reporting(E_ALL);
+error_reporting(E_ALL ^ E_NOTICE);
 
 if(!defined('IN_K4'))
 	return;
@@ -54,7 +54,7 @@ function reset_cache($cache_varname) {
 		if(!CACHE_IN_DB) {
 			
 			
-			$contents	= "<?php \nerror_reporting(E_ALL); \n\nif(!defined('IN_K4')) { \n\treturn; \n}";
+			$contents	= "<?php \nerror_reporting(E_ALL ^ E_NOTICE); \n\nif(!defined('IN_K4')) { \n\treturn; \n}";
 			foreach($cache as $id => $data) {
 				$id			= '_'. strtoupper(implode('', explode('_', $id)));
 				$contents	.= "\n\n\$GLOBALS['{$id}'] = " . var_export($data, TRUE) .";";
@@ -247,7 +247,7 @@ class DBCache {
 
 				$id			= '_'. strtoupper(implode('', explode('_', $id)));
 
-				$contents	= "<?php \nerror_reporting(E_ALL); \n\nif(!defined('IN_K4')) { \n\treturn; \n}";
+				$contents	= "<?php \nerror_reporting(E_ALL ^ E_NOTICE); \n\nif(!defined('IN_K4')) { \n\treturn; \n}";
 				$contents	.= "\n\n\$GLOBALS['{$id}'] = " . var_export($data, TRUE) .";";
 				$contents	.= "\n?>";
 				

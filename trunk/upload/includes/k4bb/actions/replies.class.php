@@ -29,7 +29,7 @@
 * @package k42
 */
 
-error_reporting(E_ALL);
+error_reporting(E_ALL ^ E_NOTICE);
 
 if(!defined('IN_K4')) {
 	return;
@@ -983,6 +983,10 @@ class DeleteReply extends FAAction {
 		/* Should the last post be the last topic? */
 		$last_post			= $last_post['created'] < $last_topic['created'] ? $last_topic : $last_post;
 		
+		/* Delete the reply */
+		$request['dba']->executeUpdate("DELETE FROM ". K4REPLIES ." WHERE reply_id = ". intval($reply['reply_id']));
+		$request['dba']->executeUpdate("UPDATE ". K4REPLIES ." SET row_order=row_order-1 WHERE row_order > ". intval($reply['row_order']) ." AND topic_id = ". intval($reply['forum_id']));
+
 		/**
 		 * Should we update the topic?
 		 */
@@ -1041,17 +1045,10 @@ class DeleteReply extends FAAction {
 		/* Update the user that posted this topic */
 		if($reply['poster_id'] > 0)
 			$request['dba']->executeUpdate("UPDATE ". K4USERINFO ." SET num_posts=num_posts-1 WHERE user_id=". intval($topic['poster_id']));
-
-		/**
-		 * Remove the reply and move any of its replies up
-		 */
 		
 		// delete this replies attachments
 		remove_attachments($request, $topic['topic_id'], $reply['reply_id']);
 		$request['dba']->executeUpdate("DELETE FROM ". K4ATTACHMENTS ." WHERE topic_id = ". intval($topic['topic_id']) ." AND reply_id = ". intval($reply['reply_id']));
-
-		/* Now remove the information stored in the topics and replies table */
-		$request['dba']->executeUpdate("DELETE FROM ". K4REPLIES ." WHERE reply_id = ". intval($reply['reply_id']));
 		
 		$request['dba']->commitTransaction();
 
