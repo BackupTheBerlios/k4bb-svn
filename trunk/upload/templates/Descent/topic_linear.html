@@ -1,3 +1,4 @@
+<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table" id="topic{$topic_id}">
 	<tr>
 		<td class="alt1" colspan="2" valign="top">
 			<core:import id="post_user_section_linear" file="post_user_section_linear.html" />
@@ -13,17 +14,6 @@
 					<if:if var="topic_locked" eq="0"><img border="0" src="Images/{$IMG_DIR}/Buttons/iconlock.gif" alt="{$L_LOCK}" onclick="updateTopicLocked(this, {$topic_id})" /><if:else /><img border="0" src="Images/{$IMG_DIR}/Buttons/iconlock_lock.gif" alt="{$L_UNLOCK}" onclick="updateTopicLocked(this, {$topic_id})" /></if:if>
 				</maps:if>
 			</div>
-			<div class="smalltext">
-				<a name="t{$topic_id}" id="t{$topic_id}" title=""></a>
-				<strong>{$L_POSTSUBJECT}:</strong>
-				<span class="smalltext">
-				<if:if var="topic_type" eq="2">{$stickytopicprefix}<else:if var="topic_type" geq="3" />{$announcementtopicprefix}</if:if>
-				<if:if var="is_feature" eq="1">{$featuretopicprefix}</if:if>
-				<if:if var="poll" eq="1">{$polltopicprefix}</if:if>
-				</span>
-				{$name}&nbsp;<img src="tmp/upload/posticons/{$posticon}" alt="" border="0" />
-			</div>
-			<hr noshade="noshade" size="1" />
 			
 			<!-- Body Text -->
 			<div id="topic{$topic_id}_body">{$body_text}</div>
@@ -87,64 +77,7 @@
 			<if:if var="user_viewsigs" eq="1">{$signatureseparator}{$post_user_signature}</if:if>
 			</if:if>
 			</if:if>
+			<br /><br />
 		</td>
 	</tr>
-	<if:if var="topic_row" eq="1">
-	<tr>
-		<td class="alt3" colspan="2" height="20">
-			<div style="text-align: right">
-				<maps:if var="replies" forum="topic_forum_id" method="can_add">
-					<a href="newreply.php?id={$topic_id}" title="{$L_POSTREPLY}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/reply.gif" alt="{$L_POSTREPLY}" /></a>
-					<maps:if forum="forum_id" var="bbcode" method="can_add"><a href="newreply.php?id={$topic_id}&amp;quote=1" title="{$L_QUOTE}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/quote.gif" alt="{$L_QUOTE}" /></a></maps:if>
-				</maps:if>
-				<if:if var="post_user_id" eq="user_id">
-					<maps:if var="topics" forum="topic_forum_id" method="can_edit"><a href="<if:if var="nojs" eq="1">newtopic.php?act=edittopic&amp;id={$topic_id}<if:else />javascript:;</if:if>" title="{$L_EDIT}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/edit.gif" alt="{$L_EDIT}" id="edit_button_t{$topic_id}" /></a></maps:if>
-					<maps:if var="topics" forum="topic_forum_id" method="can_del"><a href="mod.php?act=deletetopic&amp;id={$topic_id}" title="{$L_DELETE}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/delete.gif" alt="{$L_DELETE}" /></a></maps:if>
-				<if:else />
-					<maps:if var="other_topics" forum="topic_forum_id" method="can_edit"><a href="<if:if var="nojs" eq="1">newtopic.php?act=edittopic&amp;id={$topic_id}<if:else />javascript:;</if:if>" title="{$L_EDIT}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/edit.gif" alt="{$L_EDIT}" id="edit_button_t{$topic_id}" /></a></maps:if>
-					<maps:if var="other_topics" forum="topic_forum_id" method="can_del"><a href="mod.php?act=deletetopic&amp;id={$topic_id}" title="{$L_DELETE}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/delete.gif" alt="{$L_DELETE}" /></a></maps:if>
-				</if:if>
-			</div>
-			<!-- Edit DD Menu -->
-			<div class="k4_borderwrap" id="edit_menu_t{$topic_id}" style="display: none;">
-				<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-					<tr>
-						<td class="alt1" nowrap="nowrap"><a class="smalltext" href="javascript:;" title="{$L_QUICKEDIT}" onclick="quickEditPost('topic', {$topic_id}, 'topic{$topic_id}_body')">{$L_QUICKEDIT}</a></td>
-					</tr>
-					<tr>
-						<td class="alt1" nowrap="nowrap"><a class="smalltext" href="newtopic.php?act=edittopic&amp;id={$topic_id}" title="{$L_FULLEDIT}">{$L_FULLEDIT}</a></td>
-					</tr>
-				</table>
-			</div>
-			<script type="text/javascript">menu_init('edit_button_t{$topic_id}', 'edit_menu_t{$topic_id}');</script>
-			<!-- / Edit DD Menu -->
-		</td>
-	</tr>
-	</if:if>
-	<if:if var="modpanel" eq="1">
-	<!-- Moderator Controls -->
-	<tr>
-		<td class="k4_modmaintitle" colspan="2">
-			<form action="mod.php?act=moderate_forum&amp;id={$forum_id}" method="post" enctype="multipart/form-data">
-				<input type="hidden" name="topics" id="topics" value="{$topic_id}" />
-				<div align="center">
-					<strong>{$L_WITHTOPIC}:</strong>
-					<select name="action">
-						<option value="lock">{$L_LOCKTOPIC}</option>
-						<option value="split">{$L_SPLITTOPIC}</option>
-						<option value="stick">{$L_STICKTOPIC}</option>
-						<option value="announce">{$L_ANNOUNCETOPIC}</option>
-						<option value="feature">{$L_FEATURETOPIC}</option>
-						<option value="normal">{$L_SETASNORMALTOPIC}</option>
-						<option value="move">{$L_MOVECOPYTOPIC}</option>
-						<option value="delete">{$L_DELETETOPIC}</option>
-						<option value="queue">{$L_QUEUETOPIC}</option>
-						<option value="subscribe">{$L_SUBSCRIBETOTOPIC}</option>
-					</select>
-					<input type="submit" value="{$L_PERFORMACTION}" class="button" />
-				</div>
-			</form>
-		</td>
-	</tr>
-	<!-- / Moderator Controls -->
-	</if:if>
+</table>

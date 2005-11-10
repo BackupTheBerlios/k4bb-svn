@@ -30,7 +30,7 @@
 * @package k42
 */
 	
-error_reporting(E_ALL ^ E_NOTICE);
+
 ignore_user_abort(TRUE);
 @set_time_limit(0);
 
@@ -188,8 +188,8 @@ class DatabaseAndFileChecks extends FAAction {
 			&& is_readable('../tmp/sqlite') && is_writable('../tmp/sqlite')
 			&& is_readable('../tmp/stylesets') && is_writable('../tmp/stylesets');
 		
-		$rss_dir = is_readable('../upload/templates/RSS/rss-0.92/compiled') && is_writable('../upload/templates/RSS/rss-0.92/compiled')
-			&& is_readable('../upload/templates/RSS/rss-2.0/compiled') && is_writable('../upload/templates/RSS/rss-2.0/compiled');
+		$rss_dir = is_readable('../templates/RSS/rss-0.92/compiled') && is_writable('../templates/RSS/rss-0.92/compiled')
+			&& is_readable('../templates/RSS/rss-2.0/compiled') && is_writable('../templates/RSS/rss-2.0/compiled');
 
 		$fs_check = array(
 								'has_chmod_tmp'		=> $this->tpl_ret($tmp_dir),

@@ -1,0 +1,21 @@
+<div style="text-align: left;position: relative;top:-8px;">
+	<maps:if var="replies" forum="topic_forum_id" method="can_add">
+		<a href="newreply.php?id={$topic_id}&amp;r={$reply_id}" title="{$L_POSTREPLY}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/reply.gif" alt="{$L_POSTREPLY}" /></a><maps:if forum="forum_id" var="bbcode" method="can_add"><a href="newreply.php?id={$topic_id}&amp;r={$reply_id}&amp;quote=1" title="{$L_QUOTE}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/quote.gif" alt="{$L_QUOTE}" /></a></maps:if>
+	</maps:if>
+	<if:if var="post_user_id" eq="user_id">
+		<maps:if var="replies" forum="topic_forum_id" method="can_edit"><a href="<if:if var="nojs" eq="1">newreply.php?act=editreply&amp;id={$reply_id}<if:else />javascript:;</if:if>" title="{$L_EDIT}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/edit.gif" alt="{$L_EDIT}" id="edit_button_r{$reply_id}" /></a></maps:if>
+		<maps:if var="replies" forum="topic_forum_id" method="can_del"><a href="mod.php?act=deletereply&amp;id={$reply_id}" title="{$L_DELETE}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/delete.gif" alt="{$L_DELETE}" /></a></maps:if>
+	<if:else />
+		<maps:if var="other_replies" forum="topic_forum_id" method="can_edit"><a href="<if:if var="nojs" eq="1">newreply.php?act=editreply&amp;id={$reply_id}<if:else />javascript:;</if:if>" title="{$L_EDIT}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/edit.gif" alt="{$L_EDIT}" id="edit_button_r{$reply_id}" /></a></maps:if>
+		<maps:if var="other_replies" forum="topic_forum_id" method="can_del"><a href="mod.php?act=deletereply&amp;id={$reply_id}" title="{$L_DELETE}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/delete.gif" alt="{$L_DELETE}" /></a></maps:if>
+	</if:if>
+</div>
+<!-- Edit DD Menu -->
+<div class="k4_borderwrap" id="edit_menu_r{$reply_id}" style="display: none;">
+	<div class="k4_table">
+		<div class="alt1"><a class="smalltext" href="javascript:;" title="{$L_QUICKEDIT}" onclick="quickEditPost('reply', {$reply_id}, 'reply{$reply_id}_body')">{$L_QUICKEDIT}</a></div>
+		<div class="alt1"><a class="smalltext" href="newreply.php?act=editreply&amp;id={$reply_id}" title="{$L_FULLEDIT}">{$L_FULLEDIT}</a></div>
+	</div>
+</div>
+<script type="text/javascript">menu_init('edit_button_r{$reply_id}', 'edit_menu_r{$reply_id}');</script>
+<!-- / Edit DD Menu -->

@@ -29,7 +29,7 @@
 * @package k42
 */
 
-error_reporting(E_ALL ^ E_NOTICE);
+
 
 if(!defined('IN_K4')) {
 	return;
@@ -540,7 +540,7 @@ class AdminEditForum extends FAAction {
 
 			$groups		= $forum['moderating_groups'] != '' ? explode('|', $forum['moderating_groups']) : array();
 			$groups_str	= '';
-
+			
 			if(is_array($groups)) {
 				foreach($groups as $g) {
 					if(isset($_USERGROUPS[$g])) {
@@ -548,7 +548,7 @@ class AdminEditForum extends FAAction {
 					}
 				}
 
-				$request['template']->setVar('forum_moderating_groups', iif(strlen($groups_str) > 0, substr($groups_str, 0, -1), ''));
+				$request['template']->setVar('forum_moderating_groups', (strlen($groups_str) > 0 ? substr($groups_str, 0, -1) : ''));
 			}
 
 			$moderating_users			= '';
@@ -899,7 +899,7 @@ class AdminForumPermissions extends FAAction {
 			} else {
 
 				$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['forum_id']));
-
+				
 				if(!is_array($forum) || empty($forum)) {
 					$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
 					return $action->execute($request);

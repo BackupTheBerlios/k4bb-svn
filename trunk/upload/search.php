@@ -38,7 +38,7 @@ class K4DefaultAction extends FAAction {
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_SEARCH');
 		$request['template']->setFile('content', 'search.html');
 		
-		if(get_map($request['user'], 'advsearch', 'can_view', array()) > $request['user']->get('perms')) {
+		if(get_map( 'advsearch', 'can_view', array()) > $request['user']->get('perms')) {
 			no_perms_error($request);
 			return TRUE;
 		}
@@ -56,7 +56,7 @@ class K4SearchEverything extends FAAction {
 		
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_SEARCHRESULTS');
 		
-		if(get_map($request['user'], 'advsearch', 'can_add', array()) > $request['user']->get('perms')) {
+		if(get_map( 'advsearch', 'can_add', array()) > $request['user']->get('perms')) {
 			// something here?
 		}
 		
@@ -136,7 +136,7 @@ class K4SearchEverything extends FAAction {
 				// forums
 				if(isset($_ALLFORUMS[$id])) {
 					$id						= substr($id, 1);
-					if(get_map($request['user'], '', 'can_view', array('forum_id'=>$id)) <= $request['user']->get('perms')) {
+					if(get_map( '', 'can_view', array('forum_id'=>$id)) <= $request['user']->get('perms')) {
 						$forum_ids			.=  (!$subforums && $_ALLFORUMS[$id]['row_level'] > 2) ? '' : ' OR forum_id = '. intval($id);
 						$searchable_forums	.= '|'. $id;
 					}
@@ -144,7 +144,7 @@ class K4SearchEverything extends FAAction {
 				// categories
 				} elseif(isset($_ALLFORUMS[$id])) {
 					$id						= substr($id, 1);
-					if(get_map($request['user'], '', 'can_view', array('category_id'=>$id)) <= $request['user']->get('perms')) {
+					if(get_map( '', 'can_view', array('category_id'=>$id)) <= $request['user']->get('perms')) {
 						$category_ids		.=  $allforums ? '' : ' OR category_id = '. intval($id);
 						$searchable_forums	.= '|'. $id;
 					}

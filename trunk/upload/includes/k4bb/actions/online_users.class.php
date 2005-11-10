@@ -29,7 +29,7 @@
 * @package k4-2.0-dev
 */
 
-error_reporting(E_ALL ^ E_NOTICE);
+
 
 if(!defined('IN_K4')) {
 	return;

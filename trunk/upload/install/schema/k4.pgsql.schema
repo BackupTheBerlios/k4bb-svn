@@ -48,7 +48,7 @@ CREATE TABLE k4_userinfo (
 	googletalk		VARCHAR(255) NOT NULL DEFAULT '',
 	avatar			INT NOT NULL DEFAULT 0,
 	picture			INT NOT NULL DEFAULT 0,
-	signature		VARCHAR(255) NOT NULL DEFAULT '',
+	signature		TINYTEXT,
 	birthday		VARCHAR(10) NOT NULL DEFAULT '',
 	lastpage		VARCHAR(100) NOT NULL DEFAULT ''
 );

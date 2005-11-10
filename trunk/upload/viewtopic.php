@@ -147,7 +147,7 @@ class K4DefaultAction extends FAAction {
 			return $action->execute($request);
 		}
 		
-		if(get_map($request['user'], 'forums', 'can_view', array()) > $request['user']->get('perms') || get_map($request['user'], 'topics', 'can_view', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
+		if(get_map( 'forums', 'can_view', array()) > $request['user']->get('perms') || get_map( 'topics', 'can_view', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
 			/* set the breadcrumbs bit */
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION', $forum);
 			

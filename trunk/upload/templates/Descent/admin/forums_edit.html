@@ -228,7 +228,7 @@
 					<br />
 					<input type="button" class="button" value="{$L_NONE}" onclick="d.selectNone('moderators')" />
 					<input type="button" class="button" value="{$L_ALL}" onclick="d.selectAll('moderators')" />
-					<script type="text/javascript">d.setIndices("{$forum_moderating_groups}".split(" "), 'moderators');</script>
+					<script type="text/javascript">d.setIndices("{$forum_moderating_groups}".split("|"), 'moderators');</script>
 				</div>
 				<div style="padding-left: 15px;float:left;">
 					<label for="moderating_users">{$L_MODERATINGUSERS}</label><br />

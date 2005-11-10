@@ -249,7 +249,7 @@ class K4BannedUsersFilter extends FAFilter {
 		if($request['user']->isMember()) {
 			
 			// this user is banned
-			if(in_array($request['user']->get('id'), $_BANNEDUSERIDS) || $request['user']->get('banned') == 1) {
+			if(in_array($request['user']->get('id'), (is_array($_BANNEDUSERIDS) ? $_BANNEDUSERIDS : array())) || $request['user']->get('banned') == 1) {
 				
 				$ban	= $request['dba']->getRow("SELECT * FROM ". K4BANNEDUSERS ." WHERE user_id = ". intval($request['user']->get('id')));
 				
@@ -272,11 +272,13 @@ class K4BannedUsersFilter extends FAFilter {
 		 * User IP banning
 		 */
 		//if(in_array(USER_IP, $_BANNEDUSERIPS) && !$banned) {
-		foreach($_BANNEDUSERIPS as $ip) {
-			if(preg_match('~'. $ip .'~', USER_IP)) {
-				$ban	= $request['dba']->getRow("SELECT * FROM ". K4BANNEDUSERS ." WHERE user_ip = '". $request['dba']->quote(USER_IP) ."'");
-					
-				$action = new K4InformationAction(new K4LanguageElement('L_BANNEDUSERIP', $ban['reason'], ($ban['expiry'] == 0 ? $_LANG['L_YOURDEATH'] : strftime("%m/%d/%Y", bbtime($ban['expiry']))) ), 'content', FALSE);
+		if(is_array($_BANNEDUSERIPS)) {
+			foreach($_BANNEDUSERIPS as $ip) {
+				if(preg_match('~'. $ip .'~', USER_IP)) {
+					$ban	= $request['dba']->getRow("SELECT * FROM ". K4BANNEDUSERS ." WHERE user_ip = '". $request['dba']->quote(USER_IP) ."'");
+						
+					$action = new K4InformationAction(new K4LanguageElement('L_BANNEDUSERIP', $ban['reason'], ($ban['expiry'] == 0 ? $_LANG['L_YOURDEATH'] : strftime("%m/%d/%Y", bbtime($ban['expiry']))) ), 'content', FALSE);
+				}
 			}
 		}
 	}
@@ -350,6 +352,7 @@ class K4TemplateFilter extends FAFilter {
 		// *** IF SOMEONE IS GOING TO MAKE A PORTAL, $request['template_file'] IS THE
 		// *** VARIABLE TO CHANGE
 		$request['template_file'] = BB_BASE_DIR . "/templates/$templateset/{$this->_filename}";
+		// can also use dirname(__FILE__)
 		
 		// Load k4 custom compilers
 		$compiler		= $request['template']->getTemplateCompiler();
@@ -448,7 +451,9 @@ class K4InformationAction extends FAAction {
 
 	function execute(&$request) {
 		
-		$request['template_file'] = BB_BASE_DIR . "/templates/". $request['user']->get('templateset') ."/information_base.html";
+		$templateset = isset($request['user']) ? $request['user']->get('templateset') : 'Descent';
+
+		$request['template_file'] = BB_BASE_DIR . "/templates/". $templateset ."/information_base.html";
 
 		$js = '';
 		

@@ -29,7 +29,7 @@
 * @package k42
 */
 
-error_reporting(E_ALL ^ E_NOTICE);
+
 
 if(!defined('IN_K4')) {
 	return;
@@ -332,7 +332,7 @@ class AllForumsIterator extends FAArrayIterator {
  
 	function __construct($forums) {
 		
-		$forums		= array_values($forums);
+		$forums		= is_array($forums) ? array_values($forums) : array();
 
 		parent::__construct($forums);
 	}

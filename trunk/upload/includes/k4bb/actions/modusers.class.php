@@ -31,7 +31,7 @@
 
 class ModBanUser extends FAAction {
 	function execute(&$request) {
-		if($request['user']->get('perms') < get_map($request['user'], 'banusers', 'can_add', array())) {
+		if($request['user']->get('perms') < get_map( 'banusers', 'can_add', array())) {
 			no_perms_error($request);
 			return TRUE;
 		}
@@ -85,7 +85,7 @@ class ModBanUser extends FAAction {
 class HardBanUser extends FAAction {
 	function execute(&$request) {
 		
-		if($request['user']->get('perms') < get_map($request['user'], 'banusers', 'can_add', array())) {
+		if($request['user']->get('perms') < get_map( 'banusers', 'can_add', array())) {
 			no_perms_error($request);
 			return TRUE;
 		}
@@ -168,7 +168,7 @@ class HardBanUser extends FAAction {
 
 class BanIPRange extends FAAction {
 	function execute(&$request) {
-		if($request['user']->get('perms') < get_map($request['user'], 'banusers', 'can_add', array())) {
+		if($request['user']->get('perms') < get_map( 'banusers', 'can_add', array())) {
 			no_perms_error($request);
 			return TRUE;
 		}
@@ -194,7 +194,7 @@ class BanIPRange extends FAAction {
 
 class ModViewBanneIPs extends FAAction {
 	function execute(&$request) {
-		if($request['user']->get('perms') < get_map($request['user'], 'banusers', 'can_add', array())) {
+		if($request['user']->get('perms') < get_map( 'banusers', 'can_add', array())) {
 			no_perms_error($request);
 			return TRUE;
 		}
@@ -213,7 +213,7 @@ class ModViewBanneIPs extends FAAction {
 class LiftIPBan extends FAAction {
 	function execute(&$request) {
 		
-		if($request['user']->get('perms') < get_map($request['user'], 'banusers', 'can_add', array())) {
+		if($request['user']->get('perms') < get_map( 'banusers', 'can_add', array())) {
 			no_perms_error($request);
 			return TRUE;
 		}
@@ -249,7 +249,7 @@ class ModWarnUser extends FAAction {
 		
 		global $_SETTINGS;
 
-		if($request['user']->get('perms') < get_map($request['user'], 'warnuser', 'can_add', array())) {
+		if($request['user']->get('perms') < get_map( 'warnuser', 'can_add', array())) {
 			no_perms_error($request);
 			return TRUE;
 		}
@@ -278,7 +278,7 @@ class ModWarnUser extends FAAction {
 
 class ModFlagUser extends FAAction {
 	function execute(&$request) {
-		if($request['user']->get('perms') < get_map($request['user'], 'flaguser', 'can_add', array())) {
+		if($request['user']->get('perms') < get_map( 'flaguser', 'can_add', array())) {
 			no_perms_error($request);
 			return TRUE;
 		}
@@ -321,9 +321,9 @@ class ModFindUsers extends FAAction {
 		
 		global $_URL;
 
-		if(($request['user']->get('perms') < get_map($request['user'], 'banuser', 'can_add', array()))
-			&& ($request['user']->get('perms') < get_map($request['user'], 'warnuser', 'can_add', array()))
-			&& ($request['user']->get('perms') < get_map($request['user'], 'flaguser', 'can_add', array()))
+		if(($request['user']->get('perms') < get_map( 'banuser', 'can_add', array()))
+			&& ($request['user']->get('perms') < get_map( 'warnuser', 'can_add', array()))
+			&& ($request['user']->get('perms') < get_map( 'flaguser', 'can_add', array()))
 			) {
 			no_perms_error($request);
 			return TRUE;
@@ -382,7 +382,7 @@ class ModSendWarning extends FAAction {
 		
 		global $_SETTINGS;
 
-		if($request['user']->get('perms') < get_map($request['user'], 'warnuser', 'can_add', array())) {
+		if($request['user']->get('perms') < get_map( 'warnuser', 'can_add', array())) {
 			no_perms_error($request);
 			return TRUE;
 		}

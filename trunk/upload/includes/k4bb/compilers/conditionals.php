@@ -29,7 +29,7 @@
 * @package k42
 */
 
-error_reporting(E_ALL ^ E_NOTICE);
+
 
 if(!defined('IN_K4')) {
 	return;
@@ -94,7 +94,7 @@ class Maps_If_Compiler extends FATemplateTagCompiler {
 			
 			$attribs = array('group', 'category', 'forum', 'user');
 
-			$query = "if(\$_SESSION['user']->get('perms') >= get_map(\$_SESSION['user'], ";
+			$query = "if(\$_SESSION['user']->get('perms') >= get_map(";
 			$query .= isset($this->attribs['var']) ? "'". $this->attribs['var'] ."', " : "'', ";
 			$query .= "'". $this->attribs['method'] ."', ";
 			$query .= "array(";

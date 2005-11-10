@@ -29,7 +29,7 @@
 * @package k42
 */
 
-error_reporting(E_ALL ^ E_NOTICE);
+
 
 if(!defined('IN_K4')) {
 	return;
@@ -96,13 +96,13 @@ class PostReply extends FAAction {
 		}
 
 		/* Do we have permission to post to this topic in this forum? */
-		if($request['user']->get('perms') < get_map($request['user'], 'replies', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		if($request['user']->get('perms') < get_map( 'replies', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$action = new K4InformationAction(new K4LanguageElement('L_PERMCANTPOST'), 'content', FALSE);
 			return !USE_AJAX ? $action->execute($request) : ajax_message('L_PERMCANTPOST');	
 		}
 
 		/* Does this user have permission to reply to this topic if it is locked? */
-		if($topic['topic_locked'] == 1 && get_map($request['user'], 'closed', 'can_add', array('forum_id' => $forum['forum_id'])) > $request['user']->get('perms')) {
+		if($topic['topic_locked'] == 1 && get_map( 'closed', 'can_add', array('forum_id' => $forum['forum_id'])) > $request['user']->get('perms')) {
 			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
 			return !USE_AJAX ? $action->execute($request) : ajax_message('L_YOUNEEDPERMS');
 		}
@@ -122,7 +122,7 @@ class PostReply extends FAAction {
 		$parent					= isset($reply) && is_array($reply) ? $reply : $topic;
 
 		/* Do we have permission to post to this forum? */
-		if($request['user']->get('perms') < get_map($request['user'], 'topics', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		if($request['user']->get('perms') < get_map( 'topics', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$action = new K4InformationAction(new K4LanguageElement('L_PERMCANTPOST'), 'content', FALSE);
 			return !USE_AJAX ? $action->execute($request) : ajax_message('L_PERMCANTPOST');
 		}
@@ -231,7 +231,7 @@ class PostReply extends FAAction {
 			$insert_a->setInt(6, $request['user']->get('id'));
 			$insert_a->setString(7, USER_IP);
 			$insert_a->setString(8, $body_text);
-			$insert_a->setString(9, (($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))) ? (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif') : 'clear.gif'));
+			$insert_a->setString(9, (($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))) ? (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif') : 'clear.gif'));
 			$insert_a->setInt(10, ((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']) ? 1 : 0));
 			$insert_a->setInt(11, ((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']) ? 1 : 0));
 			$insert_a->setInt(12, ((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']) ? 1 : 0));
@@ -267,7 +267,7 @@ class PostReply extends FAAction {
 			$forum_update->setString(3, $poster_name);
 			$forum_update->setInt(4, $reply_id);
 			$forum_update->setInt(5, $request['user']->get('id'));
-			$forum_update->setString(6, iif(($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'));
+			$forum_update->setString(6, iif(($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'));
 			$forum_update->setInt(7, $forum['forum_id']);
 
 			/* Set the topic values */
@@ -408,7 +408,7 @@ class PostReply extends FAAction {
 				 * Deal with file attachments
 				 */
 				if($request['template']->getVar('attach_inputs') == '') {
-					if($request['user']->get('perms') >= get_map($request['user'], 'attachments', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+					if($request['user']->get('perms') >= get_map( 'attachments', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 						$num_attachments	= $request['template']->getVar('nummaxattaches') - $num_attachments;
 						
 						$attach_inputs		= '';
@@ -439,7 +439,7 @@ class PostReply extends FAAction {
 								'is_poll' => 0,
 								'row_left' => 0,
 								'row_right' => 0,
-								'posticon' => iif(($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'),
+								'posticon' => iif(($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'),
 								'disable_html' => iif((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']), 1, 0),
 								'disable_sig' => iif((isset($_REQUEST['enable_sig']) && $_REQUEST['enable_sig']), 0, 1),
 								'disable_bbcode' => iif((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']), 1, 0),
@@ -538,7 +538,7 @@ class EditReply extends FAAction {
 		}
 		
 		/* Does this user have permission to edit theirreply if the topic is locked? */
-		if($topic['topic_locked'] == 1 && get_map($request['user'], 'closed', 'can_edit', array('forum_id' => $forum['forum_id'])) > $request['user']->get('perms')) {
+		if($topic['topic_locked'] == 1 && get_map( 'closed', 'can_edit', array('forum_id' => $forum['forum_id'])) > $request['user']->get('perms')) {
 			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
 			return $action->execute($request);
 		}
@@ -547,12 +547,12 @@ class EditReply extends FAAction {
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_EDITREPLY', $topic, $forum);
 		
 		if($reply['poster_id'] == $request['user']->get('id')) {
-			if(get_map($request['user'], 'replies', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
+			if(get_map( 'replies', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
 				$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
 				return $action->execute($request);
 			}
 		} else {
-			if(get_map($request['user'], 'other_replies', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
+			if(get_map( 'other_replies', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
 				$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
 				return $action->execute($request);
 			}
@@ -675,7 +675,7 @@ class UpdateReply extends FAAction {
 		}
 		
 		/* Does this user have permission to edit theirreply if the topic is locked? */
-		if($topic['topic_locked'] == 1 && get_map($request['user'], 'closed', 'can_edit', array('forum_id' => $forum['forum_id'])) > $request['user']->get('perms')) {
+		if($topic['topic_locked'] == 1 && get_map( 'closed', 'can_edit', array('forum_id' => $forum['forum_id'])) > $request['user']->get('perms')) {
 			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
 			return !USE_AJAX ? $action->execute($request) : ajax_message('L_YOUNEEDPERMS');
 		}
@@ -699,12 +699,12 @@ class UpdateReply extends FAAction {
 
 		/* Does this person have permission to edit this topic? */
 		if($topic['poster_id'] == $request['user']->get('id')) {
-			if(get_map($request['user'], 'replies', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
+			if(get_map( 'replies', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
 				$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
 				return !USE_AJAX ? $action->execute($request) : ajax_message('L_YOUNEEDPERMS');
 			}
 		} else {
-			if(get_map($request['user'], 'other_replies', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
+			if(get_map( 'other_replies', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
 				$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
 				return !USE_AJAX ? $action->execute($request) : ajax_message('L_YOUNEEDPERMS');
 			}
@@ -738,7 +738,7 @@ class UpdateReply extends FAAction {
 				$is_poll	= 1;
 			}
 
-			$posticon	= iif(($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif');
+			$posticon	= iif(($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif');
 			
 			/**
 			 * Build the queries to update the reply
@@ -848,7 +848,7 @@ class UpdateReply extends FAAction {
 								'topic_id' => $topic['topic_id'],
 								'row_left' => 0,
 								'row_right' => 0,
-								'posticon' => iif(($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'),
+								'posticon' => iif(($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'),
 								'disable_html' => iif((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']), 1, 0),
 								'disable_sig' => iif((isset($_REQUEST['enable_sig']) && $_REQUEST['enable_sig']), 0, 1),
 								'disable_bbcode' => iif((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']), 1, 0),
@@ -950,12 +950,12 @@ class DeleteReply extends FAAction {
 		
 		/* Does this person have permission to remove this topic? */
 		if($reply['poster_id'] == $request['user']->get('id')) {
-			if(get_map($request['user'], 'replies', 'can_del', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
+			if(get_map( 'replies', 'can_del', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
 				no_perms_error($request);
 				return TRUE;
 			}
 		} else {
-			if(get_map($request['user'], 'other_replies', 'can_del', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
+			if(get_map( 'other_replies', 'can_del', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
 				no_perms_error($request);
 				return TRUE;
 			}
@@ -1079,7 +1079,7 @@ class ThreadedRepliesIterator extends FAProxyIterator {
 	function current() {
 		$temp					= parent::current();
 
-		$temp['inset_level']	= str_repeat('&nbsp; &nbsp; &nbsp;', intval($temp['row_level'] - $this->start_level - 1));
+		$temp['inset_level']	= str_repeat('&nbsp; &nbsp;', intval($temp['row_level'] - $this->start_level));
 		
 		/* Should we free the result? */
 		if(!$this->hasNext())
@@ -1132,7 +1132,7 @@ class RepliesIterator extends FAProxyIterator {
 					$this->users[$user['id']]	= $user;
 				}
 			} else {
-				$temp['post_display_user_ddmenu'] = $this->hasPrev() ? 0 : 1; // use a different ddmenu
+				$temp['post_display_user_ddmenu'] = $this->result->hasPrev() ? 0 : 1; // use a different ddmenu
 				$user						= $this->users[$temp['poster_id']];
 			}
 			
@@ -1144,7 +1144,7 @@ class RepliesIterator extends FAProxyIterator {
 				foreach($user as $key => $val)
 					$temp['post_user_'. $key] = $val;
 
-				$temp['profilefields']	= &new FAArrayIterator(get_profile_fields($this->fields, $temp));
+				$temp['profilefields']	= new FAArrayIterator(get_profile_fields($this->fields, $temp));
 				$temp['post_user_user_title'] = get_user_title($user['user_title'], $user['num_posts']);
 			}
 
@@ -1158,7 +1158,7 @@ class RepliesIterator extends FAProxyIterator {
 
 		/* do we have any attachments? */
 		if(isset($temp['attachments']) && $temp['attachments'] > 0) {
-			$temp['attachment_files']		= &new K4AttachmentsIterator($this->dba, $this->user, $temp['topic_id'], $temp['reply_id']);
+			$temp['attachment_files'] = new K4AttachmentsIterator($this->dba, $this->user, $temp['topic_id'], $temp['reply_id']);
 		}
 		
 		/* Deal with acronyms */

@@ -30,7 +30,7 @@
 */
 
 define('FILEARTS', TRUE);
-error_reporting(E_ALL ^ E_NOTICE);
+
 
 define('FA_BASE_DIR', dirname(__FILE__));
 define('FA_NL', "\r\n");

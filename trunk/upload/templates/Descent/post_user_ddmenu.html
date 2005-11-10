@@ -1,13 +1,12 @@
 <if:if var="post_user_id" greater="0"><if:if var="post_display_user_ddmenu" eq="1">
 <!-- User Drop Down Menu -->
 <div class="k4_borderwrap" id="post_user_ddmenu{$post_user_id}" style="display: none;">
-	<div class="k4_maintitle">{$post_user_name}</div>
-	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0">
-		<tr><td class="alt1"><a href="member.php?id={$post_user_id}" title="{$L_PROFILE}" class="smalltext">{$L_PROFILE}</a></td></tr>
-		<is:logged><tr><td class="alt1"><a href="member.php?act=usercp&amp;view=pmnewmessage&amp;user=k4st" title="{$L_PMUSER}" class="smalltext">{$L_PMUSER}</a></td></tr></is:logged>
-		<tr><td class="alt1"><a href="member.php?act=mail&amp;id={$post_user_id}" title="{$L_EMAIL}" class="smalltext">{$L_EMAIL}</a></td></tr>
-		<tr><td class="alt1"><a href="search.php?act=find&amp;author={$post_user_name}&amp;exact=1" title="{$L_FINDPOSTS}" class="smalltext">{$L_FINDPOSTS}</a></td></tr>
-	</table>
+	<div class="k4_table" style="text-align: left;">
+		<div class="alt1"><a href="member.php?id={$post_user_id}" title="{$L_PROFILE}" class="smalltext">{$L_PROFILE}</a></div>
+		<is:logged><div class="alt1"><a href="member.php?act=usercp&amp;view=pmnewmessage&amp;user=k4st" title="{$L_PMUSER}" class="smalltext">{$L_PMUSER}</a></div></is:logged>
+		<div class="alt1"><a href="member.php?act=mail&amp;id={$post_user_id}" title="{$L_EMAIL}" class="smalltext">{$L_EMAIL}</a></div>
+		<div class="alt1"><a href="search.php?act=find&amp;author={$post_user_name}&amp;exact=1" title="{$L_FINDPOSTS}" class="smalltext">{$L_FINDPOSTS}</a></div>
+	</div>
 </div>
 </if:if>
 <script type="text/javascript">menu_init('post_user_ddmenu_link{$post_id}', 'post_user_ddmenu{$post_user_id}');</script>

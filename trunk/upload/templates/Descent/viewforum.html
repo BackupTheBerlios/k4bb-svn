@@ -1,15 +1,15 @@
 <core:import id="forum_rules" file="forum_rules.html" />
-<span class="title_link">{$forum_name}</span>
-<a href="rss.php?f={$forum_id}" title="{$L_RSSFEED}: {$forum_name}"><img src="Images/{$IMG_DIR}/Icons/rss_small.gif" alt="{$L_RSSFEED}: {$forum_name}" border="0" /></a>
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
 	<tr>
-		<td width="50%">
-			<div align="left">
-				<maps:if list="forums" var="topics" forum="forum_id" method="can_add"><a href="newtopic.php?id={$forum_id}" title="{$L_POSTTOPIC}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/post_topic.gif" alt="{$L_POSTTOPIC}" /></a></maps:if>
-			</div>
+		<td width="50%" style="text-align: left;">
+			<span class="title_link">{$forum_name}</span>
+			<a href="rss.php?f={$forum_id}" title="{$L_RSSFEED}: {$forum_name}"><img src="Images/{$IMG_DIR}/Icons/rss_small.gif" alt="{$L_RSSFEED}: {$forum_name}" border="0" /></a>
 		</td>
-		<td width="50%">
-			<page:navigator id="topics_pager">
+		<td width="50%" style="text-align: right;">
+			<maps:if list="forums" var="topics" forum="forum_id" method="can_add"><a href="newtopic.php?id={$forum_id}" title="{$L_POSTTOPIC}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/post_topic.gif" alt="{$L_POSTTOPIC}" /></a></maps:if>
+		</td>
+		<page:navigator id="topics_pager">
+		<td nowrap="nowrap">
 			<div align="right">
 				<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
 					<tr>
@@ -26,15 +26,15 @@
 					</tr>
 				</table>
 			</div>
-			</page:navigator>
 		</td>
+		</page:navigator>
 	</tr>
 </table>
 
 <!-- Topics List of '{$current_location}' -->
 <div class="k4_shadow">
 	<div class="k4_borderwrap">
-		<div class="k4_maintitle" align="right">
+		<div class="k4_maintitle" align="right" style="overflow: hidden;">
 			<div style="float: left;text-align: left;">
 				{$L_TOPICSINFORUM}: <span style="font-weight: normal;">{$name}</span><br />
 				<if:if var="description" noteq=""><span class="minitext" style="font-weight: normal;">{$description}</span></if:if>
@@ -55,17 +55,17 @@
 			<tr>
 				<td class="k4_subtitle" colspan="<if:if var="modpanel" eq="1">7<if:else />6</if:if>">{$L_ANNOUNCEMENTS}</td>
 			</tr>
-			<list:item list="announcements">
+			<list:item list="announcements"><list:switch list="announcements" var="row_class" a="alt1" b="alt2">
 			<core:import id="topic_view" file="topic_view.html" />
-			</list:item>
+			</list:switch></list:item>
 			</list:list>
 			<list:list id="importants">
 			<tr>
 				<td class="k4_subtitle" colspan="<if:if var="modpanel" eq="1">7<if:else />6</if:if>">{$L_IMPORTANTTOPICS}</td>
 			</tr>
-			<list:item list="importants">
+			<list:item list="importants"><list:switch list="importants" var="row_class" a="alt1" b="alt2">
 			<core:import id="topic_view" file="topic_view.html" />
-			</list:item>
+			</list:switch></list:item>
 			</list:list>
 			<tr>
 				<td class="k4_subtitle" style="text-align: center;" width="70%" colspan="3"><a href="viewforum.php?f={$forum_forum_id}&amp;sort=name&amp;order={$order}" title="{$L_TOPICS}">{$L_TOPICS}{$name_sort}</a>/<a href="viewforum.php?f={$forum_forum_id}&amp;sort=poster_name&amp;order={$order}" title="{$L_AUTHOR}">{$L_AUTHOR}{$poster_name_sort}</a></td>
@@ -86,9 +86,9 @@
 			</tr>
 			</core:block>
 			<list:list id="topics">
-			<list:item list="topics">
+			<list:item list="topics"><list:switch list="topics" var="row_class" a="alt1" b="alt2">
 			<core:import id="topic_view" file="topic_view.html" />
-			</list:item>
+			</list:switch></list:item>
 			</list:list>
 			<if:if var="modpanel" eq="1">
 			<!-- Moderator Controls -->
@@ -133,7 +133,7 @@
 			<div align="right">
 				<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
 					<tr>
-						<td class="alt3" id="page_jump2"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+						<td class="alt3" id="page_jump2" nowrap="nowrap"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 						<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
 						<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
 						<page:list id="topics_pager" before="3" after="3">
@@ -294,9 +294,9 @@
 				<a href="viewforum.php?act=markforum&amp;id={$forum_forum_id}" title="{$L_MARKFORUMREAD}" class="smalltext">{$L_MARKFORUMREAD}</a>
 			</td>
 		</tr>
-	</table>
-	<div class="k4_maintitle">{$L_SEARCHTHISFORUM}</div>
-	<table width="190" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<tr>
+			<td class="k4_subtitle">{$L_SEARCHTHISFORUM}</td>
+		</tr>
 		<tr>
 			<td class="alt1">
 				<form action="search.php?act=find" method="post" enctype="multipart/form-data">

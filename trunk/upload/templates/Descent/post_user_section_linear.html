@@ -9,7 +9,8 @@
 					</if:if>
 					<td class="smalltext" width="20%">
 						<if:if var="poster_id" greater="0">
-						<a href="#" title="{$L_PROFILE}" id="post_user_ddmenu_link{$post_id}" style="font-weight: bold;color: #{$post_user_group_color};font-size:14px;{$post_user_background}">{$poster_name}</a> <img src="Images/{$IMG_DIR}/Icons/{$post_user_online}_small.gif" alt="<if:if var="post_user_online" eq="online">{$L_ONLINE}<if:else />{$L_OFFLINE}</if:if>" border="0" />
+						<a href="#" title="{$L_PROFILE}" id="post_user_ddmenu_link{$post_id}" style="font-weight: bold;color: #{$post_user_group_color};font-size:14px;{$post_user_background}">{$poster_name}</a>
+						<sup><img src="Images/{$IMG_DIR}/Icons/{$post_user_online}_small.gif" alt="<if:if var="post_user_online" eq="online">{$L_ONLINE}<if:else />{$L_OFFLINE}</if:if>" border="0" /></sup>
 						<br />
 						<if:if var="post_user_group_nicename" noteq="">{$post_user_group_nicename}<br /></if:if>
 						<if:if var="post_user_group_avatar" noteq=""><img src="tmp/upload/group_avatars/{$post_user_group_avatar}" border="0" alt="{$post_user_group_nicename}" /></if:if>

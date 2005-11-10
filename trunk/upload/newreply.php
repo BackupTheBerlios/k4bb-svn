@@ -72,7 +72,7 @@ class K4DefaultAction extends FAAction {
 		}
 
 		/* Do we have permission to post to this topic in this forum? */
-		if($request['user']->get('perms') < get_map($request['user'], 'replies', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		if($request['user']->get('perms') < get_map( 'replies', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			no_perms_error($request);
 			return TRUE;
 			//$action = new K4InformationAction(new K4LanguageElement('L_PERMCANTPOST'), 'content', FALSE);
@@ -137,7 +137,7 @@ class K4DefaultAction extends FAAction {
 		 * Deal with file attachments
 		 */
 		if($request['template']->getVar('attach_inputs') == '') {
-			if($request['user']->get('perms') >= get_map($request['user'], 'attachments', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+			if($request['user']->get('perms') >= get_map( 'attachments', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 				$num_attachments	= $request['template']->getVar('nummaxattaches') - $num_attachments;
 				
 				$attach_inputs		= '';

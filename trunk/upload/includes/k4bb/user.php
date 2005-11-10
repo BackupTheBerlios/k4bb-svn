@@ -318,11 +318,13 @@ class K4Guest extends FAUser {
 		
 		/* Check if this person is a search engine */
 		if(preg_match("~(". $_SPIDERAGENTS .")~is", USER_AGENT)) {
-			foreach($_SPIDERS as $spider) {
-				if(eregi($spider['useragent'], USER_AGENT)) {
-					$info['name']	= $spider['spidername'];
-					$info['perms']	= $spider['allowaccess'] == 1 ? 1 : -1;
-					$info['spider']	= TRUE;
+			if(is_array($_SPIDERS)) {
+				foreach($_SPIDERS as $spider) {
+					if(eregi($spider['useragent'], USER_AGENT)) {
+						$info['name']	= $spider['spidername'];
+						$info['perms']	= $spider['allowaccess'] == 1 ? 1 : -1;
+						$info['spider']	= TRUE;
+					}
 				}
 			}
 		}

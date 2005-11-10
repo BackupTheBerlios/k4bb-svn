@@ -1,52 +1,49 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
 <core:import id="head" file="head.html" />
-<body<if:if var="modpanel" eq="1"> onload="InitialiseCheckboxes();"</if:if>>
+<body>
 
 <div align="center">
 	<div align="left" class="forum_base">
 		<br />
 		<div class="forum_main" id="forum_main">
-
 			<core:import id="header" file="header.html" />
-
-			<core:import id="menu_global" file="menu_global.html" />
 			<core:import id="header_breadcrumbs" file="header_breadcrumbs.html" />
-
-			<!--<br />-->
-
-			<core:import id="google_adsense" file="google_adsense_lb.html" />
 			
+			<br />
+			<core:import id="google_leaderboard" file="google_adsense_lb.html" />
+			<br />
+
 			<if:if var="can_see_board" method="can_view" geq="0">
-				<core:import id="forum_welcome" file="welcome.html" />
 				<core:import id="content" />
 				<core:import id="content_extra" />
+				
+				<core:block id="forum_status_icons" hidden="yes">
+				<!-- Forum Status Icons -->
+				<br />
+				<div style="text-align: center;">
+					<ul class="menu_global">
+						<li class="first">
+							<img src="Images/{$IMG_DIR}/Icons/forum_on.gif" alt="{$L_FORUMNEWPOSTS}" />
+							<span class="smalltext">{$L_FORUMNEWPOSTS}</span>
+						</li>
+						<li class="first">
+							<img src="Images/{$IMG_DIR}/Icons/forum_off.gif" alt="{$L_FORUMNONEWPOSTS}" />
+							<span class="smalltext">{$L_FORUMNONEWPOSTS}</span>
+						</li>
+						<li class="first">
+							<img src="Images/{$IMG_DIR}/Icons/forum_on_lock.gif" alt="{$L_FORUMLOCKED}" />
+							<span class="smalltext">{$L_FORUMLOCKED}</span>
+						</li>
+					</ul>
+				</div>
+				<!-- / Forum Status Icons -->
+				</core:block>
+
 				<core:import id="users_browsing" />
 				<core:import id="forum_info" />
 				<core:import id="quick_login" />
-				<core:block id="forum_status_icons" hidden="yes">
-				
-				<!-- Forum Status Icons -->
-				<br />
-				<div style="text-align: left;" class="inset_box_small">
-					<table cellpadding="0" cellspacing="0" border="0">
-						<tr>
-							<td><img src="Images/{$IMG_DIR}/Icons/forum_on.gif" alt="{$L_FORUMNEWPOSTS}" /></td>
-							<td><span class="smalltext">{$L_FORUMNEWPOSTS}</span></td>
-						</tr>
-						<tr>
-							<td><img src="Images/{$IMG_DIR}/Icons/forum_off.gif" alt="{$L_FORUMNONEWPOSTS}" /></td>
-							<td><span class="smalltext">{$L_FORUMNONEWPOSTS}</span></td>
-						</tr>
-						<tr>
-							<td><img src="Images/{$IMG_DIR}/Icons/forum_off_lock.gif" alt="{$L_FORUMLOCKED}" /></td>
-							<td><span class="smalltext">{$L_FORUMLOCKED}</span></td>
-						</tr>
-					</table>
-				</div>
-				<!-- / Forum Status Icons -->
 
-				</core:block>
 			<if:else />
 
 				<!-- You don't have permission to view the forums -->
@@ -64,15 +61,16 @@
 				</div>
 				<!-- / You don't have permission to view the forums -->
 			</if:if>
+			
 			<br />
+			<core:import id="google_leaderboard" file="google_adsense_lb.html" />
+			<br />
+			
 			<core:import id="quick_nav" file="quick_nav.html" />
-			<br />
-
 			<core:import id="footer_breadcrumbs" file="footer_breadcrumbs.html" />
 			<core:import id="footer" file="footer.html" />
 
 		</div>
-
 	</div>
 </div>
 <br />

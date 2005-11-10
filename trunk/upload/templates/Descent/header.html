@@ -1,8 +1,14 @@
 <!-- Header -->
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
 	<tr>
-		<td width="50%" valign="middle" align="left"><a href="index.php" name="top" id="top" title="k4 Bulletin Board - {$bbtitle}"><img src="Images/{$IMG_DIR}/logo.gif" alt="{$bbtitle}" border="0" /></a></td>
-		<td width="50%" valign="middle" align="right"><h1>{$bbdescription}</h1></td>
+		<td width="20%" valign="middle" style="text-align: left;"><a href="index.php" name="top" id="top" title="k4 Bulletin Board - {$bbtitle}"><img src="Images/{$IMG_DIR}/logo.gif" alt="{$bbtitle}" border="0" /></a></td>
+		<td width="80%" valign="bottom" style="text-align: right;">
+			<h1 style="color: #666666;padding-bottom:5px;">{$bbdescription}</h1>
+			<core:import id="menu_global" file="menu_global.html" />
+		</td>
 	</tr>
 </table>
+<core:import id="quicklinks_menu" file="quicklinks_menu.html" />
+<core:import id="modpanel_menu" file="modpanel.html" />
+<core:import id="search_menu" file="search_menu.html" />
 <!-- / Header -->

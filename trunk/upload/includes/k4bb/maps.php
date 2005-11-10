@@ -29,7 +29,7 @@
 * @package k42
 */
 
-error_reporting(E_ALL ^ E_NOTICE);
+
 
 if(!defined('IN_K4')) {
 	return;
@@ -67,7 +67,7 @@ function get_recursive_maps(&$request, &$all_maps, $parents, &$maps, $start_leve
 /**
  * Get a MAP
  */
-function get_map($user, $varname, $method, $args) {
+function get_map($varname, $method, $args) {
 	
 	global $_MAPS;
 
@@ -78,8 +78,8 @@ function get_map($user, $varname, $method, $args) {
 		$perm_needed		= isset($_MAPS[$varname][$method]) ? $_MAPS[$varname][$method] : $perm_needed;
 	} else {
 		
-		$usergroups = $user->get('usergroups') != '' ? explode('|', $user->get('usergroups')) : array();
-
+		$usergroups = $_SESSION['user']->get('usergroups') != '' ? explode('|', $_SESSION['user']->get('usergroups')) : array();
+		
 		/* Forum */
 		if(isset($args['forum_id']) && intval($args['forum_id']) != 0) {
 			
@@ -98,7 +98,7 @@ function get_map($user, $varname, $method, $args) {
 					$perm_needed	= isset($_MAPS['forums'][0][$method]) ? $_MAPS['forums'][0][$method] : 0;
 				}
 			}
-
+			
 			/* Still no found perm? oh well. */
 			if($perm_needed == -1)
 				$perm_needed = 0;
@@ -171,7 +171,7 @@ function get_maps(&$dba) {
 			/**
 			 * Deal with the master forum permission set.. it is somewhat complicated
 			 */
-			if($val['id'] == MASTER_FORUM_PERM || $val['parent_id'] == MASTER_FORUM_PERM) {
+			if($val['varname'] == 'forum0' || $val['parent_id'] == $maps['forums'][0]['id']) {
 				if($val['varname'] == 'forum0') {
 					$maps['forums'][0] = isset($maps['forums'][0]) ? array_merge($maps['forums'][0], $val) : $val;
 				} else {

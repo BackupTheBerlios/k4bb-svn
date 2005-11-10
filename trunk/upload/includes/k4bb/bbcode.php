@@ -29,7 +29,7 @@
 * @package k4-2.0-dev
 */
 
-error_reporting(E_ALL ^ E_NOTICE);
+
 
 if(!defined('IN_K4')) {
 	return;
@@ -555,7 +555,7 @@ class K4Default_Compiler extends K4BBCodeTag {
 		return str_replace(array('[', ']'), array('&#91;', '&#93;'), $matches[1]);
 	}
 	function parse_close() {
-		return '&#91;/'. $matches[3] .'&#93;';
+		return '&#91;/'. $this->matches[3] .'&#93;';
 	}
 }
 
@@ -1552,7 +1552,7 @@ class K4BBPolls extends FAObject {
 	function parse(&$request, &$is_poll) {
 		
 		// set whether we can poll or not
-		$can_poll	= ($this->forum['forum_id'] > 0 &$request['user']->get('perms') >= get_map($request['user'], 'bbcode', 'can_add', array('forum_id'=>$this->forum['forum_id'])));
+		$can_poll	= ($this->forum['forum_id'] > 0 &$request['user']->get('perms') >= get_map( 'bbcode', 'can_add', array('forum_id'=>$this->forum['forum_id'])));
 
 		// set the poll compiler
 		$this->bbcode_parser->set_compiler('question', new K4Poll_Compiler($request['dba'], $can_poll, $request['template']->getVar('maxpollquestions'), $request['template']->getVar('maxpolloptions')));

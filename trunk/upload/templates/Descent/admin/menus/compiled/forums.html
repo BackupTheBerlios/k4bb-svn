@@ -1,13 +1,11 @@
 <?php if ($_SESSION['user']->get('perms') >= ADMIN): ?>
 <div id="forums_menu" style="display: none;">
 	<div class="k4_borderwrap">
-		<div class="k4_maintitle"><?php echo $scope->getVar("L_CATEGORIES"); ?></div>
 		<table width="130" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+			<tr class="k4_subtitle" nowrap="nowrap"><td><?php echo $scope->getVar("L_CATEGORIES"); ?></td></tr>
 			<tr class="alt3"><td nowrap="nowrap"><a class="smalltext" target="admin_iframe" href="admin.php?act=categories"><?php echo $scope->getVar("L_CATEGORIES"); ?></a></td></tr>
 			<tr class="alt3"><td nowrap="nowrap"><a class="smalltext" target="admin_iframe" href="admin.php?act=categories_add"><?php echo $scope->getVar("L_ADDCATEGORY"); ?></a></td></tr>
-		</table>
-		<div class="k4_maintitle"><?php echo $scope->getVar("L_FORUMS"); ?></div>
-		<table width="130" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+			<tr class="k4_subtitle" nowrap="nowrap"><td><?php echo $scope->getVar("L_FORUMS"); ?></td></tr>
 			<tr class="alt3"><td nowrap="nowrap">
 				<a class="smalltext" href="admin.php?act=forums" target="admin_iframe"><?php echo $scope->getVar("L_FORUMS"); ?></a>
 				(<a class="smalltext" href="admin.php?act=forum_select" target="admin_iframe"><?php echo $scope->getVar("L_SELECT"); ?></a>)

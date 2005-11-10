@@ -30,8 +30,7 @@
 * @package k42
 */
 
-//echo '<div style="font-family: Arial, Helvetica, Sans-Serif;font-weight: bold;text-align: center;padding: 10px;border: 1px solid #CCCCCC;background-color:#F7F7F7;">Currently working on a solution, don\'t worry yourself if you see random text ;)<br /><br />-k4st</div>';
-//exit;
+error_reporting(E_ALL ^ E_NOTICE);
 
 define('K4_BASE_DIR', dirname(__FILE__));
 define('BB_BASE_DIR', file_exists(dirname($_SERVER['SCRIPT_FILENAME']) .'/index.php') && is_dir(dirname($_SERVER['SCRIPT_FILENAME']) .'/includes') ? dirname($_SERVER['SCRIPT_FILENAME']) : $_SERVER['DOCUMENT_ROOT']);
@@ -40,7 +39,7 @@ define('IN_K4', TRUE);
 
 @set_time_limit(0);
 set_magic_quotes_runtime(0);
-error_reporting(E_ALL ^ E_NOTICE);
+
 
 ini_set('session.name',			'sid');
 ini_set('session.auto_start',	0);
@@ -203,7 +202,7 @@ class K4Controller extends FAController {
 class K4BasicController extends FAController {
 	function execute() {
 		$request = $this->getRequest();
-
+		
 		$request['template'] = &new FATemplate();
 		$this->addFilter(new K4DatabaseFilter);
 		

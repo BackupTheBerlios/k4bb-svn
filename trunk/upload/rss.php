@@ -54,7 +54,7 @@ class K4DefaultAction extends FAAction {
 				return $action->execute($request);
 			}
 			
-			if(get_map($request['user'], 'topics', 'can_view', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
+			if(get_map( 'topics', 'can_view', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
 				$action = new K4InformationAction(new K4LanguageElement('L_CANTVIEWFORUMTOPICS'), 'content_extra', FALSE);
 				return $action->execute($request);
 			}
@@ -132,7 +132,7 @@ class K4DefaultAction extends FAAction {
 				return $action->execute($request);
 			}
 			
-			if(get_map($request['user'], 'topics', 'can_view', array('forum_id'=>$topic['forum_id'])) > $request['user']->get('perms')) {
+			if(get_map( 'topics', 'can_view', array('forum_id'=>$topic['forum_id'])) > $request['user']->get('perms')) {
 				$action = new K4InformationAction(new K4LanguageElement('L_CANTVIEWFORUMTOPICS'), 'content_extra', FALSE);
 				return $action->execute($request);
 			}
@@ -148,7 +148,7 @@ class K4DefaultAction extends FAAction {
 
 			$it = new FAChainedIterator($result);
 
-			if(get_map($request['user'], 'replies', 'can_view', array('forum_id'=>$topic['forum_id'])) <= $request['user']->get('perms')) {
+			if(get_map( 'replies', 'can_view', array('forum_id'=>$topic['forum_id'])) <= $request['user']->get('perms')) {
 				if($topic['num_replies'] > 0) {
 					
 					$resultsperpage	= $request['user']->get('postsperpage') <= 0 ? $forum['postsperpage'] : $request['user']->get('postsperpage');

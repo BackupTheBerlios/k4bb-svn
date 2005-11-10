@@ -38,7 +38,7 @@ class K4DefaultAction extends FAAction {
 				
 		//$action = new AdminCSSRequestAction();
 		//return $action->execute($request);
-
+		
 		global $_DATASTORE, $_USERGROUPS, $_QUERYPARAMS;
 		
 		// Member/Guest specifics
@@ -53,11 +53,10 @@ class K4DefaultAction extends FAAction {
 		
 		$tlforums	= &new K4ForumsIterator($request['dba'], "SELECT * FROM ". K4FORUMS ." WHERE row_level = 1 AND category_id = 0 ORDER BY row_order ASC");
 		$categories = &new K4CategoriesIterator($request['dba']);
-
-		$forums		= &new FAChainedIterator($tlforums);
-		$forums->addIterator($categories);
-		
-		$request['template']->setList('categories', $forums);
+				
+		$request['template']->setVisibility('no_forums', ($tlforums->hasNext() && $categories->hasNext() ? FALSE : TRUE));
+		$request['template']->setList('tl_forums', $tlforums);
+		$request['template']->setList('categories', $categories);
 		
 		// Set the online users list
 		$user_extra			= $request['user']->isMember() ? ' OR (seen > 0 AND user_id = '. intval($request['user']->get('id')) .')' : '';
@@ -69,8 +68,8 @@ class K4DefaultAction extends FAAction {
 		$newest_user						= $request['dba']->getRow("SELECT name, id FROM ". K4USERS ." ORDER BY id DESC LIMIT 1");
 		$expired							= time() - ini_get('session.gc_maxlifetime');
 
-		$stats = array('num_online_members'	=> Globals::getGlobal('num_online_members'),
-						'num_invisible'		=> Globals::getGlobal('num_online_invisible'),
+		$stats = array('num_online_members'	=> intval(Globals::getGlobal('num_online_members')),
+						'num_invisible'		=> intval(Globals::getGlobal('num_online_invisible')),
 						'num_topics'		=> intval($_DATASTORE['forumstats']['num_topics']),
 						'num_replies'		=> intval($_DATASTORE['forumstats']['num_replies']),
 						'num_members'		=> intval($_DATASTORE['forumstats']['num_members']),
@@ -118,7 +117,7 @@ class K4DefaultAction extends FAAction {
 		/* Set the forum stats */
 		$request['template']->setFile('forum_info', 'forum_info.html');
 		
-		$request['template']->setVar('can_see_board', get_map($request['user'], 'can_see_board', 'can_view', array()));
+		$request['template']->setVar('can_see_board', get_map( 'can_see_board', 'can_view', array()));
 
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_HOME');		
 	}

@@ -39,7 +39,7 @@
  * @author Peter Goodman
  */
 function attach_files(&$request, $forum, $topic_id, $reply_id = FALSE) {
-	if($request['user']->get('perms') >= get_map($request['user'], 'attachments', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+	if($request['user']->get('perms') >= get_map( 'attachments', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 		
 		$size			= 0;
 		$max_size		= $request['template']->getVar('maxattachsize');
@@ -194,7 +194,7 @@ function remove_attachments(&$request, $topic_id, $reply_id = FALSE) {
  * Add either the file inputs or remove attachment links
  */
 function post_attachment_options(&$request, $forum, $topic, $reply = FALSE) {
-	if($request['user']->get('perms') >= get_map($request['user'], 'attachments', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+	if($request['user']->get('perms') >= get_map( 'attachments', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 		
 		$post				= !$reply ? $topic : $reply;
 
@@ -308,7 +308,7 @@ class K4ViewAttachment extends FAAction {
 		
 
 		/* Do we have permission to view attachments in this forum? */
-		if($request['user']->get('perms') < get_map($request['user'], 'attachments', 'can_view', array('forum_id'=>$forum['forum_id']))) {
+		if($request['user']->get('perms') < get_map( 'attachments', 'can_view', array('forum_id'=>$forum['forum_id']))) {
 			no_perms_error($request);
 			return TRUE;
 		}
@@ -412,7 +412,7 @@ class K4RemoveAttachment extends FAAction {
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 		
 		/* Do we have permission to view attachments in this forum? */
-		if($request['user']->get('perms') < get_map($request['user'], 'attachments', 'can_del', array('forum_id'=>$forum['forum_id']))) {
+		if($request['user']->get('perms') < get_map( 'attachments', 'can_del', array('forum_id'=>$forum['forum_id']))) {
 			no_perms_error($request);
 			return TRUE;
 		}

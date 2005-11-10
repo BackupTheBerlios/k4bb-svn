@@ -29,7 +29,7 @@
 * @package k42
 */
 
-error_reporting(E_ALL ^ E_NOTICE);
+
 
 if(!defined('IN_K4')) {
 	return;
@@ -107,7 +107,7 @@ class ModerateForum extends FAAction {
 			 */
 			case 'lock': {
 				
-				if($request['user']->get('perms') < get_map($request['user'], 'closed', 'can_add', array('forum_id' => $forum['forum_id']))) {
+				if($request['user']->get('perms') < get_map( 'closed', 'can_add', array('forum_id' => $forum['forum_id']))) {
 					no_perms_error($request);
 					return TRUE;
 				}
@@ -127,7 +127,7 @@ class ModerateForum extends FAAction {
 			 */
 			case 'stick': {
 				
-				if($request['user']->get('perms') < get_map($request['user'], 'sticky', 'can_add', array('forum_id' => $forum['forum_id']))) {
+				if($request['user']->get('perms') < get_map( 'sticky', 'can_add', array('forum_id' => $forum['forum_id']))) {
 					no_perms_error($request);
 					return TRUE;
 				}
@@ -147,7 +147,7 @@ class ModerateForum extends FAAction {
 			 */
 			case 'announce': {
 				
-				if($request['user']->get('perms') < get_map($request['user'], 'announce', 'can_add', array('forum_id' => $forum['forum_id']))) {
+				if($request['user']->get('perms') < get_map( 'announce', 'can_add', array('forum_id' => $forum['forum_id']))) {
 					no_perms_error($request);
 					return TRUE;
 				}
@@ -167,7 +167,7 @@ class ModerateForum extends FAAction {
 			 */
 			case 'feature': {
 				
-				if($request['user']->get('perms') < get_map($request['user'], 'feature', 'can_add', array('forum_id' => $forum['forum_id']))) {
+				if($request['user']->get('perms') < get_map( 'feature', 'can_add', array('forum_id' => $forum['forum_id']))) {
 					no_perms_error($request);
 					return TRUE;
 				}
@@ -187,7 +187,7 @@ class ModerateForum extends FAAction {
 			 */
 			case 'normal': {
 				
-				if($request['user']->get('perms') < get_map($request['user'], 'normalize', 'can_add', array('forum_id' => $forum['forum_id']))) {
+				if($request['user']->get('perms') < get_map( 'normalize', 'can_add', array('forum_id' => $forum['forum_id']))) {
 					no_perms_error($request);
 					return TRUE;
 				}
@@ -207,7 +207,7 @@ class ModerateForum extends FAAction {
 			 */
 			case 'queue': {
 
-				if($request['user']->get('perms') < get_map($request['user'], 'queue', 'can_add', array('forum_id' => $forum['forum_id']))) {
+				if($request['user']->get('perms') < get_map( 'queue', 'can_add', array('forum_id' => $forum['forum_id']))) {
 					no_perms_error($request);
 					return TRUE;
 				}
@@ -253,7 +253,7 @@ class ModerateForum extends FAAction {
 			 */
 			case 'delete': {
 				
-				if($request['user']->get('perms') < get_map($request['user'], 'delete', 'can_add', array('forum_id' => $forum['forum_id']))) {
+				if($request['user']->get('perms') < get_map( 'delete', 'can_add', array('forum_id' => $forum['forum_id']))) {
 					no_perms_error($request);
 					return TRUE;
 				}
@@ -355,7 +355,7 @@ class ModerateForum extends FAAction {
 			 */
 			case 'move': {
 				
-				if($request['user']->get('perms') < get_map($request['user'], 'move', 'can_add', array('forum_id' => $forum['forum_id']))) {
+				if($request['user']->get('perms') < get_map( 'move', 'can_add', array('forum_id' => $forum['forum_id']))) {
 					no_perms_error($request);
 					return TRUE;
 				}
@@ -483,12 +483,12 @@ class MoveTopics extends FAAction {
 			return TRUE;
 		}
 
-		if($request['user']->get('perms') < get_map($request['user'], 'move', 'can_add', array('forum_id' => $forum['forum_id']))) {
+		if($request['user']->get('perms') < get_map( 'move', 'can_add', array('forum_id' => $forum['forum_id']))) {
 			no_perms_error($request);
 			return TRUE;
 		}
 
-		if($request['user']->get('perms') < get_map($request['user'], 'move', 'can_add', array('forum_id' => $destination['forum_id']))) {
+		if($request['user']->get('perms') < get_map( 'move', 'can_add', array('forum_id' => $destination['forum_id']))) {
 			no_perms_error($request);
 			return TRUE;
 		}
@@ -827,12 +827,12 @@ class getTopicTitle extends FAAction {
 		}
 
 		if($topic['poster_id'] == $request['user']->get('id')) {
-			if($request['user']->get('perms') < get_map($request['user'], 'topics', 'can_edit', array('forum_id' => $topic['forum_id']))) {
+			if($request['user']->get('perms') < get_map( 'topics', 'can_edit', array('forum_id' => $topic['forum_id']))) {
 				no_perms_error($request);
 				return !USE_AJAX ? TRUE : exit();
 			}
 		} else {
-			if($request['user']->get('perms') < get_map($request['user'], 'other_topics', 'can_edit', array('forum_id' => $topic['forum_id']))) {
+			if($request['user']->get('perms') < get_map( 'other_topics', 'can_edit', array('forum_id' => $topic['forum_id']))) {
 				no_perms_error($request);
 				return !USE_AJAX ? TRUE : exit();
 			}
@@ -908,12 +908,12 @@ class SimpleUpdateTopic extends FAAction {
 			}
 
 			if($topic['poster_id'] == $request['user']->get('id')) {
-				if($request['user']->get('perms') < get_map($request['user'], 'topics', 'can_edit', array('forum_id' => $topic['forum_id']))) {
+				if($request['user']->get('perms') < get_map( 'topics', 'can_edit', array('forum_id' => $topic['forum_id']))) {
 					no_perms_error($request);
 					return !USE_AJAX ? TRUE : ajax_message('L_NEEDPERMS');
 				}
 			} else {
-				if($request['user']->get('perms') < get_map($request['user'], 'other_topics', 'can_edit', array('forum_id' => $topic['forum_id']))) {
+				if($request['user']->get('perms') < get_map( 'other_topics', 'can_edit', array('forum_id' => $topic['forum_id']))) {
 					no_perms_error($request);
 					return !USE_AJAX ? TRUE : ajax_message('L_NEEDPERMS');
 				}

@@ -1,66 +1,69 @@
 <!-- Forums List -->
+<core:block id="no_forums" hidden="yes">
+<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">	
+	<tr>
+		<td class="alt3" colspan="5" width="100%">
+			<div class="outset_box" align="center">
+				<br />
+				{$L_NOFORUMSEXIST}
+				<br /><br />
+			</div>
+		</td>
+	</tr>
+</table>
+</core:block>
+<list:list id="tl_forums">
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_FORUMS}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr>
+				<td colspan="2" class="k4_subtitle" width="60%" align="left">&nbsp;{$L_FORUM}</td>
+				<td class="k4_subtitle" width="5%" align="center">&nbsp;{$L_POSTS}&nbsp;</td>
+				<td class="k4_subtitle" width="5%" align="center">&nbsp;{$L_TOPICS}&nbsp;</td>
+				<td class="k4_subtitle" width="30%" align="center">{$L_LASTPOST}</td>
+			</tr>
+			<list:item list="tl_forums">
+			<list:switch list="tl_forums" var="row_class" a="alt1" b="alt2">
+			<maps:if forum="forum_id" method="can_view">
+			<core:import id="forum_view" file="forum_view.html" />
+			</list:switch>
+			</maps:if>
+			</list:item>
+		</table>
+	</div>
+</div>
+<br />
+</list:list>
 <list:list id="categories">
-	<list:default list="categories">
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">	
-		<tr>
-			<td class="alt3" colspan="5" width="100%">
-				<div class="outset_box" align="center">
-					<br />
-					{$L_NOFORUMSEXIST}
-					<br /><br />
-				</div>
-			</td>
-		</tr>
-	</table>
-	</list:default>
-	<list:item list="categories">
-
-	<if:if var="row_type" eq="2">
-	<maps:if forum="forum_id" method="can_view">
-		<div class="k4_shadow">
-			<div class="k4_borderwrap">
-				<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+<list:item list="categories">
+<maps:if category="category_id" method="can_view">
+	<div class="k4_shadow">
+		<div class="k4_borderwrap">	
+			<div class="k4_maintitle" id="c{$category_id}_maintitle">
+				<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_{$category_id}', 'forums_{$category_id}', 'c{$category_id}_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_{$category_id}" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+				<a href="viewforum.php?c={$category_id}" title="{$description}">{$name}</a>
+				<!--<span class="minitext" style="font-weight: normal;">{$description}</span>-->
+			</div>
+			<!-- Forums -->
+			<list:sublist list="categories" id="forums" column="forums">
+			<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table" id="forums_{$category_id}">
+				<list:item list="forums">
+				<list:switch list="forums" var="row_class" a="alt1" b="alt2">
 					<core:import id="forum_view" file="forum_view.html" />
-				</table>
-			</div>
+				</list:switch>
+				</list:item>
+			</table>
+			</list:sublist>
+		<!-- / Forums -->
 		</div>
-		<br />
-	</maps:if>
-	<else:if var="row_type" eq="1">
-	
-		<maps:if category="category_id" method="can_view">
-			<a href="viewforum.php?c={$category_id}" title="{$safe_description}" class="title_link">{$name}</a>
-			<div class="k4_shadow">
-				<div class="k4_borderwrap">	
-					<div class="k4_maintitle" id="c{$category_id}_maintitle">
-						<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_{$category_id}', 'forums_{$category_id}', 'c{$category_id}_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_{$category_id}" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
-						<span class="minitext" style="font-weight: normal;">{$description}</span>
-					</div>
-					<!-- Forums -->
-					<list:sublist list="categories" id="forums" column="forums">
-					
-					<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table" id="forums_{$category_id}">
-						<tr>
-							<td colspan="2" class="k4_subtitle" width="60%" align="left">&nbsp;{$L_FORUM}</td>
-							<td class="k4_subtitle" width="5%" align="center">&nbsp;{$L_POSTS}&nbsp;</td>
-							<td class="k4_subtitle" width="5%" align="center">&nbsp;{$L_TOPICS}&nbsp;</td>
-							<td class="k4_subtitle" width="30%" align="center">{$L_LASTPOST}</td>
-						</tr>
-						<list:item list="forums">
-							<core:import id="forum_view" file="forum_view.html" />
-						</list:item>
-					</table>
-					</list:sublist>
-				<!-- / Forums -->
-				</div>
-			</div>
-			<br />
-		</maps:if>
-	</if:if>
-	</list:item>
+	</div>
+	<br />
+</maps:if>
+</list:item>
 </list:list>
 
-<div class="outset_box_small" style="text-align: center;">
+<div style="text-align: center;">
 	<a href="index.php?act=markforums" title="{$L_MARKFORUMSREAD}" class="minitext">{$L_MARKFORUMSREAD}</a>
 	<core:block id="mark_these_forums" hidden="yes">| <a href="viewforum.php?act=markforums&amp;c={$id}" title="{$L_MARKTHESEFORUMREAD}" class="minitext">{$L_MARKTHESEFORUMREAD}</a></core:block>
 </div>

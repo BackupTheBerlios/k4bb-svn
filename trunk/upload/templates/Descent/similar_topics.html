@@ -2,8 +2,11 @@
 <!-- Similar Topics -->
 <div class="k4_shadow">
 	<div class="k4_borderwrap">
-		<div class="k4_maintitle">{$L_SIMILARTOPICS}</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<div class="k4_maintitle" id="st_maintitle">
+			<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_st', 'similartopics', 'st_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_st" src="Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+			{$L_SIMILARTOPICS}
+		</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table" id="similartopics" style="display: none;">
 			<tr>
 				<td class="k4_subtitle" width="5%">&nbsp;</td>
 				<td class="k4_subtitle" align="center" width="55%">{$L_TOPICS}/{$L_AUTHOR}</td>
@@ -28,11 +31,11 @@
 					</span>
 					<a href="viewtopic.php?id={$topic_id}" title="{$name}"><core:truncate length="40" append="...">{$name}</core:truncate></a>
 					<br />
-					<div style="float:left;" class="smalltext"><a href="member.php?id={$poster_id}" title="{$poster_name}">{$poster_name}</a></div>
+					<div style="float:left;" class="minitext"><a href="member.php?id={$poster_id}" title="{$poster_name}">{$poster_name}</a></div>
 				</td>
-				<td align="center" class="alt2">{$num_replies}</td>
-				<td align="center" class="alt1">{$views}</td>
-				<td align="center" class="alt2" nowrap="nowrap" width="30%">
+				<td align="center" class="{$row_class}">{$num_replies}</td>
+				<td align="center" class="{$row_class}">{$views}</td>
+				<td align="center" class="{$row_class}" nowrap="nowrap" width="30%">
 					<if:if var="reply_time" greater="0">
 					<span class="minitext">
 						<core:date format="%b %d %y">{$reply_time}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$reply_time}</core:date></span>

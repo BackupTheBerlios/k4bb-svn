@@ -1,8 +1,8 @@
 <?php if ($_SESSION['user']->get('perms') >= ADMIN): ?>
 <div id="misc_menu" style="display: none;">
 	<div class="k4_borderwrap">
-		<div class="k4_maintitle"><?php echo $scope->getVar("L_MISCELLANEOUS"); ?></div>
 		<table width="130" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+			<tr class="k4_subtitle" nowrap="nowrap"><td><?php echo $scope->getVar("L_MISCELLANEOUS"); ?></td></tr>
 			<tr class="alt3" nowrap="nowrap"><td><a class="smalltext" target="admin_iframe" href="admin.php?act=spiders"><?php echo $scope->getVar("L_SEARCHSPIDERS"); ?></a></td></tr>
 			<tr class="alt3" nowrap="nowrap"><td><a class="smalltext" target="admin_iframe" href="admin.php?act=email"><?php echo $scope->getVar("L_EMAILUSERS"); ?></a></td></tr>
 		</table>

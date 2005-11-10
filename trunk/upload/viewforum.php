@@ -29,7 +29,7 @@
 * @package k42
 */
 
-error_reporting(E_ALL ^ E_NOTICE);
+
 
 require "includes/filearts/filearts.php";
 require "includes/k4bb/k4bb.php";
@@ -70,7 +70,7 @@ class K4DefaultAction extends FAAction {
 		$extra				= " AND location_file = '". $request['dba']->Quote($_URL->file) ."' AND location_id = ". ($forum['row_type'] & CATEGORY ? intval($forum['category_id']) : intval($forum['forum_id']));	
 		$user_extra			= $request['user']->isMember() ? ' OR (seen > 0 AND user_id = '. intval($request['user']->get('id')) .')' : '';
 
-		$forum_can_view		= $forum['row_type'] & CATEGORY ? get_map($request['user'], '', 'can_view', array('category_id' => $forum['category_id'])) : get_map($request['user'], '', 'can_view', array('forum_id' => $forum['forum_id']));
+		$forum_can_view		= $forum['row_type'] & CATEGORY ? get_map( '', 'can_view', array('category_id' => $forum['category_id'])) : get_map( '', 'can_view', array('forum_id' => $forum['forum_id']));
 		
 		$expired			= time() - ini_get('session.gc_maxlifetime');
 
@@ -147,7 +147,7 @@ class K4DefaultAction extends FAAction {
 		/* If we are looking at a category */
 		if($forum['row_type'] & CATEGORY) {
 			
-			if(get_map($request['user'], 'categories', 'can_view', array()) > $request['user']->get('perms')) {
+			if(get_map( 'categories', 'can_view', array()) > $request['user']->get('perms')) {
 				$action = new K4InformationAction(new K4LanguageElement('L_PERMCANTVIEW'), 'content', FALSE);
 				return $action->execute($request);
 			}
@@ -190,7 +190,7 @@ class K4DefaultAction extends FAAction {
 				$request['template']->setFile('content', 'subforums.html');
 			}
 
-			if(get_map($request['user'], 'topics', 'can_view', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
+			if(get_map( 'topics', 'can_view', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
 				$action = new K4InformationAction(new K4LanguageElement('L_CANTVIEWFORUMTOPICS'), 'content_extra', FALSE);
 				return $action->execute($request);
 			}
@@ -204,15 +204,15 @@ class K4DefaultAction extends FAAction {
 			
 			/* Set what this user can/cannot do in this forum */
 			$request['template']->setVar('forum_user_topic_options', sprintf($request['template']->getVar('L_FORUMUSERTOPICPERMS'),
-			iif((get_map($request['user'], 'topics', 'can_add', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN')),
-			iif((get_map($request['user'], 'topics', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN')),
-			iif((get_map($request['user'], 'topics', 'can_del', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN')),
-			iif((get_map($request['user'], 'attachments', 'can_add', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN'))));
+			iif((get_map( 'topics', 'can_add', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN')),
+			iif((get_map( 'topics', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN')),
+			iif((get_map( 'topics', 'can_del', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN')),
+			iif((get_map( 'attachments', 'can_add', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN'))));
 
 			$request['template']->setVar('forum_user_reply_options', sprintf($request['template']->getVar('L_FORUMUSERREPLYPERMS'),
-			iif((get_map($request['user'], 'replies', 'can_add', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN')),
-			iif((get_map($request['user'], 'replies', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN')),
-			iif((get_map($request['user'], 'replies', 'can_del', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN'))));
+			iif((get_map( 'replies', 'can_add', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN')),
+			iif((get_map( 'replies', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN')),
+			iif((get_map( 'replies', 'can_del', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN'))));
 			
 			/* Create an array with all of the possible sort orders we can have */						
 			$sort_orders		= array('name', 'last_post', 'num_replies', 'views', 'reply_uname', 'rating', 'poster_name');

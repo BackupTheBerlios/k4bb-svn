@@ -29,7 +29,7 @@
 * @package k42
 */
 
-error_reporting(E_ALL ^ E_NOTICE);
+
 
 require "includes/filearts/filearts.php";
 require "includes/k4bb/k4bb.php";
@@ -308,7 +308,7 @@ class K4ProfileAction extends FAAction {
 		/* unset any search queries if we are about to go look at this users posts */
 		unset($_SESSION['search_queries']);	
 		
-		if($request['user']->get('perms') < get_map($request['user'],'member_profile','can_view',array())) {
+		if($request['user']->get('perms') < get_map( 'member_profile','can_view',array())) {
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$request['template']->setFile('content', '../login_form.html');
 			$request['template']->setVisibility('no_perms', TRUE);
@@ -526,7 +526,7 @@ class K4MemberList extends FAAction {
 		/* Create the ancestors bar */
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_MEMBERLIST');
 		
-		if(get_map($request['user'], 'memberlist', 'can_view', array()) > $request['user']->get('perms')) {
+		if(get_map( 'memberlist', 'can_view', array()) > $request['user']->get('perms')) {
 			no_perms_error($request);
 			return TRUE;
 		}

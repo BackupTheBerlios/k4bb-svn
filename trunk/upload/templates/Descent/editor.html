@@ -3,7 +3,11 @@
 <a name="editor" id="editor"></a>
 <div class="outset_box_small">
 	<script type="text/javascript">
+		<!--
 		//<![CDATA[
+
+		{$javascript}
+		
 		u_styles_tip			= "{$L_STYLES_TIP}";
 		u_close_tags			= "{$L_BBCODE_CLOSE_TAGS}";
 		u_enter_url				= "{$L_ENTERURL}";
@@ -53,20 +57,18 @@
 		/**
 		 * Initialize the editor
 		 */
-		var can_wysiwyg		= <if:if var="can_wysiwyg" eq="1">true<if:else />false</if:if>;
-		var start_wysiwyg	= <if:if var="start_wysiwyg" eq="1">true<if:else />false</if:if>;
+		var use_wysiwyg		= <if:if var="use_wysiwyg" eq="1">true<if:else />false</if:if>;
 		
 		try {
-			init_wysiwyg('messagecodex', 'wysiwygcodex', can_wysiwyg);
-			bbcodex_init('message', 'message', 10, 100, 'button', can_wysiwyg);
-		} catch(e) {
-			//alert(e.message);
-		}
+			<if:if var="use_wysiwyg" eq="1">init_wysiwyg('messagecodex', 'wysiwygcodex', use_wysiwyg);</if:if>
+			<if:if var="use_bbcode" eq="1">bbcodex_init('message', 'message', 10, 100, 'button', use_wysiwyg);</if:if>
+		} catch(e) { }
 		//]]>
+		//-->
 	</script>
 </if:if>
 </if:if>
-<if:if var="can_wysiwyg" eq="1">
+<if:if var="use_wysiwyg" eq="1">
 	<core:import id="generic_colorpicker" file="generic_colorpicker.html" />
 
 	<maps:if forum="forum_forum_id" var="emoticons" method="can_add">
@@ -93,29 +95,29 @@
 	</maps:if>
 </if:if>
 
-	<core:import id="start_editor" />
+<core:import id="start_editor" />
 
 <if:if var="allowbbcode" eq="1">
 <if:if var="has_bbcode_perms" eq="1">
 	<script type="text/javascript">		
+		<!--
+		
 		try {
 			var editorcodex		= d.getElementById('editorcodex');
 			var e_textarea		= d.getElementById('messagecodex');
-			var wysiwyg_editor	= d.getElementById('wysiwygcodex_area');
+			
 			var bbcode_buttons	= d.getElementById('bbcodex_buttons');
 			var forum_id		= parseInt('{$forum_forum_id}');
 
 			<maps:if forum="forum_forum_id" var="emoticons" method="can_add">menu_init('emoticons_link', 'emoticons_menu');</maps:if>
 			
+			<if:if var="use_wysiwyg" eq="1">
+			var wysiwyg_editor	= d.getElementById('wysiwygcodex_area');
 			populate_wysiwyg('messagecodex', 'wysiwygcodex');
-			if(can_wysiwyg) { 
+			if(use_wysiwyg) { 
 				init_wysiwyg_menus(); 
-			} else { 
-				//init_bbcode_menus();
-			}
-
-			
-			if(start_wysiwyg && can_wysiwyg) {
+			} else { }
+			if(use_wysiwyg) {
 				bbcode_buttons.style.display	= 'none';
 				if(e_textarea) {
 					e_textarea.style.display	= 'none';
@@ -126,11 +128,10 @@
 					e_textarea.style.display	= 'block';
 				}
 			}
+			</if:if>
+		} catch(e) { }
 
-		} catch(e) {
-			//alert(e.message);
-		}
-
+		//-->
 	</script>
 </div>
 </if:if>

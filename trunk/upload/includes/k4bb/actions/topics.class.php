@@ -29,7 +29,7 @@
 * @package k42
 */
 
-error_reporting(E_ALL ^ E_NOTICE);
+
 
 if(!defined('IN_K4')) {
 	return;
@@ -90,7 +90,7 @@ class PostTopic extends FAAction {
 		}
 
 		/* Do we have permission to post to this forum? */
-		if($request['user']->get('perms') < get_map($request['user'], 'topics', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		if($request['user']->get('perms') < get_map( 'topics', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$action = new K4InformationAction(new K4LanguageElement('L_PERMCANTPOST'), 'content', FALSE);
 			return !USE_AJAX ? $action->execute($request) : ajax_message('L_PERMCANTPOST');
 		}
@@ -146,15 +146,15 @@ class PostTopic extends FAAction {
 		 */
 		$topic_type			= isset($_REQUEST['topic_type']) && intval($_REQUEST['topic_type']) != 0 ? $_REQUEST['topic_type'] : TOPIC_NORMAL;
 
-		if($topic_type == TOPIC_STICKY && $request['user']->get('perms') < get_map($request['user'], 'sticky', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		if($topic_type == TOPIC_STICKY && $request['user']->get('perms') < get_map( 'sticky', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$topic_type		= TOPIC_NORMAL;
-		} else if($topic_type == TOPIC_ANNOUNCE && $request['user']->get('perms') < get_map($request['user'], 'announce', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		} else if($topic_type == TOPIC_ANNOUNCE && $request['user']->get('perms') < get_map( 'announce', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$topic_type		= TOPIC_NORMAL;
 		}
 		
 		$is_feature			= isset($_REQUEST['is_feature']) && $_REQUEST['is_feature'] ? 1 : 0;
 		
-		if($is_feature == 1 && $request['user']->get('perms') < get_map($request['user'], 'feature', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		if($is_feature == 1 && $request['user']->get('perms') < get_map( 'feature', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$is_feature		= 0;
 		}
 		
@@ -166,7 +166,7 @@ class PostTopic extends FAAction {
 			/* Does this person have permission to post a draft? */
 			$is_draft = 0;
 			if($_REQUEST['submit_type'] == 'draft' || isset($_REQUEST['draft'])) {
-				if($request['user']->get('perms') < get_map($request['user'], 'post_save', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+				if($request['user']->get('perms') < get_map( 'post_save', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 					$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
 					
 					return $action->execute($request);
@@ -213,7 +213,7 @@ class PostTopic extends FAAction {
 			$insert_a->setInt(5, $request['user']->get('id'));
 			$insert_a->setString(6, USER_IP);
 			$insert_a->setString(7, $body_text);
-			$insert_a->setString(8, iif(($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'));
+			$insert_a->setString(8, iif(($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'));
 			$insert_a->setInt(9, ((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']) ? 1 : 0));
 			$insert_a->setInt(10, ((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']) ? 1 : 0));
 			$insert_a->setInt(11, ((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']) ? 1 : 0));
@@ -253,13 +253,13 @@ class PostTopic extends FAAction {
 				$forum_update->setString(3, $poster_name);
 				$forum_update->setInt(4, $topic_id);
 				$forum_update->setInt(5, $request['user']->get('id'));
-				$forum_update->setString(6, iif(($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'));
+				$forum_update->setString(6, iif(($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'));
 				$forum_update->setInt(7, $created);
 				$forum_update->setString(8, htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
 				$forum_update->setString(9, $poster_name);
 				$forum_update->setInt(10, $topic_id);
 				$forum_update->setInt(11, $request['user']->get('id'));
-				$forum_update->setString(12, iif(($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'));
+				$forum_update->setString(12, iif(($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'));
 				$forum_update->setInt(13, $forum['forum_id']);
 				
 				/**
@@ -364,7 +364,7 @@ class PostTopic extends FAAction {
 								'row_right' => 0,
 								'topic_type' => $topic_type,
 								'is_feature' => $is_feature,
-								'posticon' => (($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))) ? (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif') : 'clear.gif'),
+								'posticon' => (($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))) ? (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif') : 'clear.gif'),
 								'disable_html' => ((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']) ? 1 : 0),
 								'disable_sig' => ((isset($_REQUEST['enable_sig']) && $_REQUEST['enable_sig']) ? 0 : 1),
 								'disable_bbcode' => ((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']) ? 1 : 0),
@@ -458,7 +458,7 @@ class PostDraft extends FAAction {
 		}
 
 		/* Do we have permission to post to this forum? */
-		if($request['user']->get('perms') < get_map($request['user'], 'topics', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		if($request['user']->get('perms') < get_map( 'topics', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$action = new K4InformationAction(new K4LanguageElement('L_PERMCANTPOST'), 'content', FALSE);
 			return !USE_AJAX ? $action->execute($request) : ajax_message('L_PERMCANTPOST');
 		}
@@ -515,15 +515,15 @@ class PostDraft extends FAAction {
 		 */
 		$topic_type			= isset($_REQUEST['topic_type']) && intval($_REQUEST['topic_type']) != 0 ? $_REQUEST['topic_type'] : TOPIC_NORMAL;
 
-		if($topic_type == TOPIC_STICKY && $request['user']->get('perms') < get_map($request['user'], 'sticky', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		if($topic_type == TOPIC_STICKY && $request['user']->get('perms') < get_map( 'sticky', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$topic_type		= TOPIC_NORMAL;
-		} else if($topic_type == TOPIC_ANNOUNCE && $request['user']->get('perms') < get_map($request['user'], 'announce', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		} else if($topic_type == TOPIC_ANNOUNCE && $request['user']->get('perms') < get_map( 'announce', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$topic_type		= TOPIC_NORMAL;
 		}
 
 		$is_feature			= isset($_REQUEST['is_feature']) && $_REQUEST['is_feature'] == 'yes' ? 1 : 0;
 		
-		if($is_feature == 1 && $request['user']->get('perms') < get_map($request['user'], 'feature', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		if($is_feature == 1 && $request['user']->get('perms') < get_map( 'feature', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$is_feature		= 0;
 		}
 		
@@ -554,7 +554,7 @@ class PostDraft extends FAAction {
 			/* Set the topic information */
 			$update_a->setString(1, htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
 			$update_a->setString(2, $body_text);
-			$update_a->setString(3, (($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))) ? (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif') : 'clear.gif'));
+			$update_a->setString(3, (($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))) ? (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif') : 'clear.gif'));
 			$update_a->setInt(4, ((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']) ? 1 : 0));
 			$update_a->setInt(5, ((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']) ? 1 : 0));
 			$update_a->setInt(6, ((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']) ? 1 : 0));
@@ -585,13 +585,13 @@ class PostDraft extends FAAction {
 			$forum_update->setString(3, $poster_name);
 			$forum_update->setInt(4, $draft['topic_id']);
 			$forum_update->setInt(5, $request['user']->get('id'));
-			$forum_update->setString(6, iif(($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'));
+			$forum_update->setString(6, iif(($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'));
 			$forum_update->setInt(7, $created);
 			$forum_update->setString(8, htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
 			$forum_update->setString(9, $poster_name);
 			$forum_update->setInt(10, $draft['topic_id']);
 			$forum_update->setInt(11, $request['user']->get('id'));
-			$forum_update->setString(12, iif(($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'));
+			$forum_update->setString(12, iif(($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'));
 			$forum_update->setInt(13, $forum['forum_id']);
 			
 			/* Set the datastore values */
@@ -681,7 +681,7 @@ class PostDraft extends FAAction {
 								'row_right' => 0,
 								'topic_type' => $topic_type,
 								'is_feature' => $is_feature,
-								'posticon' => (($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))) ? (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif') : 'clear.gif'),
+								'posticon' => (($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))) ? (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif') : 'clear.gif'),
 								'disable_html' => ((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']) ? 1 : 0),
 								'disable_sig' => ((isset($_REQUEST['enable_sig']) && $_REQUEST['enable_sig']) ? 0 : 1),
 								'disable_bbcode' => ((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']) ? 1 : 0),
@@ -822,19 +822,19 @@ class EditTopic extends FAAction {
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_EDITTOPIC', $topic, $forum);
 		
 		if($topic['poster_id'] == $request['user']->get('id')) {
-			if(get_map($request['user'], 'topics', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
+			if(get_map( 'topics', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
 				$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
 				return $action->execute($request);
 			}
 		} else {
-			if(get_map($request['user'], 'other_topics', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
+			if(get_map( 'other_topics', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
 				$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
 				return $action->execute($request);
 			}
 		}
 
 		/* Does this user have permission to edit this topic if it is locked? */
-		if($topic['topic_locked'] == 1 && get_map($request['user'], 'closed', 'can_edit', array('forum_id' => $forum['forum_id'])) > $request['user']->get('perms')) {
+		if($topic['topic_locked'] == 1 && get_map( 'closed', 'can_edit', array('forum_id' => $forum['forum_id'])) > $request['user']->get('perms')) {
 			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
 			return $action->execute($request);
 		}
@@ -945,19 +945,19 @@ class UpdateTopic extends FAAction {
 
 		/* Does this person have permission to edit this topic? */
 		if($topic['poster_id'] == $request['user']->get('id')) {
-			if(get_map($request['user'], $type, 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
+			if(get_map( $type, 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
 				$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
 				return !USE_AJAX ? $action->execute($request) : ajax_message('L_YOUNEEDPERMS');
 			}
 		} else {
-			if(get_map($request['user'], 'other_'. $type, 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
+			if(get_map( 'other_'. $type, 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
 				$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
 				return !USE_AJAX ? $action->execute($request) : ajax_message('L_YOUNEEDPERMS');
 			}
 		}
 		
 		/* Does this user have permission to edit this topic if it is locked? */
-		if($topic['topic_locked'] == 1 && get_map($request['user'], 'closed', 'can_edit', array('forum_id' => $forum['forum_id'])) > $request['user']->get('perms')) {
+		if($topic['topic_locked'] == 1 && get_map( 'closed', 'can_edit', array('forum_id' => $forum['forum_id'])) > $request['user']->get('perms')) {
 			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
 			return !USE_AJAX ? $action->execute($request) : ajax_message('L_YOUNEEDPERMS');
 		}
@@ -985,15 +985,15 @@ class UpdateTopic extends FAAction {
 		$topic_type			= isset($_REQUEST['topic_type']) && intval($_REQUEST['topic_type']) != 0 ? $_REQUEST['topic_type'] : TOPIC_NORMAL;
 		
 		/* Check the topic type and check if this user has permission to post that type of topic */
-		if($topic_type == TOPIC_STICKY && $request['user']->get('perms') < get_map($request['user'], 'sticky', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		if($topic_type == TOPIC_STICKY && $request['user']->get('perms') < get_map( 'sticky', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$topic_type		= TOPIC_NORMAL;
-		} else if($topic_type == TOPIC_ANNOUNCE && $request['user']->get('perms') < get_map($request['user'], 'announce', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		} else if($topic_type == TOPIC_ANNOUNCE && $request['user']->get('perms') < get_map( 'announce', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$topic_type		= TOPIC_NORMAL;
 		}
 		
 		/* Is this a featured topic? */
 		$is_feature			= isset($_REQUEST['is_feature']) && $_REQUEST['is_feature'] == 'yes' ? 1 : 0;
-		if($is_feature == 1 && $request['user']->get('perms') < get_map($request['user'], 'feature', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+		if($is_feature == 1 && $request['user']->get('perms') < get_map( 'feature', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$is_feature		= 0;
 		}
 
@@ -1009,7 +1009,7 @@ class UpdateTopic extends FAAction {
 				$is_poll	= 1;
 			}
 
-			$posticon			= iif(($request['user']->get('perms') >= get_map($request['user'], 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif');
+			$posticon			= iif(($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif');
 			
 			$time				= time();
 			
@@ -1243,12 +1243,12 @@ class DeleteTopic extends FAAction {
 
 		/* Does this person have permission to remove this topic? */
 		if($topic['poster_id'] == $request['user']->get('id')) {
-			if(get_map($request['user'], $type, 'can_del', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
+			if(get_map( $type, 'can_del', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
 				no_perms_error($request);
 				return TRUE;
 			}
 		} else {
-			if(get_map($request['user'], 'other_'. $type, 'can_del', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
+			if(get_map( 'other_'. $type, 'can_del', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
 				no_perms_error($request);
 				return TRUE;
 			}
@@ -1325,7 +1325,7 @@ class LockTopic extends FAAction {
 			return !USE_AJAX ? $action->execute($request) : exit();
 		}
 
-		if(get_map($request['user'], 'closed', 'can_add', array('forum_id' => $forum['forum_id'])) > $request['user']->get('perms')) {
+		if(get_map( 'closed', 'can_add', array('forum_id' => $forum['forum_id'])) > $request['user']->get('perms')) {
 			$request['template']->setFile('content', '../login_form.html');
 			$request['template']->setVisibility('no_perms', TRUE);
 			return !USE_AJAX ? TRUE : exit();

@@ -41,7 +41,7 @@ class K4ShowPMFolder extends FAAction {
 		$check = new K4PMCheckPerms();
 		$check->execute($request);
 
-		if(get_map($request['user'], 'pm_messages', 'can_add', array()) > $request['user']->get('perms')) {
+		if(get_map( 'pm_messages', 'can_add', array()) > $request['user']->get('perms')) {
 			no_perms_error($request, 'usercp_content');
 			return TRUE;
 		}
@@ -135,7 +135,7 @@ class K4CreatePMFolder extends FAAction {
 			return TRUE;
 		}
 
-		if(get_map($request['user'], 'pm_customfolders', 'can_add', array()) > $request['user']->get('perms')) {
+		if(get_map( 'pm_customfolders', 'can_add', array()) > $request['user']->get('perms')) {
 			no_perms_error($request, 'usercp_content');
 			return TRUE;
 		}
@@ -161,7 +161,7 @@ class K4InsertPMFolder extends FAAction {
 		$check = new K4PMCheckPerms();
 		$check->execute($request);
 
-		if(get_map($request['user'], 'pm_customfolders', 'can_add', array()) > $request['user']->get('perms')) {
+		if(get_map( 'pm_customfolders', 'can_add', array()) > $request['user']->get('perms')) {
 			no_perms_error($request, 'usercp_content');
 			return TRUE;
 		}
@@ -215,7 +215,7 @@ class K4EditPMFolder extends FAAction {
 		$check = new K4PMCheckPerms();
 		$check->execute($request);
 
-		if(get_map($request['user'], 'pm_customfolders', 'can_edit', array()) > $request['user']->get('perms')) {
+		if(get_map( 'pm_customfolders', 'can_edit', array()) > $request['user']->get('perms')) {
 			no_perms_error($request, 'usercp_content');
 			return TRUE;
 		}
@@ -263,7 +263,7 @@ class K4UpdatePMFolder extends FAAction {
 		$check = new K4PMCheckPerms();
 		$check->execute($request);
 
-		if(get_map($request['user'], 'pm_customfolders', 'can_edit', array()) > $request['user']->get('perms')) {
+		if(get_map( 'pm_customfolders', 'can_edit', array()) > $request['user']->get('perms')) {
 			no_perms_error($request, 'usercp_content');
 			return TRUE;
 		}
@@ -321,7 +321,7 @@ class K4PreDeleteFolder extends FAAction {
 		$check = new K4PMCheckPerms();
 		$check->execute($request);
 
-		if(get_map($request['user'], 'pm_customfolders', 'can_del', array()) > $request['user']->get('perms')) {
+		if(get_map( 'pm_customfolders', 'can_del', array()) > $request['user']->get('perms')) {
 			no_perms_error($request, 'usercp_content');
 			return TRUE;
 		}
@@ -369,7 +369,7 @@ class K4ComposePMessage extends FAAction {
 		$check = new K4PMCheckPerms();
 		$check->execute($request);
 
-		if(get_map($request['user'], 'pm_message', 'can_add', array()) > $request['user']->get('perms')) {
+		if(get_map( 'pm_message', 'can_add', array()) > $request['user']->get('perms')) {
 			no_perms_error($request, 'usercp_content');
 			return TRUE;
 		}
@@ -473,7 +473,7 @@ class K4SendPMessage extends FAAction {
 		$check = new K4PMCheckPerms();
 		$check->execute($request);
 
-		if(get_map($request['user'], 'pm_message', 'can_add', array()) > $request['user']->get('perms')) {
+		if(get_map( 'pm_message', 'can_add', array()) > $request['user']->get('perms')) {
 			no_perms_error($request);
 			return TRUE;
 		}
@@ -599,7 +599,7 @@ class K4SendPMessage extends FAAction {
 			 * Does this person have permission to post a draft? 
 			 */
 			if(!$draft_loaded && ($_REQUEST['submit_type'] == 'draft' || isset($_REQUEST['draft']))) {
-				if($request['user']->get('perms') < get_map($request['user'], 'pm_message_save', 'can_add', array())) {
+				if($request['user']->get('perms') < get_map( 'pm_message_save', 'can_add', array())) {
 					$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
 					return $action->execute($request);
 				}
@@ -653,7 +653,7 @@ class K4SendPMessage extends FAAction {
 					$insert_a->setString(3, $request['user']->get('name'));
 					$insert_a->setInt(4, $request['user']->get('id'));
 					$insert_a->setString(5, $body_text);
-					$insert_a->setString(6, iif(($request['user']->get('perms') >= get_map($request['user'], 'pm_posticons', 'can_add', array())), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'));
+					$insert_a->setString(6, iif(($request['user']->get('perms') >= get_map( 'pm_posticons', 'can_add', array())), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'));
 					$insert_a->setInt(7, iif((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']), 1, 0));
 					$insert_a->setInt(8, iif((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']), 1, 0));
 					$insert_a->setInt(9, iif((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']), 1, 0));
@@ -1030,7 +1030,7 @@ class K4PMCheckPerms extends FAAction {
 			no_perms_error($request, 'usercp_content');
 			return TRUE;
 		}
-		if($request['user']->get('perms') < get_map($request['user'], 'private_messaging', 'can_view', array())) {
+		if($request['user']->get('perms') < get_map( 'private_messaging', 'can_view', array())) {
 			no_perms_error($request, 'usercp_content');
 			return TRUE;
 		}

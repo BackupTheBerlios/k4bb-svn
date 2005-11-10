@@ -126,7 +126,7 @@ function poll_template(&$text, &$dba, $poll_id, $replace_text, $topic_id, $reply
 			$tpl.= '<input type="hidden" name="topic_id" value="'. intval($topic_id) .'" />';
 			$tpl.= '<input type="hidden" name="reply_id" value="'. intval($reply_id) .'" />';
 		}
-		$tpl	.= '	<div class="k4_borderwrap">';
+		$tpl	.= '	<div class="k4_shadow"><div class="k4_borderwrap">';
 		$tpl	.= '		<div class="k4_maintitle"><a href="viewpoll.php?id='. $question['id'] .'" title="'. $question['question'] .'">'. $question['question'] .'</a></div>';
 		$tpl	.= '		<table width="100%" cellpadding="0" cellspacing="'. K4_TABLE_CELLSPACING .'" border="0" class="k4_table">';
 
@@ -199,7 +199,7 @@ function poll_template(&$text, &$dba, $poll_id, $replace_text, $topic_id, $reply
 		}
 
 		$tpl	.= '		</table>';
-		$tpl	.= '	</div>';
+		$tpl	.= '	</div></div>';
 		
 		if(!$show_results)
 			$tpl.= '</form>';

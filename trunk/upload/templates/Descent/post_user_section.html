@@ -1,31 +1,47 @@
-		<td width="20%" valign="top" <if:if var="topic_row" eq="1">rowspan="2"</if:if> class="alt1">
-			<div class="smalltext">
-				<if:if var="poster_id" eq="0">
-				{$L_GUEST}
-				<if:else />
-					<if:if var="avatarenabled" eq="1"><if:if var="post_user_avatar" eq="1"><if:if var="user_viewavatars" eq="1">
-					<img src="viewfile.php?act=avatar&amp;id={$poster_id}" alt="" border="" />
-					<br /><br />
-					</if:if></if:if></if:if>
-					<if:if var="post_user_group_nicename" noteq="">{$post_user_group_nicename}<br /></if:if>
-					<if:if var="post_user_group_avatar" noteq="">
-					<img src="tmp/upload/group_avatars/{$post_user_group_avatar}" border="0" alt="{$post_user_group_nicename}" />
-					<br /><br />
-					</if:if>
-					<if:if var="post_user_user_title" noteq="">{$post_user_user_title}<br /></if:if>
+<div style="width: 180px;" id="pui_about{$post_user_id}-{$post_id}">
+	<div>
+		<div style="text-align: center;">
+			<if:if var="poster_id" greater="0">
+			<a href="#" title="{$L_PROFILE}" id="post_user_ddmenu_link{$post_id}" style="font-weight: bold;color: #{$post_user_group_color};font-size:14px;{$post_user_background}">{$poster_name}</a>
+			<sup><img src="Images/{$IMG_DIR}/Icons/{$post_user_online}_small.gif" alt="<if:if var="post_user_online" eq="online">{$L_ONLINE}<if:else />{$L_OFFLINE}</if:if>" border="0" /></sup>
+			<if:else />
+			<strong><if:if var="poster_name" eq="">{$L_GUEST}<if:else />{$poster_name}</if:if></strong>
+			</if:if>
+			<core:import id="post_user_ddmenu" file="post_user_ddmenu.html" />
+		</div>
+	</div>
+	<div style="text-align: left;">
+		<div class="smalltext">
+			<br />
+			<if:if var="poster_id" eq="0">
+			{$L_GUEST}
+			<if:else />
+			<if:if var="avatarenabled" eq="1"><if:if var="post_user_avatar" eq="1"><if:if var="user_viewavatars" eq="1">
+			<img src="viewfile.php?act=avatar&amp;id={$poster_id}" alt="" border="" />
+			<br /><br />
+			</if:if></if:if></if:if>
+			
+			<if:if var="post_user_group_avatar" eq="">
+			<if:if var="post_user_group_nicename" noteq="">{$post_user_group_nicename}<br /></if:if>
+			<if:else />
+			<img src="tmp/upload/group_avatars/{$post_user_group_avatar}" border="0" alt="{$post_user_group_nicename}" />
+			<br />
+			</if:if>
+			<if:if var="post_user_user_title" noteq="">{$post_user_user_title}<br /></if:if>
 
-					<strong>{$L_JOINED}:</strong> <core:date format="%b %d %Y">{$post_user_created}</core:date><br />
-					<strong>{$L_POSTS}:</strong> <a href="search.php?act=find&author={$post_user_name}" title="{$L_FINDPOSTSBYUSER}">{$post_user_num_posts}</a>
-					<if:if var="user_location" noteq="">
-					<br /><strong>{$L_LOCATION}:</strong> {$post_user_location}
-					</if:if>
-					<list:sublist list="topic" id="profilefields" column="profilefields">
-					<list:item list="profilefields">
-					<br /><strong>{$title}:</strong></label>
-					{$value}
-					</list:item>
-					</list:sublist>
-				</if:if>
-				<core:import id="post_user_ims" file="post_user_ims.html" />
-			</div>
-		</td>
+			{$L_JOINED}: <core:date format="%b %d %Y">{$post_user_created}</core:date><br />
+			{$L_POSTS}: <a href="search.php?act=find&author={$post_user_name}" title="{$L_FINDPOSTSBYUSER}">{$post_user_num_posts}</a>
+			<if:if var="user_location" noteq="">
+			<br />{$L_LOCATION}: {$post_user_location}
+			</if:if>
+			<list:sublist list="topic" id="profilefields" column="profilefields">
+			<list:item list="profilefields">
+			<br />{$title}:
+			{$value}
+			</list:item>
+			</list:sublist>
+			</if:if>
+			<core:import id="post_user_ims" file="post_user_ims.html" />
+		</div>
+	</div>
+</div>
