@@ -1,0 +1,11 @@
+<if:if var="user_new_pms" greater="0">
+<if:if var="nojs" eq="0">
+<script type="text/javascript">show_newmessage_box({$user_new_pms}, '{$L_NEWPMS}', '{$IMG_DIR}', 'forum_main');</script>
+<if:else />
+<div id="new_pms_box" class="special_panel" style="z-index: 99;border: 0px;position: absolute;top: 0px;right: 0px;padding: 5px;">
+	<span class="smalltext">
+		<a href="member.php?act=usercp&amp;view=pmfolder&amp;folder=1" title=""><img src="Images/{$IMG_DIR}/Icons/icon_latest_reply.gif" alt="" border="0" /><strong>{$user_new_pms}</strong>&nbsp;{$L_NEWPMS}</a>
+	</span>
+</div>
+</if:if>
+</if:if>

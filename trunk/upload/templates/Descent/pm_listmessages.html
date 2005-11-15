@@ -47,7 +47,7 @@
 			<div>
 				<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
 					<tr>
-						<td class="alt3" id="page_jump1"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+						<td class="alt3" id="page_jump1" nowrap="nowrap"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 						<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
 						<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
 						<page:list id="pms_pager" before="3" after="3">
@@ -89,18 +89,18 @@
 			</tr>
 			</list:default>
 			<list:item list="pmessages">
-			<list:switch list="pmessages" var="row_class" a="alt1" b="alt3">
+			<list:switch list="pmessages" var="row_class" a="alt1" b="alt2">
 			<tr>
-				<td class="alt3" style="text-align: center;"><img src="tmp/upload/posticons/{$posticon}" alt="" border="" /></td>
+				<td class="{$row_class}" style="text-align: center;"><img src="tmp/upload/posticons/{$posticon}" alt="" border="" /></td>
 				<td class="{$row_class}">
 					<a href="{$url}"><if:if var="member_has_read" eq="0"><strong></if:if><core:truncate length="40" append="...">{$name}</core:truncate></a><if:if var="member_has_read" eq="0"></strong></if:if></a><br />
 					<span class="smalltext">{$L_FROM} <a href="member.php?id={$poster_id}" title="{$poster_name}">{$poster_name}</a></span>
 				</td>
-				<td class="alt2" style="text-align: center;"><a href="member.php?id={$poster_id}">{$num_replies}</a></td>
+				<td class="{$row_class}" style="text-align: center;"><a href="member.php?id={$poster_id}">{$num_replies}</a></td>
 				<td class="{$row_class}" style="text-align: center;" nowrap="nowrap">
 					<span class="smalltext"><core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span></span>
 				</td>
-				<td class="alt2" style="text-align: center;">
+				<td class="{$row_class}" style="text-align: center;">
 					<span class="cbStyled" id="style_checkbox{$id}"><input type="checkbox" name="pmessage[]" id="pm{$pm_id}" value="{$pm_id}" /></span>
 				</td>
 			</tr>

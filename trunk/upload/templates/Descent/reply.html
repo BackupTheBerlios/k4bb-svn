@@ -1,6 +1,6 @@
 <div class="k4_shadow">
 	<div class="k4_borderwrap">
-		<div class="k4_maintitle" style="overflow: hidden;">			
+		<div class="k4_maintitle">			
 			<div style="float: right;">
 				<if:if var="modpanel" eq="1"><a href="mod.php?act=baniprange&amp;ip={$poster_ip}" title="{$L_BANIP}"><img src="Images/{$IMG_DIR}/Icons/ban_ip.gif" alt="{$L_BANIP}" border="0" /></a></if:if>
 				<a href="viewtopic.php?act=report_post&amp;r={$reply_id}" title="{$L_REPORTPOST}"><img src="Images/{$IMG_DIR}/Icons/report_post.gif" alt="{$L_REPORTPOST}" border="0" /></a>
@@ -73,7 +73,7 @@
 					</if:if>
 					<br /><br />
 				</td>
-				<td class="alt2">
+				<td class="alt2" valign="top">
 					<core:import id="post_user_section" file="post_user_section.html" />
 				</td>
 			</tr>

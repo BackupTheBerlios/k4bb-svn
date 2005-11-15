@@ -2,9 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
 <core:import id="head" file="head.html" />
 <body>
-
 <div align="center">
-	<div align="left" class="forum_base">
+	<div align="left" class="forum_base" id="forum_base">
 		<br />
 		<div class="forum_main" id="forum_main">
 			<core:import id="header" file="header.html" />
@@ -75,13 +74,9 @@
 </div>
 <br />
 <if:if var="copyrighttext" noteq=""><div align="center" class="smalltext">{$copyrighttext}</div></if:if>
+<core:import id="new_pms_box" file="new_pms_box.html" />
 
 <a name="bottom" id="bottom"></a>
-<if:if var="user_new_pms" noteq="0"><if:if var="nojs" eq="0">
-<script type="text/javascript">show_newmessage_box({$user_new_pms}, '{$L_NEWPMS}', '{$IMG_DIR}', 'header_menu');</script>
-<if:else />
-<div id="new_pms_box" class="special_panel" style="z-index: 99;border: 0px;position: absolute;top: 0px;right: 0px;padding: 5px;"><span class="smalltext"><a href="member.php?act=usercp&amp;view=pmfolder&amp;folder=1" title=""><img src="Images/{$IMG_DIR}/Icons/icon_latest_reply.gif" alt="" border="0" />&nbsp;<strong>{$user_new_pms}</strong>&nbsp;{$L_NEWPMS}</a></span></div>
-</if:if></if:if>
 
 <!--
 COPYRIGHT NOTICE
@@ -117,5 +112,15 @@ COPYRIGHT NOTICE
 * @author Geoffrey Goodman
 */
 -->
+
+<!-- Google Analytics -->
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-91810-1";
+urchinTracker();
+</script>
+<!-- / Google Analytics -->
+
 </body>
 </html>

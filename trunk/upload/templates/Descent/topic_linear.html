@@ -1,19 +1,23 @@
 <table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table" id="topic{$topic_id}">
 	<tr>
+		<td class="k4_subtitle" colspan="2">
+			<div style="float: right;">
+				<if:if var="modpanel" eq="1"><a href="mod.php?act=baniprange&amp;ip={$poster_ip}" title="{$L_BANIP}"><img src="Images/{$IMG_DIR}/Icons/ban_ip.gif" alt="{$L_BANIP}" border="0" /></a></if:if>
+				<a href="viewtopic.php?act=report_post&amp;t={$topic_id}" title="{$L_REPORTPOST}"><img src="Images/{$IMG_DIR}/Icons/report_post.gif" alt="{$L_REPORTPOST}" border="0" /></a>
+				<maps:if var="closed" forum="topic_forum_id" method="can_add"><if:if var="topic_locked" eq="0"><img border="0" src="Images/{$IMG_DIR}/Buttons/iconlock.gif" alt="{$L_LOCK}" onclick="updateTopicLocked(this, {$topic_id})" /><if:else /><img border="0" src="Images/{$IMG_DIR}/Buttons/iconlock_lock.gif" alt="{$L_UNLOCK}" onclick="updateTopicLocked(this, {$topic_id})" /></if:if></maps:if>
+			</div>
+			<div align="center">{$L_MESSAGE}</div>
+		</td>
+	</tr>
+	<tr>
 		<td class="alt1" colspan="2" valign="top">
 			<core:import id="post_user_section_linear" file="post_user_section_linear.html" />
 		</td>
 	</tr>
 	<tr>
 		<td class="alt3" colspan="2" id="topic{$topic_id}" valign="top">
-			<div style="float: right" class="smalltext">
-				<core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span>
-				<if:if var="modpanel" eq="1"><a href="mod.php?act=baniprange&amp;ip={$poster_ip}" title="{$L_BANIP}"><img src="Images/{$IMG_DIR}/Icons/ban_ip.gif" alt="{$L_BANIP}" border="0" /></a></if:if>
-				<a href="viewtopic.php?act=report_post&amp;t={$topic_id}" title="{$L_REPORTPOST}"><img src="Images/{$IMG_DIR}/Icons/report_post.gif" alt="{$L_REPORTPOST}" border="0" /></a>
-				<maps:if var="closed" forum="topic_forum_id" method="can_add">
-					<if:if var="topic_locked" eq="0"><img border="0" src="Images/{$IMG_DIR}/Buttons/iconlock.gif" alt="{$L_LOCK}" onclick="updateTopicLocked(this, {$topic_id})" /><if:else /><img border="0" src="Images/{$IMG_DIR}/Buttons/iconlock_lock.gif" alt="{$L_UNLOCK}" onclick="updateTopicLocked(this, {$topic_id})" /></if:if>
-				</maps:if>
-			</div>
+			
+			<hr noshade="noshade" size="1" />
 			
 			<!-- Body Text -->
 			<div id="topic{$topic_id}_body">{$body_text}</div>

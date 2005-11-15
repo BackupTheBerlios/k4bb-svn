@@ -1,6 +1,6 @@
 <div class="k4_shadow">
 	<div class="k4_borderwrap">
-		<div class="k4_maintitle" style="overflow: hidden;">			
+		<div class="k4_maintitle">			
 			<div style="float: right;">
 				<if:if var="modpanel" eq="1"><a href="mod.php?act=baniprange&amp;ip={$poster_ip}" title="{$L_BANIP}"><img src="Images/{$IMG_DIR}/Icons/ban_ip.gif" alt="{$L_BANIP}" border="0" /></a></if:if>
 				<a href="viewtopic.php?act=report_post&amp;r={$reply_id}" title="{$L_REPORTPOST}"><img src="Images/{$IMG_DIR}/Icons/report_post.gif" alt="{$L_REPORTPOST}" border="0" /></a>
@@ -64,24 +64,6 @@
 								<div style="float: right;" class="minitext">md5: {$mdfive}</div>
 								<img src="{$file_icon}" alt="{$L_ATTACHMENT}: {$file_name}" border="0" />&nbsp;<a href="viewfile.php?act=attachment&amp;id={$id}&amp;r={$reply_id}" target="_blank" title="{$L_ATTACHMENT}: {$file_name}" class="smalltext">{$file_name}</a>
 								<if:if var="modpanel" eq="1"><maps:if var="attachments" method="can_del" forum="forum_id"> - <a href="viewfile.php?act=remove_attach&amp;id={$id}&amp;r={$reply_id}" title="{$L_REMOVEATTACHMENT}" class="minitext">{$L_REMOVEATTACHMENT}</a></maps:if></if:if>
-								<list:separator list="attachment_files"><br /></list:separator>
-								</list:item>
-								</list:sublist>
-							</fieldset>
-							<!-- / Attached Files -->
-						</maps:if>
-					</if:if>
-
-					<if:if var="attachments" geq="1">
-						<maps:if var="attachments" forum="topic_forum_id" method="can_view">
-							<br /><br />
-							<!-- Attached Files -->
-							<fieldset>
-								<legend>{$L_ATTACHMENTS}</legend>
-								<list:sublist list="topic" id="attachment_files" column="attachment_files">
-								<list:item list="attachment_files">
-								<div style="float: right;" class="minitext">md5: {$mdfive}</div>
-								<img src="{$file_icon}" alt="{$L_ATTACHMENT}: {$file_name}" border="0" />&nbsp;<a href="viewfile.php?act=attachment&amp;id={$reply_id}&amp;t={$topic_id}" target="_blank" title="{$L_ATTACHMENT}: {$file_name}" class="smalltext">{$file_name}</a>
 								<list:separator list="attachment_files"><br /></list:separator>
 								</list:item>
 								</list:sublist>
