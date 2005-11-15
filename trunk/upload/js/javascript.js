@@ -34,14 +34,16 @@ var d			= new k4lib()
 /**
  * Show a div when there are new private messages
  */
-function show_newmessage_box(num_messages, text_to_write, img_dir, menu_id) {
-	var menu = d.getElementById(menu_id);
+function show_newmessage_box(num_messages, text_to_write, img_dir, go_in_id) {
+	var go_in = d.getElementById(go_in_id);
 	
-	if(menu && parseInt(num_messages) > 0) {
-		document.write('<div id="new_pms_box" class="special_panel" style="z-index: 99;border: 0px;position: absolute;top: ' + d.bottom(menu) + 'px;padding: 5px;"><span class="smalltext"><a href="member.php?act=usercp&amp;view=pmfolder&amp;folder=1" title=""><img src="Images/' + img_dir + '/Icons/icon_latest_reply.gif" alt="" border="0" />&nbsp;<strong>' + parseInt(num_messages) + '</strong> ' + text_to_write + '</a></span></div>');
-		new_pms_box = d.getElementById('new_pms_box');
+	if(go_in && parseInt(num_messages) > 0) {
+		
+		document.writeln('<div id="new_pms_box" class="special_panel" style="z-index: 99;border: 0px;position: absolute;top: ' + d.top(go_in) + 'px;padding: 5px;"><span class="smalltext"><a href="member.php?act=usercp&amp;view=pmfolder&amp;folder=1" title=""><img src="Images/' + img_dir + '/Icons/icon_latest_reply.gif" alt="" border="0" />&nbsp;<strong>' + parseInt(num_messages) + '</strong> ' + text_to_write + '</a></span></div>');
+		var new_pms_box = d.getElementById('new_pms_box');
+		
 		if(new_pms_box) {
-			new_pms_box.style.left = parseInt(d.width(new_pms_box) - d.width(menu) - 1) + 'px'; // -1 for the border
+			new_pms_box.style.left = parseInt(d.right(go_in) - d.width(new_pms_box) - 1) + 'px';
 		}
 	}
 }
@@ -169,69 +171,6 @@ function collect_topics(id) {
 		
 		input.value = str;
 	}	
-}
-
-/**
- * Inline topic title Moderation
- */
-var edit_mode		= false;
-var edit_topic_id	= false;
-var edit_topic_area = false;
-var being_edited	= new Array();
-
-function close_edit_mode() {
-	edit_mode		= false;
-	edit_topic_id	= false;
-	edit_topic_area = false;
-}
-
-function adv_edit(topic_id, div_id) {
-	var topic_area	= d.getElementById(div_id + '_area');
-	
-	if(topic_area) {
-		try {
-			topic_area.ondblclick = function(e) {
-				
-				if(edit_mode || edit_topic_id && topic_id != edit_topic_id) {
-					alert('One at a time please.');
-				} else {
-
-					edit_mode		= 'topic' + topic_id + '_name';
-					edit_topic_id	= topic_id;
-					edit_topic_area = div_id;
-					getTopicTitle(topic_id);
-				}
-			}
-						
-		} catch(e) {
-			alert(e.message);
-		}
-	}
-}
-
-function disable_edit_mode(e) {
-	
-	if(edit_mode && edit_topic_id && edit_topic_area) {
-		
-		if(!e) {
-			e = window.event;
-		}
-
-		topic_area	= d.getElementById(edit_mode);
-		
-		if(e.clientX < d.left(topic_area) ||
-			e.clientX > d.right(topic_area) ||
-			e.clientY < d.top(topic_area) ||
-			e.clientY > d.bottom(topic_area)
-			) {
-			
-			// update the topic name
-			updateTopicTitle(edit_mode, edit_topic_id, edit_topic_area);
-			
-			// reset all of the adv. edit vars
-			//edit_mode = edit_topic_id = edit_topic_area = false;
-		}
-	}
 }
 
 /**

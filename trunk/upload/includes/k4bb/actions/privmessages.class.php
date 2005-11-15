@@ -905,7 +905,7 @@ class K4SelectPMMoveFolder extends FAAction {
 		foreach($_REQUEST['pmessage'] as $pm_id) {
 			
 			$pm_ids .= $prefix .' pm_id = '. intval($pm_id);
-			$prefix = 'OR';
+			$prefix = ' OR';
 		}
 
 		$result		= $request['dba']->executeQuery("SELECT * FROM ". K4PRIVMESSAGES ." WHERE member_id = ". intval($request['user']->get('id')) ." AND ($pm_ids)");

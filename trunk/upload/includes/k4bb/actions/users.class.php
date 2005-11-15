@@ -61,7 +61,7 @@ class ValidateUserByEmail extends FAAction {
 				return TRUE;
 			}
 			
-			$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET reg_key = '', perms = ". MEMBER .", usergroups = 'a:1:{i:0;i:2;}' WHERE id = ". intval($u['id']));
+			$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET reg_key = '', perms = ". MEMBER .", usergroups = '2' WHERE id = ". intval($u['id']));
 			
 			$action = new K4InformationAction(new K4LanguageElement('L_REGVALIDATEDEMAIL'), 'content', FALSE, 'index.php', 3);
 

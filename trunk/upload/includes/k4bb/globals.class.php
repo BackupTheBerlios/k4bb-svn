@@ -29,22 +29,8 @@
 * @package k42
 */
 
-
-
-if(!defined('IN_K4')) {
+if(!defined('IN_K4'))
 	return;
-}
-
-class AnonymousClass {
-	function AnonymousClass($methods) {
-		
-		if(is_array($methods)) {
-			foreach($methods as $var => $val) {
-				$this->$var		= $val;
-			}
-		}
-	}
-}
 
 class GlobalsStack {
 	var $globals = array();
@@ -54,7 +40,7 @@ class GlobalsStack {
 	}
 
 	function push($varname, $value) {
-		return $this->globals[$varname] = $value;
+		return $this->globals[$varname] = &$value;
 	}
 
 	function pop($varname) {
@@ -63,7 +49,7 @@ class GlobalsStack {
 }
 
 class Globals {
-	function getStack() {
+	function &getStack() {
 		static $instance = NULL;
 
 		if ($instance == NULL)

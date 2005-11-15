@@ -87,16 +87,14 @@ k4lib.prototype.getElementsByTagName	= function(parentobj, tagname) {
  * Boolean true or false if a value is in an array
  */
 k4lib.prototype.in_array				= function(thearray, needle) {
-	
 	var bool				= false;
-	
-	for (var i = 0; i < this.sizeof(thearray); i++) {
-		
-		if (thearray[i] == needle) {
-			bool			= true;
+	for(key in thearray) {
+		if(bool)
+			break;
+		if(thearray[key] == needle) {
+			bool = true;
 		}
 	}
-
 	return bool;
 }
 
@@ -104,17 +102,15 @@ k4lib.prototype.in_array				= function(thearray, needle) {
  * Return the array key of a value
  */
 k4lib.prototype.array_key				= function(thearray, needle) {
-	
-	var key				= 0;
-	
-	for (var i = 0; i < this.sizeof(thearray); i++) {
-		
-		if (thearray[i] == needle) {
-			key			= i;
+	var the_key				= false;
+	for(key in thearray) {
+		if(the_key)
+			break;
+		if(key == needle) {
+			the_key = key;
 		}
 	}
-
-	return key;
+	return the_key;
 }
 
 /**
@@ -436,160 +432,181 @@ k4lib.prototype.get_event_target = function(e) {
 }
 
 /**
- * k4 AJAX/XML-RPC object handler
+ * k4BB XMLHttpRequest Class and related functions
+ * @author Peter Goodman
  */
-function k4http() {
-	this.d			= new k4lib();
-	this.request	= null;
-	this.state		= 0;
-	this.status		= 200;
-	this.response	= '';
-	this.state_handler = null;
-}
-
-/* Initiate a http request object */
-k4http.prototype.init	= function() {
-	if(typeof this.request == 'undefined' || this.request == null) {
+function k4XMLHttpRequest() {
+	
+	// public functions
+	this.InitRequest	= InitRequest;
+	this.Open			= Open;
+	this.Close			= Close;
+	this.Send			= Send;
+	this.setRequestType = setRequestType;
+	this.getResponseText= getResponseText;
+	this.getResponseXML	= getResponseXML;
+	this.getReadyState	= getReadyState;
+	this.getStatus		= getStatus;
+	this.getStatusText	= getStatusText;
+	this.stateChanger	= stateChanger;
+	
+	// state handlers
+	this.loadingState	= new Function();
+	this.errorState		= new Function();
+	this.successState	= new Function();
 		
-		if(window.XMLHttpRequest) {
-			
-			// create an XML HTTP Request object
-			this.request = new XMLHttpRequest();
-
-		} else if(window.ActiveXObject) { 
-			
-			// define control types for the ActiveX object
-			var control_types = new Array(
-											'MSXML2.XMLHTTP.5.0',
-											'MSXML2.XMLHTTP.4.0',
-											'MSXML2.XMLHTTP.3.0',
-											'MSXML2.XMLHTTP',
-											'Microsoft.XMLHTTP'
-											);
-			
-			// loop through and try to instanciate an ActiveX object
-			for (var i = 0; i < d.sizeof(control_types) && (typeof this.request == 'undefined' || this.request == null); i++) {
-				try {
-					this.request = new ActiveXObject(control_types[i]);
-				} catch (e) { 
-					this.request = null; 
+	// general variables
+	var _request		= false;
+	var _request_type	= 'POST' // default send type
+	var _this			= this; // private object instance
+		
+	/**
+	 * Initialize the request object
+	 */
+	function InitRequest() {
+		if(!_request) {
+			if(window.XMLHttpRequest) {
+				_request = new XMLHttpRequest();
+			} else if(window.ActiveXObject) { 
+				var control_types = new Array('MSXML2.XMLHTTP.5.0','MSXML2.XMLHTTP.4.0','MSXML2.XMLHTTP.3.0','MSXML2.XMLHTTP','Microsoft.XMLHTTP');
+				for (var i = 0; i < 5 && (typeof(_request) == 'undefined' || _request == false); i++) {
+					_request = new ActiveXObject(control_types[i]);
 				}
 			}
 		}
 	}
-}
 
-/* Close a request object */
-k4http.prototype.close	= function() {
-	if(typeof this.request != 'undefined' && this.request != null) {
-		this.request.abort();
-		this.request		= null;
-		this.r_state		= 1;
-		this.r_status		= 200;
-		this.r_response		= '';
-		this.state_handler	= null;
-	}
-}
-
-/* Function to open a request */
-k4http.prototype.open	= function(method, url, flag) {
-	if(typeof this.request != 'undefined' && this.request != null) {
-		
-		method	= (method == 'POST' ? 'POST' : 'GET');
-		flag	= typeof flag != 'undefined' ? flag : false;
-		
-		// some redundant checking
-		if(method != null && url != null) {
+	/**
+	 * Open a request
+	 */
+	function Open(url, asyno_flag) {
+		if(!_request || typeof(_request) == 'undefined') {
+			InitRequest();
+		}
+		if(_request && typeof(url) != 'undefined' && url != '' && typeof(_request) != 'undefined') {
+			// reset the state handlers so there's no overlapping
+			_this.loadingState = _this.errorState = _this.successState = new Function();
 			
-			// open a request
-			this.request.open(method, url, flag);
-			
-			// set the request header format
-			this.set_header();
+			// open the request
+			_request.open(_request_type, url, asyno_flag);
+			_request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 		}
 	}
-}
 
-/* Function to set the request header */
-k4http.prototype.set_header	= function() {
-	if(typeof this.request != 'undefined' && this.request != null) {
-		this.request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	/**
+	 * Function to close a request
+	 */
+	function Close() {
+		if(_request && typeof(_request) != 'undefined') {
+			_request.abort();
+			_request = false;
+		}
 	}
-}
 
-/* Function to set the current ready-state status */
-k4http.prototype.change_ready_state = function() {
-	if(typeof this.request != 'undefined' && this.request != null) {
-//		this.state		= (typeof this.request.readyState != 'undefined' && this.request.readyState ? this.request.readyState : 0);
-//		this.status		= (typeof this.request.status != 'undefined' && this.request.status ? this.request.status : 0);
-//		this.response	= (typeof this.request.responseText != 'undefined' && this.request.responseText ? this.request.responseText : '');
-	
-		if(this.request.readyState && typeof this.request.readyState != 'undefined') this.r_state = this.request.readyState;
-		if(this.request.status && typeof this.request.status != 'undefined') this.r_status = this.request.status;
-		if(this.request.responseText && typeof this.request.responseText != 'undefined') this.r_response = this.request.responseText;
+	/**
+	 * Function to send data over http asynchronously
+	 */
+	function Send(data) {
+		if(_request && typeof(_request) != 'undefined') {
+			_request.onreadystatechange = stateChanger;
+			_request.send(data);
+		}
 	}
-}
 
-/* Create a ready-state-change function */
-k4http.prototype.set_handler = function() {
-	
-	// add a function to the ready state change handler
-	if(this.request != null) {
-		
-		this.request.onreadystatechange = this.state_handler;
-
-//		this.request.onreadystatechange = function() { 
-//			
-//			if(r.state_handler != null) {
-//
-//				// get the state and status, need to use 'r' here because we are within a sub-function
-//				//r.change_ready_state();
-//				
-//				// evaluate the state change handling function
-//				eval(r.state_handler);
-//			}
-//		}
+	/**
+	 * Function to set the request type
+	 */
+	function setRequestType(request_type) {
+		if(request_type && typeof(request_type) != null) {
+			_request_type = request_type;
+		}
 	}
-}
 
-/* Function to send data */
-k4http.prototype.send	= function(data_string) {
-	
-	if(this.request != null) {
-		// set the handling functions
-		this.set_handler();
-		
-		if(typeof data_string == 'string') {
-			this.request.send(data_string);
-		} else {
-			if(!this.d.is_ie) {
-				this.request.send(null);
-			} else {
-				this.request.send();
+	/**
+	 * Function to return the response text from the request
+	 */
+	function getResponseText() {
+		var response_text = null;
+		if(_request && typeof(_request) != 'undefined') {
+			if(_request.responseText && typeof(_request.responseText) != 'undefined') {
+				response_text = _request.responseText;
 			}
 		}
+		return response_text;
 	}
-}
 
-/* Function to evaluate a function */
-k4http.prototype.evaluate_function = function(function_name, arguments) {
-	var str = '';
-	var args = arguments;
-	
-	for(var i = 0; i < this.d.sizeof(args); i++) {
-		
-		switch(typeof args[i]) {
-			case 'string': args[i] = "'" + args[i] + "'"; break;
-			case 'object': alert('Error: cannot complete function evaluation.'); break;
-			case 'boolean':
-			case 'integer': arguments[i] = parseInt(args[i]); break;
-			default: alert('Unknown argument type for function evaluation.');
+	/**
+	 * Function to return the response text from the request
+	 */
+	function getResponseXML() {
+		var response_xml = null;
+		if(_request && typeof(_request) != 'undefined') {
+			if(_request.responseXML && typeof(_request.responseXML) != 'undefined') {
+				response_xml = _request.responseXML;
+			}
 		}
-		
-		str += args[i] + ",";
+		return response_xml;
 	}
 	
-	//str		= str.length > 1 ? str.substring(1) : str;
-	alert(function_name + "(" + str + ");");
-	//return eval(function_name + "(" + str + ");");
+	/**
+	 * Function to get the ready state from the request
+	 */
+	function getReadyState() {
+		var ready_state = 0;
+		if(_request && typeof(_request) != 'undefined') {
+			if(_request.readyState && typeof(_request.readyState) != 'undefined') {
+				ready_state = parseInt(_request.readyState);
+			}
+		}
+		return ready_state;
+	}
+
+	/**
+	 * Function to get the numerical status of the request
+	 */
+	function getStatus() {
+		var respose_status = 404;
+		if(_request && typeof(_request) != 'undefined') {
+			if(_request.status && typeof(_request.status) != 'undefined') {
+				response_status = parseInt(_request.status);
+			}
+		}
+		return response_status;
+	}
+
+	/**
+	 * Function to get the status text from a response
+	 */
+	function getStatusText() {
+		var response_status_text = '';
+		if(_request && typeof(_request) != 'undefined') {
+			if(_request.statusText && typeof(_request.statusText) != 'undefined') {
+				response_status_text = _request.statusText;
+			}
+		}
+		return response_status_text;
+	}
+
+	/**
+	 * Function to handle state changes
+	 */
+	function stateChanger() {
+		if(_request && typeof(_request) != 'undefined') {
+			
+			var ready_state = getReadyState();
+			if(ready_state < 4) {
+				_this.loadingState();
+			}
+			if(ready_state == 4) {
+				var status = getStatus();
+				if(status == 404) {
+					_this.errorState();
+				} else {
+					_this.successState();
+				}
+			}
+		} else {
+			_this.errorState();
+		}
+	}
 }

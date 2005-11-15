@@ -29,8 +29,6 @@
 * @package k4-2.0-dev
 */
 
-
-
 if(!defined('IN_K4')) {
 	return;
 }
@@ -41,11 +39,11 @@ class K4OnlineUsersIterator extends FAProxyIterator {
 	var $bots;
 	var $result;
 	
-	function K4OnlineUsersIterator(&$dba, $extra = NULL, $result = FALSE) {
+	function K4OnlineUsersIterator(&$dba, $extra = NULL, &$result) {
 		$this->__construct($dba, $extra, $result);
 	}
 
-	function __construct(&$dba, $extra = NULL, $result = FALSE) {
+	function __construct(&$dba, $extra = NULL, &$result) {
 		global $_CONFIG, $_QUERYPARAMS, $_USERGROUPS;
 		
 		$this->groups	= $_USERGROUPS;
@@ -54,9 +52,9 @@ class K4OnlineUsersIterator extends FAProxyIterator {
 
 		//$query			= "SELECT ". $_QUERYPARAMS['user'] . $_QUERYPARAMS['session'] ." FROM ". K4USERS ." u,". K4SESSIONS ." s WHERE s.seen >= $expired AND ((u.id = s.user_id) OR (s.user_id = 0 AND s.name <> '')) $extra GROUP BY s.name ORDER BY s.seen DESC"; // GROUP BY s.user_id
 		$query			= "SELECT * FROM ". K4SESSIONS ." WHERE seen >= $expired AND ((user_id > 0) OR (user_id = 0 AND name <> '')) $extra GROUP BY name ORDER BY seen DESC";
-		$this->result	= !$result ? $this->dba->executeQuery($query) : $result;
+		$this->result	= &$result;
 
-		Globals::setGlobal('num_online_members', $this->result->numRows());
+		Globals::setGlobal('num_online_members', $this->result->numrows());
 		Globals::setGlobal('num_online_invisible', 0);
 
 		parent::__construct($this->result);
