@@ -14,6 +14,7 @@
 						<br />
 						<if:if var="post_user_group_nicename" noteq="">{$post_user_group_nicename}<br /></if:if>
 						<if:if var="post_user_group_avatar" noteq=""><img src="tmp/upload/group_avatars/{$post_user_group_avatar}" border="0" alt="{$post_user_group_nicename}" /></if:if>
+						<if:if var="post_user_user_title" noteq=""><br />{$post_user_user_title}</if:if>
 						<if:else />
 						<strong><if:if var="poster_name" eq="">{$L_GUEST}<if:else />{$poster_name}</if:if></strong>
 						<br /><span class="smalltext">{$L_GUEST}</span>
@@ -24,7 +25,6 @@
 					<td class="smalltext" width="80%">
 						<div align="right">
 							<core:import id="post_user_ims" file="post_user_ims.html" />
-							<if:if var="post_user_user_title" noteq=""><br />{$post_user_user_title}</if:if>
 							<strong>{$L_JOINED}:</strong> <core:date format="%b %d %Y">{$post_user_created}</core:date><br />
 							<strong>{$L_POSTS}:</strong> <a href="search.php?act=find&author={$post_user_name}" title="{$L_FINDPOSTSBYUSER}">{$post_user_num_posts}</a>
 							<if:if var="user_location" noteq="">

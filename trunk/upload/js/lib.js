@@ -469,8 +469,12 @@ function k4XMLHttpRequest() {
 				_request = new XMLHttpRequest();
 			} else if(window.ActiveXObject) { 
 				var control_types = new Array('MSXML2.XMLHTTP.5.0','MSXML2.XMLHTTP.4.0','MSXML2.XMLHTTP.3.0','MSXML2.XMLHTTP','Microsoft.XMLHTTP');
-				for (var i = 0; i < 5 && (typeof(_request) == 'undefined' || _request == false); i++) {
-					_request = new ActiveXObject(control_types[i]);
+				for (var i = 0; i < 5 && (typeof(_request) == 'undefined' || !_request); i++) {
+					try {
+						_request = new ActiveXObject(control_types[ i ]);
+					} catch(e) { 
+						_request = false; 
+					}
 				}
 			}
 		}

@@ -77,7 +77,7 @@ class K4SqlDebugPreFilter extends FAFilter {
 		
 		$request['template']->setVar('debug_url', $url->__toString());
 		
-		if (isset($_GET['debug'])) {
+		if (isset($_GET['debug']) && $request['user']->get('perms') >= ADMIN) {
 			$request['dba'] = &new K4SqlDebugger($request['dba']);
 		}
 	}

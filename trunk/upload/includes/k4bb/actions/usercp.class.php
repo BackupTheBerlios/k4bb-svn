@@ -293,7 +293,7 @@ class K4UserCPOptions extends FAAction {
 
 		$request['template']->setList('languages', new FAArrayIterator(get_files(K4_BASE_DIR .'/lang/', TRUE)));
 		$request['template']->setList('imagesets', new FAArrayIterator(get_files(BB_BASE_DIR .'/Images/', TRUE, FALSE, array('admin'))));
-		$request['template']->setList('templatesets', new FAArrayIterator(get_files(BB_BASE_DIR .'/templates/', TRUE)));
+		$request['template']->setList('templatesets', new FAArrayIterator(get_files(BB_BASE_DIR .'/templates/', TRUE, FALSE, array('Archive','RSS'))));
 		$request['template']->setList('stylesets', $result);
 
 		$request['template']->setFile('usercp_content', 'usercp_options.html');

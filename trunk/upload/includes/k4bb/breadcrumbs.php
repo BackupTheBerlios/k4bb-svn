@@ -141,21 +141,21 @@ function follow_forum_ids($breadcrumbs, $forum) {
 	
 	switch($forum['row_type']) {
 		/* Categories and forums */
-		case 1: {
+		case CATEGORY: {
 			$forum['location'] = 'viewforum.php?c='. $forum['category_id'];
 			break;
 		}
-		case 2: {
+		case FORUM: {
 			$forum['location'] = 'viewforum.php?f='. $forum['forum_id'];
 			break;
 		}
 		/* Gallery Category */
-		case 16: {
+		case GALLERY: {
 			$forum['location'] = 'viewgallery.php?id='. $forum['forum_id'];
 			break;
 		}
 		/* Gallery Image */
-		case 32: {
+		case IMAGE: {
 			$forum['location'] = 'viewimage.php?id='. $forum['forum_id'];
 			break;
 		}

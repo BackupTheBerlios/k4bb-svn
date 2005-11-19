@@ -100,6 +100,7 @@ $_LANG += array(
 'L_GOTOINBOX'			=> 'Go to Inbox',
 'L_CLICKTONOTWAIT'		=> 'Click here to proceed without waiting.',
 'L_PMUSER'				=> 'Private Message User',
+'L_RSS'					=> 'RSS',
 
 /* User Titles */
 'L_JUNIORMEMBER'		=> 'Junior Member',
@@ -307,7 +308,7 @@ $_LANG += array(
 'L_LOOKUP'				=> 'Look Up',
 'L_MODERATOR'			=> 'Moderator',
 'L_MEMBERS'				=> 'Members',
-'L_ADDUSER'				=> 'Add user to group',
+'L_ADDUSERTOGROUP'		=> 'Add user to group',
 'L_REMOVEUSER'			=> 'Remove user from group',
 
 /* Report a post */

@@ -829,6 +829,10 @@ $_LANG += array(
 'L_UPDATEDUSERTITLE'	=> 'Successfully update the user title for <strong>%s</strong>.',
 /* / User Titles */
 
+/* Create a User */
+'L_ADDUSER'				=> 'Add User',
+/* / Create a User */
+
 );
 
 ?>

@@ -190,7 +190,7 @@ class K4DefaultAction extends FAAction {
 				$request['template']->setFile('content', 'subforums.html');
 			}
 
-			if(get_map( 'topics', 'can_view', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
+			if(get_map( 'topics', 'can_view', array('forum_id' => $forum['forum_id'])) > $request['user']->get('perms')) {
 				$action = new K4InformationAction(new K4LanguageElement('L_CANTVIEWFORUMTOPICS'), 'content_extra', FALSE);
 				return $action->execute($request);
 			}

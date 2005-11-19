@@ -51,6 +51,209 @@ class AdminUsers extends FAAction {
 	}
 }
 
+class AdminAddUser extends FAAction {
+	function execute(&$request) {		
+		
+		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERS');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
+			
+			$result = $request['dba']->executeQuery("SELECT * FROM ". K4STYLES);
+
+			$request['template']->setList('languages', new FAArrayIterator(get_files(K4_BASE_DIR .'/lang/', TRUE)));
+			$request['template']->setList('imagesets', new FAArrayIterator(get_files(BB_BASE_DIR .'/Images/', TRUE, FALSE, array('admin'))));
+			$request['template']->setList('templatesets', new FAArrayIterator(get_files(BB_BASE_DIR .'/templates/', TRUE, FALSE, array('Archive','RSS'))));
+			$request['template']->setList('stylesets', $result);
+			
+			$request['template']->setFile('content', 'users_add.html');
+		} else {
+			no_perms_error($request);
+		}
+
+		return TRUE;
+	}
+}
+
+class AdminInsertUser extends FAAction {
+	function execute(&$request) {		
+		
+		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERS');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
+			
+			/* Collect the custom profile fields to display */
+			$query_fields	= '';
+			$query_params	= '';
+		
+			foreach($_PROFILEFIELDS as $field) {
+				if($field['display_register'] == 1) {
+					
+					/* This insures that we only put in what we need to */
+					if(isset($_REQUEST[$field['name']])) {
+						
+						switch($field['inputtype']) {
+							default:
+							case 'text':
+							case 'textarea':
+							case 'select': {
+								if($_REQUEST[$field['name']] != '') {
+									$query_fields	.= ', '. $field['name'];
+									$query_params	.= ", '". $request['dba']->quote(htmlentities($_REQUEST[$field['name']], ENT_QUOTES)) ."'";
+								}
+								break;
+							}
+							case 'multiselect':
+							case 'radio':
+							case 'check': {
+								if(is_array($_REQUEST[$field['name']]) && !empty($_REQUEST[$field['name']])) {
+									$query_fields	.= ', '. $field['name'];
+									$query_params	.= ", '". $request['dba']->quote(serialize($_REQUEST[$field['name']])) ."'";
+								}
+								break;
+							}
+						}						
+					}
+				}
+			}
+			
+			/**
+			 * Error checking
+			 */
+
+			/* Username checks */
+			if (!$this->runPostFilter('username', new FARequiredFilter)) {
+				$action = new K4InformationAction(new K4LanguageElement('L_BADUSERNAME'), 'content', TRUE);
+				return !USE_AJAX ? TRUE : ajax_message('L_BADUSERNAME');
+			}
+			
+			if (!$this->runPostFilter('username', new FARegexFilter('~^[a-zA-Z]([a-zA-Z0-9]*[-_ ]?)*[a-zA-Z0-9]*$~'))) {
+				$action = new K4InformationAction(new K4LanguageElement('L_BADUSERNAME'), 'content', TRUE);
+				return !USE_AJAX ? TRUE : ajax_message('L_BADUSERNAME');
+			}
+			if (!$this->runPostFilter('username', new FALengthFilter(intval($_SETTINGS['maxuserlength'])))) {
+				$action = new K4InformationAction(new K4LanguageElement('L_USERNAMETOOLONG', intval($_SETTINGS['maxuserlength'])), 'content', TRUE);
+				return !USE_AJAX ? TRUE : ajax_message('L_USERNAMETOOSHORT');
+			}
+			if (!$this->runPostFilter('username', new FALengthFilter(intval($_SETTINGS['maxuserlength']), intval($_SETTINGS['minuserlength'])))) {
+				$action = new K4InformationAction(new K4LanguageElement('L_USERNAMETOOSHORT', intval($_SETTINGS['minuserlength']), intval($_SETTINGS['maxuserlength'])), 'content', TRUE);
+				return !USE_AJAX ? TRUE : ajax_message(new K4LanguageElement('L_USERNAMETOOSHORT', intval($_SETTINGS['minuserlength']), intval($_SETTINGS['maxuserlength'])));
+			}
+
+			if($request['dba']->getValue("SELECT COUNT(*) FROM ". K4USERS ." WHERE name = '". $request['dba']->quote($_REQUEST['username']) ."'") > 0) {
+				$action = new K4InformationAction(new K4LanguageElement('L_USERNAMETAKEN'), 'content', TRUE);
+				return !USE_AJAX ? TRUE : ajax_message('L_USERNAMETAKEN');
+			}
+			
+			if($request['dba']->getValue("SELECT COUNT(*) FROM ". K4BADUSERNAMES ." WHERE name = '". $request['dba']->quote($_REQUEST['username']) ."'") > 0) {
+				$action = new K4InformationAction(new K4LanguageElement('L_USERNAMENOTGOOD'), 'content', TRUE);
+				return !USE_AJAX ? TRUE : ajax_message('L_USERNAMENOTGOOD');
+			}
+			
+			/* Check the appropriatness of the username */
+			$name		= $_REQUEST['username'];
+			replace_censors($name);
+
+			if($name != $_REQUEST['username']) {
+				$action = new K4InformationAction(new K4LanguageElement('L_INNAPROPRIATEUNAME'), 'content', TRUE);
+				return !USE_AJAX ? TRUE : ajax_message('L_INNAPROPRIATEUNAME');
+			}
+
+			/* Password checks */
+			if(!$this->runPostFilter('password', new FARequiredFilter)) {
+				$action = new K4InformationAction(new K4LanguageElement('L_SUPPLYPASSWORD'), 'content', TRUE);
+				return !USE_AJAX ? TRUE : ajax_message('L_SUPPLYPASSWORD');
+			}
+
+			if(!$this->runPostFilter('password2', new FARequiredFilter)) {
+				$action = new K4InformationAction(new K4LanguageElement('L_SUPPLYPASSCHECK'), 'content', TRUE);
+				return !USE_AJAX ? TRUE : ajax_message('L_SUPPLYPASSCHECK');
+			}
+
+			if(!$this->runPostFilter('password', new FACompareFilter('password2'))) {
+				$action = new K4InformationAction(new K4LanguageElement('L_PASSESDONTMATCH'), 'content', TRUE);
+				return !USE_AJAX ? TRUE : ajax_message('L_PASSESDONTMATCH');
+			}
+			
+			/* Email checks */
+			if(!$this->runPostFilter('email', new FARequiredFilter)) {
+				$action = new K4InformationAction(new K4LanguageElement('L_SUPPLYEMAIL'), 'content', TRUE);
+				return !USE_AJAX ? TRUE : ajax_message('L_SUPPLYEMAIL');
+			}
+
+			if(!$this->runPostFilter('email2', new FARequiredFilter)) {
+				$action = new K4InformationAction(new K4LanguageElement('L_SUPPLYEMAILCHECK'), 'content', TRUE);
+				return !USE_AJAX ? TRUE : ajax_message('L_SUPPLYEMAILCHECK');
+			}
+
+			if(!$this->runPostFilter('email', new FACompareFilter('email2'))) {
+				$action = new K4InformationAction(new K4LanguageElement('L_EMAILSDONTMATCH'), 'content', TRUE);
+				return !USE_AJAX ? TRUE : ajax_message('L_EMAILSDONTMATCH');
+			}
+
+			if (!$this->runPostFilter('email', new FARegexFilter('~^([0-9a-zA-Z]+[-._+&])*[0-9a-zA-Z]+@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}$~'))) {
+				$action = new K4InformationAction(new K4LanguageElement('L_NEEDVALIDEMAIL'), 'content', TRUE);
+				return !USE_AJAX ? TRUE : ajax_message('L_NEEDVALIDEMAIL');
+			}
+
+			if($_SETTINGS['requireuniqueemail'] == 1) {
+				if($request['dba']->getValue("SELECT COUNT(*) FROM ". K4USERS ." WHERE email = '". $request['dba']->quote($_REQUEST['email']) ."'") > 0) {
+					$action = new K4InformationAction(new K4LanguageElement('L_EMAILTAKEN'), 'content', TRUE);
+					return !USE_AJAX ? TRUE : ajax_message('L_EMAILTAKEN');
+				}
+			}
+
+			$usergroups					= isset($_REQUEST['usergroups']) && is_array($_REQUEST['usergroups']) ? $_REQUEST['usergroups'] : array(2);
+			
+			$name						= htmlentities(strip_tags($_REQUEST['username']), ENT_QUOTES);
+			$reg_key					= md5(uniqid(rand(), TRUE));
+
+			$insert_a					= $request['dba']->prepareStatement("INSERT INTO ". K4USERS ." (name,email,pass,perms,reg_key,usergroups,created) VALUES (?,?,?,?,?,?,?)");
+			
+			$insert_a->setString(1, $name);
+			$insert_a->setString(2, $_REQUEST['email']);
+			$insert_a->setString(3, md5($_REQUEST['password']));
+			$insert_a->setInt(4, PENDING_MEMBER);
+			$insert_a->setString(5, $reg_key);
+			$insert_a->setString(6, implode('|', $usergroups)); // Registered Users
+			$insert_a->setInt(7, time());
+			
+			$insert_a->executeUpdate();
+			
+			$user_id					= intval($request['dba']->getInsertId(K4USERS, 'id'));
+
+			$insert_b					= $request['dba']->prepareStatement("INSERT INTO ". K4USERINFO ." (user_id,timezone". $query_fields .") VALUES (?,?". $query_params .")");
+			$insert_b->setInt(1, $user_id);
+			$insert_b->setInt(2, intval(@$_REQUEST['timezone']));
+
+			$request['dba']->executeUpdate("INSERT INTO ". K4USERSETTINGS ." (user_id) VALUES (". $user_id .")");
+
+			$insert_b->executeUpdate();
+			
+			$datastore_update	= $request['dba']->prepareStatement("UPDATE ". K4DATASTORE ." SET data=? WHERE varname=?");
+			
+			/* Set the datastore values */
+			$datastore					= $_DATASTORE['forumstats'];
+			$datastore['num_members']	= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4USERS);
+			
+			$datastore_update->setString(1, serialize($datastore));
+			$datastore_update->setString(2, 'forumstats');
+
+			$datastore_update->executeUpdate();
+
+			reset_cache('datastore');
+
+		} else {
+			no_perms_error($request);
+		}
+
+		return TRUE;
+	}
+}
+
 class AdminBadUserNames extends FAAction {
 	function execute(&$request) {		
 		

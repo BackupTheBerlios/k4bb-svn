@@ -40,7 +40,7 @@ class K4DefaultAction extends FAAction {
 		/* set the breadcrumbs bit */
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 		
-		$rss_version = isset($_REQUEST['v']) && $_REQUEST['v'] == 2 ? '2.0' : '0.92';
+		$rss_version = isset($_REQUEST['v']) && intval($_REQUEST['v']) == 2 ? '2.0' : '0.92';
 		$request['template']->setVar('xml_definition', '<?xml version="1.0" encoding="utf-8"?>' ."\n");
 
 		/**
@@ -184,6 +184,22 @@ class K4DefaultAction extends FAAction {
 	}
 }
 
+class K4NewPosts extends FAAction {
+	function execute(&$request) {
+		k4_bread_crumbs($request['template'], $request['dba'], 'L_NEWPOSTS');
+		
+		$topics = $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE queue=0 AND is_draft=0 AND display=1 ORDER BY created DESC LIMIT 15");
+		$request['template']->setList('posts', $topics);
+		
+		$rss_version = isset($_REQUEST['v']) && intval($_REQUEST['v']) == 2 ? '2.0' : '0.92';
+		$xml		= $request['template']->render(BB_BASE_DIR . '/templates/RSS/rss-'. $rss_version .'/new_posts.xml');
+		
+		header("Content-Type: text/xml");
+		echo $xml;			
+		exit;
+	}
+}
+
 class RSSPostIterator extends FAProxyIterator {
 	
 	var $bbcode;
@@ -213,6 +229,8 @@ class RSSPostIterator extends FAProxyIterator {
 $app = &new K4Controller('forum_base.html');
 $app->setAction('', new K4DefaultAction);
 $app->setDefaultEvent('');
+
+$app->setAction('new_posts', new K4NewPosts);
 
 $app->execute();
 

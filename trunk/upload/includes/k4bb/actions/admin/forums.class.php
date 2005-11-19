@@ -537,6 +537,10 @@ class AdminEditForum extends FAAction {
 					$languages[]		= array('lang' => $file, 'name' => ucfirst($file));
 				}
 			}
+			
+			// set the forum info to the template
+			foreach($forum as $key => $val)
+				$request['template']->setVar('forum_'. $key, $val);
 
 			$groups		= $forum['moderating_groups'] != '' ? explode('|', $forum['moderating_groups']) : array();
 			$groups_str	= '';
@@ -570,14 +574,12 @@ class AdminEditForum extends FAAction {
 					$forum['parent'] = 'c'. $forum['category_id'];
 			}
 
+			$request['template']->setVar('forum_parent', $forum['parent']);
+
 			$request['template']->setVar('forum_moderating_users', $moderating_users);
 			
 			// forum languages
 			$languages					= &new FAArrayIterator($languages);
-			
-			// set the forum info to the template
-			foreach($forum as $key => $val)
-				$request['template']->setVar('forum_'. $key, $val);
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_FORUMS');
 			$request['template']->setVar('forums_on', '_on');
@@ -631,9 +633,9 @@ class AdminUpdateForum extends FAAction {
 					/* Forum */
 					if(strpos($_REQUEST['parent'], 'f') !== FALSE) {
 					
-						$pforum_id = substr($_REQUEST['parent'], 1);
+						$pforum_id		= substr($_REQUEST['parent'], 1);
 
-						$pforum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($pforum_id));			
+						$pforum			= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($pforum_id));			
 
 						if(!is_array($pforum) || empty($pforum)) {
 							$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
@@ -686,6 +688,53 @@ class AdminUpdateForum extends FAAction {
 				$parent			= $pcategory;
 			}
 			
+//			if(isset($_REQUEST['parent']) && (strpos($_REQUEST['parent'], 'f') !== FALSE || strpos($_REQUEST['parent'], 'c') !== FALSE)) {
+//				
+//				/* Forum */
+//				if(strpos($_REQUEST['parent'], 'f') !== FALSE) {
+//				
+//					$forum_id = substr($_REQUEST['parent'], 1);
+//
+//					$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($forum_id));			
+//
+//					if(!is_array($forum) || empty($forum)) {
+//						$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
+//						return $action->execute($request);
+//					}
+//					
+//					if($forum['category_id'] > 0) {
+//						$category					= $request['dba']->getRow("SELECT * FROM ". K4CATEGORIES ." WHERE category_id = ". intval($forum['category_id']));			
+//						
+//						if(!is_array($category) || empty($category)) {
+//							$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
+//							return $action->execute($request);
+//						}
+//					} else {
+//						$category		= array('category_id' => 0, 'row_level' => 0, 'row_type' => CATEGORY, 'parent_id' => 0);
+//					}
+//					$parent_id		= $forum['forum_id'];
+//
+//				/* Category */
+//				} else {
+//
+//					$category_id = substr($_REQUEST['parent'], 1);
+//					
+//					$category					= $request['dba']->getRow("SELECT * FROM ". K4CATEGORIES ." WHERE category_id = ". intval($category_id));			
+//					
+//					if(!is_array($category) || empty($category)) {
+//						$action = new K4InformationAction(new K4LanguageElement('L_INVALIDCATEGORY'), 'content', FALSE);
+//						return $action->execute($request);
+//					}
+//
+//					$forum			= $category;
+//					$parent_id		= $category['category_id'];
+//				}
+//			} else {
+//				$category		= array('category_id' => 0, 'row_level' => 0, 'row_type' => CATEGORY, 'parent_id' => 0);
+//				$forum			= array('forum_id' => 0, 'row_level' => 0, 'row_type' => FORUM, 'parent_id' => 0);
+//				$parent_id		= 0;
+//			}
+
 			if(!isset($_REQUEST['name']) || $_REQUEST['name'] == '') {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTFORUMNAME'), 'content', TRUE);
 				return $action->execute($request);
