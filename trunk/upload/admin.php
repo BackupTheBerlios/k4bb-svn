@@ -165,6 +165,9 @@ $app->setAction('titles_updateuser', new AdminUserTitleUpdateUser);
 
 /* Add Users */
 $app->setAction('users_add', new AdminAddUser);
+$app->setAction('users_insert', new AdminInsertUser);
+$app->setAction('users_find', new AdminFindUser);
+$app->setAction('users_found', new AdminFetchFoundUsers);
 
 /* Acronym Management */
 $app->setAction('acronyms', new AdminAcronyms);

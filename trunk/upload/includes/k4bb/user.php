@@ -58,7 +58,7 @@ function get_user_title($user_title, $num_posts) {
  * Get the highest permissioned group that a user belongs to
  */
 function get_user_max_group($temp, $all_groups) {
-	$result				= explode('|', $temp['usergroups']);
+	$result				= explode('|', trim($temp['usergroups'], '|'));
 	$groups				= $temp['usergroups'] != '' ? (!$result ? array() : $result) : array();
 	
 	if(is_array($groups)) {
@@ -231,7 +231,7 @@ function force_usergroups($user) {
 //			}
 //		}
 		
-		$groups	= explode('|', $user['usergroups']);
+		$groups	= explode('|', trim($user['usergroups'], '|'));
 	}
 
 	return $groups;
@@ -245,8 +245,8 @@ function is_in_group($my_groups, $groups, $my_perms) {
 	if($my_perms >= ADMIN)
 		return TRUE;
 
-	$my_groups			= !is_array($my_groups) ? explode('|', $my_groups) : $my_groups;
-	$groups				= !is_array($groups) ? explode('|', $groups) : $groups;
+	$my_groups			= !is_array($my_groups) ? explode('|', trim($my_groups, '|')) : $my_groups;
+	$groups				= !is_array($groups) ? explode('|', trim($groups, '|')) : $groups;
 	
 	if(is_array($my_groups) && is_array($groups) && !empty($my_groups)) {
 		foreach($my_groups as $group_id) {
@@ -275,7 +275,7 @@ function is_moderator($user, $forum) {
 	if($user['perms'] >= ADMIN)
 		return TRUE;
 
-	$result				= explode('|', $forum['moderating_groups']);
+	$result				= explode('|', trim($forum['moderating_groups'], '|'));
 	$moderators			= !$result ? force_usergroups($forum['moderating_groups']) : $result;
 	
 					
@@ -288,7 +288,7 @@ function is_moderator($user, $forum) {
 	
 	if(isset($user['usergroups'])) {
 		
-		$unserialize		= explode('|', $user['usergroups']);
+		$unserialize		= explode('|', trim($user['usergroups'], '|'));
 		$my_groups			= !$unserialize ? force_usergroups($user['usergroups']) : $unserialize;
 
 		/* Do we toggle our moderator's panel? */
@@ -301,8 +301,9 @@ function is_moderator($user, $forum) {
 		$users					= unserialize($forum['moderating_users']);
 		if(is_array($users)) {
 			foreach($users as $user_id => $username) {
-				if($user['name'] == $username && $user['id'] == $user_id)
+				if($user['name'] == $username && $user['id'] == $user_id) {
 					return TRUE;
+				}
 			}
 		}
 	}

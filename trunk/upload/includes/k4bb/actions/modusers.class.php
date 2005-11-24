@@ -36,7 +36,6 @@ class ModBanUser extends FAAction {
 			return TRUE;
 		}
 		
-
 		if(isset($_REQUEST['id'])) {
 			$user		= $request['dba']->getRow("SELECT * FROM ". K4USERS ." WHERE id = ". intval($_REQUEST['id']));
 			
@@ -367,9 +366,9 @@ class ModFindUsers extends FAAction {
 			return $action->execute($request);
 		}
 		
-		$result				= $request['dba']->executeQuery("SELECT * FROM ". K4USERS ." WHERE lower(name) LIKE lower('%$username%') ORDER BY name DESC");		
+		$result			= $request['dba']->executeQuery("SELECT * FROM ". K4USERS ." WHERE lower(name) LIKE lower('%$username%') ORDER BY name DESC");		
 		
-		$it = &new UsersIterator($result);
+		$it				= &new UsersIterator($result);
 		$request['template']->setList('users', $it);
 		$request['template']->setFile('content', 'foundusers.html');
 

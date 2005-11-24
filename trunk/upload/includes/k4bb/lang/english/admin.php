@@ -831,6 +831,8 @@ $_LANG += array(
 
 /* Create a User */
 'L_ADDUSER'				=> 'Add User',
+'L_ADDEDUSER'			=> 'Successfully add the user <strong>%s</strong> to the forums!',
+'L_FINDUSER'			=> 'Find User',
 /* / Create a User */
 
 );

@@ -432,7 +432,7 @@ function __chmod($filename, $mode) {
 			if(is_resource($conn)) {
 				
 				// log in to ftp
-				if(ftp_login($conn, $_CONFIG['ftp']['username'], $_CONFIG['ftp']['password'])) {
+				if(@ftp_login($conn, $_CONFIG['ftp']['username'], $_CONFIG['ftp']['password'])) {
 					
 					if(phpversion() < 5) {
 						
@@ -448,12 +448,12 @@ function __chmod($filename, $mode) {
 						@ftp_chmod($conn, $mode, $filename);
 
 					}
+
+					@ftp_close($conn);
 				} else {
 					@chmod($filename, $mode);
 				}
 
-				ftp_close($conn);
-			
 			} else {
 				@chmod($filename, $mode);
 			}

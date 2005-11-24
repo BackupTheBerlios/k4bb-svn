@@ -48,7 +48,8 @@
 						<list:item list="online_users">
 						<if:if var="name" noteq="">
 						<if:if var="invisible" eq="0">
-							<if:if var="user_id" noteq="0"><a href="member.php?id={$user_id}" style="color: #{$color};font-weight: {$font_weight};" class="minitext">{$name}</a><if:else /><strong style="font-style: italic;font-weight: bold;">{$name}</strong></if:if><list:separator list="online_users">,&nbsp;</list:separator>
+							<if:if var="user_id" noteq="0"><a href="member.php?id={$user_id}" style="color: #{$color};font-weight: {$font_weight};" class="minitext">{$name}</a><if:else /><strong style="font-style: italic;font-weight: bold;">{$name}</strong></if:if>
+							<list:separator list="online_users">,&nbsp;</list:separator>
 						</if:if>
 						</if:if>
 						</list:item>

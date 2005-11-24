@@ -766,8 +766,11 @@ class AdminUpdateForum extends FAAction {
 				foreach($users as $username) {
 					$u			= $request['dba']->getRow("SELECT * FROM ". K4USERS ." WHERE name = '". $request['dba']->quote($username) ."'");
 					
-					// TODO: incremement this users perms if they are not sufficient to moderate
 					if(is_array($u) && !empty($u)) {
+						
+						if($u['perms'] < MODERATOR)
+							$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET perms=". MODERATOR ." WHERE id=". intval($u['id']));
+
 						$users_array[$u['id']]	= $u['name'];
 					}
 				}

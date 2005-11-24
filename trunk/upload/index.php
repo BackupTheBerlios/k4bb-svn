@@ -46,7 +46,7 @@ class K4DefaultAction extends FAAction {
 			$request['template']->setFile('quick_login', 'login_form_quick.html');
 			$request['template']->setVisibility('welcome_msg', TRUE);
 		}
-
+		
 		// The content panel
 		$request['template']->setFile('content', 'forums.html');
 		

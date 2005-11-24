@@ -78,8 +78,11 @@ class K4OnlineUsersIterator extends FAProxyIterator {
 		if(!$this->hasNext())
 			$this->result->free();
 
-		if($temp['name'] != '' && ((isset($temp['invisible']) && $temp['invisible'] == 0) || !isset($temp['invisible'])))
-			return $temp;
+		//if($temp['name'] != '') {
+		//	if(((isset($temp['invisible']) && $temp['invisible'] == 0) || !isset($temp['invisible']))) {
+				return $temp;
+		//	}
+		//}
 	}
 }
 

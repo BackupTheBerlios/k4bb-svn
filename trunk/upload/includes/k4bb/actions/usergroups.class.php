@@ -83,7 +83,7 @@ class AddUserToGroup extends FAAction {
 			return $action->execute($request);
 		}
 		
-		$result					= explode('|', $member['usergroups']);
+		$result					= explode('|', trim($member['usergroups']. '|'));
 		$groups					= $member['usergroups'] != '' ? iif(!$result, force_usergroups($member), $result) : array();		
 		
 		$in_group				= FALSE;
@@ -105,7 +105,7 @@ class AddUserToGroup extends FAAction {
 			$extra				.= ', perms='. intval($group['min_perm']);
 		
 		/* Add this user to the group and change his perms if we need to */
-		$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET usergroups='". $request['dba']->quote(implode('|', $groups)) ."' $extra WHERE id = ". intval($member['id']));
+		$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET usergroups='". $request['dba']->quote('|'. implode('|', $groups) .'|') ."' $extra WHERE id = ". intval($member['id']));
 		
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_ADDUSER');
 		$action = new K4InformationAction(new K4LanguageElement('L_ADDEDUSERTOGROUP', $member['name'], $group['name']), 'content', FALSE, 'usergroups.php?id='. intval($group['id']), 3);
@@ -172,7 +172,7 @@ class RemoveUserFromGroup extends FAAction {
 			return $action->execute($request);
 		}
 		
-		$result					= explode('|', $member['usergroups']);
+		$result					= explode('|', trim($member['usergroups'], '|'));
 		$groups					= $member['usergroups'] != '' ? iif(!$result, force_usergroups($member), $result) : array();		
 		
 		$groups					= array_values($groups);
@@ -200,7 +200,7 @@ class RemoveUserFromGroup extends FAAction {
 			return $action->execute($request);
 		}
 		
-		$newgroup				= get_user_max_group(array('usergroups' => implode('|', $groups) ), $_USERGROUPS);
+		$newgroup				= get_user_max_group(array('usergroups' => '|'. implode('|', $groups) .'|'), $_USERGROUPS);
 		
 		$perms					= 5;
 		
@@ -213,7 +213,7 @@ class RemoveUserFromGroup extends FAAction {
 		}
 		
 		/* Add this user to the group and change his perms if we need to */
-		$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET usergroups='". $request['dba']->quote(implode('|', $groups)) ."', perms=". intval($perms) ." WHERE id = ". intval($member['id']));
+		$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET usergroups='". $request['dba']->quote('|'. implode('|', $groups) .'|') ."', perms=". intval($perms) ." WHERE id = ". intval($member['id']));
 		
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_REMOVEUSER');
 		$action = new K4InformationAction(new K4LanguageElement('L_REMOVEDUSERFROMGROUP', $member['name'], $group['name']), 'content', FALSE, 'usergroups.php?id='. intval($group['id']), 3);

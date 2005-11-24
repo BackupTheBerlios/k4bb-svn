@@ -1,0 +1,499 @@
+<is:admin>
+<form:form name="add_user" id="add_user" action="admin.php?act=users_insert" method="post" enctype="multipart/form-data">
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_ADDUSER}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr>
+				<td class="alt3">
+					<div class="outset_box">
+						<label for="uname"><strong>{$L_USERNAME}:</strong></label><br />
+						<input type="text" name="uname" id="uname" class="inputbox" value="" size="{$maxuserlength}" maxlength="{$maxuserlength}" tabindex="1" />
+						<form:error id="uname_error" for="uname" setclass="inputfailed" regex="^[a-zA-Z]([a-zA-Z0-9]*[-_ ]?)*[a-zA-Z0-9]*$">{$L_SUPPLYUSERNAME}</form:error>
+						<hr noshade="noshade" size="1" />
+						<span class="smalltext">{$L_FILLINPASSWORD}</span><br /><br />
+						<table width="100%" cellpadding="0" cellspacing="0" border="0">
+							<tr>
+								<td width="50%">
+									<label for="password"><strong>{$L_PASSWORD}:</strong></label><br />
+									<input type="password" name="pass" id="password" class="inputbox" value="" size="{$maxuserlength}" maxlength="{$maxuserlength}" tabindex="2" />
+								</td>
+								<td width="50%">
+									<label for="password2"><strong>{$L_VALIDATEPW}:</strong></label><br />
+									<input type="password" name="pass2" id="password2" class="inputbox" value="" size="{$maxuserlength}" maxlength="{$maxuserlength}" tabindex="3" />
+								</td>
+							</tr>
+						</table>
+						<form:error id="password_error" for="password" setclass="inputfailed" regex=".+">{$L_SUPPLYPASS}</form:error>
+						<form:error id="password_match_error" for="password" setclass="inputfailed" match="password2">{$L_PASSESDONTMATCH}</form:error>
+						<hr noshade="noshade" size="1" />
+						<span class="smalltext">{$L_FILLINEMAIL}</span><br /><br />
+						<table width="100%" cellpadding="0" cellspacing="0" border="0">
+							<tr>
+								<td width="50%">
+									<label for="email"><strong>{$L_EMAILADDRESS}:</strong></label><br />
+									<input type="text" name="email" id="email" class="inputbox" value="" maxlength="100" tabindex="4" />
+								</td>
+								<td width="50%">
+									<label for="email2"><strong>{$L_VALIDATEEMAILADDR}:</strong></label><br />
+									<input type="text" name="email2" id="email2" class="inputbox" value="" maxlength="100" tabindex="5" />
+								</td>
+							</tr>
+						</table>
+						<form:error id="email_error" for="email" setclass="inputfailed" regex=".+">{$L_SUPPLYEMAIL}</form:error>
+						<form:error id="email_match_error" for="email" setclass="inputfailed" match="email2">{$L_EMAILSDONTMATCH}</form:error>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="k4_subtitle" colspan="2" align="center">
+					<input type="submit" value="{$L_SAVE}" class="button" />
+					<input type="reset" value="{$L_RESET}" class="button" />
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<br />
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_USERGROUPS}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr>
+				<td class="alt1" width="50%"><strong><label for="permissions">{$L_PERMISSIONS}:</label></strong></td>
+				<td class="alt1" width="50%">
+					<select name="permissions" id="permissions" class="smalltext">
+						<option value="0">--</option>
+						<option value="1">{$L_GUEST}</option>
+						<option value="4">{$L_PENDINGMEMBER}</option>
+						<option value="5">{$L_MEMBER}</option>
+						<option value="6">{$L_SUPERMEMBER}</option>
+						<option value="7">{$L_MODERATOR}</option>
+						<option value="8">{$L_SUPERMODERATOR}</option>
+						<option value="9">{$L_ADMIN}</option>
+						<option value="10">{$L_SUPERADMIN}</option>
+					</select>
+					<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_perms}, 'permissions');</script></if:if>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%"><strong><label for="usergroups">{$L_USERGROUPS}:</label></strong></td>
+				<td class="alt1" width="50%">
+					<select name="usergroups" id="usergroups" size="5" multiple="multiple">
+						<list:list id="usergroups">
+						<list:item list="usergroups">
+						<option value="{$id}">{$name}</option>
+						</list:item>
+						</list:list>
+					</select>
+					<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndices("{$edit_user_usergroups}".split("|"), 'permissions');</script></if:if>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<br />
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_PERSONALINFORMATION}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr>
+				<td class="alt1" width="50%"><label for="fullname"><strong>{$L_FULLNAME}:</strong></label></td>
+				<td class="alt3" width="50%"><input type="text" name="fullname" value="{$edit_user_fullname}" id="fullname" maxlength="100" class="inputbox" /></td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%"><label for="bday_month"><strong>{$L_BIRTHDAY}:</strong></label></td>
+				<td class="alt3" width="50%">
+					<table cellpadding="0" cellspacing="0" border="0">
+						<tr>
+							<td class="alt3" align="center"><label class="smalltext" for="bday_month">{$L_MONTH}</label></td>
+							<td class="alt3" align="center"><label class="smalltext" for="bday_day">{$L_DAY}</label></td>
+							<td class="alt3" align="center"><label class="smalltext" for="bday_year">{$L_YEAR}</label></td>
+						</tr>
+						<tr>
+							<td class="alt3">
+								<select name="month" id="bday_month" id="month" class="inputbox">
+									<option value="0"></option>
+									<option value="01">{$L_JANUARY}</option>
+									<option value="02">{$L_FEBRUARY}</option>
+									<option value="03">{$L_MARCH}</option>
+									<option value="04">{$L_APRIL}</option>
+									<option value="05">{$L_MAY}</option>
+									<option value="06">{$L_JUNE}</option>
+									<option value="07">{$L_JULY}</option>
+									<option value="08">{$L_AUGUST}</option>
+									<option value="09">{$L_SEPTEMBER}</option>
+									<option value="10">{$L_OCTOBER}</option>
+									<option value="11">{$L_NOVEMBER}</option>
+									<option value="12">{$L_DECEMBER}</option>
+								</select>
+								<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$bday_month}, 'bday_month');</script></if:if>
+							</td>
+							<td class="alt3">
+								<select name="day" id="bday_day" id="day" class="inputbox">
+									<option value="0"></option>
+									<option value="01">1</option>
+									<option value="02">2</option>
+									<option value="03">3</option>
+									<option value="04">4</option>
+									<option value="05">5</option>
+									<option value="06">6</option>
+									<option value="07">7</option>
+									<option value="08">8</option>
+									<option value="09">9</option>
+									<option value="10">10</option>
+									<option value="11">11</option>
+									<option value="12">12</option>
+									<option value="13">13</option>
+									<option value="14">14</option>
+									<option value="15">15</option>
+									<option value="16">16</option>
+									<option value="17">17</option>
+									<option value="18">18</option>
+									<option value="19">19</option>
+									<option value="20">20</option>
+									<option value="21">21</option>
+									<option value="22">22</option>
+									<option value="23">23</option>
+									<option value="24">24</option>
+									<option value="25">25</option>
+									<option value="26">26</option>
+									<option value="27">27</option>
+									<option value="28">28</option>
+									<option value="29">29</option>
+									<option value="30">30</option>
+									<option value="31">31</option>
+								</select>
+								<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$bday_day}, 'bday_day');</script></if:if>
+							</td>
+							<td class="alt3"><input type="text" name="year" id="bday_year" value="{$bday_year}" size="4" maxlength="4" class="inputbox" /></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<br />
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_INSTANTMESSAGING}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr>
+				<td class="alt1" width="50%"><label for="icq"><strong>{$L_ICQ}:</strong></label></td>
+				<td class="alt3" width="50%"><input type="text" name="icq" id="icq" value="{$edit_user_icq}" maxlength="25" class="inputbox" /></td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%"><label for="aim"><strong>{$L_AIM}:</strong></label></td>
+				<td class="alt3" width="50%"><input type="text" name="aim" id="aim" value="{$edit_user_aim}" maxlength="100" class="inputbox" /></td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%"><label for="msn"><strong>{$L_MSN}:</strong></label></td>
+				<td class="alt3" width="50%"><input type="text" name="msn" id="msn" value="{$edit_user_msn}" maxlength="100" class="inputbox" /></td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%"><label for="yahoo"><strong>{$L_YAHOO}:</strong></label></td>
+				<td class="alt3" width="50%"><input type="text" name="yahoo" id="yahoo" value="{$edit_user_yahoo}" maxlength="100" class="inputbox" /></td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%"><label for="jabber"><strong>{$L_JABBER}:</strong></label></td>
+				<td class="alt3" width="50%"><input type="text" name="jabber" id="jabber" value="{$edit_user_jabber}" maxlength="100" class="inputbox" /></td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%"><label for="jabber"><strong>{$L_GOOGLETALK}:</strong></label></td>
+				<td class="alt3" width="50%"><input type="text" name="googletalk" id="googletalk" value="{$edit_user_googletalk}" maxlength="100" class="inputbox" /></td>
+			</tr>
+		</table>
+	</div>
+</div>
+<br />
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_ADDITIONALINFO}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr>
+				<td class="alt3">
+					<div class="outset_box">
+						<label for="timezone"><strong>{$L_TIMEZONE}:</strong></label><br />
+						<span class="smalltext">{$L_TIMEZONEEXPLAIN}</span><br /><br />
+						<select name="timezone" id="timezone" class="smalltext">
+							<option value="-12">{$L_TIMEZONE1}</option>
+							<option value="-11">{$L_TIMEZONE2}</option>
+							<option value="-10">{$L_TIMEZONE3}</option>
+							<option value="-9">{$L_TIMEZONE4}</option>
+							<option value="-8">{$L_TIMEZONE5}</option>
+							<option value="-7">{$L_TIMEZONE6}</option>
+							<option value="-6">{$L_TIMEZONE7}</option>
+							<option value="-5">{$L_TIMEZONE8}</option>
+							<option value="-4">{$L_TIMEZONE9}</option>
+							<option value="-3.5">{$L_TIMEZONE10}</option>
+							<option value="-3">{$L_TIMEZONE11}</option>
+							<option value="-2">{$L_TIMEZONE12}</option>
+							<option value="-1">{$L_TIMEZONE13}</option>
+							<option value="0" selected="selected">{$L_TIMEZONE14}</option>
+							<option value="1">{$L_TIMEZONE15}</option>
+							<option value="2">{$L_TIMEZONE16}</option>
+							<option value="3">{$L_TIMEZONE17}</option>
+							<option value="3.5">{$L_TIMEZONE18}</option>
+							<option value="4">{$L_TIMEZONE19}</option>
+							<option value="4.5">{$L_TIMEZONE20}</option>
+							<option value="5">{$L_TIMEZONE21}</option>
+							<option value="5.5">{$L_TIMEZONE22}</option>
+							<option value="6">{$L_TIMEZONE23}</option>
+							<option value="7">{$L_TIMEZONE24}</option>
+							<option value="8">{$L_TIMEZONE25}</option>
+							<option value="9">{$L_TIMEZONE26}</option>
+							<option value="9.5">{$L_TIMEZONE27}</option>
+							<option value="10">{$L_TIMEZONE28}</option>
+							<option value="11">{$L_TIMEZONE29}</option>
+							<option value="12">{$L_TIMEZONE30}</option>
+						</select>
+						<list:list id="profilefields">
+						<list:item list="profilefields">
+						<hr noshade="noshade" size="1" />
+						<label for="{$name}"><strong>{$title}:</strong></label><br />
+						<span class="smalltext">{$description}</span><br /><br />
+						{$html}
+						</list:item>
+						</list:list>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="k4_subtitle" colspan="2" align="center">
+					<input type="submit" value="{$L_SAVE}" class="button" />
+					<input type="reset" value="{$L_RESET}" class="button" />
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<br />
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_GENERALOPTIONS}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr>
+				<td class="alt1" width="50%"><label for="templateset"><strong>{$L_TEMPLATESET}:</strong></label></td>
+				<td class="alt2" width="50%">
+					<select name="templateset" id="templateset">
+						<list:list id="templatesets">
+						<list:item list="templatesets">
+						<option value="{$id}">{$name}</option>
+						</list:item>
+						</list:list>
+					</select>
+					<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_styleset}, 'styleset');</script></if:if>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%"><label for="styleset"><strong>{$L_BOARDSTYLESET}:</strong></label></td>
+				<td class="alt2" width="50%">
+					<select name="styleset" id="styleset">
+						<list:list id="stylesets">
+						<list:item list="stylesets">
+						<option value="{$id}">{$name}</option>
+						</list:item>
+						</list:list>
+					</select>
+					<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_styleset}, 'styleset');</script></if:if>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%"><label for="imageset"><strong>{$L_BOARDIMAGESET}:</strong></label></td>
+				<td class="alt2" width="50%">
+					<select name="imageset" id="imageset">
+						<list:list id="imagesets">
+						<list:item list="imagesets">
+						<option value="{$name}">{$name}</option>
+						</list:item>
+						</list:list>
+					</select>
+					<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_imageset}, 'imageset');</script></if:if>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%"><label for="language"><strong>{$L_BOARDLANGUAGE}:</strong></label></td>
+				<td class="alt2" width="50%">
+					<select name="language" id="language">
+						<list:list id="languages">
+						<list:item list="languages">
+						<option value="{$name}">{$name}</option>
+						</list:item>
+						</list:list>
+					</select>
+					<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_language}, 'language');</script></if:if>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%"><label for="invisible"><strong>{$L_INVISIBLEMODE}:</strong></label></td>
+				<td class="alt2" width="50%">
+					<select name="invisible" id="invisible">
+						<option value="1">{$L_YES}</option>
+						<option value="0">{$L_NO}</option>
+					</select>
+					<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_invisible}, 'invisible');</script></if:if>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%"><label for="topic_display"><strong>{$L_TOPICDISPLAY}:</strong></label></td>
+				<td class="alt2" width="50%">
+					<select name="topic_display" id="topic_display">
+						<option value="0">{$L_LINEAR}</option>
+						<option value="1">{$L_VERTICAL}</option>
+					</select>
+					<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex(parseInt({$edit_user_topic_display}), 'topic_display');</script></if:if>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%"><label for="topic_display"><strong>{$L_TOPICTHREADEDMODE}:</strong></label></td>
+				<td class="alt2" width="50%">
+					<select name="topic_threaded" id="topic_threaded">
+						<option value="0">{$L_NORMAL}</option>
+						<option value="1">{$L_THREADED}</option>
+					</select>
+					<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex(parseInt({$edit_user_topic_threaded}), 'topic_threaded');</script></if:if>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<br />
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_PMOPTIONS}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr>
+				<td class="alt1" width="50%"><label for="notify_pm"><strong>{$L_NOTIFYPRIVATEMESSAGE}:</strong></label></td>
+				<td class="alt2" width="50%">
+					<select name="notify_pm" id="notify_pm">
+						<option value="1">{$L_YES}</option>
+						<option value="0">{$L_NO}</option>
+					</select>
+					<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex(parseInt({$edit_user_notify_pm}), 'notify_pm');</script></if:if>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%"><label for="popup_pm"><strong>{$L_POPUPPRIVATEMESSAGE}:</strong></label></td>
+				<td class="alt2" width="50%">
+					<select name="popup_pm" id="popup_pm">
+						<option value="1">{$L_YES}</option>
+						<option value="0">{$L_NO}</option>
+					</select>
+					<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex(parseInt({$edit_user_popup_pm}), 'popup_pm');</script></if:if>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<br />
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_POSTOPTIONS}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr>
+				<td class="alt1" width="50%">
+					<label for="topicsperpage"><strong>{$L_TOPICSPERPAGE}:</strong></label>
+					<br />
+					<span class="smalltext">{$L_RESULTSPERPAGEMSG}</span>
+				</td>
+				<td class="alt2" width="50%">
+					<input type="text" name="topicsperpage" id="topicsperpage" value="{$edit_user_topicsperpage}" size="2" maxlength="2" class="inputbox" />
+				</td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%">
+					<label for="postsperpage"><strong>{$L_POSTSPERPAGE}:</strong></label>
+					<br />
+					<span class="smalltext">{$L_RESULTSPERPAGEMSG}</span>
+				</td>
+				<td class="alt2" width="50%">
+					<input type="text" name="postsperpage" id="postsperpage" value="{$edit_user_postsperpage}" size="2" maxlength="2" class="inputbox" />
+				</td>
+			</tr>
+			<tr>
+				<td class="k4_subtitle" colspan="2" align="center">
+					<input type="submit" value="{$L_SAVE}" class="button" />
+					<input type="reset" value="{$L_RESET}" class="button" />
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<br />
+<div class="k4_shadow">
+	<div class="k4_borderwrap">
+		<div class="k4_maintitle">{$L_VIEWINGOPTIONS}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+			<tr>
+				<td class="alt1" width="50%"><label for="viewimages"><strong>{$L_VIEWIMAGES}:</strong></label></td>
+				<td class="alt2" width="50%">
+					<select name="viewimages" id="viewimages">
+						<option value="1">{$L_YES}</option>
+						<option value="0">{$L_NO}</option>
+					</select>
+					<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_viewimages}, 'viewimages');</script></if:if>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%"><label for="viewavatars"><strong>{$L_VIEWAVATARS}:</strong></label></td>
+				<td class="alt2" width="50%">
+					<select name="viewavatars" id="viewavatars">
+						<option value="1">{$L_YES}</option>
+						<option value="0">{$L_NO}</option>
+					</select>
+					<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_viewavatars}, 'viewavatars');</script></if:if>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%"><label for="viewflash"><strong>{$L_VIEWFLASH}:</strong></label></td>
+				<td class="alt2" width="50%">
+					<select name="viewflash" id="viewflash">
+						<option value="1">{$L_YES}</option>
+						<option value="0">{$L_NO}</option>
+					</select>
+					<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_viewflash}, 'viewflash');</script></if:if>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%"><label for="viewemoticons"><strong>{$L_VIEWEMOTICONS}:</strong></label></td>
+				<td class="alt2" width="50%">
+					<select name="viewemoticons" id="viewemoticons">
+						<option value="1">{$L_YES}</option>
+						<option value="0">{$L_NO}</option>
+					</select>
+					<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_viewemoticons}, 'viewemoticons');</script></if:if>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%"><label for="viewsigs"><strong>{$L_VIEWSIGNATURES}:</strong></label></td>
+				<td class="alt2" width="50%">
+					<select name="viewsigs" id="viewsigs">
+						<option value="1">{$L_YES}</option>
+						<option value="0">{$L_NO}</option>
+					</select>
+					<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_viewsigs}, 'viewsigs');</script></if:if>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt1" width="50%"><label for="viewcensors"><strong>{$L_VIEWWORDCENSORS}:</strong></label></td>
+				<td class="alt2" width="50%">
+					<select name="viewcensors" id="viewcensors">
+						<option value="1">{$L_YES}</option>
+						<option value="0">{$L_NO}</option>
+					</select>
+					<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_viewcensors}, 'viewcensors');</script></if:if>
+				</td>
+			</tr>
+			<tr>
+				<td class="k4_subtitle" colspan="2" align="center">
+					<input type="submit" value="{$L_SAVE}" class="button" />
+					<input type="reset" value="{$L_RESET}" class="button" />
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+</form:form>
+</is:admin>

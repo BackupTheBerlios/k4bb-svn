@@ -106,7 +106,7 @@ class K4DefaultAction extends FAAction {
 			
 			/* Create the Pagination */
 			$resultsperpage		= 10;
-			$num_results		= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4USERS ." WHERE usergroups LIKE '%;i:". intval($group['id']) .";%' AND id <> ". intval($group['mod_id']));
+			$num_results		= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4USERS ." WHERE usergroups LIKE '%|". intval($group['id']) ."|%' AND id <> ". intval($group['mod_id']));
 
 			$perpage			= isset($_REQUEST['limit']) && ctype_digit($_REQUEST['limit']) && intval($_REQUEST['limit']) > 0 ? intval($_REQUEST['limit']) : $resultsperpage;
 			$num_pages			= ceil($num_results / $perpage);
@@ -134,7 +134,7 @@ class K4DefaultAction extends FAAction {
 			$start				= ($page - 1) * $perpage;
 			
 			/* Get the members of this usergroup */
-			$result				= $request['dba']->executeQuery("SELECT ". $_QUERYPARAMS['user'] . $_QUERYPARAMS['userinfo'] ." FROM ". K4USERS ." u LEFT JOIN ". K4USERINFO ." ui ON u.id=ui.user_id WHERE u.usergroups LIKE '%;i:". intval($group['id']) .";%' AND u.id <> ". intval($group['mod_id']) ." LIMIT ". intval($start) .", ". intval($perpage));
+			$result				= $request['dba']->executeQuery("SELECT ". $_QUERYPARAMS['user'] . $_QUERYPARAMS['userinfo'] ." FROM ". K4USERS ." u LEFT JOIN ". K4USERINFO ." ui ON u.id=ui.user_id WHERE u.usergroups LIKE '%|". intval($group['id']) ."|%' AND u.id <> ". intval($group['mod_id']) ." LIMIT ". intval($start) .", ". intval($perpage));
 			$users				= &new UsersIterator($result);
 
 			$request['template']->setVar('num_group_members', $num_results);
