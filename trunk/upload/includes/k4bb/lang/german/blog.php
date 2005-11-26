@@ -26,6 +26,7 @@
 *
 * @author Peter Goodman
 * @author James Logsdon
+* @author Thomas "Thasmo" Deinhamer (thasmo at gmail dot com)
 * @version $Id: blog.php 110 2005-06-13 20:48:58Z Peter Goodman $
 * @package k42
 */
