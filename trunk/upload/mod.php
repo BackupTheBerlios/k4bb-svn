@@ -1,6 +1,6 @@
 <?php
 /**
-* k4 Bulletin Board, files.php
+* k4 Bulletin Board, mod.php
 *
 * Copyright (c) 2005, Peter Goodman
 *
