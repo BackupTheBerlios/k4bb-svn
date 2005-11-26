@@ -1,8 +1,8 @@
 			<if:if var="modpanel" eq="1">
 			<!-- Moderator Controls -->
 			<div class="k4_modmaintitle" style="text-align: center;">
-				<form action="mod.php?act=moderate_forum&amp;id={$forum_id}" method="post" enctype="multipart/form-data">
-					<input type="hidden" name="topics" id="topics" value="{$topic_id}" />
+				<form action="mod.php?act=moderate_forum&amp;id={$forum_forum_id}" method="post" enctype="multipart/form-data">
+					<input type="hidden" name="topics" id="topics" value="{$topic_topic_id}" />
 					<strong>{$L_WITHTOPIC}:</strong>
 					<select name="action">
 						<option value="lock">{$L_LOCKTOPIC}</option>

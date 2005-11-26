@@ -1,12 +1,11 @@
 <?php if ($_SESSION['user']->get('perms') >= ADMIN): ?>
 <div id="posts_menu" style="display: none;">
 	<div class="k4_borderwrap">
-		<table width="130" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
-			<tr class="k4_subtitle" nowrap="nowrap"><td><?php echo $scope->getVar("L_POSTS"); ?></td></tr>
-			<tr class="alt3"><td nowrap="nowrap"><a class="smalltext" target="admin_iframe" href="admin.php?act=posticons"><?php echo $scope->getVar("L_POSTICONS"); ?></a></td></tr>
-			<tr class="alt3"><td nowrap="nowrap"><a class="smalltext" target="admin_iframe" href="admin.php?act=emoticons"><?php echo $scope->getVar("L_EMOTICONS"); ?></a></td></tr>
-			<tr class="alt3"><td nowrap="nowrap"><a class="smalltext" target="admin_iframe" href="admin.php?act=acronyms"><?php echo $scope->getVar("L_ACRONYMS"); ?></a></td></tr>
-			<tr class="alt3"><td nowrap="nowrap"><a class="smalltext" target="admin_iframe" href="admin.php?act=censors"><?php echo $scope->getVar("L_WORDCENSORS"); ?></a></td></tr>
+		<table cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+			<td><a class="smalltext" target="admin_iframe" href="admin.php?act=posticons"><?php echo $scope->getVar("L_POSTICONS"); ?></a></td>
+			<td><a class="smalltext" target="admin_iframe" href="admin.php?act=emoticons"><?php echo $scope->getVar("L_EMOTICONS"); ?></a></td>
+			<td><a class="smalltext" target="admin_iframe" href="admin.php?act=acronyms"><?php echo $scope->getVar("L_ACRONYMS"); ?></a></td>
+			<td><a class="smalltext" target="admin_iframe" href="admin.php?act=censors"><?php echo $scope->getVar("L_WORDCENSORS"); ?></a></td>
 		</table>
 	</div>
 </div>

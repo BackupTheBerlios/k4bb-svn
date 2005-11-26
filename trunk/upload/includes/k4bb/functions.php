@@ -37,6 +37,14 @@ if(!defined('IN_K4')) {
 }
 
 /**
+ * Custom htmlentities function
+ */
+function k4_htmlentities($str) {
+	$str = str_replace(array('&amp;', '&', '<', '>',"'", "\""), array('&', '&amp;', '&lt;', '&gt;', '&#039;', '&quot;'), $str);
+	return $str;
+}
+
+/**
  * Function to include all of the files in a directory
  */
 function include_dir($dirname) {
@@ -544,25 +552,6 @@ function get_files($directory, $dirs_only = FALSE, $numerical = FALSE, $exceptio
 	return $files;
 }
 
-/**
- * Function to get a parent directory
- */
-if(!function_exists('one_dir_up')) {
-	function one_dir_up($dir) {
-
-		$dir		= str_replace('\\', '/', $dir);
-
-		$folders	= explode('/', $dir);
-
-		unset($folders[count($folders)-1]);
-		
-		$folders	= array_values($folders);
-
-		$dir		= implode('/', $folders);
-		
-		return $dir;
-	}
-}
 
 /**
  * This function checks if we should rewrite a file
@@ -751,6 +740,8 @@ function paginate($count, $first, $prev, $separator, $next, $last, $limit, $id) 
 	$page				= isset($_REQUEST['page']) && ctype_digit($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
 	$limit				= isset($_REQUEST['limit']) && ctype_digit($_REQUEST['limit']) ? intval($_REQUEST['limit']) : $limit;
 	
+	$limit				= $limit <= 0 ? 10 : $limit;
+
 	$url				= new FAUrl($_URL->__toString());
 
 	$url->anchor		= FALSE;
@@ -765,7 +756,7 @@ function paginate($count, $first, $prev, $separator, $next, $last, $limit, $id) 
 	$before				= 3;
 	$after				= 3;
 	
-	$num_pages			= ceil($count / $limit);
+	$num_pages			= @ceil($count / $limit);
 
 	$page_start			= ($page - $before) < 1 ? 1 : $page - $before;
 	$page_end			= ($page + $after) > $num_pages ? $num_pages : $page + $after;

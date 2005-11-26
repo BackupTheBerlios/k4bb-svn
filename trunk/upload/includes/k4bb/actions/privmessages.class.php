@@ -199,13 +199,13 @@ class K4InsertPMFolder extends FAAction {
 		$insert = $request['dba']->prepareStatement("INSERT INTO ". K4PMFOLDERS ." (user_id,user_name,name,description) VALUES (?,?,?,?)");
 		$insert->setInt(1, $request['user']->get('id'));
 		$insert->setString(2, $request['user']->get('name'));
-		$insert->setString(3, htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
-		$insert->setString(4, htmlentities(preg_replace("(\r\n|\r|\n)", ' ', $_REQUEST['description'])));
+		$insert->setString(3, k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
+		$insert->setString(4, k4_htmlentities(preg_replace("(\r\n|\r|\n)", ' ', $_REQUEST['description'])));
 		$insert->executeUpdate();
 
 		$request['template']->setList('pmfolders', $request['dba']->executeQuery("SELECT * FROM ". K4PMFOLDERS ." WHERE is_global = 1 OR user_id = ". intval($request['user']->get('id'))));
 
-		$action = new K4InformationAction(new K4LanguageElement('L_ADDEDPMFOLDER', htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES)), 'usercp_content', TRUE, 'member.php?act=usercp&view=pmfolders', 3);
+		$action = new K4InformationAction(new K4LanguageElement('L_ADDEDPMFOLDER', k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES)), 'usercp_content', TRUE, 'member.php?act=usercp&view=pmfolders', 3);
 		return $action->execute($request);
 	}
 }
@@ -304,8 +304,8 @@ class K4UpdatePMFolder extends FAAction {
 		}
 
 		$update = $request['dba']->prepareStatement("UPDATE ". K4PMFOLDERS ." SET name=?,description=? WHERE id=?");
-		$update->setString(1, htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
-		$update->setString(2, htmlentities(preg_replace("(\r\n|\r|\n)", ' ', $_REQUEST['description'])));
+		$update->setString(1, k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
+		$update->setString(2, k4_htmlentities(preg_replace("(\r\n|\r|\n)", ' ', $_REQUEST['description'])));
 		$update->setInt(3, $folder['id']);
 		$update->executeUpdate();
 
@@ -509,7 +509,7 @@ class K4SendPMessage extends FAAction {
 
 			if(!in_array($username, $draft_users) && $username != $request['user']->get('name') && $username != '') {
 
-				$user = $request['dba']->getRow("SELECT * FROM ". K4USERS ." WHERE name = '". $request['dba']->quote(htmlentities($username, ENT_QUOTES)) ."'");
+				$user = $request['dba']->getRow("SELECT * FROM ". K4USERS ." WHERE name = '". $request['dba']->quote(k4_htmlentities($username, ENT_QUOTES)) ."'");
 
 				if(is_array($user) && !empty($user)) {
 					if(get_map($user, 'pm_message', 'can_view', array()) <= $user['perms']) {
@@ -648,7 +648,7 @@ class K4SendPMessage extends FAAction {
 					/* Prepare the inserting statement */
 					$insert_a			= $request['dba']->prepareStatement("INSERT INTO ". K4PRIVMESSAGES ." (name,folder_id,poster_name,poster_id,body_text,posticon,disable_html,disable_bbcode,disable_emoticons,disable_sig,disable_areply,disable_aurls,is_draft,created,member_id,member_name,member_has_read,tracker_id,sending_id,parent_id,message_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 									
-					$insert_a->setString(1, htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
+					$insert_a->setString(1, k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
 					$insert_a->setInt(2, (($user['id'] != $request['user']->get('id') || $is_draft == 1) ? $folder : PM_SENTITEMS));
 					$insert_a->setString(3, $request['user']->get('name'));
 					$insert_a->setInt(4, $request['user']->get('id'));
@@ -731,10 +731,10 @@ class K4SendPMessage extends FAAction {
 			 * Now we're done!
 			 */
 			if($is_draft == 0) {
-				$action = new K4InformationAction(new K4LanguageElement('L_SENTPRIVATEMSG', htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES)), 'usercp_content', FALSE, 'member.php?act=usercp', 3);
+				$action = new K4InformationAction(new K4LanguageElement('L_SENTPRIVATEMSG', k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES)), 'usercp_content', FALSE, 'member.php?act=usercp', 3);
 				return $action->execute($request);
 			} else {
-				$action = new K4InformationAction(new K4LanguageElement('L_SAVEDPRIVATEMSG', htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES)), 'usercp_content', FALSE, 'member.php?act=usercp', 3);
+				$action = new K4InformationAction(new K4LanguageElement('L_SAVEDPRIVATEMSG', k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES)), 'usercp_content', FALSE, 'member.php?act=usercp', 3);
 				return $action->execute($request);
 			}
 
@@ -770,7 +770,7 @@ class K4SendPMessage extends FAAction {
 			
 			$msg_preview	= array(
 								'pm_id' => 0,
-								'name' => htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES),
+								'name' => k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES),
 								'posticon' => (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'),
 								'body_text' => $body_text,
 								'poster_name' => $request['user']->get('name'),

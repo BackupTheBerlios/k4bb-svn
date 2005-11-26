@@ -22,7 +22,7 @@
 			</if:if></if:if></if:if>
 			
 			<if:if var="post_user_group_avatar" eq="">
-			<if:if var="post_user_group_nicename" noteq="">{$post_user_group_nicename}<br /></if:if>
+			<if:if var="post_user_group_nicename" noteq=""><if:if var="post_user_title" noteq="">{$post_user_group_nicename}<br /></if:if></if:if>
 			<if:else />
 			<img src="tmp/upload/group_avatars/{$post_user_group_avatar}" border="0" alt="{$post_user_group_nicename}" />
 			<br />

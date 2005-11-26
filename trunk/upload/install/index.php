@@ -34,19 +34,20 @@
 ignore_user_abort(TRUE);
 @set_time_limit(0);
 
-function one_dir_up($dir) {
+if(!function_exists('one_dir_up')) {
+	function one_dir_up($dir, $num_dirs = 1) {
 
-	$dir		= str_replace('\\', '/', $dir);
+		$dir		= str_replace('\\', '/', $dir);
 
-	$folders	= explode('/', $dir);
+		$folders	= explode('/', $dir);
+		array_splice($folders, count($folders)-$num_dirs);
+		
+		$folders	= array_values($folders);
 
-	unset($folders[count($folders)-1]);
-	
-	$folders	= array_values($folders);
-
-	$dir		= implode('/', $folders);
-	
-	return $dir;
+		$dir		= implode('/', $folders);
+		
+		return $dir;
+	}
 }
 
 define('INSTALLER_BASE_DIR', dirname(__FILE__));

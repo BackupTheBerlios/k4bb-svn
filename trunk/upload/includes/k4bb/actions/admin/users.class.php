@@ -104,7 +104,7 @@ class AdminInsertUser extends FAAction {
 							case 'select': {
 								if($_REQUEST[$field['name']] != '') {
 									$query_fields	.= ', '. $field['name'];
-									$query_params	.= ", '". $request['dba']->quote(htmlentities($_REQUEST[$field['name']], ENT_QUOTES)) ."'";
+									$query_params	.= ", '". $request['dba']->quote(k4_htmlentities($_REQUEST[$field['name']], ENT_QUOTES)) ."'";
 								}
 								break;
 							}
@@ -205,7 +205,7 @@ class AdminInsertUser extends FAAction {
 
 			$usergroups					= isset($_REQUEST['usergroups']) && is_array($_REQUEST['usergroups']) ? $_REQUEST['usergroups'] : array(2);
 			
-			$name						= htmlentities(strip_tags($_REQUEST['uname']), ENT_QUOTES);
+			$name						= k4_htmlentities(strip_tags($_REQUEST['uname']), ENT_QUOTES);
 			$reg_key					= md5(uniqid(rand(), TRUE));
 
 			$insert_a					= $request['dba']->prepareStatement("INSERT INTO ". K4USERS ." (name,email,pass,perms,reg_key,usergroups,created) VALUES (?,?,?,?,?,?,?)");
@@ -394,6 +394,67 @@ class AdminFetchFoundUsers extends FAAction {
 			$request['template']->setFile('sidebar_menu', 'menus/users.html');
 			
 			$request['template']->setFile('content', 'users_found.html');
+		} else {
+			no_perms_error($request);
+		}
+
+		return TRUE;
+	}
+}
+
+class AdminBanUser extends FAAction {
+	function execute(&$request) {		
+		
+		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+			
+			// use the moderator functions
+			$mod_action = new ModBanUser();
+			$mod_action->execute($request);
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_BANUSER');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
+			$request['template']->setFile('content', ($request['template']->getFile('content') == 'banuser.html' ? '../banuser.html' : 'finduser.html'));
+		} else {
+			no_perms_error($request);
+		}
+
+		return TRUE;
+	}
+}
+
+class AdminWarnUser extends FAAction {
+	function execute(&$request) {		
+		
+		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+			
+			// use the moderator functions
+			$mod_action = new ModWarnUser();
+			$mod_action->execute($request);
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_WARNUSER');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
+			$request['template']->setFile('content', ($request['template']->getFile('content') == 'warnuser.html' ? '../warnuser.html' : 'finduser.html'));
+		} else {
+			no_perms_error($request);
+		}
+
+		return TRUE;
+	}
+}
+
+class AdminFlagUser extends FAAction {
+	function execute(&$request) {		
+		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+			
+			// use the moderator functions
+			$mod_action = new ModFlagUser();
+			$mod_action->execute($request);
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_FLAGUSER');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
 		} else {
 			no_perms_error($request);
 		}

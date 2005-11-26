@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
+<core:import id="head" file="head.html" />
+<body<if:if var="modpanel" eq="1"> onload="InitialiseCheckboxes();"</if:if>>
+<core:import id="content" />
+<div align="center" class="smalltext">
+	<if:if var="show_close_button" eq="1"><input type="button" class="button" value="{$L_CLOSEWINDOW}" onclick="window.close()" /><br /><br /></if:if>
+	<a href="http://www.k4bb.org" title="k4 Bulletin Board" target="_blank" class="smalltext">Powered by: k4 Bulletin Board {$VERSION}</a>
+	<if:if var="copyrighttext" noteq="">{$copyrighttext}</if:if>
+</div>
+<!--
+COPYRIGHT NOTICE
+
+// Please keep this copyright notice in place
+
+/**
+* k4 Bulletin Board
+*
+* Copyright (c) 2005, Peter Goodman
+*
+* Permission is hereby granted, free of charge, to any person obtaining
+* a copy of this software and associated documentation files (the
+* "Software"), to deal in the Software without restriction, including
+* without limitation the rights to use, copy, modify, merge, publish,
+* distribute, sublicense, and/or sell copies of the Software, and to
+* permit persons to whom the Software is furnished to do so, subject to
+* the following conditions:
+*
+* The above copyright notice and this permission notice shall be
+* included in all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+* NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+* BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+* ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+* CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+*
+* @author Peter Goodman
+* @author Geoffrey Goodman
+*/
+-->
+</body>
+</html>

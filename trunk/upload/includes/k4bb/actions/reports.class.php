@@ -137,7 +137,7 @@ class SendBadPostReport extends FAAction {
 		$insert->setInt(2, $post['forum_id']);
 		$insert->setInt(3, $post['topic_id']);
 		$insert->setInt(4, @$post['reply_id']);
-		$insert->setString(5, htmlentities($_REQUEST['report'], ENT_QUOTES));
+		$insert->setString(5, k4_htmlentities($_REQUEST['report'], ENT_QUOTES));
 		$insert->setInt(6, $request['user']->get('id'));
 		$insert->setString(7, $request['user']->get('name'));
 		$insert->setInt(8, $post['poster_id']);

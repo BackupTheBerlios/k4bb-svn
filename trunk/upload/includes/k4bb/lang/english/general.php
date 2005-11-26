@@ -41,7 +41,9 @@ if (empty($_LANG) || !is_array($_LANG)) {
 $_LANG += array(
 
 'LANGSHORT'				=> 'en',
-'locale'				=> 'eng_eng',
+'ENCODING'				=> 'UTF-8',
+'lang_direction'		=> 'ltr',
+'locale'				=> 'en_en',
 'LANG'					=> 'english',
 
 /* Base vars */
@@ -101,6 +103,7 @@ $_LANG += array(
 'L_CLICKTONOTWAIT'		=> 'Click here to proceed without waiting.',
 'L_PMUSER'				=> 'Private Message User',
 'L_RSS'					=> 'RSS',
+'L_CLOSEWINDOW'			=> 'Close this Window',
 
 /* User Titles */
 'L_JUNIORMEMBER'		=> 'Junior Member',

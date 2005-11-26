@@ -354,7 +354,7 @@ class K4UpdateUserProfile extends FAAction {
 		
 		foreach($_REQUEST as $key => $val) {
 			if(!is_array($_REQUEST[$key]))
-				$_REQUEST[$key]		= htmlentities(html_entity_decode(strip_tags($val), ENT_QUOTES), ENT_QUOTES);
+				$_REQUEST[$key]		= k4_htmlentities(html_entity_decode(strip_tags($val), ENT_QUOTES), ENT_QUOTES);
 		}
 
 		/* Check if the user is logged in or not */
@@ -449,7 +449,7 @@ class K4UpdateUserPassword extends FAAction {
 		global $_URL;
 		
 		foreach($_REQUEST as $key => $val)
-			$_REQUEST[$key]		= htmlentities(strip_tags($val), ENT_QUOTES);
+			$_REQUEST[$key]		= k4_htmlentities(strip_tags($val), ENT_QUOTES);
 
 		/* Check if the user is logged in or not */
 		if(!$request['user']->isMember()) {
@@ -515,7 +515,7 @@ class K4UpdateUserEmail extends FAAction {
 		global $_URL, $_SETTINGS;
 		
 		foreach($_REQUEST as $key => $val)
-			$_REQUEST[$key]		= htmlentities(strip_tags($val), ENT_QUOTES);
+			$_REQUEST[$key]		= k4_htmlentities(strip_tags($val), ENT_QUOTES);
 
 		/* Check if the user is logged in or not */
 		if(!$request['user']->isMember()) {
@@ -607,7 +607,7 @@ class K4ValidateChangedEmail extends FAAction {
 		global $_URL, $_SETTINGS;
 		
 		foreach($_REQUEST as $key => $val) {
-			$_REQUEST[$key]		= htmlentities(strip_tags($val), ENT_QUOTES);
+			$_REQUEST[$key]		= k4_htmlentities(strip_tags($val), ENT_QUOTES);
 		}
 		
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
@@ -645,7 +645,7 @@ class K4UpdateUserOptions extends FAAction {
 		global $_URL, $_SETTINGS;
 		
 		foreach($_REQUEST as $key => $val)
-			$_REQUEST[$key]		= htmlentities(strip_tags($val), ENT_QUOTES);
+			$_REQUEST[$key]		= k4_htmlentities(strip_tags($val), ENT_QUOTES);
 
 		/* Check if the user is logged in or not */
 		if(!$request['user']->isMember()) {
@@ -704,7 +704,7 @@ class K4UpdateUserSignature extends FAAction {
 		global $_SETTINGS;
 		
 		foreach($_REQUEST as $key => $val)
-			$_REQUEST[$key]		= htmlentities(strip_tags($val), ENT_QUOTES);
+			$_REQUEST[$key]		= k4_htmlentities(strip_tags($val), ENT_QUOTES);
 
 		/* Check if the user is logged in or not */
 		if(!$request['user']->isMember()) {
@@ -761,7 +761,7 @@ class K4UpdateUserFile extends FAAction {
 		global $_SETTINGS;
 		
 		foreach($_REQUEST as $key => $val)
-			$_REQUEST[$key]		= htmlentities(strip_tags($val), ENT_QUOTES);
+			$_REQUEST[$key]		= k4_htmlentities(strip_tags($val), ENT_QUOTES);
 
 		/* Check if the user is logged in or not */
 		if(!$request['user']->isMember()) {

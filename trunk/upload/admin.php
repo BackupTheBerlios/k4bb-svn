@@ -168,6 +168,9 @@ $app->setAction('users_add', new AdminAddUser);
 $app->setAction('users_insert', new AdminInsertUser);
 $app->setAction('users_find', new AdminFindUser);
 $app->setAction('users_found', new AdminFetchFoundUsers);
+$app->setAction('users_ban', new AdminBanUser);
+$app->setAction('users_warn', new AdminWarnUser);
+$app->setAction('users_flag', new AdminFlagUser);
 
 /* Acronym Management */
 $app->setAction('acronyms', new AdminAcronyms);

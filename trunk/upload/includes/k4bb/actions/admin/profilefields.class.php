@@ -157,7 +157,7 @@ class AdminInsertUserField extends FAAction {
 			}
 			
 			if($_REQUEST['inputtype'] != 'textarea') {
-				$params			= "VARCHAR(". iif(intval(@$_REQUEST['user_maxlength']) > 0, intval(@$_REQUEST['user_maxlength']), 255) .") NOT NULL DEFAULT '". htmlentities(@$_REQUEST['default_value'], ENT_QUOTES) ."'";
+				$params			= "VARCHAR(". iif(intval(@$_REQUEST['user_maxlength']) > 0, intval(@$_REQUEST['user_maxlength']), 255) .") NOT NULL DEFAULT '". k4_htmlentities(@$_REQUEST['default_value'], ENT_QUOTES) ."'";
 			} else if($_REQUEST['inputtype'] == 'textarea') {
 				$params			= "TEXT";
 			}

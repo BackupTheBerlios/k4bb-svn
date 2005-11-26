@@ -61,10 +61,12 @@
 				<td class="{$row_class}">
 					<a href="member.php?id={$id}" title="{$L_PROFILE}" style="font-weight: bold; color: #{$group_color};">{$name}</a>
 					<div class="smalltext">
-						<if:if var="group_nicename" noteq="">{$group_nicename}<br /></if:if>
-						<if:if var="group_avatar" noteq="">
+						<if:if var="group_avatar" eq="">
+						<if:if var="group_nicename" noteq=""><if:if var="user_title" eq="">{$group_nicename}</if:if></if:if>
+						<if:else />
 						<img src="tmp/upload/group_avatars/{$group_avatar}" border="0" alt="{$group_nicename}" />
 						</if:if>
+						<if:if var="user_title" noteq=""><div>{$user_title}</div></if:if>
 					</div>
 				</td>
 				<td class="{$row_class}" align="center"><span class="smalltext">{$num_posts}</span></td>

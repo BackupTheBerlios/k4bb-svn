@@ -40,7 +40,7 @@ if(!defined('IN_K4')) {
  */
 class PostTopic extends FAAction {
 	function execute(&$request) {
-
+		
 		global $_QUERYPARAMS, $_DATASTORE, $_SETTINGS;
 
 		$this->dba			= $request['dba'];
@@ -180,7 +180,7 @@ class PostTopic extends FAAction {
 			 * Build the queries
 			 */
 			
-			$poster_name		= iif($request['user']->get('id') <= 0,  htmlentities((isset($_REQUEST['poster_name']) ? $_REQUEST['poster_name'] : '') , ENT_QUOTES), $request['user']->get('name'));
+			$poster_name		= iif($request['user']->get('id') <= 0,  k4_htmlentities((isset($_REQUEST['poster_name']) ? $_REQUEST['poster_name'] : '') , ENT_QUOTES), $request['user']->get('name'));
 
 			$request['dba']->beginTransaction();
 			
@@ -206,7 +206,7 @@ class PostTopic extends FAAction {
 			
 			//topic_id,forum_id,category_id,poster_name,poster_id,body_text,posticon
 			//disable_html,disable_bbcode,disable_emoticons,disable_sig,disable_areply,disable_aurls,is_draft,is_poll
-			$insert_a->setString(1, htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
+			$insert_a->setString(1, k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
 			$insert_a->setInt(2, $forum['forum_id']);
 			$insert_a->setInt(3, $forum['category_id']);
 			$insert_a->setString(4, $poster_name);
@@ -249,13 +249,13 @@ class PostTopic extends FAAction {
 				
 				/* Set the forum values */
 				$forum_update->setInt(1, $created);
-				$forum_update->setString(2, htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
+				$forum_update->setString(2, k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
 				$forum_update->setString(3, $poster_name);
 				$forum_update->setInt(4, $topic_id);
 				$forum_update->setInt(5, $request['user']->get('id'));
 				$forum_update->setString(6, iif(($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'));
 				$forum_update->setInt(7, $created);
-				$forum_update->setString(8, htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
+				$forum_update->setString(8, k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
 				$forum_update->setString(9, $poster_name);
 				$forum_update->setInt(10, $topic_id);
 				$forum_update->setInt(11, $request['user']->get('id'));
@@ -308,7 +308,7 @@ class PostTopic extends FAAction {
 				$request['dba']->commitTransaction();
 				
 				/* Redirect the user */
-				$action = new K4InformationAction(new K4LanguageElement('L_ADDEDTOPIC', htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES), $forum['name']), 'content', FALSE, 'viewtopic.php?id='. $topic_id, 3);
+				$action = new K4InformationAction(new K4LanguageElement('L_ADDEDTOPIC', k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES), $forum['name']), 'content', FALSE, 'viewtopic.php?id='. $topic_id, 3);
 
 				return $action->execute($request);
 			} else {
@@ -317,7 +317,7 @@ class PostTopic extends FAAction {
 				$request['dba']->commitTransaction();
 
 				/* Redirect the user */
-				$action = new K4InformationAction(new K4LanguageElement('L_SAVEDDRAFTTOPIC', htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES), $forum['name']), 'content', FALSE, 'viewforum.php?f='. $forum['forum_id'], 3);
+				$action = new K4InformationAction(new K4LanguageElement('L_SAVEDDRAFTTOPIC', k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES), $forum['name']), 'content', FALSE, 'viewforum.php?f='. $forum['forum_id'], 3);
 
 				return $action->execute($request);
 			}
@@ -355,7 +355,7 @@ class PostTopic extends FAAction {
 			}
 			/* Set topic array items to be passed to the iterator */			
 			$topic_preview	= array(
-								'name' => htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES),
+								'name' => k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES),
 								'body_text' => $body_text,
 								'poster_name' => $request['user']->get('name'),
 								'poster_id' => $request['user']->get('id'),
@@ -543,7 +543,7 @@ class PostDraft extends FAAction {
 			 * Build the queries to add the draft
 			 */
 			
-			$poster_name		= iif($request['user']->get('id') <= 0,  htmlentities((isset($_REQUEST['poster_name']) ? $_REQUEST['poster_name'] : '') , ENT_QUOTES), $request['user']->get('name'));
+			$poster_name		= iif($request['user']->get('id') <= 0,  k4_htmlentities((isset($_REQUEST['poster_name']) ? $_REQUEST['poster_name'] : '') , ENT_QUOTES), $request['user']->get('name'));
 
 			$update_a			= $request['dba']->prepareStatement("UPDATE ". K4TOPICS ." SET name=?,body_text=?,posticon=?,disable_html=?,disable_bbcode=?,disable_emoticons=?,disable_sig=?,disable_areply=?,disable_aurls=?,is_draft=?,topic_type=?,is_feature=?,is_poll=?,created=? WHERE topic_id=?");
 			
@@ -552,7 +552,7 @@ class PostDraft extends FAAction {
 			$update_a->setInt(2, $draft['topic_id']);
 			
 			/* Set the topic information */
-			$update_a->setString(1, htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
+			$update_a->setString(1, k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
 			$update_a->setString(2, $body_text);
 			$update_a->setString(3, (($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))) ? (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif') : 'clear.gif'));
 			$update_a->setInt(4, ((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']) ? 1 : 0));
@@ -581,13 +581,13 @@ class PostDraft extends FAAction {
 				
 			/* Set the forum values */
 			$forum_update->setInt(1, $created);
-			$forum_update->setString(2, htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
+			$forum_update->setString(2, k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
 			$forum_update->setString(3, $poster_name);
 			$forum_update->setInt(4, $draft['topic_id']);
 			$forum_update->setInt(5, $request['user']->get('id'));
 			$forum_update->setString(6, iif(($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'));
 			$forum_update->setInt(7, $created);
-			$forum_update->setString(8, htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
+			$forum_update->setString(8, k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
 			$forum_update->setString(9, $poster_name);
 			$forum_update->setInt(10, $draft['topic_id']);
 			$forum_update->setInt(11, $request['user']->get('id'));
@@ -630,7 +630,7 @@ class PostDraft extends FAAction {
 			set_send_topic_mail($forum['forum_id'], iif($poster_name == '', $request['template']->getVar('L_GUEST'), $poster_name));
 
 			/* Redirect the user */
-			$action = new K4InformationAction(new K4LanguageElement('L_ADDEDTOPIC', htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES), $forum['name']), 'content', FALSE, 'viewtopic.php?id='. $draft['topic_id'], 3);
+			$action = new K4InformationAction(new K4LanguageElement('L_ADDEDTOPIC', k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES), $forum['name']), 'content', FALSE, 'viewtopic.php?id='. $draft['topic_id'], 3);
 
 			return $action->execute($request);
 		
@@ -671,7 +671,7 @@ class PostDraft extends FAAction {
 			/* Set topic iterator array elements to be passed to the template */
 			$topic_preview	= array(
 								'topic_id' => @$draft['id'],
-								'name' => htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES),
+								'name' => k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES),
 								'posticon' => (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'),
 								'body_text' => $body_text,
 								'poster_name' => html_entity_decode($draft['poster_name'], ENT_QUOTES),
@@ -1013,7 +1013,7 @@ class UpdateTopic extends FAAction {
 			
 			$time				= time();
 			
-			$name				= htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES);
+			$name				= k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES);
 
 			/**
 			 * Build the queries to update the topic
@@ -1032,7 +1032,7 @@ class UpdateTopic extends FAAction {
 			$update_a->setInt(9, ((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']) ? 1 : 0));
 			$update_a->setInt(10, 0);
 			$update_a->setInt(11, $time);
-			$update_a->setString(12, iif($request['user']->get('id') <= 0,  htmlentities((isset($_REQUEST['poster_name']) ? $_REQUEST['poster_name'] : '') , ENT_QUOTES), $request['user']->get('name')));
+			$update_a->setString(12, iif($request['user']->get('id') <= 0,  k4_htmlentities((isset($_REQUEST['poster_name']) ? $_REQUEST['poster_name'] : '') , ENT_QUOTES), $request['user']->get('name')));
 			$update_a->setInt(13, $request['user']->get('id'));
 			$update_a->setInt(14, $is_feature);
 			$update_a->setInt(15, $topic_type);
@@ -1090,7 +1090,7 @@ class UpdateTopic extends FAAction {
 				// this deals with this forums last topic info
 				if($forum['topic_id'] == $topic['topic_id']) {
 					$forum_topic_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topic_name=?,topic_posticon=? WHERE forum_id=?");
-					$forum_topic_update->setString(1, htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
+					$forum_topic_update->setString(1, k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
 					$forum_topic_update->setString(2, $posticon);
 					$forum_topic_update->setInt(3, $forum['forum_id']);
 					$forum_topic_update->executeUpdate();
@@ -1099,7 +1099,7 @@ class UpdateTopic extends FAAction {
 				// if this topic is the forums last post
 				if($forum['post_id'] == $topic['topic_id'] && $forum['post_created'] == $topic['created']) {
 					$forum_topic_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET post_name=?,post_posticon=? WHERE forum_id=?");
-					$forum_topic_update->setString(1, htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
+					$forum_topic_update->setString(1, k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
 					$forum_topic_update->setString(2, $posticon);
 					$forum_topic_update->setInt(3, $forum['forum_id']);
 					$forum_topic_update->executeUpdate();
@@ -1107,7 +1107,7 @@ class UpdateTopic extends FAAction {
 			}
 
 			/* Redirect the user */
-			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDTOPIC', htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES)), 'content', FALSE, 'viewtopic.php?id='. $topic['topic_id'], 3);
+			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDTOPIC', k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES)), 'content', FALSE, 'viewtopic.php?id='. $topic['topic_id'], 3);
 
 			return $action->execute($request);
 		
@@ -1139,7 +1139,7 @@ class UpdateTopic extends FAAction {
 			
 			$topic_preview	= array(
 								'topic_id' => @$topic['topic_id'],
-								'name' => htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES),
+								'name' => k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES),
 								'posticon' => (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'),
 								'body_text' => $body_text,
 								'poster_name' => html_entity_decode($topic['poster_name'], ENT_QUOTES),

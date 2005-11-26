@@ -16,10 +16,12 @@
 							</if:if>
 							<td valign="top" nowrap="nowrap">
 								<span style="color: #{$member_group_color}; font-size: 18px;">{$member_name}</span><br />
-								<if:if var="member_group_nicename" noteq=""><span class="smalltext">{$member_group_nicename}</span><br /></if:if>
-								<if:if var="member_group_avatar" noteq="">
+								<if:if var="member_group_avatar" eq="">
+								<if:if var="member_group_nicename" noteq=""><if:if var="member_user_title" eq="">{$member_group_nicename}</if:if></if:if>
+								<if:else />
 								<img src="tmp/upload/group_avatars/{$member_group_avatar}" border="0" alt="{$member_group_nicename}" />
 								</if:if>
+								<if:if var="member_user_title" noteq=""><div>{$member_user_title}</div></if:if>
 							</td>
 						</tr>
 					</table>

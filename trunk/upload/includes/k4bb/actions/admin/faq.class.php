@@ -440,7 +440,7 @@ class AdminFAQInsertAnswer extends FAAction {
 				}
 			}
 			
-			$question = htmlentities(html_entity_decode($_REQUEST['question'], ENT_QUOTES), ENT_QUOTES);
+			$question = k4_htmlentities(html_entity_decode($_REQUEST['question'], ENT_QUOTES), ENT_QUOTES);
 			$bbcode = new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['answer'], FALSE, TRUE, TRUE, TRUE, TRUE);
 			
 			$insert = $request['dba']->prepareStatement("INSERT INTO ". K4FAQANSWERS ." (category_id,question,answer,row_order,created,can_view) VALUES (?,?,?,?,?,?)");
@@ -534,7 +534,7 @@ class AdminUpdateFAQAnswer extends FAAction {
 				return $action->execute($request);
 			}
 			
-			$question = htmlentities(html_entity_decode($_REQUEST['question'], ENT_QUOTES), ENT_QUOTES);
+			$question = k4_htmlentities(html_entity_decode($_REQUEST['question'], ENT_QUOTES), ENT_QUOTES);
 			$bbcode = new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['answer'], FALSE, TRUE, TRUE, TRUE, TRUE);
 			
 			$update = $request['dba']->prepareStatement("UPDATE ". K4FAQANSWERS ." SET question=?,answer=?,row_order=?,can_view=? WHERE answer_id=?");

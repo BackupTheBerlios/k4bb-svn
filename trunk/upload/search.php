@@ -70,7 +70,7 @@ class K4SearchEverything extends FAAction {
 		$user_ids				= '';
 		if(isset($_REQUEST['author']) && $_REQUEST['author'] != '') {
 			
-			$author				= htmlentities(trim($_REQUEST['author']), ENT_QUOTES);
+			$author				= k4_htmlentities(trim($_REQUEST['author']), ENT_QUOTES);
 			if(!isset($_REQUEST['exact']) || !$_REQUEST['exact']) {
 				$author				= str_replace('%', '*', $author);
 				$author				= intval($request['template']->getVar('allowwildcards')) == 1 ? str_replace('*', '%', $author) : str_replace('*', ' ', $author);

@@ -900,7 +900,7 @@ class SimpleUpdateTopic extends FAAction {
 
 		if($name != $topic['name']) {
 			
-			$name = htmlentities(html_entity_decode($name, ENT_QUOTES), ENT_QUOTES);
+			$name = k4_htmlentities(html_entity_decode($name, ENT_QUOTES), ENT_QUOTES);
 
 			if(!is_moderator($request['user']->getInfoArray(), $forum)) {
 				no_perms_error($request);

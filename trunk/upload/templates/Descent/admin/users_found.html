@@ -49,12 +49,16 @@
 			<tr>
 				<td class="{$row_class}">
 					<div style="float: right;">
+						<if:if var="perms" lesseq="user_perms">
+						<a href="admin.php?act=users_edit&amp;id={$id}" title="{$L_EDIT}">[{$L_EDIT}]</a>
+						<a href="admin.php?act=users_edit&amp;id={$id}" title="{$L_EDIT}">[{$L_DELETE}]</a>
+						</if:if>
 						<maps:if var="banusers" method="can_add">
-							<if:if var="banned" eq="0"><a href="mod.php?act=banuser&amp;id={$id}" title="{$L_BANUSER}" style="color: #FFFFFF;background-color: #000000;">[{$L_BANUSER}]</a><if:else /><a href="mod.php?act=banuser&amp;id={$id}" title="{$L_UNBANUSER}" style="color: #000000;background-color: #FFFFFF;">[{$L_UNBANUSER}]</a></if:if> 
+							<if:if var="banned" eq="0"><a href="admin.php?act=users_ban&amp;id={$id}" title="{$L_BANUSER}" style="color: #FFFFFF;background-color: #000000;">[{$L_BANUSER}]</a><if:else /><a href="admin.php?act=banuser&amp;id={$id}" title="{$L_UNBANUSER}" style="color: #000000;background-color: #FFFFFF;">[{$L_UNBANUSER}]</a></if:if> 
 						</maps:if>
-						<maps:if var="warnuser" method="can_add"><a href="mod.php?act=warnuser&amp;id={$id}" title="{$L_WARNUSER}" style="color: #999999;background-color: #{$warn_color};">[{$L_WARNUSER}]</a></maps:if> 
+						<maps:if var="warnuser" method="can_add"><a href="admin.php?act=users_warn&amp;id={$id}" title="{$L_WARNUSER}" style="color: #999999;background-color: #{$warn_color};">[{$L_WARNUSER}]</a></maps:if> 
 						<maps:if var="flaguser" method="can_add">
-							<if:if var="flag_level" eq="0"><a href="mod.php?act=flaguser&amp;id={$id}" title="{$L_FLAGUSER}">[{$L_FLAGUSER}]</a><if:else /><a href="mod.php?act=flaguser&amp;id={$id}" title="{$L_UNFLAGUSER}">[{$L_UNFLAGUSER}]</a></if:if>
+							<if:if var="flag_level" eq="0"><a href="admin.php?act=users_flag&amp;id={$id}" title="{$L_FLAGUSER}">[{$L_FLAGUSER}]</a><if:else /><a href="admin.php?act=users_flag&amp;id={$id}" title="{$L_UNFLAGUSER}">[{$L_UNFLAGUSER}]</a></if:if>
 						</maps:if>
 					</div>
 					<a href="member.php?id={$user_id}" style="color: #{$group_color};font-weight: {$font_weight};">{$name}</a>

@@ -114,7 +114,7 @@ class K4InsertUserFilter extends FAFilter {
 								case 'select': {
 									if($_REQUEST[$field['name']] != '') {
 										$query_fields	.= ', '. $field['name'];
-										$query_params	.= ", '". $request['dba']->quote(htmlentities($_REQUEST[$field['name']], ENT_QUOTES)) ."'";
+										$query_params	.= ", '". $request['dba']->quote(k4_htmlentities($_REQUEST[$field['name']], ENT_QUOTES)) ."'";
 									}
 									break;
 								}
@@ -225,7 +225,7 @@ class K4InsertUserFilter extends FAFilter {
 				 * Do the database inserting
 				 */
 				
-				$name						= htmlentities(strip_tags($_REQUEST['username']), ENT_QUOTES);
+				$name						= k4_htmlentities(strip_tags($_REQUEST['username']), ENT_QUOTES);
 				$reg_key					= md5(uniqid(rand(), TRUE));
 
 				$insert_a					= $request['dba']->prepareStatement("INSERT INTO ". K4USERS ." (name,email,pass,perms,reg_key,usergroups,created) VALUES (?,?,?,?,?,?,?)");
@@ -671,10 +671,10 @@ class SendPasswordToUser extends FAAction {
 			return $action->execute($request);
 		}
 
-		$user = $request['dba']->getRow("SELECT * FROM ". K4USERS ." WHERE name = '". $request['dba']->quote(htmlentities($_REQUEST['name'], ENT_QUOTES)) ."'");
+		$user = $request['dba']->getRow("SELECT * FROM ". K4USERS ." WHERE name = '". $request['dba']->quote(k4_htmlentities($_REQUEST['name'], ENT_QUOTES)) ."'");
 		
 		if(!is_array($user) || empty($user)) {
-			$action = new K4InformationAction(new K4LanguageElement('L_INVALIDUSERNAMESPW', htmlentities($_REQUEST['name'], ENT_QUOTES)), 'content', TRUE);
+			$action = new K4InformationAction(new K4LanguageElement('L_INVALIDUSERNAMESPW', k4_htmlentities($_REQUEST['name'], ENT_QUOTES)), 'content', TRUE);
 			return $action->execute($request);
 		}
 

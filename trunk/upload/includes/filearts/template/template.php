@@ -489,6 +489,15 @@ class FATemplate extends FAObject {
 		$this->_files[$name] = $file;
 	}
 
+	function getFile($name) {
+		$ret = FALSE;
+		
+		if(isset($this->_files[$name]))
+			$ret = $this->_files[$name];
+
+		return $ret;
+	}
+
 	function setPager($name, &$pager) {
 		$this->_pagers[$name] = &$pager;
 	}

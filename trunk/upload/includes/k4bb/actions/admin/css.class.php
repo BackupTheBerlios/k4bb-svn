@@ -149,7 +149,7 @@ class AdminInsertStyleSet extends FAAction {
 			
 			// collect some info
 			$name			= $request['dba']->quote($_REQUEST['name']);
-			$description	= $request['dba']->quote(htmlentities($_REQUEST['description'], ENT_QUOTES));
+			$description	= $request['dba']->quote(k4_htmlentities($_REQUEST['description'], ENT_QUOTES));
 			$use_imageset	= isset($_REQUEST['use_imageset']) && intval($_REQUEST['use_imageset']) == 1 ? 1 : 0;
 			$use_templateset	= isset($_REQUEST['use_templateset']) && intval($_REQUEST['use_templateset']) == 1 ? 1 : 0;
 			
@@ -261,7 +261,7 @@ class AdminUpdateStyleSet extends FAAction {
 				return $action->execute($request);
 			}
 
-			$description	= $request['dba']->quote(htmlentities($_REQUEST['description'], ENT_QUOTES));
+			$description	= $request['dba']->quote(k4_htmlentities($_REQUEST['description'], ENT_QUOTES));
 			$request['dba']->executeUpdate("UPDATE ". K4STYLES ." SET name='{$name}', description='{$description}',use_imageset={$use_imageset},use_templateset={$use_templateset} WHERE id = ". intval($styleset['id']));
 			
 			if($request['template']->getVar('styleset') == $styleset['name'])
@@ -404,7 +404,7 @@ class AdminInsertCSSClass extends FAAction {
 
 			$name			= $request['dba']->quote($_REQUEST['name']);
 			$properties		= $request['dba']->quote(preg_replace("~(\r\n|\r|\n)~i", "", $_REQUEST['properties']));
-			$description	= $request['dba']->quote(htmlentities($_REQUEST['description'], ENT_QUOTES));
+			$description	= $request['dba']->quote(k4_htmlentities($_REQUEST['description'], ENT_QUOTES));
 			$request['dba']->executeUpdate("INSERT INTO ". K4CSS ." (name, properties, style_id, description) VALUES ('{$name}', '{$properties}', ". intval($request['styleset']['id']) .", '{$description}')");
 			
 			if(file_exists(BB_BASE_DIR .'/tmp/stylesets/'. preg_replace("~\s~i", '_', $request['styleset']['name']) .'.css'))
@@ -964,7 +964,7 @@ class AdminUpdateCSSClass extends FAAction {
 
 			$name			= $request['dba']->quote($_REQUEST['name']);
 			$properties		= $request['dba']->quote(preg_replace("~(\r\n|\r|\n)~i", "", $_REQUEST['properties']));
-			$description	= $request['dba']->quote(htmlentities($_REQUEST['description'], ENT_QUOTES));
+			$description	= $request['dba']->quote(k4_htmlentities($_REQUEST['description'], ENT_QUOTES));
 			$request['dba']->executeUpdate("UPDATE ". K4CSS ." SET name='{$name}',properties='{$properties}',description='{$description}' WHERE id=". intval($request['style']['id']));
 			
 			if(file_exists(BB_BASE_DIR .'/tmp/stylesets/'. preg_replace("~\s~i", '_', $request['styleset']['name']) .'.css'))

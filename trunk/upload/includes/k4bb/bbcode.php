@@ -1253,7 +1253,7 @@ class K4Poll_Compiler extends K4BBCodeTag {
 					$this->num_polls++;
 					
 					// get the question
-					$question				= $this->dba->quote(htmlentities(html_entity_decode($this->question, ENT_QUOTES), ENT_QUOTES));
+					$question				= $this->dba->quote(k4_htmlentities(html_entity_decode($this->question, ENT_QUOTES), ENT_QUOTES));
 					$insert_question		= $this->dba->executeUpdate("INSERT INTO ". K4POLLQUESTIONS ." (question, created, user_id, user_name) VALUES ('". $question ."', ". time() .", ". intval($_SESSION['user']->get('id')) .", '". $this->dba->quote($_SESSION['user']->get('name')) ."')");
 					$question_id			= $this->dba->getInsertId(K4POLLQUESTIONS, 'id');
 					
@@ -1261,7 +1261,7 @@ class K4Poll_Compiler extends K4BBCodeTag {
 					$i = 1;
 					foreach($items as $answer) {
 						if($answer != '') {
-							$this->dba->executeUpdate("INSERT INTO ". K4POLLANSWERS ." (question_id, answer) VALUES (". intval($question_id) .", '". $this->dba->quote(htmlentities(html_entity_decode($answer, ENT_QUOTES), ENT_QUOTES), ENT_QUOTES) ."')");
+							$this->dba->executeUpdate("INSERT INTO ". K4POLLANSWERS ." (question_id, answer) VALUES (". intval($question_id) .", '". $this->dba->quote(k4_htmlentities(html_entity_decode($answer, ENT_QUOTES), ENT_QUOTES), ENT_QUOTES) ."')");
 							
 							if($i >= $this->max_poll_answers) {
 								break;
@@ -1420,7 +1420,7 @@ class BBCodex extends FAObject {
 		$this->init();
 		
 		//encode html entities
-		$this->text = htmlentities($this->text, ENT_QUOTES);
+		$this->text = k4_htmlentities($this->text, ENT_QUOTES);
 
 		$this->text = preg_replace("~(\r\n|\r|\n)~", '<br />', $this->text);
 		$this->text = str_replace(array('"', "'"), array('&quot;', '&#039;'), $this->text);

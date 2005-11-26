@@ -178,7 +178,7 @@ class SendEmailToUser extends FAAction {
 		$message_header .= "User ID: ". $request['user']->get('id') ."\n";
 		$message_header .= "Email: ". $request['user']->get('email') ."\n\n";
 
-		if(!email_user($member['email'], htmlentities(stripslashes($_REQUEST['subject']), ENT_NOQUOTES), $message_header . htmlentities(stripslashes($_REQUEST['message']), ENT_NOQUOTES))) {
+		if(!email_user($member['email'], k4_htmlentities(stripslashes($_REQUEST['subject']), ENT_NOQUOTES), $message_header . k4_htmlentities(stripslashes($_REQUEST['message']), ENT_NOQUOTES))) {
 			$action = new K4InformationAction(new K4LanguageElement('L_ERROREMAILING', $member['name']), 'content', FALSE);
 			return $action->execute($request);
 		} else {

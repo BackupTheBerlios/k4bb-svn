@@ -16,6 +16,9 @@
 			</tr>
 			<tr>
 				<td class="{$row_class}" colspan="2" id="topic{$reply_id}" valign="top">
+					
+					<hr noshade="noshade" size="1" />
+					
 					<!-- Body Text -->
 					<div id="reply{$reply_id}_body">{$body_text}</div>
 					<div style="text-align: right;display: none;" id="reply{$reply_id}_qebuttons"><input type="button" value="{$L_SAVE}" class="button" style="font-weight: bold;" onclick="saveQuickEdit('reply', {$reply_id}, 'reply{$reply_id}_body')" />&nbsp;<input type="button" value="X" class="button" style="font-weight: bold;color: #FF0000;" onclick="cancelQuickEdit('reply', {$reply_id}, 'reply{$reply_id}_body')" /></div>

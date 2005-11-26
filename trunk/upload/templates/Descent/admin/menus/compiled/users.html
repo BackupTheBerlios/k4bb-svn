@@ -1,18 +1,17 @@
 <?php if ($_SESSION['user']->get('perms') >= ADMIN): ?>
 <div id="users_menu" style="display: none;">
 	<div class="k4_borderwrap">
-		<table width="130" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
-			<tr class="k4_subtitle" nowrap="nowrap"><td><?php echo $scope->getVar("L_USERS"); ?></td></tr>
-			<tr class="alt3"><td nowrap="nowrap"><a class="smalltext" target="admin_iframe" href="admin.php?act=users_add"><?php echo $scope->getVar("L_ADDUSER"); ?></a></td></tr>
-			<tr class="alt3"><td nowrap="nowrap"><a class="smalltext" target="admin_iframe" href="admin.php?act=users_find"><?php echo $scope->getVar("L_FINDUSER"); ?></a></td></tr>
-			<tr class="alt3"><td nowrap="nowrap"><a class="smalltext" target="admin_iframe" href="admin.php?act=usernames"><?php echo $scope->getVar("L_DISALLOWNAMES"); ?></a></td></tr>
-			<tr class="k4_subtitle" nowrap="nowrap"><td><?php echo $scope->getVar("L_MISCELLANEOUS"); ?></td></tr>
-			<!--<tr class="alt3"><td nowrap="nowrap"><a class="smalltext" target="admin_iframe" href="admin.php?act=userranks"><?php echo $scope->getVar("L_USERRANKS"); ?></a></td></tr>-->
-			<tr class="alt3"><td nowrap="nowrap"><a class="smalltext" target="admin_iframe" href="admin.php?act=usertitles"><?php echo $scope->getVar("L_USERTITLES"); ?></a></td></tr>
-			<tr class="alt3"><td nowrap="nowrap"><a class="smalltext" target="admin_iframe" href="admin.php?act=userfields"><?php echo $scope->getVar("L_USERPROFILEFIELDS"); ?></a></td></tr>
-			<tr class="k4_subtitle" nowrap="nowrap"><td><?php echo $scope->getVar("L_GROUPS"); ?></td></tr>
-			<tr class="alt3"><td nowrap="nowrap"><a class="smalltext" target="admin_iframe" href="admin.php?act=usergroups"><?php echo $scope->getVar("L_USERGROUPS"); ?></a></td></tr>
-			<tr class="alt3"><td nowrap="nowrap"><a class="smalltext" target="admin_iframe" href="admin.php?act=masks"><?php echo $scope->getVar("L_PERMISSIONMASKS"); ?></a></td></tr>
+		<table cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+			<td><a class="smalltext" target="admin_iframe" href="admin.php?act=users_add"><?php echo $scope->getVar("L_ADDUSER"); ?></a></td>
+			<td><a class="smalltext" target="admin_iframe" href="admin.php?act=users_find"><?php echo $scope->getVar("L_FINDUSER"); ?></a></td>
+			<td><a class="smalltext" target="admin_iframe" href="admin.php?act=usernames"><?php echo $scope->getVar("L_DISALLOWNAMES"); ?></a></td>
+			<td class="alt2"><span class="smalltext"><?php echo $scope->getVar("L_MISCELLANEOUS"); ?></span></td>
+			<!--<td><a class="smalltext" target="admin_iframe" href="admin.php?act=userranks"><?php echo $scope->getVar("L_USERRANKS"); ?></a></td>-->
+			<td><a class="smalltext" target="admin_iframe" href="admin.php?act=usertitles"><?php echo $scope->getVar("L_USERTITLES"); ?></a></td>
+			<td><a class="smalltext" target="admin_iframe" href="admin.php?act=userfields"><?php echo $scope->getVar("L_USERPROFILEFIELDS"); ?></a></td>
+			<td class="alt2"><span class="smalltext"><?php echo $scope->getVar("L_GROUPS"); ?></span></td>
+			<td><a class="smalltext" target="admin_iframe" href="admin.php?act=usergroups"><?php echo $scope->getVar("L_USERGROUPS"); ?></a></td>
+			<td><a class="smalltext" target="admin_iframe" href="admin.php?act=masks"><?php echo $scope->getVar("L_PERMISSIONMASKS"); ?></a></td>
 		</table>
 	</div>
 </div>

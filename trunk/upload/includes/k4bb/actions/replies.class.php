@@ -219,11 +219,11 @@ class PostReply extends FAAction {
 			/* Prepare the query */
 			$insert_a			= $request['dba']->prepareStatement("INSERT INTO ". K4REPLIES ." (name,topic_id,forum_id,category_id,poster_name,poster_id,poster_ip,body_text,posticon,disable_html,disable_bbcode,disable_emoticons,disable_sig,disable_areply,disable_aurls,is_poll,row_type,row_level,created,parent_id,row_order) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			
-			$poster_name		= iif($request['user']->get('id') <= 0, htmlentities((isset($_REQUEST['poster_name']) ? $_REQUEST['poster_name'] : '') , ENT_QUOTES), $request['user']->get('name'));
+			$poster_name		= iif($request['user']->get('id') <= 0, k4_htmlentities((isset($_REQUEST['poster_name']) ? $_REQUEST['poster_name'] : '') , ENT_QUOTES), $request['user']->get('name'));
 			
 			//topic_id,forum_id,category_id,poster_name,poster_id,body_text,posticon
 			//disable_html,disable_bbcode,disable_emoticons,disable_sig,disable_areply,disable_aurls,is_draft
-			$insert_a->setString(1, htmlentities(html_entity_decode($_REQUEST['name'], ENT_QUOTES), ENT_QUOTES));
+			$insert_a->setString(1, k4_htmlentities(html_entity_decode($_REQUEST['name'], ENT_QUOTES), ENT_QUOTES));
 			$insert_a->setInt(2, $topic['topic_id']);
 			$insert_a->setInt(3, $forum['forum_id']);
 			$insert_a->setInt(4, $forum['category_id']);
@@ -263,7 +263,7 @@ class PostReply extends FAAction {
 
 			/* Set the forum values */
 			$forum_update->setInt(1, $created);
-			$forum_update->setString(2, htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
+			$forum_update->setString(2, k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
 			$forum_update->setString(3, $poster_name);
 			$forum_update->setInt(4, $reply_id);
 			$forum_update->setInt(5, $request['user']->get('id'));
@@ -326,7 +326,7 @@ class PostReply extends FAAction {
 			
 			/* Redirect the user */
 			if(!USE_AJAX) {
-				$action = new K4InformationAction(new K4LanguageElement('L_ADDEDREPLY', htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES), $topic['name']), 'content', FALSE, 'findpost.php?id='. $reply_id, 3);
+				$action = new K4InformationAction(new K4LanguageElement('L_ADDEDREPLY', k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES), $topic['name']), 'content', FALSE, 'findpost.php?id='. $reply_id, 3);
 				return $action->execute($request);
 			} else {
 				global $_URL;
@@ -430,7 +430,7 @@ class PostReply extends FAAction {
 			
 			/* Set template information for this iterator */								
 			$reply_preview	= array(
-								'name' => htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES),
+								'name' => k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES),
 								'body_text' => $body_text,
 								'poster_name' => $request['user']->get('name'),
 								'poster_id' => $request['user']->get('id'),
@@ -746,7 +746,7 @@ class UpdateReply extends FAAction {
 			
 			$update_a			= $request['dba']->prepareStatement("UPDATE ". K4REPLIES ." SET name=?,body_text=?,posticon=?,disable_html=?,disable_bbcode=?,disable_emoticons=?,disable_sig=?,disable_areply=?,disable_aurls=?,edited_time=?,edited_username=?,edited_userid=?,is_poll=? WHERE reply_id=?");
 			
-			$update_a->setString(1, htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
+			$update_a->setString(1, k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
 			$update_a->setString(2, $body_text);
 			$update_a->setString(3, $posticon);
 			$update_a->setInt(4, iif((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']), 1, 0));
@@ -756,7 +756,7 @@ class UpdateReply extends FAAction {
 			$update_a->setInt(8, iif((isset($_REQUEST['disable_areply']) && $_REQUEST['disable_areply']), 1, 0));
 			$update_a->setInt(9, iif((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']), 1, 0));
 			$update_a->setInt(10, time());
-			$update_a->setString(11, iif($request['user']->get('id') <= 0, htmlentities(@$_REQUEST['poster_name'], ENT_QUOTES), $request['user']->get('name')));
+			$update_a->setString(11, iif($request['user']->get('id') <= 0, k4_htmlentities(@$_REQUEST['poster_name'], ENT_QUOTES), $request['user']->get('name')));
 			$update_a->setInt(12, $request['user']->get('id'));
 			$update_a->setInt(13, $is_poll);
 			$update_a->setInt(14, $reply['reply_id']);
@@ -796,14 +796,14 @@ class UpdateReply extends FAAction {
 			/* Is this reply the forum's last post? */
 			if($forum['post_id'] == $reply['reply_id']) {
 				$forum_topic_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET post_name=?,post_posticon=? WHERE forum_id=?");
-				$forum_topic_update->setString(1, htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
+				$forum_topic_update->setString(1, k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
 				$forum_topic_update->setString(2, $posticon);
 				$forum_topic_update->setInt(3, $forum['forum_id']);
 				$forum_topic_update->executeUpdate();
 			}
 
 			/* Redirect the user */
-			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDREPLY', htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES)), 'content', FALSE, 'findpost.php?id='. $reply['reply_id'], 3);
+			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDREPLY', k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES)), 'content', FALSE, 'findpost.php?id='. $reply['reply_id'], 3);
 
 			return $action->execute($request);
 		
@@ -839,7 +839,7 @@ class UpdateReply extends FAAction {
 						
 			$reply_preview	= array(
 								'reply_id' => $reply['reply_id'],
-								'name' => htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES),
+								'name' => k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES),
 								'body_text' => $body_text,
 								'poster_name' => $request['user']->get('name'),
 								'poster_id' => $request['user']->get('id'),

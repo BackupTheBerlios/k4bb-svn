@@ -213,7 +213,7 @@ function post_attachment_options(&$request, $forum, $topic, $reply = FALSE) {
 			$post_attachments	= $request['dba']->executeQuery("SELECT * FROM ". K4ATTACHMENTS ." WHERE topic_id = ". intval($post['topic_id']) ." $extra");
 			while($post_attachments->next()) {
 				$temp			= $post_attachments->current();
-				$attach_inputs	.= '<br /><span class="smalltext">'. htmlentities($temp['file_name'], ENT_QUOTES) . '&nbsp;-&nbsp;<a href="viewfile.php?act=remove_attach?id='. $temp['id'] .'&amp;'. (!$reply ? 't' : 'r') .'='. $post['topic_id'] .'" title="'. $request['template']->getVar('L_REMOVEATTACHMENT') .'">'. $request['template']->getVar('L_REMOVEATTACHMENT') .'</a></span>';
+				$attach_inputs	.= '<br /><span class="smalltext">'. k4_htmlentities($temp['file_name'], ENT_QUOTES) . '&nbsp;-&nbsp;<a href="viewfile.php?act=remove_attach&amp;id='. $temp['id'] .'&amp;'. (!$reply ? 't' : 'r') .'='. $post['topic_id'] .'" title="'. $request['template']->getVar('L_REMOVEATTACHMENT') .'">'. $request['template']->getVar('L_REMOVEATTACHMENT') .'</a></span>';
 			}
 		}
 		
@@ -424,7 +424,7 @@ class K4RemoveAttachment extends FAAction {
 			$request['dba']->executeUpdate("UPDATE ". ($post['row_type'] & TOPIC ? K4TOPICS : K4REPLIES) ." SET attachments=attachments-1 WHERE topic_id = ". intval($post['topic_id']) . ($post['row_type'] & TOPIC ? "" : " AND reply_id = ". intval($post['reply_id'])));
 			
 
-			$action = new K4InformationAction(new K4LanguageElement('L_REMOVEDATTACHMENT', htmlentities($attachment['file_name'], ENT_QUOTES)), 'content', TRUE, referer(), 3);
+			$action = new K4InformationAction(new K4LanguageElement('L_REMOVEDATTACHMENT', k4_htmlentities($attachment['file_name'], ENT_QUOTES)), 'content', TRUE, referer(), 3);
 			return $action->execute($request);
 		} else {
 			no_perms_error($request);
@@ -465,7 +465,7 @@ class K4AttachmentsIterator extends FAProxyIterator {
 
 		$temp['file_icon']		= !file_exists($this->abs_path . $temp['file_type'] .'.gif') ? $this->img_dir .'unknown.gif' : $this->img_dir . $temp['file_type'] .'.gif';
 
-		$temp['file_name']		= htmlentities($temp['file_name'], ENT_QUOTES);
+		$temp['file_name']		= k4_htmlentities($temp['file_name'], ENT_QUOTES);
 
 		$temp['is_image']		= 0;
 		if(in_array($temp['file_type'], $this->images)) {

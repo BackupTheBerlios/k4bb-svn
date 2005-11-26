@@ -114,10 +114,10 @@ class HardBanUser extends FAAction {
 				return TRUE;
 			}
 
-			if($user['id'] > $request['user']->get('id')) {
-				no_perms_error($request);
-				return TRUE;
-			}
+//			if($user['id'] > $request['user']->get('id')) {
+//				no_perms_error($request);
+//				return TRUE;
+//			}
 
 			// unban
 			if($user['banned'] == 1) {
@@ -133,7 +133,7 @@ class HardBanUser extends FAAction {
 			// ban user
 			} else {
 				
-				$reason		= preg_replace("~(\r\n|\r|\n)~i", '<br />', htmlentities(@$_REQUEST['reason'], ENT_QUOTES));
+				$reason		= preg_replace("~(\r\n|\r|\n)~i", '<br />', k4_htmlentities(@$_REQUEST['reason'], ENT_QUOTES));
 
 				$ban		= $request['dba']->prepareStatement("INSERT INTO ". K4BANNEDUSERS ." (user_id,user_name,user_ip,reason,expiry) VALUES (?,?,?,?,?)");
 				
@@ -291,23 +291,20 @@ class ModFlagUser extends FAAction {
 				$action = new K4InformationAction(new K4LanguageElement('L_USERDOESNTEXIST'), 'content', TRUE);
 				return $action->execute($request);
 			}
-			
-			reset_cache('flagged_users');
 
 			if($user['flag_level'] == 0) {
 				$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET flag_level = 1 WHERE id = ". intval($user['id']));
 			
 				k4_bread_crumbs($request['template'], $request['dba'], 'L_FLAGUSER');
 				$action = new K4InformationAction(new K4LanguageElement('L_FLAGGEDUSER', $user['name']), 'content', TRUE, 'index.php', 3);
-				return $action->execute($request);
 			} else {
 				$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET flag_level = 0 WHERE id = ". intval($user['id']));
 			
 				k4_bread_crumbs($request['template'], $request['dba'], 'L_UNFLAGUSER');
 				$action = new K4InformationAction(new K4LanguageElement('L_UNFLAGGEDUSER', $user['name']), 'content', TRUE, 'index.php', 3);
-				return $action->execute($request);
 			}
-
+			reset_cache('flagged_users');
+			return $action->execute($request);
 		} else {
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_FLAGUSER');
 			$request['template']->setFile('content', 'finduser.html');
@@ -371,7 +368,6 @@ class ModFindUsers extends FAAction {
 		$it				= &new UsersIterator($result);
 		$request['template']->setList('users', $it);
 		$request['template']->setFile('content', 'foundusers.html');
-
 	}
 }
 

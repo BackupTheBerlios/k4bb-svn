@@ -32,14 +32,33 @@
 
 error_reporting(E_ALL ^ E_NOTICE);
 
+/**
+ * Function to get a parent directory
+ */
+if(!function_exists('one_dir_up')) {
+	function one_dir_up($dir, $num_dirs = 1) {
+
+		$dir		= str_replace('\\', '/', $dir);
+
+		$folders	= explode('/', $dir);
+		array_splice($folders, count($folders)-$num_dirs);
+		
+		$folders	= array_values($folders);
+
+		$dir		= implode('/', $folders);
+		
+		return $dir;
+	}
+}
+
+
 define('K4_BASE_DIR', dirname(__FILE__));
-define('BB_BASE_DIR', file_exists(dirname($_SERVER['SCRIPT_FILENAME']) .'/index.php') && is_dir(dirname($_SERVER['SCRIPT_FILENAME']) .'/includes') ? dirname($_SERVER['SCRIPT_FILENAME']) : $_SERVER['DOCUMENT_ROOT']);
+define('BB_BASE_DIR', file_exists(dirname($_SERVER['SCRIPT_FILENAME']) .'/index.php') && is_dir(dirname($_SERVER['SCRIPT_FILENAME']) .'/includes') ? dirname($_SERVER['SCRIPT_FILENAME']) : one_dir_up(dirname(__FILE__), 2));
 
 define('IN_K4', TRUE);
 
 @set_time_limit(0);
 set_magic_quotes_runtime(0);
-
 
 ini_set('session.name',			'sid');
 ini_set('session.auto_start',	0);
@@ -263,6 +282,12 @@ function k4_set_language($lang) {
 			
 			if (!@include(K4_BASE_DIR . "/lang/". $_CONFIG['application']['lang'] ."/lang.php"))
 				trigger_error("Configuration error, default language does not exist", E_USER_ERROR);
+		
+			global $_LANG;
+
+			setlocale(LC_ALL, $_LANG['locale']);
+			header("Content-type: text/html; charset=". $_LANG['ENCODING']);
+
 		}
 	}
 }
