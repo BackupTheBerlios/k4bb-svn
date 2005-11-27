@@ -25,6 +25,7 @@
 * SOFTWARE.
 *
 * @author Peter Goodman
+* @author Thomas "Thasmo" Deinhamer (thasmo at gmail dot com)
 * @version $Id: admin.php 156 2005-07-15 17:51:48Z Peter Goodman $
 * @package k42
 */
@@ -40,29 +41,29 @@ $_LANG += array(
 /**
  * Admin CP Menu 
  */
-'L_CATEGORIES'			=> 'Categories',
-'L_FORUMS'				=> 'Forums',
-'L_USERS'				=> 'Users',
-'L_GROUPS'				=> 'User Groups',
-'L_OPTIONS'				=> 'Options',
-'L_PERMISSIONS'			=> 'Permissions',
-'L_CENSORING'			=> 'Word Censoring',
+	'L_CATEGORIES'			=> 'Kategorien',
+	'L_FORUMS'				=> 'Foren',
+	'L_USERS'				=> 'Benutzer',
+	'L_GROUPS'				=> 'Benutzergrupen',
+	'L_OPTIONS'				=> 'Optionen',
+	'L_PERMISSIONS'			=> 'Berechtigungen',
+	'L_CENSORING'			=> 'Wortzensur',
 'L_PRUNE'				=> 'Prune Posts',
-'L_ICONS'				=> 'Icons',
-'L_USERRANKS'			=> 'User Ranks',
-'L_USERTITLES'			=> 'User Titles',
+	'L_ICONS'				=> 'Symbole',
+	'L_USERRANKS'			=> 'Benutzerränge',
+	'L_USERTITLES'			=> 'Benutzertitel',
 'L_USERPROFILEFIELDS'	=> 'User Profile Fields',
 'L_USERREGISTRATION'	=> 'User Registration',
-'L_SQL'					=> 'SQL',
+	'L_SQL'					=> 'SQL',
 'L_VIEWFORUM'			=> 'Forum Home Page',
 'L_STYLES'				=> 'Board Styles',
-'L_CMSOPTIONS'			=> 'CMS Options',
+	'L_CMSOPTIONS'			=> 'CMS Einstellungen',
 'L_MANAGESITE'			=> 'Manage Site',
 'L_GLOBALPM'			=> 'Global PM',
-'L_FILEMANAGER'			=> 'File Manager',
-'L_FAQCATEGORIES'		=> 'FAQ Categories',
-'L_FAQANSWERS'			=> 'FAQ Answers',
-'L_SPIDERS'				=> 'Search Spiders',
+	'L_FILEMANAGER'			=> 'Dateiverwaltung',
+	'L_FAQCATEGORIES'		=> 'FAQ Kategorien',
+	'L_FAQANSWERS'			=> 'FAQ Antworten',
+	'L_SPIDERS'				=> 'Suchmaschinen',
 /* / Admin CP Menu */
 
 'L_PRUNEMESSAGE'		=> 'This will delete any topic which has not been posted to within the number of days you select. If you do not enter a number then all topics will be deleted. It will not remove topics in which polls are still running nor will it remove announcements or sticky topics. You will need to remove these topics manually.',
@@ -84,30 +85,30 @@ $_LANG += array(
 'L_GLOBALEMAILMESSAGE'	=> 'Here\'s a nifty way to bug your members at home: send them emails! From this section, you can send emails to EVERY member of your forum. Amazing eh?',
 
 /* Admin CP */
-'L_WELCOME'				=> 'Welcome',
-'L_ADMINISTRATION'		=> 'Administration',
-'L_WELCOMEACP'			=> 'Welcome to the k4 Admin Control Panel',
+	'L_WELCOME'				=> 'Willkommen',
+	'L_ADMINISTRATION'		=> 'Administration',
+	'L_WELCOMEACP'			=> 'Willkommen in der k4 Administration',
 'L_ACPWELCOME'			=> 'Welcome to the k4 Administration Control Panel. From here you can control vital aspects of the forum. Depending on whether you are an administrator or a moderator you can:',
 'L_ACPFEATURES'			=> '<ul><li>Do all sorts of stuff.</li></ul>',
 
 /**
  * Category Management 
  */
-'L_ORDER'				=> 'Order',
-'L_MANAGECATEGORIES'	=> 'Manage Categories',
-'L_ADDCATEGORY'			=> 'Add New Category',
+	'L_ORDER'				=> 'Reihen',
+	'L_MANAGECATEGORIES'	=> 'Kategorien verwalten',
+	'L_ADDCATEGORY'			=> 'Neue Kategorie erstellen',
 'L_INSERTCATDESC'		=> 'You must insert a Category Description.',
 'L_INSERTCATNAME'		=> 'You must insert a Category Name.',
 'L_INSERTCATORDER'		=> 'You must insert a Category Order.',
 'L_INSERTCATORDERNUM'	=> 'The Category Order must be a number.',
-'L_CATNAME'				=> 'Category Name',
-'L_EDITCATEGORIES'		=> 'Edit Categories',
+	'L_CATNAME'				=> 'Name der Kategorie',
+	'L_EDITCATEGORIES'		=> 'Kategorien ändern',
 'L_ADDEDCATEGORY'		=> 'Successfully added the category <strong>%s</strong> to the database.<br /><br /><strong>Please wait while this category\'s default permissions are added to the database.</strong>',
 'L_INVALIDCATEGORY'		=> 'You have specified an invalid Category ID.',
 'L_ADDEDCATEGORYPERMS'	=> 'Successfuly added the category permissions for <strong>%s</strong>.',
 'L_UPDATEDCATEGORY'		=> 'Successfully updated the category <strong>%s</strong>.',
 'L_CATEGORYPERMISSIONS'	=> 'Category Permissions',
-'L_EDITCATEGORY'		=> 'Edit Category',
+	'L_EDITCATEGORY'		=> 'Kategorie ändern',
 'L_NOCATEGORYPERMS'		=> 'This category does not have any permissions assigned to it',
 'L_REMOVEDCATEGORY'		=> 'Successfully removed the category <strong>%s</strong>.',
 'L_CHECKDELCAT'			=> 'Removing this category will result in the deletion of all of its forums, topics and replies. Would you like to continue?',

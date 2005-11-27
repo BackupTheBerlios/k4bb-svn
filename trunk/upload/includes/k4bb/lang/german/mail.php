@@ -39,7 +39,7 @@ $_LANG += array(
 
 	'L_FORUMS'				=> 'Foren',
 	'L_REPLYTO'				=> 'Antworten auf',
-'L_TOPICPOSTIN'			=> 'Topic posted in',
+	'L_TOPICPOSTIN'			=> 'Beantwortetes Thema',
 'L_TOPICSUBSCRIBEEMAIL'	=> "Hello %s,\n\n%s has just replied to a topic you have subscribed to entitled: %s.\n\nThe topic is located at:\n". K4_URL ."/viewtopic.php?id=%s\n\n\nThere may be other replies as well, however you will not receive any more notifications until you visit the forum topic again.\n\nYours,\n%s team.\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nUnsubscription Information:\n\nTo unsubscribe from this topic, please visit this page:\n". K4_URL ."/viewtopic.php?act=untrack&id=%s",
 'L_FORUMSUBSCRIBEEMAIL'	=> "Hello %s,\n\n%s has just posted a topic in the forum you have subscribed to entitled: %s.\n\nThe topic is located at:\n". K4_URL ."/viewforum.php?id=%s\n\n\nThere may be other topics as well, however you will not receive any more notifications until you visit the forum again.\n\nYours,\n%s team.\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nUnsubscription Information:\n\nTo unsubscribe from this forum, please visit this page:\n". K4_URL ."/viewforum.php?act=untrack&id=%s",
 'L_PASSWORDCHANGEEMAIL'	=> "Hello %s,\n\nyour new password is %s. To log in, simply go to: ". K4_URL ."/member.php?act=login.",
