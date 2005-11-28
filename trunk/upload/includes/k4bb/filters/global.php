@@ -330,6 +330,30 @@ class K4TemplateFilter extends FAFilter {
 	function __construct($filename) {
 		$this->_filename = $filename;
 	}
+	
+	/**
+	 * If the templateset doesn't exist, try to find another one.
+	 */
+	function proveTemplateSet(&$request, &$templateset) {
+		if(!file_exists(BB_BASE_DIR . "/templates/$templateset") || !file_exists(BB_BASE_DIR . "/templates/$templateset/{$this->_filename}")) {
+			$original		= $templateset;
+			$folders		= get_files(BB_BASE_DIR . "/templates", TRUE);
+
+			foreach($folders as $f) {
+				if($f['name'] != 'Archive' && $f['name'] != 'RSS') {
+					$templateset = $f['name'];
+					break;
+				}
+			}
+			
+			if($templateset == $original)
+				$templateset = 'Archive';
+
+			$request['dba']->executeUpdate("UPDATE ". K4SETTINGS ." SET value = '{$templateset}' WHERE varname = 'styleset'");
+			$request['dba']->executeUpdate("UPDATE ". K4USERSETTINGS ." SET templateset = '{$templateset}' WHERE templateset = '{$original}'");
+			reset_cache('settings');
+		}
+	}
 
 	function execute(&$action, &$request) {
 		global $_LANG, $_CONFIG, $_SETTINGS, $_USERGROUPS, $_STYLESETS;
@@ -343,10 +367,12 @@ class K4TemplateFilter extends FAFilter {
 		$templateset	= intval($_STYLESETS[$styleset]['use_templateset']) == 0 ? (($request['user']->isMember()) ? $request['user']->get('templateset') : $styleset) : $styleset;
 		$imageset		= intval($_STYLESETS[$styleset]['use_imageset']) == 0 ? (($request['user']->isMember()) ? $request['user']->get('imageset') : $styleset) : $styleset;
 		
-		$request['user']->set('templateset', $templateset);
-		
+		$this->proveTemplateSet($request, $templateset);
+
 		if($request['user']->get('spider') == TRUE || isset($_REQUEST['archive']))
 			$templateset = 'Archive';
+		
+		$request['user']->set('templateset', $templateset);
 
 		// set the main file
 		// *** IF SOMEONE IS GOING TO MAKE A PORTAL, $request['template_file'] IS THE
@@ -501,7 +527,7 @@ class K4CloseBoardFilter extends FAFilter {
 			// check
 			if($request['user']->get('perms') < SUPERADMIN && ($file != 'admin.php' && $act != 'login' && $prev_act != 'login')) {
 			
-				$action = new K4InformationAction($request['template']->getVar('bbclosedreason'), 'content', FALSE);
+				$action = new K4InformationAction($request['template']->getVar('bbclosedreason') .'<br /><br /><a href="member.php?act=login" title="'. $request['template']->getVar('L_LOGIN') .'">'. $request['template']->getVar('L_LOGIN') .'</a>', 'content', FALSE);
 				return $action->execute($request);
 			}
 		}		

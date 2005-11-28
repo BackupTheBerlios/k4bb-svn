@@ -6,7 +6,7 @@
 <div align="center" class="smalltext">
 	<if:if var="show_close_button" eq="1"><input type="button" class="button" value="{$L_CLOSEWINDOW}" onclick="window.close()" /><br /><br /></if:if>
 	<a href="http://www.k4bb.org" title="k4 Bulletin Board" target="_blank" class="smalltext">Powered by: k4 Bulletin Board {$VERSION}</a>
-	<if:if var="copyrighttext" noteq="">{$copyrighttext}</if:if>
+	<if:if var="copyrighttext" noteq=""><br />{$copyrighttext}</if:if>
 </div>
 <!--
 COPYRIGHT NOTICE

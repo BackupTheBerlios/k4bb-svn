@@ -5,8 +5,7 @@
 		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
 			<tr>
 				<td class="alt3" colspan="3">
-					<div align="center">
-						{$L_DRAFTNOTICE}
+					<span class="smalltext">{$L_DRAFTNOTICE}</span>
 					</td>
 				</td>
 			</tr>
@@ -16,6 +15,13 @@
 				<td class="k4_subtitle">{$L_OPTIONS}</td>
 			</tr>
 			<list:list id="drafts">
+			<list:default list="drafts">
+			<tr>
+				<td class="alt3" colspan="3">
+					<div class="outset_box" style="text-align: center;"><br /><strong>{$L_NOSAVEDDRAFTS}</strong><br /><br /></div>
+				</td>
+			</tr>
+			</list:default>
 			<list:item list="drafts">
 			<list:switch list="drafts" var="row_class" a="alt1" b="alt3">
 			<tr>

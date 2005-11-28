@@ -23,10 +23,10 @@
 				</if:if>
 				<if:if var="subforums" greater="0">
 				<if:if var="showsubforums" eq="1">
+				<list:sublist list="forums" id="subforums_list" column="subforums_list">
 				<br />
 				<strong>{$L_SUBFORUMS}:</strong>
-				<list:sublist list="forums" id="subforums" column="subforums">
-					<list:item list="subforums">
+					<list:item list="subforums_list">
 					<img src="Images/{$IMG_DIR}/Icons/{$forum_icon}_small.gif" alt="{$forum_alt}" height="11" width="11" border="0" />
 					<a href="viewforum.php?f={$forum_id}" title="{$description}">{$name}</a><list:separator list="subforums">,</list:separator>
 					</list:item>

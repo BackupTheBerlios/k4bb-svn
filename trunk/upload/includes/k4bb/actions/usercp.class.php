@@ -98,6 +98,11 @@ class K4UserControlPanel extends FAAction {
 				$action				= &new K4ManageSubscriptions();
 				break;
 			}
+			
+			case 'drafts': {
+				$action				= &new K4ManageDrafts();
+				break;
+			}
 
 			default: {
 				
@@ -1067,6 +1072,41 @@ class K4ManageSubscriptions extends FAAction {
 		$request['template']->setList('subscriptions', new FAArrayIterator($subs));
 		$request['template']->setFile('usercp_content', 'usercp_subscriptions.html');
 
+	}
+}
+
+class K4ManageDrafts extends FAAction {
+	function execute(&$request) {
+		global $_ALLFORUMS;
+
+		$drafts			= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE is_draft = 1 AND poster_id = ". intval($request['user']->get('id')));
+		$drafts_array	= array();
+		$forums			= array();
+		
+		while($drafts->next()) {
+			$temp = $drafts->current();
+			
+			if(isset($_ALLFORUMS['f'. $temp['forum_id']])) {
+				
+				if(!isset($forums[$temp['forum_id']])) {
+					foreach($_ALLFORUMS['f'. $temp['forum_id']] as $key => $val)
+						$forums[$temp['forum_id']]['forum_'. $key] = $val;
+				
+				}
+				if(isset($forums[$temp['forum_id']])) {
+					$temp = array_merge($temp, $forums[$temp['forum_id']]);
+				}
+
+				$drafts_array[] = $temp;
+			}
+		}
+		
+		$drafts = new FAArrayIterator($drafts_array);
+
+		$request['template']->setList('drafts', $drafts);
+		$request['template']->setFile('usercp_content', 'post_drafts.html');
+		
+		return TRUE;
 	}
 }
 

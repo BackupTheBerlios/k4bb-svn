@@ -259,11 +259,11 @@ class K4ForumsIterator extends FAProxyIterator {
 		/* Should we query down to the next level of forums? */
 		if($this->do_recurse) {
 			if($temp['subforums'] > 0 && $this->settings['showsubforums'] == 1) {
-				$it = &new K4ForumsIterator($this->dba, "SELECT * FROM ". K4FORUMS ." WHERE parent_id = ". intval($temp['forum_id']) ." AND row_level = ". intval($temp['row_level']+1) ." ORDER BY row_order ASC", FALSE);
+				$it = new K4ForumsIterator($this->dba, "SELECT * FROM ". K4FORUMS ." WHERE parent_id = ". intval($temp['forum_id']) ." AND category_id = ". intval($temp['category_id']) ." AND row_level = ". intval($temp['row_level']+1) ." ORDER BY row_order ASC", FALSE);
 				if($it->hasNext()) {
 
 					// add the iterator
-					$temp['subforums'] = $it;
+					$temp['subforums_list'] = $it;
 				} else {
 					
 					// if this forum doesn't actually have subforums, fix it

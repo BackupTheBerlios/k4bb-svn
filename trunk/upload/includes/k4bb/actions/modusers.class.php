@@ -114,10 +114,10 @@ class HardBanUser extends FAAction {
 				return TRUE;
 			}
 
-//			if($user['id'] > $request['user']->get('id')) {
-//				no_perms_error($request);
-//				return TRUE;
-//			}
+			if($user['id'] == $request['user']->get('id')) {
+				no_perms_error($request);
+				return TRUE;
+			}
 
 			// unban
 			if($user['banned'] == 1) {

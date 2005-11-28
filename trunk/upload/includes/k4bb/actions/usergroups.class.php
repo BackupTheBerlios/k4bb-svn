@@ -101,7 +101,7 @@ class AddUserToGroup extends FAAction {
 		$groups[]				= intval($group['id']);
 		
 		$extra					= NULL;
-		if($request['user']->get('perms') < $group['min_perm'])
+		if($member['perms'] < $group['min_perm'])
 			$extra				.= ', perms='. intval($group['min_perm']);
 		
 		/* Add this user to the group and change his perms if we need to */

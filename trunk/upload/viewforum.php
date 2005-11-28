@@ -176,7 +176,7 @@ class K4DefaultAction extends FAAction {
 				$request['template']->setVar('forum_'. $key, $val);
 			
 			/* If this forum has sub-forums */
-			if( (isset_forum_cache_item('subforums', $forum['forum_id']) && $forum['subforums'] == 1)) {
+			if( (isset_forum_cache_item('subforums', $forum['forum_id']) && $forum['subforums'] >= 1)) {
 				
 				/* Cache this forum as having subforums */
 				set_forum_cache_item('subforums', 1, $forum['forum_id']);
@@ -187,7 +187,6 @@ class K4DefaultAction extends FAAction {
 				/* Set the sub-forums list */
 				$it = &new K4ForumsIterator($request['dba'], "SELECT * FROM ". K4FORUMS ." WHERE parent_id = ". $forum['forum_id'] ." ORDER BY row_order ASC");
 				$request['template']->setList('forums', $it);
-				$request['template']->setFile('content', 'subforums.html');
 			}
 
 			if(get_map( 'topics', 'can_view', array('forum_id' => $forum['forum_id'])) > $request['user']->get('perms')) {
@@ -200,7 +199,7 @@ class K4DefaultAction extends FAAction {
 			 */
 
 			/* Set the topics template to the content variable */
-			$request['template']->setFile('content_extra', 'viewforum.html');
+			$request['template']->setFile('content', 'viewforum.html');
 			
 			/* Set what this user can/cannot do in this forum */
 			$request['template']->setVar('forum_user_topic_options', sprintf($request['template']->getVar('L_FORUMUSERTOPICPERMS'),

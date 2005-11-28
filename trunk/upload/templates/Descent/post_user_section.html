@@ -22,12 +22,12 @@
 			</if:if></if:if></if:if>
 			
 			<if:if var="post_user_group_avatar" eq="">
-			<if:if var="post_user_group_nicename" noteq=""><if:if var="post_user_title" noteq="">{$post_user_group_nicename}<br /></if:if></if:if>
+			<if:if var="post_user_group_nicename" noteq=""><if:if var="post_user_title" eq="">{$post_user_group_nicename}<br /></if:if></if:if>
 			<if:else />
 			<img src="tmp/upload/group_avatars/{$post_user_group_avatar}" border="0" alt="{$post_user_group_nicename}" />
 			<br />
 			</if:if>
-			<if:if var="post_user_user_title" noteq="">{$post_user_user_title}<br /></if:if>
+			<if:if var="post_user_user_title" noteq=""><if:if var="post_user_title" eq="">{$post_user_user_title}<br /><if:else />{$post_user_title}<br /></if:if></if:if>
 
 			{$L_JOINED}: <core:date format="%b %d %Y">{$post_user_created}</core:date><br />
 			{$L_POSTS}: <a href="search.php?act=find&author={$post_user_name}" title="{$L_FINDPOSTSBYUSER}">{$post_user_num_posts}</a>

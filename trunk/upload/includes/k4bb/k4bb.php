@@ -157,7 +157,6 @@ class K4Controller extends FAController {
 		setcookie(K4LASTSEEN, $request['user']->get('seen'), time() + 2592000, get_domain());
 		setcookie('k4_canjs', 0, time() + 2592000, get_domain());
 		
-
 		/**
 		 * Determine some GZIP settings
 		 */

@@ -548,7 +548,7 @@ class AdminEditForum extends FAAction {
 			if(is_array($groups)) {
 				foreach($groups as $g) {
 					if(isset($_USERGROUPS[$g])) {
-						$groups_str	.= $g .' ';
+						$groups_str	.= $g .'|';
 					}
 				}
 
@@ -596,6 +596,25 @@ class AdminEditForum extends FAAction {
 }
 
 class AdminUpdateForum extends FAAction {
+
+	function loop_forums($level, &$dba, &$result) {
+		
+		while($result->next()) {
+			$temp						= $result->current();
+			
+			$dba->executeUpdate("UPDATE ". K4FORUMS ." SET row_level={$level} WHERE forum_id = ". $temp['forum_id']);
+			
+			if($temp['subforums'] > 0) {
+				
+				$temp_category_id = $temp['category_id'] > 0 ? " AND category_id = ". intval($temp['category_id']) ." " : " AND category_id = 0 ";
+
+				$this->loop_forums($level + 1, $dba, $dba->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE row_level = ". intval($temp['row_level'] + 1) ." AND parent_id = ". intval($temp['forum_id']) ." ". $temp_category_id ." ORDER BY row_order ASC"));
+			}
+		}
+
+		$result->free();
+	}
+
 	function execute(&$request) {		
 		
 		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
@@ -625,6 +644,26 @@ class AdminUpdateForum extends FAAction {
 			} else {
 				$category		= array('category_id' => 0, 'row_level' => 0, 'row_type' => CATEGORY, 'parent_id' => 0);
 			}
+			
+						if(!isset($_REQUEST['name']) || $_REQUEST['name'] == '') {
+				$action = new K4InformationAction(new K4LanguageElement('L_INSERTFORUMNAME'), 'content', TRUE);
+				return $action->execute($request);
+			}
+						
+//			if(!isset($_REQUEST['description']) || $_REQUEST['description'] == '') {
+//				$action = new K4InformationAction(new K4LanguageElement('L_INSERTFORUMDESC'), 'content', TRUE);
+//				return $action->execute($request);
+//			}
+			
+			if(!isset($_REQUEST['row_order']) || $_REQUEST['row_order'] == '') {
+				$action = new K4InformationAction(new K4LanguageElement('L_INSERTFORUMORDER'), 'content', TRUE);
+				return $action->execute($request);
+			}
+
+			if(!ctype_digit($_REQUEST['row_order'])) {
+				$action = new K4InformationAction(new K4LanguageElement('L_INSERTFORUMORDERNUM'), 'content', TRUE);
+				return $action->execute($request);
+			}
 
 			if(isset($_REQUEST['parent']) && (strpos($_REQUEST['parent'], 'f') !== FALSE || strpos($_REQUEST['parent'], 'c') !== FALSE)) {
 				
@@ -652,7 +691,12 @@ class AdminUpdateForum extends FAAction {
 						} else {
 							$pcategory		= array('category_id' => 0, 'row_level' => 0, 'row_type' => CATEGORY, 'parent_id' => 0);
 						}
-						$parent_id		= $pforum['forum_id'];
+						
+						$temp_category_id	= $pforum['category_id'] > 0 ? " AND category_id = ". intval($pforum['category_id']) ." " : " AND category_id = 0 ";
+						//$count				= intval($request['dba']->getValue("SELECT COUNT(forum_id) FROM ". K4FORUMS ." WHERE row_level = ". intval($pforum['row_level'] + 1) ." AND parent_id = ". intval($pforum['forum_id']) ." ". $temp_category_id ." ORDER BY row_order ASC"));
+						$request['dba']->executeUpdate("UPDATE ". K4FORUMS ." SET subforums = subforums+1 WHERE forum_id = ". intval($pforum['forum_id']));
+
+						$parent_id			= $pforum['forum_id'];
 
 					/* Category */
 					} else {
@@ -686,6 +730,29 @@ class AdminUpdateForum extends FAAction {
 				$parent			= $pforum;
 			} else {
 				$parent			= $pcategory;
+			}
+			
+			// The forum is now a) a subforum and b) is in a new place
+			// this check is made to weed out any id collisions between the forum and category tables
+			// what this does is updates this subforum's previous parent's 'subforums' column
+			if( //$pforum['forum_id'] > 0 && 
+				(
+					($forum['category_id'] == 0 && $forum['parent_id'] != $pforum['forum_id']) // if this is a subforum of a top-level forum
+					|| ($forum['row_level'] > 2 && $forum['parent_id'] != $pforum['forum_id']) // placed in a new forum
+				)
+			) {
+				$prev_parent = $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($forum['parent_id']));
+				if(is_array($prev_parent) && !empty($prev_parent)) {
+					if($prev_parent['subforums'] > 0) {
+						$request['dba']->executeUpdate("UPDATE ". K4FORUMS ." SET subforums=subforums-1 WHERE forum_id = ". intval($prev_parent['forum_id']));
+					} else { } // TODO: hrmm.. made a mistake somewhere.
+				}
+			}
+			
+			// change the row levels of subforums underneath this forum
+			if($forum['subforums'] > 0) {
+				$temp_category_id = $forum['category_id'] > 0 ? " AND category_id = ". intval($forum['category_id']) ." " : " AND category_id = 0 ";
+				$this->loop_forums($parent['row_level']+3, $request['dba'], $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE row_level = ". intval($parent['row_level']+2) ." AND parent_id = ". intval($forum['forum_id']) ." ". $temp_category_id ." ORDER BY row_order ASC"));
 			}
 			
 //			if(isset($_REQUEST['parent']) && (strpos($_REQUEST['parent'], 'f') !== FALSE || strpos($_REQUEST['parent'], 'c') !== FALSE)) {
@@ -734,26 +801,6 @@ class AdminUpdateForum extends FAAction {
 //				$forum			= array('forum_id' => 0, 'row_level' => 0, 'row_type' => FORUM, 'parent_id' => 0);
 //				$parent_id		= 0;
 //			}
-
-			if(!isset($_REQUEST['name']) || $_REQUEST['name'] == '') {
-				$action = new K4InformationAction(new K4LanguageElement('L_INSERTFORUMNAME'), 'content', TRUE);
-				return $action->execute($request);
-			}
-						
-//			if(!isset($_REQUEST['description']) || $_REQUEST['description'] == '') {
-//				$action = new K4InformationAction(new K4LanguageElement('L_INSERTFORUMDESC'), 'content', TRUE);
-//				return $action->execute($request);
-//			}
-			
-			if(!isset($_REQUEST['row_order']) || $_REQUEST['row_order'] == '') {
-				$action = new K4InformationAction(new K4LanguageElement('L_INSERTFORUMORDER'), 'content', TRUE);
-				return $action->execute($request);
-			}
-
-			if(!ctype_digit($_REQUEST['row_order'])) {
-				$action = new K4InformationAction(new K4LanguageElement('L_INSERTFORUMORDERNUM'), 'content', TRUE);
-				return $action->execute($request);
-			}
 
 			$users_array		= '';
 			/* Are there any moderating users? */

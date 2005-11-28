@@ -35,12 +35,6 @@
 				<td class="alt1"><a href="member.php?act=usercp&amp;view=picture" title="{$L_EDITPERSONALPIC}" class="smalltext">{$L_EDITPERSONALPIC}</a></td>
 			</tr>
 			</if:if>
-			<tr>
-				<td class="alt1"><a href="member.php?act=usercp&amp;view=attachments" title="{$L_MANAGEATTACHMENTS}" class="smalltext">{$L_MANAGEATTACHMENTS}</a></td>
-			</tr>
-			<tr>
-				<td class="alt1"><a href="member.php?act=usercp&amp;view=subscriptions" title="{$L_MANAGESUBSCRIPTIONS}" class="smalltext">{$L_MANAGESUBSCRIPTIONS}</a></td>
-			</tr>
 			<!-- / Settings & Options -->
 			<if:if var="enablepms" eq="1">
 			<maps:if var="private_messaging" method="can_view">
@@ -78,6 +72,18 @@
 			<!-- / Private Messaging -->
 			</maps:if>
 			</if:if>
+			<tr>
+				<td class="k4_subtitle">{$L_POSTMANAGEMENT}</td>
+			</tr>
+			<tr>
+				<td class="alt1"><a href="member.php?act=usercp&amp;view=attachments" title="{$L_MANAGEATTACHMENTS}" class="smalltext">{$L_MANAGEATTACHMENTS}</a></td>
+			</tr>
+			<tr>
+				<td class="alt1"><a href="member.php?act=usercp&amp;view=drafts" title="{$L_DRAFTS}" class="smalltext">{$L_DRAFTS}</a></td>
+			</tr>
+			<tr>
+				<td class="alt1"><a href="member.php?act=usercp&amp;view=subscriptions" title="{$L_MANAGESUBSCRIPTIONS}" class="smalltext">{$L_MANAGESUBSCRIPTIONS}</a></td>
+			</tr>
 		</table>
 	</div>
 </div>
