@@ -37,14 +37,14 @@ if (!defined('IN_K4'))
 
 $_LANG += array(
 
-	'L_FORUMS'				=> 'Foren',
-	'L_REPLYTO'				=> 'Antworten auf',
-	'L_TOPICPOSTIN'			=> 'Beantwortetes Thema',
-'L_TOPICSUBSCRIBEEMAIL'	=> "Hello %s,\n\n%s has just replied to a topic you have subscribed to entitled: %s.\n\nThe topic is located at:\n". K4_URL ."/viewtopic.php?id=%s\n\n\nThere may be other replies as well, however you will not receive any more notifications until you visit the forum topic again.\n\nYours,\n%s team.\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nUnsubscription Information:\n\nTo unsubscribe from this topic, please visit this page:\n". K4_URL ."/viewtopic.php?act=untrack&id=%s",
-'L_FORUMSUBSCRIBEEMAIL'	=> "Hello %s,\n\n%s has just posted a topic in the forum you have subscribed to entitled: %s.\n\nThe topic is located at:\n". K4_URL ."/viewforum.php?id=%s\n\n\nThere may be other topics as well, however you will not receive any more notifications until you visit the forum again.\n\nYours,\n%s team.\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nUnsubscription Information:\n\nTo unsubscribe from this forum, please visit this page:\n". K4_URL ."/viewforum.php?act=untrack&id=%s",
-'L_PASSWORDCHANGEEMAIL'	=> "Hello %s,\n\nyour new password is %s. To log in, simply go to: ". K4_URL ."/member.php?act=login.",
-'L_REGISTEREMAILMSG'	=> "%s,\n\nThanks for registering at the %s forums! We are glad you have chosen to be a part of our community and we hope you enjoy your stay.\n\nThanks again,\n%s team.",
-'L_REGISTEREMAILRMSG'	=> "%s,\n\nThanks for registering at the %s forums! We are glad you have chosen to be a part of our community and we hope you enjoy your stay.\n\nIn order to complete your registration, please go to the following website address to confirm your registration:\n\n%s\n\n\n\nThanks again,\n%s team.",
+'L_FORUMS'				=> 'Foren',
+'L_REPLYTO'				=> 'Antworten auf',
+'L_TOPICPOSTIN'			=> 'Beantwortetes Thema',
+'L_TOPICSUBSCRIBEEMAIL'	=> "Hallo %s,\n\n%s hat gerade auf ein Thema, welches abonniert wurde, geantwortet: %s.\n\nDas Thema befindet sich hier:\n". K4_URL ."/viewtopic.php?id=%s\n\n\nMöglicherweise wurden inzwischen weitere Antworten verfasst. Bis zur erneuten Durchsicht des Themas werden keine weiteren Benachrichtigungen gesendet.\n\nMit freundlichen Grüßen,\n%s Team.\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nInformation zur Auflösung des Abonnements:\n\nZum Auflösen des Abonnements dieses Themas diese Seite besuchen:\n". K4_URL ."/viewtopic.php?act=untrack&id=%s",
+'L_FORUMSUBSCRIBEEMAIL'	=> "Hallo %s,\n\n%s hat soeben ein Thema in einem Forum verfasst welches abonniert wurde: %s.\n\nDas Thema befindet sich hier:\n". K4_URL ."/viewforum.php?id=%s\n\n\nMöglicherweise wurden inzwischen weitere Themen verfasst. Bis zur erneuten Durchsicht des Forums werden keine weiteren Benachrichtigungen gesendet.\n\nMit freundlichen Grüßen,\n%s Team.\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nInformation zur Auflösung des Abonnements:\n\nZum Auflösen des Abonnements dieses Forums diese Seite besuchen:\n". K4_URL ."/viewforum.php?act=untrack&id=%s",
+'L_PASSWORDCHANGEEMAIL'	=> "Hallo %s,\n\ndas neue Passwort ist %s. Zur Anmeldung: ". K4_URL ."/member.php?act=login.",
+'L_REGISTEREMAILMSG'	=> "%s,\n\nDanke für die Registrierung auf den %s Foren! Wir freuen uns, dass du dich entschieden hast unseren Foren beizutreten und hoffen, dass du deinen Aufenthalt genießt.\n\nDanke sehr,\n%s Team.",
+'L_REGISTEREMAILRMSG'	=> "%s,\n\nDanke für die Registrierung auf den %s Foren! Wir freuen uns, dass du dich entschieden hast unseren Foren beizutreten und hoffen, dass du deinen Aufenthalt genießt.\n\nUm die Registrierung abzuschließen bitten wir dich diese Seite unserer Foren zu besuchen:\n\n%s\n\n\n\nDanke sehr,\n%s Team.",
 
 );
 
