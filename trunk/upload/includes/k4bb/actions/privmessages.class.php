@@ -512,7 +512,7 @@ class K4SendPMessage extends FAAction {
 				$user = $request['dba']->getRow("SELECT * FROM ". K4USERS ." WHERE name = '". $request['dba']->quote(k4_htmlentities($username, ENT_QUOTES)) ."'");
 
 				if(is_array($user) && !empty($user)) {
-					if(get_map($user, 'pm_message', 'can_view', array()) <= $user['perms']) {
+					if(get_map( 'pm_message', 'can_view', array()) <= $user['perms']) {
 						$valid_users[] = $user;
 						$draft_users[] = $user['name'];
 					}

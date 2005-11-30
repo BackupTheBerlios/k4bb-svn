@@ -309,20 +309,19 @@ class K4DefaultAction extends FAAction {
 		$topic_row				= 0;
 		$reply_row				= 0;
 		$perms					= $request['user']->get('perms');
-		$user					= $request['user'];
-		if( ($perms >= get_map($user,'replies','can_add',array('forum_id'=>$topic['forum_id'])))
-			|| ($perms >= get_map($user,'topics','can_edit',array('forum_id'=>$topic['forum_id'])))
-			|| ($perms >= get_map($user,'topics','can_del',array('forum_id'=>$topic['forum_id'])))
-			|| ($perms >= get_map($user,'other_topics','can_edit',array('forum_id'=>$topic['forum_id'])))
-			|| ($perms >= get_map($user,'other_topics','can_del',array('forum_id'=>$topic['forum_id'])))
+		if( ($perms >= get_map('replies','can_add',array('forum_id'=>$topic['forum_id'])))
+			|| ($perms >= get_map('topics','can_edit',array('forum_id'=>$topic['forum_id'])))
+			|| ($perms >= get_map('topics','can_del',array('forum_id'=>$topic['forum_id'])))
+			|| ($perms >= get_map('other_topics','can_edit',array('forum_id'=>$topic['forum_id'])))
+			|| ($perms >= get_map('other_topics','can_del',array('forum_id'=>$topic['forum_id'])))
 			) {
 			$topic_row			= 1;
 		}
-		if( ($perms >= get_map($user,'replies','can_add',array('forum_id'=>$topic['forum_id'])))
-			|| ($perms >= get_map($user,'replies','can_edit',array('forum_id'=>$topic['forum_id'])))
-			|| ($perms >= get_map($user,'replies','can_del',array('forum_id'=>$topic['forum_id'])))
-			|| ($perms >= get_map($user,'other_replies','can_edit',array('forum_id'=>$topic['forum_id'])))
-			|| ($perms >= get_map($user,'other_replies','can_del',array('forum_id'=>$topic['forum_id'])))
+		if( ($perms >= get_map('replies','can_add',array('forum_id'=>$topic['forum_id'])))
+			|| ($perms >= get_map('replies','can_edit',array('forum_id'=>$topic['forum_id'])))
+			|| ($perms >= get_map('replies','can_del',array('forum_id'=>$topic['forum_id'])))
+			|| ($perms >= get_map('other_replies','can_edit',array('forum_id'=>$topic['forum_id'])))
+			|| ($perms >= get_map('other_replies','can_del',array('forum_id'=>$topic['forum_id'])))
 			) {
 			$reply_row			= 1;
 		}

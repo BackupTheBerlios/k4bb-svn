@@ -1810,22 +1810,22 @@ function topic_post_options(&$template, &$user, $forum) {
 	 * Set the posting allowances for a specific forum
 	 */
 	$template->setVar('forum_user_topic_options', sprintf($template->getVar('L_FORUMUSERTOPICPERMS'),
-	iif((get_map($user, 'topics', 'can_add', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_CANNOT'), $template->getVar('L_CAN')),
-	iif((get_map($user, 'topics', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_CANNOT'), $template->getVar('L_CAN')),
-	iif((get_map($user, 'topics', 'can_del', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_CANNOT'), $template->getVar('L_CAN')),
-	iif((get_map($user, 'attachments', 'can_add', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_CANNOT'), $template->getVar('L_CAN'))));
+	iif((get_map( 'topics', 'can_add', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_CANNOT'), $template->getVar('L_CAN')),
+	iif((get_map( 'topics', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_CANNOT'), $template->getVar('L_CAN')),
+	iif((get_map( 'topics', 'can_del', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_CANNOT'), $template->getVar('L_CAN')),
+	iif((get_map( 'attachments', 'can_add', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_CANNOT'), $template->getVar('L_CAN'))));
 
 	$template->setVar('forum_user_reply_options', sprintf($template->getVar('L_FORUMUSERREPLYPERMS'),
-	iif((get_map($user, 'replies', 'can_add', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_CANNOT'), $template->getVar('L_CAN')),
-	iif((get_map($user, 'replies', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_CANNOT'), $template->getVar('L_CAN')),
-	iif((get_map($user, 'replies', 'can_del', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_CANNOT'), $template->getVar('L_CAN'))));
+	iif((get_map( 'replies', 'can_add', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_CANNOT'), $template->getVar('L_CAN')),
+	iif((get_map( 'replies', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_CANNOT'), $template->getVar('L_CAN')),
+	iif((get_map( 'replies', 'can_del', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_CANNOT'), $template->getVar('L_CAN'))));
 	
 	$template->setVar('posting_code_options', sprintf($template->getVar('L_POSTBBCODEOPTIONS'),
-	iif((get_map($user, 'html', 'can_add', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_OFF'), $template->getVar('L_ON')),
-	iif((get_map($user, 'bbcode', 'can_add', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_OFF'), $template->getVar('L_ON')),
-	iif((get_map($user, 'bbimgcode', 'can_add', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_OFF'), $template->getVar('L_ON')),
-	iif((get_map($user, 'bbflashcode', 'can_add', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_OFF'), $template->getVar('L_ON')),
-	iif((get_map($user, 'emoticons', 'can_add', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_OFF'), $template->getVar('L_ON'))));
+	iif((get_map( 'html', 'can_add', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_OFF'), $template->getVar('L_ON')),
+	iif((get_map( 'bbcode', 'can_add', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_OFF'), $template->getVar('L_ON')),
+	iif((get_map( 'bbimgcode', 'can_add', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_OFF'), $template->getVar('L_ON')),
+	iif((get_map( 'bbflashcode', 'can_add', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_OFF'), $template->getVar('L_ON')),
+	iif((get_map( 'emoticons', 'can_add', array('forum_id'=>$forum['forum_id'])) > $user->get('perms')), $template->getVar('L_OFF'), $template->getVar('L_ON'))));
 }
 
 ?>
