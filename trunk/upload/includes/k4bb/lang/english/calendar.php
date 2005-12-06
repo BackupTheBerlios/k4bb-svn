@@ -1,6 +1,6 @@
 <?php
 /**
-* k4 Bulletin Board, lang.php LANGUAGE PACK
+* k4 Bulletin Board, calendar.php
 *
 * Copyright (c) 2005, Peter Goodman
 *
@@ -24,24 +24,26 @@
 * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 *
-* @author Peter Goodman
-* @version $Id: lang.php 142 2005-07-01 19:08:04Z Peter Goodman $
+* @author Thomas "Thasmo" Deinhamer (thasmo at gmail dot com)
+* @version $Id: calendar.php Thomas Deinhamer $
 * @package k42
 */
 
-if(!defined('IN_K4'))
+if (!defined('IN_K4'))
 	return;
 
-define('LANG_DIR', dirname(__FILE__));
+if (empty($_LANG) || !is_array($_LANG)) {
+	$_LANG = array();
+}
 
-$_LANG			= array();
 
-include LANG_DIR . '/general.php';
-include LANG_DIR . '/blog.php';
-include LANG_DIR . '/admin.php';
-include LANG_DIR . '/mod.php';
-include LANG_DIR . '/usercp.php';
-include LANG_DIR . '/mail.php';
-include LANG_DIR . '/calendar.php';
+$_LANG += array(
+
+/* General Phrases */
+'L_CALENDAR'					=> 'Calendar',
+'L_CALENDARDISABLED'			=> 'The calendar is currently disabled.',
+'L_CALENDARERROR'				=> 'An error occured while viewing the calendar.',
+
+);
 
 ?>
