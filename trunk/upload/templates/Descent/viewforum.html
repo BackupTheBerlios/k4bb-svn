@@ -14,7 +14,7 @@
 			<div align="right">
 				<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
 					<tr>
-						<td class="alt3" id="page_jump1" nowrap="nowrap"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+						<td class="alt3" id="page_jump1" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 						<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
 						<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
 						<page:list id="topics_pager" before="3" after="3">
@@ -33,28 +33,22 @@
 </table>
 
 <!-- Topics List of '{$current_location}' -->
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle" align="right" style="overflow: hidden;">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle" align="right" style="overflow: hidden;">
 			<div style="float: left;text-align: left;">
 				{$L_TOPICSINFORUM}: <span style="font-weight: normal;">{$name}</span><br />
 				<if:if var="description" noteq=""><span class="minitext" style="font-weight: normal;">{$description}</span></if:if>
 			</div>
 			<!-- Drop Down Menus -->
-			<table cellpadding="0" cellspacing="0" border="0" class="k4_ddmenutable">
-				<tr>
-					<td>
-						<div class="ddmenu_button" id="forumoptions_link"><span class="nav_top">{$L_FORUMOPTIONS}</span></div>
-					</td>
-				</tr>
-			</table>
+			<div><span class="ddmenu_link_alt" id="forumoptions_link">{$L_FORUMOPTIONS}</span></div>
 			<!-- / Drop Down Menus -->
 		</div>
 
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 			<list:list id="announcements">
 			<tr>
-				<td class="k4_subtitle" colspan="<if:if var="modpanel" eq="1">7<if:else />6</if:if>">{$L_ANNOUNCEMENTS}</td>
+				<td class="subtitle" colspan="<if:if var="modpanel" eq="1">7<if:else />6</if:if>">{$L_ANNOUNCEMENTS}</td>
 			</tr>
 			<list:item list="announcements"><list:switch list="announcements" var="row_class" a="alt1" b="alt2">
 			<core:import id="topic_view" file="topic_view.html" />
@@ -62,18 +56,18 @@
 			</list:list>
 			<list:list id="importants">
 			<tr>
-				<td class="k4_subtitle" colspan="<if:if var="modpanel" eq="1">7<if:else />6</if:if>">{$L_IMPORTANTTOPICS}</td>
+				<td class="subtitle" colspan="<if:if var="modpanel" eq="1">7<if:else />6</if:if>">{$L_IMPORTANTTOPICS}</td>
 			</tr>
 			<list:item list="importants"><list:switch list="importants" var="row_class" a="alt1" b="alt2">
 			<core:import id="topic_view" file="topic_view.html" />
 			</list:switch></list:item>
 			</list:list>
 			<tr>
-				<td class="k4_subtitle" style="text-align: center;" width="70%" colspan="3"><a href="viewforum.php?f={$forum_forum_id}&amp;sort=name&amp;order={$order}" title="{$L_TOPICS}">{$L_TOPICS}{$name_sort}</a>/<a href="viewforum.php?f={$forum_forum_id}&amp;sort=poster_name&amp;order={$order}" title="{$L_AUTHOR}">{$L_AUTHOR}{$poster_name_sort}</a></td>
-				<td class="k4_subtitle" style="text-align: center;" width="20%">&nbsp;<a href="viewforum.php?f={$forum_forum_id}&amp;sort=last_post&amp;order={$order}" title="{$L_LASTPOST}">{$L_LASTPOST}{$last_post_sort}</a>&nbsp;</td>
-				<td class="k4_subtitle" style="text-align: center;">&nbsp;<a href="viewforum.php?f={$forum_forum_id}&amp;sort=num_replies&amp;order={$order}" title="{$L_REPLIES}">{$L_REPLIES}{$num_replies_sort}</a>&nbsp;</td>
-				<td class="k4_subtitle" style="text-align: center;">&nbsp;<a href="viewforum.php?f={$forum_forum_id}&amp;sort=views&amp;order={$order}" title="{$L_VIEWS}">{$L_VIEWS}{$views_sort}</a>&nbsp;</td>
-				<if:if var="modpanel" eq="1"><td class="k4_subtitle" style="text-align: center;">&nbsp;{$L_SELECT}&nbsp;</td></if:if>
+				<td class="subtitle" style="text-align: center;" width="70%" colspan="3"><a href="viewforum.php?f={$forum_forum_id}&amp;sort=name&amp;order={$order}" title="{$L_TOPICS}">{$L_TOPICS}{$name_sort}</a>/<a href="viewforum.php?f={$forum_forum_id}&amp;sort=poster_name&amp;order={$order}" title="{$L_AUTHOR}">{$L_AUTHOR}{$poster_name_sort}</a></td>
+				<td class="subtitle" style="text-align: center;" width="20%">&nbsp;<a href="viewforum.php?f={$forum_forum_id}&amp;sort=last_post&amp;order={$order}" title="{$L_LASTPOST}">{$L_LASTPOST}{$last_post_sort}</a>&nbsp;</td>
+				<td class="subtitle" style="text-align: center;">&nbsp;<a href="viewforum.php?f={$forum_forum_id}&amp;sort=num_replies&amp;order={$order}" title="{$L_REPLIES}">{$L_REPLIES}{$num_replies_sort}</a>&nbsp;</td>
+				<td class="subtitle" style="text-align: center;">&nbsp;<a href="viewforum.php?f={$forum_forum_id}&amp;sort=views&amp;order={$order}" title="{$L_VIEWS}">{$L_VIEWS}{$views_sort}</a>&nbsp;</td>
+				<if:if var="modpanel" eq="1"><td class="subtitle" style="text-align: center;">&nbsp;{$L_SELECT}&nbsp;</td></if:if>
 			</tr>
 			<core:block id="no_topics" hidden="yes">
 			<tr>
@@ -94,7 +88,7 @@
 			<if:if var="modpanel" eq="1">
 			<!-- Moderator Controls -->
 			<tr>
-				<td class="k4_modmaintitle" colspan="7">
+				<td class="modmaintitle" colspan="7">
 					<form action="mod.php?act=moderate_forum&amp;id={$forum_id}" method="post" enctype="multipart/form-data">
 						<input type="hidden" name="topics" id="topics" value="" />
 						<div align="center">
@@ -134,7 +128,7 @@
 			<div align="right">
 				<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
 					<tr>
-						<td class="alt3" id="page_jump2" nowrap="nowrap"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+						<td class="alt3" id="page_jump2" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 						<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
 						<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
 						<page:list id="topics_pager" before="3" after="3">
@@ -154,13 +148,13 @@
 
 <br />
 <!-- Forum Display Options -->
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle" id="f{$forum_id}do_maintitle">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle" id="f{$forum_id}do_maintitle">
 			<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapsedo_{$forum_id}', 'do_{$forum_id}', 'f{$forum_id}do_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapsedo_{$forum_id}" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
 			{$L_DISPLAYOPTIONS}
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table" id="do_{$forum_id}">
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table" id="do_{$forum_id}">
 			<tr class="alt1">
 				<td>
 					<table width="" cellpadding="0" cellspacing="0" border="0">
@@ -277,8 +271,8 @@
 <!-- / Forum User Posting Options -->
 
 <!-- Forum Options -->
-<div id="forumoptions_menu" class="k4_borderwrap" style="display: none;">
-	<table width="190" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+<div id="forumoptions_menu" class="borderwrap" style="display: none;">
+	<table width="190" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 		<is:logged>
 		<tr>
 			<td class="alt1">
@@ -296,7 +290,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="k4_subtitle">{$L_SEARCHTHISFORUM}</td>
+			<td class="subtitle">{$L_SEARCHTHISFORUM}</td>
 		</tr>
 		<tr>
 			<td class="alt1">

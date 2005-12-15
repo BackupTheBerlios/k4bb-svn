@@ -1,12 +1,12 @@
 <is:logged>
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle">{$L_MYCONTROLS}</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table" id="usercp_menu">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle">{$L_MYCONTROLS}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table" id="usercp_menu">
 
 			<!-- Settings & Options -->
 			<tr>
-				<td class="k4_subtitle">{$L_SETTINGSOPTIONS}</td>
+				<td class="subtitle">{$L_SETTINGSOPTIONS}</td>
 			</tr>
 			<tr>
 				<td class="alt1"><a href="member.php?act=usercp&amp;view=profile" title="{$L_EDITPROFILE}" class="smalltext">{$L_EDITPROFILE}</a></td>
@@ -40,7 +40,7 @@
 			<maps:if var="private_messaging" method="can_view">
 			<!-- Private Messaging -->
 			<tr>
-				<td class="k4_subtitle">{$L_PRIVATEMESSAGING}</td>
+				<td class="subtitle">{$L_PRIVATEMESSAGING}</td>
 			</tr>
 			<list:list id="pmfolders">
 			<list:item list="pmfolders">
@@ -73,7 +73,7 @@
 			</maps:if>
 			</if:if>
 			<tr>
-				<td class="k4_subtitle">{$L_POSTMANAGEMENT}</td>
+				<td class="subtitle">{$L_POSTMANAGEMENT}</td>
 			</tr>
 			<tr>
 				<td class="alt1"><a href="member.php?act=usercp&amp;view=attachments" title="{$L_MANAGEATTACHMENTS}" class="smalltext">{$L_MANAGEATTACHMENTS}</a></td>

@@ -1,31 +1,34 @@
 <!-- Quick Nav Menu -->
-<div align="right" class="smalltext">
-	{$L_JUMPTO}:&nbsp;<select name="quick_nav" id="quick_nav" onchange="jump_to('quick_nav')">
-		<option value="-1">{$L_SELECTAFORUM}</option>
-		<option value="-1">-----------------</option>
-		<list:list id="all_forums">
-		<list:item list="all_forums">
-			<if:if var="row_type" eq="2">
-				<maps:if forum="forum_id" method="can_view">
+<div align="right" class="spacer">
+	<span class="smalltext">
+		{$L_JUMPTO}:&nbsp;<select name="quick_nav" id="quick_nav" onchange="jump_to('quick_nav')">
+			<option value="-1">{$L_SELECTAFORUM}</option>
+			<option value="-1">-----------------</option>
+			<list:list id="all_forums">
+			<list:item list="all_forums">
+				<if:if var="row_type" eq="2">
 					<maps:if forum="forum_id" method="can_view">
-						<if:if var="is_forum" geq="0">
-							<option value="viewforum.php?f={$forum_id}">{$indent_level}{$name}</option>
-						<else:if var="is_link" eq="1" />
-							<if:if var="link_show_redirects" eq="1">
-								<option value="redirect.php?id={$forum_id}">{$indent_level}{$name}</option>
-								<if:else />
-								<option value="{$link_href}">{$indent_level}{$name}</option>
+						<maps:if forum="forum_id" method="can_view">
+							<if:if var="is_forum" geq="0">
+								<option value="viewforum.php?f={$forum_id}">{$indent_level}{$name}</option>
+							<else:if var="is_link" eq="1" />
+								<if:if var="link_show_redirects" eq="1">
+									<option value="redirect.php?id={$forum_id}">{$indent_level}{$name}</option>
+									<if:else />
+									<option value="{$link_href}">{$indent_level}{$name}</option>
+								</if:if>
 							</if:if>
-						</if:if>
+						</maps:if>
 					</maps:if>
-				</maps:if>
-			<if:else />
-				<maps:if list="all_forums" category="category_id" method="can_view">
-					<option value="viewforum.php?c={$category_id}" style="font-weight: bold;">{$indent_level}{$name}</option>
-				</maps:if>
-			</if:if>
-		</list:item>
-		</list:list>
-	</select>&nbsp;<input type="button" class="button" value="{$L_GO}" onclick="jump_to('quick_nav')" />
+				<if:else />
+					<maps:if list="all_forums" category="forum_id" method="can_view">
+						<option value="viewforum.php?c={$forum_id}" style="font-weight: bold;">{$indent_level}{$name}</option>
+					</maps:if>
+				</if:if>
+			</list:item>
+			</list:list>
+		</select>
+	</span>
+	<input type="button" class="button" value="{$L_GO}" onclick="jump_to('quick_nav')" />
 </div>
 <!-- / Quick Nav Menu -->

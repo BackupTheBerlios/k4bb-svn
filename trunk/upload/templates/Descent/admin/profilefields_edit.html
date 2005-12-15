@@ -2,8 +2,8 @@
 <form:form name="edit_field" id="edit_field" action="admin.php?act=userfields_update" method="post" enctype="multipart/form-data">
 <input type="hidden" name="inputtype" id="inputtype" value="{$field_inputtype}" />
 <input type="hidden" name="field" id="field" value="{$field_name}" />
-<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-	<tr class="k4_maintitle">
+<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+	<tr class="maintitle">
 		<td colspan="2">{$L_ADDPROFILEFIELD}</td>
 	</tr>
 	<tr class="alt2">
@@ -103,7 +103,7 @@
 		</td>
 	</tr>
 	<core:block id="text" hidden="yes">
-	<tr class="k4_maintitle">
+	<tr class="maintitle">
 		<td colspan="2">{$L_OPTIONS}</td>
 	</tr>
 	<tr class="alt2">
@@ -133,7 +133,7 @@
 	</tr>
 	</core:block>
 	<core:block id="textarea" hidden="yes">
-	<tr class="k4_maintitle">
+	<tr class="maintitle">
 		<td colspan="2">{$L_OPTIONS}</td>
 	</tr>
 	<tr class="alt2">
@@ -170,7 +170,7 @@
 	</tr>
 	</core:block>
 	<core:block id="radio" hidden="yes">
-	<tr class="k4_maintitle">
+	<tr class="maintitle">
 		<td colspan="2">{$L_OPTIONS}</td>
 	</tr>
 	<tr class="alt2">
@@ -186,7 +186,7 @@
 	</tr>
 	</core:block>
 	<core:block id="select" hidden="yes">
-	<tr class="k4_maintitle">
+	<tr class="maintitle">
 		<td colspan="2">{$L_OPTIONS}</td>
 	</tr>
 	<tr class="alt2">
@@ -202,7 +202,7 @@
 	</tr>
 	</core:block>
 	<core:block id="multiselect" hidden="yes">
-	<tr class="k4_maintitle">
+	<tr class="maintitle">
 		<td colspan="2">{$L_OPTIONS}</td>
 	</tr>
 	<tr class="alt2">
@@ -218,7 +218,7 @@
 	</tr>
 	</core:block>
 	<core:block id="checkbox" hidden="yes">
-	<tr class="k4_maintitle">
+	<tr class="maintitle">
 		<td colspan="2">{$L_OPTIONS}</td>
 	</tr>
 	<tr class="alt2">
@@ -233,7 +233,7 @@
 		</td>
 	</tr>
 	</core:block>
-	<tr class="k4_subtitle">
+	<tr class="subtitle">
 		<td colspan="2">
 			<input type="submit" value="{$L_SAVE}" class="button" />
 			<input type="reset" value="{$L_RESET}" class="button" />

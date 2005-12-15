@@ -1,14 +1,14 @@
 <is:admin>
 <form action="admin.php?act=css_updateallclasses&amp;id={$styleset_id}" method="post" enctype="multipart/form-data">
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">
+<div class="borderwrap">
+	<div class="maintitle">
 		<div style="float: right;">
 			<input type="button" class="button" value="{$L_ADDCSSSTYLE}" onclick="document.location='admin.php?act=css_addstyle&id={$styleset_id}'" />
 			<input type="button" class="button" value="{$L_EDITALLCLASSES}" onclick="document.location='admin.php?act=css&edit=1&id={$styleset_id}'" />
 		</div>
 		{$L_CSSSTYLES}<span style="font-weight: normal;">: {$styleset_name}</span>
 	</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 		<list:list id="styles">
 		<list:default list="styles">
 		<tr>
@@ -39,7 +39,7 @@
 		</tr>
 		<list:alternate list="styles" count="5" remainder="4">
 		<tr>
-			<td colspan="2" class="k4_subtitle" style="text-align: center">
+			<td colspan="2" class="subtitle" style="text-align: center">
 				<input type="submit" value="{$L_SAVEALL}" class="button" />
 				<input type="reset" value="{$L_RESETALL}" class="button" />
 			</td>
@@ -51,7 +51,7 @@
 		</list:list>
 		<if:if var="edit_all" eq="1">
 		<tr>
-			<td colspan="2" class="k4_subtitle" style="text-align: center">
+			<td colspan="2" class="subtitle" style="text-align: center">
 				<input type="submit" value="{$L_SAVEALL}" class="button" />
 				<input type="reset" value="{$L_RESETALL}" class="button" />
 			</td>

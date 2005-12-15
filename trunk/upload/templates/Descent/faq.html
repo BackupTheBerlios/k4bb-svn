@@ -1,9 +1,9 @@
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle">
 			{$L_FAQLONG}<if:if var="add_catname" noteq=""><span style="font-weight:normal;">{$add_catname}</spamn></if:if>
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 			
 			<list:list id="faq_answers">
 			<tr>
@@ -25,11 +25,11 @@
 <list:list id="faq_categories">
 <list:item list="faq_categories">
 <list:switch list="faq_categories" var="row_class" a="alt1" b="alt3">
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+<div class="shadow">
+	<div class="borderwrap">
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 			<tr>
-				<td class="k4_subtitle">
+				<td class="subtitle">
 					<a href="faq.php?c={$category_id}" title="{$name}"><strong>{$name}</strong></a>
 				</td>
 			</tr>
@@ -75,10 +75,10 @@
 <list:list id="faq_answers">
 <list:item list="faq_answers">
 <br />
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle"><a name="faq{$answer_id}" id="faq{$answer_id}">{$question}</a></div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle"><a name="faq{$answer_id}" id="faq{$answer_id}">{$question}</a></div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 			<tr><td class="alt1">{$answer}</td></tr>
 		</table>
 	</div>

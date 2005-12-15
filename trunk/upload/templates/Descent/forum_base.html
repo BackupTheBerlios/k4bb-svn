@@ -6,66 +6,58 @@
 <div align="center">
 	<div align="left" class="forum_base" id="forum_base">
 		<br />
-		<div class="forum_main" id="forum_main">
-			<core:import id="header" file="header.html" />
-			<core:import id="header_breadcrumbs" file="header_breadcrumbs.html" />
-			<core:import id="google_leaderboard" file="google_adsense_lb.html" />
-
-
-			<if:if var="can_see_board" method="can_view" geq="0">
-				<core:import id="content" />
-				<core:import id="content_extra" />
-				
-				<core:block id="forum_status_icons" hidden="yes">
-				<!-- Forum Status Icons -->
-				<br />
-				<div style="text-align: center;">
-					<ul class="menu_global">
-						<li class="first">
-							<img src="Images/{$IMG_DIR}/Icons/forum_on.gif" alt="{$L_FORUMNEWPOSTS}" />
-							<span class="smalltext">{$L_FORUMNEWPOSTS}</span>
-						</li>
-						<li class="first">
-							<img src="Images/{$IMG_DIR}/Icons/forum_off.gif" alt="{$L_FORUMNONEWPOSTS}" />
-							<span class="smalltext">{$L_FORUMNONEWPOSTS}</span>
-						</li>
-						<li class="first">
-							<img src="Images/{$IMG_DIR}/Icons/forum_on_lock.gif" alt="{$L_FORUMLOCKED}" />
-							<span class="smalltext">{$L_FORUMLOCKED}</span>
-						</li>
-					</ul>
+		<div class="spacer">
+			<div class="forum_head" id="forum_head">
+				<div id="header">
+					<core:import id="header" file="header.html" />
+					<core:import id="main_menu" file="main_menu.html" />
+					<core:import id="header_breadcrumbs" file="header_breadcrumbs.html" />
+					
+					<!-- Menus -->
+					<core:import id="quicklinks_menu" file="quicklinks_menu.html" />
+					<core:import id="modpanel_menu" file="modpanel.html" />
+					<core:import id="search_menu" file="search_menu.html" />
+					<!-- / Menus -->
 				</div>
-				<!-- / Forum Status Icons -->
-				</core:block>
+			</div>
+		</div>
+		<div class="spacer">
+			<div class="forum_main">
+				<if:if var="can_see_board" method="can_view" geq="0">
+					<core:import id="content" />
+					<core:import id="content_extra" />
+			</div>
+		</div>
+		<div class="spacer">
+			<div class="forum_mid">
+					<core:import id="users_browsing" />
+					<core:import id="forum_info" />
 
-				<core:import id="users_browsing" />
-				<core:import id="forum_info" />
-				<core:import id="quick_login" />
+				<if:else />
 
-			<if:else />
-
-				<!-- You don't have permission to view the forums -->
-				<div class="k4_borderwrap">
-					<div class="k4_maintitle">{$L_INFORMATION}</div>
-					<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-						<tr>
-							<td class="alt3">
-								<div class="outset_box">
-									{$L_YOUNEEDPERMS}
-								</div>
-							</td>
-						</tr>
-					</table>
-				</div>
-				<!-- / You don't have permission to view the forums -->
-			</if:if>
-			
-			<br />
-			
-			<core:import id="quick_nav" file="quick_nav.html" />
-			<core:import id="footer_breadcrumbs" file="footer_breadcrumbs.html" />
-			<core:import id="footer" file="footer.html" />
-
+					<!-- You don't have permission to view the forums -->
+					<div class="borderwrap">
+						<div class="maintitle">{$L_INFORMATION}</div>
+						<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+							<tr>
+								<td class="alt3">
+									<div class="outset_box">
+										{$L_YOUNEEDPERMS}
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<!-- / You don't have permission to view the forums -->
+				</if:if>
+			</div>
+		</div>
+		<div class="forum_foot">
+			<div id="footer">
+				<core:import id="quick_nav" file="quick_nav.html" />
+				<core:import id="footer_breadcrumbs" file="footer_breadcrumbs.html" />
+				<core:import id="footer" file="footer.html" />
+			</div>
 		</div>
 	</div>
 </div>

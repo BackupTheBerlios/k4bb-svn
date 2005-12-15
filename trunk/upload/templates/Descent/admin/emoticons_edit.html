@@ -1,8 +1,8 @@
 <is:admin>
 <form:form id="edit_emoticon" name="edit_emoticon" action="admin.php?act=emoticons_update" method="post" enctype="multipart/form-data">
 <input type="hidden" name="id" value="{$icon_id}" />
-<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
-	<tr class="k4_maintitle">
+<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+	<tr class="maintitle">
 		<td colspan="2">{$L_EDITEMOTICON}</td>
 	</tr>
 	<tr class="alt1">
@@ -42,7 +42,7 @@
 			<script type="text/javascript">d.setIndex({$icon_clickable}, 'clickable');</script>
 		</td>
 	</tr>
-	<tr class="k4_subtitle">
+	<tr class="subtitle">
 		<td colspan="2">
 			<input type="submit" value="{$L_SAVE}" />
 			<input type="reset" value="{$L_RESET}" />

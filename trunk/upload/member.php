@@ -233,9 +233,9 @@ class K4InsertUserFilter extends FAFilter {
 				$insert_a->setString(1, $name);
 				$insert_a->setString(2, $_REQUEST['email']);
 				$insert_a->setString(3, md5($_REQUEST['password']));
-				$insert_a->setInt(4, '|'. PENDING_MEMBER .'|');
+				$insert_a->setInt(4, PENDING_MEMBER);
 				$insert_a->setString(5, $reg_key);
-				$insert_a->setString(6, '2'); // Registered Users
+				$insert_a->setString(6, '|1|');
 				$insert_a->setInt(7, time());
 				
 				$insert_a->executeUpdate();

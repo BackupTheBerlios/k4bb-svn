@@ -2,14 +2,14 @@
 <form action="admin.php?act=masks_updateperms" method="post" enctype="multipart/form-data">
 <input type="hidden" name="f" value="{$forum_forum_id}" />
 <input type="hidden" name="g" value="{$group_id}" />
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">
+<div class="borderwrap">
+	<div class="maintitle">
 		{$L_PERMISSIONMASK}: <span style="font-weight: normal;"><em>{$forum_name} -> {$group_name}</em></span>
 	</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 		<input type="hidden" name="id" value="{$forum_forum_id}" />
 		<list:list id="mask_maps">
-		<tr class="k4_subtitle">
+		<tr class="subtitle">
 			<td>{$L_NAME}</td>
 			<td align="center">{$L_VIEW}</td>
 			<td align="center">{$L_ADD}</td>
@@ -78,7 +78,7 @@
 		</tr>
 		</list:item>
 		<tr>
-			<td align="left" colspan="5" class="k4_subtitle">
+			<td align="left" colspan="5" class="subtitle">
 				<input type="submit" class="button" value="{$L_SAVE}" accesskey="s" />
 				<input type="reset" class="button" value="{$L_RESET}" />
 			</td>

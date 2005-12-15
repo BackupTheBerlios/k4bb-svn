@@ -184,7 +184,7 @@ class PostTopic extends FAAction {
 
 			$request['dba']->beginTransaction();
 			
-			$insert_a			= $request['dba']->prepareStatement("INSERT INTO ". K4TOPICS ." (name,forum_id,category_id,poster_name,poster_id,poster_ip,body_text,posticon,disable_html,disable_bbcode,disable_emoticons,disable_sig,disable_areply,disable_aurls,is_draft,topic_type,topic_expire,is_feature,is_poll,last_post,row_type,row_level,created) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			$insert_a			= $request['dba']->prepareStatement("INSERT INTO ". K4TOPICS ." (name,forum_id,poster_name,poster_id,poster_ip,body_text,posticon,disable_html,disable_bbcode,disable_emoticons,disable_sig,disable_areply,disable_aurls,is_draft,topic_type,topic_expire,is_feature,is_poll,last_post,row_type,row_level,created) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			
 			$is_poll	= 0;
 			if($_REQUEST['submit_type'] == 'post' || isset($_REQUEST['post'])) {
@@ -204,32 +204,31 @@ class PostTopic extends FAAction {
 				return !USE_AJAX ? $action->execute($request) : ajax_message('L_DOUBLEPOSTED');
 			}
 			
-			//topic_id,forum_id,category_id,poster_name,poster_id,body_text,posticon
+			//topic_id,forum_id,poster_name,poster_id,body_text,posticon
 			//disable_html,disable_bbcode,disable_emoticons,disable_sig,disable_areply,disable_aurls,is_draft,is_poll
 			$insert_a->setString(1, k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
 			$insert_a->setInt(2, $forum['forum_id']);
-			$insert_a->setInt(3, $forum['category_id']);
-			$insert_a->setString(4, $poster_name);
-			$insert_a->setInt(5, $request['user']->get('id'));
-			$insert_a->setString(6, USER_IP);
-			$insert_a->setString(7, $body_text);
-			$insert_a->setString(8, iif(($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'));
-			$insert_a->setInt(9, ((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']) ? 1 : 0));
-			$insert_a->setInt(10, ((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']) ? 1 : 0));
-			$insert_a->setInt(11, ((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']) ? 1 : 0));
-			$insert_a->setInt(12, ((isset($_REQUEST['enable_sig']) && $_REQUEST['enable_sig']) ? 0 : 1));
-			$insert_a->setInt(13, ((isset($_REQUEST['disable_areply']) && $_REQUEST['disable_areply']) ? 1 : 0));
-			$insert_a->setInt(14, ((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']) ? 1 : 0));
-			$insert_a->setInt(15, $is_draft);
+			$insert_a->setString(3, $poster_name);
+			$insert_a->setInt(4, $request['user']->get('id'));
+			$insert_a->setString(5, USER_IP);
+			$insert_a->setString(6, $body_text);
+			$insert_a->setString(7, iif(($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'));
+			$insert_a->setInt(8, ((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']) ? 1 : 0));
+			$insert_a->setInt(9, ((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']) ? 1 : 0));
+			$insert_a->setInt(10, ((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']) ? 1 : 0));
+			$insert_a->setInt(11, ((isset($_REQUEST['enable_sig']) && $_REQUEST['enable_sig']) ? 0 : 1));
+			$insert_a->setInt(12, ((isset($_REQUEST['disable_areply']) && $_REQUEST['disable_areply']) ? 1 : 0));
+			$insert_a->setInt(13, ((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']) ? 1 : 0));
+			$insert_a->setInt(14, $is_draft);
 			// DO THIS 16 -> topic_type, 17 -> topic_expire
-			$insert_a->setInt(16, $topic_type);
-			$insert_a->setInt(17, iif($topic_type > TOPIC_NORMAL, intval((isset($_REQUEST['topic_expire']) ? $_REQUEST['topic_expire'] : 0)), 0) );
-			$insert_a->setInt(18, $is_feature);
-			$insert_a->setInt(19, $is_poll);
-			$insert_a->setInt(20, $created);
-			$insert_a->setInt(21, TOPIC);
-			$insert_a->setInt(22, $level);
-			$insert_a->setInt(23, $created);
+			$insert_a->setInt(15, $topic_type);
+			$insert_a->setInt(16, iif($topic_type > TOPIC_NORMAL, intval((isset($_REQUEST['topic_expire']) ? $_REQUEST['topic_expire'] : 0)), 0) );
+			$insert_a->setInt(17, $is_feature);
+			$insert_a->setInt(18, $is_poll);
+			$insert_a->setInt(19, $created);
+			$insert_a->setInt(20, TOPIC);
+			$insert_a->setInt(21, $level);
+			$insert_a->setInt(22, $created);
 
 			$insert_a->executeUpdate();
 			
@@ -292,13 +291,12 @@ class PostTopic extends FAAction {
 				 * Subscribe this user to the topic
 				 */
 				if(isset($_REQUEST['disable_areply']) && $_REQUEST['disable_areply']) {
-					$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,topic_id,forum_id,email,category_id) VALUES (?,?,?,?,?,?)");
+					$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,topic_id,forum_id,email) VALUES (?,?,?,?,?)");
 					$subscribe->setInt(1, $request['user']->get('id'));
 					$subscribe->setString(2, $request['user']->get('name'));
 					$subscribe->setInt(3, $topic_id);
 					$subscribe->setInt(4, $forum['forum_id']);
 					$subscribe->setString(5, $request['user']->get('email'));
-					$subscribe->setInt(6, $forum['category_id']);
 					$subscribe->executeUpdate();
 				}
 				
@@ -613,13 +611,12 @@ class PostDraft extends FAAction {
 			 * Subscribe this user to the topic
 			 */
 			if(isset($_REQUEST['disable_areply']) && $_REQUEST['disable_areply']) {
-				$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,topic_id,forum_id,email,category_id) VALUES (?,?,?,?,?,?)");
+				$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,topic_id,forum_id,email) VALUES (?,?,?,?,?)");
 				$subscribe->setInt(1, $request['user']->get('id'));
 				$subscribe->setString(2, $request['user']->get('name'));
 				$subscribe->setInt(3, $draft['id']);
 				$subscribe->setInt(4, $forum['forum_id']);
 				$subscribe->setString(5, $request['user']->get('email'));
-				$subscribe->setInt(6, $forum['category_id']);
 				$subscribe->executeUpdate();
 			}
 
@@ -1063,13 +1060,12 @@ class UpdateTopic extends FAAction {
 			$is_subscribed		= $request['dba']->getRow("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE user_id = ". intval($request['user']->get('id')) ." AND topic_id = ". intval($topic['topic_id']));
 			if(isset($_REQUEST['disable_areply']) && $_REQUEST['disable_areply']) {
 				if(!is_array($is_subscribed) || empty($is_subscribed)) {
-					$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,topic_id,forum_id,email,category_id) VALUES (?,?,?,?,?,?)");
+					$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,topic_id,forum_id,email) VALUES (?,?,?,?,?)");
 					$subscribe->setInt(1, $request['user']->get('id'));
 					$subscribe->setString(2, $request['user']->get('name'));
 					$subscribe->setInt(3, $topic['topic_id']);
 					$subscribe->setInt(4, $forum['forum_id']);
 					$subscribe->setString(5, $request['user']->get('email'));
-					$subscribe->setInt(6, $forum['category_id']);
 					$subscribe->executeUpdate();
 				}
 			} else if(!isset($_REQUEST['disable_areply']) || !$_REQUEST['disable_areply']) {
@@ -1405,13 +1401,12 @@ class SubscribeTopic extends FAAction {
 			return $action->execute($request);
 		}
 		
-		$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,topic_id,forum_id,email,category_id) VALUES (?,?,?,?,?,?)");
+		$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,topic_id,forum_id,email) VALUES (?,?,?,?,?)");
 		$subscribe->setInt(1, $request['user']->get('id'));
 		$subscribe->setString(2, $request['user']->get('name'));
 		$subscribe->setInt(3, $topic['topic_id']);
 		$subscribe->setInt(4, $topic['forum_id']);
 		$subscribe->setString(5, $request['user']->get('email'));
-		$subscribe->setInt(6, $topic['category_id']);
 		$subscribe->executeUpdate();
 
 		/* Redirect the user */

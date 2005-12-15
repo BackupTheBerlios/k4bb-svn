@@ -1,0 +1,13 @@
+<!-- Top Menu -->
+<div>
+	<is:logged>
+		{$user_name}:
+		<a href="member.php?act=usercp" title="{$L_USERCP}">{$L_USERCP}</a>
+		| <a href="{$logout_link}" title="{$L_LOGOUT}">{$L_LOGOUT}</a>
+	</is:logged>
+	<is:unlogged>
+		{$L_GUEST}: <a href="member.php?act=register" title="{$L_REGISTER}">{$L_REGISTER}</a>
+		| <a href="member.php?act=login" title="{$L_LOGIN}">{$L_LOGIN}</a>
+	</is:unlogged>
+</div>
+<!-- / Top Menu -->

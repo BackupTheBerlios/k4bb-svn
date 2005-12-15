@@ -87,8 +87,8 @@ function k4_bread_crumbs(&$template, &$dba, $location = NULL, $info = FALSE, $fo
 		
 		// this will look in forums
 		if(in_array($info['row_type'], $message_types)) {
-			$forum				= ($info['row_type'] == FORUM || $info['row_type'] == CATEGORY) ? $info : ($forum ? $forum : array());
 			
+			$forum				= ($info['row_type'] & FORUM || $info['row_type'] & CATEGORY) ? $info : (is_array($forum) ? $forum : array());
 			if(!empty($forum)) {
 				$breadcrumbs	= array_reverse(follow_forum_ids($breadcrumbs, $forum));
 			}
@@ -141,10 +141,7 @@ function follow_forum_ids($breadcrumbs, $forum) {
 	
 	switch($forum['row_type']) {
 		/* Categories and forums */
-		case CATEGORY: {
-			$forum['location'] = 'viewforum.php?c='. $forum['category_id'];
-			break;
-		}
+		case CATEGORY:
 		case FORUM: {
 			$forum['location'] = 'viewforum.php?f='. $forum['forum_id'];
 			break;
@@ -165,11 +162,7 @@ function follow_forum_ids($breadcrumbs, $forum) {
 
 	if(isset($forum['parent_id']) && $forum['parent_id'] > 0) {
 		global $_ALLFORUMS;
-
-		//$prefix				= $forum['row_level'] == 2 && $forum['row_type'] == FORUM ? 'c' : 'f';
-		//$all_forums			= ($prefix == 'c') ? (isset($_ALLFORUMS['c'. $forum['parent_id']]) ? $_ALLFORUMS['c'. $forum['parent_id']] : $_ALLFORUMS['f'. $forum['parent_id']]) : $_ALLFORUMS['f' . $forum['parent_id']];
-		$prefix			= $forum['row_level'] == 2 ? ($forum['category_id'] > 0 ? 'c' : 'f') : 'f';
-		
+		$prefix				= $forum['row_type'] & CATEGORY ? 'c' : 'f';
 		$breadcrumbs		= follow_forum_ids($breadcrumbs, $_ALLFORUMS[$prefix . $forum['parent_id']]);
 
 		unset($all_forums);

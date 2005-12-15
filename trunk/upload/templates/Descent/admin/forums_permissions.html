@@ -1,14 +1,14 @@
 <is:admin>
-<div class="k4_borderwrap">
-	<div class="k4_maintitle">
+<div class="borderwrap">
+	<div class="maintitle">
 		<script type="text/javascript">doHelpButton('forum_permissions');</script>
 		{$L_FORUMPERMISSIONS}: <span style="font-weight: normal;">{$forum_name}</span>
 	</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 		<form name="update_forum_perms" id="update_forum_perms" action="admin.php?act=forums_updateperms" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="id" value="{$forum_forum_id}" />
 		<list:list id="forum_maps">
-		<tr class="k4_subtitle">
+		<tr class="subtitle">
 			<td>{$L_NAME}</td>
 			<td align="center">{$L_VIEW}</td>
 			<td align="center">{$L_ADD}</td>
@@ -87,7 +87,7 @@
 			</td>
 		</tr>
 		</list:item>
-		<tr class="k4_subtitle">
+		<tr class="subtitle">
 			<td align="left" colspan="5">
 				<input type="submit" class="button" value="{$L_SAVE}" accesskey="s" />
 				<input type="reset" class="button" value="{$L_RESET}" />

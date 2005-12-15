@@ -50,7 +50,7 @@ require K4_BASE_DIR. '/globals.class.php';
 require K4_BASE_DIR. '/poll_template.php';
 
 /* Action Classes */
-require K4_BASE_DIR. '/actions/categories.class.php';
+//require K4_BASE_DIR. '/actions/categories.class.php';
 require K4_BASE_DIR. '/actions/online_users.class.php';
 require K4_BASE_DIR. '/actions/forums.class.php';
 require K4_BASE_DIR. '/actions/topics.class.php';

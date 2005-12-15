@@ -1,7 +1,7 @@
 <?php if ($_SESSION['user']->get('perms') >= ADMIN): ?>
 <div id="styles_menu" style="display: none;">
-	<div class="k4_borderwrap">
-		<table cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+	<div class="borderwrap">
+		<table cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="table">
 			<td><a class="smalltext" target="admin_iframe" href="admin.php?act=stylesets"><?php echo $scope->getVar("L_MANAGESTYLESETS"); ?></a></td>
 			<td><a class="smalltext" target="admin_iframe" href="admin.php?act=css"><?php echo $scope->getVar("L_MANAGECSSSTYLES"); ?></a></td>
 		</table>

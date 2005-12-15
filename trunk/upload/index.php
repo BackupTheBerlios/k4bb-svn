@@ -50,10 +50,10 @@ class K4DefaultAction extends FAAction {
 		// The content panel
 		$request['template']->setFile('content', 'forums.html');
 		
-		$tlforums	= &new K4ForumsIterator($request['dba'], "SELECT * FROM ". K4FORUMS ." WHERE row_level = 1 AND category_id = 0 ORDER BY row_order ASC");
-		$categories = &new K4CategoriesIterator($request['dba']);
+		$tlforums	= &new K4ForumsIterator($request['dba'], "SELECT * FROM ". K4FORUMS ." WHERE parent_id=0 AND row_type=". FORUM ." ORDER BY row_order ASC");
+		$categories	= &new K4ForumsIterator($request['dba'], "SELECT * FROM ". K4FORUMS ." WHERE row_type=". CATEGORY ." ORDER BY row_order ASC");
 				
-		$request['template']->setVisibility('no_forums', ($tlforums->hasNext() && $categories->hasNext() ? FALSE : TRUE));
+		$request['template']->setVisibility('no_forums', (!$tlforums->hasNext() && !$categories->hasNext() ? TRUE : FALSE));
 		$request['template']->setList('tl_forums', $tlforums);
 		$request['template']->setList('categories', $categories);
 		
@@ -99,6 +99,7 @@ class K4DefaultAction extends FAAction {
 		
 		// Show the forum status icons
 		$request['template']->setVisibility('forum_status_icons', TRUE);
+		$request['template']->setFile('content_extra', 'forum_status_icons.html');
 		
 		$groups				= array();
 

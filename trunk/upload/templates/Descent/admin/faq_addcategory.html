@@ -2,10 +2,10 @@
 <form:form name="add_faqcategory" id="add_faqcategory" action="{$faq_action}" method="post" enctype="multipart/form-data">
 <core:block id="parent_id"><input type="hidden" name="parent_id" value="{$parent_id}" /></core:block>
 <core:block id="edit" hidden="yes"><input type="hidden" name="id" value="{$faq_category_id}" /></core:block>
-<div class="k4_borderwrap">
-	<core:block id="add"><div class="k4_maintitle">{$L_ADDFAQCATEGORY}<core:block id="parent_id" hidden="yes"><span style="font-weight: normal;">: {$parent_name}</span></core:block></div></core:block>
-	<core:block id="edit" hidden="yes"><div class="k4_maintitle">{$L_EDITFAQCATEGORY}<span style="font-weight: normal;">: {$faq_name}</span></core:block>
-	<table width="100%" cellpadding="0" cellspacing="1" border="0" class="k4_table">
+<div class="borderwrap">
+	<core:block id="add"><div class="maintitle">{$L_ADDFAQCATEGORY}<core:block id="parent_id" hidden="yes"><span style="font-weight: normal;">: {$parent_name}</span></core:block></div></core:block>
+	<core:block id="edit" hidden="yes"><div class="maintitle">{$L_EDITFAQCATEGORY}<span style="font-weight: normal;">: {$faq_name}</span></core:block>
+	<table width="100%" cellpadding="0" cellspacing="1" border="0" class="table">
 		<tr>
 			<td class="alt1" width="30%">
 				<label for="name"><strong>{$L_NAME}:</strong></label>
@@ -44,7 +44,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="k4_subtitle" colspan="2">
+			<td class="subtitle" colspan="2">
 				<input type="submit" value="{$L_SAVE}" class="button" tabindex="4" />
 				<input type="reset" value="{$L_RESET}" class="button" tabindex="5" />
 			</td>

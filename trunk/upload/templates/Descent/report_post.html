@@ -1,10 +1,10 @@
 <!-- Report Post -->
 <form:form action="viewtopic.php?act=send_report" name="bad_report" id="bad_report" method="post" enctype="multipart/form-data">
 <input type="hidden" name="<if:if var="post_row_type" eq="8">r<if:else />t</if:if>" value="<if:if var="post_row_type" eq="8">{$post_reply_id}<if:else />{$post_topic_id}</if:if>" />
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle">{$L_REPORTPOSTTOMOD}</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle">{$L_REPORTPOSTTOMOD}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 			<tr>
 				<td class="alt3"><strong>{$L_BADPOSTTITLE}</strong></td>
 				<td width="70%" class="alt1">
@@ -25,7 +25,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2" class="k4_subtitle" style="text-align: center;">
+				<td colspan="2" class="subtitle" style="text-align: center;">
 					<input type="submit" value="{$L_REPORTPOST}" class="button" />
 				</td>
 			</tr>

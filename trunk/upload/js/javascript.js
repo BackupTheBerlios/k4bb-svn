@@ -39,7 +39,7 @@ function show_newmessage_box(num_messages, text_to_write, img_dir, go_in_id) {
 	
 	if(go_in && parseInt(num_messages) > 0) {
 		
-		document.writeln('<div id="new_pms_box" class="special_panel" style="z-index: 99;border: 0px;position: absolute;top: ' + d.top(go_in) + 'px;padding: 5px;"><span class="smalltext"><a href="member.php?act=usercp&amp;view=pmfolder&amp;folder=1" title=""><img src="Images/' + img_dir + '/Icons/icon_latest_reply.gif" alt="" border="0" />&nbsp;<strong>' + parseInt(num_messages) + '</strong> ' + text_to_write + '</a></span></div>');
+		document.writeln('<div id="new_pms_box" class="base2" style="z-index: 99;border: 0px;position: absolute;top: ' + d.top(go_in) + 'px;padding: 5px;"><span class="smalltext"><a href="member.php?act=usercp&amp;view=pmfolder&amp;folder=1" title=""><img src="Images/' + img_dir + '/Icons/icon_latest_reply.gif" alt="" border="0" />&nbsp;<strong>' + parseInt(num_messages) + '</strong> ' + text_to_write + '</a></span></div>');
 		var new_pms_box = d.getElementById('new_pms_box');
 		
 		if(new_pms_box) {

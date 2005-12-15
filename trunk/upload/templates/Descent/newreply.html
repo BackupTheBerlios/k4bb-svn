@@ -10,9 +10,9 @@
 <div id="ajax_post_preview" style="display: none;"></div>
 <!-- / AJAX Reply Preview -->
 
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle">
 			<core:block id="post_reply">
 			<div style="float:right;" class="smalltext">
 				<strong>{$L_REPLY}:</strong>
@@ -28,7 +28,7 @@
 			{$L_EDITPOST}: <span style="font-weight: normal;">{$reply_name}</span>
 			</core:block>
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 			<tr>
 				<td class="alt3" colspan="2" align="center">
 					
@@ -157,7 +157,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="k4_subtitle" align="center" colspan="2">
+				<td class="subtitle" align="center" colspan="2">
 					<input type="hidden" name="submit_type" id="submit_type" value="" />
 					<input <if:if var="nojs" eq="1">name="post"</if:if> type="submit" class="button" value="{$L_SUBMIT}" accesskey="s" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'post'); }" />
 					<maps:if forum="forum_forum_id" var="post_preview" method="can_add">
@@ -172,13 +172,13 @@
 <br />
 
 <!-- Additional Post Options -->
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle" id="po_maintitle">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle" id="po_maintitle">
 			<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_po', 'postoptions', 'po_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_po" src="Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
 			{$L_ADDITIONALOPTIONS}
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table" id="postoptions" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table" id="postoptions" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
 			<tr>
 				<td class="alt3">
 					<div class="outset_box">
@@ -202,13 +202,13 @@
 <maps:if var="attachments" method="can_add" forum="forum_forum_id">
 <br />
 <!-- Attachments Manager -->
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle" id="am_maintitle">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle" id="am_maintitle">
 			<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_am', 'attachmanage', 'am_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_am" src="Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
 			{$L_ATTACHMENTSMANAGER}
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table" id="attachmanage" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table" id="attachmanage" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
 			<tr>
 				<td class="alt3">
 					<div class="outset_box">
@@ -231,19 +231,19 @@
 <br />
 
 <!-- Topic Review -->
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle" id="tr_maintitle">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle" id="tr_maintitle">
 			<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('topicreview_link', 'topicreview', 'tr_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="topicreview_link" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
 			{$L_TOPICREVIEW} - {$reply_name}
 		</div>
 		<div class="alt3" style="padding: 0px;">
 			<div style="height: 300px; overflow: auto;" id="topicreview">
 				<list:list id="topic_review">
-				<table width="99%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+				<table width="99%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 				<tr>
-					<td class="k4_subtitle" width="20%"><div align="center">{$L_AUTHOR}</div></td>
-					<td class="k4_subtitle" width="80%"><div align="center">{$L_MESSAGE}</div></td>
+					<td class="subtitle" width="20%"><div align="center">{$L_AUTHOR}</div></td>
+					<td class="subtitle" width="80%"><div align="center">{$L_MESSAGE}</div></td>
 				</tr>
 				<list:item list="topic_review">
 
@@ -274,13 +274,13 @@
 
 <br />
 <!-- Posting Code Allowances -->
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle" id="pr_maintitle">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle" id="pr_maintitle">
 			<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_pr', 'postingrules', 'pr_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_pr" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
 			{$L_POSTINGRULES}
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table" id="postingrules">
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table" id="postingrules">
 			<tr>
 				<td class="alt3" valign="top">
 					<div align="left" class="minitext">

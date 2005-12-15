@@ -1,9 +1,9 @@
 <!-- Quick Links Drop Down Menu -->
 <if:if var="nojs" eq="0">
-<div id="quicklinks_menu" class="k4_borderwrap" style="display: none;">
-	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+<div id="quicklinks_menu" class="borderwrap" style="display: none;">
+	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 		<tr>
-			<td class="k4_subtitle" nowrap="nowrap">{$L_QUICKLINKS}</td>
+			<td class="subtitle" nowrap="nowrap">{$L_GENERAL}</td>
 		</tr>
 		<!--<if:if var="calendarenabled" eq="1">
 		<tr>
@@ -21,7 +21,7 @@
 			<td class="alt1"><a href="search.php?act=find&amp;author={$user_name}&amp;exact=1" title="{$L_MYPOSTS}" class="smalltext">{$L_MYPOSTS}</a></td>
 		</tr>
 		<tr>
-			<td class="k4_subtitle" nowrap="nowrap">{$L_USERCONTROLPANEL}</td>
+			<td class="subtitle" nowrap="nowrap">{$L_USERCONTROLPANEL}</td>
 		</tr>
 		<tr>
 			<td class="alt1"><a href="member.php?act=usercp" title="{$L_USERCONTROLPANEL}" class="smalltext">{$L_USERCONTROLPANEL}</a></td>
@@ -31,7 +31,7 @@
 		</tr>
 		</is:logged>
 		<tr>
-			<td class="k4_subtitle">{$L_MISCELLANEOUS}</td>
+			<td class="subtitle">{$L_MISCELLANEOUS}</td>
 		</tr>
 		<is:logged><tr>
 			<td class="alt1" nowrap="nowrap"><a href="member.php?act=usercp&amp;view=pmfolder&amp;folder=1" title="{$L_GOTOINBOX}" class="smalltext">{$L_GOTOINBOX}</a></td>
@@ -44,20 +44,18 @@
 <script type="text/javascript">menu_init('quicklinks_link', 'quicklinks_menu');</script>
 <if:else />
 <div class="alt2" style="text-align: left;border-top: 1px solid #FFFFFF;">
-	<ul class="menu_global">
-		<li class="first"><strong class="smalltext">{$L_QUICKLINKS}</strong></li>
-		<if:if var="calendarenabled" eq="1">
-		<li><a href="calendar.php" title="{$L_CALENDER}" class="smalltext">{$L_CALENDAR}</a></li>
-		</if:if>
-		<li><a href="usergroups.php" title="{$L_USERGROUPS}" class="smalltext">{$L_USERGROUPS}</a></li>
-		<li><a href="search.php?act=find&amp;newposts=1&amp;daysprune={$user_last_seen_days}" title="{$L_NEWPOSTS}" class="smalltext">{$L_NEWPOSTS}</a></li>
-		<is:logged>
-		<li><a href="search.php?act=find&amp;author={$user_name}" title="{$L_MYPOSTS}" class="smalltext">{$L_MYPOSTS}</a></li>
-		<li><a href="member.php?act=usercp" title="{$L_USERCONTROLPANEL}" class="smalltext">{$L_USERCONTROLPANEL}</a></li>
-		<li><a href="member.php?act=profile" title="{$L_PROFILE}" class="smalltext">{$L_PROFILE}</a></li>
-		</is:logged>
-		<li><a href="index.php?act=markforums" title="{$L_MARKFORUMSREAD}" class="smalltext">{$L_MARKFORUMSREAD}</a></li>
-	</ul>
+	<strong class="smalltext">{$L_QUICKLINKS}</strong>
+	<if:if var="calendarenabled" eq="1">
+	| <a href="calendar.php" title="{$L_CALENDER}" class="smalltext">{$L_CALENDAR}</a>
+	</if:if>
+	| <a href="usergroups.php" title="{$L_USERGROUPS}" class="smalltext">{$L_USERGROUPS}</a>
+	| <a href="search.php?act=find&amp;newposts=1&amp;daysprune={$user_last_seen_days}" title="{$L_NEWPOSTS}" class="smalltext">{$L_NEWPOSTS}</a>
+	<is:logged>
+	| <a href="search.php?act=find&amp;author={$user_name}" title="{$L_MYPOSTS}" class="smalltext">{$L_MYPOSTS}</a>
+	| <a href="member.php?act=usercp" title="{$L_USERCONTROLPANEL}" class="smalltext">{$L_USERCONTROLPANEL}</a>
+	| <a href="member.php?act=profile" title="{$L_PROFILE}" class="smalltext">{$L_PROFILE}</a>
+	</is:logged>
+	| <a href="index.php?act=markforums" title="{$L_MARKFORUMSREAD}" class="smalltext">{$L_MARKFORUMSREAD}</a>
 </div>
 </if:if>
 <!-- / Quick Links Drop Down Menu -->

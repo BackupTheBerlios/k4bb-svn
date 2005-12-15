@@ -1,66 +1,66 @@
 <maps:if var="can_see_wo" method="can_view">
 <!-- General Forum Information -->
-<br />
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle" id="wto_maintitle">
-			<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_wgo', 'whatsgoingon', 'wto_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_wgo" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
-			{$L_WHATSGOINGON}
-		</div>
-		<table width="100%" border="0" cellpadding="0" cellspacing="{$style_cellspacing}" class="k4_table" id="whatsgoingon">
+<div class="header">
+	<div class="title" id="wto_maintitle">
+		<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_wgo', 'whatsgoingon', 'wto_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_wgo" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+		{$L_STATISTICS}
+	</div>
+</div>
+
+<div class="spacer">
+	<div class="borderwrap">
+		<table width="100%" border="0" cellpadding="0" cellspacing="{$style_cellspacing}" class="table" id="whatsgoingon">
 			<tr>
-				<td class="alt3" rowspan="3" width="5%" align="center" valign="middle">
-					<img src="Images/{$IMG_DIR}/Icons/forum_stats.gif" alt="{$L_WHATSGOINGON}" />
-				</td>
-				<td class="alt1">
+				<td class="alt1" width="50%">
 					<div class="minitext" align="left">
-					{$newest_member}
-					<br />
-					{$total_posts}
-					<br />
-					{$total_users}
-					<br />
-					{$most_users_ever}
+						{$newest_member}
+						<br />
+						{$total_posts}
+						<br />
+						{$total_users}
+						<br />
+						{$most_users_ever}
 					</div>
 				</td>
+				<is:unlogged>
+				<td class="base2" width="50%">
+					<core:import id="quick_login" />
+				</td>
+				</is:unlogged>
 			</tr>
 			<tr>
-				<td class="alt3">
+				<td class="alt2"<is:unlogged> colspan="2"</is:unlogged>>
 					<div class="minitext" align="left">
-						<strong>{$L_LEGEND}:</strong>
+						{$L_LEGEND}:
 						<list:list id="usergroups_legend">
 						<list:item list="usergroups_legend">
 						<a href="usergroups.php?id={$id}" style="color: #{$color};font-weight: bold;" title="{$name}">{$name}</a><list:separator list="usergroups_legend">,</list:separator>
 						</list:item>
 						</list:list>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td class="alt1">
-					<div class="minitext" align="left">
-					{$online_stats}
-					<br />
-					<if:if var="num_online_members" greater="0">
-					<maps:if var="can_see_wologgedusers" method="can_view">
-					<list:list id="online_users">
-						{$L_REGISTEREDUSERS}:
-						<list:item list="online_users">
-						<if:if var="name" noteq="">
-						<if:if var="invisible" eq="0">
-							<if:if var="user_id" noteq="0"><a href="member.php?id={$user_id}" style="color: #{$color};font-weight: {$font_weight};" class="minitext">{$name}</a><if:else /><strong style="font-style: italic;font-weight: bold;">{$name}</strong></if:if>
-							<list:separator list="online_users">,&nbsp;</list:separator>
+						<br />
+						{$online_stats}
+						<br />
+						<if:if var="num_online_members" greater="0">
+						<maps:if var="can_see_wologgedusers" method="can_view">
+						<list:list id="online_users">
+							{$L_REGISTEREDUSERS}:
+							<list:item list="online_users">
+							<if:if var="name" noteq="">
+							<if:if var="invisible" eq="0">
+								<if:if var="user_id" noteq="0"><a href="member.php?id={$user_id}" style="color: #{$color};font-weight: {$font_weight};" class="smalltext">{$name}</a><if:else /><strong style="font-style: italic;font-weight: bold;">{$name}</strong></if:if>
+								<list:separator list="online_users">,&nbsp;</list:separator>
+							</if:if>
+							</if:if>
+							</list:item>
+						</list:list>
+						</maps:if>
 						</if:if>
-						</if:if>
-						</list:item>
-					</list:list>
-					</maps:if>
-					</if:if>
 					</div>
 				</td>
 			</tr>
 		</table>
 	</div>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 <!-- / General Forum Information -->
 </maps:if>

@@ -126,9 +126,9 @@ function poll_template(&$text, &$dba, $poll_id, $replace_text, $topic_id, $reply
 			$tpl.= '<input type="hidden" name="topic_id" value="'. intval($topic_id) .'" />';
 			$tpl.= '<input type="hidden" name="reply_id" value="'. intval($reply_id) .'" />';
 		}
-		$tpl	.= '	<div class="k4_shadow"><div class="k4_borderwrap">';
-		$tpl	.= '		<div class="k4_maintitle"><a href="viewpoll.php?id='. $question['id'] .'" title="'. $question['question'] .'">'. $question['question'] .'</a></div>';
-		$tpl	.= '		<table width="100%" cellpadding="0" cellspacing="'. K4_TABLE_CELLSPACING .'" border="0" class="k4_table">';
+		$tpl	.= '	<div class="shadow"><div class="borderwrap">';
+		$tpl	.= '		<div class="maintitle"><a href="viewpoll.php?id='. $question['id'] .'" title="'. $question['question'] .'">'. $question['question'] .'</a></div>';
+		$tpl	.= '		<table width="100%" cellpadding="0" cellspacing="'. K4_TABLE_CELLSPACING .'" border="0" class="table">';
 
 		/**
 		 * / POLL TEMPLATE HEADER
@@ -140,7 +140,7 @@ function poll_template(&$text, &$dba, $poll_id, $replace_text, $topic_id, $reply
 		$i						= 0;
 		
 		$tpl.= '				<tr>';
-		$tpl.= '					<td class="k4_subtitle" colspan="2" align="center">'. $_LANG['L_POLLOPTIONS'] .'</td>';
+		$tpl.= '					<td class="subtitle" colspan="2" align="center">'. $_LANG['L_POLLOPTIONS'] .'</td>';
 		$tpl.= '				</tr>';
 
 		// loop through the answers
@@ -174,7 +174,7 @@ function poll_template(&$text, &$dba, $poll_id, $replace_text, $topic_id, $reply
 		 */
 		
 		if(!$show_results) {
-			$tpl.= '			<tr class="k4_subtitle">';
+			$tpl.= '			<tr class="subtitle">';
 			$tpl.= '				<td colspan="2" align="center"><input type="submit" class="button" value="'. $_LANG['L_VOTE'] .'" /></td>';
 			$tpl.= '			</tr>';
 		}

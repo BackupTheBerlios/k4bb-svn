@@ -42,9 +42,7 @@ class K4DefaultAction extends FAAction {
 		/* set the breadcrumbs bit */
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 
-		if(isset($_REQUEST['c']) && intval($_REQUEST['c']) != 0) {
-			$forum					= $request['dba']->getRow("SELECT * FROM ". K4CATEGORIES ." WHERE category_id = ". intval($_REQUEST['c']));
-		} elseif(isset($_REQUEST['f']) && intval($_REQUEST['f']) != 0) {
+		if((isset($_REQUEST['f']) && intval($_REQUEST['f']) != 0) || (isset($_REQUEST['c']) && intval($_REQUEST['c']) != 0)) {
 			$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['f']));
 		} else {
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', TRUE);
@@ -153,7 +151,7 @@ class K4DefaultAction extends FAAction {
 			}
 
 			/* Set the Categories list */
-			$categories = &new K4CategoriesIterator($request['dba'], "SELECT * FROM ". K4CATEGORIES ." WHERE category_id = ". $forum['category_id'] ." ORDER BY row_order ASC");
+			$categories = &new K4ForumsIterator($request['dba'], "SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". $forum['forum_id'] ." ORDER BY row_order ASC");
 			$request['template']->setList('categories', $categories);
 
 			/* Hide the welcome message at the top of the forums.html template */

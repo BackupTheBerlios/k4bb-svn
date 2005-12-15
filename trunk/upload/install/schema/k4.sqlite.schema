@@ -128,6 +128,7 @@ CREATE INDEX style_name ON k4_styles (name);
 CREATE TABLE k4_css (
 	id			INTEGER UNSIGNED,
 	style_id		INTEGER UNSIGNED NOT NULL DEFAULT 1,
+	group_id		INTEGER UNSIGNED NOT NULL DEFAULT 0,
 	name			VARCHAR(100) NOT NULL DEFAULT '',
 	properties		TEXT,
 	description		VARCHAR(255) NOT NULL DEFAULT '',
@@ -137,28 +138,9 @@ CREATE TABLE k4_css (
 	PRIMARY KEY(id)
 );
 
-CREATE TABLE k4_categories (
-	category_id		INTEGER UNSIGNED,
-	name			VARCHAR(255) NOT NULL DEFAULT '',
-	description		TEXT,
-	suspended		INTEGER UNSIGNED NOT NULL DEFAULT 0,
-	archive			INTEGER UNSIGNED NOT NULL DEFAULT 0,
-	moderating_groups	TEXT,
-	moderating_users	TEXT,
-	
-	row_level		INTEGER UNSIGNED NOT NULL DEFAULT 1,
-	row_type		INTEGER UNSIGNED NOT NULL DEFAULT 0,
-	row_order		INTEGER UNSIGNED NOT NULL DEFAULT 1,
-	created			INTEGER UNSIGNED NOT NULL DEFAULT 0,
-
-	PRIMARY KEY(category_id)
-);
-CREATE INDEX category_id ON k4_categories (category_id);
-
 CREATE TABLE k4_forums (
 	forum_id		INTEGER UNSIGNED,
 	parent_id		INTEGER UNSIGNED NOT NULL DEFAULT 0,
-	category_id		INTEGER UNSIGNED NOT NULL DEFAULT 0,
 	name			VARCHAR(255) NOT NULL DEFAULT '',
 	description		TEXT,
 	archive			INTEGER UNSIGNED NOT NULL DEFAULT 0,
@@ -213,7 +195,6 @@ CREATE TABLE k4_forums (
 
 	forum_rules		TEXT,
 
-	row_level		INTEGER UNSIGNED NOT NULL DEFAULT 1,
 	row_type		INTEGER UNSIGNED NOT NULL DEFAULT 0,
 	row_order		INTEGER UNSIGNED NOT NULL DEFAULT 1,
 	created			INTEGER UNSIGNED NOT NULL DEFAULT 0,

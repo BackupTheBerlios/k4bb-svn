@@ -135,6 +135,7 @@ DROP TABLE IF EXISTS k4_css;
 CREATE TABLE k4_css (
 	id			INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	style_id		INT UNSIGNED NOT NULL DEFAULT 1,
+	group_id		INT UNSIGNED NOT NULL DEFAULT 0,
 	name			VARCHAR(100) NOT NULL DEFAULT '',
 	properties		TEXT,
 	description		VARCHAR(255) NOT NULL DEFAULT '',
@@ -144,30 +145,10 @@ CREATE TABLE k4_css (
 	PRIMARY KEY(id)
 );
 
-DROP TABLE IF EXISTS k4_categories;
-CREATE TABLE k4_categories (
-	category_id		INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	name			VARCHAR(255) NOT NULL DEFAULT '',
-	description		TEXT,
-	suspended		INT UNSIGNED NOT NULL DEFAULT 0,
-	archive			INT UNSIGNED NOT NULL DEFAULT 0,
-	moderating_groups	TEXT,
-	moderating_users	TEXT,
-	
-	row_level		INT UNSIGNED NOT NULL DEFAULT 1,
-	row_type		INT UNSIGNED NOT NULL DEFAULT 0,
-	row_order		INT UNSIGNED NOT NULL DEFAULT 1,
-	created			INT UNSIGNED NOT NULL DEFAULT 0,
-
-	PRIMARY KEY(category_id)
-);
-CREATE INDEX category_id ON k4_categories (category_id);
-
 DROP TABLE IF EXISTS k4_forums;
 CREATE TABLE k4_forums (
 	forum_id		INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	parent_id		INT UNSIGNED NOT NULL DEFAULT 0,
-	category_id		INT UNSIGNED NOT NULL DEFAULT 0,
 	name			VARCHAR(255) NOT NULL DEFAULT '',
 	description		TEXT,
 	archive			INT UNSIGNED NOT NULL DEFAULT 0,
@@ -222,7 +203,6 @@ CREATE TABLE k4_forums (
 
 	forum_rules		TEXT,
 
-	row_level		INT UNSIGNED NOT NULL DEFAULT 1,
 	row_type		INT UNSIGNED NOT NULL DEFAULT 0,
 	row_order		INT UNSIGNED NOT NULL DEFAULT 1,
 	created			INT UNSIGNED NOT NULL DEFAULT 0,

@@ -16,7 +16,7 @@
 <div align="right">
 	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
 		<tr>
-			<td class="alt3" id="page_jump1" nowrap="nowrap"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+			<td class="alt3" id="page_jump1" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
 			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
 			<page:list id="replies_pager" before="3" after="3">
@@ -32,16 +32,16 @@
 </page:navigator>
 
 <!-- Member List -->
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle">{$L_MEMBERLIST}</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle">{$L_MEMBERLIST}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 			<tr>
-				<td class="k4_subtitle">{$L_USERNAME}</td>
-				<td class="k4_subtitle" align="center">{$L_POSTS}</td>
-				<td class="k4_subtitle" align="center">{$L_REGISTERED}</td>
-				<td class="k4_subtitle" align="center">{$L_AVATAR}</td>
-				<td class="k4_subtitle" align="center">{$L_ONLINESTATUS}</td>
+				<td class="subtitle">{$L_USERNAME}</td>
+				<td class="subtitle" align="center">{$L_POSTS}</td>
+				<td class="subtitle" align="center">{$L_REGISTERED}</td>
+				<td class="subtitle" align="center">{$L_AVATAR}</td>
+				<td class="subtitle" align="center">{$L_ONLINESTATUS}</td>
 			</tr>
 			<list:list id="memberlist">
 			<list:default list="memberlist">
@@ -88,7 +88,7 @@
 <div align="right">
 	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
 		<tr>
-			<td class="alt3" id="page_jump2" nowrap="nowrap"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+			<td class="alt3" id="page_jump2" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
 			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
 			<page:list id="replies_pager" before="3" after="3">
@@ -111,10 +111,10 @@
 <input type="hidden" name="start" value="0" />
 <input type="hidden" name="sort" value="{$ml_sort}" />
 
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle">{$L_DISPLAYOPTIONS}</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle">{$L_DISPLAYOPTIONS}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 			<tr>
 				<td class="alt1" width="24%" align="center">
 					{$L_SORTRESULTSBY}:
@@ -154,7 +154,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="k4_subtitle" colspan="4" align="center">
+				<td class="subtitle" colspan="4" align="center">
 					<input type="submit" value="{$L_GO}" class="button" />
 				</td>
 			</tr>

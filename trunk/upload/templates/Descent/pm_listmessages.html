@@ -1,7 +1,7 @@
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle">{$L_LISTMESSAGES}: <span style="font-weight: normal;">{$folder_name}</span></div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle">{$L_LISTMESSAGES}: <span style="font-weight: normal;">{$folder_name}</span></div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 			<tr>
 				<td class="alt3">
 					<div class="outset_box">
@@ -47,7 +47,7 @@
 			<div>
 				<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
 					<tr>
-						<td class="alt3" id="page_jump1" nowrap="nowrap"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+						<td class="alt3" id="page_jump1" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 						<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
 						<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
 						<page:list id="pms_pager" before="3" after="3">
@@ -65,16 +65,16 @@
 	</tr>
 </table>
 <form action="member.php?act=usercp&amp;view=pmperformact" method="post" enctype="multipart/form-data">
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle">{$L_MESSAGES}</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle">{$L_MESSAGES}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 			<tr>
-				<td class="k4_subtitle">&nbsp;</td>
-				<td class="k4_subtitle" width="60%">{$L_SUBJECT}/{$L_FROM}</td>
-				<td class="k4_subtitle" width="3%" align="center">&nbsp;{$L_REPLIES}&nbsp;</td>
-				<td class="k4_subtitle" width="30%" align="center">&nbsp;{$L_SENTON}&nbsp;</td>
-				<td class="k4_subtitle" width="3%" align="center">&nbsp;{$L_SELECT}&nbsp;</td>
+				<td class="subtitle">&nbsp;</td>
+				<td class="subtitle" width="60%">{$L_SUBJECT}/{$L_FROM}</td>
+				<td class="subtitle" width="3%" align="center">&nbsp;{$L_REPLIES}&nbsp;</td>
+				<td class="subtitle" width="30%" align="center">&nbsp;{$L_SENTON}&nbsp;</td>
+				<td class="subtitle" width="3%" align="center">&nbsp;{$L_SELECT}&nbsp;</td>
 			</tr>
 			<list:list id="pmessages">
 			<list:default list="pmessages">
@@ -108,7 +108,7 @@
 			</list:item>
 			</list:list>
 			<tr>
-				<td class="k4_subtitle" colspan="5" style="text-align: right;">
+				<td class="subtitle" colspan="5" style="text-align: right;">
 					<input type="hidden" name="original_folder" value="{$folder_id}" />
 					<select name="action" id="action" class="smalltext">
 						<option value="delete">{$L_DELETEPMESSAGES}</option>
@@ -125,7 +125,7 @@
 <div align="right">
 	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
 		<tr>
-			<td class="alt3" id="page_jump1"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+			<td class="alt3" id="page_jump1"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
 			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
 			<page:list id="pms_pager" before="3" after="3">

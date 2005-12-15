@@ -409,7 +409,7 @@ function getPostPreview() {
 				
 			// if there is an error
 			if(errorstr != '') {
-				preview_holder.innerHTML = '<div class="special_panel" style="text-align:center;">' + errorstr + '</div><br />';
+				preview_holder.innerHTML = '<div class="base2" style="text-align:center;">' + errorstr + '</div><br />';
 			
 			// otherwise
 			} else {
@@ -488,7 +488,7 @@ function createEditor() {
 			
 			// if there was an error
 			if(errorstr != '') {
-				//editorcodex.innerHTML = '<div class="special_panel" style="text-align:center;">' + errorstr + '</div><br />' + editor_container.innerHTML;
+				//editorcodex.innerHTML = '<div class="base2" style="text-align:center;">' + errorstr + '</div><br />' + editor_container.innerHTML;
 			
 			// otherwise
 			} else {
@@ -577,7 +577,7 @@ function showQuickEditForm(quickedit_div, quickedit_height, post_type, post_id, 
 			
 			// display an error
 			if(errorstr != '') {
-				quickedit_div.innerHTML = '<div class="special_panel" style="text-align:center;">' + errorstr + '</div><br />';
+				quickedit_div.innerHTML = '<div class="base2" style="text-align:center;">' + errorstr + '</div><br />';
 			
 			// display the quick edit box
 			} else {

@@ -1,26 +1,27 @@
 <!-- Footer -->
-<div class="header_breadcrumbs" align="right">
-	<table width="100%" cellpadding="0" cellspacing="0" border="0">
-		<tr>
-			<td align="left" width="70%">
-				<!-- Benchmarking -->
-				<ul class="menu_global">
-					<li class="first"><a href="http://www.k4bb.org" title="k4 Bulletin Board" class="smalltext" target="_blank">Powered By: k4BB {$VERSION}</a></li>
-					<li><span class="smalltext">Load time: {$load_time}</span></li>
-					<li><span class="smalltext">Num Queries: {$num_queries}</span></li>
-					<!--<li><a href="{$debug_url}" title="Debug" class="smalltext">Debug</a></li>-->
-				</ul>
-				<!-- / Benchmarking -->
-			</td>
-			<td align="right" width="30%" nowrap="nowrap">
-				<ul class="menu_global">
-					<li class="first"><a href="{$contactuslink}" title="{$L_CONTACTUS}" class="smalltext">{$L_CONTACTUS}</a></li>
-					<li><a href="faq.php" title="{$L_HELP}" class="smalltext">{$L_HELP}</a></li>
-					<li><a href="#top" title="{$L_TOP}" class="smalltext">{$L_TOP}</a></li>
-					<if:if var="enablegzip" eq="1"><li><span class="smalltext">{$L_GZIPENABLED}</span></li></if:if>
-				</ul>
-			</td>
-		</tr>
-	</table>
+<div class="footer_menu" align="right">
+	<div id="footer_menu">
+		<table width="100%" cellpadding="0" cellspacing="0" border="0">
+			<tr>
+				<td align="left" width="70%">
+					<!-- Benchmarking -->
+					<div class="minitext">
+						<a href="http://www.k4bb.org" title="k4 Bulletin Board" target="_blank">Powered By: k4BB {$VERSION}</a>
+						| Load time: {$load_time}
+						| Num Queries: {$num_queries}
+					</div>
+					<!-- / Benchmarking -->
+				</td>
+				<td align="right" width="30%" nowrap="nowrap" class="minitext">
+					<div class="minitext">
+						<a href="{$contactuslink}" title="{$L_CONTACTUS}">{$L_CONTACTUS}</a>
+						| <a href="faq.php" title="{$L_HELP}">{$L_HELP}</a>
+						<if:if var="enablegzip" eq="1">| {$L_GZIPENABLED}</if:if>
+						| <a href="#top" title="{$L_TOP}">{$L_TOP} <img src="Images/{$IMG_DIR}/Icons/top.gif" border="0" alt="{$L_TOP}" /></a>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
 </div>
 <!-- / Footer -->

@@ -1,7 +1,7 @@
 <?php if ($_SESSION['user']->get('perms') >= ADMIN): ?>
-<div id="faq_menu" style="display: none;" class="k4_shadow">
-	<div class="k4_borderwrap">
-		<table cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+<div id="faq_menu" style="display: none;" class="shadow">
+	<div class="borderwrap">
+		<table cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="table">
 			<td><a class="smalltext" target="admin_iframe" href="admin.php?act=faq_categories"><?php echo $scope->getVar("L_FAQCATEGORIES"); ?></a></td>
 			<td><a class="smalltext" target="admin_iframe" href="admin.php?act=faq_answers"><?php echo $scope->getVar("L_FAQANSWERS"); ?></a></td>
 		</table>

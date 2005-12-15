@@ -12,9 +12,9 @@
 <core:block id="pm_id" hidden="yes"><input type="hidden" name="{$edit_type}" id="{$edit_type}" value="{$pm_pm_id}" /></core:block>
 
 <!-- Post Topic Form -->
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle">
 			<core:block id="post_pm" hidden="yes">
 			{$L_POSTPRIVATEMESSAGE}
 			</core:block>
@@ -22,7 +22,7 @@
 			{$L_EDITPRIVATEMESSAGE}: <span style="font-weight: normal;">{$pm_name}</span>
 			</core:block>
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 			<tr>
 				<td class="alt3" colspan="2" align="center">
 					
@@ -161,7 +161,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="k4_subtitle" align="center" colspan="2">
+				<td class="subtitle" align="center" colspan="2">
 					<input type="hidden" name="submit_type" id="submit_type" value="" />
 					<input <if:if var="nojs" eq="1">name="post"</if:if> type="submit" class="button" value="{$L_SUBMIT}" accesskey="s" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'post'); }" />
 					<core:block id="save_draft">
@@ -183,13 +183,13 @@
 <br />
 
 <!-- Additional Post Options -->
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle" id="po_maintitle">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle" id="po_maintitle">
 			<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_po', 'postoptions', 'po_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_po" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
 			{$L_ADDITIONALOPTIONS}
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table" id="postoptions">
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table" id="postoptions">
 			<tr>
 				<td class="alt3">
 					<div class="outset_box">
@@ -215,13 +215,13 @@
 <!-- Attachments Manager -->
 <!--
 <br />
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle" id="am_maintitle">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle" id="am_maintitle">
 			<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_am', 'attachmanage', 'am_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_am" src="Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
 			{$L_ATTACHMENTSMANAGER}
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table" id="attachmanage" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table" id="attachmanage" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
 			<tr>
 				<td class="alt3">
 					<div class="outset_box">

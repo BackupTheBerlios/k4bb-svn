@@ -1,7 +1,7 @@
 <?php if ($_SESSION['user']->get('perms') >= ADMIN): ?>
-<div class="k4_borderwrap" style="float: left;">
-	<div class="k4_maintitle"><?php echo $scope->getVar("L_OPTIONS"); ?></div>
-	<table width="130" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="k4_table">
+<div class="borderwrap" style="float: left;">
+	<div class="maintitle"><?php echo $scope->getVar("L_OPTIONS"); ?></div>
+	<table width="130" cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="table">
 		<tr class="alt3"><td><a class="smalltext" href="admin.php?act=options"><?php echo $scope->getVar("L_OPTIONS"); ?></a></td></tr>
 		<tr class="alt3"><td><a class="smalltext" href="admin.php?act=permissions_gui"><?php echo $scope->getVar("L_PERMISSIONS"); ?></a></td></tr>
 	</table>

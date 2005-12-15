@@ -18,7 +18,7 @@
 		<td nowrap="nowrap">
 			<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
 				<tr>
-					<td class="alt3" id="page_jump1" nowrap="nowrap"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+					<td class="alt3" id="page_jump1" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 					<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
 					<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
 					<page:list id="replies_pager" before="3" after="3">
@@ -38,9 +38,9 @@
 <list:list id="topic">
 <list:item list="topic">
 
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle" align="right" style="overflow: hidden;">			
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle" align="right" style="overflow: hidden;">			
 			<div style="float: left;text-align: left;">
 				<a href="viewpost.php?t={$topic_id}" target="_blank" title="{$name}"><img src="Images/{$IMG_DIR}/Icons/post_link.gif" alt="{$name}" border="0" /></a>
 				{$topic_name} <img src="tmp/upload/posticons/{$posticon}" alt="" border="0" />
@@ -48,13 +48,13 @@
 				<a href="rss.php?t={$topic_topic_id}" title="{$L_RSSFEED}: {$topic_name}"><img src="Images/{$IMG_DIR}/Icons/rss_small.gif" alt="{$L_RSSFEED}: {$topic_name}" border="0" /></a>
 			</div>
 			<!-- Drop Down Menus -->
-			<table cellpadding="0" cellspacing="0" border="0" class="k4_ddmenutable">
+			<table cellpadding="0" cellspacing="0" border="0" class="ddmenutable">
 				<tr>
 					<td>
-						<div class="ddmenu_button" id="topicoptions_link"><span class="nav_top">{$L_TOPICOPTIONS}</span></div>
+						<div class="ddmenu_button" id="topicoptions_link"><span class="ddmenu_link_alt">{$L_TOPICOPTIONS}</span></div>
 					</td>
 					<td>
-						<div class="ddmenu_button" id="ratetopic_link"><span class="nav_top">{$L_RATETOPIC}</span></div>
+						<div class="ddmenu_button" id="ratetopic_link"><span class="ddmenu_link_alt">{$L_RATETOPIC}</span></div>
 					</td>
 				</tr>
 			</table>
@@ -99,7 +99,7 @@
 <!-- Quick Reply Information -->
 <div id="quick_reply_sent" style="display: none;">
 	<br />
-	<div id="quick_reply_message" class="special_panel" style="text-align: center;">{$L_ADDEDQUICKREPLY}</div>
+	<div id="quick_reply_message" class="base2" style="text-align: center;">{$L_ADDEDQUICKREPLY}</div>
 	<br />
 	<div id="quick_reply_content" style="display: none;">
 	</div>
@@ -124,7 +124,7 @@
 			<div align="right">
 				<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
 					<tr>
-						<td class="alt3" id="page_jump2" nowrap="nowrap"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+						<td class="alt3" id="page_jump2" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 						<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
 						<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
 						<page:list id="replies_pager" before="3" after="3">
@@ -147,8 +147,8 @@
 <core:import id="similar_topics" />
 
 <!-- Topic Options Drop Down Menu -->
-<div id="topicoptions_menu" class="k4_borderwrap" style="display: none;">
-	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+<div id="topicoptions_menu" class="borderwrap" style="display: none;">
+	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 		<is:logged>
 		<tr>
 			<td class="alt1" nowrap="nowrap">
@@ -167,7 +167,7 @@
 			<td class="alt1" nowrap="nowrap"><a href="{$curr_url}&amp;email=1" title="{$L_EMAILTHISPAGE}" class="smalltext">{$L_EMAILTHISPAGE}</a></td>
 		</tr>
 		<tr>
-			<td class="k4_subtitle">{$L_DISPLAYMODES}</td>
+			<td class="subtitle">{$L_DISPLAYMODES}</td>
 		</tr>
 		<tr>
 			<td class="alt1" nowrap="nowrap">
@@ -183,7 +183,7 @@
 		</tr>
 		<is:logged>
 		<tr>
-			<td class="k4_subtitle">{$L_VIEWOPTIONS}</td>
+			<td class="subtitle">{$L_VIEWOPTIONS}</td>
 		</tr>
 		<tr>
 			<td class="alt1" nowrap="nowrap">
@@ -203,9 +203,9 @@
 <!-- / Topic Options Drop Down Menu -->
 
 <!-- Rate Topic Drop Down Menu -->
-<div id="ratetopic_menu" class="k4_borderwrap" style="display: none;">
+<div id="ratetopic_menu" class="borderwrap" style="display: none;">
 	<form action="viewtopic.php?act=rate_topic&amp;id={$topic_topic_id}" method="post" enctype="multipart/form-data">
-	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 		<tr>
 			<td class="alt3" style="text-align: center;" nowrap="nowrap">
 				<if:if var="ratings_num" noteq="0"><img src="Images/{$IMG_DIR}/Icons/Rating/{$rating}stars.gif" alt="" /><if:else /><em class="smalltext">{$L_NOVOTES}</em></if:if>
@@ -225,7 +225,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="k4_subtitle" align="center"><input type="submit" class="button" value="{$L_RATE}" /></td>
+			<td class="subtitle" align="center"><input type="submit" class="button" value="{$L_RATE}" /></td>
 		</tr>
 		</is:logged>
 	</table>

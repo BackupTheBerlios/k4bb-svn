@@ -188,6 +188,11 @@ function remove_attachments(&$request, $topic_id, $reply_id = FALSE) {
 			}
 		}
 	}
+	
+	$num_files = $attachments->numrows();
+	$extra			= $reply_id ? "AND reply_id = ". intval($reply_id) : "";
+	$request['dba']->executeUpdate("UPDATE ". K4TOPICS ." SET total_attachments=total_attachments-". $num_files ." WHERE topic_id = ". intval($topic_id));
+	$request['dba']->executeUpdate("UPDATE ". (!$reply_id ? K4TOPICS : K4REPLIES) ." SET attachments=attachments-". $num_files ." WHERE topic_id = ". intval($topic_id) ." $extra");
 }
 
 /**

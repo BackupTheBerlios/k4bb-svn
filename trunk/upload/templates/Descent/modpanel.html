@@ -1,10 +1,10 @@
 <is:mod>
 <if:if var="nojs" eq="0">
 <!-- Moderating Panel -->
-<div id="modpanel_menu" class="k4_borderwrap" style="display: none;">
-	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+<div id="modpanel_menu" class="borderwrap" style="display: none;">
+	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 		<if:if var="modpanel" eq="1"><if:if var="forum_forum_id" noteq="0">
-		<tr><td class="k4_subtitle">{$L_POSTS}</td></tr>
+		<tr><td class="subtitle">{$L_POSTS}</td></tr>
 		<tr>
 			<td class="alt1" nowrap="nowrap"><a href="viewforum.php?f={$forum_forum_id}&amp;queued=1" title="{$L_VIEWQUEUEDTOPICS}" class="smalltext">{$L_VIEWQUEUEDTOPICS}</a></td>
 		</tr>
@@ -15,7 +15,7 @@
 			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=viewbpreports&amp;id={$forum_forum_id}" title="{$L_VIEWBADPOSTREPORTS}" class="smalltext">{$L_VIEWBADPOSTREPORTS}</a></td>
 		</tr>
 		</if:if></if:if>
-		<tr><td class="k4_subtitle">{$L_MISCELLANEOUS}</td></tr>
+		<tr><td class="subtitle">{$L_MISCELLANEOUS}</td></tr>
 		<tr>
 			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=baniprange" title="{$L_BANIPRANGE}" class="smalltext">{$L_BANIPRANGE}</a></td>
 		</tr>
@@ -24,7 +24,7 @@
 			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=manage_attachments&amp;id={$forum_forum_id}" title="{$L_MANAGEATTACHMENTS}" class="smalltext">{$L_MANAGEATTACHMENTS}</a></td>
 		</tr>
 		</if:if></if:if>
-		<tr><td class="k4_subtitle">{$L_USERS}</td></tr>
+		<tr><td class="subtitle">{$L_USERS}</td></tr>
 		<tr>
 			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=bannedips" title="{$L_VIEWBANNEDIPS}" class="smalltext">{$L_VIEWBANNEDIPS}</a></td>
 		</tr>
@@ -45,21 +45,19 @@
 </script>
 <if:else />
 <div class="alt2" style="text-align: left;">
-	<ul class="menu_global">
-		<li class="first"><strong class="smalltext">{$L_MODCP}</strong></li>
-		<if:if var="modpanel" eq="1"><if:if var="forum_forum_id" noteq="0">
-		<li><a href="viewforum.php?id={$forum_forum_id}&amp;queued=1" title="{$L_VIEWQUEUEDTOPICS}" class="smalltext">{$L_VIEWQUEUEDTOPICS}</a></li>
-		<li><a href="viewforum.php?id={$forum_forum_id}&amp;locked=1" title="{$L_VIEWLOCKEDTOPICS}" class="smalltext">{$L_VIEWLOCKEDTOPICS}</a></li>
-		<li><a href="mod.php?act=viewbpreports&amp;id={$forum_forum_id}" title="{$L_VIEWBADPOSTREPORTS}" class="smalltext">{$L_VIEWBADPOSTREPORTS}</a></li>
-		</if:if></if:if>
-		<li><a href="mod.php?act=baniprange" title="{$L_BANIPRANGE}" class="smalltext">{$L_BANIPRANGE}</a></li>
-		<if:if var="modpanel" eq="1"><if:if var="forum_forum_id" noteq="0">
-		<li><a href="mod.php?act=manage_attachments&amp;id={$forum_forum_id}" title="{$L_MANAGEATTACHMENTS}" class="smalltext">{$L_MANAGEATTACHMENTS}</a></li>
-		</if:if></if:if>
-		<li><a href="mod.php?act=banuser" title="{$L_BANUSER}" class="smalltext">{$L_BANUSER}</a></li>
-		<li><a href="mod.php?act=flaguser" title="{$L_FLAGUSER}" class="smalltext">{$L_FLAGUSER}</a></li>
-		<li><a href="mod.php?act=warnuser" title="{$L_WARNUSER}" class="smalltext">{$L_WARNUSER}</a></li>
-	</ul>
+	<strong class="smalltext">{$L_MODCP}</strong>
+	<if:if var="modpanel" eq="1"><if:if var="forum_forum_id" noteq="0">
+	| <a href="viewforum.php?id={$forum_forum_id}&amp;queued=1" title="{$L_VIEWQUEUEDTOPICS}" class="smalltext">{$L_VIEWQUEUEDTOPICS}</a>
+	| <a href="viewforum.php?id={$forum_forum_id}&amp;locked=1" title="{$L_VIEWLOCKEDTOPICS}" class="smalltext">{$L_VIEWLOCKEDTOPICS}</a>
+	| <a href="mod.php?act=viewbpreports&amp;id={$forum_forum_id}" title="{$L_VIEWBADPOSTREPORTS}" class="smalltext">{$L_VIEWBADPOSTREPORTS}</a>
+	</if:if></if:if>
+	| <a href="mod.php?act=baniprange" title="{$L_BANIPRANGE}" class="smalltext">{$L_BANIPRANGE}</a>
+	<if:if var="modpanel" eq="1"><if:if var="forum_forum_id" noteq="0">
+	| <a href="mod.php?act=manage_attachments&amp;id={$forum_forum_id}" title="{$L_MANAGEATTACHMENTS}" class="smalltext">{$L_MANAGEATTACHMENTS}</a>
+	</if:if></if:if>
+	| <a href="mod.php?act=banuser" title="{$L_BANUSER}" class="smalltext">{$L_BANUSER}</a>
+	| <a href="mod.php?act=flaguser" title="{$L_FLAGUSER}" class="smalltext">{$L_FLAGUSER}</a>
+	| <a href="mod.php?act=warnuser" title="{$L_WARNUSER}" class="smalltext">{$L_WARNUSER}</a>
 </div>
 </if:if>
 </is:mod>

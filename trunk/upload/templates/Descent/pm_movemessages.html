@@ -1,10 +1,10 @@
 <is:logged>
 <form action="member.php?act=pm_movemessages" method="post" enctype="multipart/form-data">
 <input type="hidden" name="original_folder" value="{$folder_id}" />
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle">{$L_MOVEPMSFROM}: <span style="font-weight: normal;">{$folder_name}</span></div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle">{$L_MOVEPMSFROM}: <span style="font-weight: normal;">{$folder_name}</span></div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 			<tr>
 				<td class="alt1" width="50%"><strong>{$L_DESTINATIONFOLDER}:</strong></td>
 				<td class="alt3" width="50%">
@@ -18,7 +18,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="k4_subtitle" style="text-align: center;" colspan="2">
+				<td class="subtitle" style="text-align: center;" colspan="2">
 					<input type="submit" value="{$L_MOVE}" class="button" />
 					<input type="reset" value="{$L_RESET}" class="button" />
 				</td>
@@ -27,16 +27,16 @@
 	</div>
 </div>
 <br />
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle">{$L_MESSAGES}</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle">{$L_MESSAGES}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 			<tr>
-				<td class="k4_subtitle">&nbsp;</td>
-				<td class="k4_subtitle" width="60%">{$L_SUBJECT}/{$L_FROM}</td>
-				<td class="k4_subtitle" width="3%" align="center">&nbsp;{$L_REPLIES}&nbsp;</td>
-				<td class="k4_subtitle" width="30%" align="center">&nbsp;{$L_SENTON}&nbsp;</td>
-				<td class="k4_subtitle" width="3%" align="center">&nbsp;{$L_SELECT}&nbsp;</td>
+				<td class="subtitle">&nbsp;</td>
+				<td class="subtitle" width="60%">{$L_SUBJECT}/{$L_FROM}</td>
+				<td class="subtitle" width="3%" align="center">&nbsp;{$L_REPLIES}&nbsp;</td>
+				<td class="subtitle" width="30%" align="center">&nbsp;{$L_SENTON}&nbsp;</td>
+				<td class="subtitle" width="3%" align="center">&nbsp;{$L_SELECT}&nbsp;</td>
 			</tr>
 			<list:list id="pmessages">
 			<list:default list="pmessages">

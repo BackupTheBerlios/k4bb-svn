@@ -188,7 +188,7 @@ define('K4TOPICINFO',		'k4_topic_info');
 /**
  * Global Style Stuff
  */
-define('K4_TABLE_CELLSPACING', 1);
+define('K4_TABLE_CELLSPACING', 0);
 
 
 /**

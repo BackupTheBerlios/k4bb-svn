@@ -115,14 +115,14 @@ function isset_forum_cache_item($name, $id) {
 }
 
 /**
- * styleset Caching
+ * Create a styleset in a file
  */
-function get_cached_styleset(&$request, $styleset, $default_styleset) {
+function create_styleset(&$request, $styleset, $default_styleset) {
 	
 	if(!file_exists(BB_BASE_DIR .'/tmp/stylesets/'. preg_replace("~\s~i", '_', $styleset) .'.css')) {
 
 		$query			= $request['dba']->prepareStatement("SELECT c.name as name, c.properties as properties FROM ". K4CSS ." c LEFT JOIN ". K4STYLES ." s ON s.id = c.style_id WHERE s.name = ? ORDER BY c.name ASC");
-		$css			= "/* k4 Bulletin Board ". VERSION ." CSS Generated Style Set :: ". $styleset ." */\r\n\r\n";
+		$css			= "/* k4 Bulletin Board ". VERSION ." CSS Generated Style Set :: ". $styleset ." */\n\n";
 
 		/* Set the user's styleset to the query */
 		$query->setString(1, $styleset);
@@ -145,7 +145,7 @@ function get_cached_styleset(&$request, $styleset, $default_styleset) {
 		/* Loop through the result iterator */
 		while($result->next()) {
 			$temp = $result->current();
-			$css .= "\t\t". $temp['name'] ." { ". $temp['properties'] ." }\r\n";
+			$css .= "\t\t". $temp['name'] ." { ". $temp['properties'] ." }\n";
 		}
 		
 		$result->free();
@@ -168,9 +168,6 @@ function get_cached_styleset(&$request, $styleset, $default_styleset) {
 			trigger_error('Could not retrieve the default style set.', E_USER_ERROR);
 		}
 	}
-
-	$css	= $request['template']->run('tmp/stylesets/'. $which_styleset .'.css');
-	$request['template']->setVar('css_styles', $css);
 }
 
 /* Set a temporary session cache */

@@ -1,14 +1,15 @@
 		<maps:if forum="forum_id" method="can_view">
 		<if:if var="is_forum" eq="1">
 		<tr>
-			<td class="{$row_class}" width="5%" align="center"><img src="Images/{$IMG_DIR}/Icons/{$forum_icon}.gif" alt="{$forum_alt}" border="0" /></td>
-			<td class="{$row_class}" width="55%">
+			<td class="alt{$row_class}" width="5%" align="center"><img src="Images/{$IMG_DIR}/Icons/{$forum_icon}.gif" alt="{$forum_alt}" border="0" /></td>
+			<td class="alt{$row_class}" width="55%">
 				<a href="viewforum.php?f={$forum_id}" title="{$safe_description}"><strong>{$name}</strong></a>
 				<!--<if:if var="num_viewing" greater="0"><span class="smalltext">({$num_viewing} {$L_VIEWING})</span></if:if>-->
 				<br />
-				<span class="minitext">
-				<if:if var="showforumdescription" eq="1"><if:if var="description" noteq="">{$description}<br /></if:if></if:if>
+				
+				<if:if var="showforumdescription" eq="1"><if:if var="description" noteq=""><span class="smalltext">{$description}<br /></span></if:if></if:if>
 				<if:if var="are_moderators" eq="1">
+				<span class="minitext">
 				<br />
 				<strong>{$L_MODERATORS}:</strong>
 				<list:sublist list="forums" id="moderators" column="moderators">
@@ -35,20 +36,17 @@
 				</if:if>
 				</span>
 			</td>
-			<td class="{$row_class}" align="center" width="5%"><span class="minitext">{$posts}</span></td>
-			<td class="{$row_class}" align="center" width="5%"><span class="minitext">{$topics}</span></td>
-			<td class="{$row_class}" nowrap="nowrap" align="center" width="30%">
+			<td class="base{$row_class}" align="center" width="5%"><span class="minitext">{$posts}</span></td>
+			<td class="base{$row_class}" align="center" width="5%"><span class="minitext">{$topics}</span></td>
+			<td class="base{$row_class}" nowrap="nowrap" align="center" width="30%">
 				<if:if var="post_id" greater="0">
 				<div align="left" class="minitext">
 					<if:if var="post_posticon" noteq="clear.gif"><img src="tmp/upload/posticons/{$post_posticon}" alt="" border="0" /></if:if>
 					<a href="<if:if var="post_id" eq="topic_id">viewtopic.php?id={$post_id}<if:else />findpost.php?id={$post_id}</if:if>" title="{$post_name}"><strong><core:truncate length="27" append="...">{$post_name}</core:truncate></strong></a>
 					<br />
-					{$L_BY} <if:if var="post_uname" eq="">{$L_GUEST}<if:else /><if:if var="post_uid" noteq="0"><a href="member.php?id={$post_uid}" title="{$post_uname}"><strong>{$post_uname}</strong></a><if:else />{$post_uname}</if:if></if:if>
-				</div>
-				<div align="right" class="minitext">
-					<core:date format="%b %d %Y">{$post_created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$post_created}</core:date></span>
-					<a href="findpost.php?id={$post_id}" title="{$post_name}"><img src="Images/{$IMG_DIR}/Icons/icon_latest_reply.gif" border="0" alt="{$post_name}" /></a>
-				</div>
+					{$L_BY} <if:if var="post_uname" eq="">{$L_GUEST}<if:else /><if:if var="post_uid" noteq="0"><a href="member.php?id={$post_uid}" title="{$post_uname}"><strong>{$post_uname}</strong></a><if:else />{$post_uname}</if:if></if:if><br />
+					{$L_ONSMALL} <core:date format="%b %d %Y">{$post_created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$post_created}</core:date></span>
+					&nbsp;<a href="findpost.php?id={$post_id}" title="{$post_name}"><img src="Images/{$IMG_DIR}/Icons/icon_latest_reply.gif" border="0" alt="{$post_name}" /></a>
 				<if:else />
 				--
 				</if:if>
@@ -56,12 +54,12 @@
 		</tr>
 		<else:if var="is_link" eq="1" />
 		<tr>
-			<td class="{$row_class}" width="5%" align="center"><img src="Images/{$IMG_DIR}/Icons/forum_link.gif" alt="{$forum_alt}" title="{$forum_alt}" border="0" /></td>
+			<td class="alt{$row_class}" width="5%" align="center"><img src="Images/{$IMG_DIR}/Icons/forum_link.gif" alt="{$forum_alt}" title="{$forum_alt}" border="0" /></td>
 			<if:if var="link_show_redirects" eq="1">
-			<td class="{$row_class}" width="55%"><a href="redirect.php?id={$forum_id}" title="{$name}"><strong>{$name}</strong></a><br /><span class="minitext">{$description}<br />{$sub_forums}</span></td>
-			<td class="{$row_class}" width="40%" align="center" colspan="3"><span class="smalltext">{$L_REDIRECTS}: {$link_redirects}</span></td>
+			<td class="alt{$row_class}" width="55%"><a href="redirect.php?id={$forum_id}" title="{$name}"><strong>{$name}</strong></a><br /><span class="minitext">{$description}<br />{$sub_forums}</span></td>
+			<td class="base{$row_class}" width="40%" align="center" colspan="3"><span class="smalltext">{$L_REDIRECTS}: {$link_redirects}</span></td>
 			<if:else />
-			<td class="{$row_class}" width="95%" colspan="4"><a href="{$link_href}" target="_blank"><strong>{$name}</strong></a><br /><span class="minitext">{$description}<br />{$sub_forums}</span></td>
+			<td class="alt{$row_class}" width="95%" colspan="4"><a href="{$link_href}" target="_blank"><strong>{$name}</strong></a><br /><span class="minitext">{$description}<br />{$sub_forums}</span></td>
 			</if:if>
 		</tr>
 		</if:if>

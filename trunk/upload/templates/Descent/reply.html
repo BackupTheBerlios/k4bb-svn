@@ -1,6 +1,6 @@
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle">			
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle">			
 			<div style="float: right;">
 				<if:if var="modpanel" eq="1"><a href="mod.php?act=baniprange&amp;ip={$poster_ip}" title="{$L_BANIP}"><img src="Images/{$IMG_DIR}/Icons/ban_ip.gif" alt="{$L_BANIP}" border="0" /></a></if:if>
 				<a href="viewtopic.php?act=report_post&amp;r={$reply_id}" title="{$L_REPORTPOST}"><img src="Images/{$IMG_DIR}/Icons/report_post.gif" alt="{$L_REPORTPOST}" border="0" /></a>
@@ -9,7 +9,7 @@
 			{$name} <a href="#p{$reply_id}" name="p{$reply_id}" id="p{$reply_id}"><img src="tmp/upload/posticons/{$posticon}" alt="" border="0" /></a>
 			<span style="font-weight: normal;">( <core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span> )</span>
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table" id="reply{$reply_id}">
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table" id="reply{$reply_id}">
 			<tr>
 				<td width="100%" class="{$row_class}" valign="top">
 					<!-- Body Text -->

@@ -1,9 +1,9 @@
 <is:logged>
 <form:form name="update_profile" id="update_profile" action="member.php?act=update_profile" method="post" enctype="multipart/form-data">
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle">{$L_USERCONTROLPANEL}: <span style="font-weight: normal;">{$L_EDITPROFILE}</span></div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle">{$L_USERCONTROLPANEL}: <span style="font-weight: normal;">{$L_EDITPROFILE}</span></div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 			<tr class="alt3">
 				<td><span class="smalltext">{$L_USERCPPROFILEMSG}</span></td>
 			</tr>
@@ -11,10 +11,10 @@
 	</div>
 </div>
 <br />
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle">{$L_PERSONALINFORMATION}</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle">{$L_PERSONALINFORMATION}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 			<tr>
 				<td class="alt1" width="50%"><label for="fullname"><strong>{$L_FULLNAME}:</strong></label></td>
 				<td class="alt3" width="50%"><input type="text" name="fullname" value="{$user_fullname}" id="fullname" maxlength="100" class="inputbox" /></td>
@@ -93,10 +93,10 @@
 	</div>
 </div>
 <br />
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle">{$L_INSTANTMESSAGING}</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle">{$L_INSTANTMESSAGING}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 			<tr>
 				<td class="alt1" width="50%"><label for="icq"><strong>{$L_ICQ}:</strong></label></td>
 				<td class="alt3" width="50%"><input type="text" name="icq" id="icq" value="{$user_icq}" maxlength="25" class="inputbox" /></td>
@@ -125,10 +125,10 @@
 	</div>
 </div>
 <br />
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle">{$L_ADDITIONALINFO}</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle">{$L_ADDITIONALINFO}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 			<tr>
 				<td class="alt1" width="50%">
 					<label for="timezone"><strong>{$L_TIMEZONE}:</strong></label><br />
@@ -167,6 +167,7 @@
 						<option value="11">{$L_TIMEZONE29}</option>
 						<option value="12">{$L_TIMEZONE30}</option>
 					</select>
+					<script type="text/javascript">d.setIndex('{$user_timezone}', 'timezone');</script>
 				</td>
 			</tr>
 			<list:list id="member_profilefields">
@@ -181,7 +182,7 @@
 			</list:item>
 			</list:list>
 			<tr>
-				<td class="k4_subtitle" colspan="2" align="center">
+				<td class="subtitle" colspan="2" align="center">
 					<input type="submit" value="{$L_SAVE}" class="button" />
 					<input type="reset" value="{$L_RESET}" class="button" />
 				</td>

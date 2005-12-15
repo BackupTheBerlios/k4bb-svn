@@ -374,6 +374,9 @@ class K4TemplateFilter extends FAFilter {
 		
 		$request['user']->set('templateset', $templateset);
 
+		if(!file_exists('tmp/stylesets/'. $styleset .'.css'))
+			create_styleset($request, $styleset, $request['template']->getVar('styleset'));
+
 		// set the main file
 		// *** IF SOMEONE IS GOING TO MAKE A PORTAL, $request['template_file'] IS THE
 		// *** VARIABLE TO CHANGE
@@ -387,10 +390,8 @@ class K4TemplateFilter extends FAFilter {
 		// Set Theme specific template variables
 		$request['template']->setVar('IMG_DIR', $imageset);
 		$request['template']->setVar('TPL_DIR', $templateset);
+		$request['template']->setVar('STYLESET', $styleset);
 		
-		// Set the CSS to the template
-		get_cached_styleset($request, $styleset, $_SETTINGS['styleset']);
-
 		// Set global template variables
 		$request['template']->setVarArray($_LANG);
 		$request['template']->setVarArray($_SETTINGS);

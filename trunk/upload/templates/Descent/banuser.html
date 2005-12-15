@@ -2,12 +2,12 @@
 <!-- User Ban Settings -->
 <form:form name="banuser" id="banuser" action="mod.php?act=hardbanuser" method="post" enctype="mulitpart/form-data">
 <input type="hidden" name="id" value="{$banuser_id}" />
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle">
 			{$L_BANUSER}: <span style="font-weight: normal;"><a href="member.php?id={$banuser_id}" title="{$L_PROFILE}: {$banuser_name}">{$banuser_name}</a></span>
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 			<core:block id="iprange" hidden="yes">
 			<tr>
 				<td width="30%" class="alt3">
@@ -48,7 +48,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="k4_subtitle" style="text-align: center;" colspan="2">
+				<td class="subtitle" style="text-align: center;" colspan="2">
 					<input type="submit" value="{$L_BANTHISUSER}" class="button" />
 				</td>
 			</tr>

@@ -127,7 +127,7 @@ class K4CategoriesIterator extends FAProxyIterator {
 		
 		cache_forum($temp);
 		
-		$temp['forums']				= &new K4ForumsIterator($this->dba, "SELECT * FROM ". K4FORUMS ." WHERE category_id = ". $temp['category_id'] ." AND row_level = ". ($temp['row_level']+1) ." ORDER BY row_order ASC");
+		$temp['forums']				= &new K4ForumsIterator($this->dba, "SELECT * FROM ". K4FORUMS ." WHERE category_id = ". $temp['category_id'] ." ORDER BY row_order ASC");
 
 		$temp['safe_description']	= strip_tags($temp['description']);
 

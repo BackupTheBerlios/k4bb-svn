@@ -3,7 +3,7 @@
 <div align="right">
 	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
 		<tr>
-			<td class="alt3" id="page_jump1"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+			<td class="alt3" id="page_jump1"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
 			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
 			<page:list id="searchresults_pager" before="3" after="3">
@@ -18,12 +18,12 @@
 </div>
 </page:navigator>
 <!-- Bad Post Reports -->
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle">
 			{$L_BADPOSTREPORTS}: <span style="font-weight: normal;">{$name}</span>
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 			<list:list id="badpost_reports">
 			<list:default list="badpost_reports">
 			<tr>
@@ -38,7 +38,7 @@
 			</list:default>
 			<list:item list="badpost_reports">
 			</table>
-				<div class="k4_maintitle">
+				<div class="maintitle">
 					<div class="smalltext">
 						<strong>{$L_FORUM}:</strong> <a href="viewforum.php?f={$forum_id}" title="{$forum_name}" class="smalltext" style="font-weight: normal;">{$forum_name}</a>
 						&nbsp;&nbsp;&nbsp;
@@ -47,7 +47,7 @@
 						<strong>{$L_POST}:</strong> <a href="<if:if var="row_type" eq="4">viewtopic.php?id={$topic_id}<if:else />findpost.php?id={$reply_id}</if:if>" title="{$name}" class="smalltext" style="font-weight: normal;">{$name}</a>
 					</div>
 				</div>
-				<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+				<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 					<tr>
 						<td class="alt3" width="20%" align="center">
 							<if:if var="poster_id" greater="0">
@@ -117,7 +117,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td class="k4_subtitle" colspan="2"></td>
+						<td class="subtitle" colspan="2"></td>
 					</tr>
 			</list:item>
 			</list:list>
@@ -130,7 +130,7 @@
 <div align="right">
 	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
 		<tr>
-			<td class="alt3" id="page_jump2" nowrap="nowrap"><div class="nav_top"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+			<td class="alt3" id="page_jump2" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
 			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
 			<page:list id="searchresults_pager" before="3" after="3">

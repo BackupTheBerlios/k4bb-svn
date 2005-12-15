@@ -222,12 +222,13 @@ class K4ForumsIterator extends FAProxyIterator {
 	var $forums;
 	var $usergroups;
 	var $dba;
+	var $level = 1;
 
-	function K4ForumsIterator(&$dba, $query = NULL, $do_recurse = TRUE) {
-		$this->__construct($dba, $query, $do_recurse);
+	function K4ForumsIterator(&$dba, $query = NULL, $do_recurse = TRUE, $level = 1) {
+		$this->__construct($dba, $query, $do_recurse, $level);
 	}
  
-	function __construct(&$dba, $query = NULL, $do_recurse = TRUE) {
+	function __construct(&$dba, $query = NULL, $do_recurse = TRUE, $level = 1) {
 		
 		global $_SETTINGS, $_USERGROUPS;
 		
@@ -238,6 +239,7 @@ class K4ForumsIterator extends FAProxyIterator {
 		$this->usergroups	= $_USERGROUPS;
 		$this->settings		= $_SETTINGS;
 		$this->do_recurse	= $do_recurse;
+		$this->level		= $level;
 		$this->result		= $this->dba->executeQuery($query);
 		
 		parent::__construct($this->result);
@@ -254,22 +256,26 @@ class K4ForumsIterator extends FAProxyIterator {
 		forum_icon($temp, $temp['forum_icon']);
 		
 		/* Set a nice representation of what level we're on */
-		$temp['level']		= @str_repeat('&nbsp;&nbsp;&nbsp;', $temp['row_level']-2);
+		$temp['level']		= @str_repeat('&nbsp;&nbsp;&nbsp;', $this->level);
 						
 		/* Should we query down to the next level of forums? */
-		if($this->do_recurse) {
-			if($temp['subforums'] > 0 && $this->settings['showsubforums'] == 1) {
-				$it = new K4ForumsIterator($this->dba, "SELECT * FROM ". K4FORUMS ." WHERE parent_id = ". intval($temp['forum_id']) ." AND category_id = ". intval($temp['category_id']) ." AND row_level = ". intval($temp['row_level']+1) ." ORDER BY row_order ASC", FALSE);
-				if($it->hasNext()) {
+		if($temp['row_type'] & FORUM) {
+			if($this->do_recurse) {
+				if($temp['subforums'] > 0 && $this->settings['showsubforums'] == 1) {
+					$it = new K4ForumsIterator($this->dba, "SELECT * FROM ". K4FORUMS ." WHERE parent_id = ". intval($temp['forum_id']) ." ORDER BY row_order ASC", FALSE, $this->level + 1);
+					if($it->hasNext()) {
 
-					// add the iterator
-					$temp['subforums_list'] = $it;
-				} else {
-					
-					// if this forum doesn't actually have subforums, fix it
-					$this->dba->executeUpdate("UPDATE ". K4FORUMS ." SET subforums=0 WHERE forum_id = ". intval($temp['forum_id']));
+						// add the iterator
+						$temp['subforums_list'] = $it;
+					} else {
+						
+						// if this forum doesn't actually have subforums, fix it
+						$this->dba->executeUpdate("UPDATE ". K4FORUMS ." SET subforums=0 WHERE forum_id = ". intval($temp['forum_id']));
+					}
 				}
 			}
+		} else {
+			$temp['forums'] = &new K4ForumsIterator($this->dba, "SELECT * FROM ". K4FORUMS ." WHERE parent_id = ". $temp['forum_id'] ." ORDER BY row_order ASC", TRUE, $this->level + 1);
 		}
 		
 		/**

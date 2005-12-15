@@ -1,13 +1,13 @@
 <is:unlogged>
 <form:form name="register_form" id="register_form" action="member.php?act=register_user" method="post" enctype="multipart/form-data">
 <div id="form_error" style="display:none;text-align: center;">
-	<div class="special_panel" id="message_holder" style="text-align: center;"></div>
+	<div class="base2" id="message_holder" style="text-align: center;"></div>
 	<br />
 </div>
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle">{$L_REGISTER}</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle">{$L_REGISTER}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 			<tr>
 				<td class="alt3">
 					<div class="outset_box">
@@ -52,7 +52,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="k4_subtitle" align="center">
+				<td class="subtitle" align="center">
 					<input type="submit" value="{$L_REGISTER}" class="button" />
 					<!--<input type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" value="{$L_REGISTER}" class="button" onclick="if(checkForm(d.getElementById('register_form'))) { register(this); }" />-->
 					<input type="reset" value="{$L_RESET}" class="button" />
@@ -62,10 +62,10 @@
 	</div>
 </div>
 <br />
-<div class="k4_shadow">
-	<div class="k4_borderwrap">
-		<div class="k4_maintitle">{$L_ADDITIONALINFO}</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">
+<div class="shadow">
+	<div class="borderwrap">
+		<div class="maintitle">{$L_ADDITIONALINFO}</div>
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 			<tr>
 				<td class="alt3">
 					<div class="outset_box">
@@ -115,7 +115,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="k4_subtitle" align="center">
+				<td class="subtitle" align="center">
 					<input type="submit" value="{$L_REGISTER}" class="button" />
 					<!--<input type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" value="{$L_REGISTER}" class="button" onclick="if(checkForm(d.getElementById('register_form'))) { register(this); }" />-->
 					<input type="reset" value="{$L_RESET}" class="button" />
