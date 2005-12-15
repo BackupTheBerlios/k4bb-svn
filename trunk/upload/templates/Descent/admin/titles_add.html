@@ -1,8 +1,8 @@
 <is:admin>
 <form:form action="{$usertitle_action}" method="post" enctype="multipart/form-data">
 <if:if var="edit_title" eq="1"><input type="hidden" name="title_id" value="{$title_title_id}" /></if:if>
-<div class="borderwrap">
-	<div class="maintitle"><if:if var="edit_title" eq="0">{$L_ADDUSERTITLE}<if:else />{$L_EDITUSERTITLE}<span style="font-weight: normal;">: {$title_title_text}</span></if:if></div>
+<div class="header"><div class="title"><if:if var="edit_title" eq="0">{$L_ADDUSERTITLE}<if:else />{$L_EDITUSERTITLE}<span style="font-weight: normal;">: {$title_title_text}</span></if:if></div></div>
+<div class="spacer">	
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 		<tr>
 			<td class="alt1" width="30%"><strong>{$L_TITLE}:</strong></td>
@@ -12,8 +12,8 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="alt1" width="30%"><strong>{$L_MINREQUIREDPOSTS}:</strong></td>
-			<td class="alt1">
+			<td class="alt2" width="30%"><strong>{$L_MINREQUIREDPOSTS}:</strong></td>
+			<td class="alt2">
 				<input type="text" name="num_posts" id="num_posts" value="{$title_num_posts}" maxlength="8" class="inputbox" tabindex="2" />
 				<form:error id="num_posts_error" for="num_posts" setclass="inputfailed" regex="([0-9])+">{$L_INSERTUMINPOSTS}</form:error>
 			</td>
@@ -28,20 +28,21 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="alt1" width="30%">
+			<td class="alt2" width="30%">
 				<strong>{$L_UTITLEIMAGE}:</strong><br />
 				<span class="smalltext">{$L_UTITLEIMAGEHOWTO}</span>
 			</td>
-			<td class="alt1">
+			<td class="alt2">
 				<input type="text" name="image" id="image" value="{$title_image}" maxlength="100" class="inputbox" tabindex="4" />
 			</td>
 		</tr>
 		<tr>
-			<td class="subtitle" colspan="2">
+			<td class="base3" colspan="2" style="text-align: center;">
 				<input type="submit" value="{$L_SAVE}" class="button" />
 				<input type="reset" value="{$L_RESET}" class="button" />
 			</td>
 		</tr>
 	</table>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 </is:admin>

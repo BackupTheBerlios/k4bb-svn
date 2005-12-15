@@ -140,20 +140,13 @@ function k4_bread_crumbs(&$template, &$dba, $location = NULL, $info = FALSE, $fo
 function follow_forum_ids($breadcrumbs, $forum) {
 	
 	switch($forum['row_type']) {
-		/* Categories and forums */
 		case CATEGORY:
 		case FORUM: {
 			$forum['location'] = 'viewforum.php?f='. $forum['forum_id'];
 			break;
 		}
-		/* Gallery Category */
 		case GALLERY: {
-			$forum['location'] = 'viewgallery.php?id='. $forum['forum_id'];
-			break;
-		}
-		/* Gallery Image */
-		case IMAGE: {
-			$forum['location'] = 'viewimage.php?id='. $forum['forum_id'];
+			$forum['location'] = 'viewgallery.php?f='. $forum['forum_id'];
 			break;
 		}
 	}
@@ -162,12 +155,11 @@ function follow_forum_ids($breadcrumbs, $forum) {
 
 	if(isset($forum['parent_id']) && $forum['parent_id'] > 0) {
 		global $_ALLFORUMS;
-		$prefix				= $forum['row_type'] & CATEGORY ? 'c' : 'f';
-		$breadcrumbs		= follow_forum_ids($breadcrumbs, $_ALLFORUMS[$prefix . $forum['parent_id']]);
+		$breadcrumbs = follow_forum_ids($breadcrumbs, $_ALLFORUMS[$forum['parent_id']]);
 
 		unset($all_forums);
 	}
-
+	
 	return $breadcrumbs;
 }
 

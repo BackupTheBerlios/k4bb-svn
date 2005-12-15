@@ -9,22 +9,27 @@
 	}
 </script>
 <!-- MAPS GUI -->
-<div class="borderwrap">
-	<div class="maintitle">{$L_PERMISSIONS}</div>
+<div class="header"><div class="title">{$L_PERMISSIONS}</div></div>
+<div class="spacer">
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 		<tr>
-			<td class="subtitle">{$L_NAME}</td>
-			<td class="subtitle" align="center">{$L_VIEW}</td>
-			<td class="subtitle" align="center">{$L_ADD}</td>
-			<td class="subtitle" align="center">{$L_EDIT}</td>
-			<td class="subtitle" align="center">{$L_DELETE}</td>
-			<td class="subtitle">&nbsp;</td>
+			<td class="subheader" width="30%">{$L_NAME}</td>
+			<td class="subheader" align="center">{$L_VIEW}</td>
+			<td class="subheader" align="center">{$L_ADD}</td>
+			<td class="subheader" align="center">{$L_EDIT}</td>
+			<td class="subheader" align="center">{$L_DELETE}</td>
+			<td class="categorytitle">&nbsp;</td>
 		</tr>
+	</table>
+</div>
+<div class="k4_spacer">
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 		<list:list id="maps_list">
 		<list:item list="maps_list">
+		<list:switch list="maps_list" var="row_class" a="alt1" b="alt2">
 		<form name="maps_form{$id}" action="admin.php?act=maps_update&amp;id={$id}" method="post" enctype="multipart/form-data">
 		<tr>
-			<td class="alt1" nowrap="nowrap">
+			<td class="{$row_class}" nowrap="nowrap">
 				<div id="maps_link{$id}" class="minitext">{$level}{$name}</div>
 				<div id="maps_menu{$id}" class="borderwrap" style="">
 					<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
@@ -46,7 +51,7 @@
 					menu_init('maps_link{$id}', 'maps_menu{$id}');
 				</script>
 			</td>
-			<td class="alt1" align="center">
+			<td class="{$row_class}" align="center">
 				<select name="can_view" id="view_{$id}" class="minitext">
 					<option value="0">--</option>
 					<option value="1">{$L_GUEST}</option>
@@ -60,7 +65,7 @@
 				</select>
 				<script type="text/javascript">d.setIndex({$can_view}, 'view_{$id}');</script>
 			</td>
-			<td class="alt1" align="center">
+			<td class="{$row_class}" align="center">
 				<select name="can_add" id="add_{$id}" class="minitext">
 					<option value="0">--</option>
 					<option value="1">{$L_GUEST}</option>
@@ -74,7 +79,7 @@
 				</select>
 				<script type="text/javascript">d.setIndex({$can_add}, 'add_{$id}');</script>
 			</td>
-			<td class="alt1" align="center">
+			<td class="{$row_class}" align="center">
 				<select name="can_edit" id="edit_{$id}" class="minitext">
 					<option value="0">--</option>
 					<option value="1">{$L_GUEST}</option>
@@ -88,7 +93,7 @@
 				</select>
 				<script type="text/javascript">d.setIndex({$can_edit}, 'edit_{$id}');</script>
 			</td>
-			<td class="alt1" align="center">
+			<td class="{$row_class}" align="center">
 				<select name="can_del" id="del_{$id}" class="minitext">
 					<option value="0">--</option>
 					<option value="1">{$L_GUEST}</option>
@@ -102,7 +107,7 @@
 				</select>
 				<script type="text/javascript">d.setIndex({$can_del}, 'del_{$id}');</script>
 			</td>
-			<td class="alt1">
+			<td class="{$row_class}">
 				<if:if var="num_children" geq="1">
 				<if:if var="expanded" eq="0">
 					<input type="button" value="&laquo;&raquo;" style="font-weight:bold;" onclick="set_maps_cookie(parseInt({$id}))" class="button" />
@@ -113,8 +118,10 @@
 			</td>
 		</tr>
 		</form>
+		</list:switch>
 		</list:item>
 		</list:list>
 	</table>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 <!-- / MAPS GUI -->

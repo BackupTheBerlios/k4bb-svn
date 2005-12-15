@@ -133,14 +133,14 @@ function get_map($varname, $method, $args) {
 		} else if(isset($args['user_id']) && intval($args['user_id']) != 0) {
 			$perm_needed	= isset($_MAPS['users'][$args['user_id']][$varname][$method]) ? $_MAPS['groups'][$args['group_id']][$varname][$method] : 0;
 		
-		/* Category */
-		} else if(isset($args['category_id']) && intval($args['category_id']) != 0) {
-			
-			if($varname != '') {
-				$perm_needed	= isset($_MAPS['categories'][$args['category_id']][$varname][$method]) ? $_MAPS['categories'][$args['category_id']][$varname][$method] : 0;
-			} else {
-				$perm_needed	= isset($_MAPS['categories'][$args['category_id']][$method]) ? $_MAPS['categories'][$args['category_id']][$method] : 0;
-			}
+//		/* Category */
+//		} else if(isset($args['category_id']) && intval($args['category_id']) != 0) {
+//			
+//			if($varname != '') {
+//				$perm_needed	= isset($_MAPS['categories'][$args['category_id']][$varname][$method]) ? $_MAPS['categories'][$args['category_id']][$varname][$method] : 0;
+//			} else {
+//				$perm_needed	= isset($_MAPS['categories'][$args['category_id']][$method]) ? $_MAPS['categories'][$args['category_id']][$method] : 0;
+//			}
 		/* Blog */
 		} else if(isset($args['blog']) && $args['blog'] == TRUE) {
 			$perm_needed	= isset($_MAPS['blog'][$varname][$method]) ? $_MAPS['blog'][$varname][$method] : 0;
@@ -202,14 +202,14 @@ function get_maps(&$dba) {
 							$maps['users'][$val['user_id']][$val['varname']] = $val;
 						}
 					
-					/* Categories */
-					} else if($val['category_id'] != 0) {
-						if(($val['varname'] == 'category'. $val['category_id']) ) { // !isset($maps['categories'][$val['category_id']]) && 
-							$maps['categories'][$val['category_id']] = isset($maps['categories'][$val['category_id']]) ? array_merge($maps['categories'][$val['category_id']], $val) : $val;
-						} else {
-							$maps['categories'][$val['category_id']][$val['varname']] = $val;
-						}
-					
+//					/* Categories */
+//					} else if($val['category_id'] != 0) {
+//						if(($val['varname'] == 'category'. $val['category_id']) ) { // !isset($maps['categories'][$val['category_id']]) && 
+//							$maps['categories'][$val['category_id']] = isset($maps['categories'][$val['category_id']]) ? array_merge($maps['categories'][$val['category_id']], $val) : $val;
+//						} else {
+//							$maps['categories'][$val['category_id']][$val['varname']] = $val;
+//						}
+//					
 					/* Gloabal */
 					} else {
 						$maps[$val['varname']] = $val;

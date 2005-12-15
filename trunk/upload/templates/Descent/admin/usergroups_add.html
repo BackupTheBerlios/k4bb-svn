@@ -1,13 +1,14 @@
 <is:admin>
-<form:form id="add_usergroup" name="add_usergroup" action="admin.php?act=usergroups_insert" method="post" enctype="multipart/form-data">
-<div class="borderwrap">
-	<div class="maintitle">{$L_ADDUSERGROUP}</div>
+<form:form action="{$usergroups_action}" method="post" enctype="multipart/form-data">
+<input type="hidden" name="id" value="{$group_id}" />
+<div class="header"><div class="title"><if:if var="is_edit" eq="1">{$L_EDITUSERGROUP}<span style="font-weight: normal;">: {$group_name}</span><if:else />{$L_ADDUSERGROUP}</if:if></div></div>
+<div class="spacer">
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 		<tr class="alt1">
 			<td width="30%"><strong>{$L_NAME}:</strong></td>
 			<td>
 				<script type="text/javascript">doHelpButton('usergroup_name');</script>
-				<input type="text" name="name" id="name" value="" maxlength="255" class="inputbox" tabindex="1" />
+				<input type="text" name="name" id="name" value="{$group_name}" maxlength="255" class="inputbox" tabindex="1" />
 				<form:error id="name_error" for="name" setclass="inputfailed" regex=".+">{$L_INSERTGROUPNAME}</form:error>
 			</td>
 		</tr>
@@ -15,7 +16,7 @@
 			<td width="30%"><strong>{$L_NICENAME}:</strong></td>
 			<td>
 				<script type="text/javascript">doHelpButton('usergroup_nicename');</script>
-				<input type="text" name="nicename" id="nicename" value="" maxlength="255" class="inputbox" tabindex="2" />
+				<input type="text" name="nicename" id="nicename" value="{$group_nicename}" maxlength="255" class="inputbox" tabindex="2" />
 				<form:error id="name_error" for="nicename" setclass="inputfailed" regex=".+">{$L_INSERTGROUPNICENAME}</form:error>
 			</td>
 		</tr>
@@ -23,7 +24,7 @@
 			<td width="30%"><strong>{$L_DESCRIPTION}:</strong></td>
 			<td>
 				<script type="text/javascript">doHelpButton('usergroup_description');</script>
-				<textarea name="description" id="description" rows="2" style="width: 80%;" class="inputbox" tabindex="3"></textarea>
+				<textarea name="description" id="description" rows="2" style="width: 80%;" class="inputbox" tabindex="3">{$group_description}</textarea>
 				<form:error id="description_error" for="description" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTGROUPDESC}</form:error>
 			</td>
 		</tr>
@@ -42,6 +43,7 @@
 					<option value="9">{$L_ADMIN}</option>
 					<option value="10">{$L_SUPERADMIN}</option>
 				</select>
+				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex({$group_min_perm}, 'min_perm');</script></if:if>
 			</td>
 		</tr>
 		<tr class="alt1">
@@ -59,6 +61,7 @@
 					<option value="9">{$L_ADMIN}</option>
 					<option value="10">{$L_SUPERADMIN}</option>
 				</select>
+				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex({$group_max_perm}, 'max_perm');</script></if:if>
 			</td>
 		</tr>
 		<tr class="alt2">
@@ -69,13 +72,14 @@
 					<option value="0">{$L_NO}</option>
 					<option value="1">{$L_YES}</option>
 				</select>
+				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex({$group_display_legend}, 'display_legend');</script></if:if>
 			</td>
 		</tr>
 		<tr class="alt1">
 			<td width="30%"><strong>{$L_MODERATORSNAME}:</strong></td>
 			<td>
 				<script type="text/javascript">doHelpButton('usergroup_modname');</script>
-				<input type="text" name="mod_name" id="mod_name" value="" size="{$maxuserlength}" maxlength="{$maxuserlength}" class="inputbox" tabindex="7" />
+				<input type="text" name="mod_name" id="mod_name" value="{$group_mod_name}" size="{$maxuserlength}" maxlength="{$maxuserlength}" class="inputbox" tabindex="7" />
 				<form:error id="mod_name_error" for="mod_name" setclass="inputfailed" regex=".+">{$L_INSERTMODNAME}</form:error>
 			</td>
 		</tr>
@@ -95,7 +99,7 @@
 						closemenu(cp);
 					}
 				</script>
-				<a href="#" id="colorpicker_link" title="" style="border: 1px solid #999999;">#</a><input type="text" name="color" id="color" size="6" value="" maxlength="6" class="inputbox" tabindex="8" />
+				<a href="#" id="colorpicker_link" title="" style="border: 1px solid #999999;background-color: #{$group_color};">#</a><input type="text" name="color" id="color" size="6" value="{$group_color}" maxlength="6" class="inputbox" tabindex="8" />
 				<form:error id="color_error" for="color" setclass="inputfailed" regex=".+">{$L_INSERTGROUPCOLOR}</form:error>
 				<core:import id="generic_colorpicker" file="../generic_colorpicker.html" />
 				<script type="text/javascript">menu_init('colorpicker_link', 'colorpicker_menu');</script>
@@ -105,19 +109,20 @@
 			<td width="30%"><strong>{$L_GROUPAVATAR}:</strong></td>
 			<td>
 				{$L_BROWSEFORIMGFILE}:<br />
-				<input type="text" class="inputbox" name="avatar_browse" id="avatar_browse" value="" /><input type="button" class="minitext" value="{$L_BROWSE}" onclick="popupImageBrowser('tmp/upload/group_avatars', 'avatar_browse', '')" />
+				<input type="text" class="inputbox" name="avatar_browse" id="avatar_browse" value="{$group_avatar}" /><input type="button" class="minitext" value="{$L_BROWSE}" onclick="popupImageBrowser('tmp/upload/group_avatars', 'avatar_browse', '')" />
 				<br />
 				{$L_ORUPLOADNEW}:<br />
 				<input type="file" class="inputbox" name="avatar_upload" id="avatar_upload" value="" />
 			</td>
 		</tr>
 		<tr>
-			<td colspan="2" class="subtitle">
-				<input type="submit" value="{$L_SAVE}" />
-				<input type="reset" value="{$L_RESET}" />
+			<td colspan="2" class="base3" style="text-align: center;">
+				<input type="submit" value="{$L_SAVE}" class="button" />
+				<input type="reset" value="{$L_RESET}" class="button" />
 			</td>
 		</tr>
 	</table>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 </form:form>
 </is:admin>

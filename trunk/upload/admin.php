@@ -33,6 +33,7 @@
 
 require "includes/filearts/filearts.php";
 require "includes/k4bb/k4bb.php";
+require "includes/k4bb/admin_init.php";
 
 class K4DefaultAction extends FAAction {
 	function execute(&$request) {		
@@ -96,16 +97,16 @@ $app->setAction('emoticons_update', new AdminUpdateEmoticon);
 $app->setAction('emoticons_clickable', new AdminUpdateEmoticonclick);
 
 /* Categories */
-$app->setAction('categories', new AdminCategories);
-$app->setAction('categories_add', new AdminAddCategory);
-$app->setAction('categories_insert', new AdminInsertCategory);
-$app->setAction('categories_insertmaps', new AdminInsertCategoryMaps);
-$app->setAction('categories_simpleupdate', new AdminSimpleCategoryUpdate);
-$app->setAction('categories_edit', new AdminEditCategory);
-$app->setAction('categories_update', new AdminUpdateCategory);
-$app->setAction('categories_remove', new AdminRemoveCategory);
-$app->setAction('categories_permissions', new AdminCategoryPermissions);
-$app->setAction('categories_updateperms', new AdminUpdateCategoryPermissions);
+//$app->setAction('categories', new AdminCategories);
+//$app->setAction('categories_add', new AdminAddCategory);
+//$app->setAction('categories_insert', new AdminInsertCategory);
+//$app->setAction('categories_insertmaps', new AdminInsertCategoryMaps);
+//$app->setAction('categories_simpleupdate', new AdminSimpleCategoryUpdate);
+//$app->setAction('categories_edit', new AdminEditCategory);
+//$app->setAction('categories_update', new AdminUpdateCategory);
+//$app->setAction('categories_remove', new AdminRemoveCategory);
+//$app->setAction('categories_permissions', new AdminCategoryPermissions);
+//$app->setAction('categories_updateperms', new AdminUpdateCategoryPermissions);
 
 /* Forums */
 $app->setAction('forums_home', new AdminForumsHome);

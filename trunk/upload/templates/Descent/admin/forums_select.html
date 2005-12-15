@@ -11,25 +11,18 @@
 		}
 	}
 </script>
-<form action="admin.php" method="get" enctype="multipart/form-data" onsubmit="return check_delete_forum();">
-<div class="borderwrap">
-	<div class="maintitle">
-		<script type="text/javascript">doHelpButton('categories');</script>
-		{$L_FORUMS}
-	</div>
+<div class="header"><div class="title">{$L_FORUMS}</div></div>
+<div class="spacer">
+	<form action="admin.php" method="get" enctype="multipart/form-data" onsubmit="return check_delete_forum();">
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 		<tr>
-			<td class="alt1" colspan="5" style="text-align: center;">
+			<td class="alt3" colspan="5" style="text-align: center;">
 				<br />
 				<strong>{$L_FORUM}</strong><br />
 				<select name="forum_id" id="forum_id" class="inputbox">
 					<list:list id="all_forums">
 					<list:item list="all_forums">
-						<if:if var="row_type" eq="2">
-							<option value="{$forum_id}">{$indent_level}{$name}</option>
-						<if:else />
-							<optgroup label="{$name}" />
-						</if:if>
+						<option value="{$forum_id}"<if:if var="row_type" eq="1"> style="font-weight: bold;"</if:if>>{$indent_level}{$name}</option>
 					</list:item>
 					</list:list>
 				</select>
@@ -41,14 +34,16 @@
 					<option value="forums_permissions">{$L_EDITPERMISSIONS}</option>
 					<option value="forums_remove" style="color: #FF0000;">{$L_DELETE}</option>
 				</select>
+				<br /><br />
 			</td>
 		</tr>
 		<tr>
-			<td class="subtitle" style="text-align: center;">
+			<td class="base3" style="text-align: center;">
 				<input type="submit" value="{$L_SELECT}" class="button" />
 			</td>
 		</tr>
 	</table>
+	</form>
 </div>
-</form>
+<div class="footer_block"><div>&nbsp;</div></div>
 </is:admin>

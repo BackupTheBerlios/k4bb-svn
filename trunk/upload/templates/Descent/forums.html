@@ -19,15 +19,13 @@
 		<span class="ddmenu_link_alt" id="forumoptions_link">{$L_FORUMOPTIONS}</span>
 	</div>
 </div>
-<div class="subheader">	
+<div class="spacer">
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 		<tr>
-			<td width="60%" align="left">&nbsp;{$L_FORUM}</td>
-			<td width="5%" align="center">&nbsp;{$L_POSTS}&nbsp;</td>
-			<td width="5%" align="center">&nbsp;{$L_TOPICS}&nbsp;</td>
-			<td width="30%" align="center">
-				{$L_LASTPOST}
-			</td>
+			<td class="subheader" width="60%" align="left">&nbsp;{$L_FORUM}</td>
+			<td class="subheader" width="5%" align="center">&nbsp;{$L_POSTS}&nbsp;</td>
+			<td class="subheader" width="5%" align="center">&nbsp;{$L_TOPICS}&nbsp;</td>
+			<td class="subheader" width="30%" align="center">{$L_LASTPOST}</td>
 		</tr>
 	</table>
 </div>
@@ -49,7 +47,7 @@
 
 <list:list id="categories">
 <list:item list="categories">
-<maps:if category="category_id" method="can_view">
+<maps:if forum="forum_id" method="can_view">
 	<div class="spacer">
 		<div class="borderwrap">	
 			

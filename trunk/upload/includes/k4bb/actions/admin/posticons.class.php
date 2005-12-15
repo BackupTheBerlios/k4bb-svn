@@ -62,6 +62,7 @@ class AdminAddPostIcon extends FAAction {
 			$request['template']->setFile('content', 'posticons_add.html');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_POSTICONS');
+			$request['template']->setVar('posticon_action', 'admin.php?act=posticons_insert');
 			$request['template']->setVar('posts_on', '_on');
 			$request['template']->setFile('sidebar_menu', 'menus/posts.html');
 		} else {
@@ -217,10 +218,11 @@ class AdminEditPostIcon extends FAAction {
 			}
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_POSTICONS');
+			$request['template']->setVar('posticon_action', 'admin.php?act=posticons_update');
 			$request['template']->setVar('posts_on', '_on');
 			$request['template']->setFile('sidebar_menu', 'menus/posts.html');
-
-			$request['template']->setFile('content', 'posticons_edit.html');
+			$request['template']->setVar('is_edit', 1);
+			$request['template']->setFile('content', 'posticons_add.html');
 		} else {
 			no_perms_error($request);
 		}

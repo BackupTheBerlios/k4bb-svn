@@ -15,7 +15,7 @@
 	</li>
 	</maps:if>
 	<else:if var="row_type" eq="1">
-	<maps:if category="category_id" method="can_view">
+	<maps:if forum="forum_id" method="can_view">
 	<li>
 		<a href="viewforum.php?c={$category_id}" title="{$name}">{$name}</a>
 		<ul>

@@ -39,7 +39,7 @@ class K4GeneralCacheFilter extends FAFilter {
 		while($result->next()) {
 			$temp						= $result->current();
 			$temp['row_level']			= $level;
-			$forums['f'. $temp['forum_id']]	= $temp;
+			$forums[$temp['forum_id']]	= $temp;
 			
 			if($temp['subforums'] > 0) {
 				$this->loop_forums($forums, $dba, $dba->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE parent_id = ". intval($temp['forum_id']) ." ORDER BY row_order ASC"), $level + 1);
@@ -154,25 +154,25 @@ class K4GeneralCacheFilter extends FAFilter {
 		$level					= 1;
 
 		$cache['all_forums']	= array();
-		$categories				= $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE row_type=". CATEGORY ." ORDER BY row_order ASC");
-		$forums					= $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE parent_id = 0 AND row_type=". FORUM ." ORDER BY row_order ASC");
+		$categories				= $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE row_type=". CATEGORY ." AND parent_id=0 ORDER BY row_order ASC");
+		$forums					= $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE parent_id=0 AND row_type=". FORUM ." ORDER BY row_order ASC");
 		$tmp_forums				= array();
 		
 		/* We want to get these top level forums in their proper order */
 		while($forums->next()) {
 			$temp						= $forums->current();
 			$temp['row_level']			= $level;
-			$cache['all_forums']['f'. intval($temp['forum_id'])]		= $temp;
-			$this->loop_forums($cache['all_forums'], $request['dba'], $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE parent_id = ". intval($temp['forum_id']) ." ORDER BY row_order ASC"), $level + 1);
+			$cache['all_forums'][intval($temp['forum_id'])]		= $temp;
+			$this->loop_forums($cache['all_forums'], $request['dba'], $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE parent_id=". intval($temp['forum_id']) ." ORDER BY row_order ASC"), $level + 1);
 		}
 		
 		if($categories->hasNext()) {
 			while($categories->next()) {
 				$temp					= $categories->current();
 				$temp['row_level']		= $level;
-				$cache['all_forums']['c'. intval($temp['forum_id'])]	= $temp;
+				$cache['all_forums'][intval($temp['forum_id'])]	= $temp;
 				
-				$this->loop_forums($cache['all_forums'], $request['dba'], $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE parent_id = ". intval($temp['forum_id']) ." ORDER BY row_order ASC"), $level + 1);
+				$this->loop_forums($cache['all_forums'], $request['dba'], $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE parent_id=". intval($temp['forum_id']) ." ORDER BY row_order ASC"), $level + 1);
 				
 			}
 		}

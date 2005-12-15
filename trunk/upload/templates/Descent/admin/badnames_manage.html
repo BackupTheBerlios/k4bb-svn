@@ -1,36 +1,35 @@
 <is:admin>
-<div class="borderwrap">
-	<div class="maintitle">
-		<script type="text/javascript">doHelpButton('usernames');</script>
-		{$L_DISALLOWEDNAMES}
+<div class="header"><div class="title">{$L_DISALLOWEDNAMES}</div></div>
+<div class="spacer">
+	<div class="spacer">
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+			<tr>
+				<td class="subheader" colspan="2">{$L_ADDBADUSERNAME}</td>
+			</tr>
+			<form:form name="add_badname" id="add_badname" action="admin.php?act=usernames_insert" method="post" enctype="multipart/form-data">
+			<tr>
+				<td class="alt3" width="50%">
+					<label for="name"><strong>{$L_USERNAME}:</strong></label>
+				</td>
+				<td class="alt3" width="50%">
+					<script type="text/javascript">doHelpButton('add_badname');</script>
+					<input type="text" name="name" id="name" value="" size="{$maxuserlength}" maxlength="{$maxuserlength}" class="inputbox" />
+					<form:error id="username_error" for="name" setclass="inputfailed" regex=".+">{$L_SUPPLYBADUSERNAME}</form:error>
+				</td>
+			</tr>
+			<tr>
+				<td class="base3" colspan="2" style="text-align: center;">
+					<input type="submit" value="{$L_SAVE}" class="button" />
+					<input type="reset" value="{$L_RESET}" class="button" />
+				</td>
+			</tr>
+			</form:form>
+		</table>
 	</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
-		<tr>
-			<td class="subtitle" colspan="2">{$L_ADDBADUSERNAME}</td>
-		</tr>
-		<form:form name="add_badname" id="add_badname" action="admin.php?act=usernames_insert" method="post" enctype="multipart/form-data">
-		<tr>
-			<td class="alt1" width="50%">
-				<label for="name"><strong>{$L_USERNAME}:</strong></label>
-			</td>
-			<td class="alt1" width="50%">
-				<script type="text/javascript">doHelpButton('add_badname');</script>
-				<input type="text" name="name" id="name" value="" size="{$maxuserlength}" maxlength="{$maxuserlength}" class="inputbox" />
-				<form:error id="username_error" for="name" setclass="inputfailed" regex=".+">{$L_SUPPLYBADUSERNAME}</form:error>
-			</td>
-		</tr>
-		<tr>
-			<td class="alt3" colspan="2">
-				<input type="submit" value="{$L_SAVE}" class="button" />
-				<input type="reset" value="{$L_RESET}" class="button" />
-			</td>
-		</tr>
-		</form:form>
-	</table>
+	<div class="footer_block"><div>&nbsp;</div></div>
 </div>
-<br />
-<div class="borderwrap">
-	<div class="maintitle">{$L_MANAGEDISALLOWEDNAMES}</div>
+<div class="subheader">{$L_MANAGEDISALLOWEDNAMES}</div>
+<div class="spacer">
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 		<list:list id="badnames">
 		<list:default list="badnames">
@@ -45,7 +44,7 @@
 		</tr>
 		</list:default>
 		<list:item list="badnames">
-		<list:switch list="badnames" var="row_class" a="alt1" b="alt3">
+		<list:switch list="badnames" var="row_class" a="alt1" b="alt2">
 		<form:form name="update_badname" id="update_badname" action="admin.php?act=usernames_update&amp;id={$id}" method="post" enctype="multipart/form-data">
 		<tr>
 			<td class="{$row_class}" width="50%">
@@ -63,12 +62,9 @@
 					<input type="reset" value="{$L_RESET}" class="button" />
 				</td>
 			</tr>
+		</tr>
 		</form:form>
 		</list:switch>
-		</tr>
-		<tr>
-			<td class="alt2" colspan="2"></td>
-		</tr>
 		</list:item>
 		</list:list>
 	</table>

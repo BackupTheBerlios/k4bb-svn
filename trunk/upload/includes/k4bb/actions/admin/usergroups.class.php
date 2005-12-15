@@ -61,6 +61,7 @@ class AdminAddUserGroup extends FAAction {
 			$request['template']->setFile('content', 'usergroups_add.html');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERGROUPS');
+			$request['template']->setVar('usergroups_action', 'admin.php?act=usergroups_insert');
 			$request['template']->setVar('users_on', '_on');
 			$request['template']->setFile('sidebar_menu', 'menus/users.html');
 			$request['template']->setVar('input_id', 'color');
@@ -310,11 +311,12 @@ class AdminEditUserGroup extends FAAction {
 			}
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERGROUPS');
+			$request['template']->setVar('usergroups_action', 'admin.php?act=usergroups_update');
 			$request['template']->setVar('users_on', '_on');
 			$request['template']->setFile('sidebar_menu', 'menus/users.html');
-			
+			$request['template']->setVar('is_edit', 1);
 			$request['template']->setVar('input_id', 'color');
-			$request['template']->setFile('content', 'usergroups_edit.html');
+			$request['template']->setFile('content', 'usergroups_add.html');
 		} else {
 			no_perms_error($request);
 		}

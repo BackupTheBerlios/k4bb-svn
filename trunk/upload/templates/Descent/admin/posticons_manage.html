@@ -1,56 +1,51 @@
 <is:admin>
-<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
-	<tr class="maintitle">
-		<td colspan="5">
-			<script type="text/javascript">doHelpButton('posticons');</script>
-			{$L_POSTICONS}
-		</td>
-	</tr>
-	<tr class="subtitle">
-		<td colspan="5">{$L_MANAGEPOSTICONS}</td>
-	</tr>
-	<tr class="alt3">
-		<td colspan="5">
-			<div align="center">
-				<script type="text/javascript">doHelpButton('add_posticon');</script>
-				<input type="button" class="button" style="font-weight: bold;" value="{$L_ADDPOSTICON}" onclick="document.location='admin.php?act=posticons_add'" />
-			</div>
-		</td>
-	</tr>
-	<tr class="alt1">
-	<list:list id="posticons">
-	<list:default list="posticons">
-	<tr class="alt3">
-		<td>
-			<div class="outset_box" align="center">
-				<br />
-				{$L_NOPOSTICONS}
-				<br /><br />
-			</div>
-		</td>
-	</tr>
-	</list:default>
-	<list:item list="posticons">
-		<td width="20%">
-			<div align="center">
-				<img src="tmp/upload/posticons/{$image}" alt="{$description}" border="0" />
-				<br />
-				<span class="minitext">{$description}</span>
-				<br /><br />
-				<input type="button" class="button" value="{$L_EDIT}" onclick="document.location='admin.php?act=posticons_edit&id={$id}'" />
-				<br />
-				<input type="button" class="button" value="{$L_DELETE}" onclick="document.location='admin.php?act=posticons_remove&id={$id}'" />
-			</div>
-		</td>
-	<list:separator list="posticons">
-		<list:alternate list="posticons" count="5" remainder="4">
-			<list:switch list="posticons" var="row_class" a="alt2" b="alt1">
-			</tr><tr class="{$row_class}">
-			</list:switch>
-		</list:alternate>
-	</list:separator>
-	</list:item>
-	</list:list>
-	</tr>
-</table>
+<div class="header"><div class="title">{$L_POSTICONS}</div></div>
+<div class="spacer">
+	<div class="alt3" style="text-align: center;">
+		<br />
+		<a href="admin.php?act=posticons_add" title="{$L_ADDPOSTICON}">{$L_ADDPOSTICON}</a>
+		<br /><br />
+	</div>
+</div>
+<div class="subheader">{$L_MANAGEPOSTICONS}</div>
+<div class="spacer">
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<tr class="alt1">
+		<list:list id="posticons">
+		<list:default list="posticons">
+		<tr class="alt3">
+			<td>
+				<div class="outset_box" align="center">
+					<br />
+					{$L_NOPOSTICONS}
+					<br /><br />
+				</div>
+			</td>
+		</tr>
+		</list:default>
+		<list:item list="posticons">
+			<td width="20%">
+				<div align="center">
+					<img src="tmp/upload/posticons/{$image}" alt="{$description}" border="0" />
+					<br />
+					<span class="minitext">{$description}</span>
+					<br /><br />
+					<input type="button" class="button" value="{$L_EDIT}" onclick="document.location='admin.php?act=posticons_edit&id={$id}'" />
+					<br />
+					<input type="button" class="button" value="{$L_DELETE}" onclick="document.location='admin.php?act=posticons_remove&id={$id}'" />
+				</div>
+			</td>
+		<list:separator list="posticons">
+			<list:alternate list="posticons" count="5" remainder="4">
+				<list:switch list="posticons" var="row_class" a="alt2" b="alt1">
+				</tr><tr class="{$row_class}">
+				</list:switch>
+			</list:alternate>
+		</list:separator>
+		</list:item>
+		</list:list>
+		</tr>
+	</table>
+</div>
+<div class="footer_block"><div>&nbsp;</div></div>
 </is:admin>

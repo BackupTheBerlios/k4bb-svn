@@ -1,33 +1,35 @@
 <is:admin>
-<form:form id="add_posticon" name="add_posticon" action="admin.php?act=posticons_insert" method="post" enctype="multipart/form-data">
-<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
-	<tr class="maintitle">
-		<td colspan="2">{$L_ADDPOSTICON}</td>
-	</tr>
-	<tr class="alt1">
-		<td width="30%"><strong>{$L_DESCRIPTION}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('posticon_description');</script>
-			<input type="text" name="description" id="description" value="" maxlength="255" class="inputbox" />
-			<form:error id="description_error" for="description" setclass="inputfailed" regex=".+">{$L_INSERTICONDESC}</form:error>
-		</td>
-	</tr>
-	<tr class="alt2">
-		<td width="30%"><strong>{$L_IMAGE}:</strong></td>
-		<td>
-			{$L_BROWSEFORIMGFILE}:<br />
-			<input type="text" class="inputbox" name="image_browse" id="image_browse" value="" /><input type="button" class="minitext" value="{$L_BROWSE}" onclick="popupImageBrowser('tmp/upload/posticons', 'image_browse', '{$icon_image}')" />
-			<br />
-			{$L_ORUPLOADNEW}:<br />
-			<input type="file" name="image_upload" id="image_upload" value="" />
-		</td>
-	</tr>
-	<tr class="subtitle">
-		<td colspan="2">
-			<input type="submit" value="{$L_SAVE}" />
-			<input type="reset" value="{$L_RESET}" />
-		</td>
-	</tr>
-</table>
+<div class="header"><div class="title"><if:if var="is_edit" eq="1">{$L_EDITPOSTICON}<if:else />{$L_ADDPOSTICON}</if:if></div></div>
+<div class="spacer">
+	<form:form action="admin.php?act={$posticon_action}" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="id" value="{$icon_id}" />
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<tr>
+			<td class="alt1" width="30%"><strong>{$L_DESCRIPTION}:</strong></td>
+			<td class="alt1">
+				<script type="text/javascript">doHelpButton('posticon_description');</script>
+				<input type="text" name="description" id="description" value="{$icon_description}" maxlength="255" class="inputbox" />
+				<form:error id="description_error" for="description" setclass="inputfailed" regex=".+">{$L_INSERTICONDESC}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt2" width="30%"><strong>{$L_IMAGE}:</strong></td>
+			<td class="alt2">
+				{$L_BROWSEFORIMGFILE}:<br />
+				<input type="text" class="inputbox" name="image_browse" id="image_browse" value="{$icon_image}" /><input type="button" class="button" value="{$L_BROWSE}" onclick="popupImageBrowser('tmp/upload/posticons', 'image_browse', '{$icon_image}')" />
+				<br />
+				{$L_ORUPLOADNEW}:<br />
+				<input type="file" name="image_upload" id="image_upload" value="" />
+			</td>
+		</tr>
+		<tr>
+			<td class="base3" colspan="2" style="text-align: center;">
+				<input type="submit" value="{$L_SAVE}" />
+				<input type="reset" value="{$L_RESET}" />
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="footer_block"><div>&nbsp;</div></div>
 </form:form>
 </is:admin>

@@ -1,0 +1,15 @@
+<!-- Forum Options Menu -->
+<if:if var="nojs" eq="0">
+<div id="forumoptions_menu" class="borderwrap" style="display: none;">
+	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<tr>
+			<td class="alt1"><a href="index.php?act=markforums" title="{$L_MARKFORUMSREAD}" class="smalltext">{$L_MARKFORUMSREAD}</a></td>
+		</tr>
+		<tr>
+			<td class="alt1"><a href="rss.php?act=new_posts" title="{$L_RSS}: {$L_NEWPOSTS}" class="smalltext">{$L_RSS}: {$L_NEWPOSTS}</a></td>
+		</tr>
+	</table>
+</div>
+<script type="text/javascript">menu_init('forumoptions_link', 'forumoptions_menu');</script>
+</if:if>
+<!-- / Forum Options Menu -->

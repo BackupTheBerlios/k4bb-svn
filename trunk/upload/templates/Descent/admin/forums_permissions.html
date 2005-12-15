@@ -1,20 +1,21 @@
 <is:admin>
-<div class="borderwrap">
-	<div class="maintitle">
-		<script type="text/javascript">doHelpButton('forum_permissions');</script>
-		{$L_FORUMPERMISSIONS}: <span style="font-weight: normal;">{$forum_name}</span>
-	</div>
+<div class="header"><div class="title">{$L_FORUMPERMISSIONS}: <span style="font-weight: normal;"><if:if var="forum_id" noteq="0">{$forum_name}<if:else />{$L_MASTERPERMISSIONS}</if:if></span></div></div>
+<div class="spacer">
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<tr>
+			<td class="subheader" width="30%">{$L_NAME}</td>
+			<td class="subheader" align="center">{$L_VIEW}</td>
+			<td class="subheader" align="center">{$L_ADD}</td>
+			<td class="subheader" align="center">{$L_EDIT}</td>
+			<td class="subheader" align="center">{$L_DELETE}</td>
+		</tr>
+	</table>
+</div>
+<div class="spacer">
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 		<form name="update_forum_perms" id="update_forum_perms" action="admin.php?act=forums_updateperms" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="id" value="{$forum_forum_id}" />
 		<list:list id="forum_maps">
-		<tr class="subtitle">
-			<td>{$L_NAME}</td>
-			<td align="center">{$L_VIEW}</td>
-			<td align="center">{$L_ADD}</td>
-			<td align="center">{$L_EDIT}</td>
-			<td align="center">{$L_DELETE}</td>
-		</tr>
 		<list:default list="forum_maps">
 		<tr class="alt3">
 			<td colspan="5">
@@ -27,6 +28,7 @@
 		</tr>
 		</list:default>
 		<list:item list="forum_maps">
+		<list:switch list="forum_maps" var="row_class" a="alt1" b="alt2">
 		<tr class="{$row_class}">
 			<td nowrap="nowrap">{$level}<strong>{$name}</strong></td>
 			<td align="center">
@@ -86,9 +88,10 @@
 				<script type="text/javascript">d.setIndex({$can_del}, 'del_{$id}');</script>
 			</td>
 		</tr>
+		</list:switch>
 		</list:item>
-		<tr class="subtitle">
-			<td align="left" colspan="5">
+		<tr class="base3">
+			<td align="center" colspan="5">
 				<input type="submit" class="button" value="{$L_SAVE}" accesskey="s" />
 				<input type="reset" class="button" value="{$L_RESET}" />
 			</td>
@@ -97,4 +100,5 @@
 		</form>
 	</table>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 </is:admin>

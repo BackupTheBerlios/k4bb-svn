@@ -67,7 +67,7 @@ class K4DefaultAction extends FAAction {
 			 * Pagination
 			 */
 			
-			//$extra_topics		= intval(@$_ALLFORUMS['f'. GLBL_ANNOUNCEMENTS]['topics']);
+			//$extra_topics		= intval(@$_ALLFORUMS[GLBL_ANNOUNCEMENTS]['topics']);
 			$extra_topics		= 0; // TODO: need only Announcements from global announcements
 
 			/* Create the Pagination */

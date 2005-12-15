@@ -214,7 +214,7 @@ class K4DefaultAction extends FAAction {
 			/* Create an array with all of the possible sort orders we can have */						
 			$sort_orders		= array('name', 'last_post', 'num_replies', 'views', 'reply_uname', 'rating', 'poster_name');
 			
-			//$extra_topics		= intval(@$_ALLFORUMS['f'. GLBL_ANNOUNCEMENTS]['topics']);
+			//$extra_topics		= intval(@$_ALLFORUMS[GLBL_ANNOUNCEMENTS]['topics']);
 			$extra_topics		= 0; // TODO: need only Announcements from global announcements
 
 			/**

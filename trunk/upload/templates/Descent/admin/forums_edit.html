@@ -8,21 +8,27 @@
 			<td class="subtitle" colspan="2">{$L_GENERAL}</td>
 		</tr>
 		<tr class="alt3">
+			<td width="30%"><strong>{$L_TYPE}:</strong></td>
+			<td>
+				<select name="row_type" id="row_type" class="inputbox">
+					<option value="2">{$L_FORUM}</option>
+					<option value="1">{$L_CATEGORY}</option>
+				</select>
+				<script type="text/javascript">d.setIndex('{$forum_row_type}', 'row_type');</script>
+			</td>
+		</tr>
+		<tr class="alt3">
 			<td width="30%"><strong>{$L_PARENT}:</strong></td>
 			<td>
-				<select name="parent" id="parent" class="inputbox">
+				<select name="parent_id" id="parent_id" class="inputbox">
 					<option value="0">-- {$L_NONE} --</option>
 					<list:list id="all_forums">
 					<list:item list="all_forums">
-						<if:if var="row_type" eq="2">
-							<if:if var="forum_id" noteq="forum_forum_id"><option value="f{$forum_id}">{$indent_level}{$name}</option></if:if>
-						<if:else />
-							<option value="c{$category_id}" style="font-weight: bold;">{$indent_level}{$name}</option>
-						</if:if>
+						<option value="{$forum_id}" <if:if var="row_type" eq="1">style="font-weight: bold;"</if:if>>{$indent_level}{$name}</option>
 					</list:item>
 					</list:list>
 				</select>
-				<script type="text/javascript">d.setIndex('{$forum_parent}', 'parent');</script>
+				<script type="text/javascript">d.setIndex('{$forum_parent}', 'parent_id');</script>
 			</td>
 		</tr>
 		<tr class="alt1">
@@ -86,8 +92,8 @@
 			<td>
 				<script type="text/javascript">doHelpButton('forum_directlink');</script>
 				<select name="link_show_redirects" id="link_show_redirects" tabindex="7">
-					<option value="1">{$L_NO}</option>
-					<option value="0">{$L_YES}</option>
+					<option value="1">{$L_YES}</option>
+					<option value="0">{$L_NO}</option>
 				</select>
 				<script type="text/javascript">d.setIndex(iif({$forum_link_show_redirects} == 0, 0, 1), 'link_show_redirects');</script>
 			</td>

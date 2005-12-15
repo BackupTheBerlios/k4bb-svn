@@ -6,72 +6,7 @@
 	<meta http-equiv="Content-Style-Type" content="text/css" />
 	<title>k4 {$L_ADMINISTRATION} - {$current_location} - Powered by k4BB</title>
 	<link rel="icon" href="favicon.ico" type="image/x-icon" />
-	<style type="text/css">
-		
-		{$css_styles}
-		
-		/* Drop Down menus */
-		.ddmenu_link {
-			padding-right: 15px;
-			background-image:url('Images/{$IMG_DIR}/Icons/menu_open.gif');
-			background-repeat: no-repeat;
-			background-position: right center;
-			color: #000000;
-		}
-		.nav_menu {
-			text-align: left;
-		}
-		/* Required info box */
-		.required_info { border: 1px solid #FF0000;font-size:11px;background-color:#FFEEFF;padding:5px; }
-		.required_info a { font-size:11px; }
-
-		/* Admin Panel */
-		.admin_menu {
-			background: #313B4D url('Images/admin/admin_menu_bg.gif') top left repeat-x;
-		}
-		.admin_menu td {
-			padding: 0px 10px 0px 0px;
-			margin: 0px;
-			color: #FFFFFF;
-		}
-		.admin_menu a {
-			color: #FFFFFF;
-			padding: 5px 10px 6px 0px;
-		}
-		.admin_right_column {
-			width: 165px;
-			background-color: #313B4D;
-		}
-
-		.trans_ddmenu {
-			border-top: 1px solid #124376;
-			border-bottom: 1px solid #124376;
-			border-right: 1px solid #124376;
-			width: 97%;
-			float: left;
-			padding: 10px;
-			font-size: 12px;
-			font-family: Verdana, Arial, Helvetica, sans-serif;
-			color: #FFFFFF;
-
-			/* Mozilla ignores crazy MS image filters, so it will skip the following */
-			filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale, src='Images/admin/transparent_png.png');
-		}
-		/* IE ignores styles with [attributes], so it will skip the following. */
-		.trans_ddmenu[class] {
-			float: left;
-			background-image:url('Images/admin/transparent_png.png');
-		}
-		.admin_ddmenu {
-			
-			padding: 0px 30px 0px 30px;
-			background-image: url('Images/admin/help.gif');
-			background-position:  left center;
-			background-repeat: no-repeat;
-			cursor: default;
-		}
-		.admin_ddmenu span { /*background-color: #FFFFF;*/font-weight: bold; }
-	</style>
+	<link rel="stylesheet" href="tmp/stylesets/{$STYLESET}.css" type="text/css" media="screen" />
 	<script type="text/javascript" src="js/lib.js"></script>
 	<script type="text/javascript" src="js/javascript.js"></script>
 	<script type="text/javascript" src="js/form_check.js"></script>
@@ -95,7 +30,6 @@
 		</td>
 		<td valign="top" class="admin_right_column" style="padding: 0px;margin: 0px;">
 			<img src="Images/admin/colorpicker_header.gif" border="0" alt="" />
-			<core:import id="generic_colorpicker" file="../generic_colorpicker.html" />
 			<img src="Images/admin/adminhelp_header.gif" border="0" alt="" />
 			<img src="Images/admin/history_header.gif" border="0" alt="" />
 		</td>
@@ -112,13 +46,13 @@
 	
 	use_click			= false;
 	allow_follow_urls	= true;
-	menu_init('options_link', 'options_menu');
-	menu_init('forums_link', 'forums_menu');
-	menu_init('users_link', 'users_menu');
-	menu_init('posts_link', 'posts_menu');
-	menu_init('styles_link', 'styles_menu');
-	menu_init('faq_link', 'faq_menu');
-	menu_init('misc_link', 'misc_menu');
+	menu_init('options_link', 'options_menu', new Array('top', '30px'));
+	menu_init('forums_link', 'forums_menu', new Array('top', '30px'));
+	menu_init('users_link', 'users_menu', new Array('top', '30px'));
+	menu_init('posts_link', 'posts_menu', new Array('top', '30px'));
+	menu_init('styles_link', 'styles_menu', new Array('top', '30px'));
+	menu_init('faq_link', 'faq_menu', new Array('top', '30px'));
+	menu_init('misc_link', 'misc_menu', new Array('top', '30px'));
 
 	/**
 	 * Resize the iframe
@@ -155,9 +89,22 @@
 </script>
 
 <if:else />
-<div style="padding: 10px;">
-	<core:import id="content" />
-	<core:import id="footer" file="../footer.html" />
+<div align="center">
+	<div align="left" class="forum_base" id="forum_base">
+		<br />
+		<div class="spacer">
+			<div class="forum_head" id="forum_head">
+				<div id="header">
+					<core:import id="content" />	
+				</div>
+			</div>
+			<div class="forum_foot">
+				<div id="footer">
+					<core:import id="footer" file="../footer.html" />
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 </if:if>
 </is:admin>

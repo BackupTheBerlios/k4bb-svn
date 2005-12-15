@@ -1,18 +1,9 @@
 <?php if ($_SESSION['user']->get('perms') >= ADMIN): ?>
 <div id="forums_menu" style="display: none;">
-	<div class="borderwrap">
-		<table cellpadding="0" cellspacing="<?php echo $scope->getVar("style_cellspacing"); ?>" border="0" class="table">
-			<td><a class="smalltext" target="admin_iframe" href="admin.php?act=categories"><?php echo $scope->getVar("L_CATEGORIES"); ?></a></td>
-			<td><a class="smalltext" target="admin_iframe" href="admin.php?act=categories_add"><?php echo $scope->getVar("L_ADDCATEGORY"); ?></a></td>
-			<td class="alt2"><?php echo $scope->getVar("L_FORUMS"); ?></td>
-			<td>
-				<a class="smalltext" href="admin.php?act=forums" target="admin_iframe"><?php echo $scope->getVar("L_FORUMS"); ?></a>
-				(<a class="smalltext" href="admin.php?act=forum_select" target="admin_iframe"><?php echo $scope->getVar("L_SELECT"); ?></a>)
-			</td>
-			<td><a class="smalltext" target="admin_iframe" href="admin.php?act=forums_add"><?php echo $scope->getVar("L_ADDFORUM"); ?></a></td>
-			<td><a class="smalltext" target="admin_iframe" href="admin.php?act=forums_permissions&id=0"><?php echo $scope->getVar("L_MASTERPERMISSIONS"); ?></a></td>
-			<td><a class="smalltext" target="admin_iframe" href="admin.php?act=announcements"><?php echo $scope->getVar("L_ANNOUNCEMENTS"); ?></a></td>
-		</table>
-	</div>
+	<a class="smalltext" href="admin.php?act=forums" target="admin_iframe"><?php echo $scope->getVar("L_FORUMS"); ?></a>
+	(<a class="smalltext" href="admin.php?act=forum_select" target="admin_iframe"><?php echo $scope->getVar("L_SELECT"); ?></a>)
+	| <a class="smalltext" target="admin_iframe" href="admin.php?act=forums_add"><?php echo $scope->getVar("L_ADDFORUM"); ?></a>
+	| <a class="smalltext" target="admin_iframe" href="admin.php?act=forums_permissions&id=0"><?php echo $scope->getVar("L_MASTERPERMISSIONS"); ?></a>
+	| <a class="smalltext" target="admin_iframe" href="admin.php?act=announcements"><?php echo $scope->getVar("L_ANNOUNCEMENTS"); ?></a>
 </div>
 <?php endif; ?>

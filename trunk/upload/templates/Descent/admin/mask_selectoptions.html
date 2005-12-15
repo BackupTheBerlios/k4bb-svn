@@ -1,11 +1,11 @@
 <is:admin>
-<form action="admin.php" method="get" enctype="multipart/form-data">
-<input type="hidden" name="act" value="mask_edit" />
-<div class="borderwrap">
-	<div class="maintitle">{$L_PERMISSIONMASKS}</div>
+<div class="header"><div class="title">{$L_PERMISSIONMASKS}</div></div>
+<div class="spacer">
+	<form action="admin.php" method="get" enctype="multipart/form-data">
+	<input type="hidden" name="act" value="mask_edit" />
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0">
 		<tr>
-			<td class="alt1" style="text-align: center;">
+			<td class="alt3" style="text-align: center;">
 				<br />
 				<strong>{$L_USERGROUP}:</strong>
 				<br />
@@ -30,15 +30,17 @@
 					</list:item>
 					</list:list>
 				</select>
+				<br /><br />
 			</td>
 		</tr>
 		<tr>
-			<td class="subtitle" style="text-align: center;">
+			<td class="base3" style="text-align: center;">
 				<input type="submit" name="edit" class="button" value="{$L_EDITMASK}" />
 				<input type="submit" name="delete" class="button" value="{$L_DELETEMASK}" style="color: #FF0000;" />
 			</td>
 		</tr>
 	</table>
+	</form>
 </div>
-</form>
+<div class="footer_block"><div>&nbsp;</div></div>
 </is:admin>

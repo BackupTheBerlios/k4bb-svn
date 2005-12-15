@@ -51,7 +51,7 @@ class K4DefaultAction extends FAAction {
 		$request['template']->setFile('content', 'forums.html');
 		
 		$tlforums	= &new K4ForumsIterator($request['dba'], "SELECT * FROM ". K4FORUMS ." WHERE parent_id=0 AND row_type=". FORUM ." ORDER BY row_order ASC");
-		$categories	= &new K4ForumsIterator($request['dba'], "SELECT * FROM ". K4FORUMS ." WHERE row_type=". CATEGORY ." ORDER BY row_order ASC");
+		$categories	= &new K4ForumsIterator($request['dba'], "SELECT * FROM ". K4FORUMS ." WHERE row_type=". CATEGORY ." AND parent_id = 0 ORDER BY row_order ASC");
 				
 		$request['template']->setVisibility('no_forums', (!$tlforums->hasNext() && !$categories->hasNext() ? TRUE : FALSE));
 		$request['template']->setList('tl_forums', $tlforums);

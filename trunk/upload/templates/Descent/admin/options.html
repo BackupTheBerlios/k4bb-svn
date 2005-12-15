@@ -1,48 +1,51 @@
 <is:admin>
-<div class="outset_box" style="text-align: center;">
-	<form action="admin.php" method="get" enctype="multipart/form-data">
-		<input type="hidden" name="act" value="options_view" />
-		<strong>{$L_OPTIONS}</strong>
-		<br /><br />
-		<select name="id">
-			<list:list id="all_setting_groups">
-			<list:item list="all_setting_groups">
-			<option value="{$id}">{$title}</option>
-			</list:item>
-			</list:list>
-		</select>
-		<input type="submit" value="{$L_GO}" class="button" />
-	</form>
+<div class="header"><div class="title">{$L_OPTIONS}</div></div>
+<div class="spacer">
+	<div class="base3" style="text-align: center;">
+		<form action="admin.php" method="get" enctype="multipart/form-data">
+			<input type="hidden" name="act" value="options_view" />
+			<select name="id">
+				<list:list id="all_setting_groups">
+				<list:item list="all_setting_groups">
+				<option value="{$id}">{$title}</option>
+				</list:item>
+				</list:list>
+			</select>
+			<input type="submit" value="{$L_GO}" class="button" />
+		</form>
+	</div>
 </div>
-<br />
 <list:list id="setting_groups">
 <list:item list="setting_groups">
-<form action="admin.php?act=update_options" method="post">
-<a name="{$id}" id="{$id}"></a>
-<input type="hidden" name="settinggroupid" value="{$id}" />
-<div class="borderwrap">
-	<div class="maintitle">{$title}</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
-		<list:sublist list="setting_groups" id="settings" column="settings">
-		<list:item list="settings">
-		<tr class="subtitle">
-			<td colspan="2"><a href="#top" style="float:right;">{$L_TOP}</a>{$title}</td>
-		</tr>
-		<tr class="alt1">
-			<if:if var="description" noteq="">
-				<td width="50%"><span class="smalltext">{$description}</span></td>
-				<td width="50%" class="alt3">{$input}</td>
-			<if:else />
-				<td class="alt3" align="center" colspan="2">{$input}</td>
-			</if:if>
-		</tr>
-		</list:item>
-		</list:sublist>
-	</table>
+<div class="spacer">
+	<div class="spacer">
+		<div class="categorytitle">{$title}</div>
+	</div>
+	<form action="admin.php?act=update_options" method="post">
+		<a name="{$id}" id="{$id}"></a>
+		<input type="hidden" name="settinggroupid" value="{$id}" />
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+			<list:sublist list="setting_groups" id="settings" column="settings">
+			<list:item list="settings">
+			<tr class="subtitle">
+				<td colspan="2"><a href="#top" style="float:right;">{$L_TOP}</a>{$title}</td>
+			</tr>
+			<tr class="alt1">
+				<if:if var="description" noteq="">
+					<td width="50%"><span class="smalltext">{$description}</span></td>
+					<td width="50%" class="alt3">{$input}</td>
+				<if:else />
+					<td class="alt3" align="center" colspan="2">{$input}</td>
+				</if:if>
+			</tr>
+			</list:item>
+			</list:sublist>
+		</table>
+		<div class="base4"><input type="submit" value="{$L_SAVE}" class="button" /></div>
+	</form>
 </div>
-<div style="text-align: center;padding: 5px;"><input type="submit" value="{$L_SAVE}" class="button" /></div>
-</form>
 <list:separator list="setting_groups"><br /><br /></list:separator>
 </list:item>
 </list:list>
+<div class="footer_block"><div>&nbsp;</div></div>
 </is:admin>

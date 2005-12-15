@@ -50,7 +50,6 @@ require K4_BASE_DIR. '/globals.class.php';
 require K4_BASE_DIR. '/poll_template.php';
 
 /* Action Classes */
-//require K4_BASE_DIR. '/actions/categories.class.php';
 require K4_BASE_DIR. '/actions/online_users.class.php';
 require K4_BASE_DIR. '/actions/forums.class.php';
 require K4_BASE_DIR. '/actions/topics.class.php';
@@ -66,29 +65,6 @@ require K4_BASE_DIR. '/actions/privmessages.class.php';
 require K4_BASE_DIR. '/actions/moderator.class.php';
 require K4_BASE_DIR. '/actions/reports.class.php';
 require K4_BASE_DIR. '/actions/modusers.class.php';
-
-/* Admin Action Classes */
-require K4_BASE_DIR. '/actions/admin/maps.class.php';
-require K4_BASE_DIR. '/actions/admin/posticons.class.php';
-require K4_BASE_DIR. '/actions/admin/emoticons.class.php';
-require K4_BASE_DIR. '/actions/admin/files.class.php';
-require K4_BASE_DIR. '/actions/admin/categories.class.php';
-require K4_BASE_DIR. '/actions/admin/forums.class.php';
-require K4_BASE_DIR. '/actions/admin/usergroups.class.php';
-require K4_BASE_DIR. '/actions/admin/profilefields.class.php';
-require K4_BASE_DIR. '/actions/admin/users.class.php';
-require K4_BASE_DIR. '/actions/admin/options.class.php';
-require K4_BASE_DIR. '/actions/admin/acronyms.class.php';
-require K4_BASE_DIR. '/actions/admin/censors.class.php';
-require K4_BASE_DIR. '/actions/admin/spiders.class.php';
-require K4_BASE_DIR. '/actions/admin/css.class.php';
-require K4_BASE_DIR. '/actions/admin/faq.class.php';
-require K4_BASE_DIR. '/actions/admin/email.class.php';
-require K4_BASE_DIR. '/actions/admin/posts.class.php';
-require K4_BASE_DIR. '/actions/admin/masks.class.php';
-require K4_BASE_DIR. '/actions/admin/titles.class.php';
-require K4_BASE_DIR. '/actions/admin/cache.class.php';
-require K4_BASE_DIR. '/actions/admin/announcements.class.php';
 
 /* Important Classes */
 require K4_BASE_DIR . '/database.php';

@@ -1031,7 +1031,7 @@ class K4ManageAttachments extends FAAction {
 		$size = 0;
 		while($attachments->next()) {
 			$attachment = $attachments->current();
-			$attachment['forum']		= isset($_ALLFORUMS['f'. $attachment['forum_id']]) ? $_ALLFORUMS['f'. $attachment['forum_id']]['name'] : '<em>No Information</em>';
+			$attachment['forum']		= isset($_ALLFORUMS[$attachment['forum_id']]) ? $_ALLFORUMS[$attachment['forum_id']]['name'] : '<em>No Information</em>';
 			$attachment['file_type']	= strtoupper($attachment['file_type']);
 			$attachment['percent']		= ceil(@(intval($attachment['file_size']) / intval($_SETTINGS['maxattachquota'])) * 100);
 
@@ -1060,7 +1060,7 @@ class K4ManageSubscriptions extends FAAction {
 		while($subscriptions->next()) {
 			$subscription = $subscriptions->current();
 			
-			$subscription['forum_name'] = $_ALLFORUMS['f'. $subscription['forum_id']]['name'];
+			$subscription['forum_name'] = $_ALLFORUMS[$subscription['forum_id']]['name'];
 
 			if(intval($subscription['topic_id']) > 0) {
 				$subscription['topic_name'] = $request['dba']->getValue("SELECT name FROM ". K4TOPICS ." WHERE topic_id = ". intval($subscription['topic_id']));
@@ -1086,10 +1086,10 @@ class K4ManageDrafts extends FAAction {
 		while($drafts->next()) {
 			$temp = $drafts->current();
 			
-			if(isset($_ALLFORUMS['f'. $temp['forum_id']])) {
+			if(isset($_ALLFORUMS[$temp['forum_id']])) {
 				
 				if(!isset($forums[$temp['forum_id']])) {
-					foreach($_ALLFORUMS['f'. $temp['forum_id']] as $key => $val)
+					foreach($_ALLFORUMS[$temp['forum_id']] as $key => $val)
 						$forums[$temp['forum_id']]['forum_'. $key] = $val;
 				
 				}

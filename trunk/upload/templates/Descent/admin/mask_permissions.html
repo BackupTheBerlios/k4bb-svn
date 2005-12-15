@@ -1,21 +1,23 @@
 <is:admin>
-<form action="admin.php?act=masks_updateperms" method="post" enctype="multipart/form-data">
-<input type="hidden" name="f" value="{$forum_forum_id}" />
-<input type="hidden" name="g" value="{$group_id}" />
-<div class="borderwrap">
-	<div class="maintitle">
-		{$L_PERMISSIONMASK}: <span style="font-weight: normal;"><em>{$forum_name} -> {$group_name}</em></span>
-	</div>
+<div class="header"><div class="title">{$L_PERMISSIONMASK}: <span style="font-weight: normal;"><em>{$forum_name} -> {$group_name}</em></span></div></div>
+<div class="spacer">
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<tr>
+			<td class="subheader" width="30%">{$L_NAME}</td>
+			<td class="subheader" align="center">{$L_VIEW}</td>
+			<td class="subheader" align="center">{$L_ADD}</td>
+			<td class="subheader" align="center">{$L_EDIT}</td>
+			<td class="subheader" align="center">{$L_DELETE}</td>
+		</tr>
+	</table>
+</div>
+<div class="spacer">
+	<form action="admin.php?act=masks_updateperms" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="f" value="{$forum_forum_id}" />
+	<input type="hidden" name="g" value="{$group_id}" />
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 		<input type="hidden" name="id" value="{$forum_forum_id}" />
 		<list:list id="mask_maps">
-		<tr class="subtitle">
-			<td>{$L_NAME}</td>
-			<td align="center">{$L_VIEW}</td>
-			<td align="center">{$L_ADD}</td>
-			<td align="center">{$L_EDIT}</td>
-			<td align="center">{$L_DELETE}</td>
-		</tr>
 		<list:item list="mask_maps">
 		<tr class="{$row_class}">
 			<td nowrap="nowrap">{$level}<strong>{$name}</strong></td>
@@ -78,13 +80,14 @@
 		</tr>
 		</list:item>
 		<tr>
-			<td align="left" colspan="5" class="subtitle">
+			<td colspan="5" class="base3" style="text-align: center;">
 				<input type="submit" class="button" value="{$L_SAVE}" accesskey="s" />
 				<input type="reset" class="button" value="{$L_RESET}" />
 			</td>
 		</tr>
 		</list:list>
 	</table>
+	</form>
 </div>
-</form>
+<div class="footer_block"><div>&nbsp;</div></div>
 </is:admin>

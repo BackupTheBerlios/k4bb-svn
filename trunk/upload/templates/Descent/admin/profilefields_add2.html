@@ -1,233 +1,236 @@
 <is:admin>
+<div class="header"><div class="title">{$L_ADDPROFILEFIELD}</div></div>
 <form:form name="add_field" id="add_field" action="admin.php?act=userfields_insert" method="post" enctype="multipart/form-data">
-<input type="hidden" name="inputtype" id="inputtype" value="{$inputtype}" />
-<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
-	<tr class="maintitle">
-		<td colspan="2">{$L_ADDPROFILEFIELD}</td>
-	</tr>
-	<tr class="alt2">
-		<td width="50%"><strong>{$L_TITLE}:</strong></td>
-		<td width="50%">
-			<script type="text/javascript">doHelpButton('field_title');</script>
-			<input type="text" name="title" id="title" value="" maxlength="50" class="inputbox" tabindex="2" />
-			<form:error id="title_error" for="title" setclass="inputfailed" regex=".+">{$L_INSERTFIELDTITLE}</form:error>
-		</td>
-	</tr>
-	<tr class="alt1">
-		<td width="50%"><strong>{$L_DESCRIPTION}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('field_description');</script>
-			<input type="text" name="description" id="description" value="" style="width: 80%;" maxlength="255" class="inputbox" tabindex="3" />
-			<form:error id="description_error" for="description" setclass="inputfailed" regex=".+">{$L_INSERTFIELDDESC}</form:error>
-		</td>
-	</tr>
-	<tr class="alt2">
-		<td width="50%"><strong>{$L_ORDER}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('field_order');</script>
-			<input type="text" name="display_order" id="display_order" value="" maxlength="5" size="3" class="inputbox" tabindex="4" />
-			<form:error id="display_order_error" for="display_order" setclass="inputfailed" regex=".+">{$L_INSERTFIELDORDER}</form:error>
-			<form:error id="display_order_num_error" for="display_order" setclass="inputfailed" regex="([0-9])+">{$L_INSERTFIELDORDERNUM}</form:error>
-		</td>
-	</tr>
-	<tr class="alt1">
-		<td width="50%"><strong>{$L_FIELDREQUIRED}</strong></td>
-		<td width="50%">
-			<script type="text/javascript">doHelpButton('field_required');</script>
-			<select name="is_required" id="is_required" tabindex="5">
-				<option value="0">{$L_NO}</option>
-				<option value="1">{$L_YES}</option>
-			</select>
-		</td>
-	</tr>
-	<tr class="alt2">
-		<td width="50%"><strong>{$L_ISEDITABLE}</strong></td>
-		<td width="50%">
-			<script type="text/javascript">doHelpButton('field_editable');</script>
-			<select name="is_required" id="is_editable" tabindex="6">
-				<option value="1">{$L_YES}</option>
-				<option value="0">{$L_NO}</option>
-			</select>
-		</td>
-	</tr>
-	<tr class="alt1">
-		<td width="50%"><strong>{$L_ISPRIVATE}</strong></td>
-		<td width="50%">
-			<script type="text/javascript">doHelpButton('field_private');</script>
-			<select name="is_private" id="is_private" tabindex="7">
-				<option value="0">{$L_NO}</option>
-				<option value="1">{$L_YES}</option>
-			</select>
-		</td>
-	</tr>
-	<tr class="alt2">
-		<td width="50%"><strong>{$L_MINPERMTOUSE}</strong></td>
-		<td width="50%">
-			<script type="text/javascript">doHelpButton('field_min_perm');</script>
-			<select name="min_perm" id="min_perm" tabindex="8">
-				<option value="0">--</option>
-				<option value="1">{$L_GUEST}</option>
-				<option value="2" selected="selected">{$L_MEMBER}</option>
-				<option value="7">{$L_MODERATOR}</option>
-				<option value="8">{$L_SUPERMODERATOR}</option>
-				<option value="9">{$L_ADMIN}</option>
-				<option value="10">{$L_SUPERADMIN}</option>
-			</select>
-		</td>
-	</tr>
-	<tr class="alt1">
-		<td width="50%"><strong>{$L_DISPLAYPAGES}:</strong></td>
-		<td width="50%">
-			<script type="text/javascript">doHelpButton('field_pages');</script>
-			<label for="display_memberlist"><input type="checkbox" name="display_memberlist" id="display_memberlist" value="yes" /> {$L_MEMBERLIST}</label><br />
-			<label for="display_profile"><input type="checkbox" name="display_profile" id="display_profile" value="yes" /> {$L_PROFILE}</label><br />
-			<label for="display_topic"><input type="checkbox" name="display_topic" id="display_topic" value="yes" /> {$L_TOPIC}</label><br />
-			<label for="display_post"><input type="checkbox" name="display_post" id="display_post" value="yes" /> {$L_POST}</label><br />
-			<label for="display_register"><input type="checkbox" name="display_register" id="display_register" value="yes" /> {$L_REGISTRATION}</label>
-		</td>
-	</tr>
-	<core:block id="text" hidden="yes">
-	<tr class="maintitle">
-		<td colspan="2">{$L_OPTIONS}</td>
-	</tr>
-	<tr class="alt2">
-		<td width="50%"><strong>{$L_DEFAULTVALUE}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('field_defaultval');</script>
-			<input type="text" name="default_value" id="default_value" value="{$default_value}" maxlength="255" class="inputbox" tabindex="9" />
-		</td>
-	</tr>
-	<tr class="alt1">
-		<td width="50%"><strong>{$L_CHARSMAXLENGTH}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('field_maxlength');</script>
-			<input type="text" name="user_maxlength" id="user_maxlength" value="100" maxlength="3" size="3" class="inputbox" tabindex="10" /> <span class="smalltext">{$L_MAX255}</span>
-			<form:error id="maxlength_error" for="user_maxlength" setclass="inputfailed" regex=".+">{$L_INSERTMAXLENGTH}</form:error>
-			<form:error id="maxlength_num_error" for="user_maxlength" setclass="inputfailed" regex="([0-9])+">{$L_INSERTMAXLENGTHNUM}</form:error>
-		</td>
-	</tr>
-	<tr class="alt2">
-		<td width="50%"><strong>{$L_FIELDSIZE}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('field_size');</script>
-			<input type="text" name="display_size" id="display_size" value="30" maxlength="3" size="3" class="inputbox" tabindex="11" />
-			<form:error id="display_size_error" for="display_size" setclass="inputfailed" regex=".+">{$L_INSERTDISPLAYSIZE}</form:error>
-			<form:error id="display_size_num_error" for="display_size" setclass="inputfailed" regex="([0-9])+">{$L_INSERTDISPLAYSIZENUM}</form:error>
-		</td>
-	</tr>
-	</core:block>
-	<core:block id="textarea" hidden="yes">
-	<tr class="maintitle">
-		<td colspan="2">{$L_OPTIONS}</td>
-	</tr>
-	<tr class="alt2">
-		<td width="50%"><strong>{$L_DEFAULTVALUE}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('field_defaultval');</script>
-			<textarea name="default_value" id="default_value" value="{$default_value}" class="inputbox" rows="5" style="width: 80%;" tabindex="9"></textarea>
-		</td>
-	</tr>
-	<tr class="alt1">
-		<td width="50%"><strong>{$L_CHARSMAXLENGTH}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('field_maxlength');</script>
-			<input type="text" name="user_maxlength" id="user_maxlength" value="100" maxlength="3" size="3" class="inputbox" tabindex="10" /> <span class="smalltext">{$L_MAX255}</span>
-			<form:error id="maxlength_error" for="user_maxlength" setclass="inputfailed" regex=".+">{$L_INSERTMAXLENGTH}</form:error>
-			<form:error id="maxlength_num_error" for="user_maxlength" setclass="inputfailed" regex="([0-9])+">{$L_INSERTMAXLENGTHNUM}</form:error>
-		</td>
-	</tr>
-	<tr class="alt2">
-		<td width="50%"><strong>{$L_FIELDSIZE}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('field_size');</script>
-			<input type="text" name="display_size" id="display_size" value="30" maxlength="3" size="3" class="inputbox" tabindex="11" />
-		</td>
-	</tr>
-	<tr class="alt1">
-		<td width="50%"><strong>{$L_FIELDNUMROWS}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('field_rows');</script>
-			<input type="text" name="display_rows" id="display_rows" value="5" maxlength="2" size="2" class="inputbox" tabindex="12" />
-		</td>
-	</tr>
-	</core:block>
-	<core:block id="radio" hidden="yes">
-	<tr class="maintitle">
-		<td colspan="2">{$L_OPTIONS}</td>
-	</tr>
-	<tr class="alt2">
-		<td width="50%">
-			<strong>{$L_OPTIONS}:</strong><br />
-			<span class="minitext">{$L_NEWLINEEXPLAIN}</span>
-		</td>
-		<td>
-			<script type="text/javascript">doHelpButton('field_options');</script>
-			<textarea name="inputoptions" id="inputoptions" value="{$default_value}" class="inputbox" rows="5" style="width: 80%;" tabindex="9"></textarea>
-			<form:error id="options_error" for="inputoptions" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTFIELDOPTIONS}</form:error>
-		</td>
-	</tr>
-	</core:block>
-	<core:block id="select" hidden="yes">
-	<tr class="maintitle">
-		<td colspan="2">{$L_OPTIONS}</td>
-	</tr>
-	<tr class="alt2">
-		<td width="50%">
-			<strong>{$L_OPTIONS}:</strong><br />
-			<span class="minitext">{$L_NEWLINEEXPLAIN}</span>
-		</td>
-		<td>
-			<script type="text/javascript">doHelpButton('field_options');</script>
-			<textarea name="inputoptions" id="inputoptions" value="{$default_value}" class="inputbox" rows="5" style="width: 80%;" tabindex="9"></textarea>
-			<form:error id="options_error" for="inputoptions" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTFIELDOPTIONS}</form:error>
-		</td>
-	</tr>
-	</core:block>
-	<core:block id="multiselect" hidden="yes">
-	<tr class="maintitle">
-		<td colspan="2">{$L_OPTIONS}</td>
-	</tr>
-	<tr class="alt2">
-		<td width="50%">
-			<strong>{$L_OPTIONS}:</strong><br />
-			<span class="minitext">{$L_NEWLINEEXPLAIN}</span>
-		</td>
-		<td>
-			<script type="text/javascript">doHelpButton('field_options');</script>
-			<textarea name="inputoptions" id="inputoptions" value="{$default_value}" class="inputbox" rows="5" style="width: 80%;" tabindex="9"></textarea>
-			<form:error id="options_error" for="inputoptions" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTFIELDOPTIONS}</form:error>
-		</td>
-	</tr>
-	<tr class="alt1">
-		<td width="50%"><strong>{$L_FIELDNUMROWS}:</strong></td>
-		<td>
-			<script type="text/javascript">doHelpButton('field_rows');</script>
-			<input type="text" name="display_rows" id="display_rows" value="5" maxlength="2" size="2" class="inputbox" tabindex="12" />
-		</td>
-	</tr>
-	</core:block>
-	<core:block id="checkbox" hidden="yes">
-	<tr class="maintitle">
-		<td colspan="2">{$L_OPTIONS}</td>
-	</tr>
-	<tr class="alt2">
-		<td width="50%">
-			<strong>{$L_OPTIONS}:</strong><br />
-			<span class="minitext">{$L_NEWLINEEXPLAIN}</span>
-		</td>
-		<td>
-			<script type="text/javascript">doHelpButton('field_options');</script>
-			<textarea name="inputoptions" id="inputoptions" value="{$default_value}" class="inputbox" rows="5" style="width: 80%;" tabindex="9"></textarea>
-			<form:error id="options_error" for="inputoptions" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTFIELDOPTIONS}</form:error>
-		</td>
-	</tr>
-	</core:block>
-	<tr class="subtitle">
-		<td colspan="2">
-			<input type="submit" value="{$L_SAVE}" class="button" />
-			<input type="reset" value="{$L_RESET}" class="button" />
-		</td>
-	</tr>
-</table>
+<div class="spacer">
+	<input type="hidden" name="inputtype" id="inputtype" value="{$inputtype}" />
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<tr class="alt2">
+			<td width="50%"><strong>{$L_TITLE}:</strong></td>
+			<td width="50%">
+				<script type="text/javascript">doHelpButton('field_title');</script>
+				<input type="text" name="title" id="title" value="" maxlength="50" class="inputbox" tabindex="2" />
+				<form:error id="title_error" for="title" setclass="inputfailed" regex=".+">{$L_INSERTFIELDTITLE}</form:error>
+			</td>
+		</tr>
+		<tr class="alt1">
+			<td width="50%"><strong>{$L_DESCRIPTION}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('field_description');</script>
+				<input type="text" name="description" id="description" value="" style="width: 80%;" maxlength="255" class="inputbox" tabindex="3" />
+				<form:error id="description_error" for="description" setclass="inputfailed" regex=".+">{$L_INSERTFIELDDESC}</form:error>
+			</td>
+		</tr>
+		<tr class="alt2">
+			<td width="50%"><strong>{$L_ORDER}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('field_order');</script>
+				<input type="text" name="display_order" id="display_order" value="" maxlength="5" size="3" class="inputbox" tabindex="4" />
+				<form:error id="display_order_error" for="display_order" setclass="inputfailed" regex=".+">{$L_INSERTFIELDORDER}</form:error>
+				<form:error id="display_order_num_error" for="display_order" setclass="inputfailed" regex="([0-9])+">{$L_INSERTFIELDORDERNUM}</form:error>
+			</td>
+		</tr>
+		<tr class="alt1">
+			<td width="50%"><strong>{$L_FIELDREQUIRED}</strong></td>
+			<td width="50%">
+				<script type="text/javascript">doHelpButton('field_required');</script>
+				<select name="is_required" id="is_required" tabindex="5">
+					<option value="0">{$L_NO}</option>
+					<option value="1">{$L_YES}</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="alt2">
+			<td width="50%"><strong>{$L_ISEDITABLE}</strong></td>
+			<td width="50%">
+				<script type="text/javascript">doHelpButton('field_editable');</script>
+				<select name="is_required" id="is_editable" tabindex="6">
+					<option value="1">{$L_YES}</option>
+					<option value="0">{$L_NO}</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="alt1">
+			<td width="50%"><strong>{$L_ISPRIVATE}</strong></td>
+			<td width="50%">
+				<script type="text/javascript">doHelpButton('field_private');</script>
+				<select name="is_private" id="is_private" tabindex="7">
+					<option value="0">{$L_NO}</option>
+					<option value="1">{$L_YES}</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="alt2">
+			<td width="50%"><strong>{$L_MINPERMTOUSE}</strong></td>
+			<td width="50%">
+				<script type="text/javascript">doHelpButton('field_min_perm');</script>
+				<select name="min_perm" id="min_perm" tabindex="8">
+					<option value="0">--</option>
+					<option value="1">{$L_GUEST}</option>
+					<option value="2" selected="selected">{$L_MEMBER}</option>
+					<option value="7">{$L_MODERATOR}</option>
+					<option value="8">{$L_SUPERMODERATOR}</option>
+					<option value="9">{$L_ADMIN}</option>
+					<option value="10">{$L_SUPERADMIN}</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="alt1">
+			<td width="50%"><strong>{$L_DISPLAYPAGES}:</strong></td>
+			<td width="50%">
+				<script type="text/javascript">doHelpButton('field_pages');</script>
+				<label for="display_memberlist"><input type="checkbox" name="display_memberlist" id="display_memberlist" value="yes" /> {$L_MEMBERLIST}</label><br />
+				<label for="display_profile"><input type="checkbox" name="display_profile" id="display_profile" value="yes" /> {$L_PROFILE}</label><br />
+				<label for="display_topic"><input type="checkbox" name="display_topic" id="display_topic" value="yes" /> {$L_TOPIC}</label><br />
+				<label for="display_post"><input type="checkbox" name="display_post" id="display_post" value="yes" /> {$L_POST}</label><br />
+				<label for="display_register"><input type="checkbox" name="display_register" id="display_register" value="yes" /> {$L_REGISTRATION}</label>
+			</td>
+		</tr>
+		<core:block id="text" hidden="yes">
+	</table>
+</div>
+<div class="spacer">
+	<div class="subheader">{$L_OPTIONS}</div>
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">	
+		<tr class="alt2">
+			<td width="50%"><strong>{$L_DEFAULTVALUE}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('field_defaultval');</script>
+				<input type="text" name="default_value" id="default_value" value="{$default_value}" maxlength="255" class="inputbox" tabindex="9" />
+			</td>
+		</tr>
+		<tr class="alt1">
+			<td width="50%"><strong>{$L_CHARSMAXLENGTH}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('field_maxlength');</script>
+				<input type="text" name="user_maxlength" id="user_maxlength" value="100" maxlength="3" size="3" class="inputbox" tabindex="10" /> <span class="smalltext">{$L_MAX255}</span>
+				<form:error id="maxlength_error" for="user_maxlength" setclass="inputfailed" regex=".+">{$L_INSERTMAXLENGTH}</form:error>
+				<form:error id="maxlength_num_error" for="user_maxlength" setclass="inputfailed" regex="([0-9])+">{$L_INSERTMAXLENGTHNUM}</form:error>
+			</td>
+		</tr>
+		<tr class="alt2">
+			<td width="50%"><strong>{$L_FIELDSIZE}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('field_size');</script>
+				<input type="text" name="display_size" id="display_size" value="30" maxlength="3" size="3" class="inputbox" tabindex="11" />
+				<form:error id="display_size_error" for="display_size" setclass="inputfailed" regex=".+">{$L_INSERTDISPLAYSIZE}</form:error>
+				<form:error id="display_size_num_error" for="display_size" setclass="inputfailed" regex="([0-9])+">{$L_INSERTDISPLAYSIZENUM}</form:error>
+			</td>
+		</tr>
+		</core:block>
+		<core:block id="textarea" hidden="yes">
+		<tr class="maintitle">
+			<td colspan="2">{$L_OPTIONS}</td>
+		</tr>
+		<tr class="alt2">
+			<td width="50%"><strong>{$L_DEFAULTVALUE}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('field_defaultval');</script>
+				<textarea name="default_value" id="default_value" value="{$default_value}" class="inputbox" rows="5" style="width: 80%;" tabindex="9"></textarea>
+			</td>
+		</tr>
+		<tr class="alt1">
+			<td width="50%"><strong>{$L_CHARSMAXLENGTH}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('field_maxlength');</script>
+				<input type="text" name="user_maxlength" id="user_maxlength" value="100" maxlength="3" size="3" class="inputbox" tabindex="10" /> <span class="smalltext">{$L_MAX255}</span>
+				<form:error id="maxlength_error" for="user_maxlength" setclass="inputfailed" regex=".+">{$L_INSERTMAXLENGTH}</form:error>
+				<form:error id="maxlength_num_error" for="user_maxlength" setclass="inputfailed" regex="([0-9])+">{$L_INSERTMAXLENGTHNUM}</form:error>
+			</td>
+		</tr>
+		<tr class="alt2">
+			<td width="50%"><strong>{$L_FIELDSIZE}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('field_size');</script>
+				<input type="text" name="display_size" id="display_size" value="30" maxlength="3" size="3" class="inputbox" tabindex="11" />
+			</td>
+		</tr>
+		<tr class="alt1">
+			<td width="50%"><strong>{$L_FIELDNUMROWS}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('field_rows');</script>
+				<input type="text" name="display_rows" id="display_rows" value="5" maxlength="2" size="2" class="inputbox" tabindex="12" />
+			</td>
+		</tr>
+		</core:block>
+		<core:block id="radio" hidden="yes">
+		<tr class="maintitle">
+			<td colspan="2">{$L_OPTIONS}</td>
+		</tr>
+		<tr class="alt2">
+			<td width="50%">
+				<strong>{$L_OPTIONS}:</strong><br />
+				<span class="minitext">{$L_NEWLINEEXPLAIN}</span>
+			</td>
+			<td>
+				<script type="text/javascript">doHelpButton('field_options');</script>
+				<textarea name="inputoptions" id="inputoptions" value="{$default_value}" class="inputbox" rows="5" style="width: 80%;" tabindex="9"></textarea>
+				<form:error id="options_error" for="inputoptions" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTFIELDOPTIONS}</form:error>
+			</td>
+		</tr>
+		</core:block>
+		<core:block id="select" hidden="yes">
+		<tr class="maintitle">
+			<td colspan="2">{$L_OPTIONS}</td>
+		</tr>
+		<tr class="alt2">
+			<td width="50%">
+				<strong>{$L_OPTIONS}:</strong><br />
+				<span class="minitext">{$L_NEWLINEEXPLAIN}</span>
+			</td>
+			<td>
+				<script type="text/javascript">doHelpButton('field_options');</script>
+				<textarea name="inputoptions" id="inputoptions" value="{$default_value}" class="inputbox" rows="5" style="width: 80%;" tabindex="9"></textarea>
+				<form:error id="options_error" for="inputoptions" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTFIELDOPTIONS}</form:error>
+			</td>
+		</tr>
+		</core:block>
+		<core:block id="multiselect" hidden="yes">
+		<tr class="maintitle">
+			<td colspan="2">{$L_OPTIONS}</td>
+		</tr>
+		<tr class="alt2">
+			<td width="50%">
+				<strong>{$L_OPTIONS}:</strong><br />
+				<span class="minitext">{$L_NEWLINEEXPLAIN}</span>
+			</td>
+			<td>
+				<script type="text/javascript">doHelpButton('field_options');</script>
+				<textarea name="inputoptions" id="inputoptions" value="{$default_value}" class="inputbox" rows="5" style="width: 80%;" tabindex="9"></textarea>
+				<form:error id="options_error" for="inputoptions" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTFIELDOPTIONS}</form:error>
+			</td>
+		</tr>
+		<tr class="alt1">
+			<td width="50%"><strong>{$L_FIELDNUMROWS}:</strong></td>
+			<td>
+				<script type="text/javascript">doHelpButton('field_rows');</script>
+				<input type="text" name="display_rows" id="display_rows" value="5" maxlength="2" size="2" class="inputbox" tabindex="12" />
+			</td>
+		</tr>
+		</core:block>
+		<core:block id="checkbox" hidden="yes">
+		<tr class="maintitle">
+			<td colspan="2">{$L_OPTIONS}</td>
+		</tr>
+		<tr class="alt2">
+			<td width="50%">
+				<strong>{$L_OPTIONS}:</strong><br />
+				<span class="minitext">{$L_NEWLINEEXPLAIN}</span>
+			</td>
+			<td>
+				<script type="text/javascript">doHelpButton('field_options');</script>
+				<textarea name="inputoptions" id="inputoptions" value="{$default_value}" class="inputbox" rows="5" style="width: 80%;" tabindex="9"></textarea>
+				<form:error id="options_error" for="inputoptions" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTFIELDOPTIONS}</form:error>
+			</td>
+		</tr>
+		</core:block>
+		<tr>
+			<td class="base3" colspan="2" style="text-align: center;">
+				<input type="submit" value="{$L_SAVE}" class="button" />
+				<input type="reset" value="{$L_RESET}" class="button" />
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="footer_block"><div>&nbsp;</div></div>
 </form:form>
 </is:admin>
