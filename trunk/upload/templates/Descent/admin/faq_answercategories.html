@@ -1,41 +1,32 @@
 <is:admin>
-<div class="borderwrap">
-	<div class="maintitle">
-		{$L_FAQANSWERS}
+<div class="header"><div class="title">{$L_FAQANSWERS}</div></div>
+<div class="spacer">
+	<div class="alt3" style="text-align: center;">
+		<br />
+		<a href="admin.php?act=faq_addanswer{$add_extra}" title="{$L_ADDFAQANSWER}{$add_catname}">{$L_ADDFAQANSWER}{$add_catname}</a>
+		<br /><br />
 	</div>
+</div>
+<div class="subheader">{$L_MANAGEMENT}{$add_catname}</div>
+<div class="spacer">
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
-		<tr>
-			<td class="subtitle" colspan="2">{$L_MANAGEFAQANSWERS}</td>
-		</tr>
-		<tr>
-			<td class="alt3" colspan="2">
-				<div align="center">
-					<input type="button" class="button" style="font-weight: bold;" value="{$L_ADDFAQANSWER}{$add_catname}" onclick="document.location='admin.php?act=faq_addanswer{$add_extra}'" />
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td class="subtitle" colspan="2">{$L_MANAGEMENT}{$add_catname}</td>
-		</tr>
 		<list:list id="answers">
 		<list:default list="answers">
 		<tr>
-			<td class="alt3" colspan="2">
-				<div class="outset_box" style="text-align: center;">
-					<br />
-					<strong>{$L_NOFAQANSWERSONLEVEL}</strong>
-					<br /><br />
-				</div>
+			<td class="alt3" colspan="2" style="text-align: center;">
+				<br />
+				<strong>{$L_NOFAQANSWERSONLEVEL}</strong>
+				<br /><br />
 			</td>
 		</tr>
 		</list:default>
 		<list:item list="answers">
-		<list:switch list="answers" var="row_class" a="alt1" b="alt3">
+		<list:switch list="answers" var="row_class" a="alt1" b="alt2">
 		<tr>
 			<td class="{$row_class}" width="90%">
 				<em><strong>{$question}</strong></em>
 			</td>
-			<td class="alt3" width="10%" nowrap="nowrap">
+			<td class="{$row_class}" width="10%" nowrap="nowrap">
 				<input type="button" class="button" value="{$L_EDIT}" onclick="document.location='admin.php?act=faq_aedit&id={$answer_id}'" />
 				<input type="button" class="button" style="color: #FF0000;" value="{$L_DELETE}" onclick="if(confirm('{$L_CHECKDELFAQANS}')) { document.location='admin.php?act=faq_aremove&id={$answer_id}'; } else { return false; }" />
 			</td>
@@ -44,7 +35,7 @@
 		</list:item>
 		</list:list>
 		<tr>
-			<td class="subtitle" colspan="2">{$L_CATEGORIES}</td>
+			<td class="subheader" colspan="2">{$L_CATEGORIES}</td>
 		</tr>
 		<tr>
 			<td colspan="2" class="alt1">
@@ -53,7 +44,7 @@
 		</tr>
 		<list:list id="categories">
 		<list:item list="categories">
-		<list:switch list="categories" var="row_class" a="alt3" b="alt1">
+		<list:switch list="categories" var="row_class" a="alt2" b="alt1">
 		<tr>
 			<td colspan="2" class="{$row_class}">
 				{$level}<strong><a href="admin.php?act=faq_answers&amp;c={$category_id}" title="{$name}">{$name}</a></strong>
@@ -65,4 +56,5 @@
 		</list:list>
 	</table>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 </is:admin>

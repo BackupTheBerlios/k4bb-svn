@@ -1,24 +1,17 @@
 <is:admin>
-<div class="borderwrap">
-	<div class="maintitle">
-		<script type="text/javascript">doHelpButton('faqcategories');</script>
-		{$L_FAQCATEGORIES}
+<div class="header"><div class="title">{$L_FAQCATEGORIES}</div></div>
+<div class="spacer">
+	<div class="alt3" style="text-align: center;">
+		<br />
+		<a href="admin.php?act=faq_addcategory" title="{$L_ADDFAQCATEGORY}">{$L_ADDFAQCATEGORY}</a>
+		<br /><br />
 	</div>
+</div>
+<div class="spacer">
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 		<tr>
-			<td class="subtitle" colspan="3">{$L_MANAGECATEGORIES}</td>
-		</tr>
-		<tr>
-			<td class="alt3" colspan="3">
-				<div align="center">
-					<script type="text/javascript">doHelpButton('add_category');</script>
-					<input type="button" class="button" style="font-weight: bold;" value="{$L_ADDFAQCATEGORY}" onclick="document.location='admin.php?act=faq_addcategory'" />
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td class="subtitle" width="10%">{$L_ORDER}</td>
-			<td class="subtitle" colspan="2" width="70%">{$L_MANAGEMENT}</td>
+			<td class="subheader" width="10%">{$L_ORDER}</td>
+			<td class="subheader" colspan="2" width="70%">{$L_MANAGEMENT}</td>
 		</tr>
 		<list:list id="categories">
 		<list:default list="categories">
@@ -33,12 +26,12 @@
 		</tr>
 		</list:default>
 		<list:item list="categories">
-		<list:switch list="categories" var="row_class" a="alt1" b="alt3">
+		<list:switch list="categories" var="row_class" a="alt1" b="alt2">
 		<tr>
 			<form:form name="update_category" id="update_category" action="admin.php?act=faq_csimpleupdate" method="post" enctype="multipart/form-data">
-			<td class="{$row_class}" width="10%" align="center" width="10%">
+			<td class="{$row_class}" width="10%" width="10%" style="text-align: center;">
 				<input type="hidden" name="category_id" value="{$category_id}" />
-				<input type="text" size="3" name="row_order" id="row_order" value="{$row_order}" />
+				<input type="text" size="3" name="row_order" id="row_order" value="{$row_order}" class="inputbox" />
 				<form:error id="row_order_error" for="row_order" setclass="inputfailed" regex=".+"><span class="minitext">{$L_INSERTCATORDER}</span></form:error>
 				<form:error id="row_order_num_error" for="row_order" setclass="inputfailed" regex="([0-9])+"><span class="minitext">{$L_INSERTCATORDERNUM}</span></form:error>
 			</td>
@@ -46,7 +39,7 @@
 				{$level}<strong>{$name}</strong>
 				<span class="smalltext"><em>({$num_answers} {$L_ANSWERS})</em></span>
 			</td>
-			<td class="alt2" width="20%" align="center" nowrap="nowrap">
+			<td class="{$row_class}" width="20%" nowrap="nowrap" style="text-align: center;">
 				<input type="button" class="button" style="color: #006600;" value="{$L_ADDSUBCATEGORY}" onclick="document.location='admin.php?act=faq_addcategory&id={$category_id}'" />
 				<input type="submit" class="button" value="{$L_SAVE}" />
 				<input type="button" class="button" value="{$L_EDIT}" onclick="document.location='admin.php?act=faq_cedit&id={$category_id}'" />
@@ -59,4 +52,5 @@
 		</list:list>
 	</table>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 </is:admin>

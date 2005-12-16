@@ -350,7 +350,7 @@ class AdminManageCSSStyles extends FAAction {
 					return $action->execute($request);
 				}
 				
-				$styles = $request['dba']->executeQuery("SELECT * FROM ". K4CSS ." WHERE style_id = ". intval($styleset['id']) ." ORDER BY name ASC");
+				$styles = $request['dba']->executeQuery("SELECT * FROM ". K4CSS ." WHERE style_id = ". intval($styleset['id']) ." ORDER BY group_id ASC");
 
 				foreach($styleset as $key=>$val)
 					$request['template']->setVar('styleset_'. $key, $val);

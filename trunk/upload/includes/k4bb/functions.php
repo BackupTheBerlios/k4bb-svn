@@ -791,7 +791,7 @@ function paginate($count, $first, $prev, $separator, $next, $last, $limit, $id) 
 		
 		if($page != $num_pages) {
 			
-			if($page != $num_pages) {
+			if($page != $num_pages && $page > 1) {
 				$url->args['page']	= ($page + 1) < $num_pages ? ($page + 1) : $num_pages;
 				$str .= '<td class="alt2" style="padding:2px;"><a href="'. $url->__toString() .'" class="minitext">'. $next .'</a></td>';
 			}

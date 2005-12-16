@@ -1,24 +1,28 @@
 <is:admin>
 <form:form action="{$css_formaction}" method="post" enctype="multipart/form-data">
-<div class="borderwrap">
-	<if:if var="edit_style" eq="1">
-	<div class="maintitle">{$L_EDITCSSSTYLE}<span style="font-weight: normal;">: {$style_name}</span></div>
-	<input type="hidden" name="id" value="{$style_style_id}" />
-	<input type="hidden" name="style_id" value="{$style_id}" />
-	<if:else />
-	<div class="maintitle">{$L_ADDCSSSTYLE}</div>
-	</if:if>
+<div class="header">
+	<div class="title">
+		<if:if var="edit_style" eq="1">
+		{$L_EDITCSSSTYLE}<span style="font-weight: normal;">: {$style_name}</span>
+		<input type="hidden" name="id" value="{$style_style_id}" />
+		<input type="hidden" name="style_id" value="{$style_id}" />
+		<if:else />
+		{$L_ADDCSSSTYLE}
+		</if:if>
+	</div>
+</div>
+<div class="spacer">
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 		<tr>
 			<td class="alt1" width="30%"><label for="name"><strong>{$L_NAME}:</strong></label></td>
-			<td class="alt3">
+			<td class="alt1">
 				<input type="text" name="name" id="name" class="inputbox" value="{$style_name}" />
 				<form:error id="name_error" for="name" setclass="inputfailed" regex=".+">{$L_INSERTCSSNAME}</form:error>
 			</td>
 		</tr>
 		<tr>
-			<td class="alt1" width="30%"><label for="description"><strong>{$L_DESCRIPTION}:</strong></label></td>
-			<td class="alt3">
+			<td class="alt2" width="30%"><label for="description"><strong>{$L_DESCRIPTION}:</strong></label></td>
+			<td class="alt2">
 				<input type="text" name="description" id="description" size="40" class="inputbox" value="{$style_description}" />
 				<form:error id="description_error" for="description" setclass="inputfailed" regex=".+">{$L_INSERTCSSDESCRIPTION}</form:error>
 			</td>
@@ -27,17 +31,18 @@
 			<td class="alt1" colspan="2" style="text-align: center;"><strong>{$L_PROPERTIES}</strong></td>
 		</tr>
 		<tr>
-			<td class="alt3" colspan="2" style="text-align: center;">
+			<td class="alt1" colspan="2" style="text-align: center;">
 				<iframe name="css_editor" id="css_editor" frameborder="no" style="width: 640px; height: 350px;" scrolling="no" src="admin.php?act=css_editor&amp;id={$style_style_id}&amp;style_id={$style_id}">ENABLE JAVASCRIPT!!</iframe>
 			</td>
 		</tr>
 		<tr>
-			<td class="subtitle" colspan="2">
+			<td class="base3" colspan="2" style="text-align: center;">
 				<input type="submit" class="button" value="{$L_SAVE}" tabindex="15" />
 				<input type="reset" class="button" value="{$L_RESET}" />
 			</td>
 		</tr>
 	</table>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 </form:form>
 </is:admin>

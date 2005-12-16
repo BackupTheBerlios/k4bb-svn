@@ -1,32 +1,31 @@
 <is:admin>
-<form:form name="email_users" id="email_users" action="admin.php?act=email_users" method="post" name="post" enctype="multipart/form-data">
-<input type="hidden" name="id" value="{$member_id}" />
-<div class="borderwrap">
-	<div class="maintitle">{$L_EMAILUSERS}</div>
+<div class="header"><div class="title">{$L_EMAILUSERS}</div></div>
+<div class="spacer">
+	<form:form name="email_users" id="email_users" action="admin.php?act=email_users" method="post" name="post" enctype="multipart/form-data">
+	<input type="hidden" name="id" value="{$member_id}" />
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 		<tr>
 			<td class="alt3">
-				<div class="outset_box">
-					<label for="from" class="smalltext">{$L_FROM}</label><br />
-					<input type="text" name="from" id="from" value="noreply" size="20" class="inputbox" />@{$email_from}
-					<br /><br />
-					<label for="subject" class="smalltext">{$L_SUBJECT}</label><br />
-					<input type="text" name="subject" id="subject" value="" size="80" class="inputbox" />
-					<form:error id="subject_error" for="subject" setclass="inputfailed" regex=".+">{$L_INSERTMAILSUBJECT}</form:error>
-					<br /><br />
-					<label for="message" class="smalltext">{$L_MESSAGE}</label><br />
-					<textarea name="message" id="message" rows="10" cols="100" style="width:500px;" class="inputbox"></textarea>
-					<form:error id="message_error" for="message" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTMAILMESSAGE}</form:error>
-				</div>
+				<label for="from" class="smalltext">{$L_FROM}</label><br />
+				<input type="text" name="from" id="from" value="noreply" size="20" class="inputbox" />@{$email_from}
+				<br /><br />
+				<label for="subject" class="smalltext">{$L_SUBJECT}</label><br />
+				<input type="text" name="subject" id="subject" value="" size="80" class="inputbox" />
+				<form:error id="subject_error" for="subject" setclass="inputfailed" regex=".+">{$L_INSERTMAILSUBJECT}</form:error>
+				<br /><br />
+				<label for="message" class="smalltext">{$L_MESSAGE}</label><br />
+				<textarea name="message" id="message" rows="10" cols="100" style="width:500px;" class="inputbox"></textarea>
+				<form:error id="message_error" for="message" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTMAILMESSAGE}</form:error>
 			</td>
 		</tr>
 		<tr>
-			<td class="subtitle">
+			<td class="base3" style="text-align: center;">
 				<input type="submit" class="button" value="{$L_EMAIL}" />
 				<input type="reset" class="button" value="{$L_RESET}" />
 			</td>
 		</tr>
 	</table>
+	</form:form>
 </div>
-</form:form>
+<div class="footer_block"><div>&nbsp;</div></div>
 </is:admin>
