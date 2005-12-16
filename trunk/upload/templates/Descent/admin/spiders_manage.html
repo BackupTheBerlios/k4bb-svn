@@ -1,109 +1,93 @@
 <is:admin>
-<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
-	<tr class="maintitle">
-		<td colspan="6">
-			<script type="text/javascript">doHelpButton('acronyms');</script>
-			{$L_SPIDERMANAGEMENT}
-		</td>
-	</tr>
-	<tr class="subtitle">
-		<td colspan="6">
-			<script type="text/javascript">doHelpButton('add_badname');</script>
-			{$L_ADDSPIDER}
-		</td>
-	</tr>
-	<form:form name="add_apider" id="add_apider" action="admin.php?act=add_spider" method="post" enctype="multipart/form-data">
-	<tr class="alt1">
-		<td width="17%" align="center">
-			<label for="useragent"><strong>{$L_USERAGENT}:</strong></label>
-		</td>
-		<td width="17%" align="center" class="alt3">
-			<input type="text" name="useragent" id="useragent" value="" class="inputbox" />
-			<form:error id="useragent_error" for="useragent" setclass="inputfailed" regex=".+">{$L_SUPPLYUSERAGENT}</form:error>
-		</td>
-		<td width="17%" align="center">
-			<label for="spidername"><strong>{$L_SPIDERNAME}:</strong></label>
-		</td>
-		<td width="17%" align="center" class="alt3">
-			<input type="text" name="spidername" id="spidername" value="" class="inputbox" />
-			<form:error id="spidername_error" for="spidername" setclass="inputfailed" regex=".+">{$L_SUPPLYSPIDERNAME}</form:error>
-		</td>
-		<td width="17%" align="center">
-			<label for="allowaccess"><strong>{$L_ALLOWBOARDACCESS}:</strong></label>
-		</td>
-		<td width="17%" align="center" class="alt3">
-			<select name="allowaccess" id="allowaccess" class="smalltext">
-				<option value="1">{$L_YES}</option>
-				<option value="0">{$L_NO}</option>
-			</select>
-		</td>
-	</tr>
-	<tr class="alt2">
-		<td colspan="6">
-			<input type="submit" value="{$L_SAVE}" class="button" />
-			<input type="reset" value="{$L_RESET}" class="button" />
-		</td>
-	</tr>
-	</form:form>
-</table>
-<br />
-<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
-	<tr class="maintitle">
-		<td colspan="6">{$L_MANAGECURRENTSPIDERS}</td>
-	</tr>
-	<list:list id="spiders">
-	<list:default list="spiders">
-	<tr class="alt3">
-		<td colspan="6">
-			<div class="outset_box" align="center">
-				<br />
-				{$L_NOACTIVESPIDERS}
-				<br /><br />
-			</div>
-		</td>
-	</tr>
-	</list:default>
-	<list:item list="spiders">
-		<list:switch list="spiders" var="row_class" a="alt1" b="alt3">
-		<form:form name="update_spider" id="update_spider" action="admin.php?act=update_spider&amp;id={$id}" method="post" enctype="multipart/form-data">
-		<tr class="{$row_class}">
-			<td width="17%" align="center">
-				<label for="useragent{$id}"><strong>{$L_USERAGENT}:</strong></label>
+<div class="header"><div class="title">{$L_SPIDERMANAGEMENT}</div></div>
+<div class="subheader">{$L_ADDSPIDER}</div>
+<div class="spacer">
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<form:form name="add_apider" id="add_apider" action="admin.php?act=add_spider" method="post" enctype="multipart/form-data">
+		<tr>
+			<td class="alt3" width="17%" style="text-align: center;">
+				<label for="useragent"><strong>{$L_USERAGENT}:</strong></label>
 			</td>
-			<td width="17%" align="center" class="alt3">
-				<input type="text" name="useragent" id="useragent{$id}" value="{$useragent}" class="inputbox" />
+			<td class="alt3" width="17%" style="text-align: center;">
+				<input type="text" name="useragent" id="useragent" value="" class="inputbox" />
+				<form:error id="useragent_error" for="useragent" setclass="inputfailed" regex=".+">{$L_SUPPLYUSERAGENT}</form:error>
 			</td>
-			<td width="17%" align="center">
-				<label for="spidername{$id}"><strong>{$L_SPIDERNAME}:</strong></label>
+			<td class="alt3" width="17%" style="text-align: center;">
+				<label for="spidername"><strong>{$L_SPIDERNAME}:</strong></label>
 			</td>
-			<td width="17%" align="center" class="alt3">
-				<input type="text" name="spidername" id="spidername{$id}" value="{$spidername}" class="inputbox" />
+			<td class="alt3" width="17%" style="text-align: center;">
+				<input type="text" name="spidername" id="spidername" value="" class="inputbox" />
+				<form:error id="spidername_error" for="spidername" setclass="inputfailed" regex=".+">{$L_SUPPLYSPIDERNAME}</form:error>
 			</td>
-			<td width="17%" align="center">
-				<label for="allowaccess{$id}"><strong>{$L_ALLOWBOARDACCESS}:</strong></label>
+			<td class="alt3" width="17%" style="text-align: center;">
+				<label for="allowaccess"><strong>{$L_ALLOWBOARDACCESS}:</strong></label>
 			</td>
-			<td width="17%" align="center" class="alt3">
-				<select name="allowaccess" id="allowaccess{$id}" class="smalltext">
+			<td class="alt3" width="17%" style="text-align: center;">
+				<select name="allowaccess" id="allowaccess" class="smalltext">
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>
-				<script type="text/javascript">d.setIndex({$allowaccess}, 'allowaccess{$id}');</script>
 			</td>
 		</tr>
-		<tr class="{$row_class}">
-			<td colspan="6">
+		<tr>
+			<td class="base3" colspan="6" style="text-align: center;">
 				<input type="submit" value="{$L_SAVE}" class="button" />
-				<input type="button" value="{$L_REMOVE}" class="button" onclick="document.location='admin.php?act=spider_remove&id={$id}'" />
 				<input type="reset" value="{$L_RESET}" class="button" />
 			</td>
 		</tr>
 		</form:form>
-		</list:switch>
-	</tr>
-	<tr class="alt2">
-		<td colspan="6"></td>
-	</tr>
-	</list:item>
-	</list:list>
-</table>
+	</table>
+</div>
+<div class="subheader">{$L_MANAGECURRENTSPIDERS}</div>
+<div class="spacer">
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<list:list id="spiders">
+		<list:default list="spiders">
+		<tr class="alt3">
+			<td colspan="6" style="text-align: center;">
+				<br />
+				{$L_NOACTIVESPIDERS}
+				<br /><br />
+			</td>
+		</tr>
+		</list:default>
+		<list:item list="spiders">
+			<list:switch list="spiders" var="row_class" a="alt1" b="alt2">
+			<form:form name="update_spider" id="update_spider" action="admin.php?act=update_spider&amp;id={$id}" method="post" enctype="multipart/form-data">
+			<tr>
+				<td class="{$row_class}" style="text-align: center;">
+					<label for="useragent{$id}"><strong>{$L_USERAGENT}:</strong></label>
+				</td>
+				<td class="{$row_class}" style="text-align: center;">
+					<input type="text" name="useragent" id="useragent{$id}" value="{$useragent}" class="inputbox" />
+				</td>
+				<td class="{$row_class}" style="text-align: center;">
+					<label for="spidername{$id}"><strong>{$L_SPIDERNAME}:</strong></label>
+				</td>
+				<td class="{$row_class}" style="text-align: center;">
+					<input type="text" name="spidername" id="spidername{$id}" value="{$spidername}" class="inputbox" />
+				</td>
+				<td class="{$row_class}" style="text-align: center;">
+					<label for="allowaccess{$id}"><strong>{$L_ALLOWBOARDACCESS}:</strong></label>
+				</td>
+				<td class="{$row_class}" style="text-align: center;">
+					<select name="allowaccess" id="allowaccess{$id}" class="smalltext">
+						<option value="1">{$L_YES}</option>
+						<option value="0">{$L_NO}</option>
+					</select>
+					<script type="text/javascript">d.setIndex({$allowaccess}, 'allowaccess{$id}');</script>
+				</td>
+				<td class="{$row_class}" style="text-align: center;">
+					<input type="submit" value="{$L_SAVE}" class="button" />
+					<input type="button" value="{$L_REMOVE}" class="button" onclick="document.location='admin.php?act=spider_remove&id={$id}'" style="color:#FF0000;" />
+					<input type="reset" value="{$L_RESET}" class="button" />
+				</td>
+			</tr>
+			</form:form>
+			</list:switch>
+		</list:item>
+		</list:list>
+	</table>
+</div>
+<div class="footer_block"><div>&nbsp;</div></div>
 </is:admin>

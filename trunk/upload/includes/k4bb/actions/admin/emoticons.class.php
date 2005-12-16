@@ -65,6 +65,7 @@ class AdminAddEmoticon extends FAAction {
 			$request['template']->setFile('content', 'emoticons_add.html');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_EMOTICONS');
+			$request['template']->setVar('emoticons_action', 'admin.php?act=emoticons_insert');
 			$request['template']->setVar('posts_on', '_on');
 			$request['template']->setFile('sidebar_menu', 'menus/posts.html');
 		} else {
@@ -219,9 +220,11 @@ class AdminEditEmoticon extends FAAction {
 				$request['template']->setVar('icon_'. $key, $val);
 			}
 			
-			$request['template']->setFile('content', 'emoticons_edit.html');
+			$request['template']->setFile('content', 'emoticons_add.html');
 
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_EMOTICONS');
+			$request['template']->setVar('is_edit', 1);
+			$request['template']->setVar('emoticons_action', 'admin.php?act=emoticons_update');
 			$request['template']->setVar('posts_on', '_on');
 			$request['template']->setFile('sidebar_menu', 'menus/posts.html');
 		} else {

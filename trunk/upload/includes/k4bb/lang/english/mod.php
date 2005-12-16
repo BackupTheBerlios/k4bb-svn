@@ -64,7 +64,6 @@ $_LANG += array(
 'L_MODS'				=> 'MODERATORS',
 'L_ADMINS'				=> 'ADMINS',
 'L_GLOBAL'				=> 'Global Announcement',
-'L_NORMAL'				=> 'Normal',
 'L_FEATURE'				=> 'Featured Topics',
 'L_MOVE'				=> 'Moved Topics',
 'L_FEATURETOPIC'		=> 'Feature Topic',

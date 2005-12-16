@@ -171,7 +171,7 @@ function get_maps(&$dba) {
 			/**
 			 * Deal with the master forum permission set.. it is somewhat complicated
 			 */
-			if($val['varname'] == 'forum0' || $val['parent_id'] == $maps['forums'][0]['id']) {
+			if($val['varname'] == 'forum0' || (isset($maps['forums'][0]['id']) && $val['parent_id'] == $maps['forums'][0]['id'])) {
 				if($val['varname'] == 'forum0') {
 					$maps['forums'][0] = isset($maps['forums'][0]) ? array_merge($maps['forums'][0], $val) : $val;
 				} else {

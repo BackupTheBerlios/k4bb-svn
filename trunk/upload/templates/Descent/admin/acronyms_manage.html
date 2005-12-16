@@ -1,26 +1,19 @@
 <is:admin>
-<div class="borderwrap">
-	<div class="maintitle">
-		<script type="text/javascript">doHelpButton('acronyms');</script>
-		{$L_ACRONYMMANAGEMENT}
-	</div>
+<div class="header"><div class="title">{$L_ACRONYMMANAGEMENT}</div></div>
+<div class="subheader">{$L_ADDACRONYM}</div>
+<div class="spacer">
+	<form:form name="add_acronym" id="add_acronym" action="admin.php?act=add_acronym" method="post" enctype="multipart/form-data">
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		
 		<tr>
-			<td class="subtitle" colspan="4">
-				<script type="text/javascript">doHelpButton('add_badname');</script>
-				{$L_ADDACRONYM}
-			</td>
-		</tr>
-		<form:form name="add_acronym" id="add_acronym" action="admin.php?act=add_acronym" method="post" enctype="multipart/form-data">
-		<tr>
-			<td class="alt1" width="25%" align="center">
+			<td class="alt3" width="25%" align="center">
 				<label for="acronym"><strong>{$L_ACRONYM}:</strong></label>
 			</td>
 			<td class="alt3" width="25%" align="center">
 				<input type="text" name="acronym" id="acronym" value="" class="inputbox" />
 				<form:error id="acronym_error" for="acronym" setclass="inputfailed" regex=".+">{$L_SUPPLYACRONYM}</form:error>
 			</td>
-			<td class="alt1" width="25%" align="center">
+			<td class="alt3" width="25%" align="center">
 				<label for="meaning"><strong>{$L_MEANING}:</strong></label>
 			</td>
 			<td class="alt3" width="25%" align="center">
@@ -29,17 +22,16 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="alt2" colspan="4">
+			<td class="base3" colspan="4" style="text-align: center;">
 				<input type="submit" value="{$L_SAVE}" class="button" />
 				<input type="reset" value="{$L_RESET}" class="button" />
 			</td>
 		</tr>
-		</form:form>
 	</table>
+	</form:form>
 </div>
-<br />
-<div class="borderwrap">
-	<div class="maintitle">{$L_MANAGECURRENTACRONYMS}</div>
+<div class="subheader">{$L_MANAGECURRENTACRONYMS}</div>
+<div class="spacer">
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
 		<list:list id="acronyms">
 		<list:default list="acronyms">
@@ -54,37 +46,33 @@
 		</tr>
 		</list:default>
 		<list:item list="acronyms">
-			<list:switch list="acronyms" var="row_class" a="alt1" b="alt3">
+		<list:switch list="acronyms" var="row_class" a="alt1" b="alt2">
 			<form:form name="update_acronym" id="update_acronym" action="admin.php?act=update_acronym&amp;id={$id}" method="post" enctype="multipart/form-data">
 			<tr>
-				<td class="{$row_class}" width="25%" align="center">
+				<td class="{$row_class}" width="15%" align="center">
 					<label for="acronym{$id}"><strong>{$L_ACRONYM}:</strong></label>
 				</td>
-				<td class="alt3" width="25%" align="center">
+				<td class="{$row_class}" width="15%" align="center">
 					<input type="text" name="acronym" id="acronym{$id}" value="{$acronym}" class="inputbox" />
 				</td>
-				<td class="{$row_class}" width="25%" align="center">
+				<td class="{$row_class}" width="15%" align="center">
 					<label for="meaning{$id}"><strong>{$L_MEANING}:</strong></label>
 				</td>
-				<td class="alt3" width="25%" align="center">
+				<td class="{$row_class}" width="15%" align="center">
 					<input type="text" name="meaning" id="meaning{$id}" value="{$meaning}" class="inputbox" />
 				</td>
-			</tr>
-			<tr>
-				<td class="{$row_class}" colspan="4">
+				<td class="{$row_class}" style="text-align: center;">
 					<input type="submit" value="{$L_SAVE}" class="button" />
 					<input type="button" value="{$L_REMOVE}" class="button" onclick="document.location='admin.php?act=acronym_remove&id={$id}'" />
 					<input type="reset" value="{$L_RESET}" class="button" />
 				</td>
 			</tr>
 			</form:form>
-			</list:switch>
 		</tr>
-		<tr>
-			<td class="alt2" colspan="4"></td>
-		</tr>
+		</list:switch>
 		</list:item>
 		</list:list>
 	</table>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 </is:admin>

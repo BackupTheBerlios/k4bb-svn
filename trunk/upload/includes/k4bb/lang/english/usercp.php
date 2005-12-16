@@ -57,7 +57,6 @@ $_LANG += array(
 'L_SETTINGSOPTIONS'		=> 'Settings &amp; Options',
 'L_PASSWORDSETTINGS'	=> 'Password Settings',
 'L_EDITPERSONALPIC'		=> 'Edit Personal Picture',
-'L_PASSWORDSETTINGS'	=> 'Password Settings',
 'L_CURRENTPASS'			=> 'CURRENT Password',
 'L_CHECKCURRENTPASS'	=> 'Check CURRENT Password',
 'L_NEWPASS'				=> 'New Password',
