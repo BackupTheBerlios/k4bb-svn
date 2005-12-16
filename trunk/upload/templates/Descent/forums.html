@@ -29,47 +29,38 @@
 		</tr>
 	</table>
 </div>
-<list:list id="tl_forums">
-<div class="spacer">
-	<div class="borderwrap">
+
+<list:list id="tlforums">
+<list:item list="tlforums">
+<list:switch list="tlforums" var="row_class" a="1" b="2">
+<maps:if forum="forum_id" method="can_view">
+	<if:if var="row_type" eq="2">
+	<div class="spacer">
 		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
-			<list:item list="tl_forums">
-			<list:switch list="tl_forums" var="row_class" a="1" b="2">
-			<maps:if forum="forum_id" method="can_view">
 			<core:import id="forum_view" file="forum_view.html" />
-			</list:switch>
-			</maps:if>
-			</list:item>
 		</table>
 	</div>
-</div>
-</list:list>
-
-<list:list id="categories">
-<list:item list="categories">
-<maps:if forum="forum_id" method="can_view">
+	<if:else />
 	<div class="spacer">
-		<div class="borderwrap">	
-			
-			<div class="categorytitle" id="c{$forum_id}_maintitle">
-				<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_{$forum_id}', 'forums_{$forum_id}', 'c{$forum_id}_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_{$forum_id}" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
-				<a href="viewforum.php?f={$forum_id}" title="{$description}">{$name}</a>
-			</div>
-
-			<!-- Forums -->
-			<list:sublist list="categories" id="forums" column="forums">
-			<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table" id="forums_{$forum_id}">
-				<list:item list="forums">
-				<list:switch list="forums" var="row_class" a="3" b="4">
-					<core:import id="forum_view" file="forum_view.html" />
-				</list:switch>
-				</list:item>
-			</table>
-			</list:sublist>
-		<!-- / Forums -->
+		<div class="categorytitle" id="c{$forum_id}_maintitle">
+			<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_{$forum_id}', 'forums_{$forum_id}', 'c{$forum_id}_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_{$forum_id}" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+			<a href="viewforum.php?f={$forum_id}" title="{$description}">{$name}</a>
 		</div>
+		<!-- Forums -->
+		<list:sublist list="tlforums" id="forums" column="forums">
+		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table" id="forums_{$forum_id}">
+			<list:item list="forums">
+			<list:switch list="forums" var="row_class" a="3" b="4">
+				<core:import id="forum_view" file="forum_view.html" />
+			</list:switch>
+			</list:item>
+		</table>
+		</list:sublist>
+		<!-- / Forums -->
 	</div>
+	</if:if>
 </maps:if>
+</list:switch>
 </list:item>
 </list:list>
 <div class="spacer">
