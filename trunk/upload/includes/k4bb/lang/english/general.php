@@ -81,6 +81,7 @@ $_LANG += array(
 'L_INFORMATION'			=> 'Information',
 'L_GOBACK'				=> 'Go Back',
 'L_FORUM'				=> 'Forum',
+'L_GALLERY'				=> 'Gallery',
 'L_STATISTICS'			=> 'Statistics',
 'L_TODAYSBDAYS'			=> 'Today\'s Birthdays',
 'L_CONTACTUS'			=> 'Contact Us',
@@ -104,6 +105,7 @@ $_LANG += array(
 'L_PMUSER'				=> 'Private Message User',
 'L_RSS'					=> 'RSS',
 'L_CLOSEWINDOW'			=> 'Close this Window',
+'L_INFO'				=> 'Info',
 
 /* User Titles */
 'L_JUNIORMEMBER'		=> 'Junior Member',

@@ -23,7 +23,7 @@
 <is:admin>
 <if:if var="adv_view" eq="1">
 <core:import id="admin_head" file="admin_head.html" />
-<table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding: 0px;margin: 0px;">
+<table width="100%" cellspacing="0" style="padding: 0px;margin: 0px;">
 	<tr>
 		<td width="100%" valign="top" style="padding: 0px;margin: 0px;">
 			<iframe name="admin_iframe" id="admin_iframe" frameborder="no" style="width: 100%; height: 100%;" src="index.php">ENABLE JAVASCRIPT!!</iframe>
@@ -44,15 +44,13 @@
 <core:import id="users_menu" file="menus/users.html" />
 <script type="text/javascript">
 	
-	use_click			= false;
-	allow_follow_urls	= true;
-	menu_init('options_link', 'options_menu', new Array('top', '30px'));
-	menu_init('forums_link', 'forums_menu', new Array('top', '30px'));
-	menu_init('users_link', 'users_menu', new Array('top', '30px'));
-	menu_init('posts_link', 'posts_menu', new Array('top', '30px'));
-	menu_init('styles_link', 'styles_menu', new Array('top', '30px'));
-	menu_init('faq_link', 'faq_menu', new Array('top', '30px'));
-	menu_init('misc_link', 'misc_menu', new Array('top', '30px'));
+	menu_init('options_link', 'options_menu', true);
+	menu_init('forums_link', 'forums_menu', true);
+	menu_init('users_link', 'users_menu', true);
+	menu_init('posts_link', 'posts_menu', true);
+	menu_init('styles_link', 'styles_menu', true);
+	menu_init('faq_link', 'faq_menu', true);
+	menu_init('misc_link', 'misc_menu', true);
 
 	/**
 	 * Resize the iframe

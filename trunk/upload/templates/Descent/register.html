@@ -4,10 +4,10 @@
 	<div class="base2" id="message_holder" style="text-align: center;"></div>
 	<br />
 </div>
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle">{$L_REGISTER}</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<tr>
 				<td class="alt3">
 					<div class="outset_box">
@@ -18,7 +18,7 @@
 						<form:error id="username_error" for="username" setclass="inputfailed" regex="^[a-zA-Z]([a-zA-Z0-9]*[-_ ]?)*[a-zA-Z0-9]*$">{$L_SUPPLYUSERNAME}</form:error>
 						<hr noshade="noshade" size="1" />
 						<span class="smalltext">{$L_FILLINPASSWORD}</span><br /><br />
-						<table width="100%" cellpadding="0" cellspacing="0" border="0">
+						<table width="100%" cellspacing="0">
 							<tr>
 								<td width="50%">
 									<label for="password"><strong>{$L_PASSWORD}:</strong></label><br />
@@ -34,7 +34,7 @@
 						<form:error id="password_match_error" for="password" setclass="inputfailed" match="password2">{$L_PASSESDONTMATCH}</form:error>
 						<hr noshade="noshade" size="1" />
 						<span class="smalltext">{$L_FILLINEMAIL}</span><br /><br />
-						<table width="100%" cellpadding="0" cellspacing="0" border="0">
+						<table width="100%" cellspacing="0">
 							<tr>
 								<td width="50%">
 									<label for="email"><strong>{$L_EMAILADDRESS}:</strong></label><br />
@@ -62,10 +62,10 @@
 	</div>
 </div>
 <br />
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle">{$L_ADDITIONALINFO}</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<tr>
 				<td class="alt3">
 					<div class="outset_box">

@@ -1,8 +1,8 @@
 <!-- Drafts -->
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle">{$L_LOADDRAFT}</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<tr>
 				<td class="alt3" colspan="3">
 					<span class="smalltext">{$L_DRAFTNOTICE}</span>
@@ -37,9 +37,9 @@
 					</span>
 				</td>
 				<td class="{$row_class}" width="20%">
-					<a href="newtopic.php?id={$forum_id}&amp;draft={$topic_id}" title="{$L_LOADDRAFT}">{$L_LOADDRAFT}</a>
+					<a href="newtopic.php?id={$forum_id}&amp;draft={$post_id}" title="{$L_LOADDRAFT}">{$L_LOADDRAFT}</a>
 					<br />
-					<a href="newtopic.php?act=deletedraft&amp;id={$topic_id}" title="{$L_DELETEDRAFT}">{$L_DELETEDRAFT}</a>
+					<a href="newtopic.php?act=deletedraft&amp;id={$post_id}" title="{$L_DELETEDRAFT}">{$L_DELETEDRAFT}</a>
 				</td>
 			</tr>
 			</list:switch>

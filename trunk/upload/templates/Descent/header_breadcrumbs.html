@@ -1,21 +1,12 @@
 <!-- Header Breadcrumbs Bit -->
-<table cellpadding="0" cellspacing="0" border="0" width="100%" class="breadcrumbs_menu">
-	<tr>
-		<td width="100%" class="header_breadcrumbs" valign="top">
-			<div>
-				<img src="Images/{$IMG_DIR}/Icons/navbits_start.gif" alt="{$bbtitle}" />&nbsp;<a href="index.php" title="{$bbtitle}"><strong>{$bbtitle}</strong></a> 
-				<list:list id="breadcrumbs">
-				<list:item list="breadcrumbs">
-				&gt; <a href="{$location}" title="{$name}"><strong><core:truncate length="40" append="...">{$name}</core:truncate></strong></a>
-				</list:item>
-				</list:list>
-				<br />
-				<img src="Images/{$IMG_DIR}/Icons/navbits_finallink{$breadcrumb_new}.gif" alt="{$current_location}" /> <core:truncate length="55" append="...">{$current_location}</core:truncate>
-			</div>
-		</td>
-		<td nowrap="nowrap" class="breadcrumbs_tab">
-			<core:import id="breadcrumbs_tab" file="breadcrumbs_tab.html" />
-		</td>
-	</tr>
-</table>
+<div>
+	<img src="Images/{$IMG_DIR}/Icons/navbits_start.gif" alt="{$bbtitle}" />&nbsp;<a href="index.php" title="{$bbtitle}"><strong>{$bbtitle}</strong></a> 
+	<list:list id="breadcrumbs">
+	<list:item list="breadcrumbs">
+	&gt; <a href="{$location}" title="{$name}"><strong><core:truncate length="40" append="...">{$name}</core:truncate></strong></a>
+	</list:item>
+	</list:list>
+	<br />
+	<img src="Images/{$IMG_DIR}/Icons/navbits_finallink{$breadcrumb_new}.gif" alt="{$current_location}" /> <core:truncate length="55" append="...">{$current_location}</core:truncate>
+</div>
 <!-- / Header Breadcrumbs Bit -->

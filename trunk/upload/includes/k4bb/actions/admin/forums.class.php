@@ -612,8 +612,8 @@ class AdminUpdateForum extends FAAction {
 			
 //			if($forum['category_id'] != $pcategory['category_id']) {
 //				
-//				$request['dba']->executeUpdate("UPDATE ". K4TOPICS ." SET row_level=". ($pforum['row_level']+1) .", category_id=". $pforum['category_id'] ." WHERE forum_id=". $forum['forum_id']);
-//				$request['dba']->executeUpdate("UPDATE ". K4REPLIES ." SET row_level=row_level+". ($pforum['row_level'] < $forum['row_level'] ? $forum['row_level'] - $pforum['row_level'] : $pforum['row_level'] - $forum['row_level']) .", category_id=". $pforum['category_id'] ." WHERE forum_id=". $forum['forum_id']);
+//				$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET row_level=". ($pforum['row_level']+1) .", category_id=". $pforum['category_id'] ." WHERE forum_id=". $forum['forum_id']);
+//				$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET row_level=row_level+". ($pforum['row_level'] < $forum['row_level'] ? $forum['row_level'] - $pforum['row_level'] : $pforum['row_level'] - $forum['row_level']) .", category_id=". $pforum['category_id'] ." WHERE forum_id=". $forum['forum_id']);
 //				$request['dba']->executeUpdate("UPDATE ". K4MAPS ." SET category_id=". $pforum['category_id'] ." WHERE forum_id=". $forum['forum_id']);
 //				$request['dba']->executeUpdate("UPDATE ". K4SUBSCRIPTIONS ." SET category_id=". $pforum['category_id'] ." WHERE forum_id=". $forum['forum_id']);
 //				$request['dba']->executeUpdate("UPDATE ". K4BADPOSTREPORTS ." SET category_id=". $pforum['category_id'] ." WHERE forum_id=". $forum['forum_id']);
@@ -647,8 +647,8 @@ class AdminRemoveForum extends FAAction {
 			
 			$dba->executeUpdate("DELETE FROM ". K4MAPS ." WHERE forum_id = ". intval($f['forum_id']));
 			$dba->executeUpdate("DELETE FROM ". K4FORUMS ." WHERE forum_id=". intval($f['forum_id']));
-			$dba->executeUpdate("DELETE FROM ". K4TOPICS ." WHERE forum_id=". intval($f['forum_id']));
-			$dba->executeUpdate("DELETE FROM ". K4REPLIES ." WHERE forum_id=". intval($f['forum_id']));
+			$dba->executeUpdate("DELETE FROM ". K4POSTS ." WHERE forum_id=". intval($f['forum_id']));
+			$dba->executeUpdate("DELETE FROM ". K4POSTS ." WHERE forum_id=". intval($f['forum_id']));
 			$dba->executeUpdate("DELETE FROM ". K4SUBSCRIPTIONS ." WHERE forum_id = ". intval($f['forum_id']));
 			$dba->executeUpdate("DELETE FROM ". K4MAILQUEUE ." WHERE row_id = ". intval($f['forum_id']) ." AND row_type = ". FORUM);
 
@@ -685,8 +685,8 @@ class AdminRemoveForum extends FAAction {
 			/* Remove this forum */
 			$request['dba']->executeUpdate("DELETE FROM ". K4MAPS ." WHERE forum_id=". intval($forum['forum_id']));
 			$request['dba']->executeUpdate("DELETE FROM ". K4FORUMS ." WHERE forum_id=". intval($forum['forum_id']));
-			$request['dba']->executeUpdate("DELETE FROM ". K4TOPICS ." WHERE forum_id=". intval($forum['forum_id']));
-			$request['dba']->executeUpdate("DELETE FROM ". K4REPLIES ." WHERE forum_id=". intval($forum['forum_id']));
+			$request['dba']->executeUpdate("DELETE FROM ". K4POSTS ." WHERE forum_id=". intval($forum['forum_id']));
+			$request['dba']->executeUpdate("DELETE FROM ". K4POSTS ." WHERE forum_id=". intval($forum['forum_id']));
 			
 			/* Remove any sub-forums */			
 			$this->removeForums($forum, $request['dba']);

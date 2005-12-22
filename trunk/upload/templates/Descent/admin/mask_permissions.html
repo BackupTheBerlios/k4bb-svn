@@ -1,7 +1,7 @@
 <is:admin>
 <div class="header"><div class="title">{$L_PERMISSIONMASK}: <span style="font-weight: normal;"><em>{$forum_name} -> {$group_name}</em></span></div></div>
 <div class="spacer">
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
 			<td class="subheader" width="30%">{$L_NAME}</td>
 			<td class="subheader" align="center">{$L_VIEW}</td>
@@ -15,7 +15,7 @@
 	<form action="admin.php?act=masks_updateperms" method="post" enctype="multipart/form-data">
 	<input type="hidden" name="f" value="{$forum_forum_id}" />
 	<input type="hidden" name="g" value="{$group_id}" />
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<input type="hidden" name="id" value="{$forum_forum_id}" />
 		<list:list id="mask_maps">
 		<list:item list="mask_maps">

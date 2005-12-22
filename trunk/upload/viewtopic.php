@@ -49,7 +49,7 @@ class K4DefaultAction extends FAAction {
 		}
 		
 		/* Get our topic */
-		$topic				= $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($_REQUEST['id']));
+		$topic				= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($_REQUEST['id']));
 		
 		if(!$topic || !is_array($topic) || empty($topic)) {
 			$action = new K4InformationAction(new K4LanguageElement('L_TOPICDOESNTEXIST'), 'content', FALSE);
@@ -57,8 +57,8 @@ class K4DefaultAction extends FAAction {
 		}
 		
 		/* Should we redirect this user? */
-		if($topic['moved_new_topic_id'] > 0) {
-			header("Location: viewtopic.php?id=". intval($topic['moved_new_topic_id']));
+		if($topic['moved_new_post_id'] > 0) {
+			header("Location: viewtopic.php?id=". intval($topic['moved_new_post_id']));
 		}
 
 		/* Get the current forum */
@@ -98,7 +98,7 @@ class K4DefaultAction extends FAAction {
 		/**
 		 * Now tell the cookies that we've read this topic
 		 */		
-		$cookieinfo[$topic['topic_id']] = time();
+		$cookieinfo[$topic['post_id']] = time();
 		$cookiestr						= '';
 		
 		foreach($cookieinfo as $key => $val) {
@@ -159,7 +159,7 @@ class K4DefaultAction extends FAAction {
 		 * Get the users Browsing this topic 
 		 */
 		/* Set the extra SQL query fields to check */
-		$extra				= " AND location_file = '". $request['dba']->quote($_URL->file) ."' AND location_id = ". intval($topic['topic_id']);	
+		$extra				= " AND location_file = '". $request['dba']->quote($_URL->file) ."' AND location_id = ". intval($topic['post_id']);	
 		$expired			= time() - ini_get('session.gc_maxlifetime');
 		$user_extra			= $request['user']->isMember() ? ' OR (seen > 0 AND user_id = '. intval($request['user']->get('id')) .')' : '';
 
@@ -204,10 +204,10 @@ class K4DefaultAction extends FAAction {
 		 * Is this topic expired?
 		 */
 		$extra						= '';
-		if($topic['topic_type'] > TOPIC_NORMAL && $topic['topic_expire'] > 0) {
-			if(($topic['created'] + (3600 * 24 * $topic['topic_expire']) ) > time()) {
+		if($topic['post_type'] > TOPIC_NORMAL && $topic['post_expire'] > 0) {
+			if(($topic['created'] + (3600 * 24 * $topic['post_expire']) ) > time()) {
 				
-				$extra				= ",topic_expire=0,topic_type=". TOPIC_NORMAL;
+				$extra				= ",post_expire=0,post_type=". TOPIC_NORMAL;
 			}
 		}
 		
@@ -220,7 +220,7 @@ class K4DefaultAction extends FAAction {
 			$request['template']->setVar('forum_'. $key, $val);
 
 		/* Update the number of views for this topic */
-		$request['dba']->executeUpdate("UPDATE ". K4TOPICS ." SET views=views+1 $extra WHERE topic_id=". intval($topic['topic_id']));
+		$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET views=views+1 $extra WHERE post_id=". intval($topic['post_id']));
 		
 
 		$resultsperpage		= $request['user']->get('postsperpage') <= 0 ? $forum['postsperpage'] : $request['user']->get('postsperpage');
@@ -249,7 +249,7 @@ class K4DefaultAction extends FAAction {
 		
 		/* Outside valid page range, redirect */
 		if(!$pager->hasPage($page) && $num_pages > 0) {
-			$action = new K4InformationAction(new K4LanguageElement('L_PASTPAGELIMIT'), 'content', FALSE, 'viewtopic.php?id='. $topic['topic_id'] .'&limit='. $perpage .'&page='. $num_pages, 3);
+			$action = new K4InformationAction(new K4LanguageElement('L_PASTPAGELIMIT'), 'content', FALSE, 'viewtopic.php?id='. $topic['post_id'] .'&limit='. $perpage .'&page='. $num_pages, 3);
 			return $action->execute($request);
 		}
 		
@@ -263,10 +263,11 @@ class K4DefaultAction extends FAAction {
 		$topic['postsperpage']		= $perpage;
 		
 		/* Do we set the similar topics? */
-		$similar_topics					= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE ((lower(name) LIKE lower('%". $request['dba']->quote($topic['name']) ."%') OR lower(name) LIKE lower('%". $request['dba']->quote($topic['body_text']) ."%')) OR (lower(body_text) LIKE lower('%". $request['dba']->quote($topic['name']) ."%') OR lower(body_text) LIKE lower('%". $request['dba']->quote($topic['body_text']) ."%'))) AND is_draft = 0 AND topic_id <> ". intval($topic['topic_id']) ." ORDER BY last_post DESC LIMIT 10");
+		$similar_topics					= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE ((lower(name) LIKE lower('%". $request['dba']->quote($topic['name']) ."%') OR lower(name) LIKE lower('%". $request['dba']->quote($topic['body_text']) ."%')) OR (lower(body_text) LIKE lower('%". $request['dba']->quote($topic['name']) ."%') OR lower(body_text) LIKE lower('%". $request['dba']->quote($topic['body_text']) ."%'))) AND is_draft = 0 AND post_id <> ". intval($topic['post_id']) ." ORDER BY lastpost_created DESC LIMIT 10");
 		
-		if($similar_topics->numrows() > 0) {
-			$it					= new TopicsIterator($request['dba'], $request['user'], $similar_topics, $request['template']->getVar('IMG_DIR'), $forum);
+		if($similar_topics->hasNext()) {
+			//$it					= new TopicsIterator($request['dba'], $request['user'], $similar_topics, $request['template']->getVar('IMG_DIR'), $forum);
+			$it = new PostsIterator($request, $similar_topics);
 			$request['template']->setList('similar_topics', $it);
 			$request['template']->setFile('similar_topics', 'similar_topics.html');
 		}
@@ -277,18 +278,20 @@ class K4DefaultAction extends FAAction {
 		$single_reply = $request['user']->get('topic_threaded') == 1 && isset($_REQUEST['p']) && intval($_REQUEST['p']) > 0 ? intval($_REQUEST['p']) : FALSE;
 
 		/* set the topic iterator */
-		$topic_list			= new TopicIterator($request['dba'], $request['user'], $topic, $show_replies, $single_reply);
-		$request['template']->setList('topic', $topic_list);
+		//$topic_list			= new TopicIterator($request['dba'], $request['user'], $topic, $show_replies, $single_reply);
+		$result = $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE (". ($page <= 1 ? "post_id=". $topic['post_id'] ." OR" : '') ." parent_id=". intval($topic['post_id']) .") AND created >= ". (3600 * 24 * intval($topic['daysprune'])) ." ORDER BY ". $topic['sortedby'] ." ". $topic['sortorder'] ." LIMIT ". intval($topic['start']) .",". intval($topic['postsperpage']));
+		$posts = new PostsIterator($request, $result);
+		$request['template']->setList('posts', $posts);
 		
-		$request['template']->setVar('next_oldest', intval($request['dba']->getValue("SELECT topic_id FROM ". K4TOPICS ." WHERE topic_id < ". $topic['topic_id'] ." LIMIT 1")));
-		$request['template']->setVar('next_newest',intval($request['dba']->getValue("SELECT topic_id FROM ". K4TOPICS ." WHERE topic_id > ". $topic['topic_id'] ." LIMIT 1")));
+		$request['template']->setVar('next_oldest', intval($request['dba']->getValue("SELECT post_id FROM ". K4POSTS ." WHERE post_id < ". $topic['post_id'] ." LIMIT 1")));
+		$request['template']->setVar('next_newest',intval($request['dba']->getValue("SELECT post_id FROM ". K4POSTS ." WHERE post_id > ". $topic['post_id'] ." LIMIT 1")));
 		
 		/* Show the threaded view if necessary */
 		if($request['user']->get('topic_threaded') == 1) {
 			if($topic['num_replies'] > 0) {
 				$request['template']->setFile('topic_threaded', 'topic_threaded.html');
 				
-				$replies	= $request['dba']->executeQuery("SELECT * FROM ". K4REPLIES ." WHERE topic_id = ". intval($topic['topic_id']) ." ORDER BY row_order ASC");
+				$replies	= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE parent_id=". intval($topic['post_id']) ." ORDER BY row_order ASC");
 				$it			= &new ThreadedRepliesIterator($replies, $topic['row_level']);
 				
 				$request['template']->setList('threaded_replies', $it);
@@ -299,7 +302,7 @@ class K4DefaultAction extends FAAction {
 		 * Topic subscription stuff
 		 */
 		if($request['user']->isMember()) {
-			$subscribed		= $request['dba']->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE topic_id = ". intval($topic['topic_id']) ." AND user_id = ". $request['user']->get('id'));
+			$subscribed		= $request['dba']->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE post_id = ". intval($topic['post_id']) ." AND user_id = ". $request['user']->get('id'));
 			$request['template']->setVar('is_subscribed', iif($subscribed->numRows() > 0, 1, 0));
 		}
 		

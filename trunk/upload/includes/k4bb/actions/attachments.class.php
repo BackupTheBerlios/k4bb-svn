@@ -34,11 +34,11 @@
  *
  * @param object request		General request variable passed to all actions
  * @param array forum			The current forum of the topic
- * @param int topic_id			The topic id that the files are being attached to
+ * @param int post_id			The topic id that the files are being attached to
  *
  * @author Peter Goodman
  */
-function attach_files(&$request, $forum, $topic_id, $reply_id = FALSE) {
+function attach_files(&$request, $forum, $post) {
 	if($request['user']->get('perms') >= get_map( 'attachments', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 		
 		$size			= 0;
@@ -55,11 +55,9 @@ function attach_files(&$request, $forum, $topic_id, $reply_id = FALSE) {
 		if(!$in_db && $request['user']->isMember()) {
 			$upload_dir	= BB_BASE_DIR .'/tmp/upload/attachments/'. $request['user']->get('id') .'/';
 		}
-		
-		$extra			= $reply_id ? "AND reply_id = ". intval($reply_id) : "";
 
 		// get any already uploaded files for this topic
-		$files_on_file	= $request['dba']->executeQuery("SELECT * FROM ". K4ATTACHMENTS ." WHERE topic_id = ". intval($topic_id) ." $extra");
+		$files_on_file	= $request['dba']->executeQuery("SELECT * FROM ". K4ATTACHMENTS ." WHERE post_id = ". $post['post_id']);
 		while($files_on_file->next()) {
 			$temp		= $files_on_file->current();
 			
@@ -120,20 +118,19 @@ function attach_files(&$request, $forum, $topic_id, $reply_id = FALSE) {
 										__chmod($upload_dir . $_FILES['attach'. $i]['name'], 0777);
 										
 										// prepare the sql query to insert it into the db
-										$insert			= $request['dba']->prepareStatement("INSERT INTO ". K4ATTACHMENTS ." (topic_id,user_id,user_name,file_type,mime_type,file_size,file_contents,mdfive,file_name,in_db,created,reply_id,forum_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
-										$insert->setInt(1, $topic_id);
+										$insert			= $request['dba']->prepareStatement("INSERT INTO ". K4ATTACHMENTS ." (post_id,user_id,user_name,file_type,mime_type,file_size,file_contents,mdfive,file_name,in_db,created,forum_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+										$insert->setInt(1, $post['post_id']);
 										$insert->setInt(2, $request['user']->get('id'));
 										$insert->setString(3, $request['user']->get('name'));
 										$insert->setString(4, $filetype);
 										$insert->setString(5, $_FILES['attach'. $i]['type']);
 										$insert->setInt(6, $_FILES['attach'. $i]['size']);
-										$insert->setString(7, iif($in_db, file_get_contents($upload_dir . $_FILES['attach'. $i]['name']), ''));
+										$insert->setString(7, ($in_db ? file_get_contents($upload_dir . $_FILES['attach'. $i]['name']) : ''));
 										$insert->setString(8, md5_file($upload_dir . $_FILES['attach'. $i]['name']));
 										$insert->setString(9, $_FILES['attach'. $i]['name']);
-										$insert->setInt(10, iif($in_db, 1, 0));
+										$insert->setInt(10, ($in_db ? 1 : 0));
 										$insert->setInt(11, time());
-										$insert->setInt(12, iif(!$reply_id, 0, intval($reply_id)));
-										$insert->setInt(13, $forum['forum_id']);
+										$insert->setInt(12, $forum['forum_id']);
 
 										// insert the file into the database
 										$insert->executeUpdate();
@@ -153,10 +150,15 @@ function attach_files(&$request, $forum, $topic_id, $reply_id = FALSE) {
 					}
 				}
 			}
-
+			
 			// update the topic / reply
-			$request['dba']->executeUpdate("UPDATE ". K4TOPICS ." SET total_attachments=total_attachments+". $num_files ." WHERE topic_id = ". intval($topic_id));
-			$request['dba']->executeUpdate("UPDATE ". (!$reply_id ? K4TOPICS : K4REPLIES) ." SET attachments = attachments + ". $num_files ." WHERE topic_id = ". intval($topic_id) ." $extra");
+			if($num_files > 0) {
+				$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET total_attachments=total_attachments+". $num_files .", attachments=attachments+". $num_files ." WHERE post_id=". intval(($post['row_type'] & REPLY ? $post['parent_id'] : $post['post_id'])) );
+				if($post['row_type'] & REPLY) {
+					$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET attachments=attachments+". $num_files ." WHERE post_id=". intval($post['post_id']) );
+				}
+			}
+			
 		}		
 	}
 }
@@ -164,10 +166,8 @@ function attach_files(&$request, $forum, $topic_id, $reply_id = FALSE) {
 /**
  * Remove attachments
  */
-function remove_attachments(&$request, $topic_id, $reply_id = FALSE) {
-	$extra			= $reply_id ? "AND reply_id = ". intval($reply_id) : "";
-
-	$attachments	= $request['dba']->executeQuery("SELECT * FROM ". K4ATTACHMENTS ." WHERE topic_id = ". intval($topic_id) ." $extra");
+function remove_attachments(&$request, $post) {
+	$attachments	= $request['dba']->executeQuery("SELECT * FROM ". K4ATTACHMENTS ." WHERE post_id = ". intval($post_id) ." $extra");
 	
 	$upload_dir		= BB_BASE_DIR .'/tmp/upload/attachments/';
 
@@ -189,21 +189,24 @@ function remove_attachments(&$request, $topic_id, $reply_id = FALSE) {
 		}
 	}
 	
-	$num_files = $attachments->numrows();
-	$extra			= $reply_id ? "AND reply_id = ". intval($reply_id) : "";
-	$request['dba']->executeUpdate("UPDATE ". K4TOPICS ." SET total_attachments=total_attachments-". $num_files ." WHERE topic_id = ". intval($topic_id));
-	$request['dba']->executeUpdate("UPDATE ". (!$reply_id ? K4TOPICS : K4REPLIES) ." SET attachments=attachments-". $num_files ." WHERE topic_id = ". intval($topic_id) ." $extra");
+	$num_files		= $attachments->numrows();
+	$extra			= $post_id ? "AND post_id = ". intval($post_id) : "";
+
+	// fix the attachment counts for topics/replies
+	$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET total_attachments=total_attachments-". $num_files .", attachments=attachments-". $num_files ." WHERE post_id=". intval(($post['row_type'] & REPLY ? $post['parent_id'] : $post['post_id'])) );
+	if($post['row_type'] & REPLY) {
+		$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET attachments=attachments-". $num_files ." WHERE post_id=". intval($post['post_id']) );
+	}
+
+	// delete them
+	$request['dba']->executeUpdate("DELETE FROM ". K4ATTACHMENTS ." WHERE post_id = ". intval($post['post_id']));
 }
 
 /**
  * Add either the file inputs or remove attachment links
  */
-function post_attachment_options(&$request, $forum, $topic, $reply = FALSE) {
+function post_attachment_options(&$request, $forum, $post) {
 	if($request['user']->get('perms') >= get_map( 'attachments', 'can_add', array('forum_id'=>$forum['forum_id']))) {
-		
-		$post				= !$reply ? $topic : $reply;
-
-		$extra				= is_array($reply) ? "AND reply_id = ". intval($reply['reply_id']) : " AND reply_id = 0";
 		
 		$num_attachments	= $request['template']->getVar('nummaxattaches') - $post['attachments'];
 		
@@ -215,10 +218,10 @@ function post_attachment_options(&$request, $forum, $topic, $reply = FALSE) {
 
 		// do we have any current attachments?
 		if($post['attachments'] > 0) {
-			$post_attachments	= $request['dba']->executeQuery("SELECT * FROM ". K4ATTACHMENTS ." WHERE topic_id = ". intval($post['topic_id']) ." $extra");
+			$post_attachments	= $request['dba']->executeQuery("SELECT * FROM ". K4ATTACHMENTS ." WHERE post_id = ". intval($post['post_id']));
 			while($post_attachments->next()) {
 				$temp			= $post_attachments->current();
-				$attach_inputs	.= '<br /><span class="smalltext">'. k4_htmlentities($temp['file_name'], ENT_QUOTES) . '&nbsp;-&nbsp;<a href="viewfile.php?act=remove_attach&amp;id='. $temp['id'] .'&amp;'. (!$reply ? 't' : 'r') .'='. $post['topic_id'] .'" title="'. $request['template']->getVar('L_REMOVEATTACHMENT') .'">'. $request['template']->getVar('L_REMOVEATTACHMENT') .'</a></span>';
+				$attach_inputs	.= '<br /><span class="smalltext">'. k4_htmlentities($temp['file_name'], ENT_QUOTES) . '&nbsp;-&nbsp;<a href="viewfile.php?act=remove_attach&amp;id='. $temp['id'] .'&amp;post_id='. $post['post_id'] .'" title="'. $request['template']->getVar('L_REMOVEATTACHMENT') .'">'. $request['template']->getVar('L_REMOVEATTACHMENT') .'</a></span>';
 			}
 		}
 		
@@ -234,25 +237,16 @@ class K4ViewAttachment extends FAAction {
 		
 		global $_QUERYPARAMS;
 		
-		if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
-			$action = new K4InformationAction(new K4LanguageElement('L_BADATTACHMENT'), 'content', FALSE);
+		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 
+		if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
+			$action = new K4InformationAction(new K4LanguageElement('L_BADATTACHMENT'), 'content', FALSE);
 			return $action->execute($request);
 		}
 
-		if(isset($_REQUEST['t']) && intval($_REQUEST['t']) != 0) {
-
-			/* Get our topic */
-			$post				= $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($_REQUEST['t']));
-		} elseif(isset($_REQUEST['r']) && intval($_REQUEST['r']) != 0) {
-			
-			/* Get our topic */
-			$post				= $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE reply_id = ". intval($_REQUEST['r']));
+		if(isset($_REQUEST['post_id']) && intval($_REQUEST['post_id']) != 0) {
+			$post				= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($_REQUEST['post_id']));
 		} else {
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDTOPIC');
-			
 			$action = new K4InformationAction(new K4LanguageElement('L_POSTDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
@@ -260,58 +254,28 @@ class K4ViewAttachment extends FAAction {
 		$attachment		= $request['dba']->getRow("SELECT * FROM ". K4ATTACHMENTS ." WHERE id = ". intval($_REQUEST['id']));
 
 		if(!is_array($attachment) || empty($attachment)) {
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_BADATTACHMENT'), 'content', FALSE);
-
 			return $action->execute($request);
 		}
-
-		
-		
+				
 		if(!is_array($post) || empty($post)) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
-			
 			$action = new K4InformationAction(new K4LanguageElement('L_POSTDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}	
-		
-		if($post['row_type'] & TOPIC && $post['is_draft'] == 1) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDTOPICVIEW');
-			
-			$action = new K4InformationAction(new K4LanguageElement('L_CANTVIEWDRAFT'), 'content', FALSE);
-			return $action->execute($request);
-		}
 
-		if($post['row_type'] & TOPIC && $post['queue'] == 1) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDTOPICVIEW');
-			
+		if($post['row_type'] & TOPIC && ($post['queue'] == 1 || $post['display'] == 0 || $post['is_draft'] == 1) ) {
 			$action = new K4InformationAction(new K4LanguageElement('L_TOPICPENDINGMOD'), 'content', FALSE);
 			return $action->execute($request);
 		}
-
-		if($post['row_type'] & TOPIC && $post['display'] == 0) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDTOPICVIEW');
-			
-			$action = new K4InformationAction(new K4LanguageElement('L_TOPICISHIDDEN'), 'content', FALSE);
-			return $action->execute($request);
-		}
-
+		
 		/* Get the current forum */
 		$forum				= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($post['forum_id']));
 
 		if(!$forum || !is_array($forum) || empty($forum)) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDFORUM');
-			
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
 		
-
 		/* Do we have permission to view attachments in this forum? */
 		if($request['user']->get('perms') < get_map( 'attachments', 'can_view', array('forum_id'=>$forum['forum_id']))) {
 			no_perms_error($request);
@@ -347,11 +311,8 @@ class K4ViewAttachment extends FAAction {
 		}
 
 		echo $contents;
-		
 		unset($contents);
-
 		exit;
-
 	}
 }
 
@@ -363,25 +324,16 @@ class K4RemoveAttachment extends FAAction {
 
 		global $_QUERYPARAMS;
 		
-		if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
-			$action = new K4InformationAction(new K4LanguageElement('L_BADATTACHMENT'), 'content', FALSE);
+		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 
+		if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
+			$action = new K4InformationAction(new K4LanguageElement('L_BADATTACHMENT'), 'content', FALSE);
 			return $action->execute($request);
 		}
 
-		if(isset($_REQUEST['t']) && intval($_REQUEST['t']) != 0) {
-
-			/* Get our topic */
-			$post				= $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($_REQUEST['t']));
-		} elseif(isset($_REQUEST['r']) && intval($_REQUEST['r']) != 0) {
-			
-			/* Get our topic */
-			$post				= $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE reply_id = ". intval($_REQUEST['r']));
+		if(isset($_REQUEST['post_id']) && intval($_REQUEST['post_id']) != 0) {
+			$post				= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($_REQUEST['post_id']));
 		} else {
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDTOPIC');
-			
 			$action = new K4InformationAction(new K4LanguageElement('L_POSTDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
@@ -389,16 +341,11 @@ class K4RemoveAttachment extends FAAction {
 		$attachment		= $request['dba']->getRow("SELECT * FROM ". K4ATTACHMENTS ." WHERE id = ". intval($_REQUEST['id']));
 
 		if(!is_array($attachment) || empty($attachment)) {
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_BADATTACHMENT'), 'content', FALSE);
-
 			return $action->execute($request);
 		}
 
 		if(!is_array($post) || empty($post)) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDTOPIC');
-			
 			$action = new K4InformationAction(new K4LanguageElement('L_POSTDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
@@ -407,27 +354,26 @@ class K4RemoveAttachment extends FAAction {
 		$forum				= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($post['forum_id']));
 
 		if(!$forum || !is_array($forum) || empty($forum)) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDFORUM');
-			
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
 		
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 		
-		/* Do we have permission to view attachments in this forum? */
+		/* Do we have permission to delete attachments in this forum? */
 		if($request['user']->get('perms') < get_map( 'attachments', 'can_del', array('forum_id'=>$forum['forum_id']))) {
 			no_perms_error($request);
 			return TRUE;
 		}
 
-		if(($request['user']->get('id') != 0 &$request['user']->get('id') == $attachment['user_id']) || is_moderator($request['user']->getInfoArray(), $forum)) {
+		if(($request['user']->get('id') != 0 && ( $request['user']->get('id') == $attachment['user_id']) || is_moderator($request['user']->getInfoArray(), $forum) ) ) {
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_REMOVEATTACHMENT');
 			$request['dba']->executeUpdate("DELETE FROM ". K4ATTACHMENTS ." WHERE id = ". intval($attachment['id']));	
-			$request['dba']->executeUpdate("UPDATE ". K4TOPICS ." SET total_attachments=total_attachments-1 WHERE topic_id = ". intval($post['topic_id']));
-			$request['dba']->executeUpdate("UPDATE ". ($post['row_type'] & TOPIC ? K4TOPICS : K4REPLIES) ." SET attachments=attachments-1 WHERE topic_id = ". intval($post['topic_id']) . ($post['row_type'] & TOPIC ? "" : " AND reply_id = ". intval($post['reply_id'])));
 			
+			$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET total_attachments=total_attachments-1, attachments=attachments-1 WHERE post_id=". intval(($post['row_type'] & REPLY ? $post['parent_id'] : $post['post_id'])) );
+			if($post['row_type'] & REPLY) {
+				$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET attachments=attachments-1 WHERE post_id=". intval($post['post_id']) );
+			}
 
 			$action = new K4InformationAction(new K4LanguageElement('L_REMOVEDATTACHMENT', k4_htmlentities($attachment['file_name'], ENT_QUOTES)), 'content', TRUE, referer(), 3);
 			return $action->execute($request);
@@ -446,11 +392,11 @@ class K4AttachmentsIterator extends FAProxyIterator {
 	var $post;
 	var $images;
 
-	function K4AttachmentsIterator(&$dba, &$user, $topic_id, $reply_id) {
-		$this->__construct($dba, $user, $topic_id, $reply_id);
+	function K4AttachmentsIterator(&$dba, &$user, $post_id) {
+		$this->__construct($dba, $user, $post_id);
 	}
 
-	function __construct(&$dba, &$user, $topic_id, $reply_id) {
+	function __construct(&$dba, &$user, $post_id) {
 		global $_SETTINGS;
 		
 		$imageset			= $user->isMember() ? $user->get('imageset') : $_SETTINGS['imageset'];
@@ -460,7 +406,7 @@ class K4AttachmentsIterator extends FAProxyIterator {
 
 		$this->images		= array('jpe', 'jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff');
 		
-		$result				= $dba->executeQuery("SELECT * FROM ". K4ATTACHMENTS ." WHERE topic_id = ". intval($topic_id) ." AND reply_id = ". intval($reply_id));
+		$result				= $dba->executeQuery("SELECT * FROM ". K4ATTACHMENTS ." WHERE post_id = ". intval($post_id));
 
 		parent::__construct($result);
 	}

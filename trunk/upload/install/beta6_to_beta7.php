@@ -84,7 +84,7 @@ class K4DefaultAction extends FAAction {
 //		/**
 //		 * Do some other stuff
 //		 */
-//		$request['dba']->alterTable(K4REPLIES, 'ADD row_order INT UNSIGNED NOT NULL DEFAULT 0');
+//		$request['dba']->alterTable(K4POSTS, 'ADD row_order INT UNSIGNED NOT NULL DEFAULT 0');
 //		$request['dba']->alterTable(K4USERS, 'ADD new_pms INT UNSIGNED NOT NULL DEFAULT 0');
 //		$request['dba']->alterTable(K4USERINFO, "ADD googletalk VARCHAR(255) NOT NULL DEFAULT ''");
 //		

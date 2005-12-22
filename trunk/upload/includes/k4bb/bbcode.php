@@ -1616,8 +1616,8 @@ class K4BBPolls extends FAObject {
 	function delete_poll(&$request, $poll_id) {
 
 		// check if this poll is being used somewhere else
-		$topic_matches		= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE lower(body_text) LIKE lower('%[poll=". $poll_id ."]%') AND topic_id <> ". intval($this->post_id));
-		$reply_matches		= $request['dba']->executeQuery("SELECT * FROM ". K4REPLIES ." WHERE lower(body_text) LIKE lower('%[poll=". $poll_id ."]%') AND reply_id <> ". intval($this->post_id));
+		$topic_matches		= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE lower(body_text) LIKE lower('%[poll=". $poll_id ."]%') AND post_id <> ". intval($this->post_id));
+		$reply_matches		= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE lower(body_text) LIKE lower('%[poll=". $poll_id ."]%') AND post_id <> ". intval($this->post_id));
 		
 		// we can delete it
 		if( ($topic_matches->numRows() == 0) && ($reply_matches->numRows() == 0) ) {

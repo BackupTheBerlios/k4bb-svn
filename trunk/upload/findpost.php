@@ -58,27 +58,14 @@ class K4DefaultAction extends FAAction {
 			return $action->execute($request);
 		}
 
-		$post	= $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE reply_id = ". intval($_REQUEST['id']));
+		$post	= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($_REQUEST['id']));
 		
+		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
+
 		if(!is_array($post) || empty($post)) {
 			
 			if($next || $prev)
 				header("Location: ". referer());
-
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDPOST');
-			
-			$action = new K4InformationAction(new K4LanguageElement('L_POSTDOESNTEXIST'), 'content', FALSE);
-			return $action->execute($request);
-		}
-
-		if($post['row_type'] != TOPIC && $post['row_type'] != REPLY) {
-			
-			if($next || $prev)
-				header("Location: ". referer());
-
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDPOST');
 			
 			$action = new K4InformationAction(new K4LanguageElement('L_POSTDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
@@ -87,13 +74,7 @@ class K4DefaultAction extends FAAction {
 		/* If this is a topic */
 		if($post['row_type'] == TOPIC) {
 			
-			/**
-			 * We don't error check here because that would just be redundant. There is already
-			 * error checking in viewtopic.php, and it will make sure that this isn't a draft,
-			 * its info exits, etc.
-			 */
-			
-			header("Location: viewtopic.php?id=". $post['id']);
+			header("Location: viewtopic.php?id=". $post['post_id']);
 
 		/* If this is a reply */	
 		} else {
@@ -101,54 +82,33 @@ class K4DefaultAction extends FAAction {
 			if($next || $prev)
 				header("Location: ". referer());
 
-			//$post				= $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE reply_id = ". intval($post['id']));
-			
-			$topic				= $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($post['topic_id']));
-			
-			if(!$topic || !is_array($topic) || empty($topic)) {
-				/* set the breadcrumbs bit */
-				k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDTOPIC');
-				
-				$action = new K4InformationAction(new K4LanguageElement('L_TOPICDOESNTEXIST'), 'content', FALSE);
-				return $action->execute($request);
-
-				return TRUE;
-			}
-			
-			$forum				= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($topic['forum_id']));
+			$forum				= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($post['forum_id']));
 		
 			/* Check the forum data given */
 			if(!$forum || !is_array($forum) || empty($forum)) {
-				/* set the breadcrumbs bit */
-				k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDFORUM');
-				
 				$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
 				return $action->execute($request);
 			}
 				
 			/* Make sure the we are trying to delete from a forum */
 			if(!($forum['row_type'] & FORUM)) {
-				/* set the breadcrumbs bit */
-				k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
-				
 				$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
 				return $action->execute($request);
 			}
 			
-			
 			/* If the number of replies on this topic is greater than the posts per page for this forum */
 			if($topic['num_replies'] > $forum['postsperpage']) {
 				
-				$whereinline	= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4REPLIES ." WHERE topic_id = ". intval($post['topic_id']) ." AND created <= ". intval($post['created']) ." ORDER BY created ASC");
+				$whereinline	= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4POSTS ." WHERE parent_id = ". intval($post['parent_id']) ." AND row_order <= ". intval($post['created']) ." ORDER BY created ASC");
 				
 				$page		= ceil($whereinline / $forum['postsperpage']);
 				$page		= $page <= 0 ? 1 : $page;
 
-				header("Location: viewtopic.php?id=". $topic['topic_id'] ."&page=". intval($page) ."&limit=". $forum['postsperpage'] ."&order=ASC&sort=created&daysprune=0&p=". $post['reply_id'] ."#p". $post['reply_id']);
+				header("Location: viewtopic.php?id=". $post['post_id'] ."&page=". intval($page) ."&limit=". $forum['postsperpage'] ."&order=ASC&sort=created&daysprune=0&p=". $post['post_id'] ."#p". $post['post_id']);
 				return;
 
 			} else {
-				header("Location: viewtopic.php?id=". $topic['topic_id'] ."&p=". $post['reply_id'] ."#p". $post['reply_id']);
+				header("Location: viewtopic.php?id=". $post['parent_id'] ."&p=". $post['post_id'] ."#p". $post['post_id']);
 				return;
 			}
 		}

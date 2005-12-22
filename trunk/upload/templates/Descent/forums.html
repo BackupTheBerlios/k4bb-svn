@@ -1,18 +1,4 @@
 <!-- Forums List -->
-<core:block id="no_forums" hidden="yes">
-<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">	
-	<tr>
-		<td class="alt3" colspan="5" width="100%">
-			<div class="outset_box" align="center">
-				<br />
-				{$L_NOFORUMSEXIST}
-				<br /><br />
-			</div>
-		</td>
-	</tr>
-</table>
-</core:block>
-
 <div class="header">
 	<div class="title" style="text-align: right;">
 		<div style="float: left;">{$L_FORUMS}</div>
@@ -20,15 +6,25 @@
 	</div>
 </div>
 <div class="spacer">
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
-			<td class="subheader" width="60%" align="left">&nbsp;{$L_FORUM}</td>
-			<td class="subheader" width="5%" align="center">&nbsp;{$L_POSTS}&nbsp;</td>
-			<td class="subheader" width="5%" align="center">&nbsp;{$L_TOPICS}&nbsp;</td>
+			<td class="subheader" width="58%" align="left">&nbsp;{$L_FORUM}</td>
+			<td class="subheader" width="6%" align="center">&nbsp;{$L_POSTS}&nbsp;</td>
+			<td class="subheader" width="6%" align="center">&nbsp;{$L_TOPICS}&nbsp;</td>
 			<td class="subheader" width="30%" align="center">{$L_LASTPOST}</td>
 		</tr>
 	</table>
 </div>
+
+<core:block id="no_forums" hidden="yes">
+<div class="spacer">
+	<div class="alt3" style="text-align: center;">
+		<br />
+		{$L_NOFORUMSEXIST}
+		<br /><br />
+	</div>
+</div>
+</core:block>
 
 <list:list id="tlforums">
 <list:item list="tlforums">
@@ -36,7 +32,7 @@
 <maps:if forum="forum_id" method="can_view">
 	<if:if var="row_type" eq="2">
 	<div class="spacer">
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<core:import id="forum_view" file="forum_view.html" />
 		</table>
 	</div>
@@ -48,7 +44,7 @@
 		</div>
 		<!-- Forums -->
 		<list:sublist list="tlforums" id="forums" column="forums">
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table" id="forums_{$forum_id}">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="forums_{$forum_id}">
 			<list:item list="forums">
 			<list:switch list="forums" var="row_class" a="3" b="4">
 				<core:import id="forum_view" file="forum_view.html" />

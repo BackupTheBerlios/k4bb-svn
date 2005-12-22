@@ -1,6 +1,6 @@
 <page:navigator id="searchresults_pager">
 <div align="right">
-	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
+	<table cellspacing="{$style_cellspacing}" class="pagination">
 		<tr>
 			<td class="alt3" id="page_jump1"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
@@ -17,47 +17,64 @@
 </div>
 </page:navigator>
 <!-- Search Results -->
-<div class="shadow">
-	<div class="borderwrap">
-		<div class="maintitle">{$L_SEARCHRESULTS}: <span style="font-weight: normal;">{$search_num_results} {$L_RESULTSRETURNED}</span></div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
-			<if:if var="search_viewas_int" eq="2">
-			<tr>
-				<td class="subtitle" width="5%" colspan="2">&nbsp;</td>
-				<td class="subtitle" align="center" class="minitext" width="55%">{$L_TOPICS}/{$L_AUTHOR}</td>
-				<td class="subtitle" align="center" class="minitext" nowrap="nowrap" width="30%">&nbsp;{$L_LASTPOST}&nbsp;</td>
-				<td class="subtitle" align="center" class="minitext" nowrap="nowrap">&nbsp;{$L_REPLIES}&nbsp;</td>
-				<td class="subtitle" align="center" class="minitext" nowrap="nowrap">&nbsp;{$L_VIEWS}&nbsp;</td>
-			</tr>
-			</if:if>
-			<list:list id="search_results">
-			<list:default list="search_results">
-			<tr>
-				<td class="alt3" colspan="<if:if var="search_viewas_int" eq="2">6<if:else />2</if:if>">
-					<div class="outset_box" align="center">
-						<br />
-						<strong>{$L_NOSEARCHRESULTS}</strong>
-						<br /><br />
-					</div>
-				</td>
-			</tr>
-			</list:default>
-			<list:item list="search_results">
-			<if:if var="search_viewas_int" eq="2">
-				<core:import id="topic_view" file="topic_view.html" />
-			<if:else />
-				<core:import id="post_view" file="post_view.html" />
-			</if:if>
-			</list:item>
-			</list:list>
-		</table>
-	</div>
+<div class="header">
+	<div class="title">{$L_SEARCHRESULTS}: <span style="font-weight: normal;">{$search_num_results} {$L_RESULTSRETURNED}</span></div>
 </div>
+<if:if var="search_viewas_int" eq="2">
+<div class="spacer">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td class="subheader" style="text-align: center;" width="70%" colspan="3"><a href="viewforum.php?f={$forum_forum_id}&amp;sort=name&amp;order={$order}" title="{$L_TOPICS}">{$L_TOPICS}{$name_sort}</a>/<a href="viewforum.php?f={$forum_forum_id}&amp;sort=poster_name&amp;order={$order}" title="{$L_AUTHOR}">{$L_AUTHOR}{$poster_name_sort}</a></td>
+			<td class="subheader" style="text-align: center;">&nbsp;<a href="viewforum.php?f={$forum_forum_id}&amp;sort=num_replies&amp;order={$order}" title="{$L_REPLIES}">{$L_REPLIES}{$num_replies_sort}</a>&nbsp;</td>
+			<td class="subheader" style="text-align: center;">&nbsp;<a href="viewforum.php?f={$forum_forum_id}&amp;sort=views&amp;order={$order}" title="{$L_VIEWS}">{$L_VIEWS}{$views_sort}</a>&nbsp;</td>
+			<td class="subheader" style="text-align: center;" width="20%">&nbsp;<a href="viewforum.php?f={$forum_forum_id}&amp;sort=lastpost_created&amp;order={$order}" title="{$L_LASTPOST}">{$L_LASTPOST}{$lastpost_created_sort}</a>&nbsp;</td>
+			<td class="subheader" width="3%">&nbsp;{$L_INFO}&nbsp;</td>
+		</tr>
+</if:if>
+		<list:list id="search_results">
+		<list:default list="search_results">
+		
+		<if:if var="search_viewas_int" eq="5">
+		<tr>
+			<td class="alt3" colspan="7">
+				<br />
+				<strong>{$L_NOSEARCHRESULTS}</strong>
+				<br /><br />
+			</td>
+		</tr>
+		<if:else />
+		<div class="spacer">
+			<div class="alt3">
+				<br />
+				<strong>{$L_NOSEARCHRESULTS}</strong>
+				<br /><br />
+			</div>
+		</div>
+		</if:if>
+
+		</list:default>
+		<list:item list="search_results">
+		<list:switch list="search_results" var="row_class" a="3" b="4">
+		
+		<if:if var="search_viewas_int" eq="2">
+			<core:import id="topic_view" file="topic_view.html" />
+		<if:else />
+			<core:import id="post_view" file="post_view.html" />
+		</if:if>
+		
+		</list:switch>
+		</list:item>
+		</list:list>
+<if:if var="search_viewas_int" eq="2">
+	</table>
+</div>
+</if:if>
+<div class="footer_block"><div>&nbsp;</div></div>
 <!-- / Search Results -->
 
 <page:navigator id="searchresults_pager">
 <div align="right">
-	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
+	<table cellspacing="{$style_cellspacing}" class="pagination">
 		<tr>
 			<td class="alt3" id="page_jump2" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
@@ -72,6 +89,7 @@
 		</tr>
 	</table>
 </div>
+
 </page:navigator>
 <maps:if var="search_sort" method="can_view">
 <br />
@@ -84,77 +102,76 @@
 <input type="hidden" name="searchwhere" value="{$search_where}" />
 <input type="hidden" name="rewrite_session" value="1" />
 
-<div class="shadow">
-	<div class="borderwrap">
-		<div class="maintitle">{$L_DISPLAYOPTIONS}</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
-			<tr>
-				<td class="alt1" width="17%" align="center">
-					{$L_SORTRESULTSBY}:
-				</td>
-				<td class="alt3" width="17%" align="center">
-					<div class="smalltext">
-						<select name="sort" id="sort" style="width: 125px;">
-							<option value="created" selected="selected">{$L_CREATED}</option>
-							<option value="name">{$L_TITLE}</option>
-							<option value="poster_name" >{$L_AUTHOR}</option>
-							<option value="forum_id">{$L_FORUM}</option>
-						</select>
-						<br />
-						{$L_IN}
-						<select name="order" id="order" style="width:125px">
-							<option value="DESC">{$L_DESCENDING}</option>
-							<option value="ASC">{$L_ASCENDING}</option>
-						</select>
-						<script type="text/javascript">
-							d.setIndex('{$search_sort}', 'sort');
-							d.setIndex('{$search_order}', 'order');
-						</script>
-					</div>
-				</td>
-				<td class="alt1" width="17%" align="center">
-					{$L_LIMITRESULTSTOPREV}:
-				</td>
-				<td class="alt3" width="17%" align="center">
-					<select name="daysprune" id="daysprune" style="width:125px" class="smalltext">
-						<option value="1">{$L_LAST_DAY}</option>
-						<option value="2">{$L_LAST_2_DAYS}</option>
-						<option value="7">{$L_LAST_WEEK}</option>
-						<option value="10">{$L_LAST_10_DAYS}</option>
-						<option value="14">{$L_LAST_2_WEEKS}</option>
-						<option value="30">{$L_LAST_MONTH}</option>
-						<option value="45">{$L_LAST_45_DAYS}</option>
-						<option value="60">{$L_LAST_2_MONTHS}</option>
-						<option value="75">{$L_LAST_75_DAYS}</option>
-						<option value="100">{$L_LAST_100_DAYS}</option>
-						<option value="365">{$L_LAST_YEAR}</option>
-						<option value="0">{$L_BEGINNING}</option>
+<div class="header"><div class="title">{$L_DISPLAYOPTIONS}</div></div>
+<div class="spacer">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td class="alt3" width="17%" align="center">
+				{$L_SORTRESULTSBY}:
+			</td>
+			<td class="alt3" width="17%" align="center">
+				<div class="smalltext">
+					<select name="sort" id="sort" style="width: 125px;">
+						<option value="created" selected="selected">{$L_CREATED}</option>
+						<option value="name">{$L_TITLE}</option>
+						<option value="poster_name" >{$L_AUTHOR}</option>
+						<option value="forum_id">{$L_FORUM}</option>
 					</select>
-					<script type="text/javascript">d.setIndex({$search_daysprune}, 'daysprune');</script>
-				</td>
-				<td class="alt1" width="17%" align="center">
-					{$L_LIMIT}:
-				</td>
-				<td class="alt3" width="17%" align="center">
-					<select name="limit" id="limit" class="smalltext" style="width: 50px;">
-						<option value="5">5</option>
-						<option value="10">10</option>
-						<option value="20">20</option>
-						<option value="30">30</option>
-						<option value="40">40</option>
-						<option value="50">50</option>
+					<br />
+					{$L_IN}
+					<select name="order" id="order" style="width:125px">
+						<option value="DESC">{$L_DESCENDING}</option>
+						<option value="ASC">{$L_ASCENDING}</option>
 					</select>
-					<script type="text/javascript">d.setIndex({$search_limit}, 'limit');</script>
-				</td>
-			</tr>
-			<tr>
-				<td class="subtitle" colspan="6" align="center">
-					<input type="submit" value="{$L_GO}" class="button" />
-				</td>
-			</tr>
-		</table>
-	</div>
+					<script type="text/javascript">
+						d.setIndex('{$search_sort}', 'sort');
+						d.setIndex('{$search_order}', 'order');
+					</script>
+				</div>
+			</td>
+			<td class="alt3" width="17%" align="center">
+				{$L_LIMITRESULTSTOPREV}:
+			</td>
+			<td class="alt3" width="17%" align="center">
+				<select name="daysprune" id="daysprune" style="width:125px" class="smalltext">
+					<option value="1">{$L_LAST_DAY}</option>
+					<option value="2">{$L_LAST_2_DAYS}</option>
+					<option value="7">{$L_LAST_WEEK}</option>
+					<option value="10">{$L_LAST_10_DAYS}</option>
+					<option value="14">{$L_LAST_2_WEEKS}</option>
+					<option value="30">{$L_LAST_MONTH}</option>
+					<option value="45">{$L_LAST_45_DAYS}</option>
+					<option value="60">{$L_LAST_2_MONTHS}</option>
+					<option value="75">{$L_LAST_75_DAYS}</option>
+					<option value="100">{$L_LAST_100_DAYS}</option>
+					<option value="365">{$L_LAST_YEAR}</option>
+					<option value="0">{$L_BEGINNING}</option>
+				</select>
+				<script type="text/javascript">d.setIndex({$search_daysprune}, 'daysprune');</script>
+			</td>
+			<td class="alt3" width="17%" align="center">
+				{$L_LIMIT}:
+			</td>
+			<td class="alt3" width="17%" align="center">
+				<select name="limit" id="limit" class="smalltext" style="width: 50px;">
+					<option value="5">5</option>
+					<option value="10">10</option>
+					<option value="20">20</option>
+					<option value="30">30</option>
+					<option value="40">40</option>
+					<option value="50">50</option>
+				</select>
+				<script type="text/javascript">d.setIndex({$search_limit}, 'limit');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="base3" colspan="6" align="center">
+				<input type="submit" value="{$L_GO}" class="button" />
+			</td>
+		</tr>
+	</table>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 </form>
 </maps:if>
 <core:import id="page_jumper" file="page_jumper.html" />

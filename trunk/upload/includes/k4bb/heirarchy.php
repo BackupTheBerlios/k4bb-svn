@@ -45,30 +45,30 @@ function remove_item($id, $id_type) {
 	$_DBA->beginTransaction();
 	
 	switch($id_type) {
-		case 'topic_id': {
+		case 'post_id': {
 			
 			/* Get the row */
-			$info		= $_DBA->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id=". intval($id));
+			$info		= $_DBA->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id=". intval($id));
 
 			/* The number of replies that this topic has */
 			$num_replies		= $info['num_replies'];
 			//$num_replies		= @intval(($info['row_right'] - $info['row_left'] - 1) / 2);
 		
 			/* Get that last topic in this forum that's not this topic */
-			$last_topic			= $_DBA->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id <> ". intval($info['topic_id']) ." AND is_draft=0 AND queue=0 AND display=1 AND forum_id=". intval($info['forum_id']) ." ORDER BY created DESC LIMIT 1");
+			$last_topic			= $_DBA->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id <> ". intval($info['post_id']) ." AND is_draft=0 AND queue=0 AND display=1 AND forum_id=". intval($info['forum_id']) ." ORDER BY created DESC LIMIT 1");
 			$last_topic			= !$last_topic || !is_array($last_topic) ? array('created'=>0,'name'=>'','poster_name'=>'','id'=>0,'poster_id'=>0,'posticon'=>'') : $last_topic;
-			$last_topic['id']	= $last_topic['topic_id'];
+			$last_topic['id']	= $last_topic['post_id'];
 
 			/* Get that last post in this forum that's not part of/from this topic */
-			$last_post			= $_DBA->getRow("SELECT * FROM ". K4REPLIES ." WHERE topic_id <> ". intval($info['topic_id']) ." AND forum_id=". intval($info['forum_id']) ." ORDER BY created DESC LIMIT 1");
-			$last_post['id']	= $last_post['topic_id'];
-			$last_post			= !$last_post || !is_array($last_post) ? $last_topic : $last_post;
+			$lastpost_created			= $_DBA->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id <> ". intval($info['post_id']) ." AND forum_id=". intval($info['forum_id']) ." ORDER BY created DESC LIMIT 1");
+			$lastpost_created['id']	= $lastpost_created['post_id'];
+			$lastpost_created			= !$lastpost_created || !is_array($lastpost_created) ? $last_topic : $lastpost_created;
 			
 			/**
 			 * Update the forum and the datastore
 			 */
 						
-			$forum_update		= $_DBA->prepareStatement("UPDATE ". K4FORUMS ." SET topics=topics-1,posts=posts-?,replies=replies-?,topic_created=?,topic_name=?,topic_uname=?,topic_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
+			$forum_update		= $_DBA->prepareStatement("UPDATE ". K4FORUMS ." SET topics=topics-1,posts=posts-?,replies=replies-?,topic_created=?,topic_name=?,topic_uname=?,post_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
 			$datastore_update	= $_DBA->prepareStatement("UPDATE ". K4DATASTORE ." SET data=? WHERE varname=?");
 				
 			/* Set the forum values */
@@ -77,21 +77,21 @@ function remove_item($id, $id_type) {
 			$forum_update->setInt(3, $last_topic['created']);
 			$forum_update->setString(4, $last_topic['name']);
 			$forum_update->setString(5, $last_topic['poster_name']);
-			$forum_update->setInt(6, $last_topic['topic_id']);
+			$forum_update->setInt(6, $last_topic['post_id']);
 			$forum_update->setInt(7, $last_topic['poster_id']);
 			$forum_update->setString(8, $last_topic['posticon']);
-			$forum_update->setInt(9, $last_post['created']);
-			$forum_update->setString(10, $last_post['name']);
-			$forum_update->setString(11, $last_post['poster_name']);
-			$forum_update->setInt(12, $last_post['id']);
-			$forum_update->setInt(13, $last_post['poster_id']);
-			$forum_update->setString(14, $last_post['posticon']);
+			$forum_update->setInt(9, $lastpost_created['created']);
+			$forum_update->setString(10, $lastpost_created['name']);
+			$forum_update->setString(11, $lastpost_created['poster_name']);
+			$forum_update->setInt(12, $lastpost_created['id']);
+			$forum_update->setInt(13, $lastpost_created['poster_id']);
+			$forum_update->setString(14, $lastpost_created['posticon']);
 			$forum_update->setInt(15, $info['forum_id']);
 			
 			/* Set the datastore values */
 			$datastore					= $_DATASTORE['forumstats'];
-			$datastore['num_topics']	= $_DBA->getValue("SELECT COUNT(*) FROM ". K4TOPICS ." WHERE is_draft = 0 AND queue = 0 AND display = 1") - 1;
-			$datastore['num_replies']	= $_DBA->getValue("SELECT COUNT(*) FROM ". K4REPLIES ) - intval($num_replies); // ." WHERE is_draft = 0"
+			$datastore['num_topics']	= $_DBA->getValue("SELECT COUNT(*) FROM ". K4POSTS ." WHERE is_draft = 0 AND queue = 0 AND display = 1") - 1;
+			$datastore['num_replies']	= $_DBA->getValue("SELECT COUNT(*) FROM ". K4POSTS ) - intval($num_replies); // ." WHERE is_draft = 0"
 			
 			$datastore_update->setString(1, serialize($datastore));
 			$datastore_update->setString(2, 'forumstats');
@@ -114,7 +114,7 @@ function remove_item($id, $id_type) {
 			if(intval($num_replies) > 0) {
 				
 				/* Get all of the replies */
-				$replies				= $_DBA->executeQuery("SELECT poster_id FROM ". K4REPLIES ." WHERE topic_id = ". intval($info['topic_id']));
+				$replies				= $_DBA->executeQuery("SELECT poster_id FROM ". K4POSTS ." WHERE post_id = ". intval($info['post_id']));
 				
 				while($replies->next()) {
 					$reply				= $replies->current();
@@ -142,11 +142,11 @@ function remove_item($id, $id_type) {
 				unset($users);
 			}
 			
-			$_DBA->executeUpdate("DELETE FROM ". K4TOPICS ." WHERE topic_id = ". intval($id));
-			$_DBA->executeUpdate("DELETE FROM ". K4REPLIES ." WHERE topic_id = ". intval($id));
-			$_DBA->executeUpdate("DELETE FROM ". K4SUBSCRIPTIONS ." WHERE topic_id = ". intval($id));
+			$_DBA->executeUpdate("DELETE FROM ". K4POSTS ." WHERE post_id = ". intval($id));
+			$_DBA->executeUpdate("DELETE FROM ". K4POSTS ." WHERE post_id = ". intval($id));
+			$_DBA->executeUpdate("DELETE FROM ". K4SUBSCRIPTIONS ." WHERE post_id = ". intval($id));
 			$_DBA->executeUpdate("DELETE FROM ". K4MAILQUEUE ." WHERE row_id = ". intval($id) ." AND row_type = ". TOPIC);
-			$_DBA->executeUpdate("DELETE FROM ". K4BADPOSTREPORTS ." WHERE topic_id = ". intval($id));
+			$_DBA->executeUpdate("DELETE FROM ". K4BADPOSTREPORTS ." WHERE post_id = ". intval($id));
 
 			break;
 		}

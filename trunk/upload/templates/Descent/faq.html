@@ -1,9 +1,9 @@
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle">
 			{$L_FAQLONG}<if:if var="add_catname" noteq=""><span style="font-weight:normal;">{$add_catname}</spamn></if:if>
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			
 			<list:list id="faq_answers">
 			<tr>
@@ -25,9 +25,9 @@
 <list:list id="faq_categories">
 <list:item list="faq_categories">
 <list:switch list="faq_categories" var="row_class" a="alt1" b="alt3">
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<tr>
 				<td class="subtitle">
 					<a href="faq.php?c={$category_id}" title="{$name}"><strong>{$name}</strong></a>
@@ -75,10 +75,10 @@
 <list:list id="faq_answers">
 <list:item list="faq_answers">
 <br />
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle"><a name="faq{$answer_id}" id="faq{$answer_id}">{$question}</a></div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<tr><td class="alt1">{$answer}</td></tr>
 		</table>
 	</div>

@@ -50,13 +50,17 @@ class K4DefaultAction extends FAAction {
 		}
 
 		/* Get our topic */
-		$topic				= $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($_REQUEST['id']));
+		$topic				= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($_REQUEST['id']));
 		
 		if(!$topic || !is_array($topic) || empty($topic)) {
 			$action = new K4InformationAction(new K4LanguageElement('L_TOPICDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
-			
+		
+		// set the topic id to the template
+		$request['template']->setVar('topic_id', $topic['post_id']);
+		
+		// get the forum
 		$forum				= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($topic['forum_id']));
 		
 		/* Check the forum data given */
@@ -75,25 +79,23 @@ class K4DefaultAction extends FAAction {
 		if($request['user']->get('perms') < get_map( 'replies', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			no_perms_error($request);
 			return TRUE;
-			//$action = new K4InformationAction(new K4LanguageElement('L_PERMCANTPOST'), 'content', FALSE);
-			//return $action->execute($request);		
 		}
 
 		if(isset($_REQUEST['r']) && intval($_REQUEST['r']) != 0) {
-			$reply				= $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE reply_id = ". intval($_REQUEST['r']));
+			$reply				= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($_REQUEST['r']));
 			
 			if(!$reply || !is_array($reply) || empty($reply)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_REPLYDOESNTEXIST'), 'content', FALSE);
 				return $action->execute($request);
 			} else {
 				$request['template']->setVisibility('parent_id', TRUE);
-				$request['template']->setVar('parent_id', $reply['reply_id']);
+				$request['template']->setVar('parent_id', $reply['post_id']);
 			}
 		}
 		
 		/* Prevent post flooding */
-		$last_topic		= $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE poster_ip = '". USER_IP ."' ORDER BY created DESC LIMIT 1");
-		$last_reply		= $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE poster_ip = '". USER_IP ."' ORDER BY created DESC LIMIT 1");
+		$last_topic		= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE poster_ip = '". USER_IP ."' ORDER BY created DESC LIMIT 1");
+		$last_reply		= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE poster_ip = '". USER_IP ."' ORDER BY created DESC LIMIT 1");
 		
 		if(is_array($last_topic) && !empty($last_topic)) {
 			if(intval($last_topic['created']) + POST_IMPULSE_LIMIT > time() &$request['user']->get('perms') < MODERATOR) {
@@ -148,7 +150,7 @@ class K4DefaultAction extends FAAction {
 				$request['template']->setVar('attach_inputs', $attach_inputs);
 			}
 		}
-
+		
 		/* Set the forum and topic info to the template */
 		foreach($forum as $key => $val)
 			$request['template']->setVar('forum_'. $key, $val);
@@ -158,7 +160,7 @@ class K4DefaultAction extends FAAction {
 			
 			/* Omit the body text variable */
 			if($key != 'body_text')
-				$request['template']->setVar('reply_'. $key, $val);
+				$request['template']->setVar('post_'. $key, $val);
 		}
 		
 		$body_text = '';
@@ -189,15 +191,11 @@ class K4DefaultAction extends FAAction {
 			
 			// revert the text with the bbcode parser
 			$bbcode			= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $parent['body_text'], $forum['forum_id'], TRUE, TRUE, TRUE, TRUE);
-			$body_text		= '[quote='. iif($parent['poster_name'] == '', $request['template']->getVar('L_GUEST'), $parent['poster_name']) .']'. $bbcode->revert() .'[/quote]';
+			$body_text		= '[quote='. ($parent['poster_name'] == '' ? $request['template']->getVar('L_GUEST') : $parent['poster_name']) .']'. $bbcode->revert() .'[/quote]';
 		}
 
 		/* Set the title variable */
-		if(isset($reply)) {
-			$request['template']->setVar('reply_name', $request['template']->getVar('L_RE') .': '. $reply['name']);
-		} else {
-			$request['template']->setVar('reply_name', $request['template']->getVar('L_RE') .': '. $topic['name']);
-		}
+		$request['template']->setVar('post_name', $request['template']->getVar('L_RE') .': '. (isset($reply) ? $reply['name'] : $topic['name']) );
 		
 		$request['template']->setVar('L_TITLETOOSHORT', sprintf($request['template']->getVar('L_TITLETOOSHORT'), $request['template']->getVar('topicminchars'), $request['template']->getVar('topicmaxchars')));
 
@@ -207,7 +205,7 @@ class K4DefaultAction extends FAAction {
 		foreach($parent as $key => $val)
 			$request['template']->setVar('parent_'. $key, $val);
 		
-		$query				= "SELECT * FROM ". K4REPLIES ." WHERE topic_id = ". intval($topic['topic_id']) ." ORDER BY created DESC LIMIT 10";
+		$query				= "SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($topic['post_id']) ." ORDER BY created DESC LIMIT 10";
 		
 		$replies			= $request['dba']->executeQuery($query);
 		
@@ -236,9 +234,9 @@ $app = new K4controller('forum_base.html');
 $app->setAction('', new K4DefaultAction);
 $app->setDefaultEvent('');
 
-$app->setAction('postreply', new PostReply);
+$app->setAction('postreply', new InsertPost(REPLY));
 $app->setAction('editreply', new EditReply);
-$app->setAction('updatereply', new UpdateReply);
+$app->setAction('updatereply', new UpdatePost(REPLY));
 
 $app->execute();
 

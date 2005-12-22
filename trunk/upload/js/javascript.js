@@ -118,7 +118,7 @@ function iif(condition, trueval, falseval) {
  * Select topic(s) for moderation
  */
 var topics	= new Array()
-function select_topic(span_object, button_id, topic_id) {
+function select_topic(span_object, button_id, post_id) {
 
 	try {
 		if(span_object) {
@@ -138,14 +138,14 @@ function select_topic(span_object, button_id, topic_id) {
 							
 							var new_value = parseInt(parseInt(match[0])+1) < 0 ? 0 : parseInt(parseInt(match[0])+1);
 							
-							d.array_push(topics, topic_id);
+							d.array_push(topics, post_id);
 							button.value = button.value.replace(match[0], new_value);
 
 						} else {
 							
 							var new_value = parseInt(parseInt(match[0])-1) < 0 ? 0 : parseInt(parseInt(match[0])-1);
 							
-							d.unset(topics, topic_id);
+							d.unset(topics, post_id);
 							button.value = button.value.replace(match[0], new_value);
 						}
 

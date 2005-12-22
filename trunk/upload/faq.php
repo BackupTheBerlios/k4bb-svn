@@ -81,7 +81,7 @@ class K4FAQIterator extends FAProxyIterator {
 		
 		// if there are more than one answers
 		if($temp['num_answers'] > 0) {
-			$temp['sub_answers'] = $this->dba->executeQuery("SELECT * FROM ". K4FAQANSWERS ." WHERE category_id = ". intval($temp['category_id']) ." AND can_view <= ". intval($_SESSION['user']->get('perms')));
+			$temp['sub_answers'] = $this->dba->executeQuery("SELECT * FROM ". K4FAQANSWERS ." WHERE category_id = ". intval($temp['category_id']) ." AND can_view <= ". intval($_SESSION['user']->get('perms')) ." ORDER BY row_order ASC");
 		}
 
 		// if there are more than one sub-categories

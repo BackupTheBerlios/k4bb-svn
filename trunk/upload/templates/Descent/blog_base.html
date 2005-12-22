@@ -15,7 +15,7 @@
 <br />
 <if:if var="bbactive" eq="1">
 <if:if var="enableblogs" eq="1">
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
+<table width="100%" cellspacing="0">
 	<tr>
 		<td valign="top" width="75%">
 			<core:import id="content" />
@@ -32,7 +32,7 @@
 <if:else />
 
 <!-- You don't have permission to view the blogs -->
-<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 	<tr class="maintitle">
 		<td>{$L_INFORMATION}</td>
 	</tr>
@@ -48,7 +48,7 @@
 </if:if>
 <if:else />
 <!-- Board is Closed -->
-<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 	<tr class="maintitle">
 		<td>{$L_INFORMATION}</td>
 	</tr>

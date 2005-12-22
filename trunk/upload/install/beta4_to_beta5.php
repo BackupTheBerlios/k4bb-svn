@@ -41,9 +41,9 @@ class K4DefaultAction extends FAAction {
 			$banned_users_tbl	= "DROP TABLE IF EXISTS k4_bannedusers;CREATE TABLE k4_bannedusers (id INT UNSIGNED NOT NULL AUTO_INCREMENT,user_id INT UNSIGNED NOT NULL DEFAULT 0,user_name VARCHAR(30) NOT NULL DEFAULT '',user_ip VARCHAR(114) NOT NULL DEFAULT '',reason TEXT,expiry INT UNSIGNED NOT NULL DEFAULT 0,PRIMARY KEY(id))";
 		}
 
-		$request['dba']->alterTable(K4TOPICS, "ADD moved_old_topic_id INT UNSIGNED NOT NULL DEFAULT 0");
-		$request['dba']->alterTable(K4TOPICS, "ADD moved_new_topic_id INT UNSIGNED NOT NULL DEFAULT 0");
-		$request['dba']->alterTable(K4REPLIES, "ADD moved_old_topic_id INT UNSIGNED NOT NULL DEFAULT 0");
+		$request['dba']->alterTable(K4POSTS, "ADD moved_old_post_id INT UNSIGNED NOT NULL DEFAULT 0");
+		$request['dba']->alterTable(K4POSTS, "ADD moved_new_post_id INT UNSIGNED NOT NULL DEFAULT 0");
+		$request['dba']->alterTable(K4POSTS, "ADD moved_old_post_id INT UNSIGNED NOT NULL DEFAULT 0");
 		$request['dba']->alterTable(K4USERS, "ADD banned INT UNSIGNED NOT NULL DEFAULT 0");
 		$request['dba']->alterTable(K4USERINFO, "DROP banned");
 		$request['dba']->alterTable(K4USERINFO, "DROP ban_time");

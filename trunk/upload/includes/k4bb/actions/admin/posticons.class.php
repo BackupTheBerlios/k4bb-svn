@@ -174,7 +174,7 @@ class AdminRemovePostIcon extends FAAction {
 			$request['dba']->executeUpdate("DELETE FROM ". K4POSTICONS ." WHERE id = ". intval($icon['id']));
 
 			/* Change all of the topics to have no icon */
-			$request['dba']->executeUpdate("UPDATE ". K4TOPICS ." SET posticon = '' WHERE posticon = '". $request['dba']->quote($icon['image']) ."'");
+			$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET posticon = '' WHERE posticon = '". $request['dba']->quote($icon['image']) ."'");
 			
 			/* Remove the actual icon */
 			$dir		= BB_BASE_DIR . '/tmp/upload/posticons';
@@ -303,7 +303,7 @@ class AdminUpdatePostIcon extends FAAction {
 			}
 			
 			/* Change all of the topics to have no icon */
-			$request['dba']->executeUpdate("UPDATE ". K4TOPICS ." SET posticon = '". $request['dba']->quote($filename) ."' WHERE posticon = '". $request['dba']->quote($icon['image']) ."'");
+			$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET posticon = '". $request['dba']->quote($filename) ."' WHERE posticon = '". $request['dba']->quote($icon['image']) ."'");
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_POSTICONS');
 			$request['template']->setVar('posts_on', '_on');

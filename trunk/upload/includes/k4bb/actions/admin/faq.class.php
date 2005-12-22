@@ -296,13 +296,13 @@ class AdminUpdateFAQCategory extends FAAction {
  * Remove a faq category and everything associated with it
  */
 class AdminRemoveFAQCategory extends FAAction {
-	function recursive_delete_faq($parent_id) {
-		$cats = $request['dba']->executeQuery("SELECT * FROM ". K4FAQCATEGORIES ." WHERE parent_id = $parent_id");
+	function recursive_delete_faq(&$dba, $parent_id) {
+		$cats = $dba->executeQuery("SELECT * FROM ". K4FAQCATEGORIES ." WHERE parent_id = $parent_id");
 		while($cats->next()) {
 			$category = $cats->current();
-			$request['dba']->executeUpdate("DELETE FROM ". K4FAQCATEGORIES ." WHERE category_id = ". $category['category_id']);
-			$request['dba']->executeUpdate("DELETE FROM ". K4FAQANSWERS ." WHERE category_id = ". $category['category_id']);
-			$this->recursive_delete_faq($category['category_id']);
+			$dba->executeUpdate("DELETE FROM ". K4FAQCATEGORIES ." WHERE category_id = ". $category['category_id']);
+			$dba->executeUpdate("DELETE FROM ". K4FAQANSWERS ." WHERE category_id = ". $category['category_id']);
+			$this->recursive_delete_faq($dba, $category['category_id']);
 		}
 	}
 	function execute(&$request) {		
@@ -328,7 +328,7 @@ class AdminRemoveFAQCategory extends FAAction {
 
 			$request['dba']->executeUpdate("DELETE FROM ". K4FAQCATEGORIES ." WHERE category_id = ". $category['category_id']);
 			$request['dba']->executeUpdate("DELETE FROM ". K4FAQANSWERS ." WHERE category_id = ". $category['category_id']);
-			$this->recursive_delete_faq($category['category_id']);
+			$this->recursive_delete_faq($request['dba'], $category['category_id']);
 			
 			$request['dba']->executeUpdate("UPDATE ". K4FAQCATEGORIES ." SET num_categories=num_categories-1 WHERE category_id = ". intval($category['parent_id']));
 
@@ -372,7 +372,7 @@ class AdminFAQAnswers extends FAAction {
 			}
 			
 			$it			= &new AdminFAQCategoriesIterator($request['dba'], $request['template']->getVar('IMG_DIR'));
-			$answers	= $request['dba']->executeQuery("SELECT * FROM ". K4FAQANSWERS ." WHERE category_id = $category_id ORDER BY row_order ASC");
+			$answers	= $request['dba']->executeQuery("SELECT * FROM ". K4FAQANSWERS ." WHERE category_id=$category_id ORDER BY row_order ASC");
 
 			$request['template']->setList('categories', $it);
 			$request['template']->setList('answers', $answers);
@@ -598,26 +598,35 @@ class AdminRemoveFAQAnswer extends FAAction {
 /**
  * iterate through FAQ categories and set the indent image
  */
-class AdminFAQCategoriesIterator extends FAProxyIterator {
-	var $dba, $result;
+class AdminFAQCategoriesIterator extends FAArrayIterator {
+	var $image_dir;
+	
+	function loop_categories(&$dba, $result, &$categories) {
+		if($result->hasNext()) {
+			while($result->next()) {
+				$cat = $result->current();
+				$categories[] = $cat;
+				$result = $dba->executeQuery("SELECT * FROM ". K4FAQCATEGORIES ." WHERE parent_id=". intval($cat['category_id'] ." ORDER BY row_order ASC"));
+				$this->loop_categories($dba, $result, $categories);
+			}
+		}
+	}
 
 	function AdminFAQCategoriesIterator(&$dba, $image_dir) {
-		$this->result		= $dba->executeQuery("SELECT * FROM ". K4FAQCATEGORIES ." ORDER BY row_order ASC");
-		$this->dba			= &$dba;
+		$categories			= array();
+		$result				= $dba->executeQuery("SELECT * FROM ". K4FAQCATEGORIES ." WHERE parent_id=0 ORDER BY row_order ASC");
+		$this->loop_categories($dba, $result, $categories);
+		
 		$this->image_dir	= $image_dir;
 
-		parent::__construct($this->result);
+		parent::__construct($categories);
 	}
 
 	function current() {
 		$temp = parent::current();
 		
 		$temp['level']	= str_repeat('<img src="Images/'. $this->image_dir .'/Icons/threaded_bit.gif" alt="" border="0" />', $temp['row_level']-1);
-
-		/* Should we free the result? */
-		if(!$this->hasNext())
-			$this->result->free();
-
+		
 		return $temp;
 	}
 }

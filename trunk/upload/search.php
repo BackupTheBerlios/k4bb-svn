@@ -176,24 +176,30 @@ class K4SearchEverything extends FAAction {
 			$keywords		= str_replace('%', '*', $_REQUEST['keywords']);
 			$keywords		= intval($request['template']->getVar('allowwildcards')) == 1 ? str_replace('*', '%', $keywords) : str_replace('*', ' ', $keywords);
 			
+			// are the keywords too short or too long?
 			if(strlen($keywords) < $request['template']->getVar('minsearchlength') || strlen($keywords) > $request['template']->getVar('maxsearchlength')) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDSEARCHKEYWORDS', $request['template']->getVar('minsearchlength'), $request['template']->getVar('maxsearchlength')), 'content', TRUE, 'search.php', 5);
 				return $action->execute($request);
 			}
-
+			
+			// has the person specified where to search?
 			if(isset($_REQUEST['searchwhere']) && $_REQUEST['searchwhere'] != '' && $_REQUEST['searchwhere'] != 'subjectmessage') {
 				
-				if($_REQUEST['searchwhere'] == 'subject')
+				if($_REQUEST['searchwhere'] == 'subject') {
 					$keyword_query		= " AND LOWER(name) LIKE LOWER('%". $request['dba']->quote($keywords) ."%')";
-				else if($_REQUEST['searchwhere'] == 'message')
+				} else if($_REQUEST['searchwhere'] == 'message') {
 					$keyword_query		= " AND LOWER(body_text) LIKE LOWER('%". $request['dba']->quote($keywords) ."%')";
+				}
 			} else {
 
 				$keyword_query		= "  AND (LOWER(name) LIKE LOWER('%". $request['dba']->quote($keywords) ."%') OR LOWER(body_text) LIKE LOWER('%". $request['dba']->quote($keywords) ."%')) ";
 			}
 		}
+
+		// set where we are searching to the template
 		$request['template']->setVar('search_where', !isset($_REQUEST['searchwhere']) ? 'subjectmessage' : $_REQUEST['searchwhere']);
 		
+		// are there no keywords, user ids, etc?
 		if($keyword_query == '' && $user_ids == '' && !isset($_SESSION['search_queries']) && !isset($_REQUEST['newposts'])) {
 			$action = new K4InformationAction(new K4LanguageElement('L_SEARCHINVALID'), 'content', TRUE, 'search.php', 3);
 			return $action->execute($request);
@@ -224,15 +230,13 @@ class K4SearchEverything extends FAAction {
 
 		/* Create an array of the queries that we will use to weed out posts and pass through the session */
 		
-		$select				= "num_replies, forum_id, topic_id, reply_id, body_text, name, posticon, is_poll, poster_name, poster_id, views, reply_uname, reply_uid, created, row_type";
-		$selectr			= "num_replies, forum_id, topic_id, reply_id, body_text, name, posticon, is_poll, poster_name, poster_id, poster_ip as views, poster_ip, category_id, created, row_type";
-
+		$select				= "num_replies, forum_id, post_id, post_id, body_text, name, posticon, is_poll, poster_name, poster_id, views, lastpost_uname, lastpost_uid, created, row_type";
+		$general_condition	= "is_draft=0 AND queue=0 AND display=1 AND moved_new_post_id=0 AND post_id>0";
+		//$selectr			= "num_replies, forum_id, post_id, post_id, body_text, name, posticon, is_poll, poster_name, poster_id, poster_ip as views, poster_ip, category_id, created, row_type";
+		
 		$queries			= array(
-			'topics'		=> "SELECT {$select} FROM ". K4TOPICS ." WHERE topic_id > 0 AND moved_new_topic_id=0 {$user_ids} {$forum_ids} {$category_ids} {$keyword_query} AND created >= {$daysprune}",
-			'replies'		=> "SELECT {$selectr} FROM ". K4REPLIES ." WHERE reply_id > 0 {$user_ids} {$forum_ids} {$category_ids} {$keyword_query} AND created >= {$daysprune}",
-			'count'			=> "SELECT COUNT(*) FROM ** ORDER BY {$sortedby} {$sortorder}",
-			'final'			=> "SELECT * FROM ** ORDER BY {$sortedby} {$sortorder}",
-			'topics_only'	=> "SELECT * FROM ". K4TOPICS ." WHERE is_draft=0 AND queue=0 AND display=1 AND moved_new_topic_id=0 {$user_ids} {$forum_ids} {$keyword_query} ORDER BY {$sortedby} {$sortorder}",
+			'posts'			=> "SELECT **SELECT** FROM ". K4POSTS ." WHERE {$general_condition} {$user_ids} {$forum_ids} {$category_ids} {$keyword_query} AND created >= {$daysprune} ORDER BY {$sortedby} {$sortorder}",
+			'topics_only'	=> "SELECT **SELECT** FROM ". K4POSTS ." WHERE row_type=". TOPIC ." AND {$general_condition} {$user_ids} {$forum_ids} {$keyword_query} ORDER BY {$sortedby} {$sortorder}",
 			'viewas'		=> $viewas,
 			'limit'			=> $resultsperpage,
 			'sort'			=> $sortedby,
@@ -252,41 +256,40 @@ class K4SearchEverything extends FAAction {
 		/* Get topics and replies */
 		if($queries['viewas'] == 'posts') {
 				
-			//$request['dba']->executeUpdate("DROP TABLE IF EXISTS ". K4TEMPTABLE); //  TYPE=HEAP
-			if(is_a($request['dba'], 'SQLiteConnection') || is_a($request['dba'], 'MySQLConnection')) {
-				$request['dba']->createTemporary(K4TEMPTABLE, K4TOPICS);
-				$request['dba']->executeUpdate("INSERT INTO ". K4TEMPTABLE ." ($select) ". $queries['topics'] );
-				$request['dba']->executeUpdate("INSERT INTO ". K4TEMPTABLE ." ($select) ". $queries['replies'] );
-			} elseif(is_a($request['dba'], 'MysqliConnection')) {
-				$request['dba']->executeUpdate("DROP TABLE IF EXISTS ". K4TEMPTABLE);
-				$request['dba']->executeUpdate("CREATE TEMPORARY TABLE ". K4TEMPTABLE ." (". $queries['topics'] .")");
-				$request['dba']->executeUpdate("INSERT INTO ". K4TEMPTABLE ." (". $queries['replies'] .")");
-			}
+//			//$request['dba']->executeUpdate("DROP TABLE IF EXISTS ". K4TEMPTABLE); //  TYPE=HEAP
+//			if(is_a($request['dba'], 'SQLiteConnection') || is_a($request['dba'], 'MySQLConnection')) {
+//				$request['dba']->createTemporary(K4TEMPTABLE, K4POSTS);
+//				$request['dba']->executeUpdate("INSERT INTO ". K4TEMPTABLE ." ($select) ". $queries['topics'] );
+//				$request['dba']->executeUpdate("INSERT INTO ". K4TEMPTABLE ." ($select) ". $queries['replies'] );
+//			} elseif(is_a($request['dba'], 'MysqliConnection')) {
+//				$request['dba']->executeUpdate("DROP TABLE IF EXISTS ". K4TEMPTABLE);
+//				$request['dba']->executeUpdate("CREATE TEMPORARY TABLE ". K4TEMPTABLE ." (". $queries['topics'] .")");
+//				$request['dba']->executeUpdate("INSERT INTO ". K4TEMPTABLE ." (". $queries['replies'] .")");
+//			}
 			
 			if(!isset($queries['num_results'])) {
-				
-				$result			= $request['dba']->getValue(str_replace('FROM **', 'FROM '. K4TEMPTABLE, $queries['count']));
-				$num_results	= $result;
-				
+				$num_results = $request['dba']->getValue(str_replace('**SELECT**', 'COUNT(post_id)', $queries['posts']));
 				$_SESSION['search_queries']['num_results'] = $num_results;
 			} else {
 				$num_results	= $queries['num_results'];
 			}
 			
-			$result				= $request['dba']->executeQuery(str_replace('FROM **', 'FROM '. K4TEMPTABLE, $queries['final']) . " LIMIT {$start},". intval($queries['limit']));
-						
 			/* Set the iterator */
+			$result				= $request['dba']->executeQuery(str_replace('**SELECT**', $select, $queries['posts']) . " LIMIT {$start},". intval($queries['limit']));
 			$it					= &new SearchResultsIterator($request['dba'], $result);
-
-
+			
 		/* Get topics only */
 		} else {
-
-			/* get the topics */
-			$topics				= $request['dba']->executeQuery($queries['topics_only']);
 			
-			$num_results		= $topics->numrows();
-			$topics				= $request['dba']->executeQuery($queries['topics_only'] ." LIMIT {$start},". $queries['limit']);
+			if(!isset($queries['num_results'])) {
+				$num_results = $request['dba']->getValue(str_replace('**SELECT**', 'COUNT(post_id)', $queries['topics_only']));
+				$_SESSION['search_queries']['num_results'] = $num_results;
+			} else {
+				$num_results	= $queries['num_results'];
+			}
+			
+			/* get the topics */
+			$topics				= $request['dba']->executeQuery(str_replace('**SELECT**', '*', $queries['topics_only']) ." LIMIT {$start},". $queries['limit']);
 			
 			/* Apply the topics iterator */
 			$it					= &new TopicsIterator($request['dba'], $request['user'], $topics, $request['template']->getVar('IMG_DIR'), array('postsperpage' => $queries['limit']));
@@ -325,7 +328,8 @@ class K4SearchEverything extends FAAction {
 			$action = new K4InformationAction(new K4LanguageElement('L_PASTPAGELIMIT'), 'content', FALSE, $base_url->__toString(), 3);
 			return $action->execute($request);
 		}
-
+		
+		// finish stuff off
 		$request['template']->setVar('mod_panel', 0);
 		$request['template']->setVar('search_panel', 1);
 		$request['template']->setList('search_results', $it);
@@ -393,16 +397,14 @@ class SearchResultsIterator extends FAProxyIterator {
 		
 		if($temp['row_type'] == TOPIC) {
 			$temp['topic_name']	= $temp['name'];
-			$temp['url']		= 'viewtopic.php?id='. $temp['topic_id'];
-			$temp['id']			= $temp['topic_id'];
+			$temp['url']		= 'viewtopic.php?id='. $temp['post_id'];
 
-			$this->topic_names[$temp['topic_id']] = $temp['name'];
+			$this->topic_names[$temp['post_id']] = $temp['name'];
 		} else {
-			$temp['id']			= $temp['reply_id'];
 			$temp['views']		= '--';
-			$temp['url']		= 'findpost.php?id='. $temp['reply_id'];
-			$temp['topic_name'] = !isset($this->topic_names[$temp['topic_id']]) ? $this->dba->getValue("SELECT name FROM ". K4TOPICS ." WHERE topic_id = ". intval($temp['topic_id'])) : $this->topic_names[$temp['topic_id']];
-			$this->topic_names[$temp['topic_id']] = $temp['topic_name'];
+			$temp['url']		= 'findpost.php?id='. $temp['post_id'];
+			$temp['topic_name'] = !isset($this->topic_names[$temp['post_id']]) ? $this->dba->getValue("SELECT name FROM ". K4POSTS ." WHERE post_id = ". intval($temp['post_id'])) : $this->topic_names[$temp['post_id']];
+			$this->topic_names[$temp['post_id']] = $temp['topic_name'];
 		}
 
 		if($temp['poster_id'] > 0) {
@@ -422,7 +424,7 @@ class SearchResultsIterator extends FAProxyIterator {
 		}
 		
 		$temp['body_text']		= preg_replace("~<!--(.+?)-->~is", "", $temp['body_text']);
-		$temp['forum_name']		= $this->forums['f'. $temp['forum_id']]['name'];
+		$temp['forum_name']		= isset($this->forums[$temp['forum_id']]['name']) ? $this->forums[$temp['forum_id']]['name'] : '--';
 
 		/* Should we free the result? */
 		if(!$this->hasNext())

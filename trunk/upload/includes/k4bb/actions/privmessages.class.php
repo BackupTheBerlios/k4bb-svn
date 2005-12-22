@@ -252,7 +252,7 @@ class K4EditPMFolder extends FAAction {
 		
 		$request['template']->setList('pmfolders', $request['dba']->executeQuery("SELECT * FROM ". K4PMFOLDERS ." WHERE is_global = 1 OR user_id = ". intval($request['user']->get('id'))));
 		$request['template']->setFile('usercp_content', 'pm_newfolder.html');
-		$request['template']->setVar('newfolder_action', 'member.php?act=update_pmfolder&amp;id='. intval($folder['id']));
+		$request['template']->setVar('newfolder_action', 'member.php?act=update_pmfolder&amp;folder='. intval($folder['id']));
 		$request['template']->setVar('folder_name', $folder['name']);
 		$request['template']->setVar('folder_description', $folder['description']);
 	}
@@ -281,7 +281,7 @@ class K4UpdatePMFolder extends FAAction {
 			return $action->execute($request);
 		}
 
-		if(!isset($_REQUEST['folder']) || intval($_REQUEST['folder']) == 0) {
+		if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
 			$action = new K4InformationAction(new K4LanguageElement('L_BADPMFOLDER'), 'usercp_content', FALSE);
 			return $action->execute($request);
 		}
@@ -355,6 +355,56 @@ class K4PreDeleteFolder extends FAAction {
 		$request['template']->setFile('usercp_content', 'pm_deletepmfolder.html');
 		$request['template']->setVar('folder_id', intval($folder['id']));
 		$request['template']->setVar('folder_name', $folder['name']);
+	}
+}
+
+class K4DeleteFolder extends FAAction {
+	function execute(&$request) {
+		$check = new K4PMCheckPerms();
+		$check->execute($request);
+
+		if(get_map( 'pm_customfolders', 'can_del', array()) > $request['user']->get('perms')) {
+			no_perms_error($request, 'usercp_content');
+			return TRUE;
+		}
+
+		k4_bread_crumbs($request['template'], $request['dba'], 'L_USERCONTROLPANEL');
+		$request['template']->setFile('content', 'usercp.html');
+		
+		if(intval($request['template']->getVar('enablepms')) == 0 || intval($request['template']->getVar('allowcustomfolders')) == 0) {
+			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'usercp_content', FALSE);
+			return $action->execute($request);
+		}
+
+		$folder = $request['dba']->getRow("SELECT * FROM ". K4PMFOLDERS ." WHERE id = ". intval($_REQUEST['original_folder']));
+		
+		if(!is_array($folder) || empty($folder)) {
+			$action = new K4InformationAction(new K4LanguageElement('L_BADPMFOLDER'), 'usercp_content', FALSE);
+			return $action->execute($request);
+		}
+		
+		$deleted = FALSE;
+
+		if(intval($_REQUEST['destination_folder']) == 0) {
+			$request['dba']->executeUpdate("DELETE FROM ". K4PRIVMESSAGES ." WHERE folder_id = ". intval($folder['id']));
+			$deleted = TRUE;
+		} else {
+			$action = new K4MovePMessages(TRUE);
+			$action->execute($request);
+			
+			if($request['template']->getVar('move_success')) {
+				$deleted = TRUE;
+			}
+		}
+		
+		if($deleted) {
+			$request['dba']->executeUpdate("DELETE FROM ". K4PMFOLDERS ." WHERE id = ". intval($folder['id']));
+
+			$action = new K4InformationAction(new K4LanguageElement('L_DELETEDPMFOLDER', $folder['name']), 'usercp_content', FALSE);
+			return $action->execute($request);
+		}	
+
+		return TRUE;
 	}
 }
 
@@ -581,9 +631,9 @@ class K4SendPMessage extends FAAction {
 		
 		if((isset($_REQUEST['reply']) && intval($_REQUEST['reply']) > 0) || ($draft_loaded && $draft['message_id'] > 0)) {
 			
-			$reply_id	= isset($_REQUEST['reply']) ? $_REQUEST['reply'] : $draft['message_id'];
+			$post_id	= isset($_REQUEST['reply']) ? $_REQUEST['reply'] : $draft['message_id'];
 
-			$message	= $request['dba']->getRow("SELECT * FROM ". K4PRIVMESSAGES ." WHERE pm_id = ". intval($reply_id));
+			$message	= $request['dba']->getRow("SELECT * FROM ". K4PRIVMESSAGES ." WHERE pm_id = ". intval($post_id));
 			if(is_array($message) && !empty($message)) {
 				$parent_id		= intval($message['pm_id']);
 				$message_id		= intval($message['message_id']) == 0 ? intval($message['pm_id']) : intval($message['message_id']);
@@ -798,7 +848,7 @@ class K4SendPMessage extends FAAction {
 				$request['template']->setVisibility('save_draft', FALSE);
 				$request['template']->setVisibility('load_button', FALSE);
 				$request['template']->setVisibility('edit_topic', TRUE);
-				$request['template']->setVisibility('topic_id', TRUE);
+				$request['template']->setVisibility('post_id', TRUE);
 				$request['template']->setVisibility('post_topic', FALSE);
 				$request['template']->setVisibility('edit_post', TRUE);
 				$request['template']->setVisibility('post_pm', TRUE);
@@ -924,6 +974,10 @@ class K4SelectPMMoveFolder extends FAAction {
  * Move a/multiple Private Messages
  */
 class K4MovePMessages extends FAAction {
+	var $all_pms;
+	function K4MovePMessages($all = FALSE) {
+		$this->all_pms = $all;
+	}
 	function execute(&$request) {
 		
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_USERCONTROLPANEL');
@@ -931,9 +985,11 @@ class K4MovePMessages extends FAAction {
 
 		$check = new K4PMCheckPerms();
 		$check->execute($request);
+
+		$request['template']->setVar('move_success', FALSE);
 		
 		// check the ids
-		if(!isset($_REQUEST['pmessage']) || !is_array($_REQUEST['pmessage']) || empty($_REQUEST['pmessage'])) {
+		if(!$this->all_pms && (!isset($_REQUEST['pmessage']) || !is_array($_REQUEST['pmessage']) || empty($_REQUEST['pmessage']))) {
 			$action = new K4InformationAction(new K4LanguageElement('L_PMNEEDSELECTONE'), 'usercp_content', FALSE);
 			return $action->execute($request);
 		}
@@ -963,20 +1019,23 @@ class K4MovePMessages extends FAAction {
 		}
 
 		// loop through the messages and move them
-		foreach($_REQUEST['pmessage'] as $pm_id) {
-			
-			$temp = $request['dba']->getRow("SELECT * FROM ". K4PRIVMESSAGES ." WHERE pm_id = ". intval($pm_id));
+		if(!$this->all_pms) {
+			foreach($_REQUEST['pmessage'] as $pm_id) {
+				
+				$temp = $request['dba']->getRow("SELECT * FROM ". K4PRIVMESSAGES ." WHERE pm_id = ". intval($pm_id));
 
-			if($temp['member_id'] == $request['user']->get('id')) {
-				$request['dba']->executeUpdate("UPDATE ". K4PRIVMESSAGES ." SET folder_id = ". intval($destination['id']) ." WHERE (pm_id = ". intval($pm_id) ." OR message_id = ". intval($pm_id) .") AND member_id = ". intval($request['user']->get('id')));
+				if($temp['member_id'] == $request['user']->get('id')) {
+					$request['dba']->executeUpdate("UPDATE ". K4PRIVMESSAGES ." SET folder_id = ". intval($destination['id']) ." WHERE (pm_id = ". intval($pm_id) ." OR message_id = ". intval($pm_id) .") AND member_id = ". intval($request['user']->get('id')));
+				}
 			}
+		} else {
+			$request['dba']->executeUpdate("UPDATE ". K4PRIVMESSAGES ." SET folder_id = ". intval($destination['id']) ." WHERE folder_id=". intval($original['id']) ." AND member_id = ". intval($request['user']->get('id')));
 		}
 		
 		// success!
+		$request['template']->setVar('move_success', TRUE);
 		$action = new K4InformationAction(new K4LanguageElement('L_MOVEDPMESSAGES', $original['name'], $destination['name']), 'usercp_content', FALSE, 'member.php?act=usercp&view=pmfolder&folder='. $destination['id'], 3);
 		return $action->execute($request);
-
-		return TRUE;
 	}
 }
 
@@ -1114,7 +1173,7 @@ class K4PrivMsgIterator extends FAArrayiterator {
 
 		/* do we have any attachments? */
 //		if(isset($temp['attachments']) && $temp['attachments'] > 0) {
-//			$temp['attachment_files']		= &new K4AttachmentsIterator($this->dba, $this->user, $temp['topic_id'], 0);
+//			$temp['attachment_files']		= &new K4AttachmentsIterator($this->dba, $this->user, $temp['post_id'], 0);
 //		}
 
 		if($this->sr && $temp['num_replies'] > 0) {
@@ -1204,7 +1263,7 @@ class K4PrivMsgRepliesIterator extends FAProxyIterator {
 
 	//		/* do we have any attachments? */
 	//		if(isset($temp['attachments']) && $temp['attachments'] > 0) {
-	//			$temp['attachment_files']		= &new K4AttachmentsIterator($this->dba, $this->user, $temp['topic_id'], $temp['reply_id']);
+	//			$temp['attachment_files']		= &new K4AttachmentsIterator($this->dba, $this->user, $temp['post_id'], $temp['post_id']);
 	//		}
 			
 			if($temp['member_has_read'] == 0) {

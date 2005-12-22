@@ -1,8 +1,8 @@
 <is:logged>
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle">{$L_USERCONTROLPANEL}: <span style="font-weight: normal;">{$L_MANAGESUBSCRIPTIONS}</span></div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<tr>
 				<td class="alt3"><span class="smalltext">{$L_USERCPSUBSCRIPTIONSMSG}</span></td>
 			</tr>
@@ -10,10 +10,10 @@
 	</div>
 </div>
 <br />
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle">{$L_SUBSCRIPTIONS}</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<list:list id="subscriptions">
 			<list:default list="subscriptions">
 			<tr>
@@ -27,10 +27,10 @@
 			<tr>
 				<td class="{$row_class}" valign="middle">
 					<div style="float:right;">
-						<a href="<if:if var="topic_id" noteq="0">viewtopic.php?act=untrack&amp;id={$topic_id}<if:else />viewforum.php?act=untrack&amp;id={$forum_id}</if:if>" title="{$L_UNSUBSCRIBE}">{$L_UNSUBSCRIBE}</a><br />
+						<a href="<if:if var="post_id" noteq="0">viewtopic.php?act=untrack&amp;id={$post_id}<if:else />viewforum.php?act=untrack&amp;id={$forum_id}</if:if>" title="{$L_UNSUBSCRIBE}">{$L_UNSUBSCRIBE}</a><br />
 					</div>
-					<if:if var="topic_id" noteq="0">
-						<a href="viewtopic.php?id={$topic_id}" title="{$topic_name}" style="font-weight:bold;">{$topic_name}</a><br />
+					<if:if var="post_id" noteq="0">
+						<a href="viewtopic.php?id={$post_id}" title="{$topic_name}" style="font-weight:bold;">{$topic_name}</a><br />
 						<a href="viewforum.php?f={$forum_id}" class="smalltext" title="{$forum_name}">{$forum_name}</a>
 					<if:else />
 						<a href="viewforum.php?f={$forum_id}" title="{$forum_name}" style="font-weight:bold;">{$forum_name}</a>

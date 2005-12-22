@@ -61,7 +61,7 @@ function do_post_polls(&$temp, &$dba, $url = FALSE, $poll_text = FALSE) {
 			foreach($poll_matches as $poll) {
 				
 				if(!$url && !$poll_text) {
-					poll_template($temp['body_text'], $dba, $poll[1], $poll[0], $temp['topic_id'], (isset($temp['reply_id']) ? $temp['reply_id'] : 0));
+					poll_template($temp['body_text'], $dba, $poll[1], $poll[0], $temp['post_id'], (isset($temp['post_id']) ? $temp['post_id'] : 0));
 				} else {
 					//do_post_poll_urls($temp['body_text'], $dba, $url, $poll_text);
 
@@ -90,7 +90,7 @@ function do_post_polls(&$temp, &$dba, $url = FALSE, $poll_text = FALSE) {
  *
  * @author Peter Goodman
  */
-function poll_template(&$text, &$dba, $poll_id, $replace_text, $topic_id, $reply_id = FALSE) {
+function poll_template(&$text, &$dba, $poll_id, $replace_text, $post_id, $post_id = FALSE) {
 	
 	global $_URL, $_LANG;
 	
@@ -123,8 +123,8 @@ function poll_template(&$text, &$dba, $poll_id, $replace_text, $topic_id, $reply
 
 		if(!$show_results) {
 			$tpl.= '<form action="viewpoll.php?act=vote&amp;id='. intval($question['id']) .'" method="post" enctype="multipart/form-data">';
-			$tpl.= '<input type="hidden" name="topic_id" value="'. intval($topic_id) .'" />';
-			$tpl.= '<input type="hidden" name="reply_id" value="'. intval($reply_id) .'" />';
+			$tpl.= '<input type="hidden" name="post_id" value="'. intval($post_id) .'" />';
+			$tpl.= '<input type="hidden" name="post_id" value="'. intval($post_id) .'" />';
 		}
 		$tpl	.= '	<div class="shadow"><div class="borderwrap">';
 		$tpl	.= '		<div class="maintitle"><a href="viewpoll.php?id='. $question['id'] .'" title="'. $question['question'] .'">'. $question['question'] .'</a></div>';

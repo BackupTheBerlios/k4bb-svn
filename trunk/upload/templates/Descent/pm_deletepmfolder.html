@@ -1,13 +1,14 @@
 <form:form id="delete_pmfolder" name="delete_pmfolder" action="member.php?act=pm_deletepmfolder" method="post" enctype="multipart/form-data">
-<div class="shadow">
+<input type="hidden" name="original_folder" value="{$folder_id}" />
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle">{$L_DELETEPMFOLDER}: <span style="font-weight: normal;">{$folder_name}</span></div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<tr>
 				<td class="alt3">
 					<div class="outset_box" style="text-align: center;">
 						<strong>{$L_MOVEPMSTO}:</strong><br /><br />
-						<select name="moveto" class="smalltext">
+						<select name="destination_folder" class="smalltext">
 							<option value="0">{$L_DELETEPRIVATEMESSAGES}</option>
 							<list:list id="pmfolders">
 							<list:item list="pmfolders">

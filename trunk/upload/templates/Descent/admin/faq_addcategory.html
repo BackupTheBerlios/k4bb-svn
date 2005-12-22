@@ -9,7 +9,7 @@
 	<form:form name="add_faqcategory" id="add_faqcategory" action="{$faq_action}" method="post" enctype="multipart/form-data">
 	<core:block id="parent_id"><input type="hidden" name="parent_id" value="{$parent_id}" /></core:block>
 	<core:block id="edit" hidden="yes"><input type="hidden" name="id" value="{$faq_category_id}" /></core:block>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
 			<td class="alt1" width="30%">
 				<label for="name"><strong>{$L_NAME}:</strong></label>

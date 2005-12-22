@@ -253,6 +253,7 @@ $_LANG += array(
 'L_BADPMFOLDER'			=> 'The selected private messaging folder does not exist.',
 'L_UPDATEDPMFOLDER'		=> 'Successfully updated your PM storage folder <strong>%s</strong>.',
 'L_DELETEPMFOLDER'		=> 'Remove PM Storage Folder',
+'L_DELETEDPMFOLDER'		=> 'Successfully removed the PM storage folder <strong>%s</strong>.',
 'L_MOVEPMSTO'			=> 'Move Private Messages to',
 'L_DELETEPRIVATEMESSAGES'=> 'Delete PMs',
 'L_DELETEFOLDER'		=> 'Remove Folder',

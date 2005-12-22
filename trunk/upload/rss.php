@@ -41,7 +41,7 @@ class K4DefaultAction extends FAAction {
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 		
 		$rss_version = isset($_REQUEST['v']) && intval($_REQUEST['v']) == 2 ? '2.0' : '0.92';
-		$request['template']->setVar('xml_definition', '<?xml version="1.0" encoding="utf-8"?>' ."\n");
+		$request['template']->setVar('xml_definition', "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
 
 		/**
 		 * Forum
@@ -79,19 +79,19 @@ class K4DefaultAction extends FAAction {
 			$daysprune = $_daysprune = isset($_REQUEST['daysprune']) && ctype_digit($_REQUEST['daysprune']) ? ($_REQUEST['daysprune'] == 0 ? 0 : intval($_REQUEST['daysprune'])) : 365;
 			$daysprune			= $daysprune > 0 ? time() - @($daysprune * 86400) : 0;
 			$sortorder			= isset($_REQUEST['order']) && ($_REQUEST['order'] == 'ASC' || $_REQUEST['order'] == 'DESC') ? $_REQUEST['order'] : 'DESC';
-			$sortedby			= isset($_REQUEST['sort']) && in_array($_REQUEST['sort'], $sort_orders) ? $_REQUEST['sort'] : 'last_post';
+			$sortedby			= isset($_REQUEST['sort']) && in_array($_REQUEST['sort'], $sort_orders) ? $_REQUEST['sort'] : 'lastpost_created';
 			$start				= ($page - 1) * $perpage;
 			
 			
 			
 			if($page == 1) {
-				$announcements		= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE (is_draft=0 AND display=1) AND topic_type = ". TOPIC_ANNOUNCE ." AND (forum_id = ". intval($forum['forum_id']) ." OR forum_id = ". GLBL_ANNOUNCEMENTS .") ORDER BY last_post DESC");
+				$announcements		= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE row_type=". TOPIC ." AND (is_draft=0 AND display=1) AND post_type = ". TOPIC_ANNOUNCE ." AND (forum_id = ". intval($forum['forum_id']) ." OR forum_id = ". GLBL_ANNOUNCEMENTS .") ORDER BY lastpost_created DESC");
 			}
 			
-			$importants			= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE is_draft=0 AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (topic_type <> ". TOPIC_ANNOUNCE .") AND (topic_type = ". TOPIC_STICKY ." OR is_feature = 1) ORDER BY last_post DESC");
+			$importants			= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE row_type=". TOPIC ." AND is_draft=0 AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (post_type <> ". TOPIC_ANNOUNCE .") AND (post_type = ". TOPIC_STICKY ." OR is_feature = 1) ORDER BY lastpost_created DESC");
 			
 			/* get the topics */
-			$result				= $request['dba']->prepareStatement("SELECT * FROM ". K4TOPICS ." WHERE created>=? AND is_draft=0 AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (topic_type <> ". TOPIC_ANNOUNCE ." AND topic_type <> ". TOPIC_STICKY ." AND is_feature = 0) ORDER BY $sortedby $sortorder LIMIT ?,?");
+			$result				= $request['dba']->prepareStatement("SELECT * FROM ". K4POSTS ." WHERE row_type=". TOPIC ." AND created>=? AND is_draft=0 AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (post_type <> ". TOPIC_ANNOUNCE ." AND post_type <> ". TOPIC_STICKY ." AND is_feature = 0) ORDER BY $sortedby $sortorder LIMIT ?,?");
 
 			/* Set the query values */
 			$result->setInt(1, $daysprune);
@@ -123,7 +123,7 @@ class K4DefaultAction extends FAAction {
 		 */
 		} else if(isset($_REQUEST['t']) && intval($_REQUEST['t']) > 0) {
 			
-			$result		= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($_REQUEST['t']) ." LIMIT 1");
+			$result		= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($_REQUEST['t']) ." LIMIT 1");
 			$topic		= $result->next();
 			$result->reset(); // reset the pointer of the iterator
 			
@@ -161,7 +161,7 @@ class K4DefaultAction extends FAAction {
 					$sortedby		= isset($_REQUEST['sort']) && in_array($_REQUEST['sort'], $sort_orders) ? $_REQUEST['sort'] : 'created';
 					$start			= ($page - 1) * $perpage;
 					
-					$replies		= $request['dba']->executeQuery("SELECT * FROM ". K4REPLIES ." WHERE topic_id = ". intval($topic['topic_id']) ." AND created >= ". (3600 * 24 * intval($daysprune)) ." ORDER BY ". $sortedby ." ". $sortorder ." LIMIT ". intval($start) .",". intval($perpage));
+					$replies		= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE parent_id=". intval($topic['post_id']) ." AND created >= ". (3600 * 24 * intval($daysprune)) ." ORDER BY ". $sortedby ." ". $sortorder ." LIMIT ". intval($start) .",". intval($perpage));
 					$it->addIterator($replies);
 				}
 			}
@@ -188,7 +188,7 @@ class K4NewPosts extends FAAction {
 	function execute(&$request) {
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_NEWPOSTS');
 		
-		$topics = $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE queue=0 AND is_draft=0 AND display=1 ORDER BY created DESC LIMIT 15");
+		$topics = $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE queue=0 AND is_draft=0 AND display=1 ORDER BY created DESC LIMIT 15");
 		$request['template']->setList('posts', $topics);
 		
 		$rss_version = isset($_REQUEST['v']) && intval($_REQUEST['v']) == 2 ? '2.0' : '0.92';

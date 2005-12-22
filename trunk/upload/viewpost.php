@@ -49,33 +49,20 @@ class K4DefaultAction extends FAAction {
 		}
 		
 		/* Get our topic */
-		$topic				= $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($_REQUEST['t']));
+		$post = $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($_REQUEST['post_id']));
 		
-		if(!$topic || !is_array($topic) || empty($topic)) {
-			$action = new K4InformationAction(new K4LanguageElement('L_TOPICDOESNTEXIST'), 'content', FALSE);
+		if(!$post || !is_array($post) || empty($post)) {
+			$action = new K4InformationAction(new K4LanguageElement('L_POSTDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
 
-		$use_reply = FALSE;
-		
-		/* Do we try to get a reply? */
-		if(isset($_REQUEST['r']) && intval($_REQUEST['r']) != 0) {			
-			$reply		= $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE reply_id = ". intval($_REQUEST['r']) ." AND topic_id = ". intval($topic['topic_id']));
-		
-			if(!$reply || !is_array($reply) || empty($reply)) {
-				$action = new K4InformationAction(new K4LanguageElement('L_REPLYDOESNTEXIST'), 'content', FALSE);
-				return $action->execute($request);
-			}
-			$use_reply = TRUE;
-		}
-
 		/* Should we redirect this user? */
-		if($topic['moved_new_topic_id'] > 0) {
-			header("Location: viewpost.php?t=". intval($topic['moved_new_topic_id']) . ($use_reply ? '&r='. $reply['reply_id'] : ''));
+		if($post['moved_new_post_id'] > 0) {
+			header("Location: viewpost.php?post_id=". intval($post['moved_new_post_id']));
 		}
 
 		/* Get the current forum */
-		$forum				= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($topic['forum_id']));
+		$forum = $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($post['forum_id']));
 
 		if(!$forum || !is_array($forum) || empty($forum)) {
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
@@ -102,13 +89,13 @@ class K4DefaultAction extends FAAction {
 		 * Set the new breadcrumbs bit
 		 */
 		
-		k4_bread_crumbs($request['template'], $request['dba'], ($use_reply ? $reply['name'] : $topic['name']), $forum);
+		k4_bread_crumbs($request['template'], $request['dba'], $post['name'], $forum);
 		
 
 		/**
 		 * Now tell the cookies that we've read this topic
 		 */		
-		$cookieinfo[$topic['topic_id']] = time();
+		$cookieinfo[$post['post_id']] = time();
 		$cookiestr						= '';
 		
 		foreach($cookieinfo as $key => $val) {
@@ -123,37 +110,14 @@ class K4DefaultAction extends FAAction {
 		/**
 		 * More error checking
 		 */
-		if($topic['is_draft'] == 1) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDTOPICVIEW');
-			
-			$action = new K4InformationAction(new K4LanguageElement('L_CANTVIEWDRAFT'), 'content', FALSE);
-			return $action->execute($request);
-		}
-
-		if($topic['queue'] == 1 && !$moderator) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDTOPICVIEW');
-			
-			$action = new K4InformationAction(new K4LanguageElement('L_TOPICPENDINGMOD'), 'content', FALSE);
-			return $action->execute($request);
-		}
-
-		if($topic['display'] == 0 && !$moderator) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDTOPICVIEW');
-			
-			$action = new K4InformationAction(new K4LanguageElement('L_TOPICISHIDDEN'), 'content', FALSE);
-			return $action->execute($request);
+		if($post['is_draft'] == 1 || $post['display'] == 0 || ($post['queue'] == 1 && !$moderator) ) {
+			no_perms_error($request);
+			return TRUE;
 		}
 		
 		if(get_map('forums', 'can_view', array()) > $request['user']->get('perms') 
-			|| get_map( 'topics', 'can_view', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')
-			|| ($use_reply ? (get_map( 'replies', 'can_view', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) : FALSE)
+			|| get_map( ($post['row_type'] & TOPIC ? 'topics' : 'replies'), 'can_view', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')
 			) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION', $forum);
-			
 			$action = new K4InformationAction(new K4LanguageElement('L_PERMCANTVIEWTOPIC'), 'content', FALSE);
 			return $action->execute($request);
 		}
@@ -163,48 +127,39 @@ class K4DefaultAction extends FAAction {
 		 * Is this topic expired?
 		 */
 		$extra						= '';
-		if($topic['topic_type'] > TOPIC_NORMAL && $topic['topic_expire'] > 0) {
-			if(($topic['created'] + (3600 * 24 * $topic['topic_expire']) ) > time()) {
+		if($post['post_type'] > TOPIC_NORMAL && $post['post_expire'] > 0) {
+			if(($post['created'] + (3600 * 24 * $post['post_expire']) ) > time()) {
 				
-				$extra				= ",topic_expire=0,topic_type=". TOPIC_NORMAL;
+				$extra				= ",post_expire=0,post_type=". TOPIC_NORMAL;
 			}
 		}
 		
 		/* Add the topic info to the template */
-		foreach($topic as $key => $val)
-			$request['template']->setVar('topic_'. $key, $val);
+		foreach($post as $key => $val)
+			$request['template']->setVar('post_'. $key, $val);
 		
 		/* Add the forum info to the template */
 		foreach($forum as $key => $val)
 			$request['template']->setVar('forum_'. $key, $val);
 
 		/* Update the number of views for this topic */
-		$request['dba']->executeUpdate("UPDATE ". K4TOPICS ." SET views=views+1 $extra WHERE topic_id=". intval($topic['topic_id']));
+		$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET views=views+1 $extra WHERE post_id=". intval($post['post_id']));
 		
 		/* set the topic iterator */
-		if(!$use_reply) {
-			$topic_list			= new TopicIterator($request['dba'], $request['user'], $topic, FALSE);
-			$request['template']->setList('topic', $topic_list);
-			
-			$request['template']->setVar('next_oldest', intval($request['dba']->getValue("SELECT topic_id FROM ". K4TOPICS ." WHERE topic_id < ". $topic['topic_id'] ." LIMIT 1")));
-			$request['template']->setVar('next_newest', intval($request['dba']->getValue("SELECT topic_id FROM ". K4TOPICS ." WHERE topic_id > ". $topic['topic_id'] ." LIMIT 1")));
-			
+		if($post['row_type'] & TOPIC) {
+			$request['template']->setVar('next_oldest', intval($request['dba']->getValue("SELECT post_id FROM ". K4POSTS ." WHERE post_id < ". $post['post_id'] ." LIMIT 1")));
+			$request['template']->setVar('next_newest', intval($request['dba']->getValue("SELECT post_id FROM ". K4POSTS ." WHERE post_id > ". $post['post_id'] ." LIMIT 1")));
 
 			/**
 			 * Topic subscription stuff
 			 */
 			if($request['user']->isMember()) {
-				$subscribed		= $request['dba']->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE topic_id = ". intval($topic['topic_id']) ." AND user_id = ". $request['user']->get('id'));
+				$subscribed		= $request['dba']->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE post_id = ". intval($post['post_id']) ." AND user_id = ". $request['user']->get('id'));
 				$request['template']->setVar('is_subscribed', iif($subscribed->numRows() > 0, 1, 0));
 			}
-		} else {
-
-			/* Add the reply information to the template (same as for topics) */
-			$reply_iterator = &new TopicIterator($request['dba'], $request['user'], $reply, FALSE);
-			$request['template']->setList('topic', $reply_iterator);
 		}
 		
-		$request['template']->setVar('header_text', ($use_reply ? $reply['name'] : $topic['name']));
+		$request['template']->setVar('header_text', ($use_reply ? $reply['name'] : $post['name']));
 		$request['template']->setVar('show_close_button', 1);
 		$request['template']->setFile('content', 'post_preview.html');
 

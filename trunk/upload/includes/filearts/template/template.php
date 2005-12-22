@@ -437,11 +437,15 @@ class FATemplate extends FAObject {
 	}
 
 	function writeBuffer($filename, $buffer) {
+		$ret = TRUE;
 		if (!is_dir(dirname($filename))) {
 			$mask = umask(0);
 
-			if (!mkdir(dirname($filename), 0777))
-				trigger_error("Unable to create the compiled template cache: " . dirname($filename), E_USER_WARNING);
+			if (!mkdir(dirname($filename), 0777)) {
+				// TODO: send error to admin here
+				//trigger_error("Unable to create the compiled template cache: " . dirname($filename), E_USER_WARNING);
+				$ret = FALSE;
+			}
 			
 			__chmod(dirname($filename), 0777);
 
@@ -454,7 +458,9 @@ class FATemplate extends FAObject {
 			
 			// means that the chmod function is not working.
 			if (!is_writable(dirname($filename))) {
-				trigger_error("Unable to write to the compiled template cache: " . dirname($filename), E_USER_WARNING);
+				// TODO: send error to admin here
+				//trigger_error("Unable to write to the compiled template cache: " . dirname($filename), E_USER_WARNING);
+				$ret = FALSE;
 			}
 		}
 		
@@ -463,13 +469,16 @@ class FATemplate extends FAObject {
 		$fp = @fopen($filename, "w");
 
 		if (!$fp) {
-			trigger_error("Unable to write to the compiled template: $filename", E_USER_ERROR);
+			//trigger_error("Unable to write to the compiled template: $filename", E_USER_ERROR);
+			// TODO: send error to admin
+			$ret = FALSE;
 		} else {
 			fwrite($fp, $buffer);
 			fclose($fp);
 
 			__chmod($filename, 0777);
 		}
+		//return $ret;
 	}
 
 	function getVar($name) {

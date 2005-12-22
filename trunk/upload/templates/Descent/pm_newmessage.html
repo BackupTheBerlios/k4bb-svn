@@ -12,7 +12,7 @@
 <core:block id="pm_id" hidden="yes"><input type="hidden" name="{$edit_type}" id="{$edit_type}" value="{$pm_pm_id}" /></core:block>
 
 <!-- Post Topic Form -->
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle">
 			<core:block id="post_pm" hidden="yes">
@@ -22,7 +22,7 @@
 			{$L_EDITPRIVATEMESSAGE}: <span style="font-weight: normal;">{$pm_name}</span>
 			</core:block>
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<tr>
 				<td class="alt3" colspan="2" align="center">
 					
@@ -36,7 +36,7 @@
 							<strong>{$L_GUEST}</strong>
 							</is:logged>
 						</span>
-						<table border="0" cellpadding="0" cellspacing="0">
+						<table border="0" cellspacing="0">
 							<tr>
 								<td>
 									<!-- To -->
@@ -86,12 +86,12 @@
 									<maps:if var="pm_emoticons" method="can_view">
 									<list:list id="emoticons">
 									<!-- Emoticons -->
-									<table border="0" cellpadding="0" cellspacing="0">
+									<table border="0" cellspacing="0">
 										<tr>
 											<td>
 												<fieldset>
 													<legend>{$L_EMOTICONS}</legend>
-													<table cellpadding="3" cellspacing="{$style_cellspacing}" border="0" id="posticons">
+													<table cellpadding="3" cellspacing="{$style_cellspacing}" id="posticons">
 														<tr>
 															<list:item list="emoticons">
 															<td align="center">
@@ -121,14 +121,14 @@
 								<td colspan="2">
 									<list:list id="posticons">
 									<!-- Post Icons -->
-									<table border="0" cellpadding="0" cellspacing="0" width="100%">
+									<table border="0" cellspacing="0" width="100%">
 										<tr>
 											<td>
 												<fieldset>
 													<legend>{$L_POSTICONS}</legend>
 													<span class="smalltext">{$L_POSTICONSPOSTCHOOSE}</span>
 													<label for="noicon" style="float: left;margin-top: 10px;"><input type="radio" name="posticon" id="noicon" value="clear.gif" checked="checked" onclick="swap_posticon(null)" />&nbsp;{$L_NOICON}</label>
-													<table cellpadding="3" cellspacing="{$style_cellspacing}" border="0" id="posticons">
+													<table cellpadding="3" cellspacing="{$style_cellspacing}" id="posticons">
 														<tr>
 															<list:item list="posticons">
 															<td align="center">
@@ -183,13 +183,13 @@
 <br />
 
 <!-- Additional Post Options -->
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle" id="po_maintitle">
 			<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_po', 'postoptions', 'po_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_po" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
 			{$L_ADDITIONALOPTIONS}
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table" id="postoptions">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="postoptions">
 			<tr>
 				<td class="alt3">
 					<div class="outset_box">
@@ -215,13 +215,13 @@
 <!-- Attachments Manager -->
 <!--
 <br />
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle" id="am_maintitle">
 			<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_am', 'attachmanage', 'am_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_am" src="Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
 			{$L_ATTACHMENTSMANAGER}
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table" id="attachmanage" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="attachmanage" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
 			<tr>
 				<td class="alt3">
 					<div class="outset_box">

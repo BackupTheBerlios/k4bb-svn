@@ -79,8 +79,8 @@ class K4DefaultAction extends FAAction {
 		}
 		
 		/* Prevent post flooding */
-		$last_topic		= $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE poster_ip = '". USER_IP ."' ORDER BY created DESC LIMIT 1");
-		$last_reply		= $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE poster_ip = '". USER_IP ."' ORDER BY created DESC LIMIT 1");
+		$last_topic		= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE poster_ip = '". USER_IP ."' ORDER BY created DESC LIMIT 1");
+		$last_reply		= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE poster_ip = '". USER_IP ."' ORDER BY created DESC LIMIT 1");
 		
 		if(is_array($last_topic) && !empty($last_topic)) {
 			if(intval($last_topic['created']) + POST_IMPULSE_LIMIT > time() &$request['user']->get('perms') < MODERATOR) {
@@ -135,7 +135,7 @@ class K4DefaultAction extends FAAction {
 		 * Get topic drafts for this forum
 		 */
 		$body_text	= '';
-		$drafts		= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE forum_id = ". intval($forum['forum_id']) ." AND is_draft = 1 AND poster_id = ". intval($request['user']->get('id')));
+		$drafts		= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE forum_id = ". intval($forum['forum_id']) ." AND is_draft = 1 AND poster_id = ". intval($request['user']->get('id')));
 		if($drafts->numrows() > 0) {
 			$request['template']->setVisibility('load_button', TRUE);
 		
@@ -147,19 +147,17 @@ class K4DefaultAction extends FAAction {
 			if(isset($_REQUEST['draft']) && intval($_REQUEST['draft']) != 0) {
 
 				/* Get our topic */
-				$draft				= $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($_REQUEST['draft']) ." AND is_draft = 1 AND poster_id = ". intval($request['user']->get('id')));
+				$draft				= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id=". intval($_REQUEST['draft']) ." AND is_draft=1 AND poster_id=". intval($request['user']->get('id')));
 				
 				if(!$draft || !is_array($draft) || empty($draft)) {
-					/* set the breadcrumbs bit */
 					k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDDRAFT');
-					
 					$action = new K4InformationAction(new K4LanguageElement('L_DRAFTDOESNTEXIST'), 'content', FALSE);
 					return $action->execute($request);
 				}
 				
 				$request['template']->setVar('newtopic_action', 'newtopic.php?act=postdraft');
 				
-				$action = new K4InformationAction(new K4LanguageElement('L_DRAFTLOADED'), 'drafts', FALSE);
+				//$action = new K4InformationAction(new K4LanguageElement('L_DRAFTLOADED'), 'drafts', FALSE);
 
 				/* Turn the draft text back into bbcode */
 				$bbcode				= new BBCodex($request['dba'], $request['user']->getInfoArray(), $draft['body_text'], $forum['forum_id'], TRUE, TRUE, TRUE, TRUE);
@@ -170,18 +168,18 @@ class K4DefaultAction extends FAAction {
 				$request['template']->setVisibility('save_draft', FALSE);
 				$request['template']->setVisibility('load_button', FALSE);
 				$request['template']->setVisibility('edit_topic', TRUE);
-				$request['template']->setVisibility('topic_id', TRUE);
+				$request['template']->setVisibility('post_id', TRUE);
 				$request['template']->setVisibility('br', TRUE);
 				
 				$num_attachments	= $draft['attachments'];
 
 				/* Assign the draft information to the template */
 				foreach($draft as $key => $val)
-					$request['template']->setVar('topic_'. $key, $val);
+					$request['template']->setVar('post_'. $key, $val);
 				
 				post_attachment_options($request, $forum, $draft);
 
-				$action->execute($request);
+				//$action->execute($request);
 			}
 		}
 		
@@ -223,11 +221,11 @@ $app = new K4controller('forum_base.html');
 $app->setAction('', new K4DefaultAction);
 $app->setDefaultEvent('');
 
-$app->setAction('posttopic', new PostTopic);
+$app->setAction('posttopic', new InsertPost(TOPIC));
 $app->setAction('postdraft', new PostDraft);
 $app->setAction('deletedraft', new DeleteDraft);
 $app->setAction('edittopic', new EditTopic);
-$app->setAction('updatetopic', new UpdateTopic);
+$app->setAction('updatetopic', new UpdatePost(TOPIC));
 
 $app->execute();
 

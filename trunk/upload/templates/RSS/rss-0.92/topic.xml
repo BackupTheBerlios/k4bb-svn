@@ -11,7 +11,7 @@
 			<title><![CDATA[{$name}]]></title>
 			<author><![CDATA[{$poster_name}]]></author>
 			<description><![CDATA[{$body_text}]]></description>
-			<link>{$forum_url}viewtopic.php?id={$topic_id}<if:if var="row_type" eq="8">&amp;p={$reply_id}#p{$reply_id}</if:if></link>
+			<link>{$forum_url}viewtopic.php?id={$post_id}<if:if var="row_type" eq="8">&amp;p={$post_id}#p{$post_id}</if:if></link>
 		</item>
 		</list:item>
 		</list:list>

@@ -1,7 +1,7 @@
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle">{$L_LISTMESSAGES}: <span style="font-weight: normal;">{$folder_name}</span></div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<tr>
 				<td class="alt3">
 					<div class="outset_box">
@@ -39,13 +39,13 @@
 	</div>
 </div>
 <br />
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
+<table width="100%" cellspacing="0">
 	<tr>
 		<td width="50%" align="left"><span class="title_link">{$folder_name}</span></td>
 		<td width="50%" align="right">
 			<page:navigator id="pms_pager">
 			<div>
-				<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
+				<table cellspacing="{$style_cellspacing}" class="pagination">
 					<tr>
 						<td class="alt3" id="page_jump1" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 						<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
@@ -65,10 +65,10 @@
 	</tr>
 </table>
 <form action="member.php?act=usercp&amp;view=pmperformact" method="post" enctype="multipart/form-data">
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle">{$L_MESSAGES}</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<tr>
 				<td class="subtitle">&nbsp;</td>
 				<td class="subtitle" width="60%">{$L_SUBJECT}/{$L_FROM}</td>
@@ -123,7 +123,7 @@
 </form>
 <page:navigator id="pms_pager">
 <div align="right">
-	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
+	<table cellspacing="{$style_cellspacing}" class="pagination">
 		<tr>
 			<td class="alt3" id="page_jump1"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>

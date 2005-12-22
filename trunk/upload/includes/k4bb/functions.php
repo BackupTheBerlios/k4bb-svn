@@ -40,6 +40,7 @@ if(!defined('IN_K4')) {
  * Custom htmlentities function
  */
 function k4_htmlentities($str) {
+	$str = html_entity_decode($str, ENT_QUOTES);
 	$str = str_replace(array('&amp;', '&', '<', '>',"'", "\""), array('&', '&amp;', '&lt;', '&gt;', '&#039;', '&quot;'), $str);
 	return $str;
 }

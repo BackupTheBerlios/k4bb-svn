@@ -107,7 +107,7 @@ class K4UserControlPanel extends FAAction {
 			default: {
 				
 				/* Get the most recent current announcements */
-				$announcements		= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE (is_draft=0 AND queue=0 AND display=1) AND row_type=". TOPIC ." AND topic_type = ". TOPIC_ANNOUNCE ." ORDER BY created DESC");
+				$announcements		= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE (is_draft=0 AND queue=0 AND display=1) AND row_type=". TOPIC ." AND post_type = ". TOPIC_ANNOUNCE ." ORDER BY created DESC");
 				$a_it				= &new TopicsIterator($request['dba'], $request['user'], $announcements, $request['template']->getVar('IMG_DIR'), array('postsperpage' => $request['user']->get('postsperpage') ) );
 				$request['template']->setList('announcements', $a_it);
 				
@@ -1062,8 +1062,8 @@ class K4ManageSubscriptions extends FAAction {
 			
 			$subscription['forum_name'] = $_ALLFORUMS[$subscription['forum_id']]['name'];
 
-			if(intval($subscription['topic_id']) > 0) {
-				$subscription['topic_name'] = $request['dba']->getValue("SELECT name FROM ". K4TOPICS ." WHERE topic_id = ". intval($subscription['topic_id']));
+			if(intval($subscription['post_id']) > 0) {
+				$subscription['topic_name'] = $request['dba']->getValue("SELECT name FROM ". K4POSTS ." WHERE post_id = ". intval($subscription['post_id']));
 			}
 			
 			$subs[] = $subscription;
@@ -1079,7 +1079,7 @@ class K4ManageDrafts extends FAAction {
 	function execute(&$request) {
 		global $_ALLFORUMS;
 
-		$drafts			= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE is_draft = 1 AND poster_id = ". intval($request['user']->get('id')));
+		$drafts			= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE is_draft = 1 AND poster_id = ". intval($request['user']->get('id')));
 		$drafts_array	= array();
 		$forums			= array();
 		

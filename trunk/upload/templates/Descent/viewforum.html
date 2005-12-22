@@ -1,122 +1,114 @@
 <if:if var="forum_subforums" geq="1"><core:import id="subforums" file="subforums.html" /></if:if>
 <core:import id="forum_rules" file="forum_rules.html" />
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-	<tr>
-		<td width="50%" style="text-align: left;">
-			<span class="title_link">{$forum_name}</span>
-			<a href="rss.php?f={$forum_id}" title="{$L_RSSFEED}: {$forum_name}"><img src="Images/{$IMG_DIR}/Icons/rss_small.gif" alt="{$L_RSSFEED}: {$forum_name}" border="0" /></a>
-		</td>
-		<td width="50%" style="text-align: right;">
-			<maps:if list="forums" var="topics" forum="forum_id" method="can_add"><a href="newtopic.php?id={$forum_id}" title="{$L_POSTTOPIC}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/post_topic.gif" alt="{$L_POSTTOPIC}" /></a></maps:if>
-		</td>
-		<page:navigator id="topics_pager">
-		<td nowrap="nowrap">
-			<div align="right">
-				<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
-					<tr>
-						<td class="alt3" id="page_jump1" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
-						<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
-						<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
-						<page:list id="topics_pager" before="3" after="3">
-						<list:item list="topics_pager">
-							<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
-						</list:item>
-						</page:list>
-						<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
-						<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
-					</tr>
-				</table>
-			</div>
-		</td>
-		</page:navigator>
-	</tr>
-</table>
 
 <!-- Topics List of '{$current_location}' -->
-<div class="shadow">
-	<div class="borderwrap">
-		<div class="maintitle" align="right" style="overflow: hidden;">
-			<div style="float: left;text-align: left;">
-				{$L_TOPICSINFORUM}: <span style="font-weight: normal;">{$name}</span><br />
-				<if:if var="description" noteq=""><span class="minitext" style="font-weight: normal;">{$description}</span></if:if>
-			</div>
-			<!-- Drop Down Menus -->
-			<div><span class="ddmenu_link_alt" id="forumoptions_link">{$L_FORUMOPTIONS}</span></div>
-			<!-- / Drop Down Menus -->
+<div class="header">
+	<div class="title" align="right" style="overflow: hidden;">
+		<div style="float: left;text-align: left;">
+			{$name}
+			<a href="rss.php?f={$forum_forum_id}" title="{$L_RSSFEED}: {$forum_name}"><img src="Images/{$IMG_DIR}/Icons/rss_small.gif" alt="{$L_RSSFEED}: {$forum_name}" border="0" /></a>
 		</div>
-
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
-			<list:list id="announcements">
-			<tr>
-				<td class="subtitle" colspan="<if:if var="modpanel" eq="1">7<if:else />6</if:if>">{$L_ANNOUNCEMENTS}</td>
-			</tr>
-			<list:item list="announcements"><list:switch list="announcements" var="row_class" a="alt1" b="alt2">
-			<core:import id="topic_view" file="topic_view.html" />
-			</list:switch></list:item>
-			</list:list>
-			<list:list id="importants">
-			<tr>
-				<td class="subtitle" colspan="<if:if var="modpanel" eq="1">7<if:else />6</if:if>">{$L_IMPORTANTTOPICS}</td>
-			</tr>
-			<list:item list="importants"><list:switch list="importants" var="row_class" a="alt1" b="alt2">
-			<core:import id="topic_view" file="topic_view.html" />
-			</list:switch></list:item>
-			</list:list>
-			<tr>
-				<td class="subtitle" style="text-align: center;" width="70%" colspan="3"><a href="viewforum.php?f={$forum_forum_id}&amp;sort=name&amp;order={$order}" title="{$L_TOPICS}">{$L_TOPICS}{$name_sort}</a>/<a href="viewforum.php?f={$forum_forum_id}&amp;sort=poster_name&amp;order={$order}" title="{$L_AUTHOR}">{$L_AUTHOR}{$poster_name_sort}</a></td>
-				<td class="subtitle" style="text-align: center;" width="20%">&nbsp;<a href="viewforum.php?f={$forum_forum_id}&amp;sort=last_post&amp;order={$order}" title="{$L_LASTPOST}">{$L_LASTPOST}{$last_post_sort}</a>&nbsp;</td>
-				<td class="subtitle" style="text-align: center;">&nbsp;<a href="viewforum.php?f={$forum_forum_id}&amp;sort=num_replies&amp;order={$order}" title="{$L_REPLIES}">{$L_REPLIES}{$num_replies_sort}</a>&nbsp;</td>
-				<td class="subtitle" style="text-align: center;">&nbsp;<a href="viewforum.php?f={$forum_forum_id}&amp;sort=views&amp;order={$order}" title="{$L_VIEWS}">{$L_VIEWS}{$views_sort}</a>&nbsp;</td>
-				<if:if var="modpanel" eq="1"><td class="subtitle" style="text-align: center;">&nbsp;{$L_SELECT}&nbsp;</td></if:if>
-			</tr>
-			<core:block id="no_topics" hidden="yes">
-			<tr>
-				<td class="alt1" colspan="<if:if var="modpanel" eq="1">7<if:else />6</if:if>">
-					<div align="center" class="outset_box">
-						<br />
-						{$topics_message}
-						<br /><br />
-					</div>
-				</td>
-			</tr>
-			</core:block>
-			<list:list id="topics">
-			<list:item list="topics"><list:switch list="topics" var="row_class" a="alt1" b="alt2">
-			<core:import id="topic_view" file="topic_view.html" />
-			</list:switch></list:item>
-			</list:list>
-			<if:if var="modpanel" eq="1">
-			<!-- Moderator Controls -->
-			<tr>
-				<td class="modmaintitle" colspan="7">
-					<form action="mod.php?act=moderate_forum&amp;id={$forum_id}" method="post" enctype="multipart/form-data">
-						<input type="hidden" name="topics" id="topics" value="" />
-						<div align="center">
-							<strong>{$L_WITHTOPICS}:</strong>
-							<select name="action">
-								<option value="lock">{$L_LOCKTOPICS}</option>
-								<option value="stick">{$L_STICKTOPICS}</option>
-								<option value="announce">{$L_ANNOUNCETOPICS}</option>
-								<option value="feature">{$L_FEATURETOPICS}</option>
-								<option value="normal">{$L_SETASNORMALTOPICS}</option>
-								<option value="move">{$L_MOVECOPYTOPICS}</option>
-								<option value="delete">{$L_DELETETOPICS}</option>
-								<option value="queue">{$L_QUEUE}</option>
-								<option value="subscribe">{$L_SUBSCRIBETOTOPICS}</option>
-							</select>
-							<input type="submit" value="{$L_PERFORMACTION} (0)" id="performact_button" class="button" />
-						</div>
-					</form>
-				</td>
-			</tr>
-			<!-- / Moderator Controls -->
-			</if:if>
-		</table>
+		<!-- Drop Down Menus -->
+		<div><span class="ddmenu_link_alt" id="forumoptions_link">{$L_FORUMOPTIONS}</span></div>
+		<!-- / Drop Down Menus -->
 	</div>
 </div>
+<maps:if list="forums" var="topics" forum="forum_id" method="can_add"><a href="newtopic.php?id={$forum_id}" title="{$L_POSTTOPIC}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/post_topic.gif" alt="{$L_POSTTOPIC}" /></a></maps:if>
+<div class="spacer">
+	<div class="alt3" align="right" style="overflow: hidden;">
+		<if:if var="description" noteq=""><div class="minitext" style="float:left;font-weight: normal;">{$description}</div></if:if>
+		<page:navigator id="topics_pager">
+		<table cellspacing="{$style_cellspacing}" class="pagination">
+			<tr>
+				<td class="alt3" id="page_jump1" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+				<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
+				<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
+				<page:list id="topics_pager" before="3" after="3">
+				<list:item list="topics_pager">
+					<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
+				</list:item>
+				</page:list>
+				<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
+				<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
+			</tr>
+		</table>
+		</page:navigator>
+	</div>
+</div>
+<div class="spacer">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<list:list id="announcements">
+		<tr>
+			<td class="subtitle" colspan="<if:if var="modpanel" eq="1">7<if:else />6</if:if>">{$L_ANNOUNCEMENTS}</td>
+		</tr>
+		<list:item list="announcements"><list:switch list="announcements" var="row_class" a="alt1" b="alt2">
+		<core:import id="topic_view" file="topic_view.html" />
+		</list:switch></list:item>
+		</list:list>
+		<list:list id="importants">
+		<tr>
+			<td class="subtitle" colspan="<if:if var="modpanel" eq="1">7<if:else />6</if:if>">{$L_IMPORTANTTOPICS}</td>
+		</tr>
+		<list:item list="importants"><list:switch list="importants" var="row_class" a="alt1" b="alt2">
+		<core:import id="topic_view" file="topic_view.html" />
+		</list:switch></list:item>
+		</list:list>
+		<tr>
+			<td class="subheader" style="text-align: center;" width="70%" colspan="3"><a href="viewforum.php?f={$forum_forum_id}&amp;sort=name&amp;order={$order}" title="{$L_TOPICS}">{$L_TOPICS}{$name_sort}</a>/<a href="viewforum.php?f={$forum_forum_id}&amp;sort=poster_name&amp;order={$order}" title="{$L_AUTHOR}">{$L_AUTHOR}{$poster_name_sort}</a></td>
+			<td class="subheader" style="text-align: center;">&nbsp;<a href="viewforum.php?f={$forum_forum_id}&amp;sort=num_replies&amp;order={$order}" title="{$L_REPLIES}">{$L_REPLIES}{$num_replies_sort}</a>&nbsp;</td>
+			<td class="subheader" style="text-align: center;">&nbsp;<a href="viewforum.php?f={$forum_forum_id}&amp;sort=views&amp;order={$order}" title="{$L_VIEWS}">{$L_VIEWS}{$views_sort}</a>&nbsp;</td>
+			<td class="subheader" style="text-align: center;" width="20%">&nbsp;<a href="viewforum.php?f={$forum_forum_id}&amp;sort=lastpost_created&amp;order={$order}" title="{$L_LASTPOST}">{$L_LASTPOST}{$lastpost_created_sort}</a>&nbsp;</td>
+			<td class="subheader" width="3%">&nbsp;{$L_INFO}&nbsp;</td>
+			<if:if var="modpanel" eq="1"><td class="subheader" style="text-align: center;">&nbsp;{$L_SELECT}&nbsp;</td></if:if>
+		</tr>
+		<core:block id="no_topics" hidden="yes">
+		<tr>
+			<td class="alt1" colspan="<if:if var="modpanel" eq="1">7<if:else />6</if:if>">
+				<div align="center" class="outset_box">
+					<br />
+					{$topics_message}
+					<br /><br />
+				</div>
+			</td>
+		</tr>
+		</core:block>
+		<list:list id="topics">
+		<list:item list="topics"><list:switch list="topics" var="row_class" a="alt1" b="alt2">
+		<core:import id="topic_view" file="topic_view.html" />
+		</list:switch></list:item>
+		</list:list>
+	</table>
+</div>
+<if:if var="modpanel" eq="1">
+<!-- Moderator Controls -->
+<div class="spacer">
+	<div class="alt3">
+		<form action="mod.php?act=moderate_forum&amp;id={$forum_id}" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="topics" id="topics" value="" />
+			<div align="center">
+				<strong>{$L_WITHTOPICS}:</strong>
+				<select name="action">
+					<option value="lock">{$L_LOCKTOPICS}</option>
+					<option value="stick">{$L_STICKTOPICS}</option>
+					<option value="announce">{$L_ANNOUNCETOPICS}</option>
+					<option value="feature">{$L_FEATURETOPICS}</option>
+					<option value="normal">{$L_SETASNORMALTOPICS}</option>
+					<option value="move">{$L_MOVECOPYTOPICS}</option>
+					<option value="delete">{$L_DELETETOPICS}</option>
+					<option value="queue">{$L_QUEUE}</option>
+					<option value="subscribe">{$L_SUBSCRIBETOTOPICS}</option>
+				</select>
+				<input type="submit" value="{$L_PERFORMACTION} (0)" id="performact_button" class="button" />
+			</div>
+		</form>
+	</div>
+</div>
+<!-- / Moderator Controls -->
+</if:if>
+<div class="footer_block"><div>&nbsp;</div></div>
 <!-- / Topics List of '{$current_location}' -->
 
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
+<table width="100%" cellspacing="0">
 	<tr>
 		<td width="50%">
 			<div align="left">
@@ -126,7 +118,7 @@
 		<td width="50%">
 			<page:navigator id="topics_pager">
 			<div align="right">
-				<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
+				<table cellspacing="{$style_cellspacing}" class="pagination">
 					<tr>
 						<td class="alt3" id="page_jump2" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 						<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
@@ -148,16 +140,16 @@
 
 <br />
 <!-- Forum Display Options -->
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle" id="f{$forum_id}do_maintitle">
 			<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapsedo_{$forum_id}', 'do_{$forum_id}', 'f{$forum_id}do_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapsedo_{$forum_id}" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
 			{$L_DISPLAYOPTIONS}
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table" id="do_{$forum_id}">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="do_{$forum_id}">
 			<tr class="alt1">
 				<td>
-					<table width="" cellpadding="0" cellspacing="0" border="0">
+					<table width="" cellspacing="0">
 						<tr> 
 							<td><img src="Images/{$IMG_DIR}/Icons/Status/newfolder.gif" alt="{$L_OPENTOPICNEW}" border="0" /></td>
 							<td nowrap="nowrap" class="smalltext">{$L_OPENTOPICNEW}&nbsp;</td>
@@ -189,13 +181,13 @@
 						<form action="viewforum.php" method="get" enctype="multipart/form-data">
 							<input type="hidden" name="f" value="{$forum_id}" />
 							<input type="hidden" name="start" value="{$pag_start}" />
-							<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0">
+							<table cellspacing="{$style_cellspacing}">
 								<tr>
 									<td class="smalltext">{$L_SORTEDBY}:</td>
 									<td>
 										<select name="sort" style="width:125px" class="smalltext">
 											<option value="name">{$L_TOPICTITLE}</option>
-											<option value="reply_time" selected="selected">{$L_LASTPOSTTIME}</option>
+											<option value="lastpost_created" selected="selected">{$L_LASTPOSTTIME}</option>
 											<option value="num_replies" >{$L_NUMOFREPLIES}</option>
 											<option value="views" >{$L_NUMOFVIEWS}</option>
 											<option value="poster_name" >{$L_TOPICSTARTER}</option>
@@ -255,7 +247,7 @@
 <br />
 <div class="inset_box_small">
 	<div class="minitext" align="right">
-		<table cellpadding="0" cellspacing="0" border="0">
+		<table cellspacing="0">
 			<tr>
 				<td valign="top">
 					{$forum_user_reply_options}
@@ -272,7 +264,7 @@
 
 <!-- Forum Options -->
 <div id="forumoptions_menu" class="borderwrap" style="display: none;">
-	<table width="190" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+	<table width="190" cellspacing="{$style_cellspacing}" class="table">
 		<is:logged>
 		<tr>
 			<td class="alt1">

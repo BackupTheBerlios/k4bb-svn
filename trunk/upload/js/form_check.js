@@ -84,15 +84,16 @@ function checkForm(form)
 				if(typeof matches != 'undefined' && matches) {
 					if (matches[j]) {
 						var match = document.getElementById(matches[j]);
+						if(typeof(match) != 'undefined' && match) {
+							if (element.value != match.value)
+							{
+								element.value = '';
+								match.value = '';
 
-						if (element.value != match.value)
-						{
-							element.value = '';
-							match.value = '';
-
-							showError(j);
-							valid = false;
-							break;
+								showError(j);
+								valid = false;
+								break;
+							}
 						}
 					}
 				}

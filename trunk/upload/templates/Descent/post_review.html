@@ -29,7 +29,7 @@
 		</td>
 		<td class="alt1" width="80%" id="topic{$id}" valign="top" style="height: 100px;">
 			{$body_text}
-			<textarea name="reverted_body_text" id="body_text_<if:if var="row_type" eq="8">r{$reply_id}<if:else />t{$topic_id}</if:if>" style="display: none;">{$reverted_body_text}</textarea>
+			<textarea name="reverted_body_text" id="body_text_<if:if var="row_type" eq="8">r{$post_id}<if:else />t{$post_id}</if:if>" style="display: none;">{$reverted_body_text}</textarea>
 			<if:if var="disable_sig" eq="0">
 			<if:if var="post_user_signature" noteq="">
 			<br /><br />
@@ -41,7 +41,7 @@
 	<maps:if forum="forum_forum_id" var="bbcode" method="can_add">
 	<tr>
 		<td class="alt3" height="20">
-			<div align="right"><a href="javascript:;" onclick="add_review_quote('<if:if var="poster_name" eq="">{$L_GUEST}<if:else />{$poster_name}</if:if>', 'body_text_<if:if var="row_type" eq="8">r{$reply_id}<if:else />t{$topic_id}</if:if>', 'messagecodex')" title="{$L_QUOTE}"><img src="Images/{$IMG_DIR}/Buttons/{$LANG}/quote.gif" border="0" alt="{$L_QUOTE}" /></a></div>
+			<div align="right"><a href="javascript:;" onclick="add_review_quote('<if:if var="poster_name" eq="">{$L_GUEST}<if:else />{$poster_name}</if:if>', 'body_text_<if:if var="row_type" eq="8">r{$post_id}<if:else />t{$post_id}</if:if>', 'messagecodex')" title="{$L_QUOTE}"><img src="Images/{$IMG_DIR}/Buttons/{$LANG}/quote.gif" border="0" alt="{$L_QUOTE}" /></a></div>
 		</td>
 	</tr>
 	</maps:if>

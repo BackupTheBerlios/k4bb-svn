@@ -1,7 +1,7 @@
 <if:if var="modpanel" eq="1">
 <page:navigator id="bpreports_pager">
 <div align="right">
-	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
+	<table cellspacing="{$style_cellspacing}" class="pagination">
 		<tr>
 			<td class="alt3" id="page_jump1"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
@@ -18,12 +18,12 @@
 </div>
 </page:navigator>
 <!-- Bad Post Reports -->
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle">
 			{$L_BADPOSTREPORTS}: <span style="font-weight: normal;">{$name}</span>
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<list:list id="badpost_reports">
 			<list:default list="badpost_reports">
 			<tr>
@@ -42,12 +42,12 @@
 					<div class="smalltext">
 						<strong>{$L_FORUM}:</strong> <a href="viewforum.php?f={$forum_id}" title="{$forum_name}" class="smalltext" style="font-weight: normal;">{$forum_name}</a>
 						&nbsp;&nbsp;&nbsp;
-						<strong>{$L_TOPIC}:</strong> <a href="viewtopic.php?id={$topic_id}" title="{$topic_name}" class="smalltext" style="font-weight: normal;">{$topic_name}</a>
+						<strong>{$L_TOPIC}:</strong> <a href="viewtopic.php?id={$post_id}" title="{$topic_name}" class="smalltext" style="font-weight: normal;">{$topic_name}</a>
 						&nbsp;&nbsp;&nbsp;
-						<strong>{$L_POST}:</strong> <a href="<if:if var="row_type" eq="4">viewtopic.php?id={$topic_id}<if:else />findpost.php?id={$reply_id}</if:if>" title="{$name}" class="smalltext" style="font-weight: normal;">{$name}</a>
+						<strong>{$L_POST}:</strong> <a href="<if:if var="row_type" eq="4">viewtopic.php?id={$post_id}<if:else />findpost.php?id={$post_id}</if:if>" title="{$name}" class="smalltext" style="font-weight: normal;">{$name}</a>
 					</div>
 				</div>
-				<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+				<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 					<tr>
 						<td class="alt3" width="20%" align="center">
 							<if:if var="poster_id" greater="0">
@@ -64,7 +64,7 @@
 							<div class="smalltext">
 								<strong>{$L_POSTSUBJECT}:</strong>
 								<span class="smalltext">
-								<if:if var="topic_type" eq="2">{$stickytopicprefix}<else:if var="topic_type" geq="3" />{$announcementtopicprefix}</if:if>
+								<if:if var="post_type" eq="2">{$stickytopicprefix}<else:if var="post_type" geq="3" />{$announcementtopicprefix}</if:if>
 								<if:if var="is_feature" eq="1">{$featuretopicprefix}</if:if>
 								<if:if var="poll" eq="1">{$polltopicprefix}</if:if>
 								</span>
@@ -87,9 +87,9 @@
 								<strong>{$L_MODOPTIONS}</strong>
 								<br />
 								<div class="smalltext">
-									<a href="mod.php?act=deletetopic&amp;id={$topic_id}" title="{$L_DELETETOPIC}">{$L_DELETETOPIC}</a><br />
-									<a href="mod.php?act=locktopic&amp;id={$topic_id}" title="{$L_LOCKTOPIC}">{$L_LOCKTOPIC}</a><br />
-									<if:if var="row_type" eq="8"><a href="mod.php?act=deletereply&amp;id={$reply_id}" title="{$L_DELETEREPLY}">{$L_DELETEREPLY}</a><br /></if:if>
+									<a href="mod.php?act=deletetopic&amp;id={$post_id}" title="{$L_DELETETOPIC}">{$L_DELETETOPIC}</a><br />
+									<a href="mod.php?act=locktopic&amp;id={$post_id}" title="{$L_LOCKTOPIC}">{$L_LOCKTOPIC}</a><br />
+									<if:if var="row_type" eq="8"><a href="mod.php?act=deletereply&amp;id={$post_id}" title="{$L_DELETEREPLY}">{$L_DELETEREPLY}</a><br /></if:if>
 									<a href="mod.php?act=deletereport&amp;id={$id}" title="{$L_DELETEREPORT}">{$L_DELETEREPORT}</a><br />
 									--------------------
 									<br />
@@ -128,7 +128,7 @@
 
 <page:navigator id="bpreports_pager">
 <div align="right">
-	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
+	<table cellspacing="{$style_cellspacing}" class="pagination">
 		<tr>
 			<td class="alt3" id="page_jump2" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>

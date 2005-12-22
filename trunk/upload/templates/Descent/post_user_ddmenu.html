@@ -1,7 +1,7 @@
 <if:if var="post_user_id" greater="0"><if:if var="post_display_user_ddmenu" eq="1">
 <!-- User Drop Down Menu -->
 <div class="borderwrap" id="post_user_ddmenu{$post_user_id}" style="display: none;">
-	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+	<table cellspacing="{$style_cellspacing}" class="table">
 		<tr><td class="alt1"><a href="member.php?id={$post_user_id}" title="{$L_PROFILE}" class="smalltext">{$L_PROFILE}</a></td></tr>
 		<is:logged><tr><td class="alt1" nowrap="nowrap"><a href="member.php?act=usercp&amp;view=pmnewmessage&amp;user={$post_user_name}" title="{$L_PMUSER}" class="smalltext">{$L_PMUSER}</a></td></tr></is:logged>
 		<tr><td class="alt1"><a href="member.php?act=mail&amp;id={$post_user_id}" title="{$L_EMAIL}" class="smalltext">{$L_EMAIL}</a></td></tr>

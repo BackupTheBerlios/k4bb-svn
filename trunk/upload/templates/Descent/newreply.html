@@ -1,16 +1,16 @@
 <core:import id="forum_rules" file="forum_rules.html" />
 <core:import id="preview" />
 <form:form name="savepost_form" id="savepost_form" action="{$newreply_act}" method="post" enctype="multipart/form-data">
-<input type="hidden" name="forum_id" id="forum_id" value="{$reply_forum_id}" />
-<input type="hidden" name="topic_id" id="topic_id" value="{$reply_topic_id}" />
+<input type="hidden" name="forum_id" id="forum_id" value="{$post_forum_id}" />
+<input type="hidden" name="post_id" id="post_id" value="{$post_post_id}" />
+<input type="hidden" name="topic_id" id="topic_id" value="{$topic_id}" />
 <core:block id="parent_id" hidden="yes"><input type="hidden" name="parent_id" id="parent_id" value="{$parent_id}" /></core:block>
-<core:block id="reply_id" hidden="yes"><input type="hidden" name="reply_id" id="reply_id" value="{$reply_reply_id}" /></core:block>
 
 <!-- AJAX Reply Preview -->
 <div id="ajax_post_preview" style="display: none;"></div>
 <!-- / AJAX Reply Preview -->
 
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle">
 			<core:block id="post_reply">
@@ -23,12 +23,12 @@
 			<core:block id="edit_post" hidden="yes">
 			<div style="float:right;" class="smalltext">
 				<strong>{$L_REPLY}:</strong>
-				<a href="findpost.php?id={$reply_reply_id}" class="smalltext" style="font-weight: normal;" title="{$reply_name}">{$reply_name}</a>
+				<a href="findpost.php?id={$post_post_id}" class="smalltext" style="font-weight: normal;" title="{$post_name}">{$post_name}</a>
 			</div>
-			{$L_EDITPOST}: <span style="font-weight: normal;">{$reply_name}</span>
+			{$L_EDITPOST}: <span style="font-weight: normal;">{$post_name}</span>
 			</core:block>
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<tr>
 				<td class="alt3" colspan="2" align="center">
 					
@@ -42,7 +42,7 @@
 							<strong>{$L_GUEST}</strong>
 							</is:logged>
 						</span>
-						<table border="0" cellpadding="0" cellspacing="0">
+						<table border="0" cellspacing="0">
 							<is:unlogged>
 							<tr>
 								<td>
@@ -57,7 +57,7 @@
 								<td>
 									<!-- Post Title -->
 									<label for="name" class="smalltext">{$L_POSTTITLE}</label><br />
-									<input type="text" name="name" id="name" value="{$reply_name}" tabindex="2" style="width: 500px;" class="inputbox" maxlength="255" />
+									<input type="text" name="name" id="name" value="{$post_name}" tabindex="2" style="width: 500px;" class="inputbox" maxlength="255" />
 									<form:error id="name_error" for="name" setclass="inputfailed" regex=".{{$topicminchars},{$topicmaxchars}}">{$L_TITLETOOSHORT}</form:error>
 									<!-- / Post Title -->
 								</td>
@@ -82,12 +82,12 @@
 									<list:list id="emoticons">
 									
 									<!-- Emoticons -->
-									<table border="0" cellpadding="0" cellspacing="0">
+									<table border="0" cellspacing="0">
 										<tr>
 											<td>
 												<fieldset>
 													<legend>{$L_EMOTICONS}</legend>
-													<table cellpadding="3" cellspacing="{$style_cellspacing}" border="0" id="posticons">
+													<table cellpadding="3" cellspacing="{$style_cellspacing}" id="posticons">
 														<tr>
 															<list:item list="emoticons">
 															<td align="center">
@@ -117,14 +117,14 @@
 									<list:list id="posticons">
 									
 									<!-- Post Icons -->
-									<table border="0" cellpadding="0" cellspacing="0" width="100%">
+									<table border="0" cellspacing="0" width="100%">
 										<tr>
 											<td>
 												<fieldset>
 													<legend>{$L_POSTICONS}</legend>
 													<span class="smalltext">{$L_POSTICONSPOSTCHOOSE}</span>
 													<label for="noicon" style="float: left;margin-top: 10px;"><input type="radio" name="posticon" id="noicon" value="clear.gif" checked="checked" onclick="swap_posticon(null)" />&nbsp;{$L_NOICON}</label>
-													<table cellpadding="3" cellspacing="{$style_cellspacing}" border="0" id="posticons">
+													<table cellpadding="3" cellspacing="{$style_cellspacing}" id="posticons">
 														<tr>
 															<list:item list="posticons">
 															<td align="center">
@@ -172,13 +172,13 @@
 <br />
 
 <!-- Additional Post Options -->
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle" id="po_maintitle">
 			<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_po', 'postoptions', 'po_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_po" src="Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
 			{$L_ADDITIONALOPTIONS}
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table" id="postoptions" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="postoptions" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
 			<tr>
 				<td class="alt3">
 					<div class="outset_box">
@@ -202,13 +202,13 @@
 <maps:if var="attachments" method="can_add" forum="forum_forum_id">
 <br />
 <!-- Attachments Manager -->
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle" id="am_maintitle">
 			<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_am', 'attachmanage', 'am_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_am" src="Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
 			{$L_ATTACHMENTSMANAGER}
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table" id="attachmanage" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="attachmanage" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
 			<tr>
 				<td class="alt3">
 					<div class="outset_box">
@@ -231,16 +231,16 @@
 <br />
 
 <!-- Topic Review -->
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle" id="tr_maintitle">
 			<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('topicreview_link', 'topicreview', 'tr_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="topicreview_link" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
-			{$L_TOPICREVIEW} - {$reply_name}
+			{$L_TOPICREVIEW} - {$post_name}
 		</div>
 		<div class="alt3" style="padding: 0px;">
 			<div style="height: 300px; overflow: auto;" id="topicreview">
 				<list:list id="topic_review">
-				<table width="99%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+				<table width="99%" cellspacing="{$style_cellspacing}" class="table">
 				<tr>
 					<td class="subtitle" width="20%"><div align="center">{$L_AUTHOR}</div></td>
 					<td class="subtitle" width="80%"><div align="center">{$L_MESSAGE}</div></td>
@@ -274,13 +274,13 @@
 
 <br />
 <!-- Posting Code Allowances -->
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle" id="pr_maintitle">
 			<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_pr', 'postingrules', 'pr_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_pr" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
 			{$L_POSTINGRULES}
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table" id="postingrules">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="postingrules">
 			<tr>
 				<td class="alt3" valign="top">
 					<div align="left" class="minitext">
@@ -289,7 +289,7 @@
 				</td>
 				<td class="alt3" valign="top">
 					<div align="right" class="minitext">
-						<table cellpadding="0" cellspacing="0" border="0">
+						<table cellspacing="0">
 							<tr>
 								<td valign="top">
 									{$forum_user_reply_options}
@@ -321,12 +321,12 @@
 		var enable_sig				= d.getElementById('enable_sig');
 		var disable_areply			= d.getElementById('disable_areply');
 		
-		<maps:if forum="forum_forum_id" var="html" method="can_add">disable_html.checked		= ({$reply_disable_html} == 1) ? true : false;</maps:if>
-		//disable_bbcode.checked		= ({$reply_disable_bbcode} == 1) ? true : false;
-		disable_emoticons.checked	= ({$reply_disable_emoticons} == 1) ? true : false;
-		disable_aurls.checked		= ({$reply_disable_aurls} == 1) ? true : false;
-		enable_sig.checked			= ({$reply_disable_sig} == 1) ? false : true;
-		disable_areply.checked		= ({$reply_disable_areply} == 1) ? true : false;
+		<maps:if forum="forum_forum_id" var="html" method="can_add">disable_html.checked		= ({$post_disable_html} == 1) ? true : false;</maps:if>
+		//disable_bbcode.checked		= ({$post_disable_bbcode} == 1) ? true : false;
+		disable_emoticons.checked	= ({$post_disable_emoticons} == 1) ? true : false;
+		disable_aurls.checked		= ({$post_disable_aurls} == 1) ? true : false;
+		enable_sig.checked			= ({$post_disable_sig} == 1) ? false : true;
+		disable_areply.checked		= ({$post_disable_areply} == 1) ? true : false;
 	
 	} catch(e) {
 		alert(e.message);
@@ -336,10 +336,10 @@
 	/**
 	 * Get the post icons
 	 */
-	d.setRadio('{$reply_posticon}', 'posticon');
+	d.setRadio('{$post_posticon}', 'posticon');
 
 	var pi_image	= d.getElementById('display_posticon');
-	pi_image.src	= 'tmp/upload/posticons/{$reply_posticon}';
+	pi_image.src	= 'tmp/upload/posticons/{$post_posticon}';
 
 //]]>
 </script>

@@ -26,13 +26,13 @@
 				<core:import id="forum_view_subforums" file="forum_view_subforums.html" />
 				</span>
 			</td>
-			<td class="base{$row_class}" align="center" width="5%"><span class="minitext">{$posts}</span></td>
-			<td class="base{$row_class}" align="center" width="5%"><span class="minitext">{$topics}</span></td>
+			<td class="base{$row_class}" align="center"><div class="forum_number_cell"><span class="minitext"><br /><br />{$posts}</span></div></td>
+			<td class="base{$row_class}" align="center"><div class="forum_number_cell"><span class="minitext"><br /><br />{$topics}</span></div></td>
 			<td class="base{$row_class}" nowrap="nowrap" align="center" width="30%">
 				<if:if var="post_id" greater="0">
 				<div align="left" class="minitext">
 					<if:if var="post_posticon" noteq="clear.gif"><img src="tmp/upload/posticons/{$post_posticon}" alt="" border="0" /></if:if>
-					<a href="<if:if var="post_id" eq="topic_id">viewtopic.php?id={$post_id}<if:else />findpost.php?id={$post_id}</if:if>" title="{$post_name}" class="alt{$row_class}_link"><strong><core:truncate length="27" append="...">{$post_name}</core:truncate></strong></a>
+					<a href="findpost.php?id={$post_id}" title="{$post_name}" class="alt{$row_class}_link"><strong><core:truncate length="27" append="...">{$post_name}</core:truncate></strong></a>
 					<br />
 					{$L_BY} <if:if var="post_uname" eq="">{$L_GUEST}<if:else /><if:if var="post_uid" noteq="0"><a href="member.php?id={$post_uid}" title="{$post_uname}"><strong>{$post_uname}</strong></a><if:else />{$post_uname}</if:if></if:if><br />
 					{$L_ONSMALL} <core:date format="%b %d %Y">{$post_created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$post_created}</core:date></span>

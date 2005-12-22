@@ -33,9 +33,9 @@ class ReportBadPost extends FAAction {
 	function execute(&$request) {
 		
 		if(isset($_REQUEST['t']) && intval($_REQUEST['t']) != 0) {
-			$post					= $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($_REQUEST['t']));
+			$post					= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($_REQUEST['t']));
 		} elseif(isset($_REQUEST['r']) && intval($_REQUEST['r']) != 0) {
-			$post					= $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE reply_id = ". intval($_REQUEST['r']));
+			$post					= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($_REQUEST['r']));
 		} else {
 
 			/* set the breadcrumbs bit */
@@ -46,7 +46,7 @@ class ReportBadPost extends FAAction {
 		}
 		
 		/* Has this post already been reported? */
-		$report		= $request['dba']->getRow("SELECT * FROM ". K4BADPOSTREPORTS ." WHERE ". ($post['row_type'] & TOPIC ? 'topic_id = '. intval($post['topic_id']) .' AND reply_id = 0' : 'reply_id = '. intval($post['reply_id'])));
+		$report		= $request['dba']->getRow("SELECT * FROM ". K4BADPOSTREPORTS ." WHERE ". ($post['row_type'] & TOPIC ? 'post_id = '. intval($post['post_id']) .' AND post_id = 0' : 'post_id = '. intval($post['post_id'])));
 		
 		if(is_array($report) && !empty($report)) {
 			
@@ -86,9 +86,9 @@ class SendBadPostReport extends FAAction {
 		
 		// was valid topic/reply info given?
 		if(isset($_REQUEST['t']) && intval($_REQUEST['t']) != 0) {
-			$post					= $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($_REQUEST['t']));
+			$post					= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($_REQUEST['t']));
 		} elseif(isset($_REQUEST['r']) && intval($_REQUEST['r']) != 0) {
-			$post					= $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE reply_id = ". intval($_REQUEST['r']));
+			$post					= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($_REQUEST['r']));
 		} else {
 
 			/* set the breadcrumbs bit */
@@ -116,7 +116,7 @@ class SendBadPostReport extends FAAction {
 		}
 		
 		/* Has this post already been reported? */
-		$report		= $request['dba']->getRow("SELECT * FROM ". K4BADPOSTREPORTS ." WHERE ". ($post['row_type'] & TOPIC ? 'topic_id = '. intval($post['topic_id']) .' AND reply_id = 0' : 'reply_id = '. intval($post['reply_id'])));
+		$report		= $request['dba']->getRow("SELECT * FROM ". K4BADPOSTREPORTS ." WHERE ". ($post['row_type'] & TOPIC ? 'post_id = '. intval($post['post_id']) .' AND post_id = 0' : 'post_id = '. intval($post['post_id'])));
 		
 		if(is_array($report) && !empty($report)) {
 			
@@ -130,13 +130,13 @@ class SendBadPostReport extends FAAction {
 			return $action->execute($request);
 		}
 		
-		$insert		= $request['dba']->prepareStatement("INSERT INTO ". K4BADPOSTREPORTS ." (category_id,forum_id,topic_id,reply_id,message,user_id,user_name,poster_id,poster_name,created) VALUES (?,?,?,?,?,?,?,?,?,?)");
+		$insert		= $request['dba']->prepareStatement("INSERT INTO ". K4BADPOSTREPORTS ." (category_id,forum_id,post_id,post_id,message,user_id,user_name,poster_id,poster_name,created) VALUES (?,?,?,?,?,?,?,?,?,?)");
 		
-		// category_id,forum_id,topic_id,reply_id,message,user_id,user_name,poster_id,poster_name,created
+		// category_id,forum_id,post_id,post_id,message,user_id,user_name,poster_id,poster_name,created
 		$insert->setInt(1, $post['category_id']);
 		$insert->setInt(2, $post['forum_id']);
-		$insert->setInt(3, $post['topic_id']);
-		$insert->setInt(4, @$post['reply_id']);
+		$insert->setInt(3, $post['post_id']);
+		$insert->setInt(4, @$post['post_id']);
 		$insert->setString(5, k4_htmlentities($_REQUEST['report'], ENT_QUOTES));
 		$insert->setInt(6, $request['user']->get('id'));
 		$insert->setString(7, $request['user']->get('name'));
@@ -150,7 +150,7 @@ class SendBadPostReport extends FAAction {
 		/* Create the ancestors bar */
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_REPORTBADPOST');
 		
-		$url	= $post['row_type'] & TOPIC ? 'viewtopic.php?id='. $post['topic_id'] : 'findpost.php?id='. $post['reply_id'];
+		$url	= $post['row_type'] & TOPIC ? 'viewtopic.php?id='. $post['post_id'] : 'findpost.php?id='. $post['post_id'];
 
 		$action = new K4InformationAction(new K4LanguageElement('L_REPORTEDPOST', $post['name']), 'content', TRUE, $url, 3);
 		return $action->execute($request);
@@ -337,22 +337,22 @@ class BadPostReportIterator extends FAProxyIterator {
 	function current() {
 		$temp					= parent::current();
 				
-		if($temp['reply_id'] == 0) {
-			$topic				= $this->dba->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($temp['topic_id']));
+		if($temp['post_id'] == 0) {
+			$topic				= $this->dba->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($temp['post_id']));
 
 			$temp['topic_name']	= $topic['name'];
-			$temp['url']		= 'viewtopic.php?id='. $topic['topic_id'];
-			$temp['post_id']	= $topic['topic_id'];
+			$temp['url']		= 'viewtopic.php?id='. $topic['post_id'];
+			$temp['post_id']	= $topic['post_id'];
 
-			$this->topics[$temp['topic_id']] = $topic;
+			$this->topics[$temp['post_id']] = $topic;
 
 			$temp				= array_merge($temp, $topic);
 		} else {
-			$reply				= $this->dba->getRow("SELECT * FROM ". K4REPLIES ." WHERE reply_id = ". intval($temp['reply_id']));
-			$temp['post_id']	= $reply['reply_id'];
+			$reply				= $this->dba->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($temp['post_id']));
+			$temp['post_id']	= $reply['post_id'];
 			$temp['views']		= '--';
-			$temp['url']		= 'findpost.php?id='. $reply['reply_id'];
-			$temp['topic_name'] = !isset($this->topics[$reply['topic_id']]) ? $this->dba->getValue("SELECT name FROM ". K4TOPICS ." WHERE topic_id = ". intval($reply['topic_id'])) : $this->topics[$reply['topic_id']]['name'];
+			$temp['url']		= 'findpost.php?id='. $reply['post_id'];
+			$temp['topic_name'] = !isset($this->topics[$reply['post_id']]) ? $this->dba->getValue("SELECT name FROM ". K4POSTS ." WHERE post_id = ". intval($reply['post_id'])) : $this->topics[$reply['post_id']]['name'];
 			
 			$temp				= array_merge($temp, $reply);
 		}

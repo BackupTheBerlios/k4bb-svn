@@ -1,7 +1,7 @@
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle">{$L_LOOKUPGROUP}: <span style="font-weight: normal;">{$group_name}</span></div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<tr>
 				<td class="alt1" width="50%"><strong>{$L_DESCRIPTION}:</strong></td>
 				<td class="alt3" width="50%">{$group_description}</td>
@@ -27,7 +27,7 @@
 
 <page:navigator id="users_pager">
 <div align="right">
-	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
+	<table cellspacing="{$style_cellspacing}" class="pagination">
 		<tr>
 			<td class="alt1" id="page_jump2"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
@@ -44,10 +44,10 @@
 </div>
 </page:navigator>
 
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle">{$L_MEMBERS} ({$num_group_members})</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<list:list id="users_in_usergroup">
 			<list:item list="users_in_usergroup">
 			<list:switch list="users_in_usergroup" var="row_class" a="alt1" b="alt3">
@@ -66,7 +66,7 @@
 
 <page:navigator id="users_pager">
 <div align="right">
-	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
+	<table cellspacing="{$style_cellspacing}" class="pagination">
 		<tr>
 			<td class="alt3" id="page_jump2" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>

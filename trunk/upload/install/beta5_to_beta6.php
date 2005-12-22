@@ -38,9 +38,9 @@ require "includes/k4bb/k4bb.php";
 class K4DefaultAction extends FAAction {
 	function execute(&$request) {
 		
-		$request['dba']->alterTable(K4TOPICS, "ADD total_attachments INT UNSIGNED NOT NULL DEFAULT 0");
-		$request['dba']->alterTable(K4REPLIES, "ADD attachments INT UNSIGNED NOT NULL DEFAULT 0");
-		$request['dba']->alterTable(K4ATTACHMENTS, "ADD reply_id INT UNSIGNED NOT NULL DEFAULT 0");
+		$request['dba']->alterTable(K4POSTS, "ADD total_attachments INT UNSIGNED NOT NULL DEFAULT 0");
+		$request['dba']->alterTable(K4POSTS, "ADD attachments INT UNSIGNED NOT NULL DEFAULT 0");
+		$request['dba']->alterTable(K4ATTACHMENTS, "ADD post_id INT UNSIGNED NOT NULL DEFAULT 0");
 		$request['dba']->executeUpdate("UPDATE k4_topics set total_attachments=attachments");
 		$request['dba']->alterTable(K4ATTACHMENTS, "ADD forum_id INT UNSIGNED NOT NULL DEFAULT 0");
 		$request['dba']->alterTable(K4ATTACHMENTS, "ADD message_id INT UNSIGNED NOT NULL DEFAULT 0");

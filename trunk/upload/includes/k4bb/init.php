@@ -53,6 +53,7 @@ require K4_BASE_DIR. '/poll_template.php';
 require K4_BASE_DIR. '/actions/online_users.class.php';
 require K4_BASE_DIR. '/actions/forums.class.php';
 require K4_BASE_DIR. '/actions/topics.class.php';
+require K4_BASE_DIR. '/actions/posts.class.php';
 require K4_BASE_DIR. '/actions/topic_review.class.php';
 require K4_BASE_DIR. '/actions/replies.class.php';
 require K4_BASE_DIR. '/actions/users.class.php';

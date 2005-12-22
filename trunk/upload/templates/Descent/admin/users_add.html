@@ -2,7 +2,7 @@
 <form:form name="add_user" id="add_user" action="admin.php?act=users_insert" method="post" enctype="multipart/form-data">
 <div class="header"><div class="title">{$L_ADDUSER}</div></div>
 <div class="spacer">
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
 			<td class="alt1">
 				<div class="outset_box">
@@ -11,7 +11,7 @@
 					<form:error id="uname_error" for="uname" setclass="inputfailed" regex="^[a-zA-Z]([a-zA-Z0-9]*[-_ ]?)*[a-zA-Z0-9]*$">{$L_SUPPLYUSERNAME}</form:error>
 					<hr noshade="noshade" size="1" />
 					<span class="smalltext">{$L_FILLINPASSWORD}</span><br /><br />
-					<table width="100%" cellpadding="0" cellspacing="0" border="0">
+					<table width="100%" cellspacing="0">
 						<tr>
 							<td width="50%">
 								<label for="password"><strong>{$L_PASSWORD}:</strong></label><br />
@@ -27,7 +27,7 @@
 					<form:error id="password_match_error" for="password" setclass="inputfailed" match="password2">{$L_PASSESDONTMATCH}</form:error>
 					<hr noshade="noshade" size="1" />
 					<span class="smalltext">{$L_FILLINEMAIL}</span><br /><br />
-					<table width="100%" cellpadding="0" cellspacing="0" border="0">
+					<table width="100%" cellspacing="0">
 						<tr>
 							<td width="50%">
 								<label for="email"><strong>{$L_EMAILADDRESS}:</strong></label><br />
@@ -54,7 +54,7 @@
 </div>
 <div class="spacer">
 	<div class="subheader">{$L_USERGROUPS}</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
 			<td class="alt1" width="50%"><strong><label for="permissions">{$L_PERMISSIONS}:</label></strong></td>
 			<td class="alt1" width="50%">
@@ -89,7 +89,7 @@
 </div>
 <div class="spacer">
 	<div class="subheader">{$L_PERSONALINFORMATION}</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
 			<td class="alt1" width="50%"><label for="fullname"><strong>{$L_FULLNAME}:</strong></label></td>
 			<td class="alt1" width="50%"><input type="text" name="fullname" value="{$edit_user_fullname}" id="fullname" maxlength="100" class="inputbox" /></td>
@@ -97,7 +97,7 @@
 		<tr>
 			<td class="alt2" width="50%"><label for="bday_month"><strong>{$L_BIRTHDAY}:</strong></label></td>
 			<td class="alt2" width="50%">
-				<table cellpadding="0" cellspacing="0" border="0">
+				<table cellspacing="0">
 					<tr>
 						<td class="base1" align="center"><label class="smalltext" for="bday_month">{$L_MONTH}</label></td>
 						<td class="base1" align="center"><label class="smalltext" for="bday_day">{$L_DAY}</label></td>
@@ -168,7 +168,7 @@
 </div>
 <div class="spacer">
 	<div class="subheader">{$L_INSTANTMESSAGING}</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
 			<td class="alt1" width="50%"><label for="icq"><strong>{$L_ICQ}:</strong></label></td>
 			<td class="alt1" width="50%"><input type="text" name="icq" id="icq" value="{$edit_user_icq}" maxlength="25" class="inputbox" /></td>
@@ -197,7 +197,7 @@
 </div>
 <div class="spacer">
 	<div class="subheader">{$L_ADDITIONALINFO}</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
 			<td class="alt1">
 				<div class="outset_box">
@@ -256,7 +256,7 @@
 </div>
 <div class="spacer">
 	<div class="subheader">{$L_GENERALOPTIONS}</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
 			<td class="alt1" width="50%"><label for="templateset"><strong>{$L_TEMPLATESET}:</strong></label></td>
 			<td class="alt1" width="50%">
@@ -343,7 +343,7 @@
 </div>
 <div class="spacer">
 	<div class="subheader">{$L_PMOPTIONS}</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
 			<td class="alt2" width="50%"><label for="notify_pm"><strong>{$L_NOTIFYPRIVATEMESSAGE}:</strong></label></td>
 			<td class="alt2" width="50%">
@@ -374,7 +374,7 @@
 </div>
 <div class="spacer">
 	<div class="subheader">{$L_POSTOPTIONS}</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
 			<td class="alt2" width="50%">
 				<label for="topicsperpage"><strong>{$L_TOPICSPERPAGE}:</strong></label>
@@ -405,7 +405,7 @@
 </div>
 <div class="spacer">
 	<div class="subheader">{$L_VIEWINGOPTIONS}</div>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
 			<td class="alt2" width="50%"><label for="viewimages"><strong>{$L_VIEWIMAGES}:</strong></label></td>
 			<td class="alt2" width="50%">

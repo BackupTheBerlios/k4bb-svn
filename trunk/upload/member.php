@@ -317,8 +317,8 @@ class K4ProfileAction extends FAAction {
 
 		$member						= $request['user_info'];
 		
-		$member['num_topics']		= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4TOPICS ." WHERE poster_id = ". intval($member['id']) ." AND moved_new_topic_id=0 AND is_draft=0 AND queue=0 AND display=1");
-		$member['num_replies']		= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4REPLIES ." WHERE poster_id = ". intval($member['id']));
+		$member['num_topics']		= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4POSTS ." WHERE poster_id = ". intval($member['id']) ." AND moved_new_post_id=0 AND is_draft=0 AND queue=0 AND display=1");
+		$member['num_replies']		= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4POSTS ." WHERE poster_id = ". intval($member['id']));
 		
 		/**
 		 * Get and set some user/forum statistics
@@ -800,9 +800,11 @@ $app->setAction('insert_pmfolder', new K4InsertPMFolder);
 $app->setAction('editpmfolder', new K4EditPMFolder);
 $app->setAction('update_pmfolder', new K4UpdatePMFolder);
 $app->setAction('pm_delchoosefolder', new K4PreDeleteFolder);
+$app->setAction('pm_deletepmfolder', new K4DeleteFolder);
 $app->setAction('pm_savemessage', new K4SendPMessage);
 $app->setAction('pm_movemessages', new K4MovePMessages);
 
+/* Member List */
 $app->setAction('list', new K4MemberList);
 
 /* User problem stuff */

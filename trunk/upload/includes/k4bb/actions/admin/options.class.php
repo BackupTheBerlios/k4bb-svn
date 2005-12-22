@@ -165,7 +165,7 @@ class K4SettingsIterator extends FAProxyIterator {
 		$this->dba			= &$dba;
 		$this->lang			= $lang;
 
-		parent::__construct(&$result);
+		parent::__construct($result);
 	}
 
 	function current() {

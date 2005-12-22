@@ -14,15 +14,15 @@
 	<meta name="rating" content="general" />
 	<link rel="icon" href="favicon.ico" type="image/x-icon" />
 	<link rel="stylesheet" href="tmp/stylesets/{$STYLESET}.css" type="text/css" media="screen" />
+	<link rel="alternate" type="application/rss+xml" title="{$L_NEWPOSTS}" href="{$forum_url}/rss.php?act=new_posts" />
 	<script type="text/javascript" src="js/lib.js"></script>
 	<script type="text/javascript" src="js/javascript.js"></script>
 	<script type="text/javascript" src="js/form_check.js"></script>
 	<script type="text/javascript" src="js/k4_menu.js"></script>
 	<script type="text/javascript" src="js/http_requests.js"></script>
 	<script type="text/javascript">
-		var d=new k4lib();var k4_request = new k4XMLHttpRequest();var k4_domain='{$domain}'; // important stuff, don't touch
+		var d=new k4lib();var k4_request=new k4XMLHttpRequest();var k4_domain='{$domain}'; // important stuff, don't touch
 		set_cookie('k4_canjs', 1, 2592000, '{$domain}'); /* This cookie is very important and should always be set here. */
 		d.preload_images('Images/{$IMG_DIR}/Icons/collapse_thead.gif', 'Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif', 'Images/{$IMG_DIR}/Icons/dots.gif', 'Images/{$IMG_DIR}/Icons/icon_latest_reply.gif');
-		<if:if var="modpanel" eq="1">InitialiseCheckboxes();</if:if>
 	</script>
 </head>

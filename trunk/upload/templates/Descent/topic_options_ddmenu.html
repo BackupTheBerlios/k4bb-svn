@@ -1,0 +1,64 @@
+<!-- Topic Options Drop Down Menu -->
+<div id="topicoptions_menu" class="borderwrap" style="display: none;">
+	<table cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="findpost.php?id={$next_oldest}&amp;prev=1" title="{$L_NEXTOLDEST}" class="smalltext">&laquo; {$L_NEXTOLDEST}</a></td>
+		</tr>
+		<tr>
+			<td class="alt2" nowrap="nowrap"><a href="findpost.php?id={$next_newest}&amp;next=1" title="{$L_NEXTNEWEST}" class="smalltext">{$L_NEXTNEWEST} &raquo;</a></td>
+		</tr>
+		<tr>
+			<td class="subheader">{$L_TOPICOPTIONS}</td>
+		</tr>
+		<is:logged>
+		<tr>
+			<td class="alt1" nowrap="nowrap">
+				<if:if var="is_subscribed" eq="0">
+					<a href="viewtopic.php?act=track&amp;id={$topic_post_id}" title="{$L_TRACKTOPIC}" class="smalltext">{$L_TRACKTOPIC}</a>
+				<if:else />
+					<a href="viewtopic.php?act=untrack&amp;id={$topic_post_id}" title="{$L_UNTRACKTOPIC}" class="smalltext">{$L_UNTRACKTOPIC}</a>
+				</if:if>
+			</td>
+		</tr>
+		</is:logged>
+		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="{$curr_url}&amp;archive=1" title="{$L_PRINTERVERSION}" class="smalltext">{$L_PRINTERVERSION}</a></td>
+		</tr>
+		<tr>
+			<td class="alt1" nowrap="nowrap"><a href="{$curr_url}&amp;email=1" title="{$L_EMAILTHISPAGE}" class="smalltext">{$L_EMAILTHISPAGE}</a></td>
+		</tr>
+		<tr>
+			<td class="subheader">{$L_DISPLAYMODES}</td>
+		</tr>
+		<tr>
+			<td class="alt1" nowrap="nowrap">
+				<div style="float:right;"><img src="Images/{$IMG_DIR}/Icons/post_linear.gif" alt="" border="0" /></div>
+				<a href="viewtopic.php?act=changeview&amp;mode=linear" title="{$L_LINEAR}" class="smalltext">{$L_LINEAR}</a>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" nowrap="nowrap">
+				<div style="float:right;"><img src="Images/{$IMG_DIR}/Icons/post_vertical.gif" alt="" border="0" /></div>
+				<a href="viewtopic.php?act=changeview&amp;mode=vertical" title="{$L_VERTICAL}" class="smalltext">{$L_VERTICAL}</a>
+			</td>
+		</tr>
+		<is:logged>
+		<tr>
+			<td class="subheader">{$L_VIEWOPTIONS}</td>
+		</tr>
+		<tr>
+			<td class="alt1" nowrap="nowrap">
+				<div style="float:right;"><img src="Images/{$IMG_DIR}/Icons/mode_threaded.gif" alt="" border="0" /></div>
+				<a href="viewtopic.php?act=changeview&amp;mode=threaded" title="{$L_THREADED}" class="smalltext">{$L_THREADED}</a>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" nowrap="nowrap">
+				<div style="float:right;"><img src="Images/{$IMG_DIR}/Icons/mode_linear.gif" alt="" border="0" /></div>
+				<a href="viewtopic.php?act=changeview&amp;mode=normal" title="{$L_NORMAL}" class="smalltext">{$L_LINEAR}</a>
+			</td>
+		</tr>
+		</is:logged>
+	</table>
+</div>
+<!-- / Topic Options Drop Down Menu -->

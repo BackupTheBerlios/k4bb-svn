@@ -93,7 +93,7 @@ class ModerateForum extends FAAction {
 		$i				= 0;
 		foreach($topics as $id) {
 			$query_extra .= $i == 0 ? ' ' : ' OR ';
-			$query_extra .= 'topic_id = '. intval($id);
+			$query_extra .= 'post_id = '. intval($id);
 			
 			$i++;
 		}
@@ -112,7 +112,7 @@ class ModerateForum extends FAAction {
 					return TRUE;
 				}
 
-				$request['dba']->executeUpdate("UPDATE ". K4TOPICS ." SET topic_locked = 1 WHERE (". $query_extra .")");
+				$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET post_locked = 1 WHERE (". $query_extra .")");
 				
 				k4_bread_crumbs($request['template'], $request['dba'], 'L_LOCKTOPICS', $forum);
 				$action = new K4InformationAction(new K4LanguageElement('L_LOCKEDTOPICS'), 'content', TRUE, referer(), 3);
@@ -132,7 +132,7 @@ class ModerateForum extends FAAction {
 					return TRUE;
 				}
 
-				$request['dba']->executeUpdate("UPDATE ". K4TOPICS ." SET topic_type = ". TOPIC_STICKY .", topic_expire = 0 WHERE (". $query_extra .")");
+				$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET post_type = ". TOPIC_STICKY .", post_expire = 0 WHERE (". $query_extra .")");
 				
 				k4_bread_crumbs($request['template'], $request['dba'], 'L_STICKTOPICS', $forum);
 				$action = new K4InformationAction(new K4LanguageElement('L_STUCKTOPICS'), 'content', TRUE, referer(), 3);
@@ -152,7 +152,7 @@ class ModerateForum extends FAAction {
 					return TRUE;
 				}
 
-				$request['dba']->executeUpdate("UPDATE ". K4TOPICS ." SET topic_type = ". TOPIC_ANNOUNCE .", topic_expire = 0 WHERE (". $query_extra .")");
+				$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET post_type = ". TOPIC_ANNOUNCE .", post_expire = 0 WHERE (". $query_extra .")");
 				
 				k4_bread_crumbs($request['template'], $request['dba'], 'L_ANNOUNCETOPICS', $forum);
 				$action = new K4InformationAction(new K4LanguageElement('L_ANNOUNCEDTOPICS'), 'content', TRUE, referer(), 3);
@@ -172,7 +172,7 @@ class ModerateForum extends FAAction {
 					return TRUE;
 				}
 
-				$request['dba']->executeUpdate("UPDATE ". K4TOPICS ." SET is_feature = 1, topic_expire = 0 WHERE (". $query_extra .")");
+				$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET is_feature = 1, post_expire = 0 WHERE (". $query_extra .")");
 				
 				k4_bread_crumbs($request['template'], $request['dba'], 'L_FEATURETOPICS', $forum);
 				$action = new K4InformationAction(new K4LanguageElement('L_FEATUREDTOPICS'), 'content', TRUE, referer(), 3);
@@ -192,7 +192,7 @@ class ModerateForum extends FAAction {
 					return TRUE;
 				}
 
-				$request['dba']->executeUpdate("UPDATE ". K4TOPICS ." SET is_feature = 0, display = 1, queue = 0, topic_type = ". TOPIC_NORMAL .", topic_expire = 0, topic_locked = 0 WHERE (". $query_extra .")");
+				$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET is_feature = 0, display = 1, queue = 0, post_type = ". TOPIC_NORMAL .", post_expire = 0, post_locked = 0 WHERE (". $query_extra .")");
 				
 				k4_bread_crumbs($request['template'], $request['dba'], 'L_SETASNORMALTOPICS', $forum);
 				$action = new K4InformationAction(new K4LanguageElement('L_NORMALIZEDTOPICS'), 'content', TRUE, referer(), 3);
@@ -212,7 +212,7 @@ class ModerateForum extends FAAction {
 					return TRUE;
 				}
 
-				$request['dba']->executeUpdate("UPDATE ". K4TOPICS ." SET queue = 1 WHERE (". $query_extra .")");
+				$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET queue = 1 WHERE (". $query_extra .")");
 				
 				k4_bread_crumbs($request['template'], $request['dba'], 'L_QUEUETOPICS', $forum);
 				$action = new K4InformationAction(new K4LanguageElement('L_QUEUEDTOPICS'), 'content', TRUE, referer(), 3);
@@ -226,13 +226,13 @@ class ModerateForum extends FAAction {
 			 * Subscribe to all of the selected topics
 			 */
 			case 'subscribe': {
-				foreach($topics as $topic_id) {
-					$is_subscribed		= $request['dba']->getRow("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE user_id = ". intval($request['user']->get('id')) ." AND topic_id = ". intval($topic_id));
+				foreach($topics as $post_id) {
+					$is_subscribed		= $request['dba']->getRow("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE user_id = ". intval($request['user']->get('id')) ." AND post_id = ". intval($post_id));
 					if(!is_array($is_subscribed) || empty($is_subscribed)) {
-						$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,topic_id,forum_id,email,category_id) VALUES (?,?,?,?,?,?)");
+						$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,post_id,forum_id,email,category_id) VALUES (?,?,?,?,?,?)");
 						$subscribe->setInt(1, $request['user']->get('id'));
 						$subscribe->setString(2, $request['user']->get('name'));
-						$subscribe->setInt(3, $topic_id);
+						$subscribe->setInt(3, $post_id);
 						$subscribe->setInt(4, $forum['forum_id']);
 						$subscribe->setString(5, $request['user']->get('email'));
 						$subscribe->setInt(6, $forum['category_id']);
@@ -261,7 +261,7 @@ class ModerateForum extends FAAction {
 				$users			= array();
 
 				// find the users for topics first
-				$t				= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE ($query_extra)");
+				$t				= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE ($query_extra)");
 				while($t->next()) {
 					$temp		= $t->current();
 					$users[$temp['poster_id']] = isset($users[$temp['poster_id']]) ? $users[$temp['poster_id']] + 1 : 1;
@@ -272,7 +272,7 @@ class ModerateForum extends FAAction {
 				$t->free();
 				
 				// find them for replies
-				$r				= $request['dba']->executeQuery("SELECT * FROM ". K4REPLIES ." WHERE ($query_extra)");
+				$r				= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE ($query_extra)");
 				while($t->next()) {
 					$temp		= $t->current();
 					$users[$temp['poster_id']] = isset($users[$temp['poster_id']]) ? $users[$temp['poster_id']] + 1 : 1;
@@ -288,26 +288,26 @@ class ModerateForum extends FAAction {
 				}
 
 				// Remove everything
-				$request['dba']->executeUpdate("DELETE FROM ". K4TOPICS ." WHERE ". $query_extra);
-				$request['dba']->executeUpdate("DELETE FROM ". K4REPLIES ." WHERE ". $query_extra);
+				$request['dba']->executeUpdate("DELETE FROM ". K4POSTS ." WHERE ". $query_extra);
+				$request['dba']->executeUpdate("DELETE FROM ". K4POSTS ." WHERE ". $query_extra);
 								
 				// update the forum and the datastore
 				
 				/* Get that last topic in this forum that's not one of these topics */
-				$last_topic			= $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE (". str_replace('=', '<>', $query_extra) .") AND is_draft=0 AND queue=0 AND display=1 AND forum_id=". intval($forum['forum_id']) ." ORDER BY created DESC LIMIT 1");
-				$last_topic			= !$last_topic || !is_array($last_topic) ? array('created'=>0,'name'=>'','poster_name'=>'','topic_id'=>0,'id'=>0,'poster_id'=>0,'posticon'=>'') : $last_topic;
-				$last_topic['id']	= $last_topic['topic_id'];
+				$last_topic			= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE (". str_replace('=', '<>', $query_extra) .") AND is_draft=0 AND queue=0 AND display=1 AND forum_id=". intval($forum['forum_id']) ." ORDER BY created DESC LIMIT 1");
+				$last_topic			= !$last_topic || !is_array($last_topic) ? array('created'=>0,'name'=>'','poster_name'=>'','post_id'=>0,'id'=>0,'poster_id'=>0,'posticon'=>'') : $last_topic;
+				$last_topic['id']	= $last_topic['post_id'];
 
 				/* Get that last post in this forum that's not part of/from one of these topics */
-				$last_post			= $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE (". str_replace('=', '<>', $query_extra) .") AND forum_id=". intval($forum['forum_id']) ." ORDER BY created DESC LIMIT 1");
-				$last_post			= !$last_post || !is_array($last_post) ? $last_topic : array_merge($last_post, array('id'=>$last_post['reply_id']));
+				$lastpost_created			= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE (". str_replace('=', '<>', $query_extra) .") AND forum_id=". intval($forum['forum_id']) ." ORDER BY created DESC LIMIT 1");
+				$lastpost_created			= !$lastpost_created || !is_array($lastpost_created) ? $last_topic : array_merge($lastpost_created, array('id'=>$lastpost_created['post_id']));
 
 
 				/**
 				 * Update the forum and the datastore
 				 */
 							
-				$forum_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topics=topics-?,posts=posts-?,replies=replies-?,topic_created=?,topic_name=?,topic_uname=?,topic_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
+				$forum_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topics=topics-?,posts=posts-?,replies=replies-?,topic_created=?,topic_name=?,topic_uname=?,post_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
 				$datastore_update	= $request['dba']->prepareStatement("UPDATE ". K4DATASTORE ." SET data=? WHERE varname=?");
 					
 				/* Set the forum values */
@@ -317,21 +317,21 @@ class ModerateForum extends FAAction {
 				$forum_update->setInt(4, $last_topic['created']);
 				$forum_update->setString(5, $last_topic['name']);
 				$forum_update->setString(6, $last_topic['poster_name']);
-				$forum_update->setInt(7, $last_topic['topic_id']);
+				$forum_update->setInt(7, $last_topic['post_id']);
 				$forum_update->setInt(8, $last_topic['poster_id']);
 				$forum_update->setString(9, $last_topic['posticon']);
-				$forum_update->setInt(10, $last_post['created']);
-				$forum_update->setString(11, $last_post['name']);
-				$forum_update->setString(12, $last_post['poster_name']);
-				$forum_update->setInt(13, $last_post['id']); // this is fixed above
-				$forum_update->setInt(14, $last_post['poster_id']);
-				$forum_update->setString(15, $last_post['posticon']);
+				$forum_update->setInt(10, $lastpost_created['created']);
+				$forum_update->setString(11, $lastpost_created['name']);
+				$forum_update->setString(12, $lastpost_created['poster_name']);
+				$forum_update->setInt(13, $lastpost_created['id']); // this is fixed above
+				$forum_update->setInt(14, $lastpost_created['poster_id']);
+				$forum_update->setString(15, $lastpost_created['posticon']);
 				$forum_update->setInt(16, $forum['forum_id']);
 				
 				/* Set the datastore values */
 				$datastore					= $_DATASTORE['forumstats'];
-				$datastore['num_topics']	= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4TOPICS ." WHERE is_draft = 0 AND queue = 0 AND display = 1") - 1;
-				$datastore['num_replies']	= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4REPLIES ) - intval($num_replies);
+				$datastore['num_topics']	= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4POSTS ." WHERE is_draft = 0 AND queue = 0 AND display = 1") - 1;
+				$datastore['num_replies']	= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4POSTS ) - intval($num_replies);
 				
 				$datastore_update->setString(1, serialize($datastore));
 				$datastore_update->setString(2, 'forumstats');
@@ -368,7 +368,7 @@ class ModerateForum extends FAAction {
 				}
 
 				/* Get the topics */
-				$result				= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE is_draft=0 AND queue = 0 AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (". $query_extra .") ORDER BY created DESC");
+				$result				= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE is_draft=0 AND queue = 0 AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (". $query_extra .") ORDER BY created DESC");
 				
 				/* Apply the topics iterator */
 				$it					= &new TopicsIterator($request['dba'], $request['user'], $result, $request['template']->getVar('IMG_DIR'), $forum);
@@ -511,7 +511,7 @@ class MoveTopics extends FAAction {
 
 		foreach($topics as $id) {
 			$query_extra .= $i == 0 ? ' ' : ' OR ';
-			$query_extra .= 'topic_id = '. intval($id);
+			$query_extra .= 'post_id = '. intval($id);
 
 			$i++;
 		}
@@ -528,26 +528,26 @@ class MoveTopics extends FAAction {
 			case 'move': {
 				
 				// move the topics and replies
-				$request['dba']->executeUpdate("UPDATE ". K4TOPICS ." SET forum_id = ". intval($destination['forum_id']) .", category_id = ". intval($destination['category_id']) .", moved = 1 WHERE $query_extra");
-				$request['dba']->executeUpdate("UPDATE ". K4REPLIES ." SET forum_id = ". intval($destination['forum_id']) .", category_id = ". intval($destination['category_id']) ." WHERE $query_extra");
+				$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET forum_id = ". intval($destination['forum_id']) .", category_id = ". intval($destination['category_id']) .", moved = 1 WHERE $query_extra");
+				$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET forum_id = ". intval($destination['forum_id']) .", category_id = ". intval($destination['category_id']) ." WHERE $query_extra");
 				
 				$num_topics			= count($topics);
 				
 				// find the number of replies
-				$r					= $request['dba']->executeQuery("SELECT * FROM ". K4REPLIES ." WHERE $query_extra");
+				$r					= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE $query_extra");
 				$num_replies		= $r->numRows();				
 				
 				// get the last topic & reply in our initial forum
-				$last_topic			= $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE is_draft=0 AND queue=0 AND display=1 AND forum_id=". intval($forum['forum_id']) ." ORDER BY created DESC LIMIT 1");
-				$last_topic			= !$last_topic || !is_array($last_topic) ? array('created'=>0,'name'=>'','poster_name'=>'','id'=>0,'poster_id'=>0,'posticon'=>'') : array_merge($last_topic, array('id' => $last_topic['topic_id']));
-				$last_post			= $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE forum_id=". intval($forum['forum_id']) ." ORDER BY created DESC LIMIT 1");
-				$last_post			= !$last_post || !is_array($last_post) ? $last_topic : array_merge($last_post, array('id' => $last_post['reply_id']));
+				$last_topic			= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE is_draft=0 AND queue=0 AND display=1 AND forum_id=". intval($forum['forum_id']) ." ORDER BY created DESC LIMIT 1");
+				$last_topic			= !$last_topic || !is_array($last_topic) ? array('created'=>0,'name'=>'','poster_name'=>'','id'=>0,'poster_id'=>0,'posticon'=>'') : array_merge($last_topic, array('id' => $last_topic['post_id']));
+				$lastpost_created			= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE forum_id=". intval($forum['forum_id']) ." ORDER BY created DESC LIMIT 1");
+				$lastpost_created			= !$lastpost_created || !is_array($lastpost_created) ? $last_topic : array_merge($lastpost_created, array('id' => $lastpost_created['post_id']));
 				
 				// Update this forum
-				$forum_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topics=?,posts=?,replies=?,topic_created=?,topic_name=?,topic_uname=?,topic_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
+				$forum_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topics=?,posts=?,replies=?,topic_created=?,topic_name=?,topic_uname=?,post_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
 				
-				$num_topics			= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4TOPICS ." WHERE queue=0 AND is_draft=0 AND display=1 AND forum_id = ". intval($forum['forum_id']));
-				$num_replies		= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4REPLIES ." WHERE forum_id = ". intval($forum['forum_id']));	
+				$num_topics			= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4POSTS ." WHERE queue=0 AND is_draft=0 AND display=1 AND forum_id = ". intval($forum['forum_id']));
+				$num_replies		= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4POSTS ." WHERE forum_id = ". intval($forum['forum_id']));	
 				
 				/* Set the forum values */
 				$forum_update->setInt(1, $num_topics);
@@ -559,29 +559,29 @@ class MoveTopics extends FAAction {
 				$forum_update->setInt(7, $last_topic['id']);
 				$forum_update->setInt(8, $last_topic['poster_id']);
 				$forum_update->setString(9, $last_topic['posticon']);
-				$forum_update->setInt(10, $last_post['created']);
-				$forum_update->setString(11, $last_post['name']);
-				$forum_update->setString(12, $last_post['poster_name']);
-				$forum_update->setInt(13, $last_post['id']);
-				$forum_update->setInt(14, $last_post['poster_id']);
-				$forum_update->setString(15, $last_post['posticon']);
+				$forum_update->setInt(10, $lastpost_created['created']);
+				$forum_update->setString(11, $lastpost_created['name']);
+				$forum_update->setString(12, $lastpost_created['poster_name']);
+				$forum_update->setInt(13, $lastpost_created['id']);
+				$forum_update->setInt(14, $lastpost_created['poster_id']);
+				$forum_update->setString(15, $lastpost_created['posticon']);
 				$forum_update->setInt(16, $forum['forum_id']);
 				
 				$forum_update->executeUpdate();
 
-				unset($last_topic, $last_post, $forum_update);
+				unset($last_topic, $lastpost_created, $forum_update);
 				
 				// get the last topic & reply in our destination forum
-				$last_topic			= $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE is_draft=0 AND queue=0 AND display=1 AND forum_id=". intval($destination['forum_id']) ." ORDER BY created DESC LIMIT 1");
-				$last_topic			= !$last_topic || !is_array($last_topic) ? array('created'=>0,'name'=>'','poster_name'=>'','id'=>0,'poster_id'=>0,'posticon'=>'') : array_merge($last_topic, array('id' => $last_topic['topic_id']));
-				$last_post			= $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE forum_id=". intval($destination['forum_id']) ." ORDER BY created DESC LIMIT 1");
-				$last_post			= !$last_post || !is_array($last_post) ? $last_topic : array_merge($last_post, array('id' => $last_post['reply_id']));
+				$last_topic			= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE is_draft=0 AND queue=0 AND display=1 AND forum_id=". intval($destination['forum_id']) ." ORDER BY created DESC LIMIT 1");
+				$last_topic			= !$last_topic || !is_array($last_topic) ? array('created'=>0,'name'=>'','poster_name'=>'','id'=>0,'poster_id'=>0,'posticon'=>'') : array_merge($last_topic, array('id' => $last_topic['post_id']));
+				$lastpost_created			= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE forum_id=". intval($destination['forum_id']) ." ORDER BY created DESC LIMIT 1");
+				$lastpost_created			= !$lastpost_created || !is_array($lastpost_created) ? $last_topic : array_merge($lastpost_created, array('id' => $lastpost_created['post_id']));
 
 				// update the destination forum
-				$forum_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topics=?,posts=?,replies=?,topic_created=?,topic_name=?,topic_uname=?,topic_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
+				$forum_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topics=?,posts=?,replies=?,topic_created=?,topic_name=?,topic_uname=?,post_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
 				
-				$num_topics			= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4TOPICS ." WHERE queue=0 AND is_draft=0 AND display=1 AND forum_id = ". intval($destination['forum_id']));
-				$num_replies		= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4REPLIES ." WHERE forum_id = ". intval($destination['forum_id']));
+				$num_topics			= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4POSTS ." WHERE queue=0 AND is_draft=0 AND display=1 AND forum_id = ". intval($destination['forum_id']));
+				$num_replies		= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4POSTS ." WHERE forum_id = ". intval($destination['forum_id']));
 
 				/* Set the forum values */
 				$forum_update->setInt(1, $num_topics);
@@ -593,12 +593,12 @@ class MoveTopics extends FAAction {
 				$forum_update->setInt(7, $last_topic['id']);
 				$forum_update->setInt(8, $last_topic['poster_id']);
 				$forum_update->setString(9, $last_topic['posticon']);
-				$forum_update->setInt(10, $last_post['created']);
-				$forum_update->setString(11, $last_post['name']);
-				$forum_update->setString(12, $last_post['poster_name']);
-				$forum_update->setInt(13, $last_post['id']);
-				$forum_update->setInt(14, $last_post['poster_id']);
-				$forum_update->setString(15, $last_post['posticon']);
+				$forum_update->setInt(10, $lastpost_created['created']);
+				$forum_update->setString(11, $lastpost_created['name']);
+				$forum_update->setString(12, $lastpost_created['poster_name']);
+				$forum_update->setInt(13, $lastpost_created['id']);
+				$forum_update->setInt(14, $lastpost_created['poster_id']);
+				$forum_update->setString(15, $lastpost_created['posticon']);
 				$forum_update->setInt(16, $destination['forum_id']);
 				
 				$forum_update->executeUpdate();
@@ -622,62 +622,62 @@ class MoveTopics extends FAAction {
 				
 				$track		= !isset($track) ? TRUE : FALSE;
 
-				$select = "parent_id, forum_id, category_id, name, is_draft, is_feature, moved, queue, display, edited_time, edited_username, edited_userid, ratings_sum, ratings_num, rating, disable_html, disable_bbcode, disable_emoticons, disable_sig, disable_areply, disable_aurls, description, body_text, posticon, topic_type, topic_expire, topic_locked, poster_name, poster_id, poster_ip, reply_time, reply_uname, reply_id, reply_uid, is_poll, num_replies, views, last_viewed, attachments, last_post, row_level, row_type, created, moved_old_topic_id, moved_new_topic_id";
+				$select = "parent_id, forum_id, category_id, name, is_draft, is_feature, moved, queue, display, edited_time, edited_username, edited_userid, ratings_sum, ratings_num, rating, disable_html, disable_bbcode, disable_emoticons, disable_sig, disable_areply, disable_aurls, description, body_text, posticon, post_type, post_expire, post_locked, poster_name, poster_id, poster_ip, lastpost_created, lastpost_uname, post_id, lastpost_uid, is_poll, num_replies, views, last_viewed, attachments, lastpost_created, row_level, row_type, created, moved_old_post_id, moved_new_post_id";
 				
-				// moved_old_topic_id=topic_id is for post tracking
+				// moved_old_post_id=post_id is for post tracking
 
 				/**
 				 * Create a temporary table and copy all of the topics into it
 				 */
 				if(is_a($request['dba'], 'SQLiteConnection') || is_a($request['dba'], 'MySQLConnection')) {
-					$request['dba']->createTemporary(K4TEMPTABLE, K4TOPICS);
-					$request['dba']->executeUpdate("INSERT INTO ". K4TEMPTABLE ." (topic_id,$select) SELECT topic_id,$select FROM ". K4TOPICS ." WHERE $query_extra");
+					$request['dba']->createTemporary(K4TEMPTABLE, K4POSTS);
+					$request['dba']->executeUpdate("INSERT INTO ". K4TEMPTABLE ." (post_id,$select) SELECT post_id,$select FROM ". K4POSTS ." WHERE $query_extra");
 				} elseif(is_a($request['dba'], 'MySQLiConnection')) {
-					$request['dba']->executeUpdate("CREATE TEMPORARY TABLE ". K4TEMPTABLE ." (SELECT topic_id,$select FROM ". K4TOPICS ." WHERE $query_extra)");
+					$request['dba']->executeUpdate("CREATE TEMPORARY TABLE ". K4TEMPTABLE ." (SELECT post_id,$select FROM ". K4POSTS ." WHERE $query_extra)");
 				}
 				
-				$request['dba']->executeUpdate("UPDATE ". K4TEMPTABLE ." SET moved_old_topic_id=topic_id, forum_id = ". $destination['forum_id'] .", category_id = ". $destination['category_id']);
+				$request['dba']->executeUpdate("UPDATE ". K4TEMPTABLE ." SET moved_old_post_id=post_id, forum_id = ". $destination['forum_id'] .", category_id = ". $destination['category_id']);
 
 				/**
 				 * Copy all of the topics back into the topics table 
 				 */
-				$request['dba']->executeUpdate("INSERT INTO ". K4TOPICS ." ($select) SELECT $select FROM ". K4TEMPTABLE);
+				$request['dba']->executeUpdate("INSERT INTO ". K4POSTS ." ($select) SELECT $select FROM ". K4TEMPTABLE);
 				
 				// remove all gloat info from the 'tracker' topics
 				if($track)
-					$request['dba']->executeUpdate("UPDATE ". K4TOPICS ." SET body_text='',edited_time=0,edited_username='',edited_userid=0 WHERE ($query_extra)");
+					$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET body_text='',edited_time=0,edited_username='',edited_userid=0 WHERE ($query_extra)");
 				
 				/**
 				 * Create a temporary table for the replies
 				 */
-				$select	= "parent_id, topic_id, forum_id, category_id, name, body_text, poster_name, poster_id, poster_ip, edited_time, edited_username, edited_userid, disable_html, disable_bbcode, disable_emoticons, disable_sig, disable_areply, disable_aurls, num_replies, is_poll, posticon, row_level, row_type, created, moved_old_topic_id";
+				$select	= "parent_id, post_id, forum_id, category_id, name, body_text, poster_name, poster_id, poster_ip, edited_time, edited_username, edited_userid, disable_html, disable_bbcode, disable_emoticons, disable_sig, disable_areply, disable_aurls, num_replies, is_poll, posticon, row_level, row_type, created, moved_old_post_id";
 				$request['dba']->executeUpdate("DROP TABLE ". K4TEMPTABLE);
 				
 				if(is_a($request['dba'], 'SQLiteConnection') || is_a($request['dba'], 'MySQLConnection')) {
-					$request['dba']->createTemporary(K4TEMPTABLE, K4REPLIES);
-					$request['dba']->executeUpdate("INSERT INTO ". K4TEMPTABLE ." ($select) SELECT $select FROM ". K4REPLIES ." WHERE $query_extra");
+					$request['dba']->createTemporary(K4TEMPTABLE, K4POSTS);
+					$request['dba']->executeUpdate("INSERT INTO ". K4TEMPTABLE ." ($select) SELECT $select FROM ". K4POSTS ." WHERE $query_extra");
 				} elseif(is_a($request['dba'], 'MySQLiConnection')) {
-					$request['dba']->executeUpdate("CREATE TEMPORARY TABLE ". K4TEMPTABLE ." (SELECT $select FROM ". K4REPLIES ." WHERE $query_extra)");
+					$request['dba']->executeUpdate("CREATE TEMPORARY TABLE ". K4TEMPTABLE ." (SELECT $select FROM ". K4POSTS ." WHERE $query_extra)");
 				}
 				$request['dba']->executeUpdate("UPDATE ". K4TEMPTABLE ." SET forum_id = ". $destination['forum_id'] .", category_id = ". $destination['category_id']);
 
 				/**
 				 * Get all of our new topics and update the reply topic ids
 				 */
-				$new_topic_ids		= '';
-				$topics				= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE (". str_replace('topic_id', 'moved_old_topic_id', $query_extra) .")");
+				$new_post_ids		= '';
+				$topics				= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE (". str_replace('post_id', 'moved_old_post_id', $query_extra) .")");
 				
 				$num_topics			= $topics->numrows();
 				$num_replies		= 0;
 				while($topics->next()) {
 					$topic			= $topics->current();
 					
-					// fixes the reply topic_id's
-					$request['dba']->executeUpdate("UPDATE ". K4TEMPTABLE ." SET topic_id = ". $topic['topic_id'] ." WHERE topic_id = ". $topic['moved_old_topic_id']);
+					// fixes the reply post_id's
+					$request['dba']->executeUpdate("UPDATE ". K4TEMPTABLE ." SET post_id = ". $topic['post_id'] ." WHERE post_id = ". $topic['moved_old_post_id']);
 				
-					// set the moved_new_topic_id to the old topics (tracking only)
+					// set the moved_new_post_id to the old topics (tracking only)
 					if($track)
-						$request['dba']->executeUpdate("UPDATE ". K4TOPICS ." SET moved_new_topic_id = ". $topic['topic_id'] ." WHERE topic_id = ". $topic['moved_old_topic_id']);
+						$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET moved_new_post_id = ". $topic['post_id'] ." WHERE post_id = ". $topic['moved_old_post_id']);
 					
 					// update user post counts, we don't change the total_posts because copies don't count
 					// as 'posted' posts per se
@@ -692,7 +692,7 @@ class MoveTopics extends FAAction {
 				 * Loop through the replies if we need to change post counts
 				 */
 				if(!$track) {
-					$replies		= $request['dba']->executeQuery("SELECT * FROM ". K4REPLIES ." WHERE ($query_extra)");
+					$replies		= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE ($query_extra)");
 					while($replies->next()) {
 						$reply		= $replies->current();
 
@@ -706,21 +706,21 @@ class MoveTopics extends FAAction {
 
 				// delete the old replies (tracking only)
 				if($track)
-					$request['dba']->executeUpdate("DELETE FROM ". K4REPLIES ." WHERE ($query_extra)");
+					$request['dba']->executeUpdate("DELETE FROM ". K4POSTS ." WHERE ($query_extra)");
 
 				/**
 				 * Add the replies back into the replies table
 				 */
-				$request['dba']->executeUpdate("INSERT INTO ". K4REPLIES ." ($select) SELECT $select FROM ". K4TEMPTABLE);
+				$request['dba']->executeUpdate("INSERT INTO ". K4POSTS ." ($select) SELECT $select FROM ". K4TEMPTABLE);
 								
 				// get the last topic & reply in our initial forum
-				$last_topic			= $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE is_draft=0 AND queue=0 AND display=1 AND forum_id=". intval($forum['forum_id']) ." ORDER BY created DESC LIMIT 1");
-				$last_topic			= !$last_topic || !is_array($last_topic) ? array('created'=>0,'name'=>'','poster_name'=>'','id'=>0,'poster_id'=>0,'posticon'=>'') : array_merge($last_topic, array('id' => $last_topic['topic_id']));
-				$last_post			= $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE forum_id=". intval($forum['forum_id']) ." ORDER BY created DESC LIMIT 1");
-				$last_post			= !$last_post || !is_array($last_post) ? $last_topic : array_merge($last_post, array('id' => $last_post['reply_id']));
+				$last_topic			= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE is_draft=0 AND queue=0 AND display=1 AND forum_id=". intval($forum['forum_id']) ." ORDER BY created DESC LIMIT 1");
+				$last_topic			= !$last_topic || !is_array($last_topic) ? array('created'=>0,'name'=>'','poster_name'=>'','id'=>0,'poster_id'=>0,'posticon'=>'') : array_merge($last_topic, array('id' => $last_topic['post_id']));
+				$lastpost_created			= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE forum_id=". intval($forum['forum_id']) ." ORDER BY created DESC LIMIT 1");
+				$lastpost_created			= !$lastpost_created || !is_array($lastpost_created) ? $last_topic : array_merge($lastpost_created, array('id' => $lastpost_created['post_id']));
 				
 				// Update this forum
-				$forum_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET posts=posts-?,replies=replies-?,topic_created=?,topic_name=?,topic_uname=?,topic_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
+				$forum_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET posts=posts-?,replies=replies-?,topic_created=?,topic_name=?,topic_uname=?,post_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
 					
 				/* Set the forum values */
 				$forum_update->setInt(1, ($track ? $num_replies : 0));
@@ -731,26 +731,26 @@ class MoveTopics extends FAAction {
 				$forum_update->setInt(6, $last_topic['id']);
 				$forum_update->setInt(7, $last_topic['poster_id']);
 				$forum_update->setString(8, $last_topic['posticon']);
-				$forum_update->setInt(9, $last_post['created']);
-				$forum_update->setString(10, $last_post['name']);
-				$forum_update->setString(11, $last_post['poster_name']);
-				$forum_update->setInt(12, $last_post['id']);
-				$forum_update->setInt(13, $last_post['poster_id']);
-				$forum_update->setString(14, $last_post['posticon']);
+				$forum_update->setInt(9, $lastpost_created['created']);
+				$forum_update->setString(10, $lastpost_created['name']);
+				$forum_update->setString(11, $lastpost_created['poster_name']);
+				$forum_update->setInt(12, $lastpost_created['id']);
+				$forum_update->setInt(13, $lastpost_created['poster_id']);
+				$forum_update->setString(14, $lastpost_created['posticon']);
 				$forum_update->setInt(15, $forum['forum_id']);
 				
 				$forum_update->executeUpdate();
 
-				unset($last_topic, $last_post, $forum_update);
+				unset($last_topic, $lastpost_created, $forum_update);
 				
 				// get the last topic & reply in our destination forum
-				$last_topic			= $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE is_draft=0 AND queue=0 AND display=1 AND forum_id=". intval($destination['forum_id']) ." ORDER BY created DESC LIMIT 1");
-				$last_topic			= !$last_topic || !is_array($last_topic) ? array('created'=>0,'name'=>'','poster_name'=>'','id'=>0,'poster_id'=>0,'posticon'=>'') : array_merge($last_topic, array('id' => $last_topic['topic_id']));
-				$last_post			= $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE forum_id=". intval($destination['forum_id']) ." ORDER BY created DESC LIMIT 1");
-				$last_post			= !$last_post || !is_array($last_post) ? $last_topic : array_merge($last_post, array('id' => $last_post['reply_id']));
+				$last_topic			= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE is_draft=0 AND queue=0 AND display=1 AND forum_id=". intval($destination['forum_id']) ." ORDER BY created DESC LIMIT 1");
+				$last_topic			= !$last_topic || !is_array($last_topic) ? array('created'=>0,'name'=>'','poster_name'=>'','id'=>0,'poster_id'=>0,'posticon'=>'') : array_merge($last_topic, array('id' => $last_topic['post_id']));
+				$lastpost_created			= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE forum_id=". intval($destination['forum_id']) ." ORDER BY created DESC LIMIT 1");
+				$lastpost_created			= !$lastpost_created || !is_array($lastpost_created) ? $last_topic : array_merge($lastpost_created, array('id' => $lastpost_created['post_id']));
 
 				// update the destination forum
-				$forum_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topics=topics+?,posts=posts+?,replies=replies+?,topic_created=?,topic_name=?,topic_uname=?,topic_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
+				$forum_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topics=topics+?,posts=posts+?,replies=replies+?,topic_created=?,topic_name=?,topic_uname=?,post_id=?,topic_uid=?,topic_posticon=?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
 					
 				/* Set the forum values */
 				$forum_update->setInt(1, $num_topics);
@@ -762,12 +762,12 @@ class MoveTopics extends FAAction {
 				$forum_update->setInt(7, $last_topic['id']);
 				$forum_update->setInt(8, $last_topic['poster_id']);
 				$forum_update->setString(9, $last_topic['posticon']);
-				$forum_update->setInt(10, $last_post['created']);
-				$forum_update->setString(11, $last_post['name']);
-				$forum_update->setString(12, $last_post['poster_name']);
-				$forum_update->setInt(13, $last_post['id']);
-				$forum_update->setInt(14, $last_post['poster_id']);
-				$forum_update->setString(15, $last_post['posticon']);
+				$forum_update->setInt(10, $lastpost_created['created']);
+				$forum_update->setString(11, $lastpost_created['name']);
+				$forum_update->setString(12, $lastpost_created['poster_name']);
+				$forum_update->setInt(13, $lastpost_created['id']);
+				$forum_update->setInt(14, $lastpost_created['poster_id']);
+				$forum_update->setString(15, $lastpost_created['posticon']);
 				$forum_update->setInt(16, $destination['forum_id']);
 				
 				$forum_update->executeUpdate();
@@ -799,13 +799,13 @@ class getTopicTitle extends FAAction {
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 		
 		/* Check the request ID */
-		if(!isset($_REQUEST['topic_id']) || !$_REQUEST['topic_id'] || intval($_REQUEST['topic_id']) == 0) {
+		if(!isset($_REQUEST['post_id']) || !$_REQUEST['post_id'] || intval($_REQUEST['post_id']) == 0) {
 			$action = new K4InformationAction(new K4LanguageElement('L_TOPICDOESNTEXIST'), 'content', FALSE);
 			return !USE_AJAX ? $action->execute($request) : exit();
 		}			
 		
 		/* Get our topic */
-		$topic				= $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($_REQUEST['topic_id']));
+		$topic				= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($_REQUEST['post_id']));
 		
 		if(!$topic || !is_array($topic) || empty($topic)) {
 			$action = new K4InformationAction(new K4LanguageElement('L_TOPICDOESNTEXIST'), 'content', FALSE);
@@ -876,7 +876,7 @@ class SimpleUpdateTopic extends FAAction {
 		}			
 
 		/* Get our topic */
-		$topic				= $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($_REQUEST['id']));
+		$topic				= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($_REQUEST['id']));
 		
 		if(!$topic || !is_array($topic) || empty($topic)) {
 			$action = new K4InformationAction(new K4LanguageElement('L_TOPICDOESNTEXIST'), 'content', FALSE);
@@ -920,28 +920,28 @@ class SimpleUpdateTopic extends FAAction {
 			}
 
 			/* If this topic is a redirect/ connects to one, update the original */
-			if($topic['moved_new_topic_id'] > 0 || $topic['moved_old_topic_id'] > 0) {
-				$redirect		= $request['dba']->prepareStatement("UPDATE ". K4TOPICS ." SET name=?,edited_time=?,edited_username=?,edited_userid=? WHERE topic_id=?");
+			if($topic['moved_new_post_id'] > 0 || $topic['moved_old_post_id'] > 0) {
+				$redirect		= $request['dba']->prepareStatement("UPDATE ". K4POSTS ." SET name=?,edited_time=?,edited_username=?,edited_userid=? WHERE post_id=?");
 			
 				$redirect->setString(1, $name);
 				$redirect->setInt(2, time());
 				$redirect->setString(3, $request['user']->get('name'));
 				$redirect->setInt(4, $request['user']->get('id'));
-				$redirect->setInt(5, ($topic['moved_new_topic_id'] > 0 ? $topic['moved_new_topic_id'] : $topic['moved_old_topic_id']));
+				$redirect->setInt(5, ($topic['moved_new_post_id'] > 0 ? $topic['moved_new_post_id'] : $topic['moved_old_post_id']));
 				$redirect->executeUpdate();
 			}
 
-			$update_a		= $request['dba']->prepareStatement("UPDATE ". K4TOPICS ." SET name=?,edited_time=?,edited_username=?,edited_userid=? WHERE topic_id=?");
+			$update_a		= $request['dba']->prepareStatement("UPDATE ". K4POSTS ." SET name=?,edited_time=?,edited_username=?,edited_userid=? WHERE post_id=?");
 			
 			$update_a->setString(1, $name);
 			$update_a->setInt(2, time());
 			$update_a->setString(3, $request['user']->get('name'));
 			$update_a->setInt(4, $request['user']->get('id'));
-			$update_a->setInt(5, $topic['topic_id']);
+			$update_a->setInt(5, $topic['post_id']);
 
 			$update_a->executeUpdate();
 			
-			if($forum['topic_id'] == $topic['topic_id']) {
+			if($forum['post_id'] == $topic['post_id']) {
 				$update_c	= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topic_name=? WHERE forum_id=?");
 				$update_c->setString(1, $name);
 				$update_c->setInt(2, $forum['forum_id']);
@@ -949,7 +949,7 @@ class SimpleUpdateTopic extends FAAction {
 			}
 			
 			// id this is the last post in a forum
-			if($forum['post_id'] == $topic['topic_id'] && $forum['post_created'] == $topic['created']) {
+			if($forum['post_id'] == $topic['post_id'] && $forum['post_created'] == $topic['created']) {
 				$update_d	= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET post_name=? WHERE forum_id=?");
 				$update_d->setString(1, $name);
 				$update_d->setInt(2, $forum['forum_id']);
@@ -963,7 +963,7 @@ class SimpleUpdateTopic extends FAAction {
 			return $action->execute($request);
 		} else {
 			
-			echo '<a href="viewtopic.php?id='. $topic['topic_id'] .'" title="'. $name .'" style="font-size: 13px;">'. (strlen($name) > 40 ? substr($name, 0, 40) .'...' : $name) .'</a>';
+			echo '<a href="viewtopic.php?id='. $topic['post_id'] .'" title="'. $name .'" style="font-size: 13px;">'. (strlen($name) > 40 ? substr($name, 0, 40) .'...' : $name) .'</a>';
 			exit;
 		}
 	}

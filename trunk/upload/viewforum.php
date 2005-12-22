@@ -152,7 +152,7 @@ class K4DefaultAction extends FAAction {
 
 			/* Set the Categories list */
 			$categories = &new K4ForumsIterator($request['dba'], "SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". $forum['forum_id'] ." ORDER BY row_order ASC");
-			$request['template']->setList('categories', $categories);
+			$request['template']->setList('tlforums', $categories);
 
 			/* Hide the welcome message at the top of the forums.html template */
 			$request['template']->setVisibility('welcome_msg', FALSE);
@@ -212,7 +212,7 @@ class K4DefaultAction extends FAAction {
 			iif((get_map( 'replies', 'can_del', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN'))));
 			
 			/* Create an array with all of the possible sort orders we can have */						
-			$sort_orders		= array('name', 'last_post', 'num_replies', 'views', 'reply_uname', 'rating', 'poster_name');
+			$sort_orders		= array('name', 'lastpost_created', 'num_replies', 'views', 'lastpost_uname', 'rating', 'poster_name');
 			
 			//$extra_topics		= intval(@$_ALLFORUMS[GLBL_ANNOUNCEMENTS]['topics']);
 			$extra_topics		= 0; // TODO: need only Announcements from global announcements
@@ -245,7 +245,7 @@ class K4DefaultAction extends FAAction {
 			$daysprune = $_daysprune = isset($_REQUEST['daysprune']) && ctype_digit($_REQUEST['daysprune']) ? ($_REQUEST['daysprune'] == 0 ? 0 : intval($_REQUEST['daysprune'])) : 365;
 			$daysprune			= $daysprune > 0 ? time() - @($daysprune * 86400) : 0;
 			$sortorder			= isset($_REQUEST['order']) && ($_REQUEST['order'] == 'ASC' || $_REQUEST['order'] == 'DESC') ? $_REQUEST['order'] : 'DESC';
-			$sortedby			= isset($_REQUEST['sort']) && in_array($_REQUEST['sort'], $sort_orders) ? $_REQUEST['sort'] : 'last_post';
+			$sortedby			= isset($_REQUEST['sort']) && in_array($_REQUEST['sort'], $sort_orders) ? $_REQUEST['sort'] : 'lastpost_created';
 			$start				= ($page - 1) * $perpage;
 			
 			/* Apply the directional arrow to the sorting of topics */
@@ -272,7 +272,7 @@ class K4DefaultAction extends FAAction {
 						if(isset($_REQUEST['queued']))
 							$extra		= 'AND queue = 1';
 						elseif(isset($_REQUEST['locked']))
-							$extra		= ' AND queue = 0 AND topic_locked = 1';
+							$extra		= ' AND queue = 0 AND post_locked = 1';
 					}
 				}
 
@@ -281,7 +281,7 @@ class K4DefaultAction extends FAAction {
 				 */
 
 				/* get the topics */
-				$topics				= $request['dba']->prepareStatement("SELECT * FROM ". K4TOPICS ." WHERE created>=? AND is_draft=0 AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (topic_type <> ". TOPIC_ANNOUNCE ." AND topic_type <> ". TOPIC_STICKY ." AND is_feature = 0) $extra ORDER BY $sortedby $sortorder LIMIT ?,?");
+				$topics				= $request['dba']->prepareStatement("SELECT * FROM ". K4POSTS ." WHERE created>=? AND is_draft=0 AND display=1 AND row_type=". TOPIC ." AND forum_id=". intval($forum['forum_id']) ." AND (post_type <> ". TOPIC_ANNOUNCE ." AND post_type <> ". TOPIC_STICKY ." AND is_feature = 0) $extra ORDER BY $sortedby $sortorder LIMIT ?,?");
 				
 				/* Set the query values */
 				$topics->setInt(1, $daysprune);
@@ -300,7 +300,7 @@ class K4DefaultAction extends FAAction {
 				 * Get announcement/global topics
 				 */
 				if($page == 1) {
-					$announcements		= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE (is_draft=0 AND display=1) AND topic_type = ". TOPIC_ANNOUNCE ." AND (forum_id = ". intval($forum['forum_id']) ." OR forum_id = ". GLBL_ANNOUNCEMENTS .") $extra ORDER BY last_post DESC");
+					$announcements		= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE (is_draft=0 AND display=1) AND row_type=". TOPIC ." AND post_type = ". TOPIC_ANNOUNCE ." AND (forum_id = ". intval($forum['forum_id']) ." OR forum_id = ". GLBL_ANNOUNCEMENTS .") $extra ORDER BY lastpost_created DESC");
 					if($announcements->hasNext()) {
 						$a_it				= &new TopicsIterator($request['dba'], $request['user'], $announcements, $request['template']->getVar('IMG_DIR'), $forum);
 						$request['template']->setList('announcements', $a_it);
@@ -310,7 +310,7 @@ class K4DefaultAction extends FAAction {
 				/**
 				 * Get sticky/feature topics
 				 */
-				$importants			= $request['dba']->executeQuery("SELECT * FROM ". K4TOPICS ." WHERE is_draft=0 AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (topic_type <> ". TOPIC_ANNOUNCE .") AND (topic_type = ". TOPIC_STICKY ." OR is_feature = 1) $extra ORDER BY last_post DESC");
+				$importants			= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE is_draft=0 AND row_type=". TOPIC ." AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (post_type <> ". TOPIC_ANNOUNCE .") AND (post_type = ". TOPIC_STICKY ." OR is_feature = 1) $extra ORDER BY lastpost_created DESC");
 				if($importants->hasNext()) {
 					$i_it				= &new TopicsIterator($request['dba'], $request['user'], $importants, $request['template']->getVar('IMG_DIR'), $forum);
 					$request['template']->setList('importants', $i_it);
@@ -334,7 +334,7 @@ class K4DefaultAction extends FAAction {
 			 * Forum Subscriptions
 			 */
 			if($request['user']->isMember()) {
-				$subscribed						= $request['dba']->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE forum_id = ". intval($forum['forum_id']) ." AND topic_id = 0 AND user_id = ". $request['user']->get('id'));
+				$subscribed						= $request['dba']->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE forum_id = ". intval($forum['forum_id']) ." AND post_id = 0 AND user_id = ". $request['user']->get('id'));
 				$request['template']->setVar('is_subscribed', iif($subscribed->numRows() > 0, 1, 0));
 			}
 

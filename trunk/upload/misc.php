@@ -106,8 +106,9 @@ class SwitchEditors extends FAAction {
 					}
 				}
 				
-				if($allowemoticons)
+				if($allowemoticons) {
 					$request['template']->setList('emoticons', $request['dba']->executeQuery("SELECT * FROM ". K4EMOTICONS ." WHERE clickable = 1"));
+				}
 			}
 			
 			$message = $bbcode->revert();
@@ -135,47 +136,41 @@ class RevertHTMLText extends FAAction {
 	function execute(&$request) {
 		
 		if(USE_AJAX){
-			if(isset($_REQUEST['topic']) && intval($_REQUEST['topic']) != 0) {
+			if(!isset($_REQUEST['post_id']) || intval($_REQUEST['post_id']) == 0) {
+				return ajax_message('L_YOUNEEDPERMS');
+			}
 				
-				// get the topic
-				$post = $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($_REQUEST['topic']));
+			// get the post
+			$post = $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($_REQUEST['post_id']));
+			
+			if(!is_array($post) || empty($post)) {
+				return ajax_message('L_POSTDOESNTEXIST');
+			}
+			
+			if($post['row_type'] & TOPIC) {
 
-				if(!is_array($post) || empty($post)) {
-					return ajax_message('L_TOPICDOESNTEXIST');
-				}
-				
-				/* Check if this user has these permissions */
-				if($request['user']->get('id') == $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') == $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
-				if($request['user']->get('id') != $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'other_topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') != $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'other_topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
+					return ajax_message('L_YOUNEEDPERMS');
+				}
+			} else if($post['row_type'] & REPLY) {
+				
+				if($request['user']->get('id') == $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'replies', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
-			} else if(isset($_REQUEST['reply']) && intval($_REQUEST['reply']) != 0) {
-				
-				// get the reply
-				$post = $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE reply_id = ". intval($_REQUEST['reply']));
-				
-				if(!is_array($post) || empty($post)) {
-					return ajax_message('L_REPLYDOESNTEXIST');
-				}
-
-				/* Check if this user has these permissions */
-				if($request['user']->get('id') == $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
-					return ajax_message('L_YOUNEEDPERMS');
-				}
-
-				if($request['user']->get('id') != $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'other_topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') != $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'other_replies', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
 			} else {
-				return ajax_message('L_YOUNEEDPERMS');
+				return ajax_message('L_POSTDOESNTEXIST');
 			}
 			
-			$bbcode			= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $post['body_text'], $post['forum_id'], TRUE, TRUE, TRUE, TRUE);
+			$bbcode = &new BBCodex($request['dba'], $request['user']->getInfoArray(), $post['body_text'], $post['forum_id'], TRUE, TRUE, TRUE, TRUE);
 						
 			echo $bbcode->revert();
 			exit;
@@ -189,39 +184,35 @@ class PostBodyText extends FAAction {
 	function execute(&$request) {
 		
 		if(USE_AJAX){
-			if(isset($_REQUEST['topic']) && intval($_REQUEST['topic']) != 0) {
+			
+			if(!isset($_REQUEST['post_id']) || intval($_REQUEST['post_id']) == 0) {
+				return ajax_message('L_YOUNEEDPERMS');
+			}
 				
-				// get the topic
-				$post = $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($_REQUEST['topic']));
-
-				if(!is_array($post) || empty($post)) {
-					return ajax_message('L_TOPICDOESNTEXIST');
-				}
+			// get the post
+			$post = $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($_REQUEST['post_id']));
+			
+			if(!is_array($post) || empty($post)) {
+				return ajax_message('L_POSTDOESNTEXIST');
+			}
+			
+			if($post['row_type'] & TOPIC) {
 				
-				/* Check if this user has these permissions */
-				if($request['user']->get('id') == $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'topics', 'can_view', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') == $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'topics', 'can_view', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
-				if($request['user']->get('id') != $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'other_topics', 'can_view', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') != $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'other_topics', 'can_view', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
-			} else if(isset($_REQUEST['reply']) && intval($_REQUEST['reply']) != 0) {
+			} else if($post['row_type'] & REPLY) {
 				
-				// get the reply
-				$post = $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE reply_id = ". intval($_REQUEST['reply']));
-				
-				if(!is_array($post) || empty($post)) {
-					return ajax_message('L_REPLYDOESNTEXIST');
-				}
-
-				/* Check if this user has these permissions */
-				if($request['user']->get('id') == $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'replies', 'can_view', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') == $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'replies', 'can_view', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
-				if($request['user']->get('id') != $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'other_replies', 'can_view', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') != $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'other_replies', 'can_view', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
@@ -242,46 +233,36 @@ class changePostBodyText extends FAAction {
 	function execute(&$request) {
 		
 		if(USE_AJAX){
-			if(isset($_REQUEST['topic']) && intval($_REQUEST['topic']) != 0) {
-				
-				// get the topic
-				$post = $request['dba']->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($_REQUEST['topic']));
 
-				if(!is_array($post) || empty($post)) {
-					return ajax_message('L_TOPICDOESNTEXIST');
-				}
+			if(!isset($_REQUEST['post_id']) || intval($_REQUEST['post_id']) == 0) {
+					return ajax_message('L_YOUNEEDPERMS');
+			}
 				
-				/* Check if this user has these permissions */
-				if($request['user']->get('id') == $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
+			// get the post
+			$post = $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($_REQUEST['post_id']));
+			
+			if(!is_array($post) || empty($post)) {
+				return ajax_message('L_POSTDOESNTEXIST');
+			}
+			
+			if($post['row_type'] & TOPIC) {
+					
+				if($request['user']->get('id') == $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
-				if($request['user']->get('id') != $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'other_topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') != $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'other_topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
-
-				$post['id'] = $post['topic_id'];
-
-			} else if(isset($_REQUEST['reply']) && intval($_REQUEST['reply']) != 0) {
+			} else if($post['row_type'] & REPLY) {
 				
-				// get the reply
-				$post = $request['dba']->getRow("SELECT * FROM ". K4REPLIES ." WHERE reply_id = ". intval($_REQUEST['reply']));
-				
-				if(!is_array($post) || empty($post)) {
-					return ajax_message('L_REPLYDOESNTEXIST');
-				}
-
-				/* Check if this user has these permissions */
-				if($request['user']->get('id') == $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'replies', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') == $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'replies', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
 
-				if($request['user']->get('id') != $post['poster_id'] &$request['user']->get('perms') < get_map($user, 'other_replies', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
+				if($request['user']->get('id') != $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'other_replies', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
 					return ajax_message('L_YOUNEEDPERMS');
 				}
-
-				$post['id'] = $post['reply_id'];
-
 			} else {
 				return ajax_message('L_YOUNEEDPERMS');
 			}
@@ -298,7 +279,7 @@ class changePostBodyText extends FAAction {
 						
 			$body_text	= $bbcode->parse();
 
-			$poller		= &new K4BBPolls($body_text, '', array('forum_id'=>$post['forum_id']), $post['id']);
+			$poller		= &new K4BBPolls($body_text, '', array('forum_id'=>$post['forum_id']), $post['post_id']);
 
 			$is_poll	= 0;
 			// put it here to avoid previewing
@@ -310,31 +291,30 @@ class changePostBodyText extends FAAction {
 			}
 			
 			/* If this topic is a redirect/ connects to one, update the original */
-			if($post['row_type'] & TOPIC && ($post['moved_new_topic_id'] > 0 || $post['moved_old_topic_id'] > 0)) {
-				$update		= $request['dba']->prepareStatement("UPDATE ". ($post['row_type'] & TOPIC ? K4TOPICS : K4REPLIES) ." SET body_text=?,edited_time=?,edited_username=?,edited_userid=?,is_poll=? WHERE ". ($post['row_type'] & TOPIC ? 'topic_id' : 'reply_id') ."=?");
+			if($post['row_type'] & TOPIC && ($post['moved_new_post_id'] > 0 || $post['moved_old_post_id'] > 0)) {
+				$update		= $request['dba']->prepareStatement("UPDATE ". K4POSTS ." SET body_text=?,edited_time=?,edited_username=?,edited_userid=?,is_poll=? WHERE post_id=?");
 				$update->setString(1, $body_text);
 				$update->setInt(2, time());
 				$update->setString(3, $request['user']->get('name'));
 				$update->setInt(4, $request['user']->get('id'));
 				$update->setInt(5,$is_poll);
-				$update->setInt(6, ($post['moved_new_topic_id'] > 0 ? $post['moved_new_topic_id'] : $post['moved_old_topic_id']));
+				$update->setInt(6, ($post['moved_new_post_id'] > 0 ? $post['moved_new_post_id'] : $post['moved_old_post_id']));
 				$update->executeUpdate();
 			}
 			
 			/* Update the original */
-			$update		= $request['dba']->prepareStatement("UPDATE ". ($post['row_type'] & TOPIC ? K4TOPICS : K4REPLIES) ." SET body_text=?,edited_time=?,edited_username=?,edited_userid=?,is_poll=? WHERE ". ($post['row_type'] & TOPIC ? 'topic_id' : 'reply_id') ."=?");
+			$update		= $request['dba']->prepareStatement("UPDATE ". K4POSTS ." SET body_text=?,edited_time=?,edited_username=?,edited_userid=?,is_poll=? WHERE post_id=?");
 			$update->setString(1, $body_text);
 			$update->setInt(2, time());
 			$update->setString(3, $request['user']->get('name'));
 			$update->setInt(4, $request['user']->get('id'));
 			$update->setInt(5,$is_poll);
-			$update->setInt(6, $post[($post['row_type'] & TOPIC ? 'topic_id' : 'reply_id')]);
+			$update->setInt(6, $post['post_id']);
 			$update->executeUpdate();
 			
 			echo $body_text;
 			exit;
 		}
-
 		return TRUE;
 	}
 }

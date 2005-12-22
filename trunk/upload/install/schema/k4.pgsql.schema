@@ -174,13 +174,6 @@ CREATE TABLE k4_forums (
 	replies			INT NOT NULL DEFAULT 0,
 	posts			INT NOT NULL DEFAULT 0,
 	
-	topic_posticon		VARCHAR(100) NOT NULL DEFAULT '',
-	topic_created		INT NOT NULL DEFAULT 0,
-	topic_name		VARCHAR(32) NOT NULL DEFAULT '',
-	topic_uname		VARCHAR(30) NOT NULL DEFAULT '',
-	topic_id		INT NOT NULL DEFAULT 0,
-	topic_uid		INT NOT NULL DEFAULT 0,
-
 	post_posticon		VARCHAR(100) NOT NULL DEFAULT '',
 	post_created		INT NOT NULL DEFAULT 0,
 	post_name		VARCHAR(32) NOT NULL DEFAULT '',
@@ -213,11 +206,10 @@ CREATE TABLE k4_forums (
 
 	PRIMARY KEY(forum_id)
 );
-CREATE INDEX forum_id ON k4_forums (forum_id);
 
-DROP TABLE IF EXISTS k4_topics;
-CREATE TABLE k4_topics (
-	topic_id		INT NOT NULL SERIAL,
+DROP TABLE IF EXISTS k4_posts;
+CREATE TABLE k4_posts (
+	post_id			INT NOT NULL SERIAL,
 	parent_id		INT NOT NULL DEFAULT 0,
 	forum_id		INT NOT NULL DEFAULT 0,
 	category_id		INT NOT NULL DEFAULT 0,
@@ -255,10 +247,10 @@ CREATE TABLE k4_topics (
 	poster_id		INT NOT NULL DEFAULT 0,
 	poster_ip		VARCHAR(40) NOT NULL DEFAULT '',
 	
-	reply_time		INT NOT NULL DEFAULT 0,
-	reply_uname		VARCHAR(30) NOT NULL DEFAULT '',
-	reply_id		INT NOT NULL DEFAULT 0,
-	reply_uid		INT NOT NULL DEFAULT 0,
+	lastpost_created	INT NOT NULL DEFAULT 0,
+	lastpost_uname		VARCHAR(30) NOT NULL DEFAULT '',
+	lastpost_id		INT NOT NULL DEFAULT 0,
+	lastpost_uid		INT NOT NULL DEFAULT 0,
 	
 	is_poll			INT NOT NULL DEFAULT 0,
 
@@ -269,60 +261,17 @@ CREATE TABLE k4_topics (
 
 	attachments		INT NOT NULL DEFAULT 0,
 	total_attachments	INT NOT NULL DEFAULT 0,
-	last_post		INT NOT NULL DEFAULT 0,
 
 	row_level		INT NOT NULL DEFAULT 1,
-	row_type		INT NOT NULL DEFAULT 0,
-	created			INT NOT NULL DEFAULT 0,
-
-	moved_old_topic_id	INT NOT NULL DEFAULT 0,
-	moved_new_topic_id	INT NOT NULL DEFAULT 0,
-
-	PRIMARY KEY(topic_id)
-);
-CREATE INDEX topic_id ON k4_topics (topic_id);
-
-DROP TABLE IF EXISTS k4_replies;
-CREATE TABLE k4_replies (
-	reply_id		INT NOT NULL SERIAL,
-	parent_id		INT NOT NULL DEFAULT 0,
-	topic_id		INT NOT NULL DEFAULT 0,
-	forum_id		INT NOT NULL DEFAULT 0,
-	category_id		INT NOT NULL DEFAULT 0,
-	name			VARCHAR(255) NOT NULL DEFAULT '',
-
-	body_text		TEXT,
-	poster_name		VARCHAR(30) NOT NULL DEFAULT '',
-	poster_id		INT NOT NULL DEFAULT 0,
-	poster_ip		VARCHAR(40) NOT NULL DEFAULT '',
-
-	edited_time		INT NOT NULL DEFAULT 0,
-	edited_username		VARCHAR(30) NOT NULL DEFAULT '',
-	edited_userid		INT NOT NULL DEFAULT 0,
-
-	disable_html		INT NOT NULL DEFAULT 1,
-	disable_bbcode		INT NOT NULL DEFAULT 0,
-	disable_emoticons	INT NOT NULL DEFAULT 0,
-	disable_sig		INT NOT NULL DEFAULT 0,
-	disable_areply		INT NOT NULL DEFAULT 1,
-	disable_aurls		INT NOT NULL DEFAULT 0,
-
-	num_replies		INT NOT NULL DEFAULT 0,
-	is_poll			INT NOT NULL DEFAULT 0,
-
-	posticon		VARCHAR(100) NOT NULL DEFAULT '',
-
-	row_level		INT NOT NULL DEFAULT 1,
-	row_type		INT NOT NULL DEFAULT 0,
 	row_order		INT NOT NULL DEFAULT 0,
+	row_type		INT NOT NULL DEFAULT 0,
 	created			INT NOT NULL DEFAULT 0,
 
-	moved_old_topic_id	INT NOT NULL DEFAULT 0,
-	attachments		INT NOT NULL DEFAULT 0,
+	moved_old_post_id	INT NOT NULL DEFAULT 0,
+	moved_new_post_id	INT NOT NULL DEFAULT 0,
 
-	PRIMARY KEY(reply_id)
+	PRIMARY KEY(post_id)
 );
-CREATE INDEX reply_id ON k4_replies (reply_id);
 
 DROP TABLE IF EXISTS k4_pollquestions;
 CREATE TABLE k4_pollquestions (
@@ -495,9 +444,8 @@ CREATE TABLE k4_subscriptions (
 	id			INT NOT NULL SERIAL,
 	user_id			INT NOT NULL DEFAULT 0,
 	user_name		VARCHAR(30) NOT NULL DEFAULT '',
-	topic_id		INT NOT NULL DEFAULT 0,
+	post_id			INT NOT NULL DEFAULT 0,
 	forum_id		INT NOT NULL DEFAULT 0,
-	category_id		INT NOT NULL DEFAULT 0,
 	email			VARCHAR(100) NOT NULL DEFAULT '',
 	requires_revisit	INT NOT NULL DEFAULT 0,
 	last_visit		INT NOT NULL DEFAULT 0,
@@ -530,8 +478,7 @@ CREATE TABLE k4_topicqueue (
 DROP TABLE IF EXISTS k4_attachments;
 CREATE TABLE k4_attachments (
 	id			INT NOT NULL SERIAL,
-	topic_id		INT NOT NULL DEFAULT 0,
-	reply_id		INT NOT NULL DEFAULT 0,
+	post_id			INT NOT NULL DEFAULT 0,
 	forum_id		INT NOT NULL DEFAULT 0,
 	message_id		INT NOT NULL DEFAULT 0,
 	user_id			INT NOT NULL DEFAULT 0,
@@ -541,7 +488,7 @@ CREATE TABLE k4_attachments (
 	file_size		INT NOT NULL DEFAULT 0,
 	file_name		VARCHAR(150) NOT NULL DEFAULT '',
 	in_db			INT NOT NULL DEFAULT 1,
-	file_contents		BLOB,
+	file_contents		LONGBLOB,
 	mdfive			VARCHAR(32) NOT NULL DEFAULT '',
 	created			INT NOT NULL DEFAULT 0,
 	num_downloads		INT NOT NULL DEFAULT 0,
@@ -572,7 +519,7 @@ CREATE TABLE k4_personalpictues (
 	file_type		VARCHAR(30) NOT NULL DEFAULT '',
 	file_size		INT NOT NULL DEFAULT 0,
 	in_db			INT NOT NULL DEFAULT 1,
-	file_contents		BLOB,
+	file_contents		MEDIUMBLOB,
 
 	PRIMARY KEY(id)
 );
@@ -612,8 +559,7 @@ CREATE TABLE k4_badpostreports (
 	id			INT NOT NULL SERIAL,
 	category_id		INT NOT NULL DEFAULT 0,
 	forum_id		INT NOT NULL DEFAULT 0,
-	topic_id		INT NOT NULL DEFAULT 0,
-	reply_id		INT NOT NULL DEFAULT 0,
+	post_id			INT NOT NULL DEFAULT 0,
 	message			TEXT,
 	user_id			INT NOT NULL DEFAULT 0,
 	user_name		VARCHAR(30) NOT NULL DEFAULT '',
@@ -725,7 +671,6 @@ CREATE TABLE k4_faqcategories (
 	
 	PRIMARY KEY(category_id)
 );
-CREATE INDEX category_id2 ON k4_faqcategories (category_id);
 
 DROP TABLE IF EXISTS k4_faqanswers;
 CREATE TABLE k4_faqanswers (
@@ -739,7 +684,6 @@ CREATE TABLE k4_faqanswers (
 	
 	PRIMARY KEY(answer_id)
 );
-CREATE INDEX answer_id ON k4_faqanswers (answer_id);
 
 DROP TABLE IF EXISTS k4_usertitles;
 CREATE TABLE k4_usertitles (

@@ -9,7 +9,7 @@
 	<form:form name="add_faqanswer" id="add_faqanswer" action="{$faq_action}" method="post" enctype="multipart/form-data">
 	<core:block id="add"><input type="hidden" name="category_id" value="{$category_id}" /></core:block>
 	<core:block id="edit" hidden="yes"><input type="hidden" name="id" value="{$faq_answer_id}" /></core:block>
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
 			<td class="alt1" width="30%">
 				<label for="question"><strong>{$L_QUESTION}:</strong></label>

@@ -11,7 +11,7 @@
 			<title><![CDATA[{$name}]]></title>
 			<author><![CDATA[{$poster_name}]]></author>
 			<description><![CDATA[{$body_text}]]></description>
-			<link>{$forum_url}viewtopic.php?id={$topic_id}</link>
+			<link>{$forum_url}viewtopic.php?id={$post_id}</link>
 		</item>
 		</list:item>
 		</list:list>

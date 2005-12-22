@@ -1,15 +1,15 @@
 <tr>
-	<td class="{$row_class}" style="text-align: center;"><img src="{$topicicon}" id="topicicon{$topic_id}" alt="" border="0" <if:if var="modpanel" eq="1">onclick="updateTopicLocked(this, {$topic_id})"</if:if> /></td>
+	<td class="{$row_class}" style="text-align: center;"><img src="{$topicicon}" id="topicicon{$post_id}" alt="" border="0" <if:if var="modpanel" eq="1">onclick="updateTopicLocked(this, {$post_id})"</if:if> /></td>
 	<td class="{$row_class}" style="text-align: center;"><img src="tmp/upload/posticons/{$posticon}" alt="" border="0" /></td>
-	<td class="{$row_class}" width="65%" id="topicname_{$topic_id}_area"<if:if var="modpanel" eq="1"> ondblclick="adv_edit(this,{$topic_id},'topicname_{$topic_id}')"</if:if>>
+	<td class="{$row_class}" width="65%" id="topicname_{$post_id}_area"<if:if var="modpanel" eq="1"> ondblclick="adv_edit(this,{$post_id},'topicname_{$post_id}')"</if:if>>
 		<if:if var="use_pager" eq="1">{$pager}</if:if>
-		<if:if var="ratings_num" geq="1"><img src="Images/{$IMG_DIR}/Icons/Rating/{$rating}stars.gif" alt="({$ratings_num} {$L_VOTES})" border="0" style="float: right;" /></if:if>
+		
 		<span class="smalltext">
-		<if:if var="topic_type" eq="2">{$stickytopicprefix}<else:if var="topic_type" geq="3" />{$announcementtopicprefix}</if:if>
+		<if:if var="post_type" eq="2">{$stickytopicprefix}<else:if var="post_type" geq="3" />{$announcementtopicprefix}</if:if>
 		<if:if var="is_feature" eq="1">{$featuretopicprefix}</if:if>
 		<if:if var="is_poll" eq="1">{$polltopicprefix}</if:if>
 		</span>
-		<span id="topicname_{$topic_id}"><a href="viewtopic.php?id={$topic_id}" title="{$name}" style="font-size: 13px;"><if:if var="is_new" eq="1"><strong></if:if><core:truncate length="40" append="...">{$name}</core:truncate><if:if var="is_new" eq="1"></strong></if:if></a></span>
+		<span id="topicname_{$post_id}"><a href="viewtopic.php?id={$post_id}" title="{$name}" style="font-size: 13px;"><if:if var="is_new" eq="1"><strong></if:if><core:truncate length="40" append="...">{$name}</core:truncate><if:if var="is_new" eq="1"></strong></if:if></a></span>
 		<br />
 		<div style="float:left;" class="smalltext">
 			<if:if var="search_panel" eq="1">{$L_BY}: </if:if><span class="minitext"><if:if var="poster_name" eq="">{$L_GUEST}<if:else /><if:if var="poster_id" noteq="0"><a href="member.php?id={$poster_id}" title="{$poster_name}" style="{$post_user_background}">{$poster_name}</a><if:else />{$poster_name}</if:if></span></if:if>
@@ -18,38 +18,41 @@
 			{$L_IN}: <a href="viewforum.php?id={$forum_id}" title="{$forum_name}">{$forum_name}</a>
 			</if:if>
 		</div>
-		<if:if var="total_attachments" geq="1"><img src="Images/{$IMG_DIR}/Icons/paperclip.gif" alt="({$total_attachments} {$L_ATTACHMENTS})" border="0" style="float: right;" /></if:if>
 	</td>
-	<if:if var="moved_new_topic_id" eq="0">
+	<td align="center" class="{$row_class}"><span class="minitext">{$num_replies}</span></td>
+	<td align="center" class="{$row_class}"><span class="minitext">{$views}</span></td>
+	<if:if var="moved_new_post_id" eq="0">
 	<td style="text-align: right;" class="{$row_class}" nowrap="nowrap" width="20%">
-		<if:if var="reply_time" greater="0">
+		<if:if var="lastpost_created" noteq="lastpost_created">
 		<span class="minitext">
-			<core:date format="%b %d %Y">{$reply_time}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$reply_time}</core:date></span>
+			<core:date format="%b %d %Y">{$lastpost_created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$lastpost_created}</core:date></span>
 			<br />
-			{$L_BY}&nbsp;<if:if var="reply_uname" eq="">{$L_GUEST}<if:else /><if:if var="reply_uid" noteq="0"><a href="member.php?id={$reply_uid}" title="{$reply_uname}"><strong>{$reply_uname}</strong></a><if:else />{$reply_uname}</if:if></if:if>
-			<a href="findpost.php?id={$reply_id}" title="{$reply_name}"><img src="Images/{$IMG_DIR}/Icons/icon_latest_reply.gif" border="0" alt="{$reply_name}" /></a>
+			{$L_BY}&nbsp;<if:if var="lastpost_uname" eq="">{$L_GUEST}<if:else /><if:if var="lastpost_uid" noteq="0"><a href="member.php?id={$lastpost_uid}" title="{$lastpost_uname}"><strong>{$lastpost_uname}</strong></a><if:else />{$lastpost_uname}</if:if></if:if>
+			<a href="findpost.php?id={$post_id}" title="{$reply_name}"><img src="Images/{$IMG_DIR}/Icons/icon_latest_reply.gif" border="0" alt="{$reply_name}" /></a>
 		</span>
 		<if:else />
 		<span class="minitext">
 			<core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span>
 			<br />
 			{$L_BY}&nbsp;<if:if var="poster_name" eq="">{$L_GUEST}<if:else /><if:if var="poster_id" noteq="0"><a href="member.php?id={$poster_id}" title="{$poster_name}"><strong>{$poster_name}</strong></a><if:else />{$poster_name}</if:if></if:if>
-			<a href="viewtopic.php?id={$topic_id}" title="{$name}"><img src="Images/{$IMG_DIR}/Icons/icon_latest_reply.gif" border="0" alt="{$name}" /></a>
+			<a href="viewtopic.php?id={$post_id}" title="{$name}"><img src="Images/{$IMG_DIR}/Icons/icon_latest_reply.gif" border="0" alt="{$name}" /></a>
 		</span>
 		</if:if>
 	</td>
-	<td align="center" class="{$row_class}"><span class="minitext">{$num_replies}</span></td>
-	<td align="center" class="{$row_class}"><span class="minitext">{$views}</span></td>
+	<td class="{$row_class}">
+		<if:if var="ratings_num" geq="1"><img src="Images/{$IMG_DIR}/Icons/Rating/{$rating}stars.gif" alt="({$ratings_num} {$L_VOTES})" border="0" /></if:if>
+		<if:if var="total_attachments" geq="1"><img src="Images/{$IMG_DIR}/Icons/paperclip.gif" alt="({$total_attachments} {$L_ATTACHMENTS})" border="0" /></if:if>
+	</td>
 	<if:else />
-	<td colspan="3" class="{$row_class}" align="center">
+	<td colspan="4" class="{$row_class}" align="center">
 		&nbsp;
 	</td>
 	</if:if>
 	<if:if var="modpanel" eq="1">
-	<td class="alt4" align="center">
-		<span class="cbStyled" onclick="select_topic(this, 'performact_button', {$topic_id})" id="style_checkbox{$topic_id}"><input type="checkbox" name="topic{$topic_id}" id="topic{$topic_id}" value="{$topic_id}" /></span>
+	<td class="{$row_class}" align="center">
+		<span class="cbStyled" onclick="select_topic(this, 'performact_button', {$post_id})" id="style_checkbox{$post_id}"><input type="checkbox" name="topic{$post_id}" id="topic{$post_id}" value="{$post_id}" /></span>
 		<script type="text/javascript">
-			<core:block id="check_checkboxes" hidden="yes">d.setCheckbox({$topic_id}, 'topic{$topic_id}');select_topic(d.getElementById('style_checkbox{$topic_id}'), 'performact_button', {$topic_id});</core:block>
+			<core:block id="check_checkboxes" hidden="yes">d.setCheckbox({$post_id}, 'topic{$post_id}');select_topic(d.getElementById('style_checkbox{$post_id}'), 'performact_button', {$post_id});</core:block>
 		</script>
 	</td>
 	</if:if>

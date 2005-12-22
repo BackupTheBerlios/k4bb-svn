@@ -213,8 +213,8 @@ class DatabaseAndFileChecks extends FAAction {
 		
 		$request['template']->setVar('db_passed', $this->tpl_ret($db_passed));
 		$request['template']->setVar('fs_passed', $this->tpl_ret($fs_passed));
-		$request['template']->setVarArray($db_check);
 		$request['template']->setVarArray($fs_check);
+		$request['template']->setVarArray($db_check);
 
 		$template = $request['template'];
 		$template->setVar('install_action', $url->__toString());
@@ -264,7 +264,8 @@ class ConfigWriterAction extends FAAction {
 
 		$sqldata					= &new FATemplate(FA_FORCE | FA_NOCACHE);
 		$_POST['admin_created']		= time();
-		$sqldata->setVarArray($_POST);
+		foreach($_POST as $key=>$val)
+			$sqldata->setVar($key, k4_htmlentities($val, ENT_QUOTES));
 
 		$sqldata->setVar('IMG_DIR', '{$IMG_DIR}');
 

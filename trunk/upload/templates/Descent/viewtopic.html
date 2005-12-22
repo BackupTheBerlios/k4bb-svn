@@ -1,22 +1,22 @@
 <core:import id="forum_rules" file="forum_rules.html" />
 <core:import id="topic_threaded" />
 <core:import id="topic_moderation" file="topic_moderation.html" />
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
+<table width="100%" cellspacing="0">
 	<tr>
 		<td width="100%" style="text-align: right;">
 			<!-- Posting Buttons -->
-			<if:if var="topic_topic_locked" eq="1"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/locked.gif" alt="{$L_LOCKED}" /></if:if>
+			<if:if var="topic_post_locked" eq="1"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/locked.gif" alt="{$L_LOCKED}" /></if:if>
 			<maps:if var="topics" forum="topic_forum_id" method="can_add">
 			<a href="newtopic.php?id={$topic_forum_id}" title="{$L_POSTTOPIC}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/post_topic.gif" alt="{$L_POSTTOPIC}" /></a>
 			<maps:if var="replies" forum="topic_forum_id" method="can_add">
-			<a href="newreply.php?id={$topic_topic_id}" title="{$L_POSTREPLY}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/post_reply.gif" alt="{$L_POSTREPLY}" /></a>
+			<a href="newreply.php?id={$topic_post_id}" title="{$L_POSTREPLY}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/post_reply.gif" alt="{$L_POSTREPLY}" /></a>
 			</maps:if>
 			</maps:if>
 			<!-- / Posting Buttons -->
 		</td>
 		<page:navigator id="replies_pager">
 		<td nowrap="nowrap">
-			<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
+			<table cellspacing="{$style_cellspacing}" class="pagination">
 				<tr>
 					<td class="alt3" id="page_jump1" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 					<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
@@ -35,66 +35,50 @@
 	</tr>
 </table>
 
-<list:list id="topic">
-<list:item list="topic">
-
-<div class="shadow">
-	<div class="borderwrap">
-		<div class="maintitle" align="right" style="overflow: hidden;">			
-			<div style="float: left;text-align: left;">
-				<a href="viewpost.php?t={$topic_id}" target="_blank" title="{$name}"><img src="Images/{$IMG_DIR}/Icons/post_link.gif" alt="{$name}" border="0" /></a>
-				{$topic_name} <img src="tmp/upload/posticons/{$posticon}" alt="" border="0" />
-				<span style="font-weight: normal;">( <core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span> )</span>
-				<a href="rss.php?t={$topic_topic_id}" title="{$L_RSSFEED}: {$topic_name}"><img src="Images/{$IMG_DIR}/Icons/rss_small.gif" alt="{$L_RSSFEED}: {$topic_name}" border="0" /></a>
-			</div>
-			<!-- Drop Down Menus -->
-			<table cellpadding="0" cellspacing="0" border="0" class="ddmenutable">
-				<tr>
-					<td>
-						<div class="ddmenu_button" id="topicoptions_link"><span class="ddmenu_link_alt">{$L_TOPICOPTIONS}</span></div>
-					</td>
-					<td>
-						<div class="ddmenu_button" id="ratetopic_link"><span class="ddmenu_link_alt">{$L_RATETOPIC}</span></div>
-					</td>
-				</tr>
-			</table>
-			<!-- / Drop Down Menus -->
+<div class="header" align="right" style="overflow: hidden;">
+	<div class="title">
+		<div style="float: left;text-align: left;">
+			<a href="viewpost.php?post_id={$topic_post_id}" target="_blank" title="{$name}"><img src="Images/{$IMG_DIR}/Icons/post_link.gif" alt="{$name}" border="0" /></a>
+			{$topic_name} <img src="tmp/upload/posticons/{$posticon}" alt="" border="0" />
+			<span style="font-weight: normal;">( <core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span> )</span>
+			<a href="rss.php?t={$topic_post_id}" title="{$L_RSSFEED}: {$topic_name}"><img src="Images/{$IMG_DIR}/Icons/rss_small.gif" alt="{$L_RSSFEED}: {$topic_name}" border="0" /></a>
 		</div>
-		<!-- Topic: {$name} -->
-		<core:import id="topic_file" file="topic.html" />
-		<!-- / Topic: {$name} -->
+		<!-- Drop Down Menus -->
+		<table cellspacing="0" class="ddmenutable">
+			<tr>
+				<td>
+					<div class="ddmenu_button" id="topicoptions_link"><span class="ddmenu_link_alt">{$L_TOPICOPTIONS}</span></div>
+				</td>
+				<td>
+					<div class="ddmenu_button" id="ratetopic_link"><span class="ddmenu_link_alt">{$L_RATETOPIC}</span></div>
+				</td>
+			</tr>
+		</table>
+		<!-- / Drop Down Menus -->
 	</div>
 </div>
-<core:import id="topic_control_buttons" file="topic_control_buttons.html" />
 
-<br />
-<core:import id="google_text_links" file="google_adsense_lu.html" />
-
-<br />
-		<if:if var="num_replies" greater="0">
-		<maps:if var="replies" forum="topic_forum_id" method="can_view">
-		<list:sublist list="topic" id="replies" column="replies">
-		<list:item list="replies">
-		<list:switch list="replies" var="row_class" a="alt1" b="alt3">
+<list:list id="posts">
+<list:item list="posts">
+<list:switch list="posts" var="row_class" a="3" b="4">
+	<div class="spacer">
+	<if:if var="row_type" eq="4">
+		<!-- Topic: {$name} -->
+		<core:import id="topic_file" file="topic.html" />
+		<core:import id="topic_control_buttons" file="topic_control_buttons.html" />
+		<!-- / Topic: {$name} -->
+	<if:else />
+		<maps:if var="replies" forum="forum_id" method="can_view">
 		<!-- Reply: {$name} -->
-			<core:import id="reply_file" file="reply.html" />
-			<core:import id="post_control_buttons" file="post_control_buttons.html" />
-			<list:separator list="replies"><br /></list:separator>
+		<core:import id="reply_file" file="reply.html" />
+		<core:import id="post_control_buttons" file="post_control_buttons.html" />
 		<!-- / Reply: {$name} -->
-		</list:switch>
-		</list:item>
-		</list:sublist>
 		</maps:if>
-		</if:if>
+	</if:if>
+	</div>
+</list:switch>
 </list:item>
 </list:list>
-
-<!-- Topic Navigation -->
-<div class="minitext" style="text-align: center;">
-	<a href="findpost.php?id={$next_oldest}&amp;prev=1" title="{$L_NEXTOLDEST}">&laquo; {$L_NEXTOLDEST}</a>
-	| <a href="findpost.php?id={$next_newest}&amp;next=1" title="{$L_NEXTNEWEST}">{$L_NEXTNEWEST} &raquo;</a>
-</div>
-<!-- / Topic Navigation -->
 
 <!-- Quick Reply Information -->
 <div id="quick_reply_sent" style="display: none;">
@@ -106,15 +90,15 @@
 </div>
 <!-- / Quick Reply Information -->
 
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
+<table width="100%" cellspacing="0">
 	<tr>
 		<td width="100%" style="text-align: right;">
 			<!-- Posting Buttons -->
-			<if:if var="topic_topic_locked" eq="1"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/locked.gif" alt="{$L_LOCKED}" /></if:if>
+			<if:if var="topic_post_locked" eq="1"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/locked.gif" alt="{$L_LOCKED}" /></if:if>
 			<maps:if var="topics" forum="topic_forum_id" method="can_add">
 			<a href="newtopic.php?id={$topic_forum_id}" title="{$L_POSTTOPIC}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/post_topic.gif" alt="{$L_POSTTOPIC}" /></a>
 			<maps:if var="replies" forum="topic_forum_id" method="can_add">
-			<a href="newreply.php?id={$topic_topic_id}" title="{$L_POSTREPLY}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/post_reply.gif" alt="{$L_POSTREPLY}" /></a>
+			<a href="newreply.php?id={$topic_post_id}" title="{$L_POSTREPLY}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/post_reply.gif" alt="{$L_POSTREPLY}" /></a>
 			</maps:if>
 			</maps:if>
 			<!-- / Posting Buttons -->
@@ -122,7 +106,7 @@
 		<page:navigator id="replies_pager">
 		<td nowrap="nowrap">
 			<div align="right">
-				<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="pagination">
+				<table cellspacing="{$style_cellspacing}" class="pagination">
 					<tr>
 						<td class="alt3" id="page_jump2" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 						<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
@@ -146,66 +130,12 @@
 
 <core:import id="similar_topics" />
 
-<!-- Topic Options Drop Down Menu -->
-<div id="topicoptions_menu" class="borderwrap" style="display: none;">
-	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
-		<is:logged>
-		<tr>
-			<td class="alt1" nowrap="nowrap">
-				<if:if var="is_subscribed" eq="0">
-					<a href="viewtopic.php?act=track&amp;id={$topic_topic_id}" title="{$L_TRACKTOPIC}" class="smalltext">{$L_TRACKTOPIC}</a>
-				<if:else />
-					<a href="viewtopic.php?act=untrack&amp;id={$topic_topic_id}" title="{$L_UNTRACKTOPIC}" class="smalltext">{$L_UNTRACKTOPIC}</a>
-				</if:if>
-			</td>
-		</tr>
-		</is:logged>
-		<tr>
-			<td class="alt1" nowrap="nowrap"><a href="{$curr_url}&amp;archive=1" title="{$L_PRINTERVERSION}" class="smalltext">{$L_PRINTERVERSION}</a></td>
-		</tr>
-		<tr>
-			<td class="alt1" nowrap="nowrap"><a href="{$curr_url}&amp;email=1" title="{$L_EMAILTHISPAGE}" class="smalltext">{$L_EMAILTHISPAGE}</a></td>
-		</tr>
-		<tr>
-			<td class="subtitle">{$L_DISPLAYMODES}</td>
-		</tr>
-		<tr>
-			<td class="alt1" nowrap="nowrap">
-				<div style="float:right;"><img src="Images/{$IMG_DIR}/Icons/post_linear.gif" alt="" border="0" /></div>
-				<a href="viewtopic.php?act=changeview&amp;mode=linear" title="{$L_LINEAR}" class="smalltext">{$L_LINEAR}</a>
-			</td>
-		</tr>
-		<tr>
-			<td class="alt1" nowrap="nowrap">
-				<div style="float:right;"><img src="Images/{$IMG_DIR}/Icons/post_vertical.gif" alt="" border="0" /></div>
-				<a href="viewtopic.php?act=changeview&amp;mode=vertical" title="{$L_VERTICAL}" class="smalltext">{$L_VERTICAL}</a>
-			</td>
-		</tr>
-		<is:logged>
-		<tr>
-			<td class="subtitle">{$L_VIEWOPTIONS}</td>
-		</tr>
-		<tr>
-			<td class="alt1" nowrap="nowrap">
-				<div style="float:right;"><img src="Images/{$IMG_DIR}/Icons/mode_threaded.gif" alt="" border="0" /></div>
-				<a href="viewtopic.php?act=changeview&amp;mode=threaded" title="{$L_THREADED}" class="smalltext">{$L_THREADED}</a>
-			</td>
-		</tr>
-		<tr>
-			<td class="alt1" nowrap="nowrap">
-				<div style="float:right;"><img src="Images/{$IMG_DIR}/Icons/mode_linear.gif" alt="" border="0" /></div>
-				<a href="viewtopic.php?act=changeview&amp;mode=normal" title="{$L_NORMAL}" class="smalltext">{$L_LINEAR}</a>
-			</td>
-		</tr>
-		</is:logged>
-	</table>
-</div>
-<!-- / Topic Options Drop Down Menu -->
+<core:import id="topic_options" file="topic_options_ddmenu.html" />
 
 <!-- Rate Topic Drop Down Menu -->
 <div id="ratetopic_menu" class="borderwrap" style="display: none;">
-	<form action="viewtopic.php?act=rate_topic&amp;id={$topic_topic_id}" method="post" enctype="multipart/form-data">
-	<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+	<form action="viewtopic.php?act=rate_topic&amp;id={$topic_post_id}" method="post" enctype="multipart/form-data">
+	<table cellspacing="{$style_cellspacing}" class="table">
 		<tr>
 			<td class="alt3" style="text-align: center;" nowrap="nowrap">
 				<if:if var="ratings_num" noteq="0"><img src="Images/{$IMG_DIR}/Icons/Rating/{$rating}stars.gif" alt="" /><if:else /><em class="smalltext">{$L_NOVOTES}</em></if:if>

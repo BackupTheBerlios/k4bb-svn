@@ -11,9 +11,9 @@
 <div id="ajax_post_preview" style="display: none;"></div>
 <!-- / AJAX Reply Preview -->
 
-<core:block id="topic_id" hidden="yes"><input type="hidden" name="topic_id" id="topic_id" value="{$topic_topic_id}" /></core:block>
+<core:block id="post_id" hidden="yes"><input type="hidden" name="post_id" id="post_id" value="{$post_post_id}" /></core:block>
 <!-- Post Topic Form -->
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle">
 			<div style="float:right;" class="smalltext">
@@ -24,10 +24,10 @@
 			{$L_POSTTOPIC}
 			</core:block>
 			<core:block id="edit_post" hidden="yes">
-			{$L_EDITPOST}: <span style="font-weight: normal;">{$topic_name}</span>
+			{$L_EDITPOST}: <span style="font-weight: normal;">{$post_name}</span>
 			</core:block>
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<tr>
 				<td class="alt3" colspan="2" align="center">
 					
@@ -41,7 +41,7 @@
 							<strong>{$L_GUEST}</strong>
 							</is:logged>
 						</span>
-						<table border="0" cellpadding="0" cellspacing="0">
+						<table border="0" cellspacing="0">
 							<is:unlogged>
 							<tr>
 								<td>
@@ -56,7 +56,7 @@
 								<td>
 									<!-- Post Title -->
 									<label for="name" class="smalltext">{$L_POSTTITLE}</label><br />
-									<input type="text" name="name" id="name" value="{$topic_name}" tabindex="2" style="width: 500px;" class="inputbox" maxlength="255" />
+									<input type="text" name="name" id="name" value="{$post_name}" tabindex="2" style="width: 500px;" class="inputbox" maxlength="255" />
 									<form:error id="name_error" for="name" setclass="inputfailed" regex=".{{$topicminchars},{$topicmaxchars}}">{$L_TITLETOOSHORT}</form:error>
 									<!-- / Post Title -->
 								</td>
@@ -81,12 +81,12 @@
 									<list:list id="emoticons">
 									<if:if var="can_wysiwyg" eq="0">
 									<!-- Emoticons -->
-									<table border="0" cellpadding="0" cellspacing="0">
+									<table border="0" cellspacing="0">
 										<tr>
 											<td>
 												<fieldset>
 													<legend>{$L_EMOTICONS}</legend>
-													<table cellpadding="3" cellspacing="{$style_cellspacing}" border="0" id="posticons">
+													<table cellpadding="3" cellspacing="{$style_cellspacing}" id="posticons">
 														<tr>
 															<list:item list="emoticons">
 															<td align="center">
@@ -116,14 +116,14 @@
 									<list:list id="posticons">
 									
 									<!-- Post Icons -->
-									<table border="0" cellpadding="0" cellspacing="0" width="100%">
+									<table border="0" cellspacing="0" width="100%">
 										<tr>
 											<td>
 												<fieldset>
 													<legend>{$L_POSTICONS}</legend>
 													<span class="smalltext">{$L_POSTICONSPOSTCHOOSE}</span>
 													<label for="noicon" style="float: left;margin-top: 10px;"><input type="radio" name="posticon" id="noicon" value="clear.gif" checked="checked" onclick="swap_posticon(null)" />&nbsp;{$L_NOICON}</label>
-													<table cellpadding="3" cellspacing="{$style_cellspacing}" border="0" id="posticons">
+													<table cellpadding="3" cellspacing="{$style_cellspacing}" id="posticons">
 														<tr>
 															<list:item list="posticons">
 															<td align="center">
@@ -183,13 +183,13 @@
 <br />
 
 <!-- Additional Post Options -->
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle" id="po_maintitle">
 			<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_po', 'postoptions', 'po_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_po" src="Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
 			{$L_ADDITIONALOPTIONS}
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table" id="postoptions" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="postoptions" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
 			<tr>
 				<td class="alt3">
 					<div class="outset_box">
@@ -206,15 +206,15 @@
 						<br />
 						<div align="center">
 							{$L_POSTTOPICAS}: 
-							<input type="radio" name="topic_type" id="topic_type" value="1" checked="checked" /> {$L_NORMAL}
-							<maps:if var="sticky" method="can_add" forum="forum_forum_id"><input type="radio" name="topic_type" id="topic_type" value="2" /> {$L_STICKYTOPIC}</maps:if>
-							<maps:if var="announce" method="can_add" forum="forum_forum_id"><input type="radio" name="topic_type" id="topic_type" value="3" /> {$L_ANNOUNCEMENT}</maps:if>
+							<input type="radio" name="post_type" id="post_type" value="1" checked="checked" /> {$L_NORMAL}
+							<maps:if var="sticky" method="can_add" forum="forum_forum_id"><input type="radio" name="post_type" id="post_type" value="2" /> {$L_STICKYTOPIC}</maps:if>
+							<maps:if var="announce" method="can_add" forum="forum_forum_id"><input type="radio" name="post_type" id="post_type" value="3" /> {$L_ANNOUNCEMENT}</maps:if>
 							<maps:if var="feature" method="can_add" forum="forum_forum_id"><br /><br /><label for="feature"><input type="checkbox" name="is_feature" id="feature" value="yes" />&nbsp;{$L_FEATURETOPIC}</label></maps:if>
 							<br /><br />
 						</div>
 						<fieldset>
 							<legend><strong>{$L_STICKTOPICFOR}</strong> - {$L_STICKTOPICFOREXPLAIN}</legend>
-							<input type="text" name="topic_expire" size="3" maxlength="4" value="{$topic_topic_expire}" class="inputbox" /> <strong>{$L_DAYS}</strong>
+							<input type="text" name="post_expire" size="3" maxlength="4" value="{$post_post_expire}" class="inputbox" /> <strong>{$L_DAYS}</strong>
 							<span class="smalltext">{$L_TOPICEXPIREEXPLAIN}</span>
 						</fieldset>
 						</maps:if>
@@ -229,13 +229,13 @@
 <maps:if var="attachments" method="can_add" forum="forum_forum_id">
 <br />
 <!-- Attachments Manager -->
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle" id="am_maintitle">
 			<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_am', 'attachmanage', 'am_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_am" src="Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
 			{$L_ATTACHMENTSMANAGER}
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table" id="attachmanage" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="attachmanage" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
 			<tr>
 				<td class="alt3">
 					<div class="outset_box">
@@ -257,13 +257,13 @@
 </form:form>
 <br />
 <!-- Posting Code Allowances -->
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle" id="pr_maintitle">
 			<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_pr', 'postingrules', 'pr_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_pr" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
 			{$L_POSTINGRULES}
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table" id="postingrules">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="postingrules">
 			<tr>
 				<td class="alt3" valign="top">
 					<div align="left" class="minitext">
@@ -272,7 +272,7 @@
 				</td>
 				<td class="alt3" valign="top">
 					<div align="right" class="minitext">
-						<table cellpadding="0" cellspacing="0" border="0">
+						<table cellspacing="0">
 							<tr>
 								<td valign="top">
 									{$forum_user_reply_options}
@@ -308,19 +308,19 @@
 		var enable_sig				= d.getElementById('enable_sig');
 		var disable_areply			= d.getElementById('disable_areply');
 		
-		<maps:if forum="forum_forum_id" var="html" method="can_add">disable_html.checked		= ({$topic_disable_html} == 1) ? true : false;</maps:if>
-		//disable_bbcode.checked		= ({$topic_disable_bbcode} == 1) ? true : false;
-		disable_emoticons.checked	= ({$topic_disable_emoticons} == 1) ? true : false;
-		disable_aurls.checked		= ({$topic_disable_aurls} == 1) ? true : false;
-		enable_sig.checked			= ({$topic_disable_sig} == 1) ? false : true;
-		disable_areply.checked		= ({$topic_disable_areply} == 1) ? true : false;
+		<maps:if forum="forum_forum_id" var="html" method="can_add">disable_html.checked		= ({$post_disable_html} == 1) ? true : false;</maps:if>
+		//disable_bbcode.checked		= ({$post_disable_bbcode} == 1) ? true : false;
+		disable_emoticons.checked	= ({$post_disable_emoticons} == 1) ? true : false;
+		disable_aurls.checked		= ({$post_disable_aurls} == 1) ? true : false;
+		enable_sig.checked			= ({$post_disable_sig} == 1) ? false : true;
+		disable_areply.checked		= ({$post_disable_areply} == 1) ? true : false;
 		
 		<maps:if var="sticky" method="can_add" forum="forum_forum_id">
-		d.setRadio({$topic_topic_type}, 'topic_type');
+		d.setRadio({$post_post_type}, 'post_type');
 		</maps:if>
 		<maps:if var="feature" method="can_add" forum="forum_forum_id">
 		var feature					= d.getElementById('feature');
-		feature.checked				= ({$topic_is_feature} == 1) ? true : false;
+		feature.checked				= ({$post_is_feature} == 1) ? true : false;
 		</maps:if>
 
 	} catch(e) {
@@ -331,10 +331,10 @@
 	/**
 	 * Get the post icons
 	 */
-	d.setRadio('{$topic_posticon}', 'posticon');
+	d.setRadio('{$post_posticon}', 'posticon');
 
 	var pi_image	= d.getElementById('display_posticon');
-	pi_image.src	= 'tmp/upload/posticons/{$topic_posticon}';
+	pi_image.src	= 'tmp/upload/posticons/{$post_posticon}';
 
 //]]>
 </script>

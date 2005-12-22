@@ -1,8 +1,8 @@
 <is:logged>
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle">{$L_USERCONTROLPANEL}: <span style="font-weight: normal;">{$L_MANAGEATTACHMENTS}</span></div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<tr>
 				<td class="alt3"><span class="smalltext">{$L_USERCPATTACHMENTSMSG}</span></td>
 			</tr>
@@ -10,10 +10,10 @@
 	</div>
 </div>
 <br />
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle">{$L_ATTACHMENTSETTINGS}</div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<tr>
 				<td class="subtitle">{$L_CURRENTUSAGE}</td>
 			</tr>
@@ -45,8 +45,8 @@
 			<tr>
 				<td class="{$row_class}" valign="middle">
 					<div style="float:right;">
-						<a href="viewfile.php?act=remove_attach&amp;id={$id}&amp;<if:if var="message_id" noteq="0">m={$message_id}<else:if var="reply_id" noteq="0">r={$reply_id}<if:else />t={$topic_id}</if:if>" title="{$L_REMOVEATTACHMENT}">{$L_REMOVEATTACHMENT}</a><br />
-						<a href="viewfile.php?act=attachment&amp;id={$id}&amp;<if:if var="message_id" noteq="0">m={$message_id}<else:if var="reply_id" noteq="0">r={$reply_id}<if:else />t={$topic_id}</if:if>" title="{$L_VIEWATTACHMENT}" target="_blank">{$L_VIEWATTACHMENT}</a>
+						<a href="viewfile.php?act=remove_attach&amp;id={$id}&amp;<if:if var="message_id" noteq="0">m={$message_id}<else:if var="post_id" noteq="0">r={$post_id}<if:else />t={$post_id}</if:if>" title="{$L_REMOVEATTACHMENT}">{$L_REMOVEATTACHMENT}</a><br />
+						<a href="viewfile.php?act=attachment&amp;id={$id}&amp;<if:if var="message_id" noteq="0">m={$message_id}<else:if var="post_id" noteq="0">r={$post_id}<if:else />t={$post_id}</if:if>" title="{$L_VIEWATTACHMENT}" target="_blank">{$L_VIEWATTACHMENT}</a>
 					</div>
 					<strong>{$file_name}</strong><br />
 					<span class="smalltext">

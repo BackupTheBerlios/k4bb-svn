@@ -138,7 +138,7 @@ class SubscribeForum extends FAAction {
 			return TRUE;
 		}
 
-		$is_subscribed		= $request['dba']->getRow("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE user_id = ". intval($request['user']->get('id')) ." AND forum_id = ". intval($forum['forum_id']) ." AND topic_id = 0");
+		$is_subscribed		= $request['dba']->getRow("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE user_id = ". intval($request['user']->get('id')) ." AND forum_id = ". intval($forum['forum_id']) ." AND post_id = 0");
 		
 		if(is_array($is_subscribed) && !empty($is_subscribed)) {
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_SUBSCRIPTION', $forum);
@@ -201,7 +201,7 @@ class UnsubscribeForum extends FAAction {
 			return TRUE;
 		}
 		
-		$subscribe			= $request['dba']->prepareStatement("DELETE FROM ". K4SUBSCRIPTIONS ." WHERE user_id=? AND topic_id=0 AND forum_id=?");
+		$subscribe			= $request['dba']->prepareStatement("DELETE FROM ". K4SUBSCRIPTIONS ." WHERE user_id=? AND post_id=0 AND forum_id=?");
 		$subscribe->setInt(1, $request['user']->get('id'));
 		$subscribe->setInt(2, $forum['forum_id']);
 		$subscribe->executeUpdate();

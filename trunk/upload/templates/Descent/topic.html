@@ -1,19 +1,19 @@
-<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table" id="topic{$topic_id}">
+<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="topic{$post_id}">
 	<tr>
-		<td class="subtitle" colspan="2">
+		<td class="subheader" colspan="2">
 			<div style="float: right;">
 				<if:if var="modpanel" eq="1"><a href="mod.php?act=baniprange&amp;ip={$poster_ip}" title="{$L_BANIP}"><img src="Images/{$IMG_DIR}/Icons/ban_ip.gif" alt="{$L_BANIP}" border="0" /></a></if:if>
-				<a href="viewtopic.php?act=report_post&amp;t={$topic_id}" title="{$L_REPORTPOST}"><img src="Images/{$IMG_DIR}/Icons/report_post.gif" alt="{$L_REPORTPOST}" border="0" /></a>
-				<maps:if var="closed" forum="topic_forum_id" method="can_add"><if:if var="topic_locked" eq="0"><img border="0" src="Images/{$IMG_DIR}/Buttons/iconlock.gif" alt="{$L_LOCK}" onclick="updateTopicLocked(this, {$topic_id})" /><if:else /><img border="0" src="Images/{$IMG_DIR}/Buttons/iconlock_lock.gif" alt="{$L_UNLOCK}" onclick="updateTopicLocked(this, {$topic_id})" /></if:if></maps:if>
+				<a href="viewtopic.php?act=report_post&amp;t={$post_id}" title="{$L_REPORTPOST}"><img src="Images/{$IMG_DIR}/Icons/report_post.gif" alt="{$L_REPORTPOST}" border="0" /></a>
+				<maps:if var="closed" forum="topic_forum_id" method="can_add"><if:if var="post_locked" eq="0"><img border="0" src="Images/{$IMG_DIR}/Buttons/iconlock.gif" alt="{$L_LOCK}" onclick="updateTopicLocked(this, {$post_id})" /><if:else /><img border="0" src="Images/{$IMG_DIR}/Buttons/iconlock_lock.gif" alt="{$L_UNLOCK}" onclick="updateTopicLocked(this, {$post_id})" /></if:if></maps:if>
 			</div>
 			<div align="center">{$L_MESSAGE}</div>
 		</td>
 	</tr>
 	<tr>
-		<td width="100%" class="alt3" valign="top">
+		<td width="100%" class="alt1" valign="top">
 			<!-- Body Text -->
-			<div id="topic{$topic_id}_body">{$body_text}</div>
-			<div style="text-align: right;display: none;" id="topic{$topic_id}_qebuttons"><input type="button" value="{$L_SAVE}" class="button" style="font-weight: bold;" onclick="saveQuickEdit('topic', {$topic_id}, 'topic{$topic_id}_body')" />&nbsp;<input type="button" value="X" class="button" style="font-weight: bold;color: #FF0000;" onclick="cancelQuickEdit('topic', {$topic_id}, 'topic{$topic_id}_body')" /></div>
+			<div id="{$post_id}_body">{$body_text}</div>
+			<div style="text-align: right;display: none;" id="{$post_id}_qebuttons"><input type="button" value="{$L_SAVE}" class="button" style="font-weight: bold;" onclick="saveQuickEdit({$post_id}, '{$post_id}_body')" />&nbsp;<input type="button" value="X" class="button" style="font-weight: bold;color: #FF0000;" onclick="cancelQuickEdit({$post_id}, '{$post_id}_body')" /></div>
 			<!-- / Body Text -->
 
 			<if:if var="attachments" geq="1">
@@ -25,7 +25,7 @@
 							<div>
 								<span class="smalltext" style="font-weight: bold;">{$L_ATTACHEDIMAGE}: {$file_name}</span>
 								<hr />
-								<img class="bbcode_img" src="viewfile.php?act=attachment&amp;id={$id}&amp;t={$topic_id}" alt="{$L_ATTACHMENT}: {$file_name}" border="0" />
+								<img class="bbcode_img" src="viewfile.php?act=attachment&amp;id={$id}&amp;t={$post_id}" alt="{$L_ATTACHMENT}: {$file_name}" border="0" />
 							</div>
 						</if:if>
 					<list:separator list="attachment_files"><br /><br /></list:separator>
@@ -57,8 +57,8 @@
 						<list:sublist list="topic" id="attachment_files" column="attachment_files">
 						<list:item list="attachment_files">
 						<div style="float: right;" class="minitext">md5: {$mdfive}</div>
-						<img src="{$file_icon}" alt="{$L_ATTACHMENT}: {$file_name}" border="0" />&nbsp;<a href="viewfile.php?act=attachment&amp;id={$id}&amp;t={$topic_id}" target="_blank" title="{$L_ATTACHMENT}: {$file_name}" class="smalltext">{$file_name}</a>
-						<if:if var="modpanel" eq="1"><maps:if var="attachments" method="can_del" forum="forum_id"> - <a href="viewfile.php?act=remove_attach&amp;id={$id}&amp;t={$topic_id}" title="{$L_REMOVEATTACHMENT}" class="minitext">{$L_REMOVEATTACHMENT}</a></maps:if></if:if>
+						<img src="{$file_icon}" alt="{$L_ATTACHMENT}: {$file_name}" border="0" />&nbsp;<a href="viewfile.php?act=attachment&amp;id={$id}&amp;post_id={$post_id}" target="_blank" title="{$L_ATTACHMENT}: {$file_name}" class="smalltext">{$file_name}</a>
+						<if:if var="modpanel" eq="1"><maps:if var="attachments" method="can_del" forum="forum_id"> - <a href="viewfile.php?act=remove_attach&amp;id={$id}&amp;post_id={$post_id}" title="{$L_REMOVEATTACHMENT}" class="minitext">{$L_REMOVEATTACHMENT}</a></maps:if></if:if>
 						<list:separator list="attachment_files"><br /></list:separator>
 						</list:item>
 						</list:sublist>
@@ -75,7 +75,7 @@
 			</if:if>
 			<br /><br />
 		</td>
-		<td class="alt2" valign="top">
+		<td class="base1" valign="top">
 			<core:import id="post_user_section" file="post_user_section.html" />
 		</td>
 	</tr>

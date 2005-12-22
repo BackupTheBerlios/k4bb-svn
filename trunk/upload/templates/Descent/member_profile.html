@@ -1,13 +1,13 @@
 <!-- User Profile - {$member_name} -->
-<div class="shadow">
+<div class="spacer">
 	<div class="borderwrap">
 		<div class="maintitle">{$L_USERPROFILE}: <span style="font-weight: normal;">{$member_name}</span></div>
-		<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<tr>
 				<td class="alt1" width="50%" valign="top">
 					<div class="header_text"><strong>{$L_USERNAME}</strong></div>
 					
-					<table cellpadding="0" cellspacing="0" border="0">
+					<table cellspacing="0">
 						<tr>
 							<if:if var="member_avatar" eq="1">
 							<td>
@@ -28,7 +28,7 @@
 				</td>
 				<td class="alt1" width="50%" valign="top">
 					<div class="header_text"><strong>{$L_PROFILE}</strong></div>
-					<table cellpadding="0" cellspacing="0" border="0">
+					<table cellspacing="0">
 						<tr><td style="padding-bottom: 3px;" class="smalltext"><strong>{$L_REGISTERED}</strong>:&nbsp;&nbsp;</td><td class="smalltext"><core:date format="%b %d %Y">{$member_created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$member_created}</core:date></span></td></tr>
 						<list:list id="member_profilefields">
 						<list:item list="member_profilefields">

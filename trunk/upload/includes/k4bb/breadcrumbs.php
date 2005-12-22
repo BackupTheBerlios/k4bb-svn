@@ -44,12 +44,12 @@ function loop_recursive(&$breadcrumbs, &$dba, $temp) {
 		
 		switch($temp['row_type']) {
 			case TOPIC: {
-				$temp['location'] = 'viewtopic.php?id='. $temp['topic_id'];
+				$temp['location'] = 'viewtopic.php?id='. $temp['post_id'];
 				break;
 			}
 			case REPLY: {
 
-				$temp['location'] = 'findpost.php?id='. $temp['reply_id'];
+				$temp['location'] = 'findpost.php?id='. $temp['post_id'];
 				break;
 			}
 			case FAQANSWER: {
@@ -61,10 +61,10 @@ function loop_recursive(&$breadcrumbs, &$dba, $temp) {
 		$breadcrumbs[]			= $temp;
 		
 		if($temp['row_type'] & REPLY) {
-			if($temp['topic_id'] != $temp['parent_id']) {
-				loop_recursive($breadcrumbs, $dba, $dba->getRow("SELECT * FROM ". K4REPLIES ." WHERE row_level = ". intval($temp['row_level'] - 1) ." AND reply_id = ". intval($temp['parent_id']) ." LIMIT 1"));
+			if($temp['post_id'] != $temp['parent_id']) {
+				loop_recursive($breadcrumbs, $dba, $dba->getRow("SELECT * FROM ". K4POSTS ." WHERE row_level = ". intval($temp['row_level'] - 1) ." AND post_id = ". intval($temp['parent_id']) ." LIMIT 1"));
 			} else {
-				loop_recursive($breadcrumbs, $dba, $dba->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($temp['topic_id']) ." LIMIT 1"));
+				loop_recursive($breadcrumbs, $dba, $dba->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($temp['post_id']) ." LIMIT 1"));
 			}
 		}
 	}
@@ -108,16 +108,16 @@ function k4_bread_crumbs(&$template, &$dba, $location = NULL, $info = FALSE, $fo
 		if(($info['row_type'] & TOPIC || $info['row_type'] & REPLY) && $forum) {
 			
 			if($info['row_type'] & REPLY) {
-				if($info['topic_id'] != $info['parent_id']) {
-					loop_recursive($breadcrumbs, $dba, $dba->getRow("SELECT * FROM ". K4REPLIES ." WHERE row_level = ". intval($info['row_level'] - 1) ." AND reply_id = ". intval($info['parent_id']) ." LIMIT 1"));
+				if($info['post_id'] != $info['parent_id']) {
+					loop_recursive($breadcrumbs, $dba, $dba->getRow("SELECT * FROM ". K4POSTS ." WHERE row_level = ". intval($info['row_level'] - 1) ." AND post_id = ". intval($info['parent_id']) ." LIMIT 1"));
 				} else {
-					loop_recursive($breadcrumbs, $dba, $dba->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($info['topic_id']) ." LIMIT 1"));
+					loop_recursive($breadcrumbs, $dba, $dba->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($info['post_id']) ." LIMIT 1"));
 				}
 			}
 
 			switch($info['row_type']) {
-				case 4: { $info['location'] = 'viewtopic.php?id='. $info['topic_id']; break; }
-				case 8: { $info['location'] = 'findpost.php?id='. $info['reply_id']; break; }
+				case 4: { $info['location'] = 'viewtopic.php?id='. $info['post_id']; break; }
+				case 8: { $info['location'] = 'findpost.php?id='. $info['post_id']; break; }
 			}
 
 			$breadcrumbs[]	= $info;

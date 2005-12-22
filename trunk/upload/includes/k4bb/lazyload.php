@@ -52,7 +52,7 @@ function set_send_topic_mail($forum_id, $poster_name) {
 			/**
 			 * Get the subscribers of this forum
 			 */
-			$users			= $_DBA->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE topic_id = 0 AND forum_id = ". intval($forum['forum_id']));
+			$users			= $_DBA->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE post_id = 0 AND forum_id = ". intval($forum['forum_id']));
 			
 			$subscribers	= array();
 
@@ -95,13 +95,13 @@ function set_send_topic_mail($forum_id, $poster_name) {
  * This sets the mail queue items for emails that need to be sent out
  * because people have replied to a topic
  */
-function set_send_reply_mail($topic_id, $poster_name) {
+function set_send_reply_mail($post_id, $poster_name) {
 
 	global $_DBA, $_QUERYPARAMS, $_SETTINGS, $_LANG;
 
-	if(ctype_digit($topic_id) && intval($topic_id) != 0) {
+	if(ctype_digit($post_id) && intval($post_id) != 0) {
 		
-		$topic				= $_DBA->getRow("SELECT * FROM ". K4TOPICS ." WHERE topic_id = ". intval($topic_id));
+		$topic				= $_DBA->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($post_id));
 		
 		if(is_array($topic) && !empty($topic)) {
 			
@@ -109,14 +109,14 @@ function set_send_reply_mail($topic_id, $poster_name) {
 			/**
 			 * Get the subscribers of this topic
 			 */
-			$users			= $_DBA->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE topic_id = ". intval($topic['topic_id']) ." AND requires_revisit = 0");
+			$users			= $_DBA->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE post_id = ". intval($topic['post_id']) ." AND requires_revisit = 0");
 			
 			$subscribers	= array();
 
 			while($users->next()) {
 				
 				$u				= $users->current();
-				$subscribers[]	= array('name' => $u['user_name'], 'id' => $u['user_id'], 'email' => $u['email'], 'poster_name' => $poster_name, 'topic_id' => $topic['topic_id']);
+				$subscribers[]	= array('name' => $u['user_name'], 'id' => $u['user_id'], 'email' => $u['email'], 'poster_name' => $poster_name, 'post_id' => $topic['post_id']);
 			}
 			
 			/* Memory Saving */
@@ -127,13 +127,13 @@ function set_send_reply_mail($topic_id, $poster_name) {
 			 * Insert the data into the mail queue
 			 */
 			$subject			= $_LANG['L_REPLYTO'] .": ". $topic['name'];
-			$message			= sprintf($_LANG['L_TOPICSUBSCRIBEEMAIL'], "%s", "%s", $topic['name'], $topic['topic_id'], $_SETTINGS['bbtitle'], $topic['topic_id']);
+			$message			= sprintf($_LANG['L_TOPICSUBSCRIBEEMAIL'], "%s", "%s", $topic['name'], $topic['post_id'], $_SETTINGS['bbtitle'], $topic['post_id']);
 			$userinfo			= serialize($subscribers);
 			
 			$insert				= $_DBA->prepareStatement("INSERT INTO ". K4MAILQUEUE ." (subject,message,row_id,row_type,userinfo) VALUES (?,?,?,?,?)");
 			$insert->setString(1, $subject);
 			$insert->setString(2, $message);
-			$insert->setInt(3, $topic['topic_id']);
+			$insert->setInt(3, $topic['post_id']);
 			$insert->setInt(4, TOPIC);
 			$insert->setString(5, $userinfo);
 
@@ -199,7 +199,7 @@ function execute_mail_queue(&$dba, $mailqueue) {
 				}
 				
 				/* Update the subscriptions 'requires revisit' field */
-				$dba->executeUpdate("UPDATE ". K4SUBSCRIPTIONS ." SET requires_revisit = 1 WHERE topic_id = ". $queue['row_id'] ." ". ($user_query != '' ? "AND (". $user_query .")" : ''));
+				$dba->executeUpdate("UPDATE ". K4SUBSCRIPTIONS ." SET requires_revisit = 1 WHERE post_id = ". $queue['row_id'] ." ". ($user_query != '' ? "AND (". $user_query .")" : ''));
 				
 				/* If we have finished with this queue item */
 				if($count <= EMAIL_INTERVAL) {

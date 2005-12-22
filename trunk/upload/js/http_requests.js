@@ -68,26 +68,26 @@ function textarea_value(textarea) {
  * Inline Moderation
  */
 var edit_mode		= false;
-var edit_topic_id	= false;
+var edit_post_id	= false;
 var edit_topic_area = false;
 
 function close_edit_mode() {
-	edit_mode = edit_topic_id = edit_topic_area = false;
+	edit_mode = edit_post_id = edit_topic_area = false;
 }
 
-function adv_edit(topic_area, topic_id, div_id) {
-	if(edit_mode && edit_topic_id && topic_id && (topic_id != edit_topic_id)) {
-		updateTopicTitle(edit_mode, edit_topic_id, edit_topic_area);
+function adv_edit(topic_area, post_id, div_id) {
+	if(edit_mode && edit_post_id && post_id && (post_id != edit_post_id)) {
+		updateTopicTitle(edit_mode, edit_post_id, edit_topic_area);
 		close_edit_mode();
 	}
-	edit_mode		= 'topic' + topic_id + '_name';
-	edit_topic_id	= topic_id;
+	edit_mode		= 'topic' + post_id + '_name';
+	edit_post_id	= post_id;
 	edit_topic_area = div_id;
-	getTopicTitle(topic_id);
+	getTopicTitle(post_id);
 }
 
 function disable_edit_mode(e) {
-	if(edit_mode && edit_topic_id && edit_topic_area) {
+	if(edit_mode && edit_post_id && edit_topic_area) {
 		if(!e) {
 			e = window.event;
 		}
@@ -99,25 +99,25 @@ function disable_edit_mode(e) {
 			) {
 			
 			// update the topic name
-			updateTopicTitle(edit_mode, edit_topic_id, edit_topic_area);
+			updateTopicTitle(edit_mode, edit_post_id, edit_topic_area);
 			close_edit_mode();
 		}
 	}
 }
-var request_topic_id = false;
-function getTopicTitle(topic_id) {
+var request_post_id = false;
+function getTopicTitle(post_id) {
 	k4_request.setRequestType('GET');
-	k4_request.Open('mod.php?act=get_topic_title&topic_id=' + parseInt(topic_id), true);
-	k4_request.successState = function() { topicMakeUpdatable(topic_id); }
+	k4_request.Open('mod.php?act=get_topic_title&post_id=' + parseInt(post_id), true);
+	k4_request.successState = function() { topicMakeUpdatable(post_id); }
 	k4_request.Send("");
 }
-function topicMakeUpdatable(topic_id) {
-	var topic_span	= d.getElementById('topicname_' + topic_id);
-	var topic_area	= d.getElementById('topicname_' + topic_id + '_area');
+function topicMakeUpdatable(post_id) {
+	var topic_span	= d.getElementById('topicname_' + post_id);
+	var topic_area	= d.getElementById('topicname_' + post_id + '_area');
 	var response	= k4_request.getResponseText();
 	if(topic_span && topic_area) {
 		// add an input box into the topic box
-		topic_span.innerHTML	= '<input type="text" name="name" id="topic' + topic_id + '_name" value="' + response + '" class="alt1" style="padding: 1px;font-size: 11px;" />';
+		topic_span.innerHTML	= '<input type="text" name="name" id="topic' + post_id + '_name" value="' + response + '" class="alt1" style="padding: 1px;font-size: 11px;" />';
 
 		// attach a function to monitor document clicks
 		AttachEvent(document,'click',disable_edit_mode,false);
@@ -128,19 +128,19 @@ function topicMakeUpdatable(topic_id) {
 		}
 
 		// try to get the input and focus it
-		var input = d.getElementById('topic' + topic_id + '_name');
+		var input = d.getElementById('topic' + post_id + '_name');
 		if(input) {
 			input.focus();
 		}
 	}
 }
-function updateTopicTitle(textbox_id, topic_id, div_id) {
+function updateTopicTitle(textbox_id, post_id, div_id) {
 	var textbox		= d.getElementById(textbox_id);
 	if(textbox) {
 		k4_request.setRequestType('POST');
 		k4_request.Open('mod.php?act=topic_simpleupdate', true);
 		k4_request.successState = function() { topicSimpleUpdate(div_id); }
-		k4_request.Send('use_ajax=1&id=' + parseInt(topic_id) + '&name=' + encodeURIComponent(textbox.value));
+		k4_request.Send('use_ajax=1&id=' + parseInt(post_id) + '&name=' + encodeURIComponent(textbox.value));
 	}
 }
 function topicSimpleUpdate(topic_area_id) {
@@ -172,18 +172,18 @@ function topicSimpleUpdate(topic_area_id) {
 /**
  * Topic Locking
  */
-function updateTopicLocked(icon, topic_id) {
+function updateTopicLocked(icon, post_id) {
 	if(icon) {
 		var lock_regex	= new RegExp("_lock\.gif$", "i");
 		var locked		= d.sizeof(icon.src.match(lock_regex)) > 0 ? true : false;
 		
 		k4_request.setRequestType('GET');
-		k4_request.Open('mod.php?act=' + (locked == 1 ? 'un' : '') + 'locktopic&id=' + parseInt(topic_id) + '&use_ajax=1', true);
+		k4_request.Open('mod.php?act=' + (locked == 1 ? 'un' : '') + 'locktopic&id=' + parseInt(post_id) + '&use_ajax=1', true);
 		k4_request.successState = function() { changeLockedIcon(icon); }
 		k4_request.Send("");
 
 	} else {
-		document.location.href = 'mod.php?act=' + (locked == 1 ? 'un' : '') + 'locktopic&id=' + parseInt(topic_id);
+		document.location.href = 'mod.php?act=' + (locked == 1 ? 'un' : '') + 'locktopic&id=' + parseInt(post_id);
 	}
 }
 // change the topic icon for locked
@@ -217,7 +217,7 @@ function changeLockedIcon(icon) {
 /**
  * Quick Reply
  */
-function saveQuickReply(form_id, textarea_id, topic_id, page) {
+function saveQuickReply(form_id, textarea_id, post_id, forum_id, page) {
 	var textarea	= d.getElementById(textarea_id);
 	var form		= d.getElementById(form_id);
 	var query_string = '';
@@ -226,7 +226,7 @@ function saveQuickReply(form_id, textarea_id, topic_id, page) {
 			query_string += 'message=' + encodeURIComponent(textarea_value(textarea));
 			
 			k4_request.setRequestType('POST');
-			k4_request.Open('newreply.php?act=postreply&use_ajax=1&topic_id=' + parseInt(topic_id) + '&submit_type=post&page=' + parseInt(page), true);
+			k4_request.Open('newreply.php?act=postreply&use_ajax=1&row_type=8&topic_id=' + parseInt(post_id) + '&forum_id=' + parseInt(forum_id) + '&submit_type=post&page=' + parseInt(page), true);
 			k4_request.successState = function() { findQuickReply(textarea); }
 			k4_request.loadingState = function() { simpleLoadState(preview, 'preview'); }
 			k4_request.Send(query_string);
@@ -351,7 +351,7 @@ function setSendPostPreview(form_url) {
 
 	// define several possible required fields to get values
 	// from to pass to the request
-	var fields = new Array('forum_id','topic_id','parent_id','reply_id','poster_name','name','posticon','to','cc');
+	var fields = new Array('forum_id','post_id','parent_id','post_id','poster_name','name','posticon','to','cc');
 	
 	// if everything is good sofar
 	if(form) {
@@ -529,7 +529,7 @@ function createEditor() {
  * Functions to toggle the quick editing of topics/replies
  */
 var quick_edit = false;
-function quickEditPost(post_type, post_id, div_id) {
+function quickEditPost(post_id, div_id) {
 	
 	// set the quick edit box
 	var quickedit_div		= d.getElementById(div_id);
@@ -542,20 +542,20 @@ function quickEditPost(post_type, post_id, div_id) {
 		quickedit_height		= quickedit_height > 200 ? (quickedit_height > 400 ? 400 : quickedit_height) : 200;
 		
 		// is there a quick edit already open?
-		if(quick_edit) {
-			if(quick_edit['id'] != post_id && quick_edit['type'] != post_type) {
-				saveQuickEdit(quick_edit['type'], quick_edit['id'], quick_edit['div']);
+		if(typeof(quick_edit) != 'undefined' && quick_edit) {
+			if(quick_edit['id'] != post_id) {
+				saveQuickEdit(quick_edit['id'], quick_edit['div']);
 				quick_edit = false;
 			}
 			return true;
 		}
 		
-		quick_edit = { 'type' : post_type, 'id' : post_id, 'div' : div_id }
+		quick_edit = { 'id' : post_id, 'div' : div_id }
 
 		k4_request.setRequestType('GET');
-		k4_request.Open('misc.php?act=revert_text&' + post_type + '=' + post_id + '&use_ajax=1', true);
-		k4_request.successState = function() { showQuickEditForm(quickedit_div, quickedit_height, post_type, post_id, false); }
-		k4_request.loadingState = function() { simpleLoadState(quickedit_div, (post_type == 'topic' ? 't' : 'p') + post_id); }
+		k4_request.Open('misc.php?act=revert_text&post_id=' + post_id + '&use_ajax=1', true);
+		k4_request.successState = function() { showQuickEditForm(quickedit_div, quickedit_height, post_id, false); }
+		k4_request.loadingState = function() { simpleLoadState(quickedit_div, post_id); }
 		k4_request.Send("");
 	}
 }
@@ -564,7 +564,7 @@ function quickEditPost(post_type, post_id, div_id) {
 /**
  * Function to show the quick edit form 
  */
-function showQuickEditForm(quickedit_div, quickedit_height, post_type, post_id, hide) {
+function showQuickEditForm(quickedit_div, quickedit_height, post_id, hide) {
 	
 	// if we have a connection and the edit box
 	if(quickedit_div) {
@@ -584,17 +584,17 @@ function showQuickEditForm(quickedit_div, quickedit_height, post_type, post_id, 
 				
 				if(!hide) {
 					// insert the textarea
-					quickedit_div.innerHTML = '<textarea id="' + post_type + '' + post_id + '_message" rows="10" cols="100" style="width: 100%;height: ' + quickedit_height + 'px;" class="inputbox">' + response + '</textarea>';
+					quickedit_div.innerHTML = '<textarea id="' + post_id + '_message" rows="10" cols="100" style="width: 100%;height: ' + quickedit_height + 'px;" class="inputbox">' + response + '</textarea>';
 				} else {
 					quickedit_div.innerHTML = response;	
 				}
 
 				// try to get the button pallette for the quick edit
-				var buttons = d.getElementById(post_type + '' + post_id + '_qebuttons');
+				var buttons = d.getElementById(post_id + '_qebuttons');
 				if(buttons) {
 					buttons.style.display = (hide ? 'none' : 'block');
 				}
-				document.location = '#' + (post_type == 'topic' ? 't' : 'p') + post_id;
+				document.location = '#' + post_id;
 			}
 		}
 	}
@@ -604,7 +604,7 @@ function showQuickEditForm(quickedit_div, quickedit_height, post_type, post_id, 
  * Function that returns the original post text when quick edit
  * has been cancelled
  */
-function cancelQuickEdit(post_type, post_id, div_id) {
+function cancelQuickEdit(post_id, div_id) {
 	
 	// set the quick edit box
 	var quickedit_div		= d.getElementById(div_id);
@@ -612,9 +612,9 @@ function cancelQuickEdit(post_type, post_id, div_id) {
 	// if we have a connection and the edit box
 	if(quickedit_div) {
 		k4_request.setRequestType('GET');
-		k4_request.Open('misc.php?act=original_text&' + post_type + '=' + post_id + '&use_ajax=1', true);
-		k4_request.successState = function() { showQuickEditForm(quickedit_div, 0, post_type, post_id, true); }
-		k4_request.loadingState = function() { simpleLoadState(quickedit_div, (post_type == 'topic' ? 't' : 'p') + post_id); }
+		k4_request.Open('misc.php?act=original_text&post_id=' + post_id + '&use_ajax=1', true);
+		k4_request.successState = function() { showQuickEditForm(quickedit_div, 0, post_id, true); }
+		k4_request.loadingState = function() { simpleLoadState(quickedit_div, post_id); }
 		k4_request.Send("");
 	}
 }
@@ -623,20 +623,20 @@ function cancelQuickEdit(post_type, post_id, div_id) {
  * Function that returns the new post text when quick edit
  * has been saved
  */
-function saveQuickEdit(post_type, post_id, div_id) {
+function saveQuickEdit(post_id, div_id) {
 	// set the quick edit box
 	var quickedit_div		= d.getElementById(div_id);
 	
 	// if we have a connection and the edit box
 	if(quickedit_div) {
-		var textarea		= d.getElementById(post_type + '' + post_id + '_message');
+		var textarea		= d.getElementById(post_id + '_message');
 		var edited_msg		= textarea_value(textarea);
 		quick_edit			= false;
 
 		k4_request.setRequestType('POST');
-		k4_request.Open('misc.php?act=save_text&' + post_type + '=' + post_id + '&use_ajax=1', true);
-		k4_request.successState = function() { showQuickEditForm(quickedit_div, 0, post_type, post_id, true); }
-		k4_request.loadingState = function() { simpleLoadState(quickedit_div, (post_type == 'topic' ? 't' : 'p') + post_id); }
+		k4_request.Open('misc.php?act=save_text&post_id=' + post_id + '&use_ajax=1', true);
+		k4_request.successState = function() { showQuickEditForm(quickedit_div, 0, post_id, true); }
+		k4_request.loadingState = function() { simpleLoadState(quickedit_div, post_id); }
 		k4_request.Send('message=' + encodeURIComponent(edited_msg));
 	}
 }

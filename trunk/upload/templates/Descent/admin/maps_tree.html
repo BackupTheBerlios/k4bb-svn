@@ -11,7 +11,7 @@
 <!-- MAPS GUI -->
 <div class="header"><div class="title">{$L_PERMISSIONS}</div></div>
 <div class="spacer">
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
 			<td class="subheader" width="30%">{$L_NAME}</td>
 			<td class="subheader" align="center">{$L_VIEW}</td>
@@ -23,7 +23,7 @@
 	</table>
 </div>
 <div class="k4_spacer">
-	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<list:list id="maps_list">
 		<list:item list="maps_list">
 		<list:switch list="maps_list" var="row_class" a="alt1" b="alt2">
@@ -32,7 +32,7 @@
 			<td class="{$row_class}" nowrap="nowrap">
 				<div id="maps_link{$id}" class="minitext">{$level}{$name}</div>
 				<div id="maps_menu{$id}" class="borderwrap" style="">
-					<table cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="table">
+					<table cellspacing="{$style_cellspacing}" class="table">
 						<tr class="subtitle">
 							<td nowrap="nowrap">{$L_VARNAME}: {$varname}</td>
 						</tr>
