@@ -1,0 +1,26 @@
+<if:if var="calendardisabled" eq="1">
+	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">	
+		<tr>
+			<td class="alt3" colspan="5" width="100%">
+				<div class="outset_box" align="center">
+					<br />
+					{$L_CALENDARDISABLED}
+					<br /><br />
+				</div>
+			</td>
+		</tr>
+	</table>
+<if:else>
+	<!-- Calendar -->
+	{$L_CALENDAR}
+	<list:list id="calendar">
+		<table width="100%" border="1">
+		<list:item list="calendar">
+			<tr>
+				{$day}
+			</tr>
+		</list:item>
+		</table>
+	</list:list>
+	<!-- / Calendar -->
+</if:if>

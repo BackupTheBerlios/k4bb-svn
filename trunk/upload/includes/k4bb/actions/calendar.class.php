@@ -1,6 +1,6 @@
 <?php
 /**
-* k4 Bulletin Board, filename.php
+* k4 Bulletin Board, calendar.class.php
 *
 * Copyright (c) 2005, Peter Goodman
 *
@@ -24,30 +24,56 @@
 * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 *
-* @author Peter Goodman
-* @version $Id: k4_template.php 134 2005-06-25 15:41:13Z Peter Goodman $
-* @package k4-2.0-dev
+* @author Thasmo (thasmo at gmail dot com)
+* @version $Id$
+* @package k42
 */
 
-require "includes/filearts/filearts.php";
-require "includes/k4bb/k4bb.php";
-require K4_BASE_DIR. '/actions/calendar.class.php';
 
-class K4DefaultAction extends FAAction {
-	function execute(&$request) {
-		k4_bread_crumbs($request['template'], $request['dba'], 'L_CALENDAR');
-		
-		$calendar = new K4CalendarIterator(new K4Calendar);
-		$request['template']->setList('calendar', $calendar);
-		
-		$request['template']->setFile('content', 'calendar_index.html');
+
+if(!defined('IN_K4'))
+	return;
+
+class K4Calendar extends FAObject {
+	
+	function K4Calendar() {
+		$this->__construct();
+	}
+	
+	function __construct() {
+		$this->getDays();
+	}
+	
+	function getDays($switch = NULL) {
+		$days = date('t', time());
+		return array('day' => range(1, $days));
 	}
 }
 
-$app = &new K4Controller('forum_base.html');
-$app->setAction('', new K4DefaultAction);
-$app->setDefaultEvent('');
+class K4CalendarIterator extends FAArrayIterator {
+	var $settings;
+	var $data = array();
+	var $usergroups;
 
-$app->execute();
+	function K4CalendarIterator() {
+		$this->__construct();
+	}
+ 	
+	function __construct() {
+		global $_SETTINGS, $_USERGROUPS;
+		
+		$this->usergroups = $_USERGROUPS;
+		$this->settings = $_SETTINGS;
+		
+		parent::__construct($this->data);
+	}
+	
+	function current() {
+		$temp = parent::current();
+		
+		/* Return the formatted info */
+		return $temp;
+	}
+}
 
 ?>
