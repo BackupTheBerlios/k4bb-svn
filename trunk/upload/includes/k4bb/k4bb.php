@@ -136,6 +136,8 @@ class K4Controller extends FAController {
 		$request['template']->setVar('nojs', (isset($url->args['nojs']) && intval($url->args['nojs']) == 1 ? 1 : 0));
 		$request['template']->setVar('anchor', (isset($url->anchor) && $url->anchor != '' ? $url->anchor : ''));
 		$request['template']->setVar('domain', get_domain());
+
+		$request['template']->setVar('garbage_bin_id', GARBAGE_BIN);
 		
 		$this->setRequest($request);
 		

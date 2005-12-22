@@ -43,7 +43,7 @@ class K4DefaultAction extends FAAction {
 		/**
 		 * Error Checking
 		 */
-		if(!isset($_REQUEST['t']) || !$_REQUEST['t'] || intval($_REQUEST['t']) == 0) {			
+		if(!isset($_REQUEST['post_id']) || intval($_REQUEST['post_id']) == 0) {			
 			$action = new K4InformationAction(new K4LanguageElement('L_TOPICDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}

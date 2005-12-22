@@ -137,7 +137,7 @@ class FAPaginator extends FAObject {
 	}
 
 	function getLast() {
-		$page = ceil($this->count / $this->page_size);
+		$page = intval(@ceil($this->count / $this->page_size));
 		if ($this->hasPage($page) && $page != $this->page_num)
 			return array('pagenum' => $page, 'pagelink' => $this->getPage($page));
 	}

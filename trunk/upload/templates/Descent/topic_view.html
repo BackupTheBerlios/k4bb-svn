@@ -1,7 +1,7 @@
 <tr>
 	<td class="{$row_class}" style="text-align: center;"><img src="{$topicicon}" id="topicicon{$post_id}" alt="" border="0" <if:if var="modpanel" eq="1">onclick="updateTopicLocked(this, {$post_id})"</if:if> /></td>
 	<td class="{$row_class}" style="text-align: center;"><img src="tmp/upload/posticons/{$posticon}" alt="" border="0" /></td>
-	<td class="{$row_class}" width="65%" id="topicname_{$post_id}_area"<if:if var="modpanel" eq="1"> ondblclick="adv_edit(this,{$post_id},'topicname_{$post_id}')"</if:if>>
+	<td class="{$row_class}" width="70%" id="topicname_{$post_id}_area"<if:if var="modpanel" eq="1"> ondblclick="adv_edit(this,{$post_id},'topicname_{$post_id}')"</if:if>>
 		<if:if var="use_pager" eq="1">{$pager}</if:if>
 		
 		<span class="smalltext">
@@ -22,7 +22,7 @@
 	<td align="center" class="{$row_class}"><span class="minitext">{$num_replies}</span></td>
 	<td align="center" class="{$row_class}"><span class="minitext">{$views}</span></td>
 	<if:if var="moved_new_post_id" eq="0">
-	<td style="text-align: right;" class="{$row_class}" nowrap="nowrap" width="20%">
+	<td style="text-align: right;" class="{$row_class}" width="20%" nowrap="nowrap">
 		<if:if var="lastpost_created" noteq="lastpost_created">
 		<span class="minitext">
 			<core:date format="%b %d %Y">{$lastpost_created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$lastpost_created}</core:date></span>
@@ -39,9 +39,11 @@
 		</span>
 		</if:if>
 	</td>
-	<td class="{$row_class}">
+	<td class="{$row_class}" width="3%" style="text-align: right;">
 		<if:if var="ratings_num" geq="1"><img src="Images/{$IMG_DIR}/Icons/Rating/{$rating}stars.gif" alt="({$ratings_num} {$L_VOTES})" border="0" /></if:if>
 		<if:if var="total_attachments" geq="1"><img src="Images/{$IMG_DIR}/Icons/paperclip.gif" alt="({$total_attachments} {$L_ATTACHMENTS})" border="0" /></if:if>
+		<a href="viewpost.php?post_id={$post_id}" target="_blank" title="{$name}"><img src="Images/{$IMG_DIR}/Icons/post_link.gif" alt="{$name}" border="0" /></a>
+		<a href="rss.php?t={$post_id}" title="{$L_RSSFEED}: {$name}"><img src="Images/{$IMG_DIR}/Icons/rss_small.gif" alt="{$L_RSSFEED}: {$name}" border="0" /></a>
 	</td>
 	<if:else />
 	<td colspan="4" class="{$row_class}" align="center">

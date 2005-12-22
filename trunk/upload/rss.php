@@ -123,7 +123,7 @@ class K4DefaultAction extends FAAction {
 		 */
 		} else if(isset($_REQUEST['t']) && intval($_REQUEST['t']) > 0) {
 			
-			$result		= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($_REQUEST['t']) ." LIMIT 1");
+			$result		= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE post_id=". intval($_REQUEST['t']) ." LIMIT 1");
 			$topic		= $result->next();
 			$result->reset(); // reset the pointer of the iterator
 			

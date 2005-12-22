@@ -13,7 +13,7 @@
 		<!-- / Drop Down Menus -->
 	</div>
 </div>
-<maps:if list="forums" var="topics" forum="forum_id" method="can_add"><a href="newtopic.php?id={$forum_id}" title="{$L_POSTTOPIC}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/post_topic.gif" alt="{$L_POSTTOPIC}" /></a></maps:if>
+<if:if var="forum_id" noteq="garbage_bin_id"><maps:if list="forums" var="topics" forum="forum_id" method="can_add"><a href="newtopic.php?id={$forum_id}" title="{$L_POSTTOPIC}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/post_topic.gif" alt="{$L_POSTTOPIC}" /></a></maps:if></if:if>
 <div class="spacer">
 	<div class="alt3" align="right" style="overflow: hidden;">
 		<if:if var="description" noteq=""><div class="minitext" style="float:left;font-weight: normal;">{$description}</div></if:if>
@@ -42,7 +42,9 @@
 			<td class="subtitle" colspan="<if:if var="modpanel" eq="1">7<if:else />6</if:if>">{$L_ANNOUNCEMENTS}</td>
 		</tr>
 		<list:item list="announcements"><list:switch list="announcements" var="row_class" a="alt1" b="alt2">
+		
 		<core:import id="topic_view" file="topic_view.html" />
+		
 		</list:switch></list:item>
 		</list:list>
 		<list:list id="importants">
@@ -63,7 +65,7 @@
 		</tr>
 		<core:block id="no_topics" hidden="yes">
 		<tr>
-			<td class="alt1" colspan="<if:if var="modpanel" eq="1">7<if:else />6</if:if>">
+			<td class="alt1" colspan="<if:if var="modpanel" eq="1">8<if:else />7</if:if>">
 				<div align="center" class="outset_box">
 					<br />
 					{$topics_message}
@@ -112,7 +114,7 @@
 	<tr>
 		<td width="50%">
 			<div align="left">
-				<maps:if list="forums" var="topics" forum="forum_id" method="can_add"><a href="newtopic.php?id={$forum_id}" title="{$L_POSTTOPIC}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/post_topic.gif" alt="{$L_POSTTOPIC}" /></a></maps:if>
+				<if:if var="forum_id" noteq="garbage_bin_id"><maps:if list="forums" var="topics" forum="forum_id" method="can_add"><a href="newtopic.php?id={$forum_id}" title="{$L_POSTTOPIC}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/post_topic.gif" alt="{$L_POSTTOPIC}" /></a></maps:if></if:if>
 			</div>
 		</td>
 		<td width="50%">

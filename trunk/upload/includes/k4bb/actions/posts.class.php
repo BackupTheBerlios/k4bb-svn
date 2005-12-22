@@ -135,8 +135,9 @@ class InsertPost extends FAAction {
 				/* Set this nodes level */
 				$level = 1;
 				if($this->row_type & TOPIC) {
-					$row_order = 0;
-					$parent_id = $forum['forum_id'];
+					$row_order	= 0;
+					$parent_id	= $forum['forum_id'];
+					$name		= k4_htmlentities($_REQUEST['name'], ENT_QUOTES);
 				} else {
 					$topic		= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id=". intval(@$_REQUEST['topic_id']));
 						
@@ -261,7 +262,7 @@ class InsertPost extends FAAction {
 				//post_id,forum_id,poster_name,poster_id,body_text,posticon
 				//disable_html,disable_bbcode,disable_emoticons,disable_sig,disable_areply,disable_aurls,is_draft,is_poll
 				$insert_a = $request['dba']->prepareStatement("INSERT INTO ". K4POSTS ." (name,forum_id,poster_name,poster_id,poster_ip,body_text,posticon,disable_html,disable_bbcode,disable_emoticons,disable_sig,disable_areply,disable_aurls,is_draft,post_type,post_expire,is_feature,is_poll,lastpost_created,row_type,row_level,created,row_order,parent_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-				$insert_a->setString(1, k4_htmlentities($_REQUEST['name'], ENT_QUOTES));
+				$insert_a->setString(1, $name);
 				$insert_a->setInt(2, $forum['forum_id']);
 				$insert_a->setString(3, $poster_name);
 				$insert_a->setInt(4, $request['user']->get('id'));
@@ -304,11 +305,11 @@ class InsertPost extends FAAction {
 					
 					/* Set the forum values */
 					$forum_update->setInt(1, $created);
-					$forum_update->setString(2, k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
+					$forum_update->setString(2, $name);
 					$forum_update->setString(3, $poster_name);
 					$forum_update->setInt(4, $post_id);
 					$forum_update->setInt(5, $request['user']->get('id'));
-					$forum_update->setString(6, iif(($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif'));
+					$forum_update->setString(6, (($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))) ? (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif') : 'clear.gif'));
 					$forum_update->setInt(7, $forum['forum_id']);
 					
 					/**
@@ -843,7 +844,7 @@ class UpdatePost extends FAAction {
  */
 class DeletePost extends FAAction {
 	var $row_type;
-	function UpdatePost($row_type) {
+	function DeletePost($row_type) {
 		$this->row_type = $row_type;
 	}
 	function execute(&$request) {
@@ -867,11 +868,16 @@ class DeletePost extends FAAction {
 		}
 					
 		$forum		= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($post['forum_id']));
-		
+
 		/* Check the forum data given */
 		if(!$forum || !is_array($forum) || empty($forum)) {
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
+		}
+		
+		$delete_topic = FALSE;
+		if($forum['forum_id'] == GARBAGE_BIN && $this->row_type & TOPIC) {
+			$delete_topic = TRUE;
 		}
 			
 		/* Make sure the we are trying to delete from a forum */
@@ -906,9 +912,6 @@ class DeletePost extends FAAction {
 			return TRUE;
 		}
 		
-		/* Get that last post in this forum that's not part of/from this topic */
-		$lastpost_created		= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id <> ". intval($post['post_id']) ." AND forum_id=". intval($post['forum_id']) ." ORDER BY created DESC LIMIT 1");
-		
 		/* Begin the SQL transaction */
 		$request['dba']->beginTransaction();
 		
@@ -922,7 +925,7 @@ class DeletePost extends FAAction {
 			$topic_update->setString(2, $topic_last_reply['poster_name']);
 			$topic_update->setInt(3, $topic_last_reply['poster_id']);
 			$topic_update->setInt(4, $topic_last_reply['post_id']);
-			$topic_update->setInt(5, $request['dba']->getValue("SELECT COUNT(*) FROM ". K4POSTS ." WHERE parent_id=". intval($post['parent_id']))); // use this to make sure we get the right count
+			$topic_update->setInt(5, intval($request['dba']->getValue("SELECT COUNT(*) FROM ". K4POSTS ." WHERE parent_id=". intval($post['parent_id'])) - 1) ); // use this to make sure we get the right count
 			$topic_update->setInt(6, $post['parent_id']);
 			$topic_update->executeUpdate();
 		}
@@ -935,8 +938,8 @@ class DeletePost extends FAAction {
 		if($this->row_type & REPLY) {
 			$request['dba']->executeUpdate("DELETE FROM ". K4BADPOSTREPORTS ." WHERE post_id = ". intval($post['post_id']) );
 		} else {
-			$posts = $request['dba']->executeQuery("SELECT post_id,poster_id,attachments FROM ". K4POSTS ." WHERE post_id=". intval($post['post_id']) ." OR parent_id=". intval($post['post_id']));
-			$num_replies_to_remove = $posts->numrows() - 1;
+			$posts = $request['dba']->executeQuery("SELECT post_id,poster_id,attachments FROM ". K4POSTS ." WHERE ( (parent_id=". intval($post['post_id']) ." AND row_type=". REPLY .") OR parent_id=". intval($post['post_id']) .")");
+			$num_replies_to_remove = intval($posts->numrows() - 1);
 			while($posts->next()) {
 				$p = $posts->current();
 				
@@ -944,7 +947,9 @@ class DeletePost extends FAAction {
 				$request['dba']->executeUpdate("DELETE FROM ". K4BADPOSTREPORTS ." WHERE post_id = ". intval($p['post_id']) );
 				
 				// change user post count
-				$request['dba']->executeUpdate("UPDATE ". K4USERINFO ." SET num_posts=num_posts-1 WHERE user_id=". intval($p['poster_id']));
+				if($delete_topic || $this->row_type & REPLY) {
+					$request['dba']->executeUpdate("UPDATE ". K4USERINFO ." SET num_posts=num_posts-1 WHERE user_id=". intval($p['poster_id']));
+				}
 			
 				if($p['attachments'] > 0) {
 					remove_attachments($request, $p, FALSE);
@@ -953,50 +958,86 @@ class DeletePost extends FAAction {
 		}
 		
 		/**
-		 * Delete the post 
+		 * Delete/Move the post 
 		 */
-		$request['dba']->executeUpdate("DELETE FROM ". K4POSTS ." WHERE post_id = ". intval($post['post_id']));
-		
-		// change or remove replies
-		if($this->row_type & REPLY) {
-			$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET row_order=row_order-1 WHERE row_order>". intval($post['row_order']) ." AND post_id=". intval($post['forum_id']));
+		if($delete_topic || $this->row_type & REPLY) {
+			$request['dba']->executeUpdate("DELETE FROM ". K4POSTS ." WHERE post_id = ". intval($post['post_id']));
+			
+			// change or remove replies
+			if($this->row_type & REPLY) {
+				$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET row_order=row_order-1 WHERE row_order>". intval($post['row_order']) ." AND post_id=". intval($post['forum_id']));
+			} else {
+				$request['dba']->executeUpdate("DELETE FROM ". K4POSTS ." WHERE parent_id=". intval($post['post_id']));
+				$request['dba']->executeUpdate("DELETE FROM ". K4RATINGS ." WHERE post_id = ". intval($post['post_id']));
+			}
 		} else {
-			$request['dba']->executeUpdate("DELETE FROM ". K4POSTS ." WHERE parent_id=". intval($post['post_id']));
+			
+			/* Move this topic and its replies to the garbage bin */
+			if($this->row_type & TOPIC) {
+				
+				// parent_id is left as the current forum id
+				$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET forum_id=". GARBAGE_BIN ." WHERE ( (parent_id=". intval($post['post_id']) ." AND row_type=". REPLY .") OR post_id=". intval($post['post_id']) .")");
+				
+				// update the garbage bin
+				$newpost_created		= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE forum_id=". GARBAGE_BIN ." ORDER BY created DESC LIMIT 1");
+				$forum_update = $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET posts=posts+?,replies=replies+?,topics=topics+?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
+				$forum_update->setInt(1, ($this->row_type & REPLY ? $num_replies_to_remove : $num_replies_to_remove+1) );
+				$forum_update->setInt(2, $num_replies_to_remove);
+				$forum_update->setInt(3, ($this->row_type & REPLY ? 0 : 1));
+				$forum_update->setInt(4, $newpost_created['created']);
+				$forum_update->setString(5, $newpost_created['name']);
+				$forum_update->setString(6, $newpost_created['poster_name']);
+				$forum_update->setInt(7, $newpost_created['post_id']);
+				$forum_update->setInt(8, $newpost_created['poster_id']);
+				$forum_update->setString(9, $newpost_created['posticon']);
+				$forum_update->setInt(10, GARBAGE_BIN);
+				$forum_update->executeUpdate();
+			}
+		}
+
+		/* Get that last post in this forum that's not part of/from this topic */
+		$lastpost_created		= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE forum_id=". intval($post['forum_id']) ." ORDER BY created DESC LIMIT 1");
+		if(!is_array($lastpost_created) || empty($lastpost_created)) {
+			$lastpost_created = array('created'=>0, 'name'=>'', 'poster_name'=>'', 'post_id'=>0, 'poster_id'=>0, 'posticon'=>'',);
 		}
 
 		/**
 		 * Update the forum and the datastore
 		 */
 
-		$forum_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET posts=posts-?,replies=replies-?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
-		$datastore_update	= $request['dba']->prepareStatement("UPDATE ". K4DATASTORE ." SET data=? WHERE varname=?");
-			
+		$forum_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET posts=posts-?,replies=replies-?,topics=topics-?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
 		/* Set the forum values */
 		$forum_update->setInt(1, ($this->row_type & REPLY ? $num_replies_to_remove : $num_replies_to_remove+1) );
 		$forum_update->setInt(2, $num_replies_to_remove);
-		$forum_update->setInt(3, $lastpost_created['created']);
-		$forum_update->setString(4, $lastpost_created['name']);
-		$forum_update->setString(5, $lastpost_created['poster_name']);
-		$forum_update->setInt(6, $lastpost_created['post_id']);
-		$forum_update->setInt(7, $lastpost_created['poster_id']);
-		$forum_update->setString(8, $lastpost_created['posticon']);
-		$forum_update->setInt(9, $forum['forum_id']);
-		
-		/* Set the datastore values */
-		$datastore					= $_DATASTORE['forumstats'];
-		$datastore['num_replies']	= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4POSTS ." WHERE row_type=". REPLY);
-		$datastore['num_topics']	= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4POSTS ." WHERE row_type=". TOPIC);
-		
-		$datastore_update->setString(1, serialize($datastore));
-		$datastore_update->setString(2, 'forumstats');
-		
-		/* Execute the forum and datastore update queries */
+		$forum_update->setInt(3, ($this->row_type & REPLY ? 0 : 1));
+		$forum_update->setInt(4, $lastpost_created['created']);
+		$forum_update->setString(5, $lastpost_created['name']);
+		$forum_update->setString(6, $lastpost_created['poster_name']);
+		$forum_update->setInt(7, $lastpost_created['post_id']);
+		$forum_update->setInt(8, $lastpost_created['poster_id']);
+		$forum_update->setString(9, $lastpost_created['posticon']);
+		$forum_update->setInt(10, $forum['forum_id']);
 		$forum_update->executeUpdate();
-		$datastore_update->executeUpdate();			
+
+		/* Set the datastore values */
+		if($delete_topic || $this->row_type & REPLY) {
+			
+			$datastore_update	= $request['dba']->prepareStatement("UPDATE ". K4DATASTORE ." SET data=? WHERE varname=?");
+			
+			$datastore					= $_DATASTORE['forumstats'];
+			$datastore['num_replies']	= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4POSTS ." WHERE row_type=". REPLY);
+			$datastore['num_topics']	= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4POSTS ." WHERE row_type=". TOPIC);
+			
+			$datastore_update->setString(1, serialize($datastore));
+			$datastore_update->setString(2, 'forumstats');
+			
+			/* Execute datastore update query */
+			$datastore_update->executeUpdate();
+			
+			// Update the datastore cache
+			reset_cache('datastore');
+		}	
 				
-		// Update the datastore cache
-		reset_cache('datastore');
-		
 		$request['dba']->commitTransaction();		
 
 		/* Redirect the user */
