@@ -3,7 +3,7 @@
 		<div class="maintitle">{$L_MOVETOPICS}</div>
 		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<tr>
-				<td class="alt3" colspan="7">
+				<td class="alt3" colspan="8">
 					<form action="mod.php?act=move_topics" method="post" enctype="multipart/form-data">
 					<div class="outset_box">
 						<label for="movetrack"><input type="radio" name="action" value="movetrack" id="movetrack" checked="checked" /> {$L_MOVEWITHTRACKER}</label><br />
@@ -40,16 +40,19 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="subtitle" width="5%" colspan="2">&nbsp;</td>
-				<td class="subtitle" style="text-align: center;" width="65%">{$L_TOPICS}/{$L_AUTHOR}</td>
-				<td class="subtitle" style="text-align: center;" width="20%">&nbsp;{$L_LASTPOST}&nbsp;</td>
-				<td class="subtitle" style="text-align: center;">&nbsp;{$L_REPLIES}&nbsp;</td>
-				<td class="subtitle" style="text-align: center;">&nbsp;{$L_VIEWS}&nbsp;</td>
-				<td class="subtitle" style="text-align: center;">&nbsp;{$L_SELECT}&nbsp;</td>
+				<td class="subheader" width="5%" colspan="2">&nbsp;</td>
+				<td class="subheader" align="center" width="70%">{$L_TOPICS}/{$L_AUTHOR}</td>
+				<td class="subheader" align="center" nowrap="nowrap">&nbsp;{$L_REPLIES}&nbsp;</td>
+				<td class="subheader" align="center" nowrap="nowrap">&nbsp;{$L_VIEWS}&nbsp;</td>
+				<td class="subheader" align="center" nowrap="nowrap" width="20%">&nbsp;{$L_LASTPOST}&nbsp;</td>
+				<td class="subheader" width="3%">&nbsp;{$L_INFO}&nbsp;</td>
+				<td class="subheader" style="text-align: center;">&nbsp;{$L_SELECT}&nbsp;</td>
 			</tr>
 			<list:list id="topics">
 			<list:item list="topics">
+			<list:switch list="topics" var="row_class" a="alt1" b="alt2">
 			<core:import id="topic_view" file="topic_view.html" />
+			</list:switch>
 			</list:item>
 			</list:list>
 		</table>

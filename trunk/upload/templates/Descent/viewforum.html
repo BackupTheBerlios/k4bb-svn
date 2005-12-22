@@ -39,7 +39,7 @@
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<list:list id="announcements">
 		<tr>
-			<td class="subtitle" colspan="<if:if var="modpanel" eq="1">7<if:else />6</if:if>">{$L_ANNOUNCEMENTS}</td>
+			<td class="subtitle" colspan="<if:if var="modpanel" eq="1">8<if:else />7</if:if>">{$L_ANNOUNCEMENTS}</td>
 		</tr>
 		<list:item list="announcements"><list:switch list="announcements" var="row_class" a="alt1" b="alt2">
 		
@@ -49,7 +49,7 @@
 		</list:list>
 		<list:list id="importants">
 		<tr>
-			<td class="subtitle" colspan="<if:if var="modpanel" eq="1">7<if:else />6</if:if>">{$L_IMPORTANTTOPICS}</td>
+			<td class="subtitle" colspan="<if:if var="modpanel" eq="1">8<if:else />7</if:if>">{$L_IMPORTANTTOPICS}</td>
 		</tr>
 		<list:item list="importants"><list:switch list="importants" var="row_class" a="alt1" b="alt2">
 		<core:import id="topic_view" file="topic_view.html" />
