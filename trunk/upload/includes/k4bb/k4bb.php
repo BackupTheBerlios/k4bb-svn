@@ -285,8 +285,6 @@ function k4_set_language($lang) {
 			global $_LANG;
 
 			setlocale(LC_ALL, $_LANG['locale']);
-			header("Content-type: text/html; charset=". $_LANG['ENCODING']);
-			header("Content-Language: ". $_LANG['LANG']);
 		}
 	}
 }
