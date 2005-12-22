@@ -12,15 +12,26 @@
 	</table>
 <if:else>
 	<!-- Calendar -->
-	{$L_CALENDAR}
+	<div class="header"><div class="title">{$L_CALENDAR}</div></div>
+	<div class="spacer">
 	<list:list id="calendar">
-		<table width="100%" border="1">
-		<list:item list="calendar">
+		<table width="100%" class="table">
 			<tr>
-				{$day}
+			<list:item list="calendar">
+				<td>{$day}</td>
+				
+					<list:separator list="calendar">
+					<list:alternate list="calendar" count="7" remainder="0">
+						<list:switch list="calendar" var="row_class" a="alt2" b="alt1">
+						</tr><tr class="{$row_class}">
+						</list:switch>
+					</list:alternate>
+					</list:separator>
+			</list:item>
 			</tr>
-		</list:item>
 		</table>
 	</list:list>
+	</div>
+	<div class="footer_block"><div>&nbsp;</div></div>
 	<!-- / Calendar -->
 </if:if>

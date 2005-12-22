@@ -539,7 +539,7 @@ class K4CloseBoardFilter extends FAFilter {
 	}
 }
 
-class K4MasMailFilter extends FAFilter {
+class K4MassMailFilter extends FAFilter {
 	function execute(&$action, &$request) {
 		global $_DATASTORE;
 		
@@ -586,6 +586,22 @@ class K4MasMailFilter extends FAFilter {
 			reset_cache('datastore');
 
 		}		
+	}
+
+	function getDependencies() {
+		return array('dba', 'template');
+	}
+
+	function getId() {
+		return 'massmail';
+	}
+}
+
+class K4SearchDestroyerFilter extends FAFilter {
+	function execute(&$action, &$request) {
+		//if(isset($_SESSION[]) {
+				
+		//}
 	}
 
 	function getDependencies() {

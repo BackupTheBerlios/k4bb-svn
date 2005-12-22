@@ -349,6 +349,7 @@ class K4SearchEverything extends FAAction {
 		
 
 		$request['template']->setFile('content', 'search_results.html');
+		$request['template']->setFile('content_extra', 'search_sort_menu.html');
 
 //		if(isset($_SESSION['search_query'])) {
 //			unset($_SESSION['search_result']);

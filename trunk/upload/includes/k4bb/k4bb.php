@@ -103,7 +103,7 @@ class K4Controller extends FAController {
 		$this->addFilter(new K4SqlDebugPostFilter);
 
 		// Mass emailer filter
-		$this->addFilter(new K4MasMailFilter);
+		$this->addFilter(new K4MassMailFilter);
 
 		// Board closed filter
 		$this->addFilter(new K4CloseBoardFilter);

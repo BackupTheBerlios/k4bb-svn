@@ -37,7 +37,8 @@ class K4DefaultAction extends FAAction {
 	function execute(&$request) {
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_CALENDAR');
 		
-		$calendar = new K4CalendarIterator(new K4Calendar);
+		$cal = &new K4Calendar();
+		$calendar = new K4CalendarIterator($cal->getDays());
 		$request['template']->setList('calendar', $calendar);
 		
 		$request['template']->setFile('content', 'calendar_index.html');
