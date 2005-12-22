@@ -693,7 +693,7 @@ class K4SendPMessage extends FAAction {
 			foreach($valid_users as $user) {
 				
 				/* Make sure to add a limit to how many messages can be sent if there is one */
-				if($i < $request['template']->getVar('maxsendtopms') &$request['template']->getVar('maxsendtopms') > 0) {
+				if($i < $request['template']->getVar('maxsendtopms') && $request['template']->getVar('maxsendtopms') > 0) {
 					
 					/* Prepare the inserting statement */
 					$insert_a			= $request['dba']->prepareStatement("INSERT INTO ". K4PRIVMESSAGES ." (name,folder_id,poster_name,poster_id,body_text,posticon,disable_html,disable_bbcode,disable_emoticons,disable_sig,disable_areply,disable_aurls,is_draft,created,member_id,member_name,member_has_read,tracker_id,sending_id,parent_id,message_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");

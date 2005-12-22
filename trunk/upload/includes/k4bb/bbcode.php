@@ -1552,7 +1552,7 @@ class K4BBPolls extends FAObject {
 	function parse(&$request, &$is_poll) {
 		
 		// set whether we can poll or not
-		$can_poll	= ($this->forum['forum_id'] > 0 &$request['user']->get('perms') >= get_map( 'bbcode', 'can_add', array('forum_id'=>$this->forum['forum_id'])));
+		$can_poll	= ($this->forum['forum_id'] > 0 && $request['user']->get('perms') >= get_map( 'bbcode', 'can_add', array('forum_id'=>$this->forum['forum_id'])));
 
 		// set the poll compiler
 		$this->bbcode_parser->set_compiler('question', new K4Poll_Compiler($request['dba'], $can_poll, $request['template']->getVar('maxpollquestions'), $request['template']->getVar('maxpolloptions')));

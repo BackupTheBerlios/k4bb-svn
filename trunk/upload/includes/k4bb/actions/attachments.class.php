@@ -166,8 +166,8 @@ function attach_files(&$request, $forum, $post) {
 /**
  * Remove attachments
  */
-function remove_attachments(&$request, $post) {
-	$attachments	= $request['dba']->executeQuery("SELECT * FROM ". K4ATTACHMENTS ." WHERE post_id = ". intval($post_id) ." $extra");
+function remove_attachments(&$request, $post, $update = TRUE) {
+	$attachments	= $request['dba']->executeQuery("SELECT * FROM ". K4ATTACHMENTS ." WHERE post_id = ". intval($post['post_id']));
 	
 	$upload_dir		= BB_BASE_DIR .'/tmp/upload/attachments/';
 
@@ -190,14 +190,15 @@ function remove_attachments(&$request, $post) {
 	}
 	
 	$num_files		= $attachments->numrows();
-	$extra			= $post_id ? "AND post_id = ". intval($post_id) : "";
-
+	
 	// fix the attachment counts for topics/replies
-	$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET total_attachments=total_attachments-". $num_files .", attachments=attachments-". $num_files ." WHERE post_id=". intval(($post['row_type'] & REPLY ? $post['parent_id'] : $post['post_id'])) );
-	if($post['row_type'] & REPLY) {
-		$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET attachments=attachments-". $num_files ." WHERE post_id=". intval($post['post_id']) );
+	if($update) {
+		$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET total_attachments=total_attachments-". $num_files .", attachments=attachments-". $num_files ." WHERE post_id=". intval(($post['row_type'] & REPLY ? $post['parent_id'] : $post['post_id'])) );
+		if($post['row_type'] & REPLY) {
+			$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET attachments=attachments-". $num_files ." WHERE post_id=". intval($post['post_id']) );
+		}
 	}
-
+	
 	// delete them
 	$request['dba']->executeUpdate("DELETE FROM ". K4ATTACHMENTS ." WHERE post_id = ". intval($post['post_id']));
 }
@@ -293,7 +294,7 @@ class K4ViewAttachment extends FAAction {
 		$upload_dir		= BB_BASE_DIR .'/tmp/upload/attachments/';
 
 		// change the upload director if we need to
-		if($attachment['in_db'] == 0 &$request['user']->isMember()) {
+		if($attachment['in_db'] == 0 && $request['user']->isMember()) {
 			$upload_dir	= BB_BASE_DIR .'/tmp/upload/attachments/'. $request['user']->get('id') .'/';
 		}
 		

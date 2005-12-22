@@ -1073,7 +1073,7 @@ class AdminCSSRequestFilter extends FAFilter {
 					return TRUE;
 				}
 				
-				if($request['event'] != 'css_insertstyle' &$request['event'] != 'css_addstyle' &$request['event'] != 'css_updateallclasses') {
+				if($request['event'] != 'css_insertstyle' && $request['event'] != 'css_addstyle' && $request['event'] != 'css_updateallclasses') {
 					
 					if(!isset($_REQUEST['style_id']) || intval($_REQUEST['style_id']) == 0) {
 						$action = new K4InformationAction(new K4LanguageElement('L_CSSCLASSDOESNTEXIST'), 'content', FALSE);

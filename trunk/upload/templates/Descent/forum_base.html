@@ -19,18 +19,21 @@
 				</div>
 			</div>
 		</div>
+		<if:if var="can_see_board" method="can_view" geq="0">
 		<div class="spacer">
 			<div class="forum_main">
-				<if:if var="can_see_board" method="can_view" geq="0">
+				
 					<core:import id="content" />
 					<core:import id="content_extra" />
 			</div>
 		</div>
+		</if:if>
+		<core:block id="forum_midsection">
 		<div class="spacer">
 			<div class="forum_mid">
+				<if:if var="can_see_board" method="can_view" geq="0">
 					<core:import id="users_browsing" />
 					<core:import id="forum_info" />
-
 				<if:else />
 
 					<!-- You don't have permission to view the forums -->
@@ -50,6 +53,7 @@
 				</if:if>
 			</div>
 		</div>
+		</core:block>
 		<div class="forum_foot">
 			<div id="footer">
 				<core:import id="quick_nav" file="quick_nav.html" />

@@ -83,7 +83,7 @@ class K4DefaultAction extends FAAction {
 		$last_reply		= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE poster_ip = '". USER_IP ."' ORDER BY created DESC LIMIT 1");
 		
 		if(is_array($last_topic) && !empty($last_topic)) {
-			if(intval($last_topic['created']) + POST_IMPULSE_LIMIT > time() &$request['user']->get('perms') < MODERATOR) {
+			if(intval($last_topic['created']) + POST_IMPULSE_LIMIT > time() && $request['user']->get('perms') < MODERATOR) {
 				/* set the breadcrumbs bit */
 				k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 				
@@ -93,7 +93,7 @@ class K4DefaultAction extends FAAction {
 		}
 
 		if(is_array($last_reply) && !empty($last_reply)) {
-			if(intval($last_reply['created']) + POST_IMPULSE_LIMIT > time() &$request['user']->get('perms') < MODERATOR) {
+			if(intval($last_reply['created']) + POST_IMPULSE_LIMIT > time() && $request['user']->get('perms') < MODERATOR) {
 				/* set the breadcrumbs bit */
 				k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 				

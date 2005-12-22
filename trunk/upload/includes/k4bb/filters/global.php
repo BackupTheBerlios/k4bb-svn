@@ -599,17 +599,40 @@ class K4MassMailFilter extends FAFilter {
 
 class K4SearchDestroyerFilter extends FAFilter {
 	function execute(&$action, &$request) {
-		//if(isset($_SESSION[]) {
-				
-		//}
+		global $_URL;
+		
+		$unset = FALSE;
+
+		if(isset($_SESSION['search']) && strpos($_URL->file, 'search.') === FALSE) {
+			
+			if(strpos(referer(), 'search.') === FALSE) {
+				$unset = TRUE;
+			}
+		} else {
+			$referer = new FAUrl(referer());
+
+			if( !isset($referer->args['newposts']) && isset($_URL->args['newposts']) ) {
+				if(!isset($_URL->args['page']) || $_URL->args['page'] == 1) {
+					$unset = TRUE;
+				}
+			} else {
+				if(!isset($_URL->args['page']) || $_URL->args['page'] == 1) {
+					$unset = TRUE;
+				}
+			}
+		}
+
+		if($unset) {
+			unset($_SESSION['search']);
+		}
 	}
 
 	function getDependencies() {
-		return array('dba', 'template');
+		return array();
 	}
 
 	function getId() {
-		return 'massmail';
+		return 'search_destroyer';
 	}
 }
 

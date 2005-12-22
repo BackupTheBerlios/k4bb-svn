@@ -79,6 +79,7 @@ class K4Controller extends FAController {
 		$request['load_timer']		= &new FATimer(3);
 		$request['template']		= &new K4Template();
 		
+		// request filters
 		$this->addFilter(new K4RequestFilter);
 
 		// Open our database
@@ -86,7 +87,8 @@ class K4Controller extends FAController {
 
 		// cache filters
 		$this->addFilter(new K4GeneralCacheFilter);
-
+		
+		// general filters
 		$this->addFilter(new K4SessionFilter);
 		$this->addFilter(new K4UserFilter);
 		$this->addFilter(new K4LanguageFilter);
@@ -108,6 +110,10 @@ class K4Controller extends FAController {
 		// Board closed filter
 		$this->addFilter(new K4CloseBoardFilter);
 		
+		// Search result destroyer
+		$this->addFilter(new K4SearchDestroyerFilter);
+		
+		// invalid action
 		$this->setInvalidAction(new K4InformationAction(new K4LanguageElement('L_PAGEDOESNTEXIST'), 'content', TRUE));
 
 		/**

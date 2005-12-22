@@ -37,7 +37,7 @@
 							<maps:if list="all_forums" forum="forum_id" method="can_view">
 								<maps:if forum="forum_id" method="can_view">
 									<if:if var="is_forum" eq="1">
-										<option value="{$id}"<if:if var="row_type" eq="1"> style="font-weight: bold;"</if:if>>{$indent_level}{$name}</option>
+										<option value="{$forum_id}"<if:if var="row_type" eq="1"> style="font-weight: bold;"</if:if>>{$indent_level}{$name}</option>
 									</if:if>
 								</maps:if>
 							</maps:if>

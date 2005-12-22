@@ -466,7 +466,7 @@ class EditTopic extends FAAction {
 		create_editor($request, $topic['body_text'], 'post', $forum);
 
 		foreach($topic as $key => $val)
-			$request['template']->setVar('topic_'. $key, $val);
+			$request['template']->setVar('post_'. $key, $val);
 		
 		/* Assign the forum information to the template */
 		foreach($forum as $key => $val)

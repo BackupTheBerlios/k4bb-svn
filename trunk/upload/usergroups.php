@@ -42,7 +42,7 @@ class K4DefaultAction extends FAAction {
 		 */
 		if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
 			$result			= explode('|', $request['user']->get('usergroups'));
-			$groups			= $request['user']->get('usergroups') &$request['user']->get('usergroups') != '' ? iif(!$result, force_usergroups($request['user']->getInfoArray()), $result) : array();
+			$groups			= $request['user']->get('usergroups') && $request['user']->get('usergroups') != '' ? iif(!$result, force_usergroups($request['user']->getInfoArray()), $result) : array();
 			
 			$query			= "SELECT * FROM ". K4USERGROUPS ." WHERE display_legend = 1";
 			

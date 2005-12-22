@@ -43,7 +43,7 @@ class K4DefaultAction extends FAAction {
 			return TRUE;
 		}
 
-		unset($_SESSION['search_queries']);
+		unset($_SESSION['search']['search_queries']);
 		
 		return TRUE;
 	}
@@ -61,8 +61,8 @@ class K4SearchEverything extends FAAction {
 		}
 		
 		/* Do we force it to rewrite the session? */
-		if(isset($_REQUEST['rewrite_session']) && intval($_REQUEST['rewrite_session']) == 1 && isset($_SESSION['search_queries']))
-			unset($_SESSION['search_queries']);
+		if(isset($_REQUEST['rewrite_session']) && intval($_REQUEST['rewrite_session']) == 1 && isset($_SESSION['search']['search_queries']))
+			unset($_SESSION['search']['search_queries']);
 
 		/**
 		 * Sort out author information
@@ -130,22 +130,12 @@ class K4SearchEverything extends FAAction {
 			
 			// do not include the first option
 			for($i = 1; $i < count($forums); $i++) {
-				
 				$id					= intval($forums[$i]);
 				
 				// forums
 				if(isset($_ALLFORUMS[$id])) {
-					$id						= substr($id, 1);
 					if(get_map( '', 'can_view', array('forum_id'=>$id)) <= $request['user']->get('perms')) {
 						$forum_ids			.=  (!$subforums && $_ALLFORUMS[$id]['row_level'] > 2) ? '' : ' OR forum_id = '. intval($id);
-						$searchable_forums	.= '|'. $id;
-					}
-				
-				// categories
-				} elseif(isset($_ALLFORUMS[$id])) {
-					$id						= substr($id, 1);
-					if(get_map( '', 'can_view', array('category_id'=>$id)) <= $request['user']->get('perms')) {
-						$category_ids		.=  $allforums ? '' : ' OR category_id = '. intval($id);
 						$searchable_forums	.= '|'. $id;
 					}
 				}
@@ -200,7 +190,7 @@ class K4SearchEverything extends FAAction {
 		$request['template']->setVar('search_where', !isset($_REQUEST['searchwhere']) ? 'subjectmessage' : $_REQUEST['searchwhere']);
 		
 		// are there no keywords, user ids, etc?
-		if($keyword_query == '' && $user_ids == '' && !isset($_SESSION['search_queries']) && !isset($_REQUEST['newposts'])) {
+		if($keyword_query == '' && $user_ids == '' && !isset($_SESSION['search']['search_queries']) && !isset($_REQUEST['newposts'])) {
 			$action = new K4InformationAction(new K4LanguageElement('L_SEARCHINVALID'), 'content', TRUE, 'search.php', 3);
 			return $action->execute($request);
 		}
@@ -210,7 +200,7 @@ class K4SearchEverything extends FAAction {
 		 */
 		$sort_orders		= array('created', 'poster_name', 'name', 'forum_id');
 		
-		$viewas				= (isset($_SESSION['search_queries']['viewas']) && $_SESSION['search_queries']['viewas'] == 'topics') ? 'topics' : ((isset($_REQUEST['viewas']) && $_REQUEST['viewas'] == 'topics') ? 'topics' : 'posts');
+		$viewas				= (isset($_SESSION['search']['search_queries']['viewas']) && $_SESSION['search']['search_queries']['viewas'] == 'topics') ? 'topics' : ((isset($_REQUEST['viewas']) && $_REQUEST['viewas'] == 'topics') ? 'topics' : 'posts');
 
 		$resultsperpage		= $viewas == 'topics' ? intval($request['template']->getVar('searchtopicsperpage')) : intval($request['template']->getVar('searchpostsperpage'));
 		$resultsperpage		= isset($_REQUEST['limit']) && ctype_digit($_REQUEST['limit']) && intval($_REQUEST['limit']) > 0 ? intval($_REQUEST['limit']) : $resultsperpage;
@@ -219,9 +209,9 @@ class K4SearchEverything extends FAAction {
 		$daysprune			= isset($_REQUEST['daysprune']) && ctype_digit($_REQUEST['daysprune']) ? ($_REQUEST['daysprune'] == -1 ? 0 : intval($_REQUEST['daysprune'])) : 0;
 		$daysprune			= $daysprune > 0 ? time() - @($daysprune * 86400) : 0;
 		
-		$sortorder			= (isset($_SESSION['search_queries']['order']) && $_SESSION['search_queries']['order'] == 'ASC') ? 'ASC' : ((isset($_REQUEST['order']) && $_REQUEST['order'] == 'ASC') ? 'ASC' : 'DESC');
+		$sortorder			= (isset($_SESSION['search']['search_queries']['order']) && $_SESSION['search']['search_queries']['order'] == 'ASC') ? 'ASC' : ((isset($_REQUEST['order']) && $_REQUEST['order'] == 'ASC') ? 'ASC' : 'DESC');
 		
-		$sortedby			= (isset($_SESSION['search_queries']['sort']) && $_SESSION['search_queries']['sort'] != 'DESC') ? $_SESSION['search_queries']['sort'] : ((isset($_REQUEST['sort']) && $_REQUEST['sort'] != '') ? $_REQUEST['sort'] : 'created');
+		$sortedby			= (isset($_SESSION['search']['search_queries']['sort']) && $_SESSION['search']['search_queries']['sort'] != 'DESC') ? $_SESSION['search']['search_queries']['sort'] : ((isset($_REQUEST['sort']) && $_REQUEST['sort'] != '') ? $_REQUEST['sort'] : 'created');
 		$start				= ceil(@($page - 1) * $resultsperpage);
 		
 		/**
@@ -247,29 +237,18 @@ class K4SearchEverything extends FAAction {
 							);
 		//print_r($queries);
 		// set these queries to the session
-		if(isset($_SESSION['search_queries']) && is_array($_SESSION['search_queries']) && !empty($_SESSION['search_queries'])) {
-			$queries					= $_SESSION['search_queries'];
+		if(isset($_SESSION['search']['search_queries']) && is_array($_SESSION['search']['search_queries']) && !empty($_SESSION['search']['search_queries'])) {
+			$queries					= $_SESSION['search']['search_queries'];
 		} else {
-			$_SESSION['search_queries'] = $queries;
+			$_SESSION['search']['search_queries'] = $queries;
 		}
 				
 		/* Get topics and replies */
 		if($queries['viewas'] == 'posts') {
-				
-//			//$request['dba']->executeUpdate("DROP TABLE IF EXISTS ". K4TEMPTABLE); //  TYPE=HEAP
-//			if(is_a($request['dba'], 'SQLiteConnection') || is_a($request['dba'], 'MySQLConnection')) {
-//				$request['dba']->createTemporary(K4TEMPTABLE, K4POSTS);
-//				$request['dba']->executeUpdate("INSERT INTO ". K4TEMPTABLE ." ($select) ". $queries['topics'] );
-//				$request['dba']->executeUpdate("INSERT INTO ". K4TEMPTABLE ." ($select) ". $queries['replies'] );
-//			} elseif(is_a($request['dba'], 'MysqliConnection')) {
-//				$request['dba']->executeUpdate("DROP TABLE IF EXISTS ". K4TEMPTABLE);
-//				$request['dba']->executeUpdate("CREATE TEMPORARY TABLE ". K4TEMPTABLE ." (". $queries['topics'] .")");
-//				$request['dba']->executeUpdate("INSERT INTO ". K4TEMPTABLE ." (". $queries['replies'] .")");
-//			}
-			
+						
 			if(!isset($queries['num_results'])) {
 				$num_results = $request['dba']->getValue(str_replace('**SELECT**', 'COUNT(post_id)', $queries['posts']));
-				$_SESSION['search_queries']['num_results'] = $num_results;
+				$_SESSION['search']['search_queries']['num_results'] = $num_results;
 			} else {
 				$num_results	= $queries['num_results'];
 			}
@@ -283,7 +262,7 @@ class K4SearchEverything extends FAAction {
 			
 			if(!isset($queries['num_results'])) {
 				$num_results = $request['dba']->getValue(str_replace('**SELECT**', 'COUNT(post_id)', $queries['topics_only']));
-				$_SESSION['search_queries']['num_results'] = $num_results;
+				$_SESSION['search']['search_queries']['num_results'] = $num_results;
 			} else {
 				$num_results	= $queries['num_results'];
 			}
@@ -350,15 +329,16 @@ class K4SearchEverything extends FAAction {
 
 		$request['template']->setFile('content', 'search_results.html');
 		$request['template']->setFile('content_extra', 'search_sort_menu.html');
+		$request['template']->setVisibility('forum_midsection', FALSE);
 
-//		if(isset($_SESSION['search_query'])) {
-//			unset($_SESSION['search_result']);
-//			unset($_SESSION['search_num_results']);
+//		if(isset($_SESSION['search']['search_query'])) {
+//			unset($_SESSION['search']['search_result']);
+//			unset($_SESSION['search']['search_num_results']);
 //		}
 //
 //		if($num_pages > 1) {
-//			$_SESSION['search_result']		= &$result;
-//			$_SESSION['search_resultarray'] = array('num_results' => $num_results, 'resultsperpage' => $resultsperpage, 'num_pages' => $num_pages, 'viewas' => $viewas);
+//			$_SESSION['search']['search_result']		= &$result;
+//			$_SESSION['search']['search_resultarray'] = array('num_results' => $num_results, 'resultsperpage' => $resultsperpage, 'num_pages' => $num_pages, 'viewas' => $viewas);
 //		}
 		
 		/* Memory Saving */

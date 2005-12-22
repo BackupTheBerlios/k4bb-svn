@@ -48,8 +48,8 @@ $app = new K4controller('forum_base.html');
 $app->setAction('', new K4DefaultAction);
 $app->setDefaultEvent('');
 
-$app->setAction('deletetopic', new DeleteTopic);
-$app->setAction('deletereply', new DeleteReply);
+$app->setAction('deletetopic', new DeletePost(TOPIC));
+$app->setAction('deletereply', new DeletePost(REPLY));
 $app->setAction('locktopic', new LockTopic(1));
 $app->setAction('unlocktopic', new LockTopic(0));
 

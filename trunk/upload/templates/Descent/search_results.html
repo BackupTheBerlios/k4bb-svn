@@ -2,12 +2,11 @@
 <div class="header">
 	<div class="title">{$L_SEARCHRESULTS}: <span style="font-weight: normal;">{$search_num_results} {$L_RESULTSRETURNED}</span></div>
 </div>
-
 <page:navigator id="searchresults_pager">
 <div class="alt3" align="right">
 	<table cellspacing="{$style_cellspacing}" class="pagination">
 		<tr>
-			<td class="alt3" id="page_jump" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+			<td class="alt3" id="page_jump1" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
 			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
 			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
 			<page:list id="searchresults_pager" before="3" after="3">
@@ -21,77 +20,81 @@
 	</table>
 </div>
 </page:navigator>
-
-<if:if var="search_viewas_int" eq="2">
 <div class="spacer">
-	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-		<tr>
-			<td class="subheader" style="text-align: center;" width="70%" colspan="3"><a href="viewforum.php?f={$forum_forum_id}&amp;sort=name&amp;order={$order}" title="{$L_TOPICS}">{$L_TOPICS}{$name_sort}</a>/<a href="viewforum.php?f={$forum_forum_id}&amp;sort=poster_name&amp;order={$order}" title="{$L_AUTHOR}">{$L_AUTHOR}{$poster_name_sort}</a></td>
-			<td class="subheader" style="text-align: center;">&nbsp;<a href="viewforum.php?f={$forum_forum_id}&amp;sort=num_replies&amp;order={$order}" title="{$L_REPLIES}">{$L_REPLIES}{$num_replies_sort}</a>&nbsp;</td>
-			<td class="subheader" style="text-align: center;">&nbsp;<a href="viewforum.php?f={$forum_forum_id}&amp;sort=views&amp;order={$order}" title="{$L_VIEWS}">{$L_VIEWS}{$views_sort}</a>&nbsp;</td>
-			<td class="subheader" style="text-align: center;" width="20%">&nbsp;<a href="viewforum.php?f={$forum_forum_id}&amp;sort=lastpost_created&amp;order={$order}" title="{$L_LASTPOST}">{$L_LASTPOST}{$lastpost_created_sort}</a>&nbsp;</td>
-			<td class="subheader" width="3%">&nbsp;{$L_INFO}&nbsp;</td>
-		</tr>
-</if:if>
-		<list:list id="search_results">
-		<list:default list="search_results">
-		
-		<if:if var="search_viewas_int" eq="5">
-		<tr>
-			<td class="alt3" colspan="7">
-				<br />
-				<strong>{$L_NOSEARCHRESULTS}</strong>
-				<br /><br />
-			</td>
-		</tr>
-		<if:else />
-		<div class="spacer">
-			<div class="alt3">
-				<br />
-				<strong>{$L_NOSEARCHRESULTS}</strong>
-				<br /><br />
+	<if:if var="search_viewas_int" eq="2">
+	<div class="spacer">
+		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+			<tr>
+				<td class="subheader" style="text-align: center;" width="70%" colspan="3"><a href="viewforum.php?f={$forum_forum_id}&amp;sort=name&amp;order={$order}" title="{$L_TOPICS}">{$L_TOPICS}{$name_sort}</a>/<a href="viewforum.php?f={$forum_forum_id}&amp;sort=poster_name&amp;order={$order}" title="{$L_AUTHOR}">{$L_AUTHOR}{$poster_name_sort}</a></td>
+				<td class="subheader" style="text-align: center;">&nbsp;<a href="viewforum.php?f={$forum_forum_id}&amp;sort=num_replies&amp;order={$order}" title="{$L_REPLIES}">{$L_REPLIES}{$num_replies_sort}</a>&nbsp;</td>
+				<td class="subheader" style="text-align: center;">&nbsp;<a href="viewforum.php?f={$forum_forum_id}&amp;sort=views&amp;order={$order}" title="{$L_VIEWS}">{$L_VIEWS}{$views_sort}</a>&nbsp;</td>
+				<td class="subheader" style="text-align: center;" width="20%">&nbsp;<a href="viewforum.php?f={$forum_forum_id}&amp;sort=lastpost_created&amp;order={$order}" title="{$L_LASTPOST}">{$L_LASTPOST}{$lastpost_created_sort}</a>&nbsp;</td>
+				<td class="subheader" width="3%">&nbsp;{$L_INFO}&nbsp;</td>
+			</tr>
+	</if:if>
+			<list:list id="search_results">
+			<list:default list="search_results">
+			
+			<if:if var="search_viewas_int" eq="5">
+			<tr>
+				<td class="alt3" colspan="7">
+					<br />
+					<strong>{$L_NOSEARCHRESULTS}</strong>
+					<br /><br />
+				</td>
+			</tr>
+			<if:else />
+			<div class="spacer">
+				<div class="alt3">
+					<br />
+					<strong>{$L_NOSEARCHRESULTS}</strong>
+					<br /><br />
+				</div>
 			</div>
-		</div>
-		</if:if>
+			</if:if>
 
-		</list:default>
-		<list:item list="search_results">
-		<list:switch list="search_results" var="row_class" a="3" b="4">
-		
-		<if:if var="search_viewas_int" eq="2">
-			<core:import id="topic_view" file="topic_view.html" />
-		<if:else />
-			<core:import id="post_view" file="post_view.html" />
-		</if:if>
-		
-		</list:switch>
-		</list:item>
-		</list:list>
-<if:if var="search_viewas_int" eq="2">
-	</table>
-</div>
-</if:if>
-
-<page:navigator id="searchresults_pager">
-<div class="alt3" align="right">
-	<table cellspacing="{$style_cellspacing}" class="pagination">
-		<tr>
-			<td class="alt3" id="page_jump2" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
-			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
-			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
-			<page:list id="searchresults_pager" before="3" after="3">
-			<list:item list="searchresults_pager">
-				<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
+			</list:default>
+			<list:item list="search_results">
+			
+			<if:if var="search_viewas_int" eq="2">
+				<list:switch list="search_results" var="row_class" a="alt1" b="alt2">
+				<core:import id="topic_view" file="topic_view.html" />
+				</list:switch>
+			<if:else />
+				<list:switch list="search_results" var="row_class" a="3" b="4">
+				<core:import id="post_view" file="post_view.html" />
+				</list:switch>
+			</if:if>
+			
 			</list:item>
-			</page:list>
-			<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
-			<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
-		</tr>
-	</table>
-</div>
-</page:navigator>
+			</list:list>
+	<if:if var="search_viewas_int" eq="2">
+		</table>
+	</if:if>
 
-<div class="footer_block"><div>&nbsp;</div></div>
+	<page:navigator id="searchresults_pager">
+	<div class="alt3" align="right">
+		<table cellspacing="{$style_cellspacing}" class="pagination">
+			<tr>
+				<td class="alt3" id="page_jump2" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+				<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
+				<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
+				<page:list id="searchresults_pager" before="3" after="3">
+				<list:item list="searchresults_pager">
+					<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
+				</list:item>
+				</page:list>
+				<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
+				<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
+			</tr>
+		</table>
+	</div>
+	</page:navigator>
+
+	<if:if var="search_viewas_int" eq="2"></div></if:if>
+
+	<div class="footer_block"><div>&nbsp;</div></div>
+</div>
 <!-- / Search Results -->
 
 <core:import id="page_jumper" file="page_jumper.html" />

@@ -231,46 +231,29 @@
 <br />
 
 <!-- Topic Review -->
+<maps:if var="replies" forum="forum_forum_id" method="can_view">
+<div class="header">
+	<div class="title" id="tr_maintitle">
+		<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('topicreview_link', 'topicreview', 'tr_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="topicreview_link" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
+		{$L_TOPICREVIEW} - {$post_name}
+	</div>
+</div>
 <div class="spacer">
-	<div class="borderwrap">
-		<div class="maintitle" id="tr_maintitle">
-			<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('topicreview_link', 'topicreview', 'tr_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="topicreview_link" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
-			{$L_TOPICREVIEW} - {$post_name}
-		</div>
-		<div class="alt3" style="padding: 0px;">
-			<div style="height: 300px; overflow: auto;" id="topicreview">
-				<list:list id="topic_review">
-				<table width="99%" cellspacing="{$style_cellspacing}" class="table">
-				<tr>
-					<td class="subtitle" width="20%"><div align="center">{$L_AUTHOR}</div></td>
-					<td class="subtitle" width="80%"><div align="center">{$L_MESSAGE}</div></td>
-				</tr>
-				<list:item list="topic_review">
-
-				<maps:if var="replies" forum="forum_forum_id" method="can_view">
-				<list:sublist list="topic_review" id="replies" column="replies">
-				<list:item list="replies">
-
-				<!-- Reply: {$name} -->
-				<core:import id="reply" file="post_review.html" />
-				<!-- / Reply: {$name} -->
-
-				</list:item>
-				</list:sublist>
-				</maps:if>
-				
-				<!-- Topic: {$name} -->
-				<core:import id="topic" file="post_review.html" />
-				<!-- / Topic: {$name} -->
-
-				</list:item>
-				</table>
-				</list:list>
-			</div>
+	<div class="alt3" style="padding: 0px;">
+		<div style="height: 300px; overflow: auto;" id="topicreview">
+			<list:list id="topic_review">
+			<list:item list="topic_review">
+			<!-- Reply: {$name} -->
+			<core:import id="reply" file="post_preview.html" />
+			<!-- / Reply: {$name} -->
+			</list:item>
+			</list:list>
 		</div>
 	</div>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 <!-- / Topic Review -->
+</maps:if>
 
 <br />
 <!-- Posting Code Allowances -->
