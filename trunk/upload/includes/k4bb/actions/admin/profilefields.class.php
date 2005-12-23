@@ -266,7 +266,7 @@ class AdminEditUserField extends FAAction {
 				
 				/* If these are options, format them */
 				if($key == 'inputoptions') {
-					$val = $val != '' ? iif(!unserialize($val), array(), unserialize($val)) : array();
+					$val = $val != '' ? iif(!force_unserialize($val), array(), force_unserialize($val)) : array();
 					if(is_array($val) && !empty($val)) {
 						$val = str_replace("\n\n", "\n", implode("\n", $val));
 					} else {

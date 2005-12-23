@@ -153,7 +153,7 @@ function get_profile_fields($fields, $temp) {
 					case 'multiselect':
 					case 'radio':
 					case 'check': {
-						$result				= unserialize($temp['post_user_'. $field['name']]);
+						$result				= force_unserialize($temp['post_user_'. $field['name']]);
 						$field['value']		= implode(", ", (!$result ? array() : $result));
 						break;
 					}
@@ -682,7 +682,7 @@ function format_profilefield($data) {
 			
 			$input		= '<select name="'. $data['name'] .'" id="'. $data['name'] .'">';
 			
-			$options	= $data['inputoptions'] != '' ? iif(!unserialize($data['inputoptions']), array(), unserialize($data['inputoptions'])) : array();
+			$options	= $data['inputoptions'] != '' ? force_unserialize($data['inputoptions']) : array();
 
 			if(is_array($options) && !empty($empty)) {
 				foreach($options as $option)
@@ -697,7 +697,7 @@ function format_profilefield($data) {
 			
 			$input		= '<select name="'. $data['name'] .'[]" id="'. $data['name'] .'" multiple="multiple" '. iif(intval($data['display_rows']) > 0, 'size="'. intval($data['display_rows']) .'"', '') .'>';
 			
-			$options	= $data['inputoptions'] != '' ? iif(!unserialize($data['inputoptions']), array(), unserialize($data['inputoptions'])) : array();
+			$options	= $data['inputoptions'] != '' ? force_unserialize($data['inputoptions']) : array();
 
 			if(is_array($options) && !empty($empty)) {
 				foreach($options as $option)
@@ -710,7 +710,7 @@ function format_profilefield($data) {
 		}
 		case 'radio': {
 			
-			$options	= $data['inputoptions'] != '' ? iif(!unserialize($data['inputoptions']), array(), unserialize($data['inputoptions'])) : array();
+			$options	= $data['inputoptions'] != '' ? force_unserialize($data['inputoptions']) : array();
 			
 			$input		= '';
 			
@@ -727,7 +727,7 @@ function format_profilefield($data) {
 		}
 		case 'check': {
 			
-			$options	= $data['inputoptions'] != '' ? iif(!unserialize($data['inputoptions']), array(), unserialize($data['inputoptions'])) : array();
+			$options	= $data['inputoptions'] != '' ? iif(!force_unserialize($data['inputoptions']), array(), force_unserialize($data['inputoptions'])) : array();
 			
 			$input		= '';
 			

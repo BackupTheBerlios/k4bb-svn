@@ -46,7 +46,7 @@ function format_profile_fields($member, $use_all = FALSE) {
 			
 		if(($field['is_editable'] == 1 && !$use_all) || $use_all) {
 			
-			$result				= @unserialize(@$member[$field['name']]);
+			$result				= @force_unserialize(@$member[$field['name']]);
 			$result				= is_array($result) ? array_values($result) : array();
 
 			//if(isset($member[$field['name']])) {
@@ -76,7 +76,7 @@ function format_profile_fields($member, $use_all = FALSE) {
 						$field['html']		.= '</select>';
 						
 						$values				= '';
-						foreach(unserialize(@$member[$field['name']]) as $val)
+						foreach(force_unserialize(@$member[$field['name']]) as $val)
 							$values			.= "'$val',";
 
 						$field['html']		.= '<script type="text/javascript">d.setIndices(new Array('. $values .'\'), \''. $field['name'] .'\');</script>';
@@ -90,7 +90,7 @@ function format_profile_fields($member, $use_all = FALSE) {
 						break;
 					}
 					case 'check': {
-						$values				= unserialize(@$member[$field['name']]);
+						$values				= force_unserialize(@$member[$field['name']]);
 						$i = 0;
 						foreach($result as $val) {
 							$field['html']	.= '<input type="checkbox" value="'. $val .'" name="'. $field['name'] .'[]" id="'. $field['name'] .'_'. $i .'" />'. $val;
@@ -376,7 +376,7 @@ function is_moderator($user, $forum) {
 	}
 
 	if($forum['moderating_users'] != '') {
-		$users					= unserialize($forum['moderating_users']);
+		$users					= force_unserialize($forum['moderating_users']);
 		if(is_array($users)) {
 			foreach($users as $user_id => $username) {
 				if($user['name'] == $username && $user['id'] == $user_id) {

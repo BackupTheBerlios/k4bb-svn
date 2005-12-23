@@ -160,7 +160,7 @@ function execute_mail_queue(&$dba, $mailqueue) {
 			
 			$queue			= $mailqueue[0];
 			
-			$users			= unserialize($mailqueue[0]['userinfo']);
+			$users			= force_unserialize($mailqueue[0]['userinfo']);
 
 			if(is_array($users) && !empty($users)) {
 				

@@ -437,7 +437,7 @@ class AdminEditForum extends FAAction {
 
 			$moderating_users			= '';
 			if($forum['moderating_users'] != '') {
-				$users					= unserialize($forum['moderating_users']);
+				$users					= force_unserialize($forum['moderating_users']);
 				if(is_array($users)) {
 					$users				= array_values($users);
 					$moderating_users	= implode("\n", $users);

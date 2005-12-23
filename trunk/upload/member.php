@@ -379,7 +379,7 @@ class K4ProfileAction extends FAAction {
 						case 'multiselect':
 						case 'radio':
 						case 'check': {
-							$field['value']		= $member[$field['name']] != '' ? implode(", ", iif(!unserialize($member[$field['name']]), array(), unserialize($member[$field['name']]))) : $request['template']->getVar('L_NOINFORMATION');
+							$field['value']		= $member[$field['name']] != '' ? implode(", ", iif(!force_unserialize($member[$field['name']]), array(), force_unserialize($member[$field['name']]))) : $request['template']->getVar('L_NOINFORMATION');
 							break;
 						}
 					}

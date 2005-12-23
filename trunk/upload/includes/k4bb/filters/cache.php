@@ -326,7 +326,7 @@ class K4GeneralCacheFilter extends FAFilter {
 				$temp = $result->current();
 				
 				//	echo strlen($temp['data']) .'<br />'.$temp['data'] .'<br /><br />';
-				$cache[$temp['varname']] = unserialize($temp['data']);
+				$cache[$temp['varname']] = force_unserialize($temp['data']);
 
 				unset($temp); // memory saving
 			}

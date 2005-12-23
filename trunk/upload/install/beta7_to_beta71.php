@@ -136,7 +136,7 @@ class K4DefaultAction extends FAAction {
 		$forums = $request['dba']->executeQuery("SELECT moderating_groups,forum_id FROM k4_forums");
 		while($forums->next()) {
 			$forum = $forums->current();
-			$usergroups = $forum['usergroups'] != '' ? unserialize($forum['moderating_groups']) : array();
+			$usergroups = $forum['usergroups'] != '' ? force_unserialize($forum['moderating_groups']) : array();
 			$usergroups = !is_array($usergroups) ? array() : $usergroups;
 			$usergroups = implode('|', $usergroups);
 			$request['dba']->executeUpdate("UPDATE k4_forums SET moderating_groups = '". $usergroups ."' WHERE forum_id=". intval($forum['forum_id']));
@@ -149,7 +149,7 @@ class K4DefaultAction extends FAAction {
 		$users = $request['dba']->executeQuery("SELECT usergroups,id FROM k4_users");
 		while($users->next()) {
 			$user = $users->current();
-			$usergroups = $user['usergroups'] != '' ? unserialize($user['usergroups']) : array();
+			$usergroups = $user['usergroups'] != '' ? force_unserialize($user['usergroups']) : array();
 			$usergroups = !is_array($usergroups) ? array() : $usergroups;
 			$usergroups = implode('|', $usergroups);
 			$request['dba']->executeUpdate("UPDATE k4_users SET usergroups = '". $usergroups ."' WHERE id=". intval($user['id']));

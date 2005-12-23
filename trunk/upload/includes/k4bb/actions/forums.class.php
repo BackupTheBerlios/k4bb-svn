@@ -297,7 +297,7 @@ class K4ForumsIterator extends FAProxyIterator {
 			}
 		}
 		if($temp['moderating_users'] != '') {
-			$users					= unserialize($temp['moderating_users']);
+			$users					= force_unserialize($temp['moderating_users']);
 			if(is_array($users) && !empty($users)) {
 				foreach($users as $user_id => $username)
 					$temp['moderators'][]		= array('user_id' => $user_id, 'name' => $username);
