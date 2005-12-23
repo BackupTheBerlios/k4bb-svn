@@ -196,11 +196,10 @@ class K4InsertPMFolder extends FAAction {
 			return $action->execute($request);
 		}
 
-		$insert = $request['dba']->prepareStatement("INSERT INTO ". K4PMFOLDERS ." (user_id,user_name,name,description) VALUES (?,?,?,?)");
+		$insert = $request['dba']->prepareStatement("INSERT INTO ". K4PMFOLDERS ." (user_id,name,description) VALUES (?,?,?)");
 		$insert->setInt(1, $request['user']->get('id'));
-		$insert->setString(2, $request['user']->get('name'));
-		$insert->setString(3, k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
-		$insert->setString(4, k4_htmlentities(preg_replace("(\r\n|\r|\n)", ' ', $_REQUEST['description'])));
+		$insert->setString(2, k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES));
+		$insert->setString(3, k4_htmlentities(preg_replace("(\r\n|\r|\n)", ' ', $_REQUEST['description'])));
 		$insert->executeUpdate();
 
 		$request['template']->setList('pmfolders', $request['dba']->executeQuery("SELECT * FROM ". K4PMFOLDERS ." WHERE is_global = 1 OR user_id = ". intval($request['user']->get('id'))));

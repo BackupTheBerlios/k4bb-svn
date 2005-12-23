@@ -147,7 +147,7 @@ class AdminInsertUserField extends FAAction {
 			$insert->setString(21, @$_REQUEST['special_pcre']);
 			
 			push_error_handler(create_function('', 'return TRUE;'));
-			$ret = $request['dba']->executeQuery("SELECT ". $name ." FROM ". K4USERINFO ." LIMIT 1");
+			$ret = @$request['dba']->executeQuery("SELECT ". $name ." FROM ". K4USERINFO ." LIMIT 1");
 			pop_error_handler();
 			
 			if($ret === FALSE) {

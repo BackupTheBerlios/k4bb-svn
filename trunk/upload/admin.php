@@ -96,18 +96,6 @@ $app->setAction('emoticons_remove', new AdminRemoveEmoticon);
 $app->setAction('emoticons_update', new AdminUpdateEmoticon);
 $app->setAction('emoticons_clickable', new AdminUpdateEmoticonclick);
 
-/* Categories */
-//$app->setAction('categories', new AdminCategories);
-//$app->setAction('categories_add', new AdminAddCategory);
-//$app->setAction('categories_insert', new AdminInsertCategory);
-//$app->setAction('categories_insertmaps', new AdminInsertCategoryMaps);
-//$app->setAction('categories_simpleupdate', new AdminSimpleCategoryUpdate);
-//$app->setAction('categories_edit', new AdminEditCategory);
-//$app->setAction('categories_update', new AdminUpdateCategory);
-//$app->setAction('categories_remove', new AdminRemoveCategory);
-//$app->setAction('categories_permissions', new AdminCategoryPermissions);
-//$app->setAction('categories_updateperms', new AdminUpdateCategoryPermissions);
-
 /* Forums */
 $app->setAction('forums_home', new AdminForumsHome);
 $app->setAction('forums', new AdminForums);
@@ -172,6 +160,8 @@ $app->setAction('users_found', new AdminFetchFoundUsers);
 $app->setAction('users_ban', new AdminBanUser);
 $app->setAction('users_warn', new AdminWarnUser);
 $app->setAction('users_flag', new AdminFlagUser);
+$app->setAction('users_edit', new AdminEditUser);
+$app->setAction('users_update', new AdminUpdateUser);
 
 /* Acronym Management */
 $app->setAction('acronyms', new AdminAcronyms);

@@ -430,11 +430,11 @@ class K4UpdateUserProfile extends FAAction {
 		/* Update the user */
 		$request['dba']->executeUpdate($query);
 		
-//		/* Make sure to change the information in the $request */
-//		$user				= &new K4UserManager($request['dba']);
-//		$user				= $user->getInfo($request['user']->get('id'));
-//		$request['user']	= &new K4Member($user);
-//		$_SESSION['user']	= &new K4Member($user);
+		/* Make sure to change the information in the $request */
+		$user				= &new K4UserManager($request['dba']);
+		$user				= $user->getInfo($request['user']->get('id'));
+		$request['user']	= &new K4Member($user);
+		$_SESSION['user']	= &new K4Member($user);
 
 		/* redirect us */
 		$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDPROFILE'), 'usercp_content', FALSE, 'member.php?act=usercp', 3);
@@ -698,6 +698,12 @@ class K4UpdateUserOptions extends FAAction {
 
 		$query->executeUpdate();
 		
+		/* Update the session */
+		$user				= &new K4UserManager($request['dba']);
+		$user				= $user->getInfo($request['user']->get('id'));
+		$request['user']	= &new K4Member($user);
+		$_SESSION['user']	= &new K4Member($user);
+
 		$action = new K4InformationAction(new K4LanguageElement('L_SETTINGSSUCCESS'), 'usercp_content', TRUE, 'member.php?act=usercp', 3);
 		return $action->execute($request);
 	}

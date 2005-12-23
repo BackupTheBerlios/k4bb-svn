@@ -443,7 +443,6 @@ DROP TABLE IF EXISTS k4_subscriptions;
 CREATE TABLE k4_subscriptions (
 	id			INT NOT NULL SERIAL,
 	user_id			INT NOT NULL DEFAULT 0,
-	user_name		VARCHAR(30) NOT NULL DEFAULT '',
 	post_id			INT NOT NULL DEFAULT 0,
 	forum_id		INT NOT NULL DEFAULT 0,
 	email			VARCHAR(100) NOT NULL DEFAULT '',
@@ -587,7 +586,6 @@ DROP TABLE IF EXISTS k4_pmfolders;
 CREATE TABLE k4_pmfolders (
 	id			INT SERIAL,
 	user_id			INT NOT NULL DEFAULT 0,
-	user_name		VARCHAR(30) NOT NULL DEFAULT '',
 	is_global		INT NOT NULL DEFAULT 0,
 	is_deleteable		INT NOT NULL DEFAULT 1,
 	name			VARCHAR(50) NOT NULL DEFAULT '',

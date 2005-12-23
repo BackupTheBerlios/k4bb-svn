@@ -64,7 +64,7 @@ class K4DefaultAction extends FAAction {
 		$online_users						= &new K4OnlineUsersIterator($request['dba'], '', $online_users);
 		$request['template']->setList('online_users', $online_users);
 		
-		$newest_user						= $request['dba']->getRow("SELECT name, id FROM ". K4USERS ." ORDER BY id DESC LIMIT 1");
+		//$newest_user						= $request['dba']->getRow("SELECT name, id FROM ". K4USERS ." ORDER BY id DESC LIMIT 1");
 		$expired							= time() - ini_get('session.gc_maxlifetime');
 
 		$stats = array('num_online_members'	=> intval(Globals::getGlobal('num_online_members')),
@@ -73,8 +73,8 @@ class K4DefaultAction extends FAAction {
 						'num_replies'		=> intval($_DATASTORE['forumstats']['num_replies']),
 						'num_members'		=> intval($_DATASTORE['forumstats']['num_members']),
 						'num_guests'		=> $request['dba']->getValue("SELECT COUNT(*) FROM ". K4SESSIONS ." WHERE seen >= $expired AND user_id=0"),
-						'newest_uid'		=> $newest_user['id'],
-						'newest_user'		=> $newest_user['name'],
+						'newest_uid'		=> $_DATASTORE['forumstats']['newest_user_id'],
+						'newest_user'		=> $_DATASTORE['forumstats']['newest_user_name'],
 						);
 		$stats['num_online_total'] = ($stats['num_online_members'] + $stats['num_invisible'] + $stats['num_guests']);
 

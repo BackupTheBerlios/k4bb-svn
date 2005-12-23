@@ -222,12 +222,11 @@ class PostDraft extends FAAction {
 			 * Subscribe this user to the topic
 			 */
 			if(isset($_REQUEST['disable_areply']) && $_REQUEST['disable_areply']) {
-				$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,post_id,forum_id,email) VALUES (?,?,?,?,?)");
+				$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,post_id,forum_id,email) VALUES (?,?,?,?)");
 				$subscribe->setInt(1, $request['user']->get('id'));
-				$subscribe->setString(2, $request['user']->get('name'));
-				$subscribe->setInt(3, $draft['id']);
-				$subscribe->setInt(4, $forum['forum_id']);
-				$subscribe->setString(5, $request['user']->get('email'));
+				$subscribe->setInt(2, $draft['id']);
+				$subscribe->setInt(3, $forum['forum_id']);
+				$subscribe->setString(4, $request['user']->get('email'));
 				$subscribe->executeUpdate();
 			}
 
@@ -698,12 +697,11 @@ class SubscribeTopic extends FAAction {
 			return $action->execute($request);
 		}
 		
-		$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,post_id,forum_id,email) VALUES (?,?,?,?,?)");
+		$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,post_id,forum_id,email) VALUES (?,?,?,?)");
 		$subscribe->setInt(1, $request['user']->get('id'));
-		$subscribe->setString(2, $request['user']->get('name'));
-		$subscribe->setInt(3, $topic['post_id']);
-		$subscribe->setInt(4, $topic['forum_id']);
-		$subscribe->setString(5, $request['user']->get('email'));
+		$subscribe->setInt(2, $topic['post_id']);
+		$subscribe->setInt(3, $topic['forum_id']);
+		$subscribe->setString(4, $request['user']->get('email'));
 		$subscribe->executeUpdate();
 
 		/* Redirect the user */

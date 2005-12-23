@@ -255,6 +255,8 @@ class K4InsertUserFilter extends FAFilter {
 				/* Set the datastore values */
 				$datastore					= $_DATASTORE['forumstats'];
 				$datastore['num_members']	= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4USERS);
+				$datastore['newest_user_id'] = $user_id;
+				$datastore['newest_user_name'] = $name;
 				
 				$datastore_update->setString(1, serialize($datastore));
 				$datastore_update->setString(2, 'forumstats');

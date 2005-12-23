@@ -106,6 +106,7 @@ $_LANG += array(
 'L_RSS'					=> 'RSS',
 'L_CLOSEWINDOW'			=> 'Close this Window',
 'L_INFO'				=> 'Info',
+'L_MOVED'				=> 'Moved',
 
 /* User Titles */
 'L_JUNIORMEMBER'		=> 'Junior Member',

@@ -1,5 +1,6 @@
 <is:admin>
-<form:form name="add_user" id="add_user" action="admin.php?act=users_insert" method="post" enctype="multipart/form-data">
+<form:form name="add_user" id="add_user" action="{$users_action}" method="post" enctype="multipart/form-data">
+<if:if var="is_edit" eq="1"><input type="hidden" name="user_id" value="{$edit_user_id}" /></if:if>
 <div class="header"><div class="title">{$L_ADDUSER}</div></div>
 <div class="spacer">
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
@@ -7,9 +8,10 @@
 			<td class="alt1">
 				<div class="outset_box">
 					<label for="uname"><strong>{$L_USERNAME}:</strong></label><br />
-					<input type="text" name="uname" id="uname" class="inputbox" value="" size="{$maxuserlength}" maxlength="{$maxuserlength}" tabindex="1" />
+					<input type="text" name="uname" id="uname" class="inputbox" value="{$edit_user_name}" size="{$maxuserlength}" maxlength="{$maxuserlength}" tabindex="1" />
 					<form:error id="uname_error" for="uname" setclass="inputfailed" regex="^[a-zA-Z]([a-zA-Z0-9]*[-_ ]?)*[a-zA-Z0-9]*$">{$L_SUPPLYUSERNAME}</form:error>
 					<hr noshade="noshade" size="1" />
+					<if:if var="is_edit" noteq="1">
 					<span class="smalltext">{$L_FILLINPASSWORD}</span><br /><br />
 					<table width="100%" cellspacing="0">
 						<tr>
@@ -26,26 +28,29 @@
 					<form:error id="password_error" for="password" setclass="inputfailed" regex=".+">{$L_SUPPLYPASS}</form:error>
 					<form:error id="password_match_error" for="password" setclass="inputfailed" match="password2">{$L_PASSESDONTMATCH}</form:error>
 					<hr noshade="noshade" size="1" />
+					</if:if>
 					<span class="smalltext">{$L_FILLINEMAIL}</span><br /><br />
 					<table width="100%" cellspacing="0">
 						<tr>
 							<td width="50%">
 								<label for="email"><strong>{$L_EMAILADDRESS}:</strong></label><br />
-								<input type="text" name="email" id="email" class="inputbox" value="" maxlength="100" tabindex="4" />
+								<input type="text" name="email" id="email" class="inputbox" value="{$edit_user_email}" maxlength="100" tabindex="4" />
 							</td>
+							<if:if var="is_edit" noteq="1">
 							<td width="50%">
 								<label for="email2"><strong>{$L_VALIDATEEMAILADDR}:</strong></label><br />
 								<input type="text" name="email2" id="email2" class="inputbox" value="" maxlength="100" tabindex="5" />
 							</td>
+							</if:if>
 						</tr>
 					</table>
 					<form:error id="email_error" for="email" setclass="inputfailed" regex=".+">{$L_SUPPLYEMAIL}</form:error>
-					<form:error id="email_match_error" for="email" setclass="inputfailed" match="email2">{$L_EMAILSDONTMATCH}</form:error>
+					<if:if var="is_edit" noteq="1"><form:error id="email_match_error" for="email" setclass="inputfailed" match="email2">{$L_EMAILSDONTMATCH}</form:error></if:if>
 				</div>
 			</td>
 		</tr>
 		<tr>
-			<td class="base4" colspan="2" align="center">
+			<td class="base3" colspan="2" align="center">
 				<input type="submit" value="{$L_SAVE}" class="button" />
 				<input type="reset" value="{$L_RESET}" class="button" />
 			</td>
@@ -58,7 +63,7 @@
 		<tr>
 			<td class="alt1" width="50%"><strong><label for="permissions">{$L_PERMISSIONS}:</label></strong></td>
 			<td class="alt1" width="50%">
-				<select name="permissions" id="permissions" class="smalltext">
+				<select name="permissions" id="permissions" class="inputbox">
 					<option value="0">--</option>
 					<option value="1">{$L_GUEST}</option>
 					<option value="4">{$L_PENDINGMEMBER}</option>
@@ -68,21 +73,22 @@
 					<option value="8">{$L_SUPERMODERATOR}</option>
 					<option value="9">{$L_ADMIN}</option>
 					<option value="10">{$L_SUPERADMIN}</option>
+					<option value="11">{$L_SUPERADMIN} **</option>
 				</select>
-				<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_perms}, 'permissions');</script></if:if>
+				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_perms}, 'permissions');</script></if:if>
 			</td>
 		</tr>
 		<tr>
 			<td class="alt2" width="50%"><strong><label for="usergroups">{$L_USERGROUPS}:</label></strong></td>
 			<td class="alt2" width="50%">
-				<select name="usergroups" id="usergroups" size="5" multiple="multiple">
+				<select name="usergroups" id="usergroups" class="inputbox" size="5" multiple="multiple">
 					<list:list id="usergroups">
 					<list:item list="usergroups">
 					<option value="{$id}">{$name}</option>
 					</list:item>
 					</list:list>
 				</select>
-				<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndices("{$edit_user_usergroups}".split("|"), 'permissions');</script></if:if>
+				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndices("{$edit_user_usergroups}".split("|"), 'usergroups');</script></if:if>
 			</td>
 		</tr>
 	</table>
@@ -120,7 +126,7 @@
 								<option value="11">{$L_NOVEMBER}</option>
 								<option value="12">{$L_DECEMBER}</option>
 							</select>
-							<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$bday_month}, 'bday_month');</script></if:if>
+							<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex({$bday_month}, 'bday_month');</script></if:if>
 						</td>
 						<td class="base1">
 							<select name="day" id="bday_day" id="day" class="inputbox">
@@ -157,7 +163,7 @@
 								<option value="30">30</option>
 								<option value="31">31</option>
 							</select>
-							<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$bday_day}, 'bday_day');</script></if:if>
+							<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex({$bday_day}, 'bday_day');</script></if:if>
 						</td>
 						<td class="base1"><input type="text" name="year" id="bday_year" value="{$bday_year}" size="4" maxlength="4" class="inputbox" /></td>
 					</tr>
@@ -235,6 +241,7 @@
 						<option value="11">{$L_TIMEZONE29}</option>
 						<option value="12">{$L_TIMEZONE30}</option>
 					</select>
+					<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex('{$edit_user_timezone}', 'timezone');</script></if:if>
 					<list:list id="profilefields">
 					<list:item list="profilefields">
 					<hr noshade="noshade" size="1" />
@@ -247,7 +254,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="base4" colspan="2" align="center">
+			<td class="base3" colspan="2" align="center">
 				<input type="submit" value="{$L_SAVE}" class="button" />
 				<input type="reset" value="{$L_RESET}" class="button" />
 			</td>
@@ -267,7 +274,7 @@
 					</list:item>
 					</list:list>
 				</select>
-				<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_styleset}, 'styleset');</script></if:if>
+				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex('{$edit_user_templateset}', 'styleset');</script></if:if>
 			</td>
 		</tr>
 		<tr>
@@ -280,7 +287,7 @@
 					</list:item>
 					</list:list>
 				</select>
-				<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_styleset}, 'styleset');</script></if:if>
+				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex('{$edit_user_styleset}', 'styleset');</script></if:if>
 			</td>
 		</tr>
 		<tr>
@@ -293,7 +300,7 @@
 					</list:item>
 					</list:list>
 				</select>
-				<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_imageset}, 'imageset');</script></if:if>
+				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex('{$edit_user_imageset}', 'imageset');</script></if:if>
 			</td>
 		</tr>
 		<tr>
@@ -306,7 +313,7 @@
 					</list:item>
 					</list:list>
 				</select>
-				<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_language}, 'language');</script></if:if>
+				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex('{$edit_user_language}', 'language');</script></if:if>
 			</td>
 		</tr>
 		<tr>
@@ -316,7 +323,7 @@
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>
-				<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_invisible}, 'invisible');</script></if:if>
+				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_invisible}, 'invisible');</script></if:if>
 			</td>
 		</tr>
 		<tr>
@@ -326,7 +333,7 @@
 					<option value="0">{$L_LINEAR}</option>
 					<option value="1">{$L_VERTICAL}</option>
 				</select>
-				<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex(parseInt({$edit_user_topic_display}), 'topic_display');</script></if:if>
+				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex(parseInt({$edit_user_topic_display}), 'topic_display');</script></if:if>
 			</td>
 		</tr>
 		<tr>
@@ -336,7 +343,7 @@
 					<option value="0">{$L_NORMAL}</option>
 					<option value="1">{$L_THREADED}</option>
 				</select>
-				<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex(parseInt({$edit_user_topic_threaded}), 'topic_threaded');</script></if:if>
+				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex(parseInt({$edit_user_topic_threaded}), 'topic_threaded');</script></if:if>
 			</td>
 		</tr>
 	</table>
@@ -351,7 +358,7 @@
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>
-				<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex(parseInt({$edit_user_notify_pm}), 'notify_pm');</script></if:if>
+				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex(parseInt({$edit_user_notify_pm}), 'notify_pm');</script></if:if>
 			</td>
 		</tr>
 		<tr>
@@ -361,11 +368,11 @@
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>
-				<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex(parseInt({$edit_user_popup_pm}), 'popup_pm');</script></if:if>
+				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex(parseInt({$edit_user_popup_pm}), 'popup_pm');</script></if:if>
 			</td>
 		</tr>
 		<tr>
-			<td class="base4" colspan="2" align="center">
+			<td class="base3" colspan="2" align="center">
 				<input type="submit" value="{$L_SAVE}" class="button" />
 				<input type="reset" value="{$L_RESET}" class="button" />
 			</td>
@@ -396,7 +403,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="base4" colspan="2" align="center">
+			<td class="base3" colspan="2" align="center">
 				<input type="submit" value="{$L_SAVE}" class="button" />
 				<input type="reset" value="{$L_RESET}" class="button" />
 			</td>
@@ -413,7 +420,7 @@
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>
-				<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_viewimages}, 'viewimages');</script></if:if>
+				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_viewimages}, 'viewimages');</script></if:if>
 			</td>
 		</tr>
 		<tr>
@@ -423,7 +430,7 @@
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>
-				<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_viewavatars}, 'viewavatars');</script></if:if>
+				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_viewavatars}, 'viewavatars');</script></if:if>
 			</td>
 		</tr>
 		<tr>
@@ -433,7 +440,7 @@
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>
-				<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_viewflash}, 'viewflash');</script></if:if>
+				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_viewflash}, 'viewflash');</script></if:if>
 			</td>
 		</tr>
 		<tr>
@@ -443,7 +450,7 @@
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>
-				<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_viewemoticons}, 'viewemoticons');</script></if:if>
+				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_viewemoticons}, 'viewemoticons');</script></if:if>
 			</td>
 		</tr>
 		<tr>
@@ -453,7 +460,7 @@
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>
-				<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_viewsigs}, 'viewsigs');</script></if:if>
+				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_viewsigs}, 'viewsigs');</script></if:if>
 			</td>
 		</tr>
 		<tr>
@@ -463,11 +470,11 @@
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>
-				<if:if var="user_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_viewcensors}, 'viewcensors');</script></if:if>
+				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_viewcensors}, 'viewcensors');</script></if:if>
 			</td>
 		</tr>
 		<tr>
-			<td class="base4" colspan="2" align="center">
+			<td class="base3" colspan="2" align="center">
 				<input type="submit" value="{$L_SAVE}" class="button" />
 				<input type="reset" value="{$L_RESET}" class="button" />
 			</td>

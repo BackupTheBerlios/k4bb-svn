@@ -194,8 +194,6 @@ class K4GeneralCacheFilter extends FAFilter {
 			$cache['profile_fields'][$temp['name']]			= $temp;
 			$cache['profile_fields'][$temp['name']]['html']	= format_profilefield($temp);
 			
-			/* Add the extra values onto the end of the userinfo query params variable */
-			$_QUERYPARAMS['userinfo']			.= ', ui.'. $temp['name'] .' AS '. $temp['name'];
 		}
 		$result->free();
 	}
@@ -351,7 +349,14 @@ class K4GeneralCacheFilter extends FAFilter {
 			$GLOBALS['_DATASTORE']				= isset($cache['datastore']) ? $cache['datastore'] : array();
 			$GLOBALS['_USERTITLES']				= $cache['user_titles'];
 		}	
-		
+
+		/* Add the extra values onto the end of the userinfo query params variable */
+		global $_QUERYPARAMS;
+		foreach($GLOBALS['_PROFILEFIELDS'] as $temp) {
+			$_QUERYPARAMS['userinfo']			.= ', ui.'. $temp['name'] .' AS '. $temp['name'];
+		}
+		$GLOBALS['_QUERYPARAMS'] = $_QUERYPARAMS;
+
 		/* Execute the queue after we get/check the cached file(s) */
 		//execute_mail_queue($request['dba'], $cache['mail_queue']);
 

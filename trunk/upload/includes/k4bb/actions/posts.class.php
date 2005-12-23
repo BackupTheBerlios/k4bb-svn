@@ -351,12 +351,11 @@ class InsertPost extends FAAction {
 					 * Subscribe this user to the topic
 					 */
 					if(isset($_REQUEST['disable_areply']) && $_REQUEST['disable_areply']) {
-						$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,post_id,forum_id,email) VALUES (?,?,?,?,?)");
+						$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,post_id,forum_id,email) VALUES (?,?,?,?)");
 						$subscribe->setInt(1, $request['user']->get('id'));
-						$subscribe->setString(2, $request['user']->get('name'));
-						$subscribe->setInt(3, $post_id);
-						$subscribe->setInt(4, $forum['forum_id']);
-						$subscribe->setString(5, $request['user']->get('email'));
+						$subscribe->setInt(2, $post_id);
+						$subscribe->setInt(3, $forum['forum_id']);
+						$subscribe->setString(4, $request['user']->get('email'));
 						$subscribe->executeUpdate();
 					}
 					
@@ -715,12 +714,11 @@ class UpdatePost extends FAAction {
 				$is_subscribed		= $request['dba']->getRow("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE user_id = ". intval($request['user']->get('id')) ." AND post_id = ". intval($post['post_id']));
 				if(isset($_REQUEST['disable_areply']) && $_REQUEST['disable_areply']) {
 					if(!is_array($is_subscribed) || empty($is_subscribed)) {
-						$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,user_name,post_id,forum_id,email) VALUES (?,?,?,?,?)");
+						$subscribe			= $request['dba']->prepareStatement("INSERT INTO ". K4SUBSCRIPTIONS ." (user_id,post_id,forum_id,email) VALUES (?,?,?,?)");
 						$subscribe->setInt(1, $request['user']->get('id'));
-						$subscribe->setString(2, $request['user']->get('name'));
-						$subscribe->setInt(3, $topic['post_id']);
-						$subscribe->setInt(4, $forum['forum_id']);
-						$subscribe->setString(5, $request['user']->get('email'));
+						$subscribe->setInt(2, $topic['post_id']);
+						$subscribe->setInt(3, $forum['forum_id']);
+						$subscribe->setString(4, $request['user']->get('email'));
 						$subscribe->executeUpdate();
 					}
 				} else if(!isset($_REQUEST['disable_areply']) || !$_REQUEST['disable_areply']) {

@@ -679,15 +679,15 @@ class MoveTopics extends FAAction {
 				 * Add the replies back into the replies table
 				 */
 				$request['dba']->executeUpdate("INSERT INTO ". K4POSTS ." ($select) SELECT $select FROM ". K4TEMPTABLE);
-								
+				
+				// TODO: something going's on here...				
+
 				// get the last topic & reply in our initial forum
 				$lastpost_created		= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE forum_id=". intval($forum['forum_id']) ." ORDER BY created DESC LIMIT 1");
 				$lastpost_created		= !$lastpost_created || !is_array($lastpost_created) || empty($lastpost_created) ? $no_post : $lastpost_created;
 				
-				// Update this forum
+				// Update the original forum
 				$forum_update			= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET posts=posts-?,replies=replies-?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
-					
-				/* Set the forum values */
 				$forum_update->setInt(1, ($track ? $num_replies : 0));
 				$forum_update->setInt(2, ($track ? $num_replies : 0));
 				$forum_update->setInt(3, $lastpost_created['created']);
@@ -699,17 +699,13 @@ class MoveTopics extends FAAction {
 				$forum_update->setInt(9, $forum['forum_id']);
 				
 				$forum_update->executeUpdate();
-
-				unset($last_topic, $lastpost_created);
 				
 				// get the last topic & reply in our destination forum
-				$lastpost_created			= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE forum_id=". intval($destination['forum_id']) ." ORDER BY created DESC LIMIT 1");
+				$lastpost_created	= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE forum_id=". intval($destination['forum_id']) ." ORDER BY created DESC LIMIT 1");
 				$lastpost_created	= !$lastpost_created || !is_array($lastpost_created) || empty($lastpost_created) ? $no_post : $lastpost_created;
-
+				
 				// update the destination forum
 				$forum_update		= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topics=topics+?,posts=posts+?,replies=replies+?,post_created=?,post_name=?,post_uname=?,post_id=?,post_uid=?,post_posticon=? WHERE forum_id=?");
-					
-				/* Set the forum values */
 				$forum_update->setInt(1, $num_topics);
 				$forum_update->setInt(2, intval($num_replies + $num_topics));
 				$forum_update->setInt(3, $num_replies);
@@ -722,6 +718,8 @@ class MoveTopics extends FAAction {
 				$forum_update->setInt(10, $destination['forum_id']);
 				
 				$forum_update->executeUpdate();
+				
+				unset($last_topic, $lastpost_created, $forum_update);
 
 				// we're done	
 				k4_bread_crumbs($request['template'], $request['dba'], 'L_MOVECOPYTOPICS', $forum);

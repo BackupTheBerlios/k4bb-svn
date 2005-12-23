@@ -19,9 +19,9 @@
 			</if:if>
 		</div>
 	</td>
+	<if:if var="moved_new_post_id" eq="0">
 	<td align="center" class="{$row_class}"><span class="minitext">{$num_replies}</span></td>
 	<td align="center" class="{$row_class}"><span class="minitext">{$views}</span></td>
-	<if:if var="moved_new_post_id" eq="0">
 	<td style="text-align: right;" class="{$row_class}" width="20%" nowrap="nowrap">
 		<if:if var="lastpost_created" noteq="lastpost_created">
 		<span class="minitext">
@@ -47,7 +47,7 @@
 	</td>
 	<if:else />
 	<td colspan="4" class="{$row_class}" align="center">
-		&nbsp;
+		<span class="minitext">{$L_MOVED}</span>
 	</td>
 	</if:if>
 	<if:if var="modpanel" eq="1">

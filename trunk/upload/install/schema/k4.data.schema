@@ -3,7 +3,7 @@ INSERT INTO k4_userinfo (user_id, num_posts) VALUES (1,1);
 INSERT INTO k4_usersettings (user_id) VALUES (1);
 
 INSERT INTO k4_datastore (varname, data) VALUES ('maxloggedin', 'a:2:{s:9:&quot;maxonline&quot;;i:0;s:13:&quot;maxonlinedate&quot;;i:0;}');
-INSERT INTO k4_datastore (varname, data) VALUES ('forumstats', 'a:3:{s:10:&quot;num_topics&quot;;i:1;s:11:&quot;num_replies&quot;;i:0;s:11:&quot;num_members&quot;;i:1;}');
+INSERT INTO k4_datastore (varname, data) VALUES ('forumstats', 'a:5:{s:10:&quot;num_topics&quot;;i:1;s:11:&quot;num_replies&quot;;i:0;s:11:&quot;num_members&quot;;i:1;s:14:&quot;newest_user_id&quot;;i:1;s:16:&quot;newest_user_name&quot;;s:13:&quot;{$admin_name}&quot;;}');
 
 INSERT INTO k4_posticons (description, image) VALUES('Post', 'icon1.gif');
 INSERT INTO k4_posticons (description, image) VALUES('Arrow', 'icon2.gif');
