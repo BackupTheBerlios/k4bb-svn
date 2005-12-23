@@ -41,12 +41,47 @@ class K4DefaultAction extends FAAction {
 		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_WELCOME');
-			$request['template']->setVar('adv_view', 1);
+			//$request['template']->setVar('adv_view', 1);
+			$request['template_file'] = 'templates/'. $request['user']->get('templateset') .'/admin/admin_frameset.html';
 
 		} else {
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
-			$request['template']->setFile('content', '../login_form.html');
-			$request['template']->setVisibility('no_perms', TRUE);
+			no_perms_error($request);
+			return TRUE;
+		}
+
+		return TRUE;
+	}
+}
+
+class AdminHeadSection extends FAAction {
+	function execute(&$request) {		
+		
+		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_WELCOME');
+			$request['template']->setVar('adv_view', 1);
+			
+			$request['template']->setFile('content', 'admin_head.html');
+		} else {
+			no_perms_error($request);
+			return TRUE;
+		}
+
+		return TRUE;
+	}
+}
+
+class AdminMenuSection extends FAAction {
+	function execute(&$request) {		
+		
+		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_WELCOME');
+			$request['template']->setVar('adv_view', 1);
+			$request['template']->setFile('content', 'admin_menu.html');
+
+		} else {
+			no_perms_error($request);
 			return TRUE;
 		}
 
@@ -58,6 +93,10 @@ $app = new K4controller('admin/admin_base.html');
 
 $app->setAction('', new K4DefaultAction);
 $app->setDefaultEvent('');
+
+/* Frameset */
+$app->setAction('admin_header', new AdminHeadSection);
+$app->setAction('admin_menu', new AdminMenuSection);
 
 /* Admin File Browser */
 $app->setAction('file_browser', new AdminFileBrowser);

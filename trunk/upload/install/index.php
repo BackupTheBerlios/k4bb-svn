@@ -197,7 +197,6 @@ class DatabaseAndFileChecks extends FAAction {
 								'has_chmod_k4bb'	=> $this->tpl_ret(is_readable('../includes/k4bb') && is_writable('../includes/k4bb')),
 								'has_chmod_tc'		=> $this->tpl_ret(is_readable('../templates/Descent/compiled') && is_writable('../templates/Descent/compiled')),
 								'has_chmod_tac'		=> $this->tpl_ret(is_readable('../templates/Descent/admin/compiled') && is_writable('../templates/Descent/admin/compiled')),
-								'has_chmod_tamc'	=> $this->tpl_ret(is_readable('../templates/Descent/admin/menus/compiled') && is_writable('../templates/Descent/admin/menus/compiled')),
 								'has_chmod_tacc'	=> $this->tpl_ret(is_readable('../templates/Descent/admin/css/compiled') && is_writable('../templates/Descent/admin/css/compiled')),
 								'has_chmod_ac'		=> $this->tpl_ret(is_readable('../templates/Archive/compiled') && is_writable('../templates/Archive/compiled')),
 								'has_chmod_rc'		=> $this->tpl_ret($rss_dir),

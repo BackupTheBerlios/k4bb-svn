@@ -375,6 +375,8 @@ class AdminEditUser extends FAAction {
 			$request['template']->setVar('bday_month', intval($parts[0]));
 			$request['template']->setVar('bday_day', intval($parts[1]));
 			$request['template']->setVar('bday_year', $parts[2]);
+			
+			$user['usergroups'] = trim(str_replace('||', '|', $user['usergroups']), '|');
 
 			foreach($user as $key => $val)
 				$request['template']->setVar('edit_user_'. $key, $val);

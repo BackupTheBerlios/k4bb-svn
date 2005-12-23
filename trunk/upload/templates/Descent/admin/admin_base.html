@@ -22,70 +22,7 @@
 <body id="body">
 <is:admin>
 <if:if var="adv_view" eq="1">
-<core:import id="admin_head" file="admin_head.html" />
-<table width="100%" cellspacing="0" style="padding: 0px;margin: 0px;">
-	<tr>
-		<td width="100%" valign="top" style="padding: 0px;margin: 0px;">
-			<iframe name="admin_iframe" id="admin_iframe" frameborder="no" style="width: 100%; height: 100%;" src="index.php">ENABLE JAVASCRIPT!!</iframe>
-		</td>
-		<td valign="top" class="admin_right_column" style="padding: 0px;margin: 0px;">
-			<img src="Images/admin/colorpicker_header.gif" border="0" alt="" />
-			<img src="Images/admin/adminhelp_header.gif" border="0" alt="" />
-			<img src="Images/admin/history_header.gif" border="0" alt="" />
-		</td>
-	</tr>
-</table>
-<core:import id="options_menu" file="menus/options.html" />
-<core:import id="faq_menu" file="menus/faq.html" />
-<core:import id="forums_menu" file="menus/forums.html" />
-<core:import id="misc_menu" file="menus/misc.html" />
-<core:import id="posts_menu" file="menus/posts.html" />
-<core:import id="styles_menu" file="menus/styles.html" />
-<core:import id="users_menu" file="menus/users.html" />
-<script type="text/javascript">
-	
-	menu_init('options_link', 'options_menu', true);
-	menu_init('forums_link', 'forums_menu', true);
-	menu_init('users_link', 'users_menu', true);
-	menu_init('posts_link', 'posts_menu', true);
-	menu_init('styles_link', 'styles_menu', true);
-	menu_init('faq_link', 'faq_menu', true);
-	menu_init('misc_link', 'misc_menu', true);
-
-	/**
-	 * Resize the iframe
-	 */
-	var admin_iframe = d.getElementById('admin_iframe');
-	var admin_menu = d.getElementById('admin_menu');
-
-	if(admin_iframe && admin_menu) {
-		var window_height = 515;
-
-		if (parseInt(navigator.appVersion) > 3) {
-			if (!d.is_ie) {
-				window_height = parseInt(window.innerHeight - d.height(admin_menu));
-			}
-			if (d.is_ie) {
-				if(document.documentElement) {
-					window_height = parseInt(document.documentElement.clientHeight - d.height(admin_menu));
-				} else {
-					window_height = parseInt(document.body.clientHeight - d.height(admin_menu));
-				}
-			}
-			window_height = window_height - 30;
-			admin_iframe.style.height = window_height + 'px';
-		}
-	}
-
-	/**
-	 * Change the display options on the color picker
-	 */
-	var admin_colorpicker = d.getElementById('colorpicker_menu');
-	if(admin_colorpicker) {
-		admin_colorpicker.style.display = 'block';
-	}
-</script>
-
+<core:import id="content" />
 <if:else />
 <div align="center">
 	<div align="left" class="forum_base" id="forum_base">
