@@ -933,6 +933,8 @@ class AdminEditCSSClass extends FAAction {
 			$request['template']->setVar('edit_style', 1);
 			$request['template']->setVar('css_formaction', 'admin.php?act=css_updatestyle');
 			
+			$request['style']['properties'] = str_replace(';', ";\n", $request['style']['properties']);
+
 			foreach($request['style'] as $key=>$val) {
 				$request['template']->setVar('style_'. $key, $val);
 			}
@@ -1062,11 +1064,14 @@ class AdminCSSRequestFilter extends FAFilter {
 				$request['template']->setFile('sidebar_menu', 'menus/styles.html');
 
 				if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
-					$action = new K4InformationAction(new K4LanguageElement('L_BADSTYLESET'), 'content', FALSE);
-					return TRUE;
+					//$action = new K4InformationAction(new K4LanguageElement('L_BADSTYLESET'), 'content', FALSE);
+					//return TRUE;
+					$id				= $request['dba']->getValue("SELECT id FROM ". K4STYLES ." WHERE name='". $request['user']->get('styleset') ."'");
+				} else {
+					$id = $_REQUEST['id'];
 				}
 
-				$styleset			= $request['dba']->getRow("SELECT * FROM ". K4STYLES ." WHERE id = ". intval($_REQUEST['id']));
+				$styleset			= $request['dba']->getRow("SELECT * FROM ". K4STYLES ." WHERE id=". intval($id));
 				
 				if(!is_array($styleset) || empty($styleset)) {
 					$action = new K4InformationAction(new K4LanguageElement('L_BADSTYLESET'), 'content', FALSE);
@@ -1075,12 +1080,19 @@ class AdminCSSRequestFilter extends FAFilter {
 				
 				if($request['event'] != 'css_insertstyle' && $request['event'] != 'css_addstyle' && $request['event'] != 'css_updateallclasses') {
 					
-					if(!isset($_REQUEST['style_id']) || intval($_REQUEST['style_id']) == 0) {
+
+					if( (!isset($_REQUEST['style_id']) || intval($_REQUEST['style_id']) == 0) && (!isset($_REQUEST['class']) || $_REQUEST['class'] == '') ) {
 						$action = new K4InformationAction(new K4LanguageElement('L_CSSCLASSDOESNTEXIST'), 'content', FALSE);
 						return TRUE;
 					}
 
-					$style			= $request['dba']->getRow("SELECT * FROM ". K4CSS ." WHERE id = ". intval($_REQUEST['style_id']) ." AND style_id = ". intval($styleset['id']));
+					if(isset($_REQUEST['class'])) {
+						$class_query = " name = '". str_replace('+', ' ', $_REQUEST['class']) ."'";
+					} else {
+						$class_query = " id = ". intval($_REQUEST['style_id']);
+					}
+					
+					$style			= $request['dba']->getRow("SELECT * FROM ". K4CSS ." WHERE {$class_query} AND style_id = ". intval($styleset['id']));
 					
 					if(!is_array($style) || empty($style)) {
 						$action = new K4InformationAction(new K4LanguageElement('L_CSSCLASSDOESNTEXIST'), 'content', FALSE);
@@ -1096,6 +1108,20 @@ class AdminCSSRequestFilter extends FAFilter {
 				return TRUE;
 			}
 		}		
+	}
+}
+
+class AdminToggleInlineCSS extends FAAction {
+	function execute(&$request) {
+		
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
+			
+			setcookie('k4_cssedit', (isset($_COOKIE['k4_cssedit']) ? '' : 1), (isset($_COOKIE['k4_cssedit']) ? time()-3600 : time()+3600));
+			header("Location: index.php");
+			
+		} else {
+			no_perms_error($request);
+		}
 	}
 }
 

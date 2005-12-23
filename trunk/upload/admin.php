@@ -238,6 +238,7 @@ $app->setAction('css_updatestyle', new AdminUpdateCSSClass);
 $app->setAction('css_updateallclasses', new AdminUpdateAllCSSClasses);
 $app->setAction('css_removestyle', new AdminRemoveCSSClass);
 $app->setAction('css_editor', new AdminCSSEditor);
+$app->setAction('css_toggle', new AdminToggleInlineCSS);
 $app->addFilter(new AdminCSSRequestFilter);
 
 /* Frequently Asked Questions */

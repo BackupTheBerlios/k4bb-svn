@@ -103,6 +103,11 @@ COPYRIGHT NOTICE
 * @author Geoffrey Goodman
 */
 -->
-
+<if:if var="admin_css_edit" eq="1">
+<script type="text/javascript">
+var k4cssext = new k4css();
+k4cssext.init();
+</script>
+</if:if>
 </body>
 </html>

@@ -115,7 +115,7 @@ class K4Controller extends FAController {
 		
 		// invalid action
 		$this->setInvalidAction(new K4InformationAction(new K4LanguageElement('L_PAGEDOESNTEXIST'), 'content', TRUE));
-
+		
 		/**
 		 * Set some important template variables
 		 */
@@ -156,8 +156,14 @@ class K4Controller extends FAController {
 		$request['template']->setVar('num_queries', $request['dba']->getNumQueries() + 1);
 		
 		// reset the nojs variable if this is a new session
-		if($request['session']->isNew())
+		if($request['session']->isNew()) {
 			$request['template']->setVar('nojs', 0);
+		}
+			
+		// inline css editing
+		if($request['user']->get('perms') >= ADMIN && isset($_COOKIE['k4_cssedit']) && intval($_COOKIE['k4_cssedit']) == 1) {
+			$request['template']->setVar('admin_css_edit', 1);
+		}
 
 		/**
 		 * Set cookies to track our last seen time and to try to disable javascript

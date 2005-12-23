@@ -20,6 +20,7 @@
 	<script type="text/javascript" src="js/form_check.js"></script>
 	<script type="text/javascript" src="js/k4_menu.js"></script>
 	<script type="text/javascript" src="js/http_requests.js"></script>
+	<if:if var="admin_css_edit" eq="1"><script type="text/javascript" src="js/k4_css.js"></script></if:if>
 	<script type="text/javascript">
 		var d=new k4lib();var k4_request=new k4XMLHttpRequest();var k4_domain='{$domain}'; // important stuff, don't touch
 		set_cookie('k4_canjs', 1, 2592000, '{$domain}'); /* This cookie is very important and should always be set here. */

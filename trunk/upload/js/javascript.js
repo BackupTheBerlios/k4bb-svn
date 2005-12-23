@@ -316,7 +316,7 @@ function fetch_cookie(cookieName){
 		var keyVal = cookies[i].split("=");
 		if (unescape(keyVal[0])==cookieName) return unescape(keyVal[1]);
 	}
-	return null;
+	return false;
 }
 /* Delete a cookie */
 function delete_cookie(name)

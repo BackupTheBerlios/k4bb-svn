@@ -28,7 +28,7 @@
 			</td>
 			<td class="base{$row_class}" align="center"><div class="forum_number_cell"><span class="minitext"><br /><br />{$posts}</span></div></td>
 			<td class="base{$row_class}" align="center"><div class="forum_number_cell"><span class="minitext"><br /><br />{$topics}</span></div></td>
-			<td class="base{$row_class}" nowrap="nowrap" align="center" width="30%">
+			<td class="base{$row_class}" nowrap="nowrap" width="30%">
 				<div align="left" class="minitext">
 				<if:if var="post_id" greater="0">
 					<if:if var="post_posticon" noteq="clear.gif"><img src="tmp/upload/posticons/{$post_posticon}" alt="" border="0" /></if:if>
@@ -38,7 +38,7 @@
 					{$L_ONSMALL} <core:date format="%b %d %Y">{$post_created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$post_created}</core:date></span>
 					&nbsp;<a href="findpost.php?id={$post_id}" title="{$post_name}"><img src="Images/{$IMG_DIR}/Icons/icon_latest_reply.gif" border="0" alt="{$post_name}" /></a>
 				<if:else />
-				--
+				<div style="text-align: center;">--</div>
 				</if:if>
 				</div>
 			</td>

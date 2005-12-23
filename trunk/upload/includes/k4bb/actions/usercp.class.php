@@ -195,6 +195,7 @@ class K4UserCPProfile extends FAAction {
 			$request['template']->setVar('member_'. $key, $val);
 		
 		$fields			= format_profile_fields($user);
+		$request['template']->setList('member_profilefields', new FAArrayIterator($fields));
 
 		// month/day/year
 		$parts			= strlen($user['birthday']) == 10 ? explode("/", $user['birthday']) : explode("/", '0/0/');

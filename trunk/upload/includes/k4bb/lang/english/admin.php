@@ -635,6 +635,7 @@ $_LANG += array(
 /**
  * CSS editor
  */
+'L_TOGGLECSSEDITING'	=> 'Toggle CSS Editing',
 'L_UPDATEDCSSSTYLES'	=> 'Successfully updated all of the CSS styles in the <strong>%s</strong> style set.',
 'L_SAVEALL'				=> 'Save All',
 'L_RESETALL'			=> 'Reset All',
