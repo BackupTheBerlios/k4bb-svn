@@ -838,6 +838,7 @@ $_LANG += array(
 'L_UPDATEDUSER'			=> 'Successfully updated the user <strong>%s</strong>.',
 'L_DISABLEDUSER'		=> 'Successfully disabled the user <strong>%s</strong>.',
 'L_ENABLEDUSER'			=> 'Successfully enabled the user <strong>%s</strong>.',
+'L_ADDTOGROUP'			=> 'Add to Group...',
 /* User Stuff */
 
 );

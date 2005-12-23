@@ -1,0 +1,21 @@
+<form action="admin.php?act=users_insertuseringroup" method="post" enctype="multipart/form-data">
+<input type="hidden" name="user_id" value="{$user_id}" />
+<div class="header"><div class="title">{$L_ADDUSERTOGROUP}<span style="font-weight: normal;">: {$user_name}</span></div></div>
+<div class="spacer">
+	<div class="alt3" style="text-align: center;">
+		<br />
+		<select name="group_id" id="group_id">
+			<list:list id="usergroups">
+			<list:item list="usergroups">
+			<option value="{$id}">{$name}</option>
+			</list:item>
+			</list:list>
+		</select>
+		<br /><br />
+	</div>
+	<div class="base3" style="text-align: center;">
+		<input type="submit" class="button" value="{$L_ADD}" />
+	</div>
+</div>
+</form>
+<div class="footer_block"><div>&nbsp;</div></div>

@@ -444,9 +444,9 @@ INSERT INTO k4_userprofilefields (name,title,description,inputtype,display_size,
 INSERT INTO k4_userprofilefields (name,title,description,inputtype,display_size,display_rows,display_register,display_topic,display_post,user_maxlength,display_order) VALUES ('field4','Biography','A short description of yourself.','textarea',35,3,0,0,0,255,4);
 INSERT INTO k4_userprofilefields (name,title,description,inputtype,display_size,display_register,display_topic,display_post,default_value,user_maxlength,display_order) VALUES ('field5','Homepage','Your website homepage.','text',30,0,0,0,'',100,5);
 
-INSERT INTO k4_pmfolders (id,user_id,user_name,is_global,is_deleteable,name,description,actas) VALUES (1,0,'',1,0,'Inbox','This is where all of your incoming private messages are stored.','inbox');
-INSERT INTO k4_pmfolders (id,user_id,user_name,is_global,is_deleteable,name,description,actas) VALUES (2,0,'',1,0,'Sent Items','This is where you can see your sent private messages.','sentitems');
-INSERT INTO k4_pmfolders (id,user_id,user_name,is_global,is_deleteable,name,description,actas) VALUES (3,0,'',1,0,'Saved (Unsent) PMs','This is where saved private messages go.','saveditems');
+INSERT INTO k4_pmfolders (id,user_id,is_global,is_deleteable,name,description,actas) VALUES (1,0,1,0,'Inbox','This is where all of your incoming private messages are stored.','inbox');
+INSERT INTO k4_pmfolders (id,user_id,is_global,is_deleteable,name,description,actas) VALUES (2,0,1,0,'Sent Items','This is where you can see your sent private messages.','sentitems');
+INSERT INTO k4_pmfolders (id,user_id,is_global,is_deleteable,name,description,actas) VALUES (3,0,1,0,'Saved (Unsent) PMs','This is where saved private messages go.','saveditems');
 
 INSERT INTO k4_faqanswers (answer_id, category_id, question, answer, row_order, created, can_view) VALUES (1, 2, 'Registration', 'You need to register to have more benefits that a guest!', 1, 1128134573, 1);
 INSERT INTO k4_faqanswers (answer_id, category_id, question, answer, row_order, created, can_view) VALUES (2, 1, 'Why are there so few FAQ items?', 'There are so few FAQ items because I (Peter Goodmane, maker of k4 BB) have yet to write them all, or, someone has yet to volunteer to write them instead of me. Just think... even you could write them!', 1, 1128134654, 1);

@@ -163,6 +163,8 @@ $app->setAction('users_flag', new AdminFlagUser);
 $app->setAction('users_edit', new AdminEditUser);
 $app->setAction('users_update', new AdminUpdateUser);
 $app->setAction('users_disable', new AdminDisableUser);
+$app->setAction('users_addtogroup', new AdminAddUserToGroup);
+$app->setAction('users_insertuseringroup', new AdminInsertUserInGroup);
 
 /* Acronym Management */
 $app->setAction('acronyms', new AdminAcronyms);
