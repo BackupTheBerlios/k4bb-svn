@@ -223,19 +223,15 @@ class AdminInsertUser extends FAAction {
 			 */
 
 			$usergroups					= isset($_REQUEST['usergroups']) && is_array($_REQUEST['usergroups']) ? $_REQUEST['usergroups'] : array(2);
-			
 			$name						= k4_htmlentities(strip_tags($_REQUEST['uname']), ENT_QUOTES);
-			$reg_key					= md5(uniqid(rand(), TRUE));
-
-			$insert_a					= $request['dba']->prepareStatement("INSERT INTO ". K4USERS ." (name,email,pass,perms,reg_key,usergroups,created) VALUES (?,?,?,?,?,?,?)");
+			$insert_a					= $request['dba']->prepareStatement("INSERT INTO ". K4USERS ." (name,email,pass,perms,usergroups,created) VALUES (?,?,?,?,?,?)");
 			
 			$insert_a->setString(1, $name);
 			$insert_a->setString(2, $_REQUEST['email']);
 			$insert_a->setString(3, md5($_REQUEST['pass']));
 			$insert_a->setInt(4, $_REQUEST['permissions']);
-			$insert_a->setString(5, $reg_key);
-			$insert_a->setString(6, implode('|', $usergroups)); // Registered Users
-			$insert_a->setInt(7, time());
+			$insert_a->setString(5, implode('|', $usergroups)); // Registered Users
+			$insert_a->setInt(6, time());
 			
 			$insert_a->executeUpdate();
 			
@@ -392,6 +388,12 @@ class AdminEditUser extends FAAction {
 				$action = new K4InformationAction(new K4LanguageElement('L_USERDOESNTEXIST'), 'content', TRUE);
 				return $action->execute($request);
 			}
+
+			// month/day/year
+			$parts			= strlen($user['birthday']) == 10 ? explode("/", $user['birthday']) : explode("/", '0/0/');
+			$request['template']->setVar('bday_month', intval($parts[0]));
+			$request['template']->setVar('bday_day', intval($parts[1]));
+			$request['template']->setVar('bday_year', $parts[2]);
 
 			foreach($user as $key => $val)
 				$request['template']->setVar('edit_user_'. $key, $val);
