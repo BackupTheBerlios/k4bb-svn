@@ -209,7 +209,7 @@
 				<div class="outset_box">
 					<label for="timezone"><strong>{$L_TIMEZONE}:</strong></label><br />
 					<span class="smalltext">{$L_TIMEZONEEXPLAIN}</span><br /><br />
-					<select name="timezone" id="timezone" class="smalltext">
+					<select name="timezone" id="timezone" class="inputbox">
 						<option value="-12">{$L_TIMEZONE1}</option>
 						<option value="-11">{$L_TIMEZONE2}</option>
 						<option value="-10">{$L_TIMEZONE3}</option>
@@ -267,7 +267,7 @@
 		<tr>
 			<td class="alt1" width="50%"><label for="templateset"><strong>{$L_TEMPLATESET}:</strong></label></td>
 			<td class="alt1" width="50%">
-				<select name="templateset" id="templateset">
+				<select name="templateset" id="templateset" class="inputbox">
 					<list:list id="templatesets">
 					<list:item list="templatesets">
 					<option value="{$id}">{$name}</option>
@@ -280,7 +280,7 @@
 		<tr>
 			<td class="alt2" width="50%"><label for="styleset"><strong>{$L_BOARDSTYLESET}:</strong></label></td>
 			<td class="alt2" width="50%">
-				<select name="styleset" id="styleset">
+				<select name="styleset" id="styleset" class="inputbox">
 					<list:list id="stylesets">
 					<list:item list="stylesets">
 					<option value="{$id}">{$name}</option>
@@ -293,7 +293,7 @@
 		<tr>
 			<td class="alt1" width="50%"><label for="imageset"><strong>{$L_BOARDIMAGESET}:</strong></label></td>
 			<td class="alt1" width="50%">
-				<select name="imageset" id="imageset">
+				<select name="imageset" id="imageset" class="inputbox">
 					<list:list id="imagesets">
 					<list:item list="imagesets">
 					<option value="{$name}">{$name}</option>
@@ -306,7 +306,7 @@
 		<tr>
 			<td class="alt2" width="50%"><label for="language"><strong>{$L_BOARDLANGUAGE}:</strong></label></td>
 			<td class="alt2" width="50%">
-				<select name="language" id="language">
+				<select name="language" id="language" class="inputbox">
 					<list:list id="languages">
 					<list:item list="languages">
 					<option value="{$name}">{$name}</option>
@@ -319,7 +319,7 @@
 		<tr>
 			<td class="alt1" width="50%"><label for="invisible"><strong>{$L_INVISIBLEMODE}:</strong></label></td>
 			<td class="alt1" width="50%">
-				<select name="invisible" id="invisible">
+				<select name="invisible" id="invisible" class="inputbox">
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>
@@ -329,7 +329,7 @@
 		<tr>
 			<td class="alt2" width="50%"><label for="topic_display"><strong>{$L_TOPICDISPLAY}:</strong></label></td>
 			<td class="alt2" width="50%">
-				<select name="topic_display" id="topic_display">
+				<select name="topic_display" id="topic_display" class="inputbox">
 					<option value="0">{$L_LINEAR}</option>
 					<option value="1">{$L_VERTICAL}</option>
 				</select>
@@ -339,7 +339,7 @@
 		<tr>
 			<td class="alt1" width="50%"><label for="topic_display"><strong>{$L_TOPICTHREADEDMODE}:</strong></label></td>
 			<td class="alt1" width="50%">
-				<select name="topic_threaded" id="topic_threaded">
+				<select name="topic_threaded" id="topic_threaded" class="inputbox">
 					<option value="0">{$L_NORMAL}</option>
 					<option value="1">{$L_THREADED}</option>
 				</select>
@@ -354,7 +354,7 @@
 		<tr>
 			<td class="alt2" width="50%"><label for="notify_pm"><strong>{$L_NOTIFYPRIVATEMESSAGE}:</strong></label></td>
 			<td class="alt2" width="50%">
-				<select name="notify_pm" id="notify_pm">
+				<select name="notify_pm" id="notify_pm" class="inputbox">
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>
@@ -364,7 +364,7 @@
 		<tr>
 			<td class="alt1" width="50%"><label for="popup_pm"><strong>{$L_POPUPPRIVATEMESSAGE}:</strong></label></td>
 			<td class="alt1" width="50%">
-				<select name="popup_pm" id="popup_pm">
+				<select name="popup_pm" id="popup_pm" class="inputbox">
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>
@@ -416,7 +416,7 @@
 		<tr>
 			<td class="alt2" width="50%"><label for="viewimages"><strong>{$L_VIEWIMAGES}:</strong></label></td>
 			<td class="alt2" width="50%">
-				<select name="viewimages" id="viewimages">
+				<select name="viewimages" id="viewimages" class="inputbox">
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>
@@ -426,7 +426,7 @@
 		<tr>
 			<td class="alt1" width="50%"><label for="viewavatars"><strong>{$L_VIEWAVATARS}:</strong></label></td>
 			<td class="alt1" width="50%">
-				<select name="viewavatars" id="viewavatars">
+				<select name="viewavatars" id="viewavatars" class="inputbox">
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>
@@ -436,7 +436,7 @@
 		<tr>
 			<td class="alt2" width="50%"><label for="viewflash"><strong>{$L_VIEWFLASH}:</strong></label></td>
 			<td class="alt2" width="50%">
-				<select name="viewflash" id="viewflash">
+				<select name="viewflash" id="viewflash" class="inputbox">
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>
@@ -446,7 +446,7 @@
 		<tr>
 			<td class="alt1" width="50%"><label for="viewemoticons"><strong>{$L_VIEWEMOTICONS}:</strong></label></td>
 			<td class="alt1" width="50%">
-				<select name="viewemoticons" id="viewemoticons">
+				<select name="viewemoticons" id="viewemoticons" class="inputbox">
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>
@@ -456,7 +456,7 @@
 		<tr>
 			<td class="alt2" width="50%"><label for="viewsigs"><strong>{$L_VIEWSIGNATURES}:</strong></label></td>
 			<td class="alt2" width="50%">
-				<select name="viewsigs" id="viewsigs">
+				<select name="viewsigs" id="viewsigs" class="inputbox">
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>
@@ -466,7 +466,7 @@
 		<tr>
 			<td class="alt1" width="50%"><label for="viewcensors"><strong>{$L_VIEWWORDCENSORS}:</strong></label></td>
 			<td class="alt1" width="50%">
-				<select name="viewcensors" id="viewcensors">
+				<select name="viewcensors" id="viewcensors" class="inputbox">
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>

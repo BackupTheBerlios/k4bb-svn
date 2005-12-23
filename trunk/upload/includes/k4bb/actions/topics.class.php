@@ -976,7 +976,7 @@ class TopicsIterator extends FAProxyIterator {
 			}
 		}
 
-		$temp['forum_name']			= $this->allforums['f'. $temp['forum_id']]['name'];
+		$temp['forum_name']			= $this->allforums[$temp['forum_id']]['name'];
 
 		if($new) {
 			$temp['is_new']			= 1;

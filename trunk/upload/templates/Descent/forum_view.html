@@ -29,8 +29,8 @@
 			<td class="base{$row_class}" align="center"><div class="forum_number_cell"><span class="minitext"><br /><br />{$posts}</span></div></td>
 			<td class="base{$row_class}" align="center"><div class="forum_number_cell"><span class="minitext"><br /><br />{$topics}</span></div></td>
 			<td class="base{$row_class}" nowrap="nowrap" align="center" width="30%">
-				<if:if var="post_id" greater="0">
 				<div align="left" class="minitext">
+				<if:if var="post_id" greater="0">
 					<if:if var="post_posticon" noteq="clear.gif"><img src="tmp/upload/posticons/{$post_posticon}" alt="" border="0" /></if:if>
 					<a href="findpost.php?id={$post_id}" title="{$post_name}" class="alt{$row_class}_link"><strong><core:truncate length="27" append="...">{$post_name}</core:truncate></strong></a>
 					<br />
@@ -40,6 +40,7 @@
 				<if:else />
 				--
 				</if:if>
+				</div>
 			</td>
 		</tr>
 		<else:if var="is_link" eq="1" />

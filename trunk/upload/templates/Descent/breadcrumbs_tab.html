@@ -4,12 +4,4 @@
 	<if:if var="nojs" eq="0"><a href="?nojs=1#quicklinks" class="ddmenu_link_alt" id="quicklinks_link" title="{$L_QUICKLINKS}">{$L_QUICKLINKS}</a></if:if>
 	<br /><br />
 </div>
-<script type="text/javascript">
-	var bct = d.getElementById('breadcrumbs_tab');
-	var ct = d.getElementById('controls_tab');
-	if(bct && ct) {
-		if(d.width(bct) > d.width(ct)) ct.style.width = d.width(bct) + 'px';
-		if(d.width(ct) > d.width(bct)) bct.style.width = d.width(ct) + 'px';
-	}
-</script>
 <!-- / Breadcrumbs Tab -->

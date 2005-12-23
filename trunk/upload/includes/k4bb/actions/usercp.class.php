@@ -176,22 +176,31 @@ class K4UserControlPanel extends FAAction {
 
 class K4UserCPProfile extends FAAction {
 	function execute(&$request) {
-				
-		$member			= $request['user']->getInfoArray();
-
-		$fields			= format_profile_fields($member);
-		
-		// month/day/year
-		$parts			= strlen($member['birthday']) == 10 ? explode("/", $member['birthday']) : explode("/", '0/0/');
-		$request['template']->setVar('bday_month', intval($parts[0]));
-		$request['template']->setVar('bday_day', intval($parts[1]));
-		$request['template']->setVar('bday_year', $parts[2]);
 
 		if(count($fields) > 0) {
 			$it = &new FAArrayIterator($fields);
 			$request['template']->setList('member_profilefields', $it);
 		}
 		
+		global $_QUERYPARAMS;
+
+		$user = $request['dba']->getRow("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']}{$_QUERYPARAMS['usersettings']} FROM ". K4USERS ." u, ". K4USERINFO ." ui, ". K4USERSETTINGS ." us WHERE u.id=ui.user_id AND us.user_id=u.id AND u.id=". intval($request['user']->get('id')) ." LIMIT 1");
+			
+		if(!is_array($user) || empty($user)) {
+			$action = new K4InformationAction(new K4LanguageElement('L_USERDOESNTEXIST'), 'content', TRUE);
+			return $action->execute($request);
+		}
+
+		foreach($user as $key=>$val)
+			$request['template']->setVar('member_'. $key, $val);
+		
+		$fields			= format_profile_fields($user);
+
+		// month/day/year
+		$parts			= strlen($user['birthday']) == 10 ? explode("/", $user['birthday']) : explode("/", '0/0/');
+		$request['template']->setVar('bday_month', intval($parts[0]));
+		$request['template']->setVar('bday_day', intval($parts[1]));
+		$request['template']->setVar('bday_year', $parts[2]);
 
 		$request['template']->setFile('usercp_content', 'usercp_profile.html');
 
@@ -306,8 +315,8 @@ class K4UpdateUserProfile extends FAAction {
 		$fields			= array('fullname', 'icq', 'aim', 'msn', 'yahoo', 'jabber', 'googletalk');
 
 		foreach($fields as $field) {
-			if(isset($_REQUEST[$field]) && $_REQUEST[$field] != '') {
-				$query		.= $field ." = '". $request['dba']->quote($_REQUEST[$field]) ."', ";
+			if(isset($_REQUEST[$field])) {
+				$query		.= $field ."='". $request['dba']->quote($_REQUEST[$field]) ."', ";
 			}
 		}
 
@@ -362,12 +371,6 @@ class K4UpdateUserProfile extends FAAction {
 		/* Update the user */
 		$request['dba']->executeUpdate($query);
 		
-		/* Make sure to change the information in the $request */
-		$user				= &new K4UserManager($request['dba']);
-		$user				= $user->getInfo($request['user']->get('id'));
-		$request['user']	= &new K4Member($user);
-		$_SESSION['user']	= &new K4Member($user);
-
 		/* redirect us */
 		$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDPROFILE'), 'usercp_content', FALSE, 'member.php?act=usercp', 3);
 		return $action->execute($request);
