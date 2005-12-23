@@ -684,6 +684,11 @@ class SendPasswordToUser extends FAAction {
 			$action = new K4InformationAction(new K4LanguageElement('L_INVALIDEMAILSPW', $_REQUEST['email']), 'content', TRUE);
 			return $action->execute($request);
 		}
+
+		if($user['pass'] == '') {
+			$action = new K4InformationAction(new K4LanguageElement('L_ACCOUNTDISABLED'), 'content', TRUE);
+			return $action->execute($request);
+		}
 		
 		$newpass = substr(md5(uniqid(rand(), true)), 0, (intval($request['template']->getVar('minuserlength')) > 8 ? intval($request['template']->getVar('minuserlength')) : 8));
 

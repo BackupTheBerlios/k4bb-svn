@@ -830,10 +830,14 @@ $_LANG += array(
 /* / User Titles */
 
 /* User Stuff */
+'L_DISABLE'				=> 'Disable',
+'L_ENABLE'				=> 'Enable',
 'L_ADDUSER'				=> 'Add User',
 'L_ADDEDUSER'			=> 'Successfully added the user <strong>%s</strong> to the forums!',
 'L_FINDUSER'			=> 'Find User',
 'L_UPDATEDUSER'			=> 'Successfully updated the user <strong>%s</strong>.',
+'L_DISABLEDUSER'		=> 'Successfully disabled the user <strong>%s</strong>.',
+'L_ENABLEDUSER'			=> 'Successfully enabled the user <strong>%s</strong>.',
 /* User Stuff */
 
 );

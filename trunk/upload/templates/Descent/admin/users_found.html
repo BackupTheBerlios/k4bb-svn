@@ -49,7 +49,11 @@
 				<div style="float: right;">
 					<if:if var="perms" lesseq="user_perms">
 					<a href="admin.php?act=users_edit&amp;id={$id}" title="{$L_EDIT}">[{$L_EDIT}]</a>
-					<a href="admin.php?act=users_edit&amp;id={$id}" title="{$L_EDIT}">[{$L_DELETE}]</a>
+					<if:if var="pass" noteq="">
+					<a href="admin.php?act=users_disable&amp;id={$id}" title="{$L_EDIT}">[{$L_DISABLE}]</a>
+					<if:else />
+					<a href="admin.php?act=users_disable&amp;enable=1&amp;id={$id}" title="{$L_EDIT}">[{$L_ENABLE}]</a>
+					</if:if>
 					</if:if>
 					<maps:if var="banusers" method="can_add">
 						<if:if var="banned" eq="0"><a href="admin.php?act=users_ban&amp;id={$id}" title="{$L_BANUSER}" style="color: #FFFFFF;background-color: #000000;">[{$L_BANUSER}]</a><if:else /><a href="admin.php?act=banuser&amp;id={$id}" title="{$L_UNBANUSER}" style="color: #000000;background-color: #FFFFFF;">[{$L_UNBANUSER}]</a></if:if> 

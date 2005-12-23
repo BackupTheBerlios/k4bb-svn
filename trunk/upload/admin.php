@@ -162,6 +162,7 @@ $app->setAction('users_warn', new AdminWarnUser);
 $app->setAction('users_flag', new AdminFlagUser);
 $app->setAction('users_edit', new AdminEditUser);
 $app->setAction('users_update', new AdminUpdateUser);
+$app->setAction('users_disable', new AdminDisableUser);
 
 /* Acronym Management */
 $app->setAction('acronyms', new AdminAcronyms);

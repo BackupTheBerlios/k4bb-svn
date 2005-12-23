@@ -212,8 +212,6 @@ class K4LoginFilter extends FAFilter {
 							$remember = FALSE;
 
 						k4_set_login($request['dba'], $user, $remember);
-						//$request['user'] = &$user;
-
 						$action = new K4InformationAction(new K4LanguageElement('L_LOGGEDINSUCCESS'), 'content', FALSE, $_SERVER['REQUEST_URI'], 3);
 					} else {
 						// this is a pending user who cannot log in
@@ -274,7 +272,7 @@ class K4BannedUsersFilter extends FAFilter {
 		//if(in_array(USER_IP, $_BANNEDUSERIPS) && !$banned) {
 		if(is_array($_BANNEDUSERIPS)) {
 			foreach($_BANNEDUSERIPS as $ip) {
-				if(preg_match('~'. $ip .'~', USER_IP)) {
+				if(preg_match('~'. preg_quote($ip) .'~', USER_IP)) {
 					$ban	= $request['dba']->getRow("SELECT * FROM ". K4BANNEDUSERS ." WHERE user_ip = '". $request['dba']->quote(USER_IP) ."'");
 						
 					$action = new K4InformationAction(new K4LanguageElement('L_BANNEDUSERIP', $ban['reason'], ($ban['expiry'] == 0 ? $_LANG['L_YOURDEATH'] : strftime("%m/%d/%Y", bbtime($ban['expiry']))) ), 'content', FALSE);

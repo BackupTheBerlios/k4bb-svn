@@ -54,7 +54,7 @@ class AdminUsers extends FAAction {
 class AdminAddUser extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERS');
 			$request['template']->setVar('users_on', '_on');
@@ -79,7 +79,7 @@ class AdminAddUser extends FAAction {
 class AdminInsertUser extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
 			global $_PROFILEFIELDS, $_SETTINGS;
 
@@ -366,7 +366,7 @@ class AdminInsertUser extends FAAction {
 class AdminEditUser extends FAAction {
 	function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
 			global $_QUERYPARAMS;
 
@@ -411,7 +411,7 @@ class AdminEditUser extends FAAction {
 class AdminUpdateUser extends FAAction {
 		function execute(&$request) {		
 		
-		if($request['user']->isMember() && ($request['user']->get('perms') >= ADMIN)) {
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
 			global $_PROFILEFIELDS, $_SETTINGS;
 
@@ -694,6 +694,60 @@ class AdminUpdateUser extends FAAction {
 			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDUSER', $name), 'content', FALSE, 'admin.php?act=users', 3);
 			return $action->execute($request);
 
+		} else {
+			no_perms_error($request);
+		}
+
+		return TRUE;
+	}
+}
+
+class AdminDisableUser extends FAAction {
+	function execute(&$request) {		
+		
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
+			
+			global $_QUERYPARAMS;
+
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_USERS');
+			$request['template']->setVar('users_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/users.html');
+			
+			if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
+				$action = new K4InformationAction(new K4LanguageElement('L_USERDOESNTEXIST'), 'content', TRUE);
+				return $action->execute($request);
+			}
+			
+			$user = $request['dba']->getRow("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']}{$_QUERYPARAMS['usersettings']} FROM ". K4USERS ." u, ". K4USERINFO ." ui, ". K4USERSETTINGS ." us WHERE u.id=ui.user_id AND us.user_id=u.id AND u.id=". intval($_REQUEST['id']) ." LIMIT 1");
+			
+			if(!is_array($user) || empty($user)) {
+				$action = new K4InformationAction(new K4LanguageElement('L_USERDOESNTEXIST'), 'content', TRUE);
+				return $action->execute($request);
+			}
+			
+			// make sure we can disable/enable this user
+			if($user['perms'] < SUPERADMIN && $user['id'] != $request['user']->get('id') && $user['id'] != 1) {
+				$disable = TRUE;
+				
+				// disable the user
+				if(!isset($_REQUEST['enable'])) {
+					$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET pass='',perms=0,usergroups='|2|' WHERE id=". $user['id']);
+				
+				// enable the user
+				} else {
+					$disable = FALSE;
+					$newpass = substr(md5(uniqid(rand(), true)), 0, (intval($request['template']->getVar('minuserlength')) > 8 ? intval($request['template']->getVar('minuserlength')) : 8));
+					$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET pass='". md5($newpass) ."', perms=5 WHERE id = ". intval($user['id']));
+					email_user($user['email'], $request['template']->getVar('bbtitle') .' - '. $request['template']->getVar('L_PASSWORDCHANGE'), sprintf($request['template']->getVar('L_PASSWORDCHANGEEMAIL'), $user['name'], $newpass));
+					$action = new K4InformationAction(new K4LanguageElement('L_SENTNEWPASSWORD'), 'content', TRUE);
+				}
+			} else {
+				no_perms_error($request);
+				return true;
+			}
+
+			$action = new K4InformationAction(new K4LanguageElement(($disable ? 'L_DISABLEDUSER' : 'L_ENABLEDUSER'), $user['name']), 'content', FALSE, 'admin.php?act=users', 3);
+			return $action->execute($request);
 		} else {
 			no_perms_error($request);
 		}

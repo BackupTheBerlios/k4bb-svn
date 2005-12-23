@@ -564,6 +564,7 @@ $_LANG += array(
 'L_INVALIDREGID'		=> 'You have specified an invalid registration confirmation key. Please consult the FAQ section under User Registration or contact the administrator directly. Thank you.',
 'L_REGVALIDATEDEMAIL'	=> 'You have now validated your email address. Thank you for completing your registration. You are now being redirected to the board index.',
 'L_FILLINEMAIL'			=> 'Please enter a valid email address for yourself.',
+'L_ACCOUNTDISABLED'		=> 'Your user account has been disabled.',
 /* / Stuff on the login & register forms */
 
 /* Search forms */
