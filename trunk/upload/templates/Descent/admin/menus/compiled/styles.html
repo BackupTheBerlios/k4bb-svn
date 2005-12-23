@@ -1,6 +1,0 @@
-<?php if ($_SESSION['user']->get('perms') >= ADMIN): ?>
-<div id="styles_menu" style="display: none;">
-	<a class="smalltext" target="admin_iframe" href="admin.php?act=stylesets"><?php echo $scope->getVar("L_MANAGESTYLESETS"); ?></a>
-	| <a class="smalltext" target="admin_iframe" href="admin.php?act=css"><?php echo $scope->getVar("L_MANAGECSSSTYLES"); ?></a>
-</div>
-<?php endif; ?>

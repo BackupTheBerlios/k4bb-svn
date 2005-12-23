@@ -1,6 +1,0 @@
-<?php if ($_SESSION['user']->get('perms') >= ADMIN): ?>
-<div id="misc_menu" style="display: none;">
-	<a class="smalltext" target="admin_iframe" href="admin.php?act=spiders"><?php echo $scope->getVar("L_SEARCHSPIDERS"); ?></a>
-	<!--| <a class="smalltext" target="admin_iframe" href="admin.php?act=email"><?php echo $scope->getVar("L_EMAILUSERS"); ?></a>-->
-</div>
-<?php endif; ?>

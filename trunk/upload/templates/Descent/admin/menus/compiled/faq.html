@@ -1,6 +1,0 @@
-<?php if ($_SESSION['user']->get('perms') >= ADMIN): ?>
-<div id="faq_menu" style="display: none;" class="spacer">
-	<a class="smalltext" target="admin_iframe" href="admin.php?act=faq_categories"><?php echo $scope->getVar("L_FAQCATEGORIES"); ?></a>
-	| <a class="smalltext" target="admin_iframe" href="admin.php?act=faq_answers"><?php echo $scope->getVar("L_FAQANSWERS"); ?></a>
-</div>
-<?php endif; ?>

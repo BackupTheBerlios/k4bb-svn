@@ -1,9 +1,0 @@
-<?php if ($_SESSION['user']->get('perms') >= ADMIN): ?>
-<div id="forums_menu" style="display: none;">
-	<a class="smalltext" href="admin.php?act=forums" target="admin_iframe"><?php echo $scope->getVar("L_FORUMS"); ?></a>
-	(<a class="smalltext" href="admin.php?act=forum_select" target="admin_iframe"><?php echo $scope->getVar("L_SELECT"); ?></a>)
-	| <a class="smalltext" target="admin_iframe" href="admin.php?act=forums_add"><?php echo $scope->getVar("L_ADDFORUM"); ?></a>
-	| <a class="smalltext" target="admin_iframe" href="admin.php?act=forums_permissions&id=0"><?php echo $scope->getVar("L_MASTERPERMISSIONS"); ?></a>
-	| <a class="smalltext" target="admin_iframe" href="admin.php?act=announcements"><?php echo $scope->getVar("L_ANNOUNCEMENTS"); ?></a>
-</div>
-<?php endif; ?>
