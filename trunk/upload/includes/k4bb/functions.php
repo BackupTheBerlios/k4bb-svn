@@ -37,6 +37,49 @@ if(!defined('IN_K4')) {
 }
 
 /**
+ * Unserialize a string if the normal function fails
+ *
+ * $str string	- The string to be unserialized
+ * @autor		Peter Goodman
+ */
+function force_unserialize($str) {
+	
+	$array = @unserialize($str);
+
+	if(!is_array($array)) {
+
+		/* Look for something that identifies the scope of this serialized array */
+		preg_match("~\{(.*?)\}~ise", $str, $matches);
+		
+		$array = array();
+
+		/* Check the results of our search */
+		if(is_array($matches) && isset($matches[1])) {
+			
+			preg_match_all('/("([^"]*)";i:([0-9]{1,3});)/', $matches[1], $matches_int);
+			preg_match_all('/("([^"]*)";s:([0-9]{1,3}):"([^"]*)";)/', $matches[1], $matches_str);
+			
+			// add the integer values in
+			for($i = 0; $i < count($matches_int); $i++) {
+				if($matches_int[2][$i] != '') {
+					$array[$matches_int[2][$i]] = $matches_int[3][$i];
+				}
+			}
+			
+			// add the string values in
+			for($i = 0; $i < count($matches_str); $i++) {
+				if($matches_str[2][$i] != '') {
+					$array[$matches_str[2][$i]] = $matches_str[4][$i];
+				}
+			}
+			
+		}
+	}
+	
+	return $array;
+}
+
+/**
  * Custom htmlentities function
  */
 function k4_htmlentities($str) {

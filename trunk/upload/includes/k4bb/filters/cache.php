@@ -242,8 +242,9 @@ class K4GeneralCacheFilter extends FAFilter {
 		while($result->next()) {
 			$temp								= $result->current();
 			
-			$unserialize_result					= @unserialize(stripslashes(str_replace('&quot;', '"', $temp['data'])));
-			$cache['datastore'][$temp['varname']] = $temp['data'] != '' ? (!$unserialize_result ? array() : $unserialize_result) : array();
+			$temp['data']						= str_replace('&quot;', '"', $temp['data']);
+			$unserialize_result					= force_unserialize($temp['data']);
+			$cache['datastore'][$temp['varname']] = $unserialize_result;
 		}
 		$result->free();
 	}

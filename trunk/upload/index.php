@@ -66,7 +66,7 @@ class K4DefaultAction extends FAAction {
 		
 		//$newest_user						= $request['dba']->getRow("SELECT name, id FROM ". K4USERS ." ORDER BY id DESC LIMIT 1");
 		$expired							= time() - ini_get('session.gc_maxlifetime');
-
+		//print_r($_DATASTORE); exit;
 		$stats = array('num_online_members'	=> intval(Globals::getGlobal('num_online_members')),
 						'num_invisible'		=> intval(Globals::getGlobal('num_online_invisible')),
 						'num_topics'		=> intval($_DATASTORE['forumstats']['num_topics']),

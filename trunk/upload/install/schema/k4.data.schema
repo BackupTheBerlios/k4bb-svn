@@ -101,7 +101,7 @@ INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (8
 INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (8, '.title_link', 'padding-left:5px;color:#363636;font-size:20px;font-weight:normal;', 1, 'description here');
 INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (8, 'a.title_link:hover', 'text-decoration:none;', 1, 'description here');
 INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (9, '.maintitle div, .maintitle span, .maintitle strong', 'color:#FFFFFF;', 1, 'description here');
-INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (9, '.header', 'background:#C3D950 url(../../Images/Descent/Background/background_greentitle_left.gif) top left no-repeat;margin-bottom:5px;', 1, 'description here');
+INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (9, '.header', 'background:#C3D950 url(../../Images/Descent/Background/background_greentitle_left.gif) top left no-repeat;border-bottom:5px solid #FFFFFF;', 1, 'description here');
 INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (9, '.header div.title', 'background:url(../../Images/Descent/Background/background_greentitle_right.gif) top right no-repeat;color:#FFFFFF;font-weight:bold;padding:8px 12px 8px 10px;', 1, 'description here');
 INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (9, '.subheader', 'background-color:#35426F;color:#FFFFFF;font-weight:bold;font-size:11px;padding:5px;', 1, 'description here');
 INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (9, '.subheader a, .subheader a:hover', 'color:#FFFFFF;', 1, 'Links within subheaders');
@@ -123,7 +123,7 @@ INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (1
 INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (10, '.forum_foot #footer', 'padding:10px 20px 20px 20px;background:url(../../Images/Descent/Background/background_main_bottom_right.gif) bottom right no-repeat;', 1, 'description here');
 INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (10, '.footer_block', 'background:#C3D950 url(../../Images/Descent/Background/background_base_left.gif) bottom left no-repeat;', 1, 'description here');
 INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (10, '.footer_block div', 'padding:8px;background:url(../../Images/Descent/Background/background_base_right.gif) bottom right no-repeat;', 1, 'description here');
-INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (10, '.spacer', 'margin-bottom:5px;', 1, 'description here');
+INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (10, '.spacer', 'padding-bottom:5px;', 1, 'description here');
 INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (10, '.header_table td', 'padding:0px;margin:0px;', 1, 'The header table');
 INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (11, '.forum_number_cell', 'height:64px;width:64px;', 1, 'Number-only cells in forum rows.');
 INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (1, '.borderwrap', 'background:url(../../Images/Descent/Background/background_left_curve.gif) left top no-repeat;', 1, 'description here');

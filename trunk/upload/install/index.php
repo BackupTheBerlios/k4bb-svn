@@ -115,7 +115,7 @@ class DatabaseVerifyFilter extends FAFilter {
 				$ftp_info['user']		= $_POST['ftp_name'];
 				$ftp_info['pass']		= $_POST['ftp_pass'];
 
-				$dba = &db_connect($db_info);
+				$dba = db_connect($db_info);
 
 				// Check to see if the schema is available
 				$driver = $db_info['driver'];
