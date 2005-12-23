@@ -102,7 +102,7 @@ function k4css() {
 				ex.style.width = '60%';
 				ex.style.display = 'block';
 				ext.innerHTML = 'CSS: ' + t.className + '<br />' + t.title + '';
-				ifr.location.href = 'admin.php?act=css_editstyle&class=.' + t.className.replace(/\s/, '+');
+				ifr.location.href = 'admin.php?act=css_editstyle&class=' + t.className.replace(/\s/, '+');
 			}
 		}
 	}

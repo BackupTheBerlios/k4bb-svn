@@ -1087,7 +1087,7 @@ class AdminCSSRequestFilter extends FAFilter {
 					}
 
 					if(isset($_REQUEST['class'])) {
-						$class_query = " name = '". str_replace('+', ' ', $_REQUEST['class']) ."'";
+						$class_query = " name = '.". str_replace('+', ' ', $_REQUEST['class']) ."'";
 					} else {
 						$class_query = " id = ". intval($_REQUEST['style_id']);
 					}
