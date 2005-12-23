@@ -60,6 +60,12 @@ class AdminAddUser extends FAAction {
 			$request['template']->setVar('users_on', '_on');
 			$request['template']->setFile('sidebar_menu', 'menus/users.html');
 			
+			$fields = format_profile_fields(array(), TRUE);
+			if(count($fields) > 0) {
+				$it = &new FAArrayIterator($fields);
+				$request['template']->setList('profilefields', $it);
+			}
+
 			$result = $request['dba']->executeQuery("SELECT * FROM ". K4STYLES);
 
 			$request['template']->setList('languages', new FAArrayIterator(get_files(K4_BASE_DIR .'/lang/', TRUE)));
@@ -87,38 +93,32 @@ class AdminInsertUser extends FAAction {
 			$request['template']->setVar('users_on', '_on');
 			$request['template']->setFile('sidebar_menu', 'menus/users.html');
 			
-			/* Collect the custom profile fields to display */
+			/* Collect the custom profile fields */
 			$query_fields	= '';
-			$query_params	= '';
 		
 			foreach($_PROFILEFIELDS as $field) {
-				if($field['display_register'] == 1) {
+				/* This insures that we only put in what we need to */
+				if(isset($_REQUEST[$field['name']])) {
 					
-					/* This insures that we only put in what we need to */
-					if(isset($_REQUEST[$field['name']])) {
-						
-						switch($field['inputtype']) {
-							default:
-							case 'text':
-							case 'textarea':
-							case 'select': {
-								if($_REQUEST[$field['name']] != '') {
-									$query_fields	.= ', '. $field['name'];
-									$query_params	.= ", '". $request['dba']->quote(k4_htmlentities($_REQUEST[$field['name']], ENT_QUOTES)) ."'";
-								}
-								break;
+					switch($field['inputtype']) {
+						default:
+						case 'text':
+						case 'textarea':
+						case 'select': {
+							if($_REQUEST[$field['name']] != '') {
+								$query_fields	.= ', '. $field['name'] ."='". $request['dba']->quote(k4_htmlentities($_REQUEST[$field['name']], ENT_QUOTES)) ."'";
 							}
-							case 'multiselect':
-							case 'radio':
-							case 'check': {
-								if(is_array($_REQUEST[$field['name']]) && !empty($_REQUEST[$field['name']])) {
-									$query_fields	.= ', '. $field['name'];
-									$query_params	.= ", '". $request['dba']->quote(serialize($_REQUEST[$field['name']])) ."'";
-								}
-								break;
+							break;
+						}
+						case 'multiselect':
+						case 'radio':
+						case 'check': {
+							if(is_array($_REQUEST[$field['name']]) && !empty($_REQUEST[$field['name']])) {
+								$query_fields	.= ','. $field['name'] ."='". $request['dba']->quote(serialize($_REQUEST[$field['name']])) ."'";
 							}
-						}						
-					}
+							break;
+						}
+					}						
 				}
 			}
 			
@@ -194,26 +194,7 @@ class AdminInsertUser extends FAAction {
 					$action = new K4InformationAction(new K4LanguageElement('L_EMAILTAKEN'), 'content', TRUE);
 				}
 			}
-
-			/**
-			 * Get the custom user fields for this member
-			 */
-			foreach($_PROFILEFIELDS as $field) {
-				if($field['is_editable'] == 1) {
-					if(isset($_REQUEST[$field['name']]) && $_REQUEST[$field['name']] != '') {
-						$query	.= $field['name'] ." = '". $request['dba']->quote(preg_replace("~(\r\n|\r|\n)~", '<br />', $_REQUEST[$field['name']])) ."', ";
-						if($field['is_required'] == 1 && @$_REQUEST[$field['name']] == '') {
-							$error .= '<br />'. $request['template']->getVar('L_REQUIREDFIELDS') .': <strong>'. $field['title'] .'</strong>';
-						}
-					}
-				}
-			}
-
-			// error checking... too late? nah.
-			if($error != '') {
-				$action = new K4InformationAction(new K4LanguageElement('L_FOLLOWINGERRORS', $error), 'usercp_content', FALSE);
-			}
-
+			
 			if(isset($action)) return $action->execute($request);
 			
 			/**
@@ -397,6 +378,12 @@ class AdminEditUser extends FAAction {
 
 			foreach($user as $key => $val)
 				$request['template']->setVar('edit_user_'. $key, $val);
+			
+			$fields = format_profile_fields($user, TRUE);
+			if(count($fields) > 0) {
+				$it = &new FAArrayIterator($fields);
+				$request['template']->setList('profilefields', $it);
+			}
 
 			$request['template']->setVar('is_edit', 1);
 			
@@ -433,36 +420,32 @@ class AdminUpdateUser extends FAAction {
 				return $action->execute($request);
 			}
 			
-			/* Collect the custom profile fields to display */
+			/* Collect the custom profile fields */
 			$query_fields	= '';
-			$query_params	= '';
 		
 			foreach($_PROFILEFIELDS as $field) {
-				if($field['display_register'] == 1) {
+				/* This insures that we only put in what we need to */
+				if(isset($_REQUEST[$field['name']])) {
 					
-					/* This insures that we only put in what we need to */
-					if(isset($_REQUEST[$field['name']])) {
-						
-						switch($field['inputtype']) {
-							default:
-							case 'text':
-							case 'textarea':
-							case 'select': {
-								if($_REQUEST[$field['name']] != '') {
-									$query_fields	.= ', '. $field['name'] ."='". $request['dba']->quote(k4_htmlentities($_REQUEST[$field['name']], ENT_QUOTES)) ."'";
-								}
-								break;
+					switch($field['inputtype']) {
+						default:
+						case 'text':
+						case 'textarea':
+						case 'select': {
+							if($_REQUEST[$field['name']] != '') {
+								$query_fields	.= ', '. $field['name'] ."='". $request['dba']->quote(k4_htmlentities($_REQUEST[$field['name']], ENT_QUOTES)) ."'";
 							}
-							case 'multiselect':
-							case 'radio':
-							case 'check': {
-								if(is_array($_REQUEST[$field['name']]) && !empty($_REQUEST[$field['name']])) {
-									$query_fields	.= ','. $field['name'] ."='". $request['dba']->quote(serialize($_REQUEST[$field['name']])) ."'";
-								}
-								break;
+							break;
+						}
+						case 'multiselect':
+						case 'radio':
+						case 'check': {
+							if(is_array($_REQUEST[$field['name']]) && !empty($_REQUEST[$field['name']])) {
+								$query_fields	.= ','. $field['name'] ."='". $request['dba']->quote(serialize($_REQUEST[$field['name']])) ."'";
 							}
-						}						
-					}
+							break;
+						}
+					}						
 				}
 			}
 			
@@ -519,26 +502,7 @@ class AdminUpdateUser extends FAAction {
 					$action = new K4InformationAction(new K4LanguageElement('L_EMAILTAKEN'), 'content', TRUE);
 				}
 			}
-
-			/**
-			 * Get the custom user fields for this member
-			 */
-			foreach($_PROFILEFIELDS as $field) {
-				if($field['is_editable'] == 1) {
-					if(isset($_REQUEST[$field['name']]) && $_REQUEST[$field['name']] != '') {
-						$query	.= $field['name'] ." = '". $request['dba']->quote(preg_replace("~(\r\n|\r|\n)~", '<br />', $_REQUEST[$field['name']])) ."', ";
-						if($field['is_required'] == 1 && @$_REQUEST[$field['name']] == '') {
-							$error .= '<br />'. $request['template']->getVar('L_REQUIREDFIELDS') .': <strong>'. $field['title'] .'</strong>';
-						}
-					}
-				}
-			}
-
-			// error checking... too late? nah.
-			if($error != '') {
-				$action = new K4InformationAction(new K4LanguageElement('L_FOLLOWINGERRORS', $error), 'usercp_content', FALSE);
-			}
-
+			
 			if(isset($action)) return $action->execute($request);
 			
 			/**
@@ -557,7 +521,7 @@ class AdminUpdateUser extends FAAction {
 			$insert_a->setString(1, $name);
 			$insert_a->setString(2, $_REQUEST['email']);
 			$insert_a->setInt(3, $_REQUEST['permissions']);
-			$insert_a->setString(4, implode('|', $usergroups)); // Registered Users
+			$insert_a->setString(4, '|'. implode('|', $usergroups) .'|'); // Registered Users
 			$insert_a->setInt(5, $user['id']);
 			
 			$insert_a->executeUpdate();

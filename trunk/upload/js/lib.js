@@ -167,11 +167,11 @@ k4lib.prototype.forceSetIndex			= function(element, array) {
 
 /* Set the indices on a multi-select select field */
 k4lib.prototype.setIndices				= function(values_array, select) {
-	var temp				= this.getElementById(select);
-	
+	var temp = this.getElementById(select);
 	if(temp) {
 		if(this.sizeof(values_array) > 0) {
-			for(var i = 0; i < this.sizeof(temp.options); i++) {
+			for(var i=0; i < this.sizeof(temp.options); i++) {
+				
 				if(this.in_array(values_array, temp.options[i].value)) {
 					temp.options[i].selected = true;
 				}

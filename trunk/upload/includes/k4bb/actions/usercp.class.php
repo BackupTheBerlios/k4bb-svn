@@ -176,79 +176,10 @@ class K4UserControlPanel extends FAAction {
 
 class K4UserCPProfile extends FAAction {
 	function execute(&$request) {
-		
-		global $_PROFILEFIELDS;
-		
+				
 		$member			= $request['user']->getInfoArray();
 
-		/**
-		 * Get the custom user fields for this member
-		 */
-		$fields = array();
-		foreach($_PROFILEFIELDS as $field) {
-				
-			if($field['is_editable'] == 1) {
-				
-				$result				= @unserialize($member[$field['name']]);
-				$result				= is_array($result) ? array_values($result) : array();
-
-				if(isset($member[$field['name']])) {
-					switch($field['inputtype']) {
-						case 'text': {
-							$field['html']		= '<input type="text" name="'. $field['name'] .'" id="'. $field['name'] .'" value="'. $member[$field['name']] .'" size="'. $field['display_size'] .'" class="inputbox" />';							
-							break;
-						}
-						case 'textarea': {
-							$field['html']		= '<textarea name="'. $field['name'] .'" id="'. $field['name'] .'" cols="'. $field['display_size'] .'" class="inputbox">'. preg_replace("~<br />~", "\n", $member[$field['name']]) .'</textarea>';
-							break;
-						}
-						case 'select': {
-							
-							$field['html']		= '<select name="'. $field['name'] .'" id="'. $field['name'] .'">';
-							foreach($result as $val)
-								$field['html']	.= '	<option value="'. $val .'">'. $val .'</option>';
-							$field['html']		.= '</select>';
-							$field['html']		.= '<script type="text/javascript">d.setIndex(\''. $member[$field['name']] .'\', \''. $field['name'] .'\');</script>';
-							break;
-						}
-						case 'multiselect': {
-							
-							$field['html']		= '<select name="'. $field['name'] .'" id="'. $field['name'] .'" rows="'. $field['display_rows'] .'" cols="'. $field['display_size'] .'">';
-							foreach($result as $val)
-								$field['html']	.= '	<option value="'. $val .'">'. $val .'</option>';
-							$field['html']		.= '</select>';
-							
-							$values				= '';
-							foreach(unserialize($member[$field['name']]) as $val)
-								$values			.= "'$val',";
-
-							$field['html']		.= '<script type="text/javascript">d.setIndices(new Array('. $values .'\'), \''. $field['name'] .'\');</script>';
-							break;
-						}
-						case 'radio': {
-							foreach($result as $val)
-								$field['html']	.= '<input type="radio" value="'. $val .'" name="'. $field['name'] .'" />'. $val;
-							
-							$field['html']		.= '<script type="text/javascript">d.setRadio(\''. $val .'\', \''. $field['name'] .'\');</script>';
-							break;
-						}
-						case 'check': {
-							$values				= unserialize($member[$field['name']]);
-							$i = 0;
-							foreach($result as $val) {
-								$field['html']	.= '<input type="checkbox" value="'. $val .'" name="'. $field['name'] .'[]" id="'. $field['name'] .'_'. $i .'" />'. $val;
-								if(in_array())
-									$field['html']	.= '<script type="text/javascript">d.setCheckbox(\''. $val .'\', \''. $field['name'] .'_'. $i .'\');</script>';
-								
-								$i++;
-							}
-							break;
-						}
-					}
-					$fields[] = $field;
-				}
-			}
-		}
+		$fields			= format_profile_fields($member);
 		
 		// month/day/year
 		$parts			= strlen($member['birthday']) == 10 ? explode("/", $member['birthday']) : explode("/", '0/0/');
@@ -256,9 +187,10 @@ class K4UserCPProfile extends FAAction {
 		$request['template']->setVar('bday_day', intval($parts[1]));
 		$request['template']->setVar('bday_year', $parts[2]);
 
-		if(count($fields) > 0)
+		if(count($fields) > 0) {
 			$it = &new FAArrayIterator($fields);
 			$request['template']->setList('member_profilefields', $it);
+		}
 		
 
 		$request['template']->setFile('usercp_content', 'usercp_profile.html');

@@ -81,7 +81,7 @@
 		<tr>
 			<td class="alt2" width="50%"><strong><label for="usergroups">{$L_USERGROUPS}:</label></strong></td>
 			<td class="alt2" width="50%">
-				<select name="usergroups" id="usergroups" class="inputbox" size="5" multiple="multiple">
+				<select name="usergroups[]" id="usergroups" class="inputbox" size="5" multiple="multiple">
 					<list:list id="usergroups">
 					<list:item list="usergroups">
 					<option value="{$id}">{$name}</option>
@@ -420,7 +420,7 @@
 					<option value="1">{$L_YES}</option>
 					<option value="0">{$L_NO}</option>
 				</select>
-				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex({$edit_user_viewimages}, 'viewimages');</script></if:if>
+				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex('{$edit_user_viewimages}', 'viewimages');</script></if:if>
 			</td>
 		</tr>
 		<tr>
