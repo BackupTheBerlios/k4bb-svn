@@ -13,13 +13,13 @@
 <if:else>
 	<!-- Calendar -->
 	<div class="header"><div class="title">{$L_CALENDAR}</div></div>
+	<div class="header"><div class="title"><a href="calendar.php?y={$year_prev}&m={$month_prev}">[<<]</a> {$month_label} {$year_label} <a href="calendar.php?y={$year_next}&m={$month_next}">[>>]</a></div></div>
 	<div class="spacer">
 	<list:list id="calendar">
 		<table width="100%" class="table">
 			<tr>
 			<list:item list="calendar">
-				<td>{$day}</td>
-				
+				<td><a href="calendar.php?y={$year}&m={$month}&d={$day}">{$day}</a></td>
 					<list:separator list="calendar">
 					<list:alternate list="calendar" count="7" remainder="6">
 						<list:switch list="calendar" var="row_class" a="alt2" b="alt1">

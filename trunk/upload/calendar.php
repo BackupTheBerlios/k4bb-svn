@@ -37,9 +37,22 @@ class K4DefaultAction extends FAAction {
 	function execute(&$request) {
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_CALENDAR');
 		
-		$cal = &new K4Calendar();
-		$calendar = new K4CalendarIterator($cal->getDays());
-		$request['template']->setList('calendar', $calendar);
+		$year = isset($_REQUEST['y']) ? $_REQUEST['y'] : NULL;
+		$month = isset($_REQUEST['m']) ? $_REQUEST['m'] : NULL;
+		$day = isset($_REQUEST['d']) ? $_REQUEST['d'] : NULL;
+		
+		$c = &new K4Calendar($year, $month, $day);
+		$iteration = new K4CalendarIterator($c->getData());
+		
+		$request['template']->setVar('month_label', date('F', mktime(0, 0, 0, $c->getMonth(), 1, $c->getYear())));
+		$request['template']->setVar('year_label', $c->getYear());
+		
+		$request['template']->setVar('month_next', $c->getNextMonth());
+		$request['template']->setVar('month_prev', $c->getPrevMonth());
+		$request['template']->setVar('year_next', $c->getNextYear());
+		$request['template']->setVar('year_prev', $c->getPrevYear());
+		
+		$request['template']->setList('calendar', $iteration);
 		
 		$request['template']->setFile('content', 'calendar_index.html');
 	}

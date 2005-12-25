@@ -29,24 +29,13 @@
 * @package k42
 */
 
-
-
 if(!defined('IN_K4'))
 	return;
 
 class K4Calendar extends FAObject {
-	
-	/**
-	 * array $cal		- An array of all of the days in a month
-	 * int $daysInMonth	- The number of days in a month
-	 * int $month		- The numerical value for the current month
-	 * int $year		- the current year
-	 * string $title	- The title of the month (month name, year, etc)
-	 */
-
 	var $cal = array();
-	var $daysInMonth, $month, $year, $title;
-
+	var $timestamp, $current_year, $current_month, $current_day, $daysInMonth;
+	
 	/**
 	 * __construct() public method
 	 *
@@ -54,19 +43,23 @@ class K4Calendar extends FAObject {
 	 * if you're not passing anything in to the __construct
 	 * by reference, that's all you need :D (even in php4)
 	 */
-	function __construct() {
+	function __construct($year = NULL, $month = NULL, $day = NULL) {
+		$this->timestamp = time();
+		$this->current_year = date('Y', $this->timestamp);
+		$this->current_month = date('n', $this->timestamp);
+		$this->current_day = date('j', $this->timestamp);
 		
 		// create an array that has 42 arrays in it
 		// this represents 1 months with padding days on each side.
-		$this->cal = array_pad($this->cal, 42, array('day' => NULL,'year' => NULL,'month' => NULL) );
-	
+		$this->cal = array_pad($this->cal, 42, array('day' => NULL, 'year' => NULL, 'month' => NULL));
+		
 		// set up the date and time stuff
-		$this->setDate(date("n", time()), date("Y", time()));
+		$this->setCalendar($year, $month, $day);
 	}
 
 	/**
 	 *
-	 * boolean setDate(int $month, int $year [, string $title]) public method
+	 * boolean setDate(int $month [, int $year, string $title]) public method
 	 *
 	 * int $month    - an integer value between 1 and 12 representing the month for the calendar
 	 * int $year     - an integer value greater than or equal to 1975 representing the year for the calendar
@@ -75,33 +68,130 @@ class K4Calendar extends FAObject {
 	 * setDate() sets up the month and year for the object.
 	 *
 	 **/
-	function setDate($month, $year, $title = NULL) {
-		if ($month < 1 || $month > 12) {
-			
-			// some error here.
-			//$this->error("Calendar::setDate() failed: month must be an integer from 1 to 12");
-			return false;
-		} else {
-			$this->month=$month;
-		}
-
-		if ($year < 1975) {
-			
-			// some error here.
-			//$this->error("Calendar::setDate() failed: year must be a valid 4 digit year on or after 1975");
-			return false;
-		} else {
-			$this->year=$year;
-		}
-
-		if ($title === NULL) {
-			$this->title = date("F Y", mktime(0,0,0,$this->month,1,$this->year));
-		} else {
-			$this->title = $title;
-		}
-
-		$this->daysInMonth = date("t", mktime(0,0,0,$this->month, 1, $this->year));
-		return true;
+	function setCalendar($year = NULL, $month = NULL, $day = NULL) {
+		# Set Year
+		if(!$this->checkYear($year))
+			$this->setYear();
+		else
+			$this->setYear($year);
+		
+		# Set Month
+		if(!$this->checkMonth($month))
+			$this->setMonth();
+		else
+			$this->setMonth($month);
+		
+		# Set Day
+		if(!$this->checkDay($day))
+			$this->setDay();
+		else
+			$this->setDay($day);
+		
+		$this->daysInMonth = date('t', mktime(0, 0, 0, $this->month, 1, $this->year));
+	}
+	
+	/**
+	*
+	* int getDay() public method
+	*
+	* This method returns the number of a day for a given timestamp.
+	*
+	**/
+	function checkDay($day = NULL, $month = NULL) {
+		if($day === NULL)
+			$day = $this->current_day;
+		
+		if($month === NULL)
+			$month = $this->current_month;
+		
+		$max = date('t', mktime(0, 0, 0, $month, 1, 2000));
+		
+		return($day > 0 && $day <= $max);
+	}
+	
+	function checkYear($year = NULL) {
+		return($year !== NULL && $year > 1975);
+	}
+	
+	function checkMonth($month = NULL) {
+		return($month !== NULL && $month > 0 && $month <= 12);
+	}
+	
+	function setYear($year = NULL) {
+		if($year === NULL)
+			$this->year = $this->current_year;
+		else
+			$this->year = $year;
+	}
+	
+	function setMonth($month = NULL) {
+		if($month === NULL)
+			$this->month = $this->current_month;
+		else
+			$this->month = $month;
+	}
+	
+	function setDay($day = NULL) {
+		if($day === NULL)
+			$this->day = $this->current_day;
+		else
+			$this->day = $day;
+	}
+	
+	function getYear() {
+		return $this->year;
+	}
+	
+	function getMonth() {
+		return $this->month;
+	}
+	
+	function getDay() {
+		return $this->day;
+	}
+	
+	function getNextMonth($month = NULL) {
+		if($month === NULL)
+			$month = $this->month();
+		
+		if($month == 12)
+			$month = 1;
+		else
+			$month += 1;
+		
+		return $month;
+	}
+	
+	function getPrevMonth($month = NULL) {
+		if($month === NULL)
+			$month = $this->month;
+		
+		if($month == 1)
+			$month = 12;
+		else
+			$month -= 1;
+		
+		return $month;
+	}
+	
+	function getNextYear($year = NULL) {
+		if($year === NULL)
+			$year = $this->year;
+		
+		if($this->month == 12)
+			$year += 1;
+		
+		return $year;
+	}
+	
+	function getPrevYear($year = NULL) {
+		if($year === NULL)
+			$year = $this->year();
+		
+		if($this->$month == 1)
+			$year -= 1;
+		
+		return $year;
 	}
 	
 	/**
@@ -112,11 +202,10 @@ class K4Calendar extends FAObject {
 	 * It offsets the days in the array so they allign properly in the cells of the calendar.
 	 *
 	 **/
-
 	function daysInMonth() {
 		
 		// get the first day of the month
-		$first_day = date("w", mktime(0,0,0,$this->month, 1, $this->year));
+		$first_day = date("w", mktime(0, 0, 0, $this->month, 1, $this->year));
 		
 		// loop through the number of days in the month. This will start at
 		// whatever the first day of the month is.
@@ -129,7 +218,7 @@ class K4Calendar extends FAObject {
 		}
 	}
 
-	function getDays() {
+	function getData() {
 		$this->daysInMonth();
 		return $this->cal;
 	}
@@ -152,7 +241,7 @@ class K4CalendarIterator extends FAArrayIterator {
 		$temp = parent::current();
 		
 		$temp['iteration'] = parent::key();
-
+		
 		/* Return the formatted info */
 		return $temp;
 	}
