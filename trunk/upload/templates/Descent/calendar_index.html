@@ -17,9 +17,21 @@
 	<div class="spacer">
 	<list:list id="calendar">
 		<table width="100%" class="table">
+			
+			<list:sublist id="weekdays" column="calendar">
 			<tr>
+				
+				<list:item list="weekdays">
+				<td>{$weekday}</td>
+				</list:item>
+				
+			</tr>
+			</list:sublist>
+			
+			<tr>
+			
 			<list:item list="calendar">
-				<td><a href="calendar.php?y={$year}&m={$month}&d={$day}">{$day}</a></td>
+				<core:import id="calendar_day" file="calendar_day.html" />
 					<list:separator list="calendar">
 					<list:alternate list="calendar" count="7" remainder="6">
 						<list:switch list="calendar" var="row_class" a="alt2" b="alt1">
@@ -28,6 +40,7 @@
 					</list:alternate>
 					</list:separator>
 			</list:item>
+			
 			</tr>
 		</table>
 	</list:list>

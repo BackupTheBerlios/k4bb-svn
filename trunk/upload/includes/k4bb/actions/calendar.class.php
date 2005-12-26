@@ -33,6 +33,7 @@ if(!defined('IN_K4'))
 	return;
 
 class K4Calendar extends FAObject {
+	var $start_day = 1;
 	var $cal = array();
 	var $timestamp, $current_year, $current_month, $current_day, $daysInMonth;
 	
@@ -104,7 +105,7 @@ class K4Calendar extends FAObject {
 		if($month === NULL)
 			$month = $this->current_month;
 		
-		$max = date('t', mktime(0, 0, 0, $month, 1, 2000));
+		$max = date('t', mktime(0, 0, 0, $month, 1, 2005));
 		
 		return($day > 0 && $day <= $max);
 	}
@@ -152,7 +153,7 @@ class K4Calendar extends FAObject {
 	
 	function getNextMonth($month = NULL) {
 		if($month === NULL)
-			$month = $this->month();
+			$month = $this->month;
 		
 		if($month == 12)
 			$month = 1;
@@ -186,9 +187,9 @@ class K4Calendar extends FAObject {
 	
 	function getPrevYear($year = NULL) {
 		if($year === NULL)
-			$year = $this->year();
+			$year = $this->year;
 		
-		if($this->$month == 1)
+		if($this->month == 1)
 			$year -= 1;
 		
 		return $year;
@@ -202,10 +203,10 @@ class K4Calendar extends FAObject {
 	 * It offsets the days in the array so they allign properly in the cells of the calendar.
 	 *
 	 **/
-	function daysInMonth() {
+	function setArray() {
 		
 		// get the first day of the month
-		$first_day = date("w", mktime(0, 0, 0, $this->month, 1, $this->year));
+		$first_day = date('w', mktime(0, 0, 0, $this->month, 1, $this->year));
 		
 		// loop through the number of days in the month. This will start at
 		// whatever the first day of the month is.
@@ -217,10 +218,25 @@ class K4Calendar extends FAObject {
 			$this->cal[$i]['year'] = $this->year;
 		}
 	}
-
+	
 	function getData() {
-		$this->daysInMonth();
+		$this->setArray();
 		return $this->cal;
+	}
+	
+	function getWeekdays($start = 0) {
+		$week = array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
+		
+		if($start < 0 || $start > 1)
+			$start = 0;
+		
+		$calc = $start == 0 ? 1 : 0;
+		
+		for($i = 1; $i <= 7; $i++) {
+			$array[$i]['weekday'] = $week[$i - $calc];
+		}
+		
+		return $array;
 	}
 }
 
