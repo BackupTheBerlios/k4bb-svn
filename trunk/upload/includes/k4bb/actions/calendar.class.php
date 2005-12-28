@@ -33,7 +33,7 @@ if(!defined('IN_K4'))
 	return;
 
 class K4Calendar extends FAObject {
-	var $start_day = 1;
+	var $start_day = 1; # 0 for Sunday, 1 for Monday, (2 for Tuesday ...)
 	var $cal = array();
 	var $timestamp, $current_year, $current_month, $current_day, $daysInMonth;
 	
@@ -50,11 +50,6 @@ class K4Calendar extends FAObject {
 		$this->current_month = date('n', $this->timestamp);
 		$this->current_day = date('j', $this->timestamp);
 		
-		// create an array that has 42 arrays in it
-		// this represents 1 months with padding days on each side.
-		$this->cal = array_pad($this->cal, 42, array('day' => NULL, 'year' => NULL, 'month' => NULL));
-		
-		// set up the date and time stuff
 		$this->setCalendar($year, $month, $day);
 	}
 
@@ -87,8 +82,8 @@ class K4Calendar extends FAObject {
 			$this->setDay();
 		else
 			$this->setDay($day);
-		
-		$this->daysInMonth = date('t', mktime(0, 0, 0, $this->month, 1, $this->year));
+			
+		$this->setArray();
 	}
 	
 	/**
@@ -196,26 +191,47 @@ class K4Calendar extends FAObject {
 	}
 	
 	/**
-	 *
-	 * void daysInMonth() private method
-	 *
-	 * this function populates a 42 element array which represents the cells in a calendar.  
-	 * It offsets the days in the array so they allign properly in the cells of the calendar.
-	 *
-	 **/
+	*
+	* void setArray() private method
+	*
+	* this function populates a 42 element array which represents the cells in a calendar.  
+	* It offsets the days in the array so they allign properly in the cells of the calendar.
+	*
+	**/
+	 
+	# !!!Known Bugs: When using start day Monday (=1) then month which start with Sunday (=0) display wrong!
 	function setArray() {
+		$days = date('t', mktime(0, 0, 0, $this->month, 1, $this->year)); # total days of the month to display
+		$first = date('w', mktime(0, 0, 0, $this->month, 1, $this->year)); # number of the first day in the month to display
 		
-		// get the first day of the month
-		$first_day = date('w', mktime(0, 0, 0, $this->month, 1, $this->year));
+		# Arrays to fill up the display-array: $cal. Haven't found any function for this yet. *cough*
+		$fill[1] = array(0 => 6, 1 => 0, 2 => 1, 3 => 2, 4 => 3, 5 => 4, 6 => 5);
+		$fill[0] = array(0 => 0, 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6);
+		
+		$start = $fill[$this->start_day][$first];
+		$lenght = $days + $fill[$this->start_day][$first]; #30 + 2
+		
+		# Calculate the cells to fill up
+		$rest = 7 - $lenght % 7;
+		$lenght += $rest == 7 ? 0 : $rest;
+		
+		$this->cal = array_pad($this->cal, $lenght, array('day' => NULL, 'year' => NULL, 'month' => NULL));
 		
 		// loop through the number of days in the month. This will start at
 		// whatever the first day of the month is.
-		for ($i = $first_day; $i < ($this->daysInMonth + $first_day); $i++) {
+		for($i = $start; $i < $lenght; $i++) {
 			
 			// insert the current day into one of the arrays in $cal
-			$this->cal[$i]['day'] = $i - $first_day + 1;
+			$this->cal[$i]['day'] = $i - $first + 1 + $this->start_day;
 			$this->cal[$i]['month'] = $this->month;
 			$this->cal[$i]['year'] = $this->year;
+			
+			# To display the fill up cells as empty.
+			if($i >= ($start + $days)) {
+				$this->cal[$i]['day'] = false;
+				$this->cal[$i]['month'] = false;
+				$this->cal[$i]['year'] = false;
+			}
 		}
 	}
 	
@@ -224,13 +240,11 @@ class K4Calendar extends FAObject {
 		return $this->cal;
 	}
 	
-	function getWeekdays($start = 0) {
+	# TODO: Language support and better routine thou. *cough*
+	function getWeekdays() {
 		$week = array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
 		
-		if($start < 0 || $start > 1)
-			$start = 0;
-		
-		$calc = $start == 0 ? 1 : 0;
+		$calc = $this->start_day == 0 ? 1 : 0;
 		
 		for($i = 1; $i <= 7; $i++) {
 			$array[$i]['weekday'] = $week[$i - $calc];

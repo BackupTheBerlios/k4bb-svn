@@ -13,32 +13,38 @@
 <if:else>
 	<!-- Calendar -->
 	<div class="header"><div class="title">{$L_CALENDAR}</div></div>
-	<div class="header"><div class="title"><a href="calendar.php?y={$year_prev}&m={$month_prev}">[<<]</a> {$month_label} {$year_label} <a href="calendar.php?y={$year_next}&m={$month_next}">[>>]</a></div></div>
+	<div class="header"><div class="categorytitle"><a href="calendar.php?y={$year_prev}&m={$month_prev}">&laquo;</a> {$month_label} {$year_label} <a href="calendar.php?y={$year_next}&m={$month_next}">&raquo;</a></div>
+	</div>
 	<div class="spacer">
 	<list:list id="calendar">
 		<table width="100%" class="table">
 			
 			<list:sublist id="weekdays" column="calendar">
 			<tr>
+				<td class="alt1" width="2%"></td>
 				
 				<list:item list="weekdays">
-				<td>{$weekday}</td>
+				<td width="14%" class="alt2"><strong>{$weekday}</strong></td>
 				</list:item>
 				
 			</tr>
+			
 			</list:sublist>
 			
 			<tr>
 			
 			<list:item list="calendar">
-				<core:import id="calendar_day" file="calendar_day.html" />
-					<list:separator list="calendar">
-					<list:alternate list="calendar" count="7" remainder="6">
-						<list:switch list="calendar" var="row_class" a="alt2" b="alt1">
-						</tr><tr class="{$row_class}">
-						</list:switch>
-					</list:alternate>
-					</list:separator>
+				<list:alternate list="calendar" count="7" remainder="0">
+						<td class="alt2"><a href="calendar.php?y={$year_prev}&w={$week}">&raquo;</a></td>
+				</list:alternate>
+				<list:switch list="calendar" var="row_class" a="alt2" b="alt1">
+					<core:import id="calendar_day" file="calendar_day.html" />
+				</list:switch>
+				<list:separator list="calendar">
+				<list:alternate list="calendar" count="7" remainder="6">
+				    </tr><tr>
+				</list:alternate>
+				</list:separator>
 			</list:item>
 			
 			</tr>
