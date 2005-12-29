@@ -51,30 +51,26 @@ class K4ViewPicture extends FAAction {
 	function execute(&$request) {
 		
 		global $_QUERYPARAMS;
-
+		
+		/* set the breadcrumbs bit */
+		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
+		
 		if(!isset($_REQUEST['id']) || intval($_REQUEST['id']) == 0) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_BAD'. strtoupper($this->table_column)), 'content', FALSE);
-
 			return $action->execute($request);
 		}
 		
 		$avatar		= $request['dba']->getRow("SELECT * FROM ". $this->table ." WHERE user_id = ". intval($_REQUEST['id']));
 
 		if(!is_array($avatar) || empty($avatar)) {
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_BAD'. strtoupper($this->table_column)), 'content', FALSE);
-
 			return $action->execute($request);
 		}
 
 		$user		= $request['dba']->getRow("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']}{$_QUERYPARAMS['usersettings']} FROM ((". K4USERS ." u LEFT JOIN ". K4USERINFO ." ui ON u.id=ui.user_id) LEFT JOIN ". K4USERSETTINGS ." us ON us.user_id=u.id) WHERE u.id=". intval($_REQUEST['id']));
 		
 		if(!is_array($user) || empty($user)) {
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_USERDOESNTEXIST'), 'content', TRUE);
-
 			return $action->execute($request);
 		}
 
@@ -97,9 +93,7 @@ class K4ViewPicture extends FAAction {
 			if(file_exists($avatar_file)) {
 				$contents	= file_get_contents($avatar_file);
 			} else {
-				k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 				$action = new K4InformationAction(new K4LanguageElement('L_BAD'. strtoupper($this->table_column)), 'content', FALSE);
-
 				return $action->execute($request);
 			}
 		}

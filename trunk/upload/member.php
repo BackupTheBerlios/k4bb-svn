@@ -319,8 +319,9 @@ class K4ProfileAction extends FAAction {
 
 		$member						= $request['user_info'];
 		
-		$member['num_topics']		= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4POSTS ." WHERE poster_id = ". intval($member['id']) ." AND moved_new_post_id=0 AND is_draft=0 AND queue=0 AND display=1");
-		$member['num_replies']		= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4POSTS ." WHERE poster_id = ". intval($member['id']));
+		$member['num_topics']		= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4POSTS ." WHERE row_type=". TOPIC ." AND poster_id = ". intval($member['id']) ." AND moved_new_post_id=0 AND is_draft=0 AND queue=0 AND display=1");
+		$member['num_replies']		= $member['num_posts'] - $member['num_topics'];
+		//$member['num_replies']		= $request['dba']->getValue("SELECT COUNT(*) FROM ". K4POSTS ." WHERE row_type=". REPLY ." AND poster_id = ". intval($member['id']));
 		
 		/**
 		 * Get and set some user/forum statistics

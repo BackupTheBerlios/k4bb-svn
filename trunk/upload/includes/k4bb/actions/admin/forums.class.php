@@ -227,7 +227,7 @@ class AdminInsertForum extends FAAction {
 			$insert_a->setInt(18, $_REQUEST['prune_old_polls']);
 			$insert_a->setInt(19, $_REQUEST['prune_announcements']);
 			$insert_a->setInt(20, $_REQUEST['prune_stickies']);
-			$insert_a->setInt(21, (isset($_REQUEST['row_type']) && intval($_REQUEST['row_type']) == FORUM ? FORUM : CATEGORY));
+			$insert_a->setInt(21, (isset($_REQUEST['row_type']) && intval($_REQUEST['row_type']) ? $_REQUEST['row_type'] : FORUM));
 			$insert_a->setInt(22, time());
 			$insert_a->setInt(23, $_REQUEST['row_order']);
 			$insert_a->setInt(24, $parent_id);

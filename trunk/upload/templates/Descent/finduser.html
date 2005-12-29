@@ -1,26 +1,27 @@
 <!-- Search for a User -->
 <form:form name="finduser" id="finduser" action="mod.php?act=findusers" method="post" enctype="multipart/form-data">
 <div class="spacer">
-	<div class="borderwrap">
-		<div class="maintitle">{$L_FINDAUSER}</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<tr>
-				<td class="alt3" width="50%">
-					<strong>{$L_USERNAME}:</strong><br />
-					<span class="smalltext">{$L_WILDCARDSTARINFO}</span>
-				</td>
-				<td class="alt1" width="50%">
-					<input type="text" name="username" id="username" class="inputbox" />
-					<form:error id="username_error" for="username" setclass="inputfailed" regex="^[a-zA-Z]([a-zA-Z0-9]*[-_ \*\%]?)*[a-zA-Z0-9]*$">{$L_SUPPLYUSERNAME}</form:error>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2" class="subtitle" style="text-align: center;">
-					<input type="submit" value="{$L_SEARCH}" class="button" />
-				</td>
-			</tr>
-		</table>
-	</div>
+	<div class="header">
+		<div class="title">{$L_FINDAUSER}</div>
+	</div>	
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td class="alt1" width="50%">
+				<strong>{$L_USERNAME}:</strong><br />
+				<span class="smalltext">{$L_WILDCARDSTARINFO}</span>
+			</td>
+			<td class="alt1" width="50%">
+				<input type="text" name="username" id="username" class="inputbox" />
+				<form:error id="username_error" for="username" setclass="inputfailed" regex="^[a-zA-Z]([a-zA-Z0-9]*[-_ \*\%]?)*[a-zA-Z0-9]*$">{$L_SUPPLYUSERNAME}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" class="subtitle" style="text-align: center;">
+				<input type="submit" value="{$L_SEARCH}" class="button" />
+			</td>
+		</tr>
+	</table>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 </form:form>
 <!-- / Search for a User -->

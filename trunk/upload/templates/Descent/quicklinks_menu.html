@@ -1,9 +1,9 @@
 <!-- Quick Links Drop Down Menu -->
 <if:if var="nojs" eq="0">
-<div id="quicklinks_menu" class="borderwrap" style="display: none;">
+<div id="quicklinks_menu" style="display: none;">
 	<table cellspacing="{$style_cellspacing}" class="table">
 		<tr>
-			<td class="subtitle" nowrap="nowrap">{$L_GENERAL}</td>
+			<td class="supheader" nowrap="nowrap">{$L_GENERAL}</td>
 		</tr>
 		<!--<if:if var="calendarenabled" eq="1">
 		<tr>
@@ -21,7 +21,7 @@
 			<td class="alt1"><a href="search.php?act=find&amp;author={$user_name}&amp;exact=1" title="{$L_MYPOSTS}" class="smalltext">{$L_MYPOSTS}</a></td>
 		</tr>
 		<tr>
-			<td class="subtitle" nowrap="nowrap">{$L_USERCONTROLPANEL}</td>
+			<td class="supheader" nowrap="nowrap">{$L_USERCONTROLPANEL}</td>
 		</tr>
 		<tr>
 			<td class="alt1"><a href="member.php?act=usercp" title="{$L_USERCONTROLPANEL}" class="smalltext">{$L_USERCONTROLPANEL}</a></td>
@@ -31,7 +31,7 @@
 		</tr>
 		</is:logged>
 		<tr>
-			<td class="subtitle">{$L_MISCELLANEOUS}</td>
+			<td class="supheader">{$L_MISCELLANEOUS}</td>
 		</tr>
 		<is:logged><tr>
 			<td class="alt1" nowrap="nowrap"><a href="member.php?act=usercp&amp;view=pmfolder&amp;folder=1" title="{$L_GOTOINBOX}" class="smalltext">{$L_GOTOINBOX}</a></td>

@@ -113,10 +113,6 @@ class K4DefaultAction extends FAAction {
 		}
 
 		if($forum_can_view > $request['user']->get('perms')) {
-			
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION', $forum);
-			
 			$action = new K4InformationAction(new K4LanguageElement('L_PERMCANTVIEW'), 'content', FALSE);
 			return $action->execute($request);
 		}
@@ -142,7 +138,11 @@ class K4DefaultAction extends FAAction {
 		/* Set all of the category/forum info to the template */
 		$request['template']->setVarArray($forum);
 
-		/* If we are looking at a category */
+		/**
+		 *
+		 * CATEGORY
+		 *
+		 */
 		if($forum['row_type'] & CATEGORY) {
 			
 			if(get_map( 'categories', 'can_view', array()) > $request['user']->get('perms')) {
@@ -166,7 +166,11 @@ class K4DefaultAction extends FAAction {
 			/* Set the forums template to content variable */
 			$request['template']->setFile('content', 'forums.html');
 		
-		/* If we are looking at a forum */
+		/**
+		 *
+		 * FORUM
+		 *
+		 */
 		} else if($forum['row_type'] & FORUM) {						
 			
 			/* Add the forum info to the template */
@@ -338,6 +342,13 @@ class K4DefaultAction extends FAAction {
 				$request['template']->setVar('is_subscribed', iif($subscribed->numRows() > 0, 1, 0));
 			}
 
+		/**
+		 *
+		 * GALLERY
+		 *
+		 */
+		} else if($forum['row_type'] & GALLERY) {
+			
 		} else {
 			/* set the breadcrumbs bit */
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDFORUM');

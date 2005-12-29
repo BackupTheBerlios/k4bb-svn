@@ -1,0 +1,20 @@
+<is:admin>
+<div class="header"><div class="title">{$L_DIDYOUMEANCSS}</div></div>
+<div class="spacer">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<list:list id="css_classes">
+		<list:item list="css_classes">
+		<list:switch list="css_classes" var="row_class" a="alt1" b="alt2">
+		<tr>
+			<td class="{$row_class}">
+				<a href="admin.php?act=css_editstyle&amp;id={$style_id}&amp;style_id={$id}" title="{$name}"><strong>{$name}</strong>
+				<span class="smalltext"><br />{$description}</span></a>
+			</td>
+		</tr>
+		</list:switch>
+		</list:item>
+		</list:list>
+	</table>
+</div>
+<div class="footer_block"><div>&nbsp;</div></div>
+</is:admin>

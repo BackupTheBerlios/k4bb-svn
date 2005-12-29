@@ -22,7 +22,7 @@
 		<tr class="{$row_class}">
 			<td nowrap="nowrap">{$level}<strong>{$name}</strong></td>
 			<td align="center">
-				<select name="{$varname}_can_view" id="view_{$id}" class="minitext">
+				<select name="{$varname}_can_view" id="view_{$id}" class="inputbox">
 					<option value="0">--</option>
 					<option value="1">{$L_GUEST}</option>
 					<option value="4">{$L_PENDINGMEMBER}</option>
@@ -36,7 +36,7 @@
 				<script type="text/javascript">d.setIndex({$can_view}, 'view_{$id}');</script>
 			</td>
 			<td align="center">
-				<select name="{$varname}_can_add" id="add_{$id}" class="minitext">
+				<select name="{$varname}_can_add" id="add_{$id}" class="inputbox">
 					<option value="0">--</option>
 					<option value="1">{$L_GUEST}</option>
 					<option value="4">{$L_PENDINGMEMBER}</option>
@@ -50,7 +50,7 @@
 				<script type="text/javascript">d.setIndex({$can_add}, 'add_{$id}');</script>
 			</td>
 			<td align="center">
-				<select name="{$varname}_can_edit" id="edit_{$id}" class="minitext">
+				<select name="{$varname}_can_edit" id="edit_{$id}" class="inputbox">
 					<option value="0">--</option>
 					<option value="1">{$L_GUEST}</option>
 					<option value="4">{$L_PENDINGMEMBER}</option>
@@ -64,7 +64,7 @@
 				<script type="text/javascript">d.setIndex({$can_edit}, 'edit_{$id}');</script>
 			</td>
 			<td align="center">
-				<select name="{$varname}_can_del" id="del_{$id}" class="minitext">
+				<select name="{$varname}_can_del" id="del_{$id}" class="inputbox">
 					<option value="0">--</option>
 					<option value="1">{$L_GUEST}</option>
 					<option value="4">{$L_PENDINGMEMBER}</option>

@@ -929,14 +929,19 @@ class AdminEditCSSClass extends FAAction {
 		
 		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
 			
-			$request['template']->setFile('content', 'css_addstyle.html');
-			$request['template']->setVar('edit_style', 1);
-			$request['template']->setVar('css_formaction', 'admin.php?act=css_updatestyle');
-			
-			$request['style']['properties'] = str_replace(';', ";\n", $request['style']['properties']);
+			if(isset($request['classes'])) {
+				$request['template']->setList('css_classes', $request['classes']);
+				$request['template']->setFile('content', 'css_possiblecss.html');
+			} else {
+				$request['template']->setFile('content', 'css_addstyle.html');
+				$request['template']->setVar('edit_style', 1);
+				$request['template']->setVar('css_formaction', 'admin.php?act=css_updatestyle');
 
-			foreach($request['style'] as $key=>$val) {
-				$request['template']->setVar('style_'. $key, $val);
+				$request['style']['properties'] = str_replace(';', ";\n", $request['style']['properties']);
+
+				foreach($request['style'] as $key=>$val) {
+					$request['template']->setVar('style_'. $key, $val);
+				}
 			}
 		} else {
 			no_perms_error($request);
@@ -1087,16 +1092,20 @@ class AdminCSSRequestFilter extends FAFilter {
 					}
 
 					if(isset($_REQUEST['class'])) {
-						$class_query = " name = '.". str_replace('+', ' ', $_REQUEST['class']) ."'";
+						$class_query = " name = '.". $request['dba']->quote($_REQUEST['class']) ."'";
 					} else {
 						$class_query = " id = ". intval($_REQUEST['style_id']);
 					}
 					
 					$style			= $request['dba']->getRow("SELECT * FROM ". K4CSS ." WHERE {$class_query} AND style_id = ". intval($styleset['id']));
 					
-					if(!is_array($style) || empty($style)) {
-						$action = new K4InformationAction(new K4LanguageElement('L_CSSCLASSDOESNTEXIST'), 'content', FALSE);
-						return TRUE;
+					if(isset($_REQUEST['editor'])) {
+						$request['classes']	= $request['dba']->executeQuery("SELECT * FROM ". K4CSS ." WHERE name LIKE '%". $request['dba']->quote($_REQUEST['class']) ."%'");
+					} else {
+						if(!is_array($style) || empty($style) ) {
+							$action = new K4InformationAction(new K4LanguageElement('L_CSSCLASSDOESNTEXIST'), 'content', FALSE);
+							return TRUE;
+						}
 					}
 				}
 

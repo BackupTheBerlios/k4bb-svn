@@ -33,55 +33,54 @@
 
 <!-- Member List -->
 <div class="spacer">
-	<div class="borderwrap">
-		<div class="maintitle">{$L_MEMBERLIST}</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<tr>
-				<td class="subtitle">{$L_USERNAME}</td>
-				<td class="subtitle" align="center">{$L_POSTS}</td>
-				<td class="subtitle" align="center">{$L_REGISTERED}</td>
-				<td class="subtitle" align="center">{$L_AVATAR}</td>
-				<td class="subtitle" align="center">{$L_ONLINESTATUS}</td>
-			</tr>
-			<list:list id="memberlist">
-			<list:default list="memberlist">
-			<tr>
-				<td class="alt3" colspan="6">
-					<div class="outset_box">
-						<br />
-						<strong>{$L_NOMEMBERS}</strong>
-						<br /><br />
-					</div>
-				</td>
-			</tr>
-			</list:default>
-			<list:item list="memberlist">
-			<list:switch list="memberlist" var="row_class" a="alt1" b="alt3">
-			<tr>
-				<td class="{$row_class}">
-					<a href="member.php?id={$id}" title="{$L_PROFILE}" style="font-weight: bold; color: #{$group_color};">{$name}</a>
-					<div class="smalltext">
-						<if:if var="group_avatar" eq="">
-						<if:if var="group_nicename" noteq="">{$group_nicename}</if:if>
-						<if:else />
-						<img src="tmp/upload/group_avatars/{$group_avatar}" border="0" alt="{$group_nicename}" />
-						</if:if>
-						<if:if var="user_title" noteq=""><div>{$user_title}</div></if:if>
-					</div>
-				</td>
-				<td class="{$row_class}" align="center"><span class="smalltext">{$num_posts}</span></td>
-				<td class="{$row_class}" align="center"><span class="smalltext"><core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span></span></td>
-				<td class="{$row_class}" align="center">
-					<if:if var="avatar" eq="1"><img src="viewfile.php?act=avatar&amp;id={$user_id}" alt="" border="" /></if:if>
-				</td>
-				<td class="{$row_class}" align="center"><img src="Images/{$IMG_DIR}/Buttons/{$LANG}/{$online}.gif" alt="" border="0" /></td>
-			</tr>
-			</list:switch>
-			</list:item>
-			</list:list>
-		</table>
-	</div>
+	<div class="header"><div class="title">{$L_MEMBERLIST}</div></div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td class="subheader">{$L_USERNAME}</td>
+			<td class="subheader" align="center">{$L_POSTS}</td>
+			<td class="subheader" align="center">{$L_REGISTERED}</td>
+			<td class="subheader" align="center">{$L_AVATAR}</td>
+			<td class="subheader" align="center">{$L_ONLINESTATUS}</td>
+		</tr>
+		<list:list id="memberlist">
+		<list:default list="memberlist">
+		<tr>
+			<td class="alt3" colspan="6">
+				<div class="outset_box">
+					<br />
+					<strong>{$L_NOMEMBERS}</strong>
+					<br /><br />
+				</div>
+			</td>
+		</tr>
+		</list:default>
+		<list:item list="memberlist">
+		<list:switch list="memberlist" var="row_class" a="alt1" b="alt3">
+		<tr>
+			<td class="{$row_class}">
+				<a href="member.php?id={$id}" title="{$L_PROFILE}" style="font-weight: bold; color: #{$group_color};">{$name}</a>
+				<div class="smalltext">
+					<if:if var="group_avatar" eq="">
+					<if:if var="group_nicename" noteq="">{$group_nicename}</if:if>
+					<if:else />
+					<img src="tmp/upload/group_avatars/{$group_avatar}" border="0" alt="{$group_nicename}" />
+					</if:if>
+					<if:if var="user_title" noteq=""><div>{$user_title}</div></if:if>
+				</div>
+			</td>
+			<td class="{$row_class}" align="center"><span class="smalltext">{$num_posts}</span></td>
+			<td class="{$row_class}" align="center"><span class="smalltext"><core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span></span></td>
+			<td class="{$row_class}" align="center">
+				<if:if var="avatar" eq="1"><img src="viewfile.php?act=avatar&amp;id={$user_id}" alt="" border="" /></if:if>
+			</td>
+			<td class="{$row_class}" align="center"><img src="Images/{$IMG_DIR}/Buttons/{$LANG}/{$online}.gif" alt="" border="0" /></td>
+		</tr>
+		</list:switch>
+		</list:item>
+		</list:list>
+	</table>
 </div>
+<div class="spacer"><div class="footer_block"><div>&nbsp;</div></div></div>
 <!-- / Member List -->
 
 <page:navigator id="memberlist_pager">
@@ -105,62 +104,58 @@
 
 <maps:if var="memberlist_sort" method="can_view">
 <!-- Dsiplay Options -->
-<br />
 <form action="member.php" method="get" enctype="multipart/form-data">
 <input type="hidden" name="act" value="list" />
 <input type="hidden" name="start" value="0" />
 <input type="hidden" name="sort" value="{$ml_sort}" />
 
 <div class="spacer">
-	<div class="borderwrap">
-		<div class="maintitle">{$L_DISPLAYOPTIONS}</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<tr>
-				<td class="alt1" width="24%" align="center">
-					{$L_SORTRESULTSBY}:
-				</td>
-				<td class="alt3" width="24%" align="center">
-					<div class="smalltext">
-						<select name="sort" id="sort" style="width: 125px;">
-							<option value="created" selected="selected">{$L_REGISTERED}</option>
-							<option value="name" >{$L_USERNAME}</option>
-							<option value="las_seen">{$L_LASTSEEN}</option>
-						</select>
-						<br />
-						{$L_IN}
-						<select name="order" id="order" style="width:125px">
-							<option value="DESC">{$L_DESCENDING}</option>
-							<option value="ASC">{$L_ASCENDING}</option>
-						</select>
-						<script type="text/javascript">
-							d.setIndex('{$search_sort}', 'sort');
-							d.setIndex('{$search_order}', 'order');
-						</script>
-					</div>
-				</td>
-				<td class="alt1" width="24%" align="center">
-					{$L_LIMIT}:
-				</td>
-				<td class="alt3" width="24%" align="center">
-					<select name="limit" id="limit" class="smalltext" style="width: 50px;">
-						<option value="5">5</option>
-						<option value="10">10</option>
-						<option value="20">20</option>
-						<option value="30">30</option>
-						<option value="40">40</option>
-						<option value="50">50</option>
-					</select>
-					<script type="text/javascript">d.setIndex({$ml_limit}, 'limit');</script>
-				</td>
-			</tr>
-			<tr>
-				<td class="subtitle" colspan="4" align="center">
-					<input type="submit" value="{$L_GO}" class="button" />
-				</td>
-			</tr>
-		</table>
-	</div>
+	<div class="header"><div class="title">{$L_DISPLAYOPTIONS}</div></div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td class="alt1" width="24%" align="center">
+				{$L_SORTRESULTSBY}:
+			</td>
+			<td class="alt1" width="24%" align="center">
+				<select name="sort" id="sort" class="inputbox" style="width: 125px;">
+					<option value="created" selected="selected">{$L_REGISTERED}</option>
+					<option value="name" >{$L_USERNAME}</option>
+					<option value="las_seen">{$L_LASTSEEN}</option>
+				</select>
+				<br />
+				{$L_IN}
+				<select name="order" id="order" class="inputbox" style="width:125px">
+					<option value="DESC">{$L_DESCENDING}</option>
+					<option value="ASC">{$L_ASCENDING}</option>
+				</select>
+				<script type="text/javascript">
+					d.setIndex('{$search_sort}', 'sort');
+					d.setIndex('{$search_order}', 'order');
+				</script>
+			</td>
+			<td class="alt1" width="24%" align="center">
+				{$L_LIMIT}:
+			</td>
+			<td class="alt1" width="24%" align="center">
+				<select name="limit" id="limit" class="inputbox" style="width: 50px;">
+					<option value="5">5</option>
+					<option value="10">10</option>
+					<option value="20">20</option>
+					<option value="30">30</option>
+					<option value="40">40</option>
+					<option value="50">50</option>
+				</select>
+				<script type="text/javascript">d.setIndex({$ml_limit}, 'limit');</script>
+			</td>
+		</tr>
+		<tr>
+			<td class="base3" colspan="4" align="center">
+				<input type="submit" value="{$L_GO}" class="button" />
+			</td>
+		</tr>
+	</table>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 </form>
 <!-- / Display Options -->
 </maps:if>

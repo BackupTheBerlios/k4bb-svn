@@ -1,10 +1,10 @@
 <is:mod>
 <if:if var="nojs" eq="0">
 <!-- Moderating Panel -->
-<div id="modpanel_menu" class="borderwrap" style="display: none;">
+<div id="modpanel_menu" style="display: none;">
 	<table cellspacing="{$style_cellspacing}" class="table">
 		<if:if var="modpanel" eq="1"><if:if var="forum_forum_id" noteq="0">
-		<tr><td class="subtitle">{$L_POSTS}</td></tr>
+		<tr><td class="supheader">{$L_POSTS}</td></tr>
 		<tr>
 			<td class="alt1" nowrap="nowrap"><a href="viewforum.php?f={$forum_forum_id}&amp;queued=1" title="{$L_VIEWQUEUEDTOPICS}" class="smalltext">{$L_VIEWQUEUEDTOPICS}</a></td>
 		</tr>
@@ -15,7 +15,7 @@
 			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=viewbpreports&amp;id={$forum_forum_id}" title="{$L_VIEWBADPOSTREPORTS}" class="smalltext">{$L_VIEWBADPOSTREPORTS}</a></td>
 		</tr>
 		</if:if></if:if>
-		<tr><td class="subtitle">{$L_MISCELLANEOUS}</td></tr>
+		<tr><td class="supheader">{$L_MISCELLANEOUS}</td></tr>
 		<tr>
 			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=baniprange" title="{$L_BANIPRANGE}" class="smalltext">{$L_BANIPRANGE}</a></td>
 		</tr>
@@ -24,7 +24,7 @@
 			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=manage_attachments&amp;id={$forum_forum_id}" title="{$L_MANAGEATTACHMENTS}" class="smalltext">{$L_MANAGEATTACHMENTS}</a></td>
 		</tr>
 		</if:if></if:if>
-		<tr><td class="subtitle">{$L_USERS}</td></tr>
+		<tr><td class="supheader">{$L_USERS}</td></tr>
 		<tr>
 			<td class="alt1" nowrap="nowrap"><a href="mod.php?act=bannedips" title="{$L_VIEWBANNEDIPS}" class="smalltext">{$L_VIEWBANNEDIPS}</a></td>
 		</tr>

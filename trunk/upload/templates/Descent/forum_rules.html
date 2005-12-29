@@ -1,22 +1,21 @@
 <if:if var="forum_forum_rules" noteq="">
 <!-- Forum Rules -->
 <div class="spacer">
-	<div class="borderwrap">
-		<div class="maintitle" id="fr_maintitle">
+	<div class="header">
+		<div class="title" id="fr_maintitle">
 			<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_fr', 'forumrules', 'fr_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_fr" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
 			{$L_FORUMRULES}
 		</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="forumrules">
-			<tr>
-				<td class="alt3">
-					<div class="outset_box">
-						{$forum_forum_rules}
-					</div>
-				</td>
-			</tr>
-		</table>
 	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="forumrules">
+		<tr>
+			<td class="alt3">
+				<div class="outset_box">
+					{$forum_forum_rules}
+				</div>
+			</td>
+		</tr>
+	</table>
 </div>
 <!-- / Forum Rules -->
-<br />
 </if:if>

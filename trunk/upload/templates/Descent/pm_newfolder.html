@@ -1,29 +1,30 @@
 <form:form name="folder_info" id="folder_info" action="{$newfolder_action}" method="post" enctype="multipart/form-data">
-<div class="spacer">
-	<div class="borderwrap">
-		<div class="maintitle">{$L_CREATESTORAGEFOLDER}<if:if var="folder_name" noteq="">: <span style="font-weight: normal;">{$folder_name}</span></if:if></div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<tr>
-				<td width="30%" class="alt3"><strong>{$L_NAME}:</strong></td>
-				<td width="70%" class="alt1">
-					<input type="text" name="name" id="name" class="inputbox" maxlength="50" value="{$folder_name}" />
-					<form:error id="name_error" for="name" setclass="inputfailed" regex=".+">{$L_NEEDPMFOLDERNAME}</form:error>
-				</td>
-			</tr>
-			<tr>
-				<td width="30%" class="alt3"><strong>{$L_DESCRIPTION}:</strong></td>
-				<td width="70%" class="alt1">
-					<textarea name="description" id="description" class="inputbox" rows="2" cols="50">{$folder_description}</textarea>
-					<form:error id="description_error" for="description" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_NEEDPMFOLDERDESC}</form:error>
-				</td>
-			</tr>
-			<tr>
-				<td class="subtitle" colspan="2">
-					<input type="submit" class="button" value="{$L_SAVE}" />
-					<input type="reset" class="button" value="{$L_RESET}" />
-				</td>
-			</tr>
-		</table>
-	</div>
+<div class="header">
+	<div class="title">{$L_CREATESTORAGEFOLDER}<if:if var="folder_name" noteq="">: <span style="font-weight: normal;">{$folder_name}</span></if:if></div>
 </div>
+<div class="spacer">	
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td width="30%" class="alt1"><strong>{$L_NAME}:</strong></td>
+			<td width="70%" class="alt1">
+				<input type="text" name="name" id="name" class="inputbox" maxlength="50" value="{$folder_name}" />
+				<form:error id="name_error" for="name" setclass="inputfailed" regex=".+">{$L_NEEDPMFOLDERNAME}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td width="30%" class="alt2"><strong>{$L_DESCRIPTION}:</strong></td>
+			<td width="70%" class="alt2">
+				<textarea name="description" id="description" class="inputbox" rows="2" cols="50">{$folder_description}</textarea>
+				<form:error id="description_error" for="description" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_NEEDPMFOLDERDESC}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td class="base3" colspan="2">
+				<input type="submit" class="button" value="{$L_SAVE}" />
+				<input type="reset" class="button" value="{$L_RESET}" />
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="footer_block"><div>&nbsp;</div></div>
 </form:form>

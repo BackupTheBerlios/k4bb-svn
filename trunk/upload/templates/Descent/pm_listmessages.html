@@ -1,44 +1,37 @@
 <div class="spacer">
-	<div class="borderwrap">
-		<div class="maintitle">{$L_LISTMESSAGES}: <span style="font-weight: normal;">{$folder_name}</span></div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<tr>
-				<td class="alt3">
-					<div class="outset_box">
-						<fieldset>
-							<legend>{$L_FOLDEROPTIONS}</legend>
-							<span class="smalltext">{$L_PMSGSTATS} ({$pm_usedpercent}%)</span><br />
-							<div style="border:1px solid #000000;padding:1px;width:99%;">
-								<div style="width:100%;height:20px;background-color:green;" align="left">
-									<div style="width:{$pm_usedpercent}%;height:20px;background-color:#FF0000;"></div>
-								</div>
-							</div>
-							
-							<hr />
-
-							<div style="text-align: right;">
-								<form action="member.php" method="get" enctype="multipart/form-data">
-									<input type="hidden" name="act" value="usercp" />
-									<input type="hidden" name="view" value="pmfolder" />
-									{$L_FOLDERJUMP}:&nbsp;
-									<select name="folder" id="folder" class="smalltext">
-										<list:list id="pmfolders">
-										<list:item list="pmfolders">
-										<if:if var="id" noteq="folder_id"><option value="{$id}">&nbsp;&middot; {$name}</option><if:else /><option style="font-weight: bold;" value="{$id}">{$name}</option></if:if>
-										</list:item>
-										</list:list>
-									</select>
-									<input type="submit" value="{$L_GO}" class="button" />
-								</form>
-							</div>
-						</fieldset>
+	<div class="header"><div class="title">{$L_LISTMESSAGES}: <span style="font-weight: normal;">{$folder_name}</span></div></div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td class="alt3">
+				<div class="outset_box">
+					<span class="smalltext">{$L_PMSGSTATS} ({$pm_usedpercent}%)</span><br />
+					<div style="border:1px solid #000000;padding:1px;width:99%;">
+						<div style="width:100%;height:20px;background-color:green;" align="left">
+							<div style="width:{$pm_usedpercent}%;height:20px;background-color:#FF0000;"></div>
+						</div>
 					</div>
-				</td>
-			</tr>
-		</table>
-	</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="base3" style="text-align: center;">
+				<form action="member.php" method="get" enctype="multipart/form-data">
+					<input type="hidden" name="act" value="usercp" />
+					<input type="hidden" name="view" value="pmfolder" />
+					{$L_FOLDERJUMP}:&nbsp;
+					<select name="folder" id="folder" class="inputbox">
+						<list:list id="pmfolders">
+						<list:item list="pmfolders">
+						<if:if var="id" noteq="folder_id"><option value="{$id}">&nbsp;&middot; {$name}</option><if:else /><option style="font-weight: bold;" value="{$id}">{$name}</option></if:if>
+						</list:item>
+						</list:list>
+					</select>
+					<input type="submit" value="{$L_GO}" class="button" />
+				</form>
+			</td>
+		</tr>
+	</table>
 </div>
-<br />
+<div class="footer_block"><div>&nbsp;</div></div>
 <table width="100%" cellspacing="0">
 	<tr>
 		<td width="50%" align="left"><span class="title_link">{$folder_name}</span></td>
@@ -65,61 +58,60 @@
 	</tr>
 </table>
 <form action="member.php?act=usercp&amp;view=pmperformact" method="post" enctype="multipart/form-data">
+<div class="header"><div class="title">{$L_MESSAGES}</div></div>
 <div class="spacer">
-	<div class="borderwrap">
-		<div class="maintitle">{$L_MESSAGES}</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<tr>
-				<td class="subtitle">&nbsp;</td>
-				<td class="subtitle" width="60%">{$L_SUBJECT}/{$L_FROM}</td>
-				<td class="subtitle" width="3%" align="center">&nbsp;{$L_REPLIES}&nbsp;</td>
-				<td class="subtitle" width="30%" align="center">&nbsp;{$L_SENTON}&nbsp;</td>
-				<td class="subtitle" width="3%" align="center">&nbsp;{$L_SELECT}&nbsp;</td>
-			</tr>
-			<list:list id="pmessages">
-			<list:default list="pmessages">
-			<tr>
-				<td class="alt3" colspan="5">
-					<div class="outset_box" style="text-align: center;">
-						<br />
-						<strong>{$L_NOPRIVATEMESSAGES}</strong>
-						<br /><br />
-					</div>
-				</td>
-			</tr>
-			</list:default>
-			<list:item list="pmessages">
-			<list:switch list="pmessages" var="row_class" a="alt1" b="alt2">
-			<tr>
-				<td class="{$row_class}" style="text-align: center;"><img src="tmp/upload/posticons/{$posticon}" alt="" border="" /></td>
-				<td class="{$row_class}">
-					<a href="{$url}"><if:if var="member_has_read" eq="0"><strong></if:if><core:truncate length="40" append="...">{$name}</core:truncate></a><if:if var="member_has_read" eq="0"></strong></if:if></a><br />
-					<span class="smalltext">{$L_FROM} <a href="member.php?id={$poster_id}" title="{$poster_name}">{$poster_name}</a></span>
-				</td>
-				<td class="{$row_class}" style="text-align: center;"><a href="member.php?id={$poster_id}">{$num_replies}</a></td>
-				<td class="{$row_class}" style="text-align: center;" nowrap="nowrap">
-					<span class="smalltext"><core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span></span>
-				</td>
-				<td class="{$row_class}" style="text-align: center;">
-					<span class="cbStyled" id="style_checkbox{$id}"><input type="checkbox" name="pmessage[]" id="pm{$pm_id}" value="{$pm_id}" /></span>
-				</td>
-			</tr>
-			</list:switch>
-			</list:item>
-			</list:list>
-			<tr>
-				<td class="subtitle" colspan="5" style="text-align: right;">
-					<input type="hidden" name="original_folder" value="{$folder_id}" />
-					<select name="action" id="action" class="smalltext">
-						<option value="delete">{$L_DELETEPMESSAGES}</option>
-						<option value="move">{$L_MOVEPMESSAGES}</option>
-					</select>
-					<input type="submit" value="{$L_GO}" class="button" />
-				</td>
-			</tr>
-		</table>
-	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td class="subheader">&nbsp;</td>
+			<td class="subheader" width="60%">{$L_SUBJECT}/{$L_FROM}</td>
+			<td class="subheader" width="3%" align="center">&nbsp;{$L_REPLIES}&nbsp;</td>
+			<td class="subheader" width="30%" align="center">&nbsp;{$L_SENTON}&nbsp;</td>
+			<td class="subheader" width="3%" align="center">&nbsp;{$L_SELECT}&nbsp;</td>
+		</tr>
+		<list:list id="pmessages">
+		<list:default list="pmessages">
+		<tr>
+			<td class="alt3" colspan="5">
+				<div class="outset_box" style="text-align: center;">
+					<br />
+					<strong>{$L_NOPRIVATEMESSAGES}</strong>
+					<br /><br />
+				</div>
+			</td>
+		</tr>
+		</list:default>
+		<list:item list="pmessages">
+		<list:switch list="pmessages" var="row_class" a="alt1" b="alt2">
+		<tr>
+			<td class="{$row_class}" style="text-align: center;"><img src="tmp/upload/posticons/{$posticon}" alt="" border="" /></td>
+			<td class="{$row_class}">
+				<a href="{$url}"><if:if var="member_has_read" eq="0"><strong></if:if><core:truncate length="40" append="...">{$name}</core:truncate></a><if:if var="member_has_read" eq="0"></strong></if:if></a><br />
+				<span class="smalltext">{$L_FROM} <a href="member.php?id={$poster_id}" title="{$poster_name}">{$poster_name}</a></span>
+			</td>
+			<td class="{$row_class}" style="text-align: center;"><a href="member.php?id={$poster_id}">{$num_replies}</a></td>
+			<td class="{$row_class}" style="text-align: center;" nowrap="nowrap">
+				<span class="smalltext"><core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span></span>
+			</td>
+			<td class="{$row_class}" style="text-align: center;">
+				<span class="cbStyled" id="style_checkbox{$id}"><input type="checkbox" name="pmessage[]" id="pm{$pm_id}" value="{$pm_id}" /></span>
+			</td>
+		</tr>
+		</list:switch>
+		</list:item>
+		</list:list>
+		<tr>
+			<td class="base3" colspan="5" style="text-align: center;">
+				<input type="hidden" name="original_folder" value="{$folder_id}" />
+				<select name="action" id="action" class="inputbox">
+					<option value="delete">{$L_DELETEPMESSAGES}</option>
+					<option value="move">{$L_MOVEPMESSAGES}</option>
+				</select>
+				<input type="submit" value="{$L_GO}" class="button" />
+			</td>
+		</tr>
+	</table>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 </form>
 <page:navigator id="pms_pager">
 <div align="right">

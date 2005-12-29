@@ -310,6 +310,8 @@ class PostDraft extends FAAction {
 			foreach($forum as $key => $val)
 				$request['template']->setVar('forum_'. $key, $val);
 			
+			$request['template']->setVar('is_topic', 1);
+
 			if(!USE_AJAX) {
 
 				/* Set the the button display options */
@@ -460,6 +462,8 @@ class EditTopic extends FAAction {
 		$request['template']->setVar('emoticons_per_row_remainder', $request['template']->getVar('smcolumns')-1);
 		
 		$request['template']->setVar('newtopic_action', 'newtopic.php?act=updatetopic');
+
+		$request['template']->setVar('is_topic', 1);
 		
 		/* Create our editor */
 		create_editor($request, $topic['body_text'], 'post', $forum);

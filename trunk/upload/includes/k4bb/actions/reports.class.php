@@ -130,19 +130,17 @@ class SendBadPostReport extends FAAction {
 			return $action->execute($request);
 		}
 		
-		$insert		= $request['dba']->prepareStatement("INSERT INTO ". K4BADPOSTREPORTS ." (category_id,forum_id,post_id,post_id,message,user_id,user_name,poster_id,poster_name,created) VALUES (?,?,?,?,?,?,?,?,?,?)");
+		$insert		= $request['dba']->prepareStatement("INSERT INTO ". K4BADPOSTREPORTS ." (forum_id,post_id,message,user_id,user_name,poster_id,poster_name,created) VALUES (?,?,?,?,?,?,?,?)");
 		
 		// category_id,forum_id,post_id,post_id,message,user_id,user_name,poster_id,poster_name,created
-		$insert->setInt(1, $post['category_id']);
-		$insert->setInt(2, $post['forum_id']);
-		$insert->setInt(3, $post['post_id']);
-		$insert->setInt(4, @$post['post_id']);
-		$insert->setString(5, k4_htmlentities($_REQUEST['report'], ENT_QUOTES));
-		$insert->setInt(6, $request['user']->get('id'));
-		$insert->setString(7, $request['user']->get('name'));
-		$insert->setInt(8, $post['poster_id']);
-		$insert->setString(9, $post['poster_name']);
-		$insert->setInt(10, time());
+		$insert->setInt(1, $post['forum_id']);
+		$insert->setInt(2, $post['post_id']);
+		$insert->setString(3, k4_htmlentities($_REQUEST['report'], ENT_QUOTES));
+		$insert->setInt(4, $request['user']->get('id'));
+		$insert->setString(5, $request['user']->get('name'));
+		$insert->setInt(6, $post['poster_id']);
+		$insert->setString(7, $post['poster_name']);
+		$insert->setInt(8, time());
 		
 		/* Insert the report */
 		$insert->executeUpdate();
@@ -257,19 +255,17 @@ class ViewBadPostReports extends FAAction {
 class DeleteBadPostReport extends FAAction {
 	function execute(&$request) {
 		
-		if(!isset($_REQUEST['id']) || !$_REQUEST['id'] || intval($_REQUEST['id']) == 0) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
-			$action = new K4InformationAction(new K4LanguageElement('L_REPORTDOESNTEXIST'), 'content', FALSE);
+		/* set the breadcrumbs bit */
+		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 
+		if(!isset($_REQUEST['id']) || !$_REQUEST['id'] || intval($_REQUEST['id']) == 0) {
+			$action = new K4InformationAction(new K4LanguageElement('L_REPORTDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
 		
 		$report				= $request['dba']->getRow("SELECT * FROM ". K4BADPOSTREPORTS ." WHERE id = ". intval($_REQUEST['id']));	
 		
 		if(!$report || !is_array($report) || empty($report)) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_REPORTDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
@@ -278,19 +274,13 @@ class DeleteBadPostReport extends FAAction {
 		
 		/* Check the forum data given */
 		if(!$forum || !is_array($forum) || empty($forum)) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
-
 			return $action->execute($request);
 		}
 			
 		/* Make sure the we are trying to post into a forum */
 		if(!($forum['row_type'] & FORUM)) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 			$action = new K4InformationAction(new K4LanguageElement('L_CANTMODACATEGORY'), 'content', FALSE);
-
 			return $action->execute($request);
 		}
 
@@ -302,9 +292,7 @@ class DeleteBadPostReport extends FAAction {
 		if(is_moderator($request['user']->getInfoArray(), $forum)) {
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_DELETEREPORT', $forum);
 			$request['dba']->executeUpdate("DELETE FROM ". K4BADPOSTREPORTS ." WHERE id = ". intval($report['id']));
-		
 			$action = new K4InformationAction(new K4LanguageElement('L_REMOVEDBADPOSTREPORT'), 'content', FALSE, referer(), 3);
-
 			return $action->execute($request);
 		} else {
 			no_perms_error($request);
@@ -337,25 +325,35 @@ class BadPostReportIterator extends FAProxyIterator {
 	function current() {
 		$temp					= parent::current();
 				
-		if($temp['post_id'] == 0) {
-			$topic				= $this->dba->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($temp['post_id']));
-
-			$temp['topic_name']	= $topic['name'];
-			$temp['url']		= 'viewtopic.php?id='. $topic['post_id'];
-			$temp['post_id']	= $topic['post_id'];
-
-			$this->topics[$temp['post_id']] = $topic;
-
-			$temp				= array_merge($temp, $topic);
-		} else {
-			$reply				= $this->dba->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($temp['post_id']));
-			$temp['post_id']	= $reply['post_id'];
-			$temp['views']		= '--';
-			$temp['url']		= 'findpost.php?id='. $reply['post_id'];
-			$temp['topic_name'] = !isset($this->topics[$reply['post_id']]) ? $this->dba->getValue("SELECT name FROM ". K4POSTS ." WHERE post_id = ". intval($reply['post_id'])) : $this->topics[$reply['post_id']]['name'];
+//		if($temp['post_id'] == 0) {
+			$post				= $this->dba->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($temp['post_id']));
 			
-			$temp				= array_merge($temp, $reply);
-		}
+			if($post['row_type'] & TOPIC) {
+				$temp['topic_name']	= $post['name'];
+				$temp['url']		= 'viewtopic.php?id='. $topic['post_id'];
+				$temp['topic_id']	= $post['post_id'];
+
+				$this->topics[$temp['post_id']] = $post;
+
+				
+			} else {
+				$temp['topic_name']	= !isset($this->topics[$post['parent_id']]) ? $this->dba->getValue("SELECT name FROM ". K4POSTS ." WHERE post_id = ". intval($post['parent_id'])) : $this->topics[$post['parent_id']]['name'];;
+				$this->topics[$post['parent_id']]['name'] = $temp['topic_name'];
+				$temp['url']		= 'findpost.php?id='. $post['post_id'];
+				$temp['topic_id']	= $post['parent_id'];
+			}
+
+			$temp = array_merge($temp, $post);
+
+//		} else {
+//			$reply				= $this->dba->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($temp['post_id']));
+//			$temp['post_id']	= $reply['post_id'];
+//			$temp['views']		= '--';
+//			$temp['url']		= 'findpost.php?id='. $reply['post_id'];
+//			$temp['topic_name'] = !isset($this->topics[$reply['post_id']]) ? $this->dba->getValue("SELECT name FROM ". K4POSTS ." WHERE post_id = ". intval($reply['post_id'])) : $this->topics[$reply['post_id']]['name'];
+//			
+//			$temp				= array_merge($temp, $reply);
+//		}
 
 		if($temp['poster_id'] > 0) {
 			$user					= !isset($this->users[$temp['poster_id']]) ? $this->dba->getRow("SELECT ". $this->qp['user'] . $this->qp['userinfo'] ." FROM ". K4USERS ." u LEFT JOIN ". K4USERINFO ." ui ON u.id=ui.user_id WHERE u.id=". intval($temp['poster_id'])) : $this->users[$temp['poster_id']];

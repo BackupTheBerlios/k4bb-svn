@@ -250,11 +250,30 @@ class K4ForumsIterator extends FAProxyIterator {
 
 		/* Cache this forum in the session */
 		cache_forum($temp);
-
-		/* Set the forum's icon */
-		$temp['forum_icon']	= 'forum_off.gif';
-		forum_icon($temp, $temp['forum_icon']);
 		
+		/**
+		 * Do the icon
+		 */
+		switch($temp['row_type']) {
+			case FORUM: {
+				$temp['forum_icon']	= 'forum_off';
+				forum_icon($temp, $temp['forum_icon']);
+				break;
+			}
+			case GALLERY: {
+				$temp['forum_icon']	= 'forum_gallery';
+				break;
+			}
+			case METAFORUM: {
+				$temp['forum_icon']	= 'forum_meta';
+				break;
+			}
+			case ARCHIVEFORUM: {
+				$temp['forum_icon']	= 'forum_archive';
+				break;
+			}
+		}
+
 		/* Set a nice representation of what level we're on */
 		$temp['level']		= @str_repeat('&nbsp;&nbsp;&nbsp;', $this->level);
 						
@@ -320,6 +339,8 @@ class K4ForumsIterator extends FAProxyIterator {
 //		bb_settopic_cache_item('forums', serialize($this->forums), time() + 3600 * 25 * 5);
 		
 		$temp['safe_description']	= strip_tags($temp['description']);
+		
+		$temp['forum']				= $temp['row_type'] == CATEGORY ? 0 : 1;
 
 		/* Should we free the result? */
 		if(!$this->hasNext())

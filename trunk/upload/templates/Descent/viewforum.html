@@ -143,8 +143,8 @@
 <br />
 <!-- Forum Display Options -->
 <div class="spacer">
-	<div class="borderwrap">
-		<div class="maintitle" id="f{$forum_id}do_maintitle">
+	<div class="header">
+		<div class="title" id="f{$forum_id}do_maintitle">
 			<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapsedo_{$forum_id}', 'do_{$forum_id}', 'f{$forum_id}do_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapsedo_{$forum_id}" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
 			{$L_DISPLAYOPTIONS}
 		</div>
@@ -265,7 +265,7 @@
 <!-- / Forum User Posting Options -->
 
 <!-- Forum Options -->
-<div id="forumoptions_menu" class="borderwrap" style="display: none;">
+<div id="forumoptions_menu" class="header" style="display: none;">
 	<table width="190" cellspacing="{$style_cellspacing}" class="table">
 		<is:logged>
 		<tr>

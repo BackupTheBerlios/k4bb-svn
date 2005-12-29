@@ -18,7 +18,7 @@
 </page:navigator>
 
 <!-- Found Users -->
-<div class="outset_box_small">
+<div class="spacer">
 	<fieldset>
 		<legend>{$L_LEGEND}</legend>
 		<span style="background-color: #000000;">&nbsp;&nbsp;</span> {$L_BANUSER}<br />
@@ -27,45 +27,45 @@
 		<span style="background-color: #FFFF00;">&nbsp;&nbsp;</span> {$L_WARNLOW}
 	</fieldset>
 </div>
-<br />
 <div class="spacer">
-	<div class="borderwrap">
-		<div class="maintitle">{$L_SEARCHRESULTS}: <span style="font-weight: normal;">{$search_num_results} {$L_RESULTSRETURNED}</span></div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<list:list id="users">
-			<list:default list="users">
-			<tr>
-				<td class="alt3">
-					<div class="outset_box" align="center">
-						<br />
-						<strong>{$L_NOSEARCHRESULTS}</strong>
-						<br /><br />
-					</div>
-				</td>
-			</tr>
-			</list:default>
-			<list:item list="users">
-			<list:switch list="users" var="row_class" a="alt1" b="alt3">
-			<tr>
-				<td class="{$row_class}">
-					<div style="float: right;">
-						<maps:if var="banusers" method="can_add">
-							<if:if var="banned" eq="0"><a href="mod.php?act=banuser&amp;id={$id}" title="{$L_BANUSER}" style="color: #FFFFFF;background-color: #000000;">[{$L_BANUSER}]</a><if:else /><a href="mod.php?act=banuser&amp;id={$id}" title="{$L_UNBANUSER}" style="color: #000000;background-color: #FFFFFF;">[{$L_UNBANUSER}]</a></if:if> 
-						</maps:if>
-						<maps:if var="warnuser" method="can_add"><a href="mod.php?act=warnuser&amp;id={$id}" title="{$L_WARNUSER}" style="color: #999999;background-color: #{$warn_color};">[{$L_WARNUSER}]</a></maps:if> 
-						<maps:if var="flaguser" method="can_add">
-							<if:if var="flag_level" eq="0"><a href="mod.php?act=flaguser&amp;id={$id}" title="{$L_FLAGUSER}">[{$L_FLAGUSER}]</a><if:else /><a href="mod.php?act=flaguser&amp;id={$id}" title="{$L_UNFLAGUSER}">[{$L_UNFLAGUSER}]</a></if:if>
-						</maps:if>
-					</div>
-					<a href="member.php?id={$user_id}" style="color: #{$group_color};font-weight: {$font_weight};">{$name}</a>
-				</td>
-			</tr>
-			</list:switch>
-			</list:item>
-			</list:list>
-		</table>
-	</div>
+	<div class="header">
+		<div class="title">{$L_SEARCHRESULTS}: <span style="font-weight: normal;">{$search_num_results} {$L_RESULTSRETURNED}</span></div>
+	</div>	
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<list:list id="users">
+		<list:default list="users">
+		<tr>
+			<td class="alt3">
+				<div class="outset_box" align="center">
+					<br />
+					<strong>{$L_NOSEARCHRESULTS}</strong>
+					<br /><br />
+				</div>
+			</td>
+		</tr>
+		</list:default>
+		<list:item list="users">
+		<list:switch list="users" var="row_class" a="alt1" b="alt2">
+		<tr>
+			<td class="{$row_class}">
+				<div style="float: right;">
+					<maps:if var="banusers" method="can_add">
+						<if:if var="banned" eq="0"><a href="mod.php?act=banuser&amp;id={$id}" title="{$L_BANUSER}" style="color: #FFFFFF;background-color: #000000;">[{$L_BANUSER}]</a><if:else /><a href="mod.php?act=banuser&amp;id={$id}" title="{$L_UNBANUSER}" style="color: #000000;background-color: #FFFFFF;">[{$L_UNBANUSER}]</a></if:if> 
+					</maps:if>
+					<maps:if var="warnuser" method="can_add"><a href="mod.php?act=warnuser&amp;id={$id}" title="{$L_WARNUSER}" style="color: #999999;background-color: #{$warn_color};">[{$L_WARNUSER}]</a></maps:if> 
+					<maps:if var="flaguser" method="can_add">
+						<if:if var="flag_level" eq="0"><a href="mod.php?act=flaguser&amp;id={$id}" title="{$L_FLAGUSER}">[{$L_FLAGUSER}]</a><if:else /><a href="mod.php?act=flaguser&amp;id={$id}" title="{$L_UNFLAGUSER}">[{$L_UNFLAGUSER}]</a></if:if>
+					</maps:if>
+				</div>
+				<a href="member.php?id={$user_id}" style="color: #{$group_color};font-weight: {$font_weight};">{$name}</a>
+			</td>
+		</tr>
+		</list:switch>
+		</list:item>
+		</list:list>
+	</table>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 <!-- / Found Users -->
 
 <page:navigator id="users_pager">

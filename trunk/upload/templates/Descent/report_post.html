@@ -2,8 +2,8 @@
 <form:form action="viewtopic.php?act=send_report" name="bad_report" id="bad_report" method="post" enctype="multipart/form-data">
 <input type="hidden" name="<if:if var="post_row_type" eq="8">r<if:else />t</if:if>" value="<if:if var="post_row_type" eq="8">{$post_post_id}<if:else />{$post_post_id}</if:if>" />
 <div class="spacer">
-	<div class="borderwrap">
-		<div class="maintitle">{$L_REPORTPOSTTOMOD}</div>
+	<div class="header">
+		<div class="title">{$L_REPORTPOSTTOMOD}</div>
 		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<tr>
 				<td class="alt3"><strong>{$L_BADPOSTTITLE}</strong></td>

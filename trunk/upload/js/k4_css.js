@@ -25,14 +25,14 @@ function k4css() {
 	level_cs['inline'] = '#00EA06';
 	level_cs['block'] = '#0000EA';
 	level_cs['body'] = '#D70000';
-
+	
 	var _t = this;
 
 	// initialize
 	function init() {
 		_t._init_nodes(document.body);
 		document.write('<div id="css_inline_editor" style="display:none;"><div class="header"><div class="title" id="css_inline_editor_title"> </div></div>');
-		document.write('<div class="spacer"><div class="alt3"><iframe id="css_inline_editor_iframe" src="" frameborder="no" style="width: 100%;height: 200px;"></iframe></div></div>');
+		document.write('<div class="spacer"><div class="alt1"><iframe id="css_inline_editor_iframe" src="" frameborder="no" style="width: 100%;height: 200px;"></iframe></div></div>');
 		document.write('<div class="footer_block"><div style="text-align:center;" id="close_css_editor" onclick="d.getElementById(\'css_inline_editor\').style.display=\'none\';">X &nbsp; X &nbsp; X</div></div></div>');
 	}
 	function _init_nodes(nx) {
@@ -83,13 +83,16 @@ function k4css() {
 	}
 	// un/highlight
 	function _highlight(e, nx) {
-		nx.style.border = '1px solid ' + level_cs[nx._nodeType] + ';';
+		nx.style.borderWidth = '1px';
+		nx.style.borderColor = level_cs[nx._nodeType];
+		nx.style.borderStyle = (nx.className == '' ? 'dotted' : 'solid');
 	}
 	function _unhighlight(e, nx, bt) {
 		nx.style.border = bt;
 	}
 	// editor
 	function _editor(e, nx) {
+		
 		var ex = d.getElementById('css_inline_editor');
 		var ext = d.getElementById('css_inline_editor_title');
 		var ifr = _t._getd(d.getElementById('css_inline_editor_iframe'));
@@ -102,7 +105,7 @@ function k4css() {
 				ex.style.width = '60%';
 				ex.style.display = 'block';
 				ext.innerHTML = 'CSS: ' + t.className + '<br />' + t.title + '';
-				ifr.location.href = 'admin.php?act=css_editstyle&class=' + t.className.replace(/\s/, '+');
+				ifr.location.href = 'admin.php?act=css_editstyle&editor=1&class=' + t.className.replace(/\s/, '+');
 			}
 		}
 	}

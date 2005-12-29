@@ -13,283 +13,212 @@
 
 <core:block id="post_id" hidden="yes"><input type="hidden" name="post_id" id="post_id" value="{$post_post_id}" /></core:block>
 <!-- Post Topic Form -->
-<div class="spacer">
-	<div class="borderwrap">
-		<div class="maintitle">
-			<div style="float:right;" class="smalltext">
-				<strong>{$L_FORUM}:</strong>
-				<a href="viewforum.php?id={$forum_forum_id}" class="smalltext" style="font-weight: normal;" title="{$forum_name}">{$forum_name}</a>
-			</div>
-			<core:block id="post_topic" hidden="yes">
-			{$L_POSTTOPIC}
-			</core:block>
-			<core:block id="edit_post" hidden="yes">
-			{$L_EDITPOST}: <span style="font-weight: normal;">{$post_name}</span>
-			</core:block>
+
+<div class="header">
+	<div class="title">
+		<div style="float:right;" class="smalltext">
+			<strong>{$L_FORUM}:</strong>
+			<a href="viewforum.php?id={$forum_forum_id}" class="smalltext" style="font-weight: normal;" title="{$forum_name}">{$forum_name}</a>
 		</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<tr>
-				<td class="alt3" colspan="2" align="center">
-					
-					<!-- Main Posting Inputs -->
-					<div class="outset_box" align="left">
-						<span class="smalltext" style="float: right;">
-							{$L_LOGGEDAS}
-							<is:logged>
-							<a href="member.php?id={$user_id}" style="text-decoration: underline;">{$user_name}</a>
-							<if:else />
-							<strong>{$L_GUEST}</strong>
-							</is:logged>
-						</span>
-						<table border="0" cellspacing="0">
-							<is:unlogged>
-							<tr>
-								<td>
-									<!-- Poster Name -->
-									<label for="poster_name" class="smalltext">{$L_YOURNAME}</label><br />
-									<input type="text" name="poster_name" id="poster_name" value="{$poster_name}" tabindex="1" size="{$maxuserlength}" class="inputbox" maxlength="{$maxuserlength}" />
-									<!-- / Poster Name -->
-								</td>
-							</tr>
-							</is:unlogged>
-							<tr>
-								<td>
-									<!-- Post Title -->
-									<label for="name" class="smalltext">{$L_POSTTITLE}</label><br />
-									<input type="text" name="name" id="name" value="{$post_name}" tabindex="2" style="width: 500px;" class="inputbox" maxlength="255" />
-									<form:error id="name_error" for="name" setclass="inputfailed" regex=".{{$topicminchars},{$topicmaxchars}}">{$L_TITLETOOSHORT}</form:error>
-									<!-- / Post Title -->
-								</td>
-								<td valign="bottom">
-									<img id="display_posticon" src="tmp/upload/posticons/clear.gif" alt="" />
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<br />
-									<!-- Post Message -->
-									<label for="messagecodex" class="smalltext">{$L_POST}</label><br />
-									
-									<core:import id="editor" file="editor.html" />
-									<form:error id="messagecodex_error" for="messagecodex" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTTOPICMESSAGE}</form:error>
-
-									<!-- / Post Message -->
-
-								</td>
-								<td valign="bottom">
-									<maps:if forum="forum_forum_id" var="emoticons" method="can_add">
-									<list:list id="emoticons">
-									<if:if var="can_wysiwyg" eq="0">
-									<!-- Emoticons -->
-									<table border="0" cellspacing="0">
-										<tr>
-											<td>
-												<fieldset>
-													<legend>{$L_EMOTICONS}</legend>
-													<table cellpadding="3" cellspacing="{$style_cellspacing}" id="posticons">
-														<tr>
-															<list:item list="emoticons">
-															<td align="center">
-																<a href="javascript:emoticon('{$typed}')" title="{$description}"><img src="tmp/upload/emoticons/{$image}" alt="{$description}" border="0" /></a>
-															</td>
-															<list:separator list="emoticons">
-																<list:alternate list="emoticons" count="{@emoticons_per_row}" remainder="{@emoticons_per_row_remainder}">
-																	</tr><tr>
-																</list:alternate>
-															</list:separator>
-															</list:item>
-														</tr>	
-													</table>
-												</fieldset>
-											</td>
-										</tr>
-									</table>
-									<!-- / Emoticons -->
-									</if:if>
-									</list:list>
-									</maps:if>
-								</td>
-							</tr>
-							<maps:if forum="forum_forum_id" var="posticons" method="can_add">
-							<tr>
-								<td colspan="2">
-									<list:list id="posticons">
-									
-									<!-- Post Icons -->
-									<table border="0" cellspacing="0" width="100%">
-										<tr>
-											<td>
-												<fieldset>
-													<legend>{$L_POSTICONS}</legend>
-													<span class="smalltext">{$L_POSTICONSPOSTCHOOSE}</span>
-													<label for="noicon" style="float: left;margin-top: 10px;"><input type="radio" name="posticon" id="noicon" value="clear.gif" checked="checked" onclick="swap_posticon(null)" />&nbsp;{$L_NOICON}</label>
-													<table cellpadding="3" cellspacing="{$style_cellspacing}" id="posticons">
-														<tr>
-															<list:item list="posticons">
-															<td align="center">
-																<label for="pi{$id}">
-																	<input type="radio" name="posticon" id="pi{$id}" value="{$image}" style="float: left;padding-right: 5px;" onclick="swap_posticon('pi_{$id}')" />&nbsp;&nbsp;<img src="tmp/upload/posticons/{$image}" alt="{$description}" id="pi_{$id}" style="margin-right:15px;" />
-																</label>
-															</td>
-															<list:separator list="posticons">
-																<list:alternate list="posticons" count="7" remainder="6">
-																	</tr><tr>
-																</list:alternate>
-															</list:separator>
-															</list:item>
-														</tr>	
-													</table>
-												</fieldset>
-											</td>
-										</tr>
-									</table>
-									<!-- / Post Icons -->
-
-									</list:list>
-								</td>
-							</tr>
-							</maps:if>
-						</table>
-					</div>
-					<!-- / Main Posting Inputs -->
-
-				</td>
-			</tr>
-			<tr>
-				<td class="subtitle" align="center" colspan="2">
-					<input type="hidden" name="submit_type" id="submit_type" value="" />
-					<input <if:if var="nojs" eq="1">name="post"</if:if> type="submit" class="button" value="{$L_SUBMIT}" accesskey="s" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'post'); }" />
-					<core:block id="save_draft">
-					<is:logged>
-						<maps:if forum="forum_forum_id" var="post_save" method="can_add">
-							<input <if:if var="nojs" eq="1">name="draft"</if:if> type="submit" class="button" value="{$L_SAVEDRAFT}" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'draft'); }" />
-						</maps:if>
-					</is:logged>
-					</core:block>
-					<maps:if forum="forum_forum_id" var="post_preview" method="can_add">
-						<input <if:if var="nojs" eq="1">name="preview"</if:if> type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" class="button" value="{$L_PREVIEW}" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'preview');setSendPostPreview('{$newtopic_action}'); }" />
-					</maps:if>
-					<core:block id="load_button" hidden="yes">
-					<if:if var="nojs" eq="0"><input type="button" class="button" value="{$L_LOADDRAFT}" onclick="document.location='newtopic.php?id={$forum_forum_id}&load_drafts=1'" /><if:else /><a href="newtopic.php?id={$forum_forum_id}&load_drafts=1" title="{$L_LOADDRAFT}">{$L_LOADDRAFT}</a></if:if>
-					</core:block>
-					<input type="reset" class="button" value="{$L_RESET}" />
-				</td>
-			</tr>
-		</table>
+		<core:block id="post_topic" hidden="yes">
+		{$L_POSTTOPIC}
+		</core:block>
+		<core:block id="edit_post" hidden="yes">
+		{$L_EDITPOST}: <span style="font-weight: normal;">{$post_name}</span>
+		</core:block>
 	</div>
+</div>
+<div class="spacer">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td class="alt3" colspan="2" align="center">
+				
+				<!-- Main Posting Inputs -->
+				<span class="smalltext" style="float: right;">
+					{$L_LOGGEDAS}
+					<is:logged>
+					<a href="member.php?id={$user_id}" style="text-decoration: underline;">{$user_name}</a>
+					<if:else />
+					<strong>{$L_GUEST}</strong>
+					</is:logged>
+				</span>
+				<table border="0" cellspacing="0">
+					<is:unlogged>
+					<tr>
+						<td>
+							<!-- Poster Name -->
+							<label for="poster_name" class="smalltext">{$L_YOURNAME}</label><br />
+							<input type="text" name="poster_name" id="poster_name" value="{$poster_name}" tabindex="1" size="{$maxuserlength}" class="inputbox" maxlength="{$maxuserlength}" />
+							<!-- / Poster Name -->
+						</td>
+					</tr>
+					</is:unlogged>
+					<tr>
+						<td>
+							<!-- Post Title -->
+							<label for="name" class="smalltext">{$L_POSTTITLE}</label><br />
+							<input type="text" name="name" id="name" value="{$post_name}" tabindex="2" style="width: 500px;" class="inputbox" maxlength="255" />
+							<form:error id="name_error" for="name" setclass="inputfailed" regex=".{{$topicminchars},{$topicmaxchars}}">{$L_TITLETOOSHORT}</form:error>
+							<!-- / Post Title -->
+						</td>
+						<td valign="bottom">
+							<img id="display_posticon" src="tmp/upload/posticons/clear.gif" alt="" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<br />
+							<!-- Post Message -->
+							<label for="messagecodex" class="smalltext">{$L_POST}</label><br />
+							
+							<core:import id="editor" file="editor.html" />
+							<form:error id="messagecodex_error" for="messagecodex" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTTOPICMESSAGE}</form:error>
+
+							<!-- / Post Message -->
+
+						</td>
+						<td valign="bottom">
+							<maps:if forum="forum_forum_id" var="emoticons" method="can_add">
+							<list:list id="emoticons">
+							<if:if var="can_wysiwyg" eq="0">
+							<!-- Emoticons -->
+							<table border="0" cellspacing="0">
+								<tr>
+									<td>
+										<fieldset>
+											<legend>{$L_EMOTICONS}</legend>
+											<table cellpadding="3" cellspacing="{$style_cellspacing}" id="posticons">
+												<tr>
+													<list:item list="emoticons">
+													<td align="center">
+														<a href="javascript:emoticon('{$typed}')" title="{$description}"><img src="tmp/upload/emoticons/{$image}" alt="{$description}" border="0" /></a>
+													</td>
+													<list:separator list="emoticons">
+														<list:alternate list="emoticons" count="{@emoticons_per_row}" remainder="{@emoticons_per_row_remainder}">
+															</tr><tr>
+														</list:alternate>
+													</list:separator>
+													</list:item>
+												</tr>	
+											</table>
+										</fieldset>
+									</td>
+								</tr>
+							</table>
+							<!-- / Emoticons -->
+							</if:if>
+							</list:list>
+							</maps:if>
+						</td>
+					</tr>
+					<maps:if forum="forum_forum_id" var="posticons" method="can_add">
+					<tr>
+						<td colspan="2">
+							<list:list id="posticons">
+							
+							<!-- Post Icons -->
+							<table border="0" cellspacing="0" width="100%">
+								<tr>
+									<td>
+										<fieldset>
+											<legend>{$L_POSTICONS}</legend>
+											<span class="smalltext">{$L_POSTICONSPOSTCHOOSE}</span>
+											<label for="noicon" style="float: left;margin-top: 10px;"><input type="radio" name="posticon" id="noicon" value="clear.gif" checked="checked" onclick="swap_posticon(null)" />&nbsp;{$L_NOICON}</label>
+											<table cellpadding="3" cellspacing="{$style_cellspacing}" id="posticons">
+												<tr>
+													<list:item list="posticons">
+													<td align="center">
+														<label for="pi{$id}">
+															<input type="radio" name="posticon" id="pi{$id}" value="{$image}" style="float: left;padding-right: 5px;" onclick="swap_posticon('pi_{$id}')" />&nbsp;&nbsp;<img src="tmp/upload/posticons/{$image}" alt="{$description}" id="pi_{$id}" style="margin-right:15px;" />
+														</label>
+													</td>
+													<list:separator list="posticons">
+														<list:alternate list="posticons" count="7" remainder="6">
+															</tr><tr>
+														</list:alternate>
+													</list:separator>
+													</list:item>
+												</tr>	
+											</table>
+										</fieldset>
+									</td>
+								</tr>
+							</table>
+							<!-- / Post Icons -->
+
+							</list:list>
+						</td>
+					</tr>
+					</maps:if>
+				</table>
+				<!-- / Main Posting Inputs -->
+
+			</td>
+		</tr>
+		<tr>
+			<td class="base3" align="center" colspan="2">
+				<input type="hidden" name="submit_type" id="submit_type" value="" />
+				<input <if:if var="nojs" eq="1">name="post"</if:if> type="submit" class="button" value="{$L_SUBMIT}" accesskey="s" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'post'); }" />
+				<core:block id="save_draft">
+				<is:logged>
+					<maps:if forum="forum_forum_id" var="post_save" method="can_add">
+						<input <if:if var="nojs" eq="1">name="draft"</if:if> type="submit" class="button" value="{$L_SAVEDRAFT}" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'draft'); }" />
+					</maps:if>
+				</is:logged>
+				</core:block>
+				<maps:if forum="forum_forum_id" var="post_preview" method="can_add">
+					<input <if:if var="nojs" eq="1">name="preview"</if:if> type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" class="button" value="{$L_PREVIEW}" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'preview');setSendPostPreview('{$newtopic_action}'); }" />
+				</maps:if>
+				<core:block id="load_button" hidden="yes">
+				<if:if var="nojs" eq="0"><input type="button" class="button" value="{$L_LOADDRAFT}" onclick="document.location='newtopic.php?id={$forum_forum_id}&load_drafts=1'" /><if:else /><a href="newtopic.php?id={$forum_forum_id}&load_drafts=1" title="{$L_LOADDRAFT}">{$L_LOADDRAFT}</a></if:if>
+				</core:block>
+				<input type="reset" class="button" value="{$L_RESET}" />
+			</td>
+		</tr>
+	</table>
 </div>
 <!-- / Post Topic Form -->
 
-<br />
+<core:import id="post_options" file="post_options.html" />
 
-<!-- Additional Post Options -->
-<div class="spacer">
-	<div class="borderwrap">
-		<div class="maintitle" id="po_maintitle">
-			<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_po', 'postoptions', 'po_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_po" src="Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
-			{$L_ADDITIONALOPTIONS}
-		</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="postoptions" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
-			<tr>
-				<td class="alt3">
-					<div class="outset_box">
-						<fieldset>
-							<legend>{$L_MISCOPTIONS}</legend>
-							<maps:if forum="forum_forum_id" var="html" method="can_add"><input type="checkbox" name="disable_html" id="disable_html" checked="checked" />&nbsp;<label for="disable_html">{$L_DISABLEHTML}</label><br /></maps:if>
-							<!--<input type="checkbox" name="disable_bbcode" id="disable_bbcode" />&nbsp;<label for="disable_bbcode">{$L_DISABLEBBCODE}</label><br />-->
-							<input type="checkbox" name="disable_emoticons" id="disable_emoticons" />&nbsp;<label for="disable_emoticons">{$L_DISABLEEMOTICONS}</label><br />
-							<input type="checkbox" name="disable_aurls" id="disable_aurls" />&nbsp;<label for="disable_aurls">{$L_PARSEURLS}</label><br />
-							<is:logged><input type="checkbox" name="enable_sig" id="enable_sig" checked="checked" />&nbsp;<label for="enable_sig">{$L_ATTACHSIGNATURE}</label><br />
-							<input type="checkbox" name="disable_areply" id="disable_areply" />&nbsp;<label for="disable_areply">{$L_NOTIFYONREPLY}</label></is:logged>
-						</fieldset>
-						<maps:if var="sticky" method="can_add" forum="forum_forum_id">
-						<br />
-						<div align="center">
-							{$L_POSTTOPICAS}: 
-							<input type="radio" name="post_type" id="post_type" value="1" checked="checked" /> {$L_NORMAL}
-							<maps:if var="sticky" method="can_add" forum="forum_forum_id"><input type="radio" name="post_type" id="post_type" value="2" /> {$L_STICKYTOPIC}</maps:if>
-							<maps:if var="announce" method="can_add" forum="forum_forum_id"><input type="radio" name="post_type" id="post_type" value="3" /> {$L_ANNOUNCEMENT}</maps:if>
-							<maps:if var="feature" method="can_add" forum="forum_forum_id"><br /><br /><label for="feature"><input type="checkbox" name="is_feature" id="feature" value="yes" />&nbsp;{$L_FEATURETOPIC}</label></maps:if>
-							<br /><br />
-						</div>
-						<fieldset>
-							<legend><strong>{$L_STICKTOPICFOR}</strong> - {$L_STICKTOPICFOREXPLAIN}</legend>
-							<input type="text" name="post_expire" size="3" maxlength="4" value="{$post_post_expire}" class="inputbox" /> <strong>{$L_DAYS}</strong>
-							<span class="smalltext">{$L_TOPICEXPIREEXPLAIN}</span>
-						</fieldset>
-						</maps:if>
-					</div>
-				</td>
-			</tr>
-		</table>
-	</div>
-</div>
-<!-- / Additional Post Options -->
-
-<maps:if var="attachments" method="can_add" forum="forum_forum_id">
-<br />
-<!-- Attachments Manager -->
-<div class="spacer">
-	<div class="borderwrap">
-		<div class="maintitle" id="am_maintitle">
-			<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_am', 'attachmanage', 'am_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_am" src="Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
-			{$L_ATTACHMENTSMANAGER}
-		</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="attachmanage" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
-			<tr>
-				<td class="alt3">
-					<div class="outset_box">
-						<fieldset>
-							<legend>{$L_SELECTFILES}</legend>
-							<div class="smalltext">{$L_VALIDEXTENSIONS}: {$attachextensions}</div>
-							<input type="hidden" name="MAX_FILE_SIZE" value="{$maxattachsize}" />
-							{$attach_inputs}
-						</fieldset>
-					</div>
-				</td>
-			</tr>
-		</table>
-	</div>
-</div>
-<!-- / Attachments Manager -->
-</maps:if>
+<core:import id="post_attachments" file="post_attachments.html" />
 
 </form:form>
-<br />
+
 <!-- Posting Code Allowances -->
+<div class="subheader" id="pr_maintitle">
+	<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_pr', 'postingrules', 'pr_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_pr" src="Images/{$IMG_DIR}/Icons/collapse_thead<if:if var="nojs" eq="0">_collapsed</if:if>.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+	{$L_POSTINGRULES}
+</div>
 <div class="spacer">
-	<div class="borderwrap">
-		<div class="maintitle" id="pr_maintitle">
-			<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_pr', 'postingrules', 'pr_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_pr" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
-			{$L_POSTINGRULES}
-		</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="postingrules">
-			<tr>
-				<td class="alt3" valign="top">
-					<div align="left" class="minitext">
-						{$posting_code_options}
-					</div>
-				</td>
-				<td class="alt3" valign="top">
-					<div align="right" class="minitext">
-						<table cellspacing="0">
-							<tr>
-								<td valign="top">
-									{$forum_user_reply_options}
-								</td>
-								<td>&nbsp;&nbsp;</td>
-								<td valign="top">
-									{$forum_user_topic_options}
-								</td>
-							</tr>
-						</table>
-					</div>
-				</td>
-			</tr>
-		</table>
-	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="postingrules" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
+		<tr>
+			<td class="alt3" valign="top">
+				<div align="left" class="minitext">
+					{$posting_code_options}
+				</div>
+			</td>
+			<td class="alt3" valign="top">
+				<div align="right" class="minitext">
+					<table cellspacing="0">
+						<tr>
+							<td valign="top">
+								{$forum_user_reply_options}
+							</td>
+							<td>&nbsp;&nbsp;</td>
+							<td valign="top">
+								{$forum_user_topic_options}
+							</td>
+						</tr>
+					</table>
+				</div>
+			</td>
+		</tr>
+	</table>
 </div>
 <!-- / Posting Code Allowances -->
+
+<div class="footer_block"><div>&nbsp;</div></div>
 
 <core:block id="edit_topic" hidden="yes">
 <!-- Edit Topic Javascript -->

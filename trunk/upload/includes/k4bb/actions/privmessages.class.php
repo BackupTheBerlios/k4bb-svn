@@ -399,7 +399,7 @@ class K4DeleteFolder extends FAAction {
 		if($deleted) {
 			$request['dba']->executeUpdate("DELETE FROM ". K4PMFOLDERS ." WHERE id = ". intval($folder['id']));
 
-			$action = new K4InformationAction(new K4LanguageElement('L_DELETEDPMFOLDER', $folder['name']), 'usercp_content', FALSE);
+			$action = new K4InformationAction(new K4LanguageElement('L_DELETEDPMFOLDER', $folder['name']), 'usercp_content', FALSE, 'member.php?act=usercp&view=pmfolders', 3);
 			return $action->execute($request);
 		}	
 

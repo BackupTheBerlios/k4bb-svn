@@ -1,30 +1,27 @@
 <!-- Information Table -->
+<div class="header"><div class="title">{$L_INFORMATION}</div></div>
 <div class="spacer">
-	<div class="borderwrap">
-		<div class="maintitle">{$L_INFORMATION}</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td class="alt3">
+				<div class="outset_box" style="text-align: center;">
+					<br />
+					{$information}
+					<br /><br />
+					<if:if var="redirect_url" noteq=""><br />(<a href="{$redirect_url}" title="{$L_CLICKTONOTWAIT}" class="smalltext">{$L_CLICKTONOTWAIT}</a>)</if:if>
+				</div>
+			</td>
+		</tr>
+		<core:block id="info_back_button">
 			<tr>
-				<td class="alt3">
-					<div class="outset_box" style="text-align: center;">
-						<br />
-						{$information}
-						<br /><br />
-						<if:if var="redirect_url" noteq=""><br />(<a href="{$redirect_url}" title="{$L_CLICKTONOTWAIT}" class="smalltext">{$L_CLICKTONOTWAIT}</a>)</if:if>
-					</div>
+				<td class="base3" style="text-align: center;">
+					<input type="button" class="button" value="{$L_GOBACK}" onclick="javascript:history.go(-1)" />
 				</td>
 			</tr>
-			<core:block id="info_back_button">
-				<tr>
-					<td class="subtitle">
-						<div style="text-align: center;">
-							<input type="button" class="button" value="{$L_GOBACK}" onclick="javascript:history.go(-1)" />
-						</div>
-					</td>
-				</tr>
-			</core:block>
-		</table>
-	</div>
+		</core:block>
+	</table>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 {$redirect_html}
 <script type="text/javascript">
 //<![CDATA[

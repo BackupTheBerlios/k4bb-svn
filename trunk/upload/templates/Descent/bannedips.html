@@ -1,43 +1,38 @@
 <is:mod>
 <!-- Banned IP's -->
-<br />
-<a name="bannedips" id="bannedips"></a>
 <div class="spacer">
-	<div class="borderwrap">
-		<div class="maintitle">{$L_BANNEDIPS}</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<list:list id="bannedips">
-			<list:default list="bannedips">
-			<tr>
-				<td class="alt3">
-					<div class="outset_box">
-						<br />
-						{$L_NOBANNEDIPS}
-						<br /><br />
-					</div>
-				</td>
-			</tr>
-			</list:default>
-			<list:item list="bannedips">
-			<list:switch list="bannedips" var="row_class" a="alt1" b="alt1" c="alt3" d="alt3">
-			<td width="50%" class="{$row_class}">
-				<div style="float:right;"><a href="mod.php?act=liftban&amp;id={$id}" title="{$L_LEFTBAN}">{$L_LEFTBAN}</a></div>
-				<strong>{$user_ip}</strong>
-				<if:if var="user_id" greater="0">
+	<div class="header"><div class="title">{$L_BANNEDIPS}<a name="bannedips" id="bannedips"></a></div></div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<list:list id="bannedips">
+		<list:default list="bannedips">
+		<tr>
+			<td class="alt3" style="text-align: center;">
 				<br />
-				<a href="member.php?id={$user_id}" title="{$L_PROFILE}">{$user_name}</a>
-				</if:if>
+				{$L_NOBANNEDIPS}
+				<br /><br />
 			</td>
-			<list:separator list="bannedips">
-				<list:alternate list="bannedips" count="2" remainder="1">
-					</tr><tr>
-				</list:alternate>
-			</list:separator>
-			</list:switch>
-			</list:item>
-			</list:list>
-		</table>
-	</div>
+		</tr>
+		</list:default>
+		<list:item list="bannedips">
+		<list:switch list="bannedips" var="row_class" a="alt1" b="alt1" c="alt3" d="alt3">
+		<td width="50%" class="{$row_class}">
+			<div style="float:right;"><a href="mod.php?act=liftban&amp;id={$id}" title="{$L_LEFTBAN}">{$L_LEFTBAN}</a></div>
+			<strong>{$user_ip}</strong>
+			<if:if var="user_id" greater="0">
+			<br />
+			<a href="member.php?id={$user_id}" title="{$L_PROFILE}">{$user_name}</a>
+			</if:if>
+		</td>
+		<list:separator list="bannedips">
+			<list:alternate list="bannedips" count="2" remainder="1">
+				</tr><tr>
+			</list:alternate>
+		</list:separator>
+		</list:switch>
+		</list:item>
+		</list:list>
+	</table>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 <!-- / Banned IP's -->
 </is:mod>

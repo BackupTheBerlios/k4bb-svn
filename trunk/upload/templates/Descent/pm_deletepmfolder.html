@@ -1,30 +1,29 @@
 <form:form id="delete_pmfolder" name="delete_pmfolder" action="member.php?act=pm_deletepmfolder" method="post" enctype="multipart/form-data">
 <input type="hidden" name="original_folder" value="{$folder_id}" />
+<div class="header"><div class="title">{$L_DELETEPMFOLDER}: <span style="font-weight: normal;">{$folder_name}</span></div></div>
 <div class="spacer">
-	<div class="borderwrap">
-		<div class="maintitle">{$L_DELETEPMFOLDER}: <span style="font-weight: normal;">{$folder_name}</span></div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<tr>
-				<td class="alt3">
-					<div class="outset_box" style="text-align: center;">
-						<strong>{$L_MOVEPMSTO}:</strong><br /><br />
-						<select name="destination_folder" class="smalltext">
-							<option value="0">{$L_DELETEPRIVATEMESSAGES}</option>
-							<list:list id="pmfolders">
-							<list:item list="pmfolders">
-							<if:if var="id" noteq="folder_id"><option value="{$id}">&nbsp;&middot; {$name}</option></if:if>
-							</list:item>
-							</list:list>
-						</select>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td class="subtitle">
-					<input type="submit" class="button" value="{$L_DELETEFOLDER}" />
-				</td>
-			</tr>
-		</table>
-	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td class="alt3">
+				<div class="outset_box" style="text-align: center;">
+					<strong>{$L_MOVEPMSTO}:</strong><br /><br />
+					<select name="destination_folder" class="smalltext">
+						<option value="0">{$L_DELETEPRIVATEMESSAGES}</option>
+						<list:list id="pmfolders">
+						<list:item list="pmfolders">
+						<if:if var="id" noteq="folder_id"><option value="{$id}">&nbsp;&middot; {$name}</option></if:if>
+						</list:item>
+						</list:list>
+					</select>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="base3" style="text-align: center;">
+				<input type="submit" class="button" value="{$L_DELETEFOLDER}" />
+			</td>
+		</tr>
+	</table>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 </form:form>

@@ -1,52 +1,49 @@
 <!-- Drafts -->
+<div class="header"><div class="title">{$L_LOADDRAFT}</div></div>
 <div class="spacer">
-	<div class="borderwrap">
-		<div class="maintitle">{$L_LOADDRAFT}</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<tr>
-				<td class="alt3" colspan="3">
-					<span class="smalltext">{$L_DRAFTNOTICE}</span>
-					</td>
-				</td>
-			</tr>
-			<tr>
-				<td class="subtitle">{$L_SAVEDON}</td>
-				<td class="subtitle">{$L_DRAFTTITLE}</td>
-				<td class="subtitle">{$L_OPTIONS}</td>
-			</tr>
-			<list:list id="drafts">
-			<list:default list="drafts">
-			<tr>
-				<td class="alt3" colspan="3">
-					<div class="outset_box" style="text-align: center;"><br /><strong>{$L_NOSAVEDDRAFTS}</strong><br /><br /></div>
-				</td>
-			</tr>
-			</list:default>
-			<list:item list="drafts">
-			<list:switch list="drafts" var="row_class" a="alt1" b="alt3">
-			<tr>
-				<td class="{$row_class}" width="20%">
-					<span class="smalltext">
-						<core:date format="%b %d %y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span>
-					</span>
-				</td>
-				<td class="{$row_class}" width="60%">
-					<strong>{$name}</strong><br />
-					<span class="smalltext">
-						{$L_FORUM}: <a href="viewforum.php?id={$forum_id}" title="{$forum_name}">{$forum_name}</a>
-					</span>
-				</td>
-				<td class="{$row_class}" width="20%">
-					<a href="newtopic.php?id={$forum_id}&amp;draft={$post_id}" title="{$L_LOADDRAFT}">{$L_LOADDRAFT}</a>
-					<br />
-					<a href="newtopic.php?act=deletedraft&amp;id={$post_id}" title="{$L_DELETEDRAFT}">{$L_DELETEDRAFT}</a>
-				</td>
-			</tr>
-			</list:switch>
-			</list:item>
-			</list:list>
-		</table>
-	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td class="alt3" colspan="3">
+				<span class="smalltext">{$L_DRAFTNOTICE}</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="subheader">{$L_SAVEDON}</td>
+			<td class="subheader">{$L_DRAFTTITLE}</td>
+			<td class="subheader">{$L_OPTIONS}</td>
+		</tr>
+		<list:list id="drafts">
+		<list:default list="drafts">
+		<tr>
+			<td class="alt3" colspan="3">
+				<div class="outset_box" style="text-align: center;"><br /><strong>{$L_NOSAVEDDRAFTS}</strong><br /><br /></div>
+			</td>
+		</tr>
+		</list:default>
+		<list:item list="drafts">
+		<list:switch list="drafts" var="row_class" a="alt1" b="alt2">
+		<tr>
+			<td class="{$row_class}" width="20%">
+				<span class="smalltext">
+					<core:date format="%b %d %y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span>
+				</span>
+			</td>
+			<td class="{$row_class}" width="60%">
+				<strong>{$name}</strong><br />
+				<span class="smalltext">
+					{$L_FORUM}: <a href="viewforum.php?id={$forum_id}" title="{$forum_name}">{$forum_name}</a>
+				</span>
+			</td>
+			<td class="{$row_class}" width="20%">
+				<a href="newtopic.php?id={$forum_id}&amp;draft={$post_id}" title="{$L_LOADDRAFT}">{$L_LOADDRAFT}</a>
+				<br />
+				<a href="newtopic.php?act=deletedraft&amp;id={$post_id}" title="{$L_DELETEDRAFT}">{$L_DELETEDRAFT}</a>
+			</td>
+		</tr>
+		</list:switch>
+		</list:item>
+		</list:list>
+	</table>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 <!-- / Drafts -->
-<br />

@@ -206,6 +206,7 @@ class K4DefaultAction extends FAAction {
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_POSTTOPIC', $forum);
 		
 		/* Set the post topic form */
+		$request['template']->setVar('is_topic', 1);
 		$request['template']->setFile('content', 'newtopic.html');
 		$request['template']->setVar('forum_forum_id', $forum['forum_id']);
 		$request['template']->setVisibility('post_topic', TRUE);

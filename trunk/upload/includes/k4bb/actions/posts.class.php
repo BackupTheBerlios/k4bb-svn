@@ -426,7 +426,7 @@ class InsertPost extends FAAction {
 					$request['dba']->commitTransaction();
 
 					/* Redirect the user */
-					$action = new K4InformationAction(new K4LanguageElement('L_SAVEDDRAFTTOPIC', k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES), $forum['name']), 'content', FALSE, 'viewforum.php?f='. $forum['forum_id'], 3);
+					$action = new K4InformationAction(new K4LanguageElement('L_SAVEDDRAFTTOPIC', $name, $forum['name']), 'content', FALSE, 'viewforum.php?f='. $forum['forum_id'], 3);
 
 					return $action->execute($request);
 				}
@@ -492,6 +492,8 @@ class InsertPost extends FAAction {
 				foreach($forum as $key => $val)
 					$request['template']->setVar('forum_'. $key, $val);
 				
+				$request['template']->setVar('is_topic', ($this->row_type & TOPIC ? 1 : 0));
+
 				if(!USE_AJAX) {
 
 					/* Set the the button display options */

@@ -1,88 +1,84 @@
 <div class="spacer">
-	<div class="borderwrap">
-		<div class="maintitle">
+	<div class="header">
+		<div class="title">
 			{$L_FAQLONG}<if:if var="add_catname" noteq=""><span style="font-weight:normal;">{$add_catname}</spamn></if:if>
 		</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			
-			<list:list id="faq_answers">
-			<tr>
-				<td class="alt3">
-					<ul type="circle">
-						<list:default list="faq_answers">
-						<div align="center" class="smalltext"><em>{$L_NOFAQANSWERS}</em></div>
-						</list:default>
-						<list:item list="faq_answers">
-						<if:if var="has_top_level" eq="1"><li><a href="faq.php?c={$category_id}#faq{$answer_id}" title="{$question}"><strong>{$question}</strong></a></li></if:if>
-						</list:item>
-					</ul>
-				</td>
-			</tr>
-			</list:list>
-		</table>
 	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		
+		<list:list id="faq_answers">
+		<tr>
+			<td class="alt3">
+				<ul type="circle">
+					<list:default list="faq_answers">
+					<div align="center" class="smalltext"><em>{$L_NOFAQANSWERS}</em></div>
+					</list:default>
+					<list:item list="faq_answers">
+					<if:if var="has_top_level" eq="1"><li><a href="faq.php?c={$category_id}#faq{$answer_id}" title="{$question}"><strong>{$question}</strong></a></li></if:if>
+					</list:item>
+				</ul>
+			</td>
+		</tr>
+		</list:list>
+	</table>
 </div>
 <list:list id="faq_categories">
 <list:item list="faq_categories">
-<list:switch list="faq_categories" var="row_class" a="alt1" b="alt3">
+<list:switch list="faq_categories" var="row_class" a="alt1" b="alt2">
 <div class="spacer">
-	<div class="borderwrap">
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<tr>
-				<td class="subtitle">
-					<a href="faq.php?c={$category_id}" title="{$name}"><strong>{$name}</strong></a>
-				</td>
-			</tr>
-			<tr>
-				<td class="{$row_class}">
-					
-					<if:if var="num_answers" greater="0">
-					<list:sublist list="faq_categories" id="sub_answers" column="sub_answers">
-					<!-- Answers -->
-					<ul type="circle">
-						<list:item list="sub_answers">
-						<li><a href="faq.php?c={$category_id}#faq{$answer_id}" title="{$question}"><strong>{$question}</strong></a></li>
-						</list:item>
-					</ul>
-					<!-- / Answers -->
-					</list:sublist>
-					</if:if>
-					
-					<if:if var="num_categories" greater="0">
-					<list:sublist list="faq_categories" id="sub_categories" column="sub_categories">
-					<!-- Sub-Categories -->
-					<ul type="disc">
-						<list:item list="sub_categories">
-						<li>
-							<a href="faq.php?c={$category_id}" title="{$name}"><strong>{$name}</strong></a>
-							<span class="minitext"><em>({$num_answers} {$L_ANSWERS})</em></span>
-						</li>
-						</list:item>
-					</ul>
-					<!--/ Sub-Categories -->
-					</list:sublist>
-					</if:if>
-
-				</td>
-			</tr>
-		</table>
+	<div class="subheader">
+		<a href="faq.php?c={$category_id}" title="{$name}"><strong>{$name}</strong></a>
 	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td class="{$row_class}">
+				<if:if var="num_answers" greater="0">
+				<list:sublist list="faq_categories" id="sub_answers" column="sub_answers">
+				<!-- Answers -->
+				<ul type="circle">
+					<list:item list="sub_answers">
+					<li><a href="faq.php?c={$category_id}#faq{$answer_id}" title="{$question}"><strong>{$question}</strong></a></li>
+					</list:item>
+				</ul>
+				<!-- / Answers -->
+				</list:sublist>
+				</if:if>
+				
+				<if:if var="num_categories" greater="0">
+				<list:sublist list="faq_categories" id="sub_categories" column="sub_categories">
+				<!-- Sub-Categories -->
+				<ul type="disc">
+					<list:item list="sub_categories">
+					<li>
+						<a href="faq.php?c={$category_id}" title="{$name}"><strong>{$name}</strong></a>
+						<span class="minitext"><em>({$num_answers} {$L_ANSWERS})</em></span>
+					</li>
+					</list:item>
+				</ul>
+				<!--/ Sub-Categories -->
+				</list:sublist>
+				</if:if>
+
+			</td>
+		</tr>
+	</table>
 </div>
 </list:switch>
 </list:item>
 </list:list>
+<div class="spacer"><div class="footer_block"><div>&nbsp;</div></div></div>
 <if:if var="has_top_level" eq="1">
 <list:list id="faq_answers">
 <list:item list="faq_answers">
-<br />
 <div class="spacer">
-	<div class="borderwrap">
-		<div class="maintitle"><a name="faq{$answer_id}" id="faq{$answer_id}">{$question}</a></div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<tr><td class="alt1">{$answer}</td></tr>
-		</table>
-	</div>
+	<div class="header">
+		<div class="title"><a name="faq{$answer_id}" id="faq{$answer_id}">{$question}</a></div>
+	</div>	
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr><td class="alt1">{$answer}</td></tr>
+	</table>
 </div>
 </list:item>
+<div class="footer_block"><div>&nbsp;</div></div>
 </list:list>
 </if:if>
