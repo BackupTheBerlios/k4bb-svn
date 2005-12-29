@@ -43,18 +43,20 @@ class K4DefaultAction extends FAAction {
 		
 		$c = &new K4Calendar($year, $month, $day);
 		$iteration_c = new K4CalendarIterator($c->getData());
-		$iteration_w = new FAArrayIterator($c->getWeekdays());
+		$iteration_d = new FAArrayIterator($c->getWeekdays());
+		
+		$request['template']->setList('calendar', $iteration_c);
+		$request['template']->setList('weekdays', $iteration_d);
 		
 		$request['template']->setVar('month_label', date('F', mktime(0, 0, 0, $c->getMonth(), 1, $c->getYear())));
 		$request['template']->setVar('year_label', $c->getYear());
-		
 		$request['template']->setVar('month_next', $c->getNextMonth());
 		$request['template']->setVar('month_prev', $c->getPrevMonth());
 		$request['template']->setVar('year_next', $c->getNextYear());
 		$request['template']->setVar('year_prev', $c->getPrevYear());
 		
-		$request['template']->setList('calendar', $iteration_c);
-		$request['template']->setList('weekdays', $iteration_w);
+		$request['template']->setVar('nav_prev', $c->checkPrevYear());
+		$request['template']->setVar('nav_next', $c->checkNextYear());
 		
 		$request['template']->setFile('content', 'calendar_index.html');
 	}

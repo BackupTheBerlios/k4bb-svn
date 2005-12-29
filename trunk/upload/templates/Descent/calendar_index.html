@@ -1,4 +1,61 @@
-<if:if var="calendardisabled" eq="1">
+<if:if var="calendardisabled" noteq="1">
+	<!-- Calendar -->
+	<div class="header"><div class="title">{$L_CALENDAR}</div></div>
+	<div class="header">
+		<div class="categorytitle">
+			<if:if var="nav_prev" eq="">
+				<a href="calendar.php?y={$year_prev}&m={$month_prev}">&laquo;</a> 
+			</if:if>
+			{$month_label} {$year_label}
+			<if:if var="nav_next" eq="">
+				 <a href="calendar.php?y={$year_next}&m={$month_next}">&raquo;</a>
+			</if:if>
+		</div>
+	</div>
+	<div class="spacer">
+	
+	<list:list id="calendar">
+		<table width="100%" class="table">
+			
+			<list:sublist id="weekdays" column="calendar">
+			<tr class="base2">
+				<td class="base1" width="2%"></td>
+				
+				<list:item list="weekdays">
+				<td width="14%"><strong>{$weekday}</strong></td>
+				</list:item>
+				
+			</tr>
+			</list:sublist>
+			
+			<tr class="alt4">
+			
+				<list:item list="calendar">
+				<list:alternate list="calendar" count="7" remainder="0">
+					<td class="base2" style="text-align: center"><a href="calendar.php?y={$year}&w={$week}">&raquo;</a></td>
+				</list:alternate>
+
+				<list:switch list="calendar" var="row_class" a="alt3" b="alt4">
+				
+				<core:import id="calendar_day" file="calendar_day.html" />
+				
+				<list:separator list="calendar">
+				<list:alternate list="calendar" count="7" remainder="6">
+					</tr><tr class="{$row_class}">
+				</list:alternate>
+				</list:separator>
+				</list:switch>
+				</list:item>
+			
+			</tr>
+		</table>
+	</list:list>
+	
+	</div>
+	<div class="header"><div class="base2">Look</div></div>
+	<div class="footer_block"><div>&nbsp;</div></div>
+	<!-- / Calendar -->
+<if:else>
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">	
 		<tr>
 			<td class="alt3" colspan="5" width="100%">
@@ -10,47 +67,4 @@
 			</td>
 		</tr>
 	</table>
-<if:else>
-	<!-- Calendar -->
-	<div class="header"><div class="title">{$L_CALENDAR}</div></div>
-	<div class="header"><div class="categorytitle"><a href="calendar.php?y={$year_prev}&m={$month_prev}">&laquo;</a> {$month_label} {$year_label} <a href="calendar.php?y={$year_next}&m={$month_next}">&raquo;</a></div>
-	</div>
-	<div class="spacer">
-	<list:list id="calendar">
-		<table width="100%" class="table">
-			
-			<list:sublist id="weekdays" column="calendar">
-			<tr>
-				<td class="alt1" width="2%"></td>
-				
-				<list:item list="weekdays">
-				<td width="14%" class="alt2"><strong>{$weekday}</strong></td>
-				</list:item>
-				
-			</tr>
-			
-			</list:sublist>
-			
-			<tr>
-			
-			<list:item list="calendar">
-				<list:alternate list="calendar" count="7" remainder="0">
-						<td class="alt2"><a href="calendar.php?y={$year_prev}&w={$week}">&raquo;</a></td>
-				</list:alternate>
-				<list:switch list="calendar" var="row_class" a="alt2" b="alt1">
-					<core:import id="calendar_day" file="calendar_day.html" />
-				</list:switch>
-				<list:separator list="calendar">
-				<list:alternate list="calendar" count="7" remainder="6">
-				    </tr><tr>
-				</list:alternate>
-				</list:separator>
-			</list:item>
-			
-			</tr>
-		</table>
-	</list:list>
-	</div>
-	<div class="footer_block"><div>&nbsp;</div></div>
-	<!-- / Calendar -->
 </if:if>

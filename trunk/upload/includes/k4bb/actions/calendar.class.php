@@ -33,9 +33,15 @@ if(!defined('IN_K4'))
 	return;
 
 class K4Calendar extends FAObject {
-	var $start_day = 1; # 0 for Sunday, 1 for Monday, (2 for Tuesday ...)
-	var $cal = array();
-	var $timestamp, $current_year, $current_month, $current_day, $daysInMonth;
+	var $data = array();
+	var $start_day = 1; # 0 for Sunday, 1 for Monday
+	var $years_future = 5;
+	var $years_past = 2;
+	
+	var $timestamp;
+	var $current_year;
+	var $current_month;
+	var $current_day;
 	
 	/**
 	 * __construct() public method
@@ -106,11 +112,32 @@ class K4Calendar extends FAObject {
 	}
 	
 	function checkYear($year = NULL) {
-		return($year !== NULL && $year > 1975);
+		return(
+			$year !== NULL &&
+			$year > 1975 &&
+			$year <= ($this->current_year + $this->years_future) &&
+			$year >= ($this->current_year - $this->years_past)
+		);
 	}
 	
 	function checkMonth($month = NULL) {
 		return($month !== NULL && $month > 0 && $month <= 12);
+	}
+	
+	function checkPrevYear($year = NULL) {
+		if($year === NULL)
+			$year = $this->year;
+		
+		if($this->month == 1 && $year <= ($this->current_year - $this->years_past))
+			return -1;
+	}
+	
+	function checkNextYear($year = NULL) {
+		if($year === NULL)
+			$year = $this->year;
+		
+		if($this->month == 12 && $year >= ($this->current_year + $this->years_future))
+			return -1;
 	}
 	
 	function setYear($year = NULL) {
@@ -151,7 +178,7 @@ class K4Calendar extends FAObject {
 			$month = $this->month;
 		
 		if($month == 12)
-			$month = 1;
+			$month = $this->year >= ($this->current_year + $this->years_future) ? 12 : 1;
 		else
 			$month += 1;
 		
@@ -163,7 +190,7 @@ class K4Calendar extends FAObject {
 			$month = $this->month;
 		
 		if($month == 1)
-			$month = 12;
+			$month = $this->year <= ($this->current_year - $this->years_past) ? 1 : 12;
 		else
 			$month -= 1;
 		
@@ -175,7 +202,7 @@ class K4Calendar extends FAObject {
 			$year = $this->year;
 		
 		if($this->month == 12)
-			$year += 1;
+			$year += $this->year < ($this->current_year + $this->years_future) ? 1 : 0;
 		
 		return $year;
 	}
@@ -185,7 +212,7 @@ class K4Calendar extends FAObject {
 			$year = $this->year;
 		
 		if($this->month == 1)
-			$year -= 1;
+			$year -= $this->year > ($this->current_year - $this->years_past) ? 1 : 0;
 		
 		return $year;
 	}
@@ -209,35 +236,31 @@ class K4Calendar extends FAObject {
 		$fill[0] = array(0 => 0, 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6);
 		
 		$start = $fill[$this->start_day][$first];
-		$lenght = $days + $fill[$this->start_day][$first]; #30 + 2
+		$lenght = $days + $fill[$this->start_day][$first];
 		
 		# Calculate the cells to fill up
 		$rest = 7 - $lenght % 7;
 		$lenght += $rest == 7 ? 0 : $rest;
 		
-		$this->cal = array_pad($this->cal, $lenght, array('day' => NULL, 'year' => NULL, 'month' => NULL));
+		$this->data = array_pad($this->data, $lenght, array('day' => NULL, 'year' => NULL, 'month' => NULL));
 		
 		// loop through the number of days in the month. This will start at
 		// whatever the first day of the month is.
 		for($i = $start; $i < $lenght; $i++) {
 			
-			// insert the current day into one of the arrays in $cal
-			$this->cal[$i]['day'] = $i - $first + 1 + $this->start_day;
-			$this->cal[$i]['month'] = $this->month;
-			$this->cal[$i]['year'] = $this->year;
+			#$this->data[$i]['week'] = k4; # Tryin' to get the week into the array. =o(
 			
-			# To display the fill up cells as empty.
-			if($i >= ($start + $days)) {
-				$this->cal[$i]['day'] = false;
-				$this->cal[$i]['month'] = false;
-				$this->cal[$i]['year'] = false;
+			if($i < $start + $days) {
+				// insert the current day into one of the arrays in $data
+				$this->data[$i]['day'] = $i + 1 - $start;
+				$this->data[$i]['month'] = $this->month;
+				$this->data[$i]['year'] = $this->year;
 			}
 		}
 	}
 	
 	function getData() {
-		$this->setArray();
-		return $this->cal;
+		return $this->data;
 	}
 	
 	# TODO: Language support and better routine thou. *cough*
