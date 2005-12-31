@@ -279,7 +279,7 @@ class K4DefaultAction extends FAAction {
 
 		/* set the topic iterator */
 		//$topic_list			= new TopicIterator($request['dba'], $request['user'], $topic, $show_replies, $single_reply);
-		$result = $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE (". ($page <= 1 ? "post_id=". $topic['post_id'] ." OR" : '') ." parent_id=". intval($topic['post_id']) .") AND created >= ". (3600 * 24 * intval($topic['daysprune'])) ." ORDER BY ". $topic['sortedby'] ." ". $topic['sortorder'] ." LIMIT ". intval($topic['start']) .",". intval($topic['postsperpage']));
+		$result = $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE (". ($page <= 1 ? "post_id=". $topic['post_id'] ." OR" : '') ." (parent_id=". intval($topic['post_id']) ." AND row_level>1)) AND created >= ". (3600 * 24 * intval($topic['daysprune'])) ." ORDER BY ". $topic['sortedby'] ." ". $topic['sortorder'] ." LIMIT ". intval($topic['start']) .",". intval($topic['postsperpage']));
 		$posts = new PostsIterator($request, $result);
 		$request['template']->setList('posts', $posts);
 		
@@ -291,7 +291,7 @@ class K4DefaultAction extends FAAction {
 			if($topic['num_replies'] > 0) {
 				$request['template']->setFile('topic_threaded', 'topic_threaded.html');
 				
-				$replies	= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE parent_id=". intval($topic['post_id']) ." ORDER BY row_order ASC");
+				$replies	= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE parent_id=". intval($topic['post_id']) ." AND row_level>1 ORDER BY row_order ASC");
 				$it			= &new ThreadedRepliesIterator($replies, $topic['row_level']);
 				
 				$request['template']->setList('threaded_replies', $it);

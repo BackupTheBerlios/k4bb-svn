@@ -119,7 +119,7 @@ INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (1
 INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (10, '.forum_foot #footer', 'padding:10px 20px 20px 20px;background:url(../../Images/Descent/Background/background_main_bottom_right.gif) bottom right no-repeat;', 1, 'description here');
 INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (10, '.footer_block', 'background:#C3D950 url(../../Images/Descent/Background/background_base_left.gif) bottom left no-repeat;', 1, 'description here');
 INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (10, '.footer_block div', 'padding:8px;background:url(../../Images/Descent/Background/background_base_right.gif) bottom right no-repeat;', 1, 'description here');
-INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (10, '.spacer', 'border-bottom:5px solid #FFFFFF;', 1, 'description here');
+INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (10, '.spacer', 'padding-bottom:5px;', 1, 'description here');
 INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (10, '.header_table td', 'padding:0px;margin:0px;', 1, 'The header table');
 INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (11, '.forum_number_cell', 'height:64px;width:64px;', 1, 'Number-only cells in forum rows.');
 

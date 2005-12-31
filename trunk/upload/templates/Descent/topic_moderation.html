@@ -1,24 +1,25 @@
 			<if:if var="modpanel" eq="1">
 			<!-- Moderator Controls -->
-			<div class="alt3" style="text-align: center;">
-				<form action="mod.php?act=moderate_forum&amp;id={$forum_forum_id}" method="post" enctype="multipart/form-data">
-					<input type="hidden" name="topics" id="topics" value="{$topic_post_id}" />
-					<strong>{$L_WITHTOPIC}:</strong>
-					<select name="action" class="inputbox">
-						<option value="lock">{$L_LOCKTOPIC}</option>
-						<option value="split">{$L_SPLITTOPIC}</option>
-						<option value="stick">{$L_STICKTOPIC}</option>
-						<option value="announce">{$L_ANNOUNCETOPIC}</option>
-						<option value="feature">{$L_FEATURETOPIC}</option>
-						<option value="normal">{$L_SETASNORMALTOPIC}</option>
-						<option value="move">{$L_MOVECOPYTOPIC}</option>
-						<option value="delete">{$L_DELETETOPIC}</option>
-						<option value="queue">{$L_QUEUETOPIC}</option>
-						<option value="subscribe">{$L_SUBSCRIBETOTOPIC}</option>
-					</select>
-					<input type="submit" value="{$L_PERFORMACTION}" class="button" />
-				</form>
+			<div class="spacer">
+				<div class="alt3" style="text-align: center;">
+					<form action="mod.php?act=moderate_forum&amp;id={$forum_forum_id}" method="post" enctype="multipart/form-data">
+						<input type="hidden" name="topics" id="topics" value="{$topic_post_id}" />
+						<strong>{$L_WITHTOPIC}:</strong>
+						<select name="action" class="inputbox">
+							<option value="lock">{$L_LOCKTOPIC}</option>
+							<option value="split">{$L_SPLITTOPIC}</option>
+							<option value="stick">{$L_STICKTOPIC}</option>
+							<option value="announce">{$L_ANNOUNCETOPIC}</option>
+							<option value="feature">{$L_FEATURETOPIC}</option>
+							<option value="normal">{$L_SETASNORMALTOPIC}</option>
+							<option value="move">{$L_MOVECOPYTOPIC}</option>
+							<option value="delete">{$L_DELETETOPIC}</option>
+							<option value="queue">{$L_QUEUETOPIC}</option>
+							<option value="subscribe">{$L_SUBSCRIBETOTOPIC}</option>
+						</select>
+						<input type="submit" value="{$L_PERFORMACTION}" class="button" />
+					</form>
+				</div>
 			</div>
-			<br />
 			<!-- / Moderator Controls -->
 			</if:if>

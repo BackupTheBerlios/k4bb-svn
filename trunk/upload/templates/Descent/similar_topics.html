@@ -1,63 +1,59 @@
-<br />
 <!-- Similar Topics -->
 <div class="spacer">
-	<div class="header">
-		<div class="title" id="st_maintitle">
-			<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_st', 'similartopics', 'st_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_st" src="Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
-			{$L_SIMILARTOPICS}
-		</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="similartopics" style="display: none;">
-			<tr>
-				<td class="subheader" width="5%" colspan="2">&nbsp;</td>
-				<td class="subheader" align="center" width="70%">{$L_TOPICS}/{$L_AUTHOR}</td>
-				<td class="subheader" align="center" nowrap="nowrap">&nbsp;{$L_REPLIES}&nbsp;</td>
-				<td class="subheader" align="center" nowrap="nowrap">&nbsp;{$L_VIEWS}&nbsp;</td>
-				<td class="subheader" align="center" nowrap="nowrap" width="20%">&nbsp;{$L_LASTPOST}&nbsp;</td>
-				<td class="subheader" width="3%">&nbsp;{$L_INFO}&nbsp;</td>
-			</tr>
-			<list:list id="similar_topics">
-			<list:item list="similar_topics">
-			<list:switch list="similar_topics" var="row_class" a="alt1" b="alt3">
-			<tr>
-				<td class="{$row_class}" align="center"><img src="tmp/upload/posticons/{$posticon}" alt="" border="0" /></td>
-				<td class="{$row_class}" width="55%">
-					<if:if var="ratings_num" geq="1"><img src="Images/{$IMG_DIR}/Icons/Rating/{$rating}stars.gif" alt="({$ratings_num} {$L_VOTES})" border="0" style="float: right;" /></if:if>
-					
-					<if:if var="use_pager" eq="1">{$pager}</if:if>
-
-					<span class="smalltext">
-					<if:if var="post_type" eq="2">{$stickytopicprefix}<else:if var="post_type" geq="3" />{$announcementtopicprefix}</if:if>
-					<if:if var="is_feature" eq="1">{$featuretopicprefix}</if:if>
-					<if:if var="poll" eq="1">{$polltopicprefix}</if:if>
-					</span>
-					<a href="viewtopic.php?id={$post_id}" title="{$name}"><core:truncate length="40" append="...">{$name}</core:truncate></a>
-					<br />
-					<div style="float:left;" class="minitext"><a href="member.php?id={$poster_id}" title="{$poster_name}">{$poster_name}</a></div>
-				</td>
-				<td align="center" class="{$row_class}">{$num_replies}</td>
-				<td align="center" class="{$row_class}">{$views}</td>
-				<td align="center" class="{$row_class}" nowrap="nowrap" width="30%">
-					<if:if var="lastpost_created" greater="0">
-					<span class="minitext">
-						<core:date format="%b %d %y">{$lastpost_created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$lastpost_created}</core:date></span>
-						<br />
-						{$L_BY}&nbsp;<a href="member.php?id={$lastpost_uid}" style="text-decoration: underline;" title="{$lastpost_uname}">{$lastpost_uname}</a>
-						<a href="findpost.php?id={$post_id}" title="{$reply_name}"><img src="Images/{$IMG_DIR}/Icons/icon_latest_reply.gif" border="0" alt="{$reply_name}" /></a>
-					</span>
-					<if:else />
-					<span class="minitext">
-						<core:date format="%b %d %y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span>
-						<br />
-						{$L_BY}&nbsp;<a href="member.php?id={$poster_id}" style="text-decoration: underline;" title="{$poster_name}">{$poster_name}</a>
-						<a href="viewtopic.php?id={$id}" title="{$name}"><img src="Images/{$IMG_DIR}/Icons/icon_latest_reply.gif" border="0" alt="{$name}" /></a>
-					</span>
-					</if:if>
-				</td>
-			</tr>
-			</list:switch>
-			</list:item>
-			</list:list>
-		</table>
+	<div class="supheader" id="st_maintitle">
+		<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_st', 'similartopics', 'st_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_st" src="Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+		{$L_SIMILARTOPICS}
 	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="similartopics" style="display: none;">
+		<tr>
+			<td class="subheader" width="5%">&nbsp;</td>
+			<td class="subheader" align="center" width="70%">{$L_TOPICS}/{$L_AUTHOR}</td>
+			<td class="subheader" align="center" nowrap="nowrap">&nbsp;{$L_REPLIES}&nbsp;</td>
+			<td class="subheader" align="center" nowrap="nowrap">&nbsp;{$L_VIEWS}&nbsp;</td>
+			<td class="subheader" align="center" nowrap="nowrap" width="20%">&nbsp;{$L_LASTPOST}&nbsp;</td>
+		</tr>
+		<list:list id="similar_topics">
+		<list:item list="similar_topics">
+		<list:switch list="similar_topics" var="row_class" a="alt1" b="alt3">
+		<tr>
+			<td class="{$row_class}" align="center"><img src="tmp/upload/posticons/{$posticon}" alt="" border="0" /></td>
+			<td class="{$row_class}" width="55%">
+				<if:if var="ratings_num" geq="1"><img src="Images/{$IMG_DIR}/Icons/Rating/{$rating}stars.gif" alt="({$ratings_num} {$L_VOTES})" border="0" style="float: right;" /></if:if>
+				
+				<if:if var="use_pager" eq="1">{$pager}</if:if>
+
+				<span class="smalltext">
+				<if:if var="post_type" eq="2">{$stickytopicprefix}<else:if var="post_type" geq="3" />{$announcementtopicprefix}</if:if>
+				<if:if var="is_feature" eq="1">{$featuretopicprefix}</if:if>
+				<if:if var="poll" eq="1">{$polltopicprefix}</if:if>
+				</span>
+				<a href="viewtopic.php?id={$post_id}" title="{$name}"><core:truncate length="40" append="...">{$name}</core:truncate></a>
+				<br />
+				<div style="float:left;" class="minitext"><a href="member.php?id={$poster_id}" title="{$poster_name}">{$poster_name}</a></div>
+			</td>
+			<td align="center" class="{$row_class}">{$num_replies}</td>
+			<td align="center" class="{$row_class}">{$views}</td>
+			<td align="center" class="{$row_class}" nowrap="nowrap" width="30%">
+				<if:if var="lastpost_created" greater="0">
+				<span class="minitext">
+					<core:date format="%b %d %y">{$lastpost_created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$lastpost_created}</core:date></span>
+					<br />
+					{$L_BY}&nbsp;<a href="member.php?id={$lastpost_uid}" style="text-decoration: underline;" title="{$lastpost_uname}">{$lastpost_uname}</a>
+					<a href="findpost.php?id={$post_id}" title="{$reply_name}"><img src="Images/{$IMG_DIR}/Icons/icon_latest_reply.gif" border="0" alt="{$reply_name}" /></a>
+				</span>
+				<if:else />
+				<span class="minitext">
+					<core:date format="%b %d %y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span>
+					<br />
+					{$L_BY}&nbsp;<a href="member.php?id={$poster_id}" style="text-decoration: underline;" title="{$poster_name}">{$poster_name}</a>
+					<a href="viewtopic.php?id={$id}" title="{$name}"><img src="Images/{$IMG_DIR}/Icons/icon_latest_reply.gif" border="0" alt="{$name}" /></a>
+				</span>
+				</if:if>
+			</td>
+		</tr>
+		</list:switch>
+		</list:item>
+		</list:list>
+	</table>
 </div>
 <!-- / Similar Topics -->

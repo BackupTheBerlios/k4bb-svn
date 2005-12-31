@@ -10,7 +10,10 @@
 		</td>
 	</tr>
 	<tr>
-		<td width="100%" class="alt1" valign="top">
+		<td class="base1" valign="top">
+			<core:import id="post_user_section" file="post_user_section.html" />
+		</td>
+		<td width="100%" class="alt1" valign="top" rowspan="2">
 			<!-- Body Text -->
 			<div id="{$post_id}_body">{$body_text}</div>
 			<div style="text-align: right;display: none;" id="{$post_id}_qebuttons"><input type="button" value="{$L_SAVE}" class="button" style="font-weight: bold;" onclick="saveQuickEdit({$post_id}, '{$post_id}_body')" />&nbsp;<input type="button" value="X" class="button" style="font-weight: bold;color: #FF0000;" onclick="cancelQuickEdit({$post_id}, '{$post_id}_body')" /></div>
@@ -58,8 +61,6 @@
 			</if:if>
 			<br /><br />
 		</td>
-		<td class="base1" valign="top">
-			<core:import id="post_user_section" file="post_user_section.html" />
-		</td>
 	</tr>
+	<core:import id="topic_control_buttons" file="topic_control_buttons.html" />
 </table>

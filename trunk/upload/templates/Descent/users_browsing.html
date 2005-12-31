@@ -8,7 +8,7 @@
 <div class="spacer" id="usersbrowsing">
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
-			<td class="alt3">
+			<td class="alt1">
 				<div class="minitext" align="left">
 					<strong>{$L_LEGEND}:</strong>
 					<list:list id="usergroups_legend">
@@ -16,12 +16,6 @@
 					<a href="usergroups.php?id={$id}" style="color: #{$color};font-weight: bold;" title="{$name}">{$name}</a><list:separator list="usergroups_legend">,&nbsp;</list:separator>
 					</list:item>
 					</list:list>
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td class="alt1">
-				<div class="minitext" align="left">
 					{$online_stats}
 					<br />
 					<if:if var="num_online_members" greater="0">

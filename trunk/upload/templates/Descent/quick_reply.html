@@ -1,6 +1,4 @@
 <maps:if var="replies" forum="topic_forum_id" method="can_add">
-<br />
-
 <!-- AJAX Reply Preview -->
 <div id="ajax_post_preview" style="display: none;"></div>
 <!-- / AJAX Reply Preview -->
@@ -25,7 +23,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="subtitle">
+			<td class="base3">
 				<div style="text-align: center;">
 					<input type="hidden" name="submit_type" id="submit_type" value="post" />
 					<input type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" class="button" value="{$L_SUBMIT}" accesskey="s" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'post');saveQuickReply('savepost_form', 'messagecodex', '{$topic_post_id}', '{$topic_forum_id}', '{$page}'); }" />

@@ -1,13 +1,11 @@
-<div class="header">
-	<div class="title">			
-		<div style="float: right;">
-			<if:if var="modpanel" eq="1"><a href="mod.php?act=baniprange&amp;ip={$poster_ip}" title="{$L_BANIP}"><img src="Images/{$IMG_DIR}/Icons/ban_ip.gif" alt="{$L_BANIP}" border="0" /></a></if:if>
-			<a href="viewtopic.php?act=report_post&amp;r={$post_id}" title="{$L_REPORTPOST}"><img src="Images/{$IMG_DIR}/Icons/report_post.gif" alt="{$L_REPORTPOST}" border="0" /></a>
-		</div>
-		<a href="viewpost.php?post_id={$post_id}" target="_blank" title="{$name}"><img src="Images/{$IMG_DIR}/Icons/post_link.gif" alt="{$name}" border="0" /></a>
-		{$name} <a href="#p{$post_id}" name="p{$post_id}" id="p{$post_id}"><img src="tmp/upload/posticons/{$posticon}" alt="" border="0" /></a>
-		<span style="font-weight: normal;">( <core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span> )</span>
+<div class="subheader">			
+	<div style="float: right;">
+		<if:if var="modpanel" eq="1"><a href="mod.php?act=baniprange&amp;ip={$poster_ip}" title="{$L_BANIP}"><img src="Images/{$IMG_DIR}/Icons/ban_ip.gif" alt="{$L_BANIP}" border="0" /></a></if:if>
+		<a href="viewtopic.php?act=report_post&amp;r={$post_id}" title="{$L_REPORTPOST}"><img src="Images/{$IMG_DIR}/Icons/report_post.gif" alt="{$L_REPORTPOST}" border="0" /></a>
 	</div>
+	<a href="viewpost.php?post_id={$post_id}" target="_blank" title="{$name}"><img src="Images/{$IMG_DIR}/Icons/post_link.gif" alt="{$name}" border="0" /></a>
+	{$name} <a href="#p{$post_id}" name="p{$post_id}" id="p{$post_id}"><img src="tmp/upload/posticons/{$posticon}" alt="" border="0" /></a>
+	<span style="font-weight: normal;">( <core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span> )</span>
 </div>
 <div class="spacer">		
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
@@ -69,5 +67,6 @@
 				<br /><br />
 			</td>
 		</tr>
+		<core:import id="post_control_buttons" file="post_control_buttons.html" />
 	</table>
 </div>
