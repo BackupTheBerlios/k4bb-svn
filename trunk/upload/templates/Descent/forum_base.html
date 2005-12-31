@@ -21,14 +21,13 @@
 		</div>
 		<if:if var="can_see_board" method="can_view" geq="0">
 		<div class="spacer">
-			<div class="forum_main">
-				
+			<div class="forum_main">				
 					<core:import id="content" />
 					<core:import id="content_extra" />
 			</div>
 		</div>
 		</if:if>
-		<core:block id="forum_midsection">
+		<core:block id="forum_midsection" hidden="yes">
 		<div class="spacer">
 			<div class="forum_mid">
 				<if:if var="can_see_board" method="can_view" geq="0">

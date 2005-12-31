@@ -34,7 +34,7 @@ require "includes/k4bb/k4bb.php";
 
 class K4DefaultAction extends FAAction {
 	function execute(&$request) {
-				
+		
 		//$action = new AdminCSSRequestAction();
 		//return $action->execute($request);
 		
@@ -101,13 +101,18 @@ class K4DefaultAction extends FAAction {
 		$request['template']->setVisibility('forum_status_icons', TRUE);
 		$request['template']->setFile('content_extra', 'forum_status_icons.html');
 		
-		$groups				= array();
+		if($request['user']->get('perms') >= get_map( 'can_see_board', 'can_add', array() ) ) {
+			
+			$request['template']->setVisibility('forum_midsection', TRUE);
 
-		// Set the usergroups legend list
-		if(is_array($_USERGROUPS) && !empty($_USERGROUPS)) {
-			foreach($_USERGROUPS as $group) {
-				if($group['display_legend'] == 1)
-					$groups[]	= $group;
+			$groups				= array();
+
+			// Set the usergroups legend list
+			if(is_array($_USERGROUPS) && !empty($_USERGROUPS)) {
+				foreach($_USERGROUPS as $group) {
+					if($group['display_legend'] == 1)
+						$groups[]	= $group;
+				}
 			}
 		}
 

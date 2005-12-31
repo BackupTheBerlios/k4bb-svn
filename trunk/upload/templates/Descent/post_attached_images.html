@@ -1,0 +1,18 @@
+<if:if var="attachments" geq="1">
+	<maps:if var="attachments" forum="forum_id" method="can_view">
+		<!-- Attached Images -->
+		<list:sublist list="topic" id="attachment_files" column="attachment_files">
+		<list:item list="attachment_files">
+			<if:if var="is_image" eq="1">
+				<div>
+					<span class="smalltext" style="font-weight: bold;">{$L_ATTACHEDIMAGE}: {$file_name}</span>
+					<hr />
+					<img class="bbcode_img" src="viewfile.php?act=attachment&amp;id={$id}&amp;post_id={$post_id}" alt="{$L_ATTACHMENT}: {$file_name}" border="0" />
+				</div>
+			</if:if>
+		<list:separator list="attachment_files"><br /><br /></list:separator>
+		</list:item>
+		</list:sublist>
+		<!-- / Attached Images -->
+	</maps:if>
+</if:if>

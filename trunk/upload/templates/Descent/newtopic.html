@@ -72,7 +72,7 @@
 							<label for="messagecodex" class="smalltext">{$L_POST}</label><br />
 							
 							<core:import id="editor" file="editor.html" />
-							<form:error id="messagecodex_error" for="messagecodex" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTTOPICMESSAGE}</form:error>
+							<form:error id="messagecodex_error" for="{$editor_input_id}" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTTOPICMESSAGE}</form:error>
 
 							<!-- / Post Message -->
 

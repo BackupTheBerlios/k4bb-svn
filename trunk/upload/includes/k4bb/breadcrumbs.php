@@ -81,14 +81,15 @@ function k4_bread_crumbs(&$template, &$dba, $location = NULL, $info = FALSE, $fo
 	} 
 	if($info) {
 		
-		$message_types		= array(CATEGORY, FORUM, TOPIC, REPLY);
+		$message_types		= array(CATEGORY, FORUM, TOPIC, REPLY, GALLERY, METAFORUM, IMAGE, ARCHIVEFORUM);
+		$top_level_types	= array(CATEGORY, FORUM, GALLERY, METAFORUM, ARCHIVEFORUM);
 		
 		$breadcrumbs		= array();
 		
 		// this will look in forums
 		if(in_array($info['row_type'], $message_types)) {
 			
-			$forum				= ($info['row_type'] & FORUM || $info['row_type'] & CATEGORY) ? $info : (is_array($forum) ? $forum : array());
+			$forum				= in_array($info['row_type'], $top_level_types) ? $info : (is_array($forum) ? $forum : array());
 			if(!empty($forum)) {
 				$breadcrumbs	= array_reverse(follow_forum_ids($breadcrumbs, $forum));
 			}

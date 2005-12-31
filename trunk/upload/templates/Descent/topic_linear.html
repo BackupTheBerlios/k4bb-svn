@@ -24,24 +24,7 @@
 			<div style="text-align: right;display: none;" id="{$post_id}_qebuttons"><input type="button" value="{$L_SAVE}" class="button" style="font-weight: bold;" onclick="saveQuickEdit({$post_id}, '{$post_id}_body')" />&nbsp;<input type="button" value="X" class="button" style="font-weight: bold;color: #FF0000;" onclick="cancelQuickEdit({$post_id}, '{$post_id}_body')" /></div>
 			<!-- / Body Text -->
 			
-			<if:if var="attachments" geq="1">
-				<maps:if var="attachments" forum="topic_forum_id" method="can_view">
-					<!-- Attached Images -->
-					<list:sublist list="topic" id="attachment_files" column="attachment_files">
-					<list:item list="attachment_files">
-						<if:if var="is_image" eq="1">
-							<div>
-								<span class="smalltext" style="font-weight: bold;">{$L_ATTACHEDIMAGE}: {$file_name}</span>
-								<hr />
-								<img class="bbcode_img" src="viewfile.php?act=attachment&amp;id={$id}&amp;t={$post_id}" alt="{$L_ATTACHMENT}: {$file_name}" border="0" />
-							</div>
-						</if:if>
-					<list:separator list="attachment_files"><br /><br /></list:separator>
-					</list:item>
-					</list:sublist>
-					<!-- / Attached Images -->
-				</maps:if>
-			</if:if>
+			<core:import id="attached_images" file="post_attached_images.html" />
 
 			<if:if var="showeditedby" eq="1">
 				<if:if var="edited_time" greater="0">

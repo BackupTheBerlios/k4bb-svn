@@ -41,7 +41,7 @@
 	<div class="title">
 		<div style="float: left;text-align: left;">
 			<a href="viewpost.php?post_id={$topic_post_id}" target="_blank" title="{$topic_name}"><img src="Images/{$IMG_DIR}/Icons/post_link.gif" alt="{$topic_name}" border="0" /></a>
-			{$topic_name} <img src="tmp/upload/posticons/{$posticon}" alt="" border="0" />
+			{$topic_name} <if:if var="posticon" noteq=""><img src="tmp/upload/posticons/{$posticon}" alt="" border="0" /></if:if>
 			<span style="font-weight: normal;">( <core:date format="%b %d %Y">{$created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$created}</core:date></span> )</span>
 			<a href="rss.php?t={$topic_post_id}" title="{$L_RSSFEED}: {$topic_name}"><img src="Images/{$IMG_DIR}/Icons/rss_small.gif" alt="{$L_RSSFEED}: {$topic_name}" border="0" /></a>
 		</div>

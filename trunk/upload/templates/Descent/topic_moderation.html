@@ -4,7 +4,7 @@
 				<form action="mod.php?act=moderate_forum&amp;id={$forum_forum_id}" method="post" enctype="multipart/form-data">
 					<input type="hidden" name="topics" id="topics" value="{$topic_post_id}" />
 					<strong>{$L_WITHTOPIC}:</strong>
-					<select name="action">
+					<select name="action" class="inputbox">
 						<option value="lock">{$L_LOCKTOPIC}</option>
 						<option value="split">{$L_SPLITTOPIC}</option>
 						<option value="stick">{$L_STICKTOPIC}</option>

@@ -35,7 +35,9 @@
 				<td class="subheader" width="3%">&nbsp;{$L_INFO}&nbsp;</td>
 			</tr>
 			<list:item list="announcements">
+			<list:switch list="announcements" var="row_class" a="3" b="4">
 			<core:import id="topic_view" file="topic_view.html" />
+			</list:switch>
 			</list:item>
 			</list:list>
 		</table>

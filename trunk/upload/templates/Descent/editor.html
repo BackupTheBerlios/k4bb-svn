@@ -1,138 +1,18 @@
-<if:if var="allowbbcode" eq="1">
-<if:if var="has_bbcode_perms" eq="1">
 <a name="editor" id="editor"></a>
-<div class="outset_box_small">
-	<script type="text/javascript">
-		<!--
-		//<![CDATA[
-
-		{$javascript}
-		
-		u_styles_tip			= "{$L_STYLES_TIP}";
-		u_close_tags			= "{$L_BBCODE_CLOSE_TAGS}";
-		u_enter_url				= "{$L_ENTERURL}";
-		u_enter_pagetitle		= "{$L_ENTERPAGETITLE}";
-		s_webpage_title			= "{$L_PAGETITLE}";
-		u_error_enter_url		= " {$L_ERRORENTERURL}";
-		s_found_errors			= " {$L_ERRORENTERTITLE}";
-		s_error					= "{$L_ERROR}";
-		u_enter_img				= "{$L_ENTERIMG}";
-		u_error_enter_img		= " {$L_ERRORENTERIMG}";
-		u_enter_poll			= "{$L_ENTERPOLLQUESTION}";
-		u_error_enter_poll		= " {$L_ERRORENTERPOLLQUESTION}";
-		u_enter_answer			= "{$L_ENTERPOLLANSWER}";
-		u_error_enter_answer	= " {$L_ERRORENTERPOLLANSWERS}";
-		b_help					= "{$L_BBCODE_B_HELP}"; // Bold
-		i_help					= "{$L_BBCODE_I_HELP}"; // Italic
-		u_help					= "{$L_BBCODE_U_HELP}"; // Underline
-		quote_help				= "{$L_BBCODE_Q_HELP}"; // Quote
-		code_help				= "{$L_BBCODE_C_HELP}"; // Code
-		php_help				= "{$L_BBCODE_PHP_HELP}"; // PHP
-		l_help					= "{$L_BBCODE_L_HELP}"; // List
-		o_help					= "{$L_BBCODE_O_HELP}"; // Ordered List
-		p_help					= "{$L_BBCODE_P_HELP}"; // Image
-		w_help					= "{$L_BBCODE_W_HELP}"; // URL
-		a_help					= "{$L_BBCODE_A_HELP}"; // Close all tags
-		color_help				= "{$L_BBCODE_S_HELP}"; // Color
-		size_help				= "{$L_BBCODE_F_HELP}"; // Font Size
-		poll_help				= "{$L_BBCODE_POLL_HELP}";
-		use_polls				= "";
-
-		var maxpolloptions		= parseInt('{$maxpolloptions}');
-		var allowemoticons		= <maps:if forum="forum_forum_id" var="emoticons" method="can_add">true<maps:else />false</maps:if>;
-
-		var color_options	= new Array('{$L_FONT_COLOR}', '{$L_SKYBLUE}', '{$L_ROYALBLUE}', '{$L_BLUE}', '{$L_DARKBLUE}', '{$L_ORANGE}', '{$L_ORANGERED}', '{$L_CRIMSON}', '{$L_RED}', '{$L_FIREBRICK}', '{$L_DARKRED}', '{$L_GREEN}', '{$L_LIMEGREEN}', '{$L_SEAGREEN}', '{$L_DEEPPINK}', '{$L_TOMATO}', '{$L_CORAL}', '{$L_PURPLE}', '{$L_INDIGO}', '{$L_BURLYWOOD}', '{$L_SANDYBROWN}', '{$L_SIENNA}', '{$L_CHOCOLATE}', '{$L_TEAL}', '{$L_SILVER}');
-		var color_values	= new Array('black', 'skyblue', 'royalblue', 'blue', 'darkblue', 'orange', 'orangered', 'crimson', 'red', 'firebrick', 'darkred', 'green', 'limegreen', 'seagreen', 'deeppink', 'tomato', 'coral', 'purple', 'indigo', 'burlywood', 'sandybrown', 'sienna', 'chocolate', 'teal', 'silver');
-		var color_styles	= new Array('color: black;', 'color: skyblue;', 'color: royalblue;', 'color: blue;', 'color: darkblue;', 'color: orange;', 'color: orangered;', 'color: crimson;', 'color: red;', 'color: firebrick;', 'color: darkred;', 'color: green;', 'color: limegreen;', 'color: seagreen;', 'color: deeppink;', 'color: tomato;', 'color: coral;', 'color: purple;', 'color: indigo;', 'color: burlywood;', 'color: sandybrown;', 'color: sienna;', 'color: chocolate;', 'color: teal;', 'color: silver;');
-		
-		var size_options	= new Array('{$L_FONT_SIZE}', '{$L_FONT_TINY}', '{$L_FONT_SMALL}', '{$L_FONT_NORMAL}', '{$L_FONT_LARGE}', '{$L_FONT_HUGE}');
-		var size_values		= new Array(12, 7, 9, 12, 18, 24);
-		var size_styles		= new Array('font-size: auto;', 'font-size: 8px;', 'font-size: 9px;', 'font-size: 12px;');
-		
-		function emoticon(typed) {
-			var editor	= document.getElementById('messagecodex');
-			editor.value += ' ' + typed;
-		}
-		
-		/**
-		 * Initialize the editor
-		 */
-		var use_wysiwyg		= <if:if var="use_wysiwyg" eq="1">true<if:else />false</if:if>;
-		
-		try {
-			<if:if var="use_wysiwyg" eq="1">init_wysiwyg('messagecodex', 'wysiwygcodex', use_wysiwyg);</if:if>
-			<if:if var="use_bbcode" eq="1">bbcodex_init('message', 'message', 10, 100, 'button', use_wysiwyg);</if:if>
-		} catch(e) { }
-		//]]>
-		//-->
-	</script>
-</if:if>
-</if:if>
-<if:if var="use_wysiwyg" eq="1">
-	<core:import id="generic_colorpicker" file="generic_colorpicker.html" />
-
-	<maps:if forum="forum_forum_id" var="emoticons" method="can_add">
-	<list:list id="emoticons">
-	<!-- Emoticons Table -->
-	<div id="emoticons_menu" class="editor_button_over" style="display: none;">
-		<table cellspacing="{$style_cellspacing}">
-			<tr>
-				<list:item list="emoticons">
-				<td align="center">
-					<a href="javascript:;" onclick="insert_image('tmp/upload/emoticons/{$image}')" title="{$description}"><img src="tmp/upload/emoticons/{$image}" alt="{$description}" border="0" /></a>
-				</td>
-				<list:separator list="emoticons">
-					<list:alternate list="emoticons" count="{@emoticons_per_row}" remainder="{@emoticons_per_row_remainder}">
-						</tr><tr>
-					</list:alternate>
-				</list:separator>
-				</list:item>
-			</tr>
-		</table>
-	</div>
-	<!-- / Emoticons Table -->
-	</list:list>
-	</maps:if>
-</if:if>
-
-<core:import id="start_editor" />
+<textarea name="message" id="{$editor_input_id}" class="inputbox" rows="10" cols="100" wrap="SOFT" style="width: 500px;" tabindex="3">{$editor_text_reverted}</textarea>
 
 <if:if var="allowbbcode" eq="1">
 <if:if var="has_bbcode_perms" eq="1">
-	<script type="text/javascript">		
-		<!--
-		
-		try {
-			var editorcodex		= d.getElementById('editorcodex');
-			var e_textarea		= d.getElementById('messagecodex');
-			
-			var bbcode_buttons	= d.getElementById('bbcodex_buttons');
-			var forum_id		= parseInt('{$forum_forum_id}');
-
-			<maps:if forum="forum_forum_id" var="emoticons" method="can_add">menu_init('emoticons_link', 'emoticons_menu');</maps:if>
-			
-			<if:if var="use_wysiwyg" eq="1">
-			var wysiwyg_editor	= d.getElementById('wysiwygcodex_area');
-			populate_wysiwyg('messagecodex', 'wysiwygcodex');
-			if(use_wysiwyg) { 
-				init_wysiwyg_menus(); 
-			}
-			if(use_wysiwyg) {
-				bbcode_buttons.style.display	= 'none';
-				if(e_textarea) {
-					e_textarea.style.display	= 'none';
-				}
-			} else {
-				wysiwyg_editor.style.display	= 'none';
-				if(e_textarea) {
-					e_textarea.style.display	= 'block';
-				}
-			}
-			</if:if>
-		} catch(e) { }
-
-		//-->
-	</script>
-</div>
+<script type="text/javascript" src="js/editor.js"></script>
+<script type="text/javascript">
+	var maxpolloptions = parseInt('{$maxpolloptions}');
+	var allowemoticons = <maps:if forum="forum_forum_id" var="emoticons" method="can_add">true<maps:else />false</maps:if>;
+	var color_options = new Array('{$L_FONT_COLOR}', '{$L_SKYBLUE}', '{$L_ROYALBLUE}', '{$L_BLUE}', '{$L_DARKBLUE}', '{$L_ORANGE}', '{$L_ORANGERED}', '{$L_CRIMSON}', '{$L_RED}', '{$L_FIREBRICK}', '{$L_DARKRED}', '{$L_GREEN}', '{$L_LIMEGREEN}', '{$L_SEAGREEN}', '{$L_DEEPPINK}', '{$L_TOMATO}', '{$L_CORAL}', '{$L_PURPLE}', '{$L_INDIGO}', '{$L_BURLYWOOD}', '{$L_SANDYBROWN}', '{$L_SIENNA}', '{$L_CHOCOLATE}', '{$L_TEAL}', '{$L_SILVER}');
+	var size_options = new Array('{$L_FONT_SIZE}', '{$L_FONT_TINY}', '{$L_FONT_SMALL}', '{$L_FONT_NORMAL}', '{$L_FONT_LARGE}', '{$L_FONT_HUGE}');
+	var use_wysiwyg = <if:if var="use_wysiwyg" eq="1">true<if:else />false</if:if>;
+	var rte = new k4rte();
+	rte.init('{$editor_input_id}');
+	//rte.sm('{$editor_input_id}');
+</script>
 </if:if>
 </if:if>

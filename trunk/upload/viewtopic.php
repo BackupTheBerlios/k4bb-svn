@@ -354,8 +354,12 @@ class K4DefaultAction extends FAAction {
 			$request['template']->setVar('emoticons_per_row', $request['template']->getVar('smcolumns'));
 			$request['template']->setVar('emoticons_per_row_remainder', $request['template']->getVar('smcolumns')-1);
 		}
+
 		/* Create our editor for the quick reply */
 		create_editor($request, '', 'post', $forum);
+		
+		// show the midsection of the forum
+		$request['template']->setVisibility('forum_midsection', TRUE);
 
 		return TRUE;
 	}

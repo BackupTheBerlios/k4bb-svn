@@ -205,15 +205,15 @@ class K4DefaultAction extends FAAction {
 			
 			/* Set what this user can/cannot do in this forum */
 			$request['template']->setVar('forum_user_topic_options', sprintf($request['template']->getVar('L_FORUMUSERTOPICPERMS'),
-			iif((get_map( 'topics', 'can_add', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN')),
-			iif((get_map( 'topics', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN')),
-			iif((get_map( 'topics', 'can_del', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN')),
-			iif((get_map( 'attachments', 'can_add', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN'))));
+			((get_map( 'topics', 'can_add', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) ? $request['template']->getVar('L_CANNOT') : $request['template']->getVar('L_CAN')),
+			((get_map( 'topics', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) ? $request['template']->getVar('L_CANNOT') : $request['template']->getVar('L_CAN')),
+			((get_map( 'topics', 'can_del', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) ? $request['template']->getVar('L_CANNOT') : $request['template']->getVar('L_CAN')),
+			((get_map( 'attachments', 'can_add', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) ? $request['template']->getVar('L_CANNOT') : $request['template']->getVar('L_CAN'))));
 
 			$request['template']->setVar('forum_user_reply_options', sprintf($request['template']->getVar('L_FORUMUSERREPLYPERMS'),
-			iif((get_map( 'replies', 'can_add', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN')),
-			iif((get_map( 'replies', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN')),
-			iif((get_map( 'replies', 'can_del', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')), $request['template']->getVar('L_CANNOT'), $request['template']->getVar('L_CAN'))));
+			((get_map( 'replies', 'can_add', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) ? $request['template']->getVar('L_CANNOT') : $request['template']->getVar('L_CAN')),
+			((get_map( 'replies', 'can_edit', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) ? $request['template']->getVar('L_CANNOT') : $request['template']->getVar('L_CAN')),
+			((get_map( 'replies', 'can_del', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) ? $request['template']->getVar('L_CANNOT') : $request['template']->getVar('L_CAN'))));
 			
 			/* Create an array with all of the possible sort orders we can have */						
 			$sort_orders		= array('name', 'lastpost_created', 'num_replies', 'views', 'lastpost_uname', 'rating', 'poster_name');
@@ -339,7 +339,7 @@ class K4DefaultAction extends FAAction {
 			 */
 			if($request['user']->isMember()) {
 				$subscribed						= $request['dba']->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE forum_id = ". intval($forum['forum_id']) ." AND post_id = 0 AND user_id = ". $request['user']->get('id'));
-				$request['template']->setVar('is_subscribed', iif($subscribed->numRows() > 0, 1, 0));
+				$request['template']->setVar('is_subscribed', ($subscribed->numRows() > 0 ? 1 : 0));
 			}
 
 		/**
@@ -349,10 +349,16 @@ class K4DefaultAction extends FAAction {
 		 */
 		} else if($forum['row_type'] & GALLERY) {
 			
-		} else {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDFORUM');
+			$request['template']->setFile('content', 'viewgallery.html');
 			
+			
+
+		/**
+		 *
+		 * ERROR
+		 *
+		 */
+		} else {
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
@@ -360,6 +366,9 @@ class K4DefaultAction extends FAAction {
 		/* Add the cookies for this forum's topics */
 		bb_execute_topiccache();
 		
+		// show the midsection of the forum
+		$request['template']->setVisibility('forum_midsection', TRUE);
+
 		return TRUE;
 	}
 }

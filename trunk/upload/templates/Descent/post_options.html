@@ -1,0 +1,43 @@
+<!-- Additional Post Options -->
+<div class="subheader" id="po_title">
+	<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_po', 'postoptions', 'po_title')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_po" src="Images/{$IMG_DIR}/Icons/collapse_thead<if:if var="nojs" eq="0">_collapsed</if:if>.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
+	{$L_ADDITIONALOPTIONS}
+</div>
+<div class="spacer">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="postoptions" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
+		<tr>
+			<td class="alt3">
+				<div class="outset_box">
+					<fieldset>
+						<legend>{$L_MISCOPTIONS}</legend>
+						<maps:if forum="forum_forum_id" var="html" method="can_add"><input type="checkbox" name="disable_html" id="disable_html" checked="checked" />&nbsp;<label for="disable_html">{$L_DISABLEHTML}</label><br /></maps:if>
+						<!--<input type="checkbox" name="disable_bbcode" id="disable_bbcode" />&nbsp;<label for="disable_bbcode">{$L_DISABLEBBCODE}</label><br />-->
+						<input type="checkbox" name="disable_emoticons" id="disable_emoticons" />&nbsp;<label for="disable_emoticons">{$L_DISABLEEMOTICONS}</label><br />
+						<input type="checkbox" name="disable_aurls" id="disable_aurls" />&nbsp;<label for="disable_aurls">{$L_PARSEURLS}</label><br />
+						<is:logged><input type="checkbox" name="enable_sig" id="enable_sig" checked="checked" />&nbsp;<label for="enable_sig">{$L_ATTACHSIGNATURE}</label><br />
+						<input type="checkbox" name="disable_areply" id="disable_areply" />&nbsp;<label for="disable_areply">{$L_NOTIFYONREPLY}</label></is:logged>
+					</fieldset>
+					<if:if var="is_topic" eq="1">
+					<maps:if var="sticky" method="can_add" forum="forum_forum_id">
+					<br />
+					<div align="center">
+						{$L_POSTTOPICAS}: 
+						<input type="radio" name="post_type" id="post_type" value="1" checked="checked" /> {$L_NORMAL}
+						<maps:if var="sticky" method="can_add" forum="forum_forum_id"><input type="radio" name="post_type" id="post_type" value="2" /> {$L_STICKYTOPIC}</maps:if>
+						<maps:if var="announce" method="can_add" forum="forum_forum_id"><input type="radio" name="post_type" id="post_type" value="3" /> {$L_ANNOUNCEMENT}</maps:if>
+						<maps:if var="feature" method="can_add" forum="forum_forum_id"><br /><br /><label for="feature"><input type="checkbox" name="is_feature" id="feature" value="yes" />&nbsp;{$L_FEATURETOPIC}</label></maps:if>
+						<br /><br />
+					</div>
+					<fieldset>
+						<legend><strong>{$L_STICKTOPICFOR}</strong> - {$L_STICKTOPICFOREXPLAIN}</legend>
+						<input type="text" name="post_expire" size="3" maxlength="4" value="{$post_post_expire}" class="inputbox" /> <strong>{$L_DAYS}</strong>
+						<span class="smalltext">{$L_TOPICEXPIREEXPLAIN}</span>
+					</fieldset>
+					</maps:if>
+					</if:if>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- / Additional Post Options -->

@@ -6,11 +6,16 @@
  * @package k42
  */
 
+// global vars
 var rows = ["alt1", "alt2"];
 var afu = false;
 
 function k4menu() {
+
+	// public functions
 	this.init = init;
+
+	// private functions
 	this._open = _open;
 	this._close = _close;
 	this._closec = _closec;
@@ -23,12 +28,19 @@ function k4menu() {
 	this._pos = _pos;
 	this._ws = _ws;
 	this._sets = _sets;
-	this.switchTargetValue = new Function(); // hookable function
+	
+	// hooks
+	this.clickRow = new Function();
+	this.mouseupRow = new Function();
+	this.mouseoverRow = new Function();
+	this.mouseoutRow = new Function();
+	
+	// vars
 	var d = new k4lib(); // k4 library
 	var _om = false; // open menu
 	var _hs = new Array(); // hidden selects
 	var _t = this; // this
-
+	
 	// initialize a menu
 	function init(li, mi, uc, t) {
 		var lx = d.getElementById(li);
@@ -138,21 +150,30 @@ function k4menu() {
 			}
 		}
 	}
-	// highlight rows
+	// highlight rows, and do other stuff
 	function _hrs(mx, tx) {
 		var rs = d.getElementsByTagName(mx, 'td');
 		if(rs) {
 			for(var i = 0; i < d.sizeof(rs); i++) {
 				if(rs[i]) {
-					rs[i].onmouseover = function() { if(this.className == rows[0]) this.className = rows[1]; }
-					rs[i].onmouseout = function() { if(this.className == rows[1]) this.className = rows[0]; }
+					rs[i].onmouseover = function() { 
+						if(this.className == rows[0]) 
+							this.className = rows[1]; 
+						_t.mouseoverRow(this);
+					}
+					rs[i].onmouseout = function() { 
+						if(this.className == rows[1]) 
+							this.className = rows[0]; 
+						_t.mouseoutRow(this);
+					}
 					rs[i].onclick = function() {
 						if(typeof(tx) != 'undefined' && tx) {
 							tx.innerHTML = this.innerHTML;
-							_t.switchTargetValue(this.innerHTML);
+							_t.clickRow(this);
 						}
 						//_t._close(mx);
 					}
+					rs[i].onmouseup = function() { _t.mouseupRow(this); }
 				}
 			}
 		}
@@ -233,7 +254,7 @@ function k4menu() {
 var k4_menu=new k4menu();
 function menu_init(link_id, menu_id, use_click) {
 	if(typeof(use_click) == 'undefined') {
-		use_click = true;
+		use_click=true;
 	}
 	k4_menu.init(link_id, menu_id, use_click);
 }

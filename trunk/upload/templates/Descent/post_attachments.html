@@ -1,0 +1,22 @@
+<maps:if var="attachments" method="can_add" forum="forum_forum_id">
+<!-- Attachments Manager -->
+<div class="subheader" id="am_title">
+	<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_am', 'attachmanage', 'am_title')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_am" src="Images/{$IMG_DIR}/Icons/collapse_thead<if:if var="nojs" eq="0">_collapsed</if:if>.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
+	{$L_ATTACHMENTSMANAGER}
+</div>
+<div class="spacer">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="attachmanage" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
+		<tr>
+			<td class="alt3">
+				<fieldset>
+					<legend>{$L_SELECTFILES}</legend>
+					<div class="smalltext">{$L_VALIDEXTENSIONS}: {$attachextensions}</div>
+					<input type="hidden" name="MAX_FILE_SIZE" value="{$maxattachsize}" />
+					{$attach_inputs}
+				</fieldset>
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- / Attachments Manager -->
+</maps:if>

@@ -54,12 +54,9 @@ function create_editor(&$request, $text, $place, $forum = FALSE) {
 	}
 	
 	$request['template']->setVar('has_bbcode_perms', $can_bbcode);
-	$request['template']->setVar('input_id', 'wysiwygcodex');
-	$request['template']->setFile('start_editor', (USE_WYSIWYG ? 'editor_wysiwyg.html' : 'editor_bbcode.html'));
+	$request['template']->setVar('editor_input_id', 'editor_area');
 	$request['template']->setVar('use_wysiwyg', (USE_WYSIWYG ? 1 : 0));
 	$request['template']->setVar('use_bbcode', (USE_WYSIWYG ? 0 : 1));
-	
-	$request['template']->setVar('javascript', encode_javascript((USE_WYSIWYG ? '/js/wysiwyg.js' : '/js/bbcode.js')));
 
 	if($text != '') {
 		$bbcode				= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $text, $forum['forum_id'], TRUE, TRUE, TRUE, TRUE, array('php', 'quote', 'code'));
@@ -72,27 +69,6 @@ function create_editor(&$request, $text, $place, $forum = FALSE) {
 		$request['template']->setVar('editor_text', $bbcode->parse());
 	}
 	$request['template']->setVar('editor_enabled', 1);
-}
-
-function encode_javascript($filename) {
-	$file	= BB_BASE_DIR . $filename;
-	$ret	= '';
-
-	if(file_exists($file)) {
-		$ret = file_get_contents($file);
-		
-//		$ret = preg_replace("~//(.*)+$~", '', $ret);
-//		$ret = preg_replace("~(\s)?(=|\|\||\+)(\s)?~i", '$2', $ret);
-//		$ret = preg_replace("~/\*(.+?)\*/~is", '', $ret);
-//		$ret = preg_replace("~\{(\r\n|\r|\n)~i", '{', $ret);
-//		$ret = preg_replace("~(\/\/(.+?)(\n|\r\n|\r)$)~i", '', $ret);
-//		$ret = preg_replace("~(\t|\n)~i", '', $ret);
-//		$ret = preg_replace("~(\n\n|\r\n\r\n|\r\r)~i", "\n", $ret);
-//		$ret = preg_replace("~\} (else|catch\(e\)) \{~i", '}$1{', $ret);
-		//$ret = preg_replace("~(\r\n|\n|\r|\s)?\}(\r\n|\n|\r|\s)?\}(\r\n|\n|\r|\s)?~i", '}}', $ret);
-	}
-
-	return $ret;
 }
 
 ?>
