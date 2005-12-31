@@ -45,12 +45,12 @@
 			<a href="rss.php?t={$topic_post_id}" title="{$L_RSSFEED}: {$topic_name}"><img src="Images/{$IMG_DIR}/Icons/rss_small.gif" alt="{$L_RSSFEED}: {$topic_name}" border="0" /></a>
 		</div>
 		<!-- Drop Down Menus -->
-		<table cellspacing="0" class="ddmenutable">
+		<table cellpadding="0" cellspacing="0" border="0" class="ddmenutable">
 			<tr>
-				<td>
+				<td style="padding:0px;margin:0px;border:0px;">
 					<div class="ddmenu_button" id="topicoptions_link"><span class="ddmenu_link_alt">{$L_TOPICOPTIONS}</span></div>
 				</td>
-				<td>
+				<td style="padding:0px;margin:0px;border:0px;">
 					<div class="ddmenu_button" id="ratetopic_link"><span class="ddmenu_link_alt">{$L_RATETOPIC}</span></div>
 				</td>
 			</tr>
@@ -66,9 +66,7 @@
 <list:switch list="posts" var="row_class" a="3" b="4">
 <if:if var="row_type" eq="4">
 <!-- Topic: {$name} -->
-<div class="spacer">
-	<core:import id="topic_file" file="topic.html" />
-</div>
+<core:import id="topic_file" file="topic.html" />
 <!-- / Topic: {$name} -->
 <if:else />
 <maps:if var="replies" forum="forum_id" method="can_view">
@@ -137,7 +135,7 @@
 <core:import id="topic_options" file="topic_options_ddmenu.html" />
 
 <!-- Rate Topic Drop Down Menu -->
-<div id="ratetopic_menu" class="header" style="display: none;">
+<div id="ratetopic_menu" style="display: none;">
 	<form action="viewtopic.php?act=rate_topic&amp;id={$topic_post_id}" method="post" enctype="multipart/form-data">
 	<table cellspacing="{$style_cellspacing}" class="table">
 		<tr>

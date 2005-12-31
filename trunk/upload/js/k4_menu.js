@@ -28,6 +28,7 @@ function k4menu() {
 	this._pos = _pos;
 	this._ws = _ws;
 	this._sets = _sets;
+	this._psnts = _psnts;
 	
 	// hooks
 	this.clickRow = new Function();
@@ -60,11 +61,15 @@ function k4menu() {
 		d.forceCursor(lx);
 		mx.style.display = 'none';
 		mx.style.position = 'absolute';
+		_t._psnts(lx, mx, tx);
+		_t._hrs(mx, tx);
+	}
+	// set menu positions
+	function _psnts(lx, mx, tx) {
 		force_right = parseInt(d.left(lx) + d.width(mx)) >= document.body.clientWidth ? true : false;
 		xx = tx ? tx : lx;
 		mx.style.left = (force_right ? (d.left(xx) - (d.width(mx) - d.width(xx))) : d.left(xx)) + 'px';
 		mx.style.top = parseInt(d.top(xx) + d.height(xx)) + 'px';
-		_t._hrs(mx, tx);
 	}
 	// is open function
 	function _io(mx) {
@@ -75,10 +80,11 @@ function k4menu() {
 		return ret;
 	}
 	// open the menu
-	function _open(mx, tx) {
+	function _open(lx, mx, tx) {
 		if(_om != mx) {
 			_t._close(_om);
 			mx.style.display = 'block';
+			_t._psnts(lx, mx, tx);
 			_t._cs(mx);
 			_om = mx;
 			_t._sets(mx, tx);
@@ -132,10 +138,10 @@ function k4menu() {
 	// attach event
 	function _ae(lx, mx, uc, tx) {
 		var close = function(e) { _t._closec(e, lx, mx, tx); }
-		lx.onclick = function (e) { _t._open(mx, tx); }
+		lx.onclick = function (e) { _t._open(lx, mx, tx); }
 		lx.onmouseover = function(e) { 
-			if(_om && (mx.id != _om.id)) {
-				_t._open(mx, tx);
+			if(_om && (mx.id != _om.id) ) {
+				_t._open(lx, mx, tx);
 			}
 		}
 		if(document.addEventListener ) {
@@ -231,11 +237,12 @@ function k4menu() {
 		var es = d.getElementsByTagName(mx, 'table');
 		if(b > ws[1]) {
 			mx.style.height = parseInt(parseInt(b - t) - parseInt(b - ws[1]) - 10) + 'px';
-			if(!d.is_ff) { mx.style.width = parseInt(d.width(mx) + 17) + 'px'; } // scroll bar width
+			if(!d.is_ff) {  } // scroll bar width
 			if(!d.is_opera) {
 				mx.style.overflow = 'auto';
 			} else {
 				// deal with opera's overflow:auto annoyance
+				mx.style.width = parseInt(d.width(mx) + 19) + 'px';
 				var scroller = d.getElementById('scroller_' + mx.id);
 				if(typeof(scroller) == 'undefined' || !scroller) {
 					var html = mx.innerHTML;
@@ -247,6 +254,8 @@ function k4menu() {
 					}
 				}
 			}
+		} else {
+			// TODO: change the size if the scroll bar isn't needed
 		}
 	}
 }

@@ -55,7 +55,7 @@ function create_editor(&$request, $text, $place, $forum = FALSE) {
 		$bbcode				= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $text, $forum['forum_id'], TRUE, TRUE, TRUE, TRUE, array('php', 'quote', 'code'));
 		
 		$reverted			= $bbcode->revert();
-		$request['template']->setVar('editor_text_reverted', $reverted);
+		$request['template']->setVar('editor_text_reverted', $reverted .' ');
 		
 		$bbcode->text		= $reverted;
 

@@ -15,10 +15,10 @@
 		</div>
 		<!-- Edit DD Menu -->
 		<div class="header" id="edit_menu_{$post_id}" style="display: none;">
-			<div class="table">
-				<div class="alt1"><a class="smalltext" href="javascript:;" title="{$L_QUICKEDIT}" onclick="quickEditPost({$post_id}, '{$post_id}_body')">{$L_QUICKEDIT}</a></div>
-				<div class="alt1"><a class="smalltext" href="newreply.php?act=editreply&amp;id={$post_id}" title="{$L_FULLEDIT}">{$L_FULLEDIT}</a></div>
-			</div>
+			<table cellspacing="{$style_cellspacing}" class="table">
+				<tr><td class="alt1"><a class="smalltext" href="javascript:;" title="{$L_QUICKEDIT}" onclick="quickEditPost({$post_id}, '{$post_id}_body')">{$L_QUICKEDIT}</a></td></tr>
+				<tr><td class="alt1"><a class="smalltext" href="newreply.php?act=editreply&amp;id={$post_id}" title="{$L_FULLEDIT}">{$L_FULLEDIT}</a></td></tr>
+			</table>
 		</div>
 		<script type="text/javascript">menu_init('edit_button_{$post_id}', 'edit_menu_{$post_id}', true);</script>
 		<!-- / Edit DD Menu -->

@@ -1,71 +1,73 @@
-<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="topic{$post_id}">
-	<tr>
-		<td class="subheader" colspan="2">
-			<div style="float: right;">
-				<if:if var="modpanel" eq="1"><a href="mod.php?act=baniprange&amp;ip={$poster_ip}" title="{$L_BANIP}"><img src="Images/{$IMG_DIR}/Icons/ban_ip.gif" alt="{$L_BANIP}" border="0" /></a></if:if>
-				<a href="viewtopic.php?act=report_post&amp;t={$post_id}" title="{$L_REPORTPOST}"><img src="Images/{$IMG_DIR}/Icons/report_post.gif" alt="{$L_REPORTPOST}" border="0" /></a>
-				<maps:if var="closed" forum="topic_forum_id" method="can_add"><if:if var="post_locked" eq="0"><img border="0" src="Images/{$IMG_DIR}/Buttons/iconlock.gif" alt="{$L_LOCK}" onclick="updateTopicLocked(this, {$post_id})" /><if:else /><img border="0" src="Images/{$IMG_DIR}/Buttons/iconlock_lock.gif" alt="{$L_UNLOCK}" onclick="updateTopicLocked(this, {$post_id})" /></if:if></maps:if>
-			</div>
-			<div align="center">{$L_MESSAGE}</div>
-		</td>
-	</tr>
-	<tr>
-		<td class="alt1" colspan="2" valign="top">
-			<core:import id="post_user_section_linear" file="post_user_section_linear.html" />
-		</td>
-	</tr>
-	<tr>
-		<td class="base1" colspan="2" id="topic{$post_id}" valign="top">
-			
-			<hr noshade="noshade" size="1" />
-			
-			<!-- Body Text -->
-			<div id="{$post_id}_body">{$body_text}</div>
-			<div style="text-align: right;display: none;" id="{$post_id}_qebuttons"><input type="button" value="{$L_SAVE}" class="button" style="font-weight: bold;" onclick="saveQuickEdit({$post_id}, '{$post_id}_body')" />&nbsp;<input type="button" value="X" class="button" style="font-weight: bold;color: #FF0000;" onclick="cancelQuickEdit({$post_id}, '{$post_id}_body')" /></div>
-			<!-- / Body Text -->
-			
-			<core:import id="attached_images" file="post_attached_images.html" />
+<div class="spacer">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="topic{$post_id}">
+		<tr>
+			<td class="subheader" colspan="2">
+				<div style="float: right;">
+					<if:if var="modpanel" eq="1"><a href="mod.php?act=baniprange&amp;ip={$poster_ip}" title="{$L_BANIP}"><img src="Images/{$IMG_DIR}/Icons/ban_ip.gif" alt="{$L_BANIP}" border="0" /></a></if:if>
+					<a href="viewtopic.php?act=report_post&amp;t={$post_id}" title="{$L_REPORTPOST}"><img src="Images/{$IMG_DIR}/Icons/report_post.gif" alt="{$L_REPORTPOST}" border="0" /></a>
+					<maps:if var="closed" forum="topic_forum_id" method="can_add"><if:if var="post_locked" eq="0"><img border="0" src="Images/{$IMG_DIR}/Buttons/iconlock.gif" alt="{$L_LOCK}" onclick="updateTopicLocked(this, {$post_id})" /><if:else /><img border="0" src="Images/{$IMG_DIR}/Buttons/iconlock_lock.gif" alt="{$L_UNLOCK}" onclick="updateTopicLocked(this, {$post_id})" /></if:if></maps:if>
+				</div>
+				<div align="center">{$L_MESSAGE}</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" colspan="2" valign="top">
+				<core:import id="post_user_section_linear" file="post_user_section_linear.html" />
+			</td>
+		</tr>
+		<tr>
+			<td class="base1" colspan="2" id="topic{$post_id}" valign="top">
+				
+				<hr noshade="noshade" size="1" />
+				
+				<!-- Body Text -->
+				<div id="{$post_id}_body">{$body_text}</div>
+				<div style="text-align: right;display: none;" id="{$post_id}_qebuttons"><input type="button" value="{$L_SAVE}" class="button" style="font-weight: bold;" onclick="saveQuickEdit({$post_id}, '{$post_id}_body')" />&nbsp;<input type="button" value="X" class="button" style="font-weight: bold;color: #FF0000;" onclick="cancelQuickEdit({$post_id}, '{$post_id}_body')" /></div>
+				<!-- / Body Text -->
+				
+				<core:import id="attached_images" file="post_attached_images.html" />
 
-			<if:if var="showeditedby" eq="1">
-				<if:if var="edited_time" greater="0">
-					<!-- Edited Information -->
-						<br /><br />
-						<div class="smalltext" style="font-style: italic;">
-							{$L_EDITEDON} <core:date format="%b %d %Y">{$edited_time}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$edited_time}</core:date></span>
-							{$L_BY} <a href="member.php?id={$edited_userid}" title="{$edited_username}">{$edited_username}</a>
-						</div>
-						<br />
-					<!-- / Edited Information -->
+				<if:if var="showeditedby" eq="1">
+					<if:if var="edited_time" greater="0">
+						<!-- Edited Information -->
+							<br /><br />
+							<div class="smalltext" style="font-style: italic;">
+								{$L_EDITEDON} <core:date format="%b %d %Y">{$edited_time}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$edited_time}</core:date></span>
+								{$L_BY} <a href="member.php?id={$edited_userid}" title="{$edited_username}">{$edited_username}</a>
+							</div>
+							<br />
+						<!-- / Edited Information -->
+					</if:if>
 				</if:if>
-			</if:if>
 
-			<if:if var="attachments" geq="1">
-				<maps:if var="attachments" forum="topic_forum_id" method="can_view">
-					<!-- Attached Files -->
-					<br /><br />
-					<fieldset>
-						<legend>{$L_ATTACHMENTS}</legend>
-						<list:sublist list="topic" id="attachment_files" column="attachment_files">
-						<list:item list="attachment_files">
-						<div style="float: right;" class="minitext">md5: {$mdfive}</div>
-						<img src="{$file_icon}" alt="{$L_ATTACHMENT}: {$file_name}" border="0" />&nbsp;<a href="viewfile.php?act=attachment&amp;id={$id}&amp;post_id={$post_id}" target="_blank" title="{$L_ATTACHMENT}: {$file_name}" class="smalltext">{$file_name}</a>
-						<if:if var="modpanel" eq="1"><maps:if var="attachments" method="can_del" forum="forum_id"> - <a href="viewfile.php?act=remove_attach&amp;id={$id}&amp;post_id={$post_id}" title="{$L_REMOVEATTACHMENT}" class="minitext">{$L_REMOVEATTACHMENT}</a></maps:if></if:if>
-						<list:separator list="attachment_files"><br /></list:separator>
-						</list:item>
-						</list:sublist>
-					</fieldset>
-					<!-- / Attached Files -->
-				</maps:if>
-			</if:if>
+				<if:if var="attachments" geq="1">
+					<maps:if var="attachments" forum="topic_forum_id" method="can_view">
+						<!-- Attached Files -->
+						<br /><br />
+						<fieldset>
+							<legend>{$L_ATTACHMENTS}</legend>
+							<list:sublist list="topic" id="attachment_files" column="attachment_files">
+							<list:item list="attachment_files">
+							<div style="float: right;" class="minitext">md5: {$mdfive}</div>
+							<img src="{$file_icon}" alt="{$L_ATTACHMENT}: {$file_name}" border="0" />&nbsp;<a href="viewfile.php?act=attachment&amp;id={$id}&amp;post_id={$post_id}" target="_blank" title="{$L_ATTACHMENT}: {$file_name}" class="smalltext">{$file_name}</a>
+							<if:if var="modpanel" eq="1"><maps:if var="attachments" method="can_del" forum="forum_id"> - <a href="viewfile.php?act=remove_attach&amp;id={$id}&amp;post_id={$post_id}" title="{$L_REMOVEATTACHMENT}" class="minitext">{$L_REMOVEATTACHMENT}</a></maps:if></if:if>
+							<list:separator list="attachment_files"><br /></list:separator>
+							</list:item>
+							</list:sublist>
+						</fieldset>
+						<!-- / Attached Files -->
+					</maps:if>
+				</if:if>
 
-			<if:if var="disable_sig" eq="0">
-			<if:if var="post_user_signature" noteq="">
-			<br /><br />
-			<if:if var="user_viewsigs" eq="1">{$signatureseparator}{$post_user_signature}</if:if>
-			</if:if>
-			</if:if>
-			<br /><br />
-		</td>
-	</tr>
-	<core:import id="topic_control_buttons" file="topic_control_buttons.html" />
-</table>
+				<if:if var="disable_sig" eq="0">
+				<if:if var="post_user_signature" noteq="">
+				<br /><br />
+				<if:if var="user_viewsigs" eq="1">{$signatureseparator}{$post_user_signature}</if:if>
+				</if:if>
+				</if:if>
+				<br /><br />
+			</td>
+		</tr>
+		<core:import id="topic_control_buttons" file="topic_control_buttons.html" />
+	</table>
+</div>

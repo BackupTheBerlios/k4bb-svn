@@ -52,7 +52,8 @@
 		<tr>
 			<td class="subheader" colspan="<if:if var="modpanel" eq="1">8<if:else />7</if:if>">{$L_ANNOUNCEMENTS}</td>
 		</tr>
-		<list:item list="announcements"><list:switch list="announcements" var="row_class" a="3" b="4">
+		<list:item list="announcements">
+		<list:switch list="announcements" var="row_class" a="3" b="4">
 		
 		<core:import id="topic_view" file="topic_view.html" />
 		

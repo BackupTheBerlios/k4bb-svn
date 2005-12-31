@@ -1,15 +1,9 @@
 <a name="editor" id="editor"></a>
 <textarea name="message" id="{$editor_input_id}" class="inputbox" rows="10" cols="100" wrap="SOFT" style="width: 500px;" tabindex="3">{$editor_text_reverted}</textarea>
-
 <if:if var="allowbbcode" eq="1">
 <if:if var="has_bbcode_perms" eq="1">
-<script type="text/javascript" src="js/editor.js"></script>
+<script type="text/javascript" src="js/k4_editor.js"></script>
 <script type="text/javascript">
-	var maxpolloptions = parseInt('{$maxpolloptions}');
-	var allowemoticons = <maps:if forum="forum_forum_id" var="emoticons" method="can_add">true<maps:else />false</maps:if>;
-	var color_options = new Array('{$L_FONT_COLOR}', '{$L_SKYBLUE}', '{$L_ROYALBLUE}', '{$L_BLUE}', '{$L_DARKBLUE}', '{$L_ORANGE}', '{$L_ORANGERED}', '{$L_CRIMSON}', '{$L_RED}', '{$L_FIREBRICK}', '{$L_DARKRED}', '{$L_GREEN}', '{$L_LIMEGREEN}', '{$L_SEAGREEN}', '{$L_DEEPPINK}', '{$L_TOMATO}', '{$L_CORAL}', '{$L_PURPLE}', '{$L_INDIGO}', '{$L_BURLYWOOD}', '{$L_SANDYBROWN}', '{$L_SIENNA}', '{$L_CHOCOLATE}', '{$L_TEAL}', '{$L_SILVER}');
-	var size_options = new Array('{$L_FONT_SIZE}', '{$L_FONT_TINY}', '{$L_FONT_SMALL}', '{$L_FONT_NORMAL}', '{$L_FONT_LARGE}', '{$L_FONT_HUGE}');
-	var use_wysiwyg = <if:if var="use_wysiwyg" eq="1">true<if:else />false</if:if>;
 	var rte = new k4rte();
 	rte.init('{$editor_input_id}');
 	//rte.sm('{$editor_input_id}');
