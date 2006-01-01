@@ -92,11 +92,8 @@ function cache_forum($info) {
 	}
 
 	$data['subforums']	= isset($info['subforums']) ? intval($info['subforums']) : 0;
-	
-	$data['id']			= $data['forum_id'];
-
-	$_SESSION['bbcache']['forums'][$data['id']]				= $data;
-	$_SESSION['bbcache']['forums'][$data['id']]['forum_time']	= time();
+	$_SESSION['bbcache']['forums'][$data['forum_id']]				= $data;
+	$_SESSION['bbcache']['forums'][$data['forum_id']]['forum_time']	= time();
 }
 
 function set_forum_cache_item($name, $val, $id) {
