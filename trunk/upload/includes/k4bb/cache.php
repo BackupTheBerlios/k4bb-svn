@@ -84,7 +84,7 @@ function cache_forum($info) {
 	if(!isset($_SESSION['bbcache']))
 		$_SESSION['bbcache'] = array();
 	
-	$required	= array('forum_id', 'category_id', 'parent_id', 'row_left', 'row_right', 'row_type', 'row_level', 'row_order', 'name', 'created', 'subforums');
+	$required	= array('forum_id', 'parent_id', 'row_type', 'row_order', 'name', 'created', 'subforums');
 	$data		= array();
 	foreach($required as $val) {
 		if(isset($info[$val]))
@@ -93,7 +93,7 @@ function cache_forum($info) {
 
 	$data['subforums']	= isset($info['subforums']) ? intval($info['subforums']) : 0;
 	
-	$data['id']			= $data['row_type'] & FORUM ? $data['forum_id'] : $data['category_id'];
+	$data['id']			= $data['forum_id'];
 
 	$_SESSION['bbcache']['forums'][$data['id']]				= $data;
 	$_SESSION['bbcache']['forums'][$data['id']]['forum_time']	= time();
