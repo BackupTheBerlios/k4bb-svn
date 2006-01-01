@@ -272,26 +272,28 @@ class K4GeneralCacheFilter extends FAFilter {
 	function execute(&$action, &$request, $do_overwrite = FALSE) {
 				
 		$cache = array();
-
-		/**
-		 * Should we have to rewrite the cache file/database? 
-		 */
-		// TODO: make it so that the db can recache itself //  || CACHE_IN_DB
-		//if((!CACHE_IN_DB && (!file_exists(CACHE_DIR) || rewrite_file(CACHE_DIR, CACHE_INTERVAL))) || $do_overwrite) {
-		if(FALSE) {	
-			$methods = get_class_methods($this);
-
-			foreach($methods as $function) {
-				if(substr($function, 0, 6) == 'cache_') {
-					$this->$function($cache, $request);
-				}	
-			}
-
-			/* Create the cache file */
-			if(USE_CACHE)
-				DBCache::createCache($cache);
-		}
 		
+		/**
+		 * Make sure the cache files exist
+		 */
+		if(!CACHE_IN_DB && USE_CACHE) {
+			$d = dir(CACHE_DIR);
+			if(count($d->read()) < 17) {
+				
+				/* Create the cache file using the class functions */
+				$methods = get_class_methods($this);
+
+				foreach($methods as $function) {
+					if(substr($function, 0, 6) == 'cache_') {
+						$this->$function($cache, $request);
+					}	
+				}
+
+				/* Create the cache file */
+				DBCache::createCache($cache);
+			}
+		}		
+
 		/**
 		 * Fileserver caching
 		 */
@@ -343,7 +345,7 @@ class K4GeneralCacheFilter extends FAFilter {
 			$GLOBALS['_DATASTORE']				= isset($cache['datastore']) ? $cache['datastore'] : array();
 			$GLOBALS['_USERTITLES']				= $cache['user_titles'];
 		}	
-
+		
 		/* Add the extra values onto the end of the userinfo query params variable */
 		global $_QUERYPARAMS;
 		foreach($GLOBALS['_PROFILEFIELDS'] as $temp) {

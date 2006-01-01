@@ -70,7 +70,7 @@ class K4SqlDebugPreFilter extends FAFilter {
 		
 		$request['template']->setVar('debug_url', $url->__toString());
 		
-		if (isset($_GET['debug']) && $request['user']->get('perms') >= ADMIN) {
+		if (isset($_GET['debug'])) {
 			$request['dba'] = &new K4SqlDebugger($request['dba']);
 		}
 	}
@@ -448,7 +448,9 @@ class K4SqlDebugAction extends FAAction {
 		$template->setVar('filename', $_SERVER['PHP_SELF']);
 		$template->setVar('page_preview', $page_preview);
 		$template->setList('queries', $request['dba']->getDebugIterator());
-		$template->render(K4_BASE_DIR . '/templates/sqldebug.html');
+		$html = $template->run(K4_BASE_DIR . '/templates/sqldebug.html');
+		echo $html;
+		exit;
 	}
 }
 
