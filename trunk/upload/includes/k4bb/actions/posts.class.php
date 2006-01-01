@@ -401,12 +401,11 @@ class InsertPost extends FAAction {
 								$request['template']->setVar($key, $val);
 
 							$request['template']->setVisibility('in_topicview', FALSE);
+							$request['template']->setVar('row_class', ($topic['num_replies'] % 2 == 0 ? 1 : 2));
 							
 							$templateset = $request['user']->isMember() ? $request['user']->get('templateset') : $forum['defaultstyle'];
 
-							$html	= '<div class="spacer"><table width="100%" cellpadding="0" cellspacing="'. K4_TABLE_CELLSPACING .'" border="0" class="table">';
-							$html	.= $request['template']->run(BB_BASE_DIR .'/templates/'. $templateset .'/reply'. ($request['user']->get('topic_display') == 0 ? '' : '_linear') .'.html');
-							$html	.= '</table></div>';
+							$html	= $request['template']->run(BB_BASE_DIR .'/templates/'. $templateset .'/reply'. ($request['user']->get('topic_display') == 0 ? '' : '_linear') .'.html');
 
 							echo $html;
 							exit;

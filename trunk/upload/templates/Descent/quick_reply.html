@@ -15,9 +15,9 @@
 			<td class="alt3">
 				<div class="outset_box">
 					<!-- Post Message -->
-					<label for="messagecodex" class="smalltext">{$L_MESSAGE}</label>
+					<label for="{$editor_input_id}" class="smalltext">{$L_MESSAGE}</label>
 					<core:import id="editor" file="editor.html" />
-					<form:error id="messagecodex_error" for="{$editor_input_id}" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTREPLYMESSAGE}</form:error>
+					<form:error id="{$editor_input_id}_error" for="{$editor_input_id}" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTREPLYMESSAGE}</form:error>
 					<!-- / Post Message -->
 				</div>
 			</td>
@@ -26,7 +26,7 @@
 			<td class="base3">
 				<div style="text-align: center;">
 					<input type="hidden" name="submit_type" id="submit_type" value="post" />
-					<input type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" class="button" value="{$L_SUBMIT}" accesskey="s" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'post');saveQuickReply('savepost_form', 'messagecodex', '{$topic_post_id}', '{$topic_forum_id}', '{$page}'); }" />
+					<input type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" class="button" value="{$L_SUBMIT}" accesskey="s" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'post');saveQuickReply('savepost_form', '{$editor_input_id}', '{$topic_post_id}', '{$topic_forum_id}', '{$page}'); }" />
 					<maps:if forum="topic_forum_id" var="post_preview" method="can_add">
 						<input type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'preview');setSendPostPreview('{$newreply_act}'); }" class="button" value="{$L_PREVIEW}" />
 					</maps:if>

@@ -13,6 +13,8 @@ var size_styles = new Array('font-size: auto;', 'font-size: 8px;', 'font-size: 9
 var img_dir = 'js/editor/';
 var default_src = 'js/editor/blank.html';
 var default_inst = 'rte';
+var bbcode = true;
+var use_rtm = false;
 
 function k4rte() {
 
@@ -74,42 +76,50 @@ function k4rte() {
 		var dm = false;
 		if(ix && ixd) {
 			ixd.open();
-			ixd.write("<html><head></head><body></body></html>");
+			ixd.write("<html><head><style type=\"text/css\">body { font-family:Tahoma, Arial, Helvetica, Sans-serif;background-color:#FFFFFF; }</style></head><body></body></html>");
 			ixd.close();
-			if(typeof(ixd.designMode) != 'undefined') {
-				ixd.designMode = "On";
-				dm = true;
+			if(typeof(document.designMode) != 'undefined') {
+				try {
+					ixd.designMode = "On";
+					dm = true;
+				} catch(e) { }
 			}
-			if(typeof(ix.contentDocument.designMode) != 'undefined' && !dm) {
-				ix.contentDocument.designMode = "on";
+			if(typeof(ix.contentDocument.designMode) != 'undefined') {
+				try {
+					ix.contentDocument.designMode = "on";
+					dm = true;
+				} catch(e) { }
+			}
+			if(typeof(ix.contentEditable) != 'undefined') {
 				ix.contentEditable = true;
 				dm = true;
 			}
-			if(!dm) {
-				alert('failed.');
-			}
 		}
+		return dm;
 	}
 
 	// create an iframe and position it
 	function _set(i) {
-		document.writeln('<iframe name="' + i + '" id="' + i + '" frameborder="no" style="border:1px solid #999999;" src="' + default_src + '"></iframe>');
-		_t._rtm(i);
-		var ix = _t._get(i);
-		var tx = _t._get(i.substring(0, i.length-6));
-		ix.style.width = d.width(tx) + 'px';
-		ix.style.height = d.height(tx) + 'px';
-		tx.style.border = '1px solid #999999';
-		rte_mode[i] = false;
-		_t.sm(i);
+		if(use_rtm) {
+			document.write('<iframe name="' + i + '" id="' + i + '" frameborder="no" style="background-color:#FFFFFF;" src="' + default_src + '"></iframe>');
+			if(_t._rtm(i)) {
+				var ix = _t._get(i);
+				var tx = _t._get(i.substring(0, i.length-6));
+				ix.style.width = d.width(tx) + 'px';
+				ix.style.height = d.height(tx) + 'px';
+				rte_mode[i] = false;
+				_t.sm(i);
+			}
+		}
 	}
 
 	// execute a button command
 	function btn(i, cmd) {
 		var ix = _t._get(i);
 		var ixd = _t._getd(ix);
+		var t = i.substring(0, i.length-6);
 		if(cmd in _t.hs) {
-			eval("_t.hs." + cmd + "(i);");
+			eval("_t.hs." + cmd + "(t, i);");
 		} else {
 			if(rte_mode[i] == true) {
 				ixd.execCommand(cmd, false, '');
@@ -121,15 +131,16 @@ function k4rte() {
 	}
 
 	// create a button
-	function _cbtn(i, alt, img, cmd, tags) {
-		if(typeof(tags) != 'undefined') {
-			_t._tags[cmd] = tags;
+	function _cbtn(i, alt, img, cmd, tags_html, tags_bbcode) {
+		if(typeof(tags_html) != 'undefined' && typeof(tags_bbcode) != 'undefined') {
+			_t._tags[cmd] = (bbcode ? tags_bbcode : tags_html);
 		}
 		document.writeln('<a href="javascript:'+ default_inst + '.btn(\'' + i + '\', \'' + cmd + '\');" title="' + alt + '"><img src="' + img_dir + '' + img + '.gif" name="button_' + cmd + '" id="button_' + cmd  + '_' + i + '" alt="' + alt + '" border="0" /></a>');
 	}
 
 	// create a panel of buttons
 	function _bs(i) {
+		document.write('<div class="alt1">');
 		_t._cbtn(i, 'Bold', 'bold', 'bold', ["<strong>", "</strong>"], ["[b]", "[/b]"]);
 		_t._cbtn(i, 'Italic', 'italic', 'italic', ["<em>", "</em>"], ["[i]", "[/i]"]);
 		_t._cbtn(i, 'Underline', 'underline', 'underline', ["<u>", "</u>"], ["[u]", "[/u]"]);
@@ -141,11 +152,11 @@ function k4rte() {
 		_t._cbtn(i, 'Unordered List', 'ul', 'insertunorderedlist', ["<ol>", "</ul>"], ["[list]", "[/list]"]);
 		_t._cbtn(i, 'Indent', 'indent', 'indent', ["<span style=\"margin-left: 20px;\">", "</span>"], ["[indent]", "[/indent]"]);
 		_t._cbtn(i, 'Outdent', 'outdent', 'outdent', ["<span style=\"margin-left: 0px;\">", "</span>"], ["[outdent]", "[/outdent]"]);
-		_t._cbtn(i, 'Undo', 'undo', 'undo');
-		_t._cbtn(i, 'Redo', 'redo', 'redo');
+		//_t._cbtn(i, 'Undo', 'undo', 'undo');
+		//_t._cbtn(i, 'Redo', 'redo', 'redo');
 		_t._cbtn(i, 'Color', 'textcolor', 'forecolor');
-		document.writeln('<a href="javascript:'+ default_inst + '.sm(\'' + i + '\');" title="Switch Mode"><img src="' + img_dir + 'switch_format.gif" name="button_switch" id="button_switch_' + i + '" alt="Switch Mode" border="0" /></a>');
-		document.write('<br />');
+		if(use_rtm) document.write('<a href="javascript:'+ default_inst + '.sm(\'' + i + '\');" title="Switch Mode"><img src="' + img_dir + 'switch_format.gif" name="button_switch" id="button_switch_' + i + '" alt="Switch Mode" border="0" /></a>');
+		document.write('</div>');
 	}
 
 	// initialize the editor
@@ -304,7 +315,10 @@ function k4rte() {
 	/**
 	 * END: modified Steven King code
 	 */
-	_t.hs.forecolor = function(i) {
-		alert('This is a hooked on function.');
+	_t.hs.emoticon = function(t, i) {
+		
+	}
+	_t.hs.forecolor = function(t, i) {
+		alert(t + ' ' + i);
 	}
 }

@@ -1,6 +1,6 @@
 <if:if var="forum_id" noteq="garbage_bin_id">
 <tr>
-	<td nowrap="nowrap" class="base1" valign="bottom">
+	<td nowrap="nowrap" class="base4" valign="bottom">
 		<div style="text-align: left;">
 			<maps:if var="replies" forum="topic_forum_id" method="can_add">
 				<a href="newreply.php?id={$post_id}" title="{$L_POSTREPLY}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/reply.gif" alt="{$L_POSTREPLY}" /></a><maps:if forum="forum_id" var="bbcode" method="can_add"><a href="newreply.php?id={$post_id}&amp;quote=1" title="{$L_QUOTE}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/quote.gif" alt="{$L_QUOTE}" /></a></maps:if>

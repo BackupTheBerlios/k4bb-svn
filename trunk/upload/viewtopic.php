@@ -61,7 +61,42 @@ class K4DefaultAction extends FAAction {
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
+
+		if($topic['is_draft'] == 1) {
+			$action = new K4InformationAction(new K4LanguageElement('L_CANTVIEWDRAFT'), 'content', FALSE);
+			return $action->execute($request);
+		}
+
+		if(get_map( 'forums', 'can_view', array()) > $request['user']->get('perms') || get_map( 'topics', 'can_view', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
+			$action = new K4InformationAction(new K4LanguageElement('L_PERMCANTVIEWTOPIC'), 'content', FALSE);
+			return $action->execute($request);
+		}
+
+		/**
+		 * Moderator functions
+		 */
+		$request['template']->setVar('modpanel', 0);
+		$moderator				= FALSE;
+		if(is_moderator($request['user']->getInfoArray(), $forum)) {
+			$request['template']->setVar('modpanel', 1);
+			$moderator			= TRUE;
+		}
 		
+		/**
+		 * More error checking
+		 */
+		
+
+		if($topic['queue'] == 1 && !$moderator) {
+			$action = new K4InformationAction(new K4LanguageElement('L_TOPICPENDINGMOD'), 'content', FALSE);
+			return $action->execute($request);
+		}
+
+		if($topic['display'] == 0 && !$moderator) {
+			$action = new K4InformationAction(new K4LanguageElement('L_TOPICISHIDDEN'), 'content', FALSE);
+			return $action->execute($request);
+		}
+
 		/**
 		 * This sets the last time that we've seen this forum
 		 */
@@ -102,52 +137,7 @@ class K4DefaultAction extends FAAction {
 		
 		setcookie(K4TOPICINFO, trim($cookiestr, ','), time() + 2592000, get_domain());		
 		unset($cookieinfo, $cookiestr);
-
-		/**
-		 * Moderator functions
-		 */
-		$request['template']->setVar('modpanel', 0);
-		$moderator				= FALSE;
-		if(is_moderator($request['user']->getInfoArray(), $forum)) {
-			$request['template']->setVar('modpanel', 1);
-			$moderator			= TRUE;
-		}
-		
-		/**
-		 * More error checking
-		 */
-		if($topic['is_draft'] == 1) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDTOPICVIEW');
-			
-			$action = new K4InformationAction(new K4LanguageElement('L_CANTVIEWDRAFT'), 'content', FALSE);
-			return $action->execute($request);
-		}
-
-		if($topic['queue'] == 1 && !$moderator) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDTOPICVIEW');
-			
-			$action = new K4InformationAction(new K4LanguageElement('L_TOPICPENDINGMOD'), 'content', FALSE);
-			return $action->execute($request);
-		}
-
-		if($topic['display'] == 0 && !$moderator) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDTOPICVIEW');
-			
-			$action = new K4InformationAction(new K4LanguageElement('L_TOPICISHIDDEN'), 'content', FALSE);
-			return $action->execute($request);
-		}
-		
-		if(get_map( 'forums', 'can_view', array()) > $request['user']->get('perms') || get_map( 'topics', 'can_view', array('forum_id'=>$forum['forum_id'])) > $request['user']->get('perms')) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION', $forum);
-			
-			$action = new K4InformationAction(new K4LanguageElement('L_PERMCANTVIEWTOPIC'), 'content', FALSE);
-			return $action->execute($request);
-		}
-		
+				
 		/** 
 		 * Get the users Browsing this topic 
 		 */
@@ -256,7 +246,7 @@ class K4DefaultAction extends FAAction {
 		$topic['postsperpage']		= $perpage;
 		
 		/* Do we set the similar topics? */
-		$similar_topics					= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE ((lower(name) LIKE lower('%". $request['dba']->quote($topic['name']) ."%') OR lower(name) LIKE lower('%". $request['dba']->quote($topic['body_text']) ."%')) OR (lower(body_text) LIKE lower('%". $request['dba']->quote($topic['name']) ."%') OR lower(body_text) LIKE lower('%". $request['dba']->quote($topic['body_text']) ."%'))) AND is_draft = 0 AND post_id <> ". intval($topic['post_id']) ." ORDER BY lastpost_created DESC LIMIT 10");
+		$similar_topics					= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE ((lower(name) LIKE lower('%". $request['dba']->quote($topic['name']) ."%') OR lower(name) LIKE lower('%". $request['dba']->quote($topic['body_text']) ."%')) OR (lower(body_text) LIKE lower('%". $request['dba']->quote($topic['name']) ."%') OR lower(body_text) LIKE lower('%". $request['dba']->quote($topic['body_text']) ."%'))) AND row_type=". TOPIC ." AND is_draft = 0 AND post_id <> ". intval($topic['post_id']) ." ORDER BY lastpost_created DESC LIMIT 10");
 		
 		if($similar_topics->hasNext()) {
 			//$it					= new TopicsIterator($request['dba'], $request['user'], $similar_topics, $request['template']->getVar('IMG_DIR'), $forum);

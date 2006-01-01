@@ -50,17 +50,14 @@ function create_editor(&$request, $text, $place, $forum = FALSE) {
 	$request['template']->setVar('editor_input_id', 'editor_area');
 	$request['template']->setVar('use_wysiwyg', (USE_WYSIWYG ? 1 : 0));
 	$request['template']->setVar('use_bbcode', (USE_WYSIWYG ? 0 : 1));
-
+	
+	$editor_text = '';
 	if($text != '') {
-		$bbcode				= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $text, $forum['forum_id'], TRUE, TRUE, TRUE, TRUE, array('php', 'quote', 'code'));
+		$bbcode			= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $text, $forum['forum_id'], TRUE, TRUE, TRUE, TRUE, array('php', 'quote', 'code'));
 		
-		$reverted			= $bbcode->revert();
-		$request['template']->setVar('editor_text_reverted', $reverted .' ');
-		
-		$bbcode->text		= $reverted;
-
-		$request['template']->setVar('editor_text', $bbcode->parse());
+		$editor_text	= $bbcode->revert();
 	}
+	$request['template']->setVar('editor_text_reverted', $editor_text);
 	$request['template']->setVar('editor_enabled', 1);
 }
 
