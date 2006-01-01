@@ -167,7 +167,7 @@
 				</is:logged>
 				</core:block>
 				<maps:if forum="forum_forum_id" var="post_preview" method="can_add">
-					<input <if:if var="nojs" eq="1">name="preview"</if:if> type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" class="button" value="{$L_PREVIEW}" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'preview');setSendPostPreview('{$newtopic_action}'); }" />
+					<input <if:if var="nojs" eq="1">name="preview"</if:if> type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" class="button" value="{$L_PREVIEW}" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'preview');setSendPostPreview('{$newtopic_action}', '{$editor_input_id}'); }" />
 				</maps:if>
 				<core:block id="load_button" hidden="yes">
 				<if:if var="nojs" eq="0"><input type="button" class="button" value="{$L_LOADDRAFT}" onclick="document.location='newtopic.php?id={$forum_forum_id}&load_drafts=1'" /><if:else /><a href="newtopic.php?id={$forum_forum_id}&load_drafts=1" title="{$L_LOADDRAFT}">{$L_LOADDRAFT}</a></if:if>

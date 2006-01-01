@@ -423,7 +423,7 @@ class InsertPost extends FAAction {
 					return $action->execute($request);
 				}
 			} else {
-			
+				
 				/**
 				 * Post Previewing
 				 */

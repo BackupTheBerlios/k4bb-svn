@@ -2,7 +2,7 @@
 		<if:if var="forum" eq="1">
 		<if:if var="is_forum" eq="1">
 		<tr>
-			<td class="alt{$row_class}" width="5%" align="center"><img src="Images/{$IMG_DIR}/Icons/{$forum_icon}.gif" alt="{$forum_alt}" border="0" /></td>
+			<td class="alt{$row_class}" width="5%" style="text-align: center;"><img src="Images/{$IMG_DIR}/Icons/{$forum_icon}.gif" alt="{$forum_alt}" border="0" /></td>
 			<td class="alt{$row_class}" width="55%">
 				<a href="viewforum.php?f={$forum_id}" class="alt{$row_class}_link" title="{$safe_description}"><strong>{$name}</strong></a>
 				<!--<if:if var="num_viewing" greater="0"><span class="smalltext">({$num_viewing} {$L_VIEWING})</span></if:if>-->
@@ -26,8 +26,8 @@
 				<core:import id="forum_view_subforums" file="forum_view_subforums.html" />
 				</span>
 			</td>
-			<td class="base{$row_class}" align="center"><div class="forum_number_cell"><span class="minitext"><br /><br />{$posts}</span></div></td>
-			<td class="base{$row_class}" align="center"><div class="forum_number_cell"><span class="minitext"><br /><br />{$topics}</span></div></td>
+			<td class="base{$row_class}"><div class="forum_number_cell"><span class="minitext"><br /><br />{$posts}</span></div></td>
+			<td class="base{$row_class}"><div class="forum_number_cell"><span class="minitext"><br /><br />{$topics}</span></div></td>
 			<td class="base{$row_class}" nowrap="nowrap" width="30%">
 				<div align="left" class="minitext">
 				<if:if var="post_id" greater="0">

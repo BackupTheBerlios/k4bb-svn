@@ -337,7 +337,7 @@ function handleRegErrors(button) {
 /**
  * Send a request to get a preview of a post
  */
-function setSendPostPreview(form_url) {
+function setSendPostPreview(form_url, editor_id) {
 
 	// try to get the form object
 	var form = d.getElementById('savepost_form');
@@ -361,7 +361,7 @@ function setSendPostPreview(form_url) {
 		}
 
 		// get the textare field
-		field	= d.getElementById('messagecodex');
+		field	= d.getElementById(editor_id);
 		
 		// if the value of the textare is not null, add it to the query string
 		if(field && textarea_value(field) != '') {

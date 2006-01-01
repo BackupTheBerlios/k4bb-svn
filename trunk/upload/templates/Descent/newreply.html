@@ -160,7 +160,7 @@
 				<input type="hidden" name="submit_type" id="submit_type" value="" />
 				<input <if:if var="nojs" eq="1">name="post"</if:if> type="submit" class="button" value="{$L_SUBMIT}" accesskey="s" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'post'); }" />
 				<maps:if forum="forum_forum_id" var="post_preview" method="can_add">
-					<input type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" <if:if var="nojs" eq="1">name="preview"</if:if>class="button" value="{$L_PREVIEW}" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'preview');setSendPostPreview('{$newreply_act}'); }" />
+					<input type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" <if:if var="nojs" eq="1">name="preview"</if:if>class="button" value="{$L_PREVIEW}" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'preview');setSendPostPreview('{$newreply_act}', '{$editor_input_id}'); }" />
 				</maps:if>
 				<input type="reset" class="button" value="{$L_RESET}" />
 			</td>

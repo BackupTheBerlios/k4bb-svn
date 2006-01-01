@@ -57,7 +57,7 @@ function k4menu() {
 	}
 	// set menu positions
 	function _set(lx, mx, tx) {
-		if(lx.href && !afu) { lx.href = '#'; }
+		if(lx.href && !afu) { lx.href = '#' + lx.id; }
 		d.forceCursor(lx);
 		mx.style.display = 'none';
 		mx.style.position = 'absolute';
