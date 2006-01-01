@@ -27,7 +27,7 @@ if(!defined('IN_K4'))
 
 class K4Calendar extends FAObject {
 	var $data = array();
-	var $start_day = 1; # 0 for Sunday, 1 for Monday
+	var $start_day = 0; # 0 for Sunday, 1 for Monday
 	var $years_future = 5;
 	var $years_past = 2;
 	
@@ -165,6 +165,14 @@ class K4Calendar extends FAObject {
 	function getDay() {
 		return $this->day;
 	}
+
+	function getWeek($m, $d, $y) {
+		$time = mktime(0,0,0,$m,$d,$y);
+		$day_of_year = date('z', $time);
+		$week_number = floor($day_of_year / 7);
+
+		return $week_number;
+	}
 	
 	function getNextMonth($month = NULL) {
 		if($month === NULL)
@@ -218,28 +226,28 @@ class K4Calendar extends FAObject {
 	* It offsets the days in the array so they allign properly in the cells of the calendar.
 	*
 	**/
-	 
-	# !!!Known Bugs: When using start day Monday (=1) then month which start with Sunday (=0) display wrong!
 	function setArray() {
-		$days = date('t', mktime(0, 0, 0, $this->month, 1, $this->year)); # total days of the month to display
-		$first = date('w', mktime(0, 0, 0, $this->month, 1, $this->year)); # number of the first day in the month to display
 		
-		# Arrays to fill up the display-array: $cal. Haven't found any function for this yet. *cough*
-		$fill[1] = array(0 => 6, 1 => 0, 2 => 1, 3 => 2, 4 => 3, 5 => 4, 6 => 5);
-		$fill[0] = array(0 => 0, 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6);
+		$first_day_time = mktime(0, 0, 0, $this->month, 1, $this->year);
 		
-		$start = $fill[$this->start_day][$first];
-		$lenght = $days + $fill[$this->start_day][$first];
+		$days = date('t', $first_day_time); # total days of the month to display
+		$start = date('w', $first_day_time); # day of the week of the first day in the month
+
+		# fix the offset of the start day, +1 represents the current day
+		$start = $this->start_day == 1 ? (7 - ($start + 1)) : $start; 
 		
+		# total number of days (days in month + offset of start day)
+		$length = $start + $days; 
+				
 		# Calculate the cells to fill up
-		$rest = 7 - $lenght % 7;
-		$lenght += $rest == 7 ? 0 : $rest;
+		$rest = 7 - $length % 7;
+		$length += $rest == 7 ? 0 : $rest;
 		
-		$this->data = array_pad($this->data, $lenght, array('day' => NULL, 'year' => NULL, 'month' => NULL));
+		$this->data = array_pad($this->data, $length, array('day' => NULL, 'year' => NULL, 'month' => NULL));
 		
 		// loop through the number of days in the month. This will start at
 		// whatever the first day of the month is.
-		for($i = $start; $i < $lenght; $i++) {
+		for($i = $start; $i < $length; $i++) {
 			
 			#$this->data[$i]['week'] = k4; # Tryin' to get the week into the array. =o(
 			
@@ -258,7 +266,7 @@ class K4Calendar extends FAObject {
 	
 	# TODO: Language support and better routine thou. *cough*
 	function getWeekdays() {
-		$week = array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
+		$week = array('L_SUNDAY', 'L_MONDAY', 'L_TUESDAY', 'L_WEDNESDAY', 'L_THURSDAY', 'L_FIRDAY', 'L_SATURDAY', 'L_SUNDAY',);
 		
 		$calc = $this->start_day == 0 ? 1 : 0;
 		
@@ -271,24 +279,29 @@ class K4Calendar extends FAObject {
 }
 
 class K4CalendarIterator extends FAArrayIterator {
-	var $settings;
-	var $usergroups;
+	var $week, $iteration;
 	 	
-	function __construct($data) {
-		global $_SETTINGS, $_USERGROUPS;
-		
-		$this->usergroups = $_USERGROUPS;
-		$this->settings = $_SETTINGS;
-		
+	function __construct($data, $start_week) {
+		$this->week = $start_week;
+		$this->iteration = 1;
 		parent::__construct($data);
 	}
 	
 	function current() {
 		$temp = parent::current();
 		
-		$temp['iteration'] = parent::key();
+		// set the week the the data
+		$temp['week'] = $this->week;
 		
-		/* Return the formatted info */
+		// increment the week number
+		if($this->iteration % 7 == 0) {
+			$this->week++;
+		}
+		
+		// increment something to keep track of how many days we have iterated over
+		$this->iteration++;
+
+		// Return the formatted info
 		return $temp;
 	}
 }

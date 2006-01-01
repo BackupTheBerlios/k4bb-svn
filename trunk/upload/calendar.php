@@ -30,12 +30,12 @@ class K4DefaultAction extends FAAction {
 	function execute(&$request) {
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_CALENDAR');
 		
-		$year = isset($_REQUEST['y']) ? $_REQUEST['y'] : NULL;
-		$month = isset($_REQUEST['m']) ? $_REQUEST['m'] : NULL;
-		$day = isset($_REQUEST['d']) ? $_REQUEST['d'] : NULL;
+		$year = isset($_REQUEST['y']) ? $_REQUEST['y'] : date('Y', time());
+		$month = isset($_REQUEST['m']) ? $_REQUEST['m'] : date('j', time());
+		$day = isset($_REQUEST['d']) ? $_REQUEST['d'] : 1;
 		
 		$c = &new K4Calendar($year, $month, $day);
-		$iteration_c = new K4CalendarIterator($c->getData());
+		$iteration_c = new K4CalendarIterator($c->getData(), $c->getWeek($month, $day, $year));
 		$iteration_d = new FAArrayIterator($c->getWeekdays());
 		
 		$request['template']->setList('calendar', $iteration_c);
