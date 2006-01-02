@@ -3,6 +3,7 @@
 <!--<if:if var="enableblogs" eq="1">| <a href="blogs.php" title="{$L_BLOGS}">{$L_BLOGS}</a></if:if>-->
 <if:if var="enablememberlist" eq="1">| <a href="member.php?act=list&amp;start=0&amp;limit=30&amp;letter=*" title="{$L_MEMBERS}">{$L_MEMBERS}</a></if:if> 
 <if:if var="enablesearches" eq="1">| <a href="<if:if var="nojs" eq="0">search.php<if:else />#search</if:if>" class="ddmenu_link" title="{$L_SEARCH}" id="search_link">{$L_SEARCH}</a> </if:if>
+<if:if var="nojs" eq="0">| <a href="?nojs=1#quicklinks" class="ddmenu_link" id="quicklinks_link" title="{$L_QUICKLINKS}">{$L_QUICKLINKS}</a></if:if>
 <if:if var="nojs" eq="0"><is:mod>| <a href="?nojs=1#modcp" class="ddmenu_link" id="modpanel_link" title="{$L_MODCP}" style="font-weight: bold;">{$L_MODCP}</a></is:mod> </if:if>
 <is:admin>| <a href="admin.php" id="admin_link" target="_blank" title="{$L_ADMINPANEL}" style="font-weight: bold;">{$L_ADMINPANEL}</a> </is:admin>
 | <a href="faq.php" title="{$L_HELP}">{$L_HELP}</a>

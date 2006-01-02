@@ -463,6 +463,13 @@ $_LANG += array(
 'L_RSS_FEED'			=> 'RSS Feeds',
 
 /* Date and time stuff */
+'L_SUNDAY'				=> 'Sunday',
+'L_MONDAY'				=> 'Monday',
+'L_TUESDAY'				=> 'Tuesday',
+'L_WEDNESDAY'			=> 'Wednesday',
+'L_THURSDAY'			=> 'Thursday',
+'L_FIRDAY'				=> 'Friday',
+'L_SATURDAY'			=> 'Saturday',
 'L_JANUARY'				=> 'January',
 'L_FEBRUARY'			=> 'February',
 'L_MARCH'				=> 'March',

@@ -271,28 +271,7 @@ class K4GeneralCacheFilter extends FAFilter {
 	}
 	function execute(&$action, &$request, $do_overwrite = FALSE) {
 				
-		$cache = array();
-		
-		/**
-		 * Make sure the cache files exist
-		 */
-		if(!CACHE_IN_DB && USE_CACHE) {
-			$d = dir(CACHE_DIR);
-			if(count($d->read()) < 17) {
-				
-				/* Create the cache file using the class functions */
-				$methods = get_class_methods($this);
-
-				foreach($methods as $function) {
-					if(substr($function, 0, 6) == 'cache_') {
-						$this->$function($cache, $request);
-					}	
-				}
-
-				/* Create the cache file */
-				DBCache::createCache($cache);
-			}
-		}		
+		$cache = array();		
 
 		/**
 		 * Fileserver caching
@@ -346,6 +325,25 @@ class K4GeneralCacheFilter extends FAFilter {
 			$GLOBALS['_USERTITLES']				= $cache['user_titles'];
 		}	
 		
+		/**
+		 * Make sure the cache files exist
+		 */
+		if(!CACHE_IN_DB && USE_CACHE) {
+			if(!isset($GLOBALS['_SETTINGS']) || !isset($GLOBALS['_MAPS']) || !isset($GLOBALS['_ALLFORUMS'])) {
+				/* Create the cache file using the class functions */
+				$methods = get_class_methods($this);
+
+				foreach($methods as $function) {
+					if(substr($function, 0, 6) == 'cache_') {
+						$this->$function($cache, $request);
+					}	
+				}
+
+				/* Create the cache file */
+				DBCache::createCache($cache);
+			}
+		}
+
 		/* Add the extra values onto the end of the userinfo query params variable */
 		global $_QUERYPARAMS;
 		foreach($GLOBALS['_PROFILEFIELDS'] as $temp) {

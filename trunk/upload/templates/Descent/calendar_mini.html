@@ -1,0 +1,48 @@
+<!-- Mini Calendar -->
+<div style="width:220px;">
+	<div class="subheader" style="text-align: center;">
+		{$month_label} {$year_label}
+	</div>
+	<list:list id="calendar">
+	<div class="spacer">
+		<table width="100%" class="table">
+			
+			<list:sublist id="weekdays" column="calendar">
+			<tr class="base2">
+				<td class="base1" width="2%"></td>
+				
+				<list:item list="weekdays">
+				<td width="14%" style="text-align: center;"><strong>{$weekday}</strong></td>
+				</list:item>
+				
+			</tr>
+			</list:sublist>
+			
+			<tr class="alt4">
+			
+				<list:item list="calendar">
+				<list:alternate list="calendar" count="7" remainder="0">
+					<td class="base2" style="text-align: center"><a href="calendar.php?view=month&amp;y={$year}&amp;m={$month}&amp;w={$week}">&raquo;</a></td>
+				</list:alternate>
+
+				<list:switch list="calendar" var="row_class" a="alt3" b="alt4">
+				
+				<if:if var="day" noteq="">
+					<td style="text-align:center;"><a href="calendar.php?view=day&amp;y={$year}&amp;m={$month}&amp;d={$day}&amp;w={$week}">{$day}</a></td>
+				<if:else>
+					<td class="base1">&nbsp;</td>
+				</if:if>
+				
+				<list:separator list="calendar">
+				<list:alternate list="calendar" count="7" remainder="6">
+					</tr><tr class="{$row_class}">
+				</list:alternate>
+				</list:separator>
+				</list:switch>
+				</list:item>
+			</tr>
+		</table>
+	</div>
+	</list:list>
+</div>
+<!-- / Mini Calendar -->

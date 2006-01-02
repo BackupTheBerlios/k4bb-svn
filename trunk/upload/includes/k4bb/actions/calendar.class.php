@@ -18,6 +18,7 @@
 * http://www.gnu.org/copyleft/lesser.html
 *
 * @author Thasmo (thasmo at gmail dot com)
+* @author Peter Goodman
 * @version $Id$
 * @package k42
 */
@@ -154,7 +155,7 @@ class K4Calendar extends FAObject {
 			$this->day = $day;
 	}
 	
-	function getYear() {
+	function getYear($month = NULL) {
 		return $this->year;
 	}
 	
@@ -173,15 +174,19 @@ class K4Calendar extends FAObject {
 
 		return $week_number;
 	}
+
+	function getWeekRange($m, $w, $y) {
+		
+	}
 	
 	function getNextMonth($month = NULL) {
 		if($month === NULL)
 			$month = $this->month;
-		
+
 		if($month == 12)
 			$month = $this->year >= ($this->current_year + $this->years_future) ? 12 : 1;
 		else
-			$month += 1;
+			$month++;
 		
 		return $month;
 	}
@@ -193,7 +198,7 @@ class K4Calendar extends FAObject {
 		if($month == 1)
 			$month = $this->year <= ($this->current_year - $this->years_past) ? 1 : 12;
 		else
-			$month -= 1;
+			$month--;
 		
 		return $month;
 	}
@@ -234,7 +239,7 @@ class K4Calendar extends FAObject {
 		$start = date('w', $first_day_time); # day of the week of the first day in the month
 
 		# fix the offset of the start day, +1 represents the current day
-		$start = $this->start_day == 1 ? (7 - ($start + 1)) : $start; 
+		$start = $this->start_day == 1 ? (7 - ($start + 1)) : $start;
 		
 		# total number of days (days in month + offset of start day)
 		$length = $start + $days; 
@@ -243,7 +248,7 @@ class K4Calendar extends FAObject {
 		$rest = 7 - $length % 7;
 		$length += $rest == 7 ? 0 : $rest;
 		
-		$this->data = array_pad($this->data, $length, array('day' => NULL, 'year' => NULL, 'month' => NULL));
+		$this->data = array_pad($this->data, $length, array('day' => NULL, 'year' => $this->year, 'month' => $this->month));
 		
 		// loop through the number of days in the month. This will start at
 		// whatever the first day of the month is.
@@ -254,8 +259,6 @@ class K4Calendar extends FAObject {
 			if($i < $start + $days) {
 				// insert the current day into one of the arrays in $data
 				$this->data[$i]['day'] = $i + 1 - $start;
-				$this->data[$i]['month'] = $this->month;
-				$this->data[$i]['year'] = $this->year;
 			}
 		}
 	}
@@ -266,12 +269,14 @@ class K4Calendar extends FAObject {
 	
 	# TODO: Language support and better routine thou. *cough*
 	function getWeekdays() {
+		global $_LANG;
+
 		$week = array('L_SUNDAY', 'L_MONDAY', 'L_TUESDAY', 'L_WEDNESDAY', 'L_THURSDAY', 'L_FIRDAY', 'L_SATURDAY', 'L_SUNDAY',);
 		
 		$calc = $this->start_day == 0 ? 1 : 0;
 		
 		for($i = 1; $i <= 7; $i++) {
-			$array[$i]['weekday'] = $week[$i - $calc];
+			$array[$i]['weekday'] = $_LANG[$week[$i - $calc]];
 		}
 		
 		return $array;
@@ -279,11 +284,14 @@ class K4Calendar extends FAObject {
 }
 
 class K4CalendarIterator extends FAArrayIterator {
-	var $week, $iteration;
+	var $week, $iteration, $user_bdays;
 	 	
-	function __construct($data, $start_week) {
-		$this->week = $start_week;
-		$this->iteration = 1;
+	function __construct($data, $start_week, $user_bdays) {
+		
+		$this->week			= $start_week;
+		$this->iteration	= 1;
+		$this->user_bdays	= $user_bdays;
+
 		parent::__construct($data);
 	}
 	
@@ -293,6 +301,13 @@ class K4CalendarIterator extends FAArrayIterator {
 		// set the week the the data
 		$temp['week'] = $this->week;
 		
+		// set a users iterator
+		$temp['user_bdays'] = 0;
+		if(isset($this->user_bdays[$temp['day']])) {
+			$temp['users'] = &new FAArrayIterator($this->user_bdays[$temp['day']]);
+			$temp['user_bdays'] = 1;
+		}
+
 		// increment the week number
 		if($this->iteration % 7 == 0) {
 			$this->week++;

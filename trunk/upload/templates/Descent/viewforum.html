@@ -41,9 +41,7 @@
 </div>
 <if:if var="description" noteq="">
 <div class="spacer">
-	<div class="alt2" align="right" style="overflow: hidden;">
-		<div class="minitext" style="float:left;font-weight: normal;">{$description}</div>
-	</div>
+	<div class="alt2">{$description}</div>
 </div>
 </if:if>
 <div class="spacer">
@@ -227,31 +225,33 @@
 
 <div class="footer_block"><div>&nbsp;</div></div>
 
-<table width="100%" cellpadding="0" cellspacing="0" class="spacer">
-	<tr>
-		<td align="left" style="border: 0px;padding: 0px;margin: 0px;">
-			<page:navigator id="topics_pager">
-			<table cellspacing="1" class="pagination">
-				<tr class="alt2">
-					<td id="page_jump2" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
-					<page:first><td><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
-					<page:prev><td><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
-					<page:list id="topics_pager" before="3" after="3">
-					<list:item list="topics_pager">
-						<td><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
-					</list:item>
-					</page:list>
-					<page:next><td><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
-					<page:last><td><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
-				</tr>
-			</table>
-			</page:navigator>
-		</td>
-		<td align="right" style="border: 0px;padding: 0px;margin: 0px;">
-			<if:if var="forum_id" noteq="garbage_bin_id"><maps:if var="topics" forum="forum_id" method="can_add"><a href="newtopic.php?id={$forum_id}" title="{$L_POSTTOPIC}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/post_topic.gif" alt="{$L_POSTTOPIC}" /></a></maps:if></if:if>
-		</td>
-	</tr>
-</table>
+<div class="spacer">
+	<table width="100%" cellpadding="0" cellspacing="0">
+		<tr>
+			<td align="left" style="border: 0px;padding: 0px;margin: 0px;">
+				<page:navigator id="topics_pager">
+				<table cellspacing="1" class="pagination">
+					<tr class="alt2">
+						<td id="page_jump2" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+						<page:first><td><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
+						<page:prev><td><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
+						<page:list id="topics_pager" before="3" after="3">
+						<list:item list="topics_pager">
+							<td><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
+						</list:item>
+						</page:list>
+						<page:next><td><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
+						<page:last><td><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
+					</tr>
+				</table>
+				</page:navigator>
+			</td>
+			<td align="right" style="border: 0px;padding: 0px;margin: 0px;">
+				<if:if var="forum_id" noteq="garbage_bin_id"><maps:if var="topics" forum="forum_id" method="can_add"><a href="newtopic.php?id={$forum_id}" title="{$L_POSTTOPIC}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/post_topic.gif" alt="{$L_POSTTOPIC}" /></a></maps:if></if:if>
+			</td>
+		</tr>
+	</table>
+</div>
 
 <!-- Forum User Posting Options -->
 <div class="spacer">

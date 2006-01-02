@@ -19,7 +19,7 @@
 <list:item list="setting_groups">
 <div class="spacer">
 	<div class="spacer">
-		<div class="categorytitle">{$title}</div>
+		<div class="subheader">{$title}</div>
 	</div>
 	<form action="admin.php?act=update_options" method="post">
 		<a name="{$id}" id="{$id}"></a>
@@ -27,7 +27,7 @@
 		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<list:sublist list="setting_groups" id="settings" column="settings">
 			<list:item list="settings">
-			<tr class="subtitle">
+			<tr class="supheader">
 				<td colspan="2"><a href="#top" style="float:right;">{$L_TOP}</a>{$title}</td>
 			</tr>
 			<tr class="alt1">
@@ -41,7 +41,7 @@
 			</list:item>
 			</list:sublist>
 		</table>
-		<div class="base4"><input type="submit" value="{$L_SAVE}" class="button" /></div>
+		<div class="base4" style="text-align: center;"><input type="submit" value="{$L_SAVE}" class="button" /></div>
 	</form>
 </div>
 <list:separator list="setting_groups"><br /><br /></list:separator>
