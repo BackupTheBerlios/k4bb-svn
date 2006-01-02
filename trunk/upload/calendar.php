@@ -28,15 +28,19 @@ require "includes/k4bb/k4bb.php";
 require K4_BASE_DIR. '/actions/calendar.class.php';
 
 class K4DefaultAction extends FAAction {
+	
+	# make a mini calendar
 	function mini_month($m, $y, &$request) {
 		$c			= &new K4Calendar($y, $m, 1);
-		$month_it	= &new K4CalendarIterator($c->getData(), $c->getWeek($c->month, 1, $c->year), array());
+		$month_it	= &new K4CalendarIterator($c->getData(), $c->getWeek($m, 1, $y), array());
 		$request['template']->setList('calendar', $month_it);
 		$request['template']->setVar('month_label', date('F', mktime(0, 0, 0, $c->getMonth(), 1, $c->getYear())));
 		$html		= $request['template']->run(BB_BASE_DIR .'/templates/'. $request['user']->get('templateset') .'/calendar_mini.html');
 		
 		return $html;
 	}
+
+	# the main action
 	function execute(&$request) {
 		
 		global $_QUERYPARAMS, $_USERGROUPS;
@@ -52,12 +56,15 @@ class K4DefaultAction extends FAAction {
 		$c			= &new K4Calendar($year, $month, $day);
 
 		# The next and previous months, do this all first.
+		
 		$year		= $month == 1 ? $year-1 : $year;
 		$html		= $this->mini_month($c->getPrevMonth(), $year, $request);
 		$request['template']->setVar('prev_month_cal', $html);
+		
 		$year		= $month == 12 ? $year+1 : $year;
-		$html		= $this->mini_month($c->getNextMonth(), $c->getPrevYear(), $request);
+		$html		= $this->mini_month($c->getNextMonth(), $year, $request);
 		$request['template']->setVar('next_month_cal', $html);
+		
 
 		# Get user birthdays
 		$birthdays	= $request['dba']->executeQuery("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']} FROM ". K4USERS ." u LEFT JOIN ". K4USERINFO ." ui ON u.id=ui.user_id WHERE ui.birthday LIKE '". str_pad($month, 2, '0', STR_PAD_LEFT) ."/%'");

@@ -48,26 +48,36 @@
 	</table>
 	</list:list>
 </div>
-
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
+<div class="spacer">
+	<div class="supheader" id="nav_title">
+		<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_nav', 'navigate', 'nav_title')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_nav" src="Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+		{$L_NAVIGATE}
+	</div>
+</div>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" id="navigate" style="display:none;">
 	<tr>
 		<td style="padding:0px;border:0px;margin:0px;">
 			{$prev_month_cal}
 		</td>
 		<td>&nbsp;</td>
+		<td width="80%" style="padding:0px;border:0px;margin:0px;">
+			<div class="spacer">
+				<div class="gen_box1_head"><div id="header">&nbsp;</div></div>
+				<div class="alt3">
+					gonna put some sort stuff or whatever here..
+				</div>
+				<div class="gen_box1_foot"><div id="footer">&nbsp;</div></div>
+			</div>
+		</td>
+		<td>&nbsp;</td>
 		<td style="padding:0px;border:0px;margin:0px;">
 			{$next_month_cal}
 		</td>
-		<td>&nbsp;</td>
-		<td width="80%" style="padding:0px;border:0px;margin:0px;">
-			<div class="base3">
-				hello
-			</div>
-		</td>
 	</tr>
 </table>
-
-<div class="footer_block"><div>&nbsp;</div></div>
+<div class="spacer">
+	<div class="footer_block"><div>&nbsp;</div></div>
+</div>
 <!-- / Calendar -->
 <if:else>
 	<table width="100%" cellpadding="0" cellspacing="{$style_cellspacing}" border="0" class="k4_table">	

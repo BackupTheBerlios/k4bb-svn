@@ -52,6 +52,7 @@ $_LANG += array(
 'L_ONLINEUSERS'			=> 'Online Users',
 'L_FORUMINFO'			=> 'Neat Forum Info',
 'L_CALENDAR'			=> 'Calendar',
+'L_NAVIGATE'			=> 'Navigate',
 'L_MEMBERLIST'			=> 'Member List',
 'L_QUICKLINKS'			=> 'Quick Links',
 'L_USERCONTROLPANEL'	=> 'User Control Panel',
