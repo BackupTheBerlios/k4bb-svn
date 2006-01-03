@@ -148,6 +148,7 @@ class K4DefaultAction extends FAAction {
 					return $action->execute($request);
 				}
 				
+				$request['template']->setVar('attach_post_id', $draft['post_id']);
 				$request['template']->setVar('newtopic_action', 'newtopic.php?act=postdraft');
 				
 				//$action = new K4InformationAction(new K4LanguageElement('L_DRAFTLOADED'), 'drafts', FALSE);
@@ -170,8 +171,9 @@ class K4DefaultAction extends FAAction {
 				foreach($draft as $key => $val)
 					$request['template']->setVar('post_'. $key, $val);
 				
-				post_attachment_options($request, $forum, $draft);
-
+				if($request['template']->getVar('nojs') == 0) {
+					post_attachment_options($request, $forum, $draft);
+				}
 				//$action->execute($request);
 			}
 		}
@@ -179,16 +181,18 @@ class K4DefaultAction extends FAAction {
 		/**
 		 * Deal with file attachments
 		 */
-		if($request['template']->getVar('attach_inputs') == '') {
-			if($request['user']->get('perms') >= get_map( 'attachments', 'can_add', array('forum_id'=>$forum['forum_id']))) {
-				$num_attachments	= $request['template']->getVar('nummaxattaches') - $num_attachments;
-				
-				$attach_inputs		= '';
-				for($i = 1; $i <= $num_attachments; $i++) {
-					$attach_inputs	.= '<br /><input type="file" class="inputbox" name="attach'. $i .'" id="attach'. $i .'" value="" size="55" />';
+		if($request['template']->getVar('nojs') == 0) {
+			if($request['template']->getVar('attach_inputs') == '') {
+				if($request['user']->get('perms') >= get_map( 'attachments', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+					$num_attachments	= $request['template']->getVar('nummaxattaches') - $num_attachments;
+					
+					$attach_inputs		= '';
+					for($i = 1; $i <= $num_attachments; $i++) {
+						$attach_inputs	.= '<br /><input type="file" class="inputbox" name="attach'. $i .'" id="attach'. $i .'" value="" size="55" />';
+					}
+					
+					$request['template']->setVar('attach_inputs', $attach_inputs);
 				}
-				
-				$request['template']->setVar('attach_inputs', $attach_inputs);
 			}
 		}
 

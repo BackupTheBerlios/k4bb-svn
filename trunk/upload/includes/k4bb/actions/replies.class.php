@@ -47,6 +47,8 @@ class EditReply extends FAAction {
 			return $action->execute($request);
 		}
 
+		$request['template']->setVar('attach_post_id', $reply['post_id']);
+
 		$topic				= $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($reply['post_id']));
 		
 		if(!$topic || !is_array($topic) || empty($topic)) {

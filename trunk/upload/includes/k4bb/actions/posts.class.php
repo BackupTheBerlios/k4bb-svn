@@ -230,7 +230,7 @@ class InsertPost extends FAAction {
 				 * Build the queries
 				 */
 				
-				$poster_name		= iif($request['user']->get('id') <= 0,  k4_htmlentities((isset($_REQUEST['poster_name']) ? $_REQUEST['poster_name'] : '') , ENT_QUOTES), $request['user']->get('name'));
+				$poster_name		= ($request['user']->get('id') <= 0 ? k4_htmlentities((isset($_REQUEST['poster_name']) ? $_REQUEST['poster_name'] : '') , ENT_QUOTES) : $request['user']->get('name'));
 				
 				$is_poll	= 0;
 				if($submit_type == 'post' || isset($_REQUEST['post'])) {
@@ -312,8 +312,12 @@ class InsertPost extends FAAction {
 				}
 				
 				// deal with attachments
-				attach_files($request, $forum, array('post_id'=>$post_id,'parent_id'=>$parent_id,'row_type'=>$this->row_type));
-				
+				$t_post = array('post_id'=>$post_id,'parent_id'=>$parent_id,'row_type'=>$this->row_type);
+				if($request['template']->getVar('nojs') == 0) {
+					attach_files($request, $forum, $t_post);
+				}
+				attach_limbo_files($request, $forum, $t_post);
+
 				/* Added the topic */
 				if($is_draft == 0) {
 					
@@ -662,7 +666,7 @@ class UpdatePost extends FAAction {
 			
 			$time				= time();
 			
-			$name				= k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES);
+			$name				= k4_htmlentities($_REQUEST['name'], ENT_QUOTES);
 
 			/**
 			 * Build the queries to update the topic
@@ -726,7 +730,9 @@ class UpdatePost extends FAAction {
 			}
 
 			// deal with attachments
-			attach_files($request, $forum, $post);
+			if($request['template']->getVar('nojs') == 0) {
+				attach_files($request, $forum, $post);
+			}
 
 			/* Should we update the forum's last post info? */
 			if($forum['lastpost_id'] == $post['post_id']) {

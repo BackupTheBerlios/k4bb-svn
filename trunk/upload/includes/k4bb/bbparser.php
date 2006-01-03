@@ -19,7 +19,7 @@
 *
 * @author Geoffrey Goodman
 * @version $Id:$
-* @package k4-something
+* @package k4bb
 */
 
 

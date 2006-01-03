@@ -224,8 +224,10 @@ class PostDraft extends FAAction {
 			}
 
 			// deal with attachments
-			attach_files($request, $forum, $draft['post_id']);
-			
+			if($request['template']->getVar('nojs') == 0) {
+				attach_files($request, $forum, $draft['post_id']);
+			}
+
 			// set up the topic queue
 			set_send_topic_mail($forum['forum_id'], ($poster_name == '' ? $request['template']->getVar('L_GUEST') : $poster_name));
 
@@ -405,6 +407,8 @@ class EditTopic extends FAAction {
 			$action = new K4InformationAction(new K4LanguageElement('L_DRAFTDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
+
+		$request['template']->setVar('attach_post_id', $topic['post_id']);
 		
 		$forum				= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($topic['forum_id']));
 		

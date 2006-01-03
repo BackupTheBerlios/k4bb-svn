@@ -107,7 +107,7 @@ function k4menu() {
 			ko = true;
 			if(pos[1] > d.bottom(mx)) ko = false;
 			if(pos[1] < d.top(lx)) ko = false;
-			if(pos[0] < d.left((tx ? tx : lx))) ko = false;
+			if(pos[0] < d.left((tx ? tx : lx))) ko = false; // TODO: include force_right thing
 			if(pos[0] > d.right(lx)) ko = false;
 			if(!ko) {
 				_t._close(mx);

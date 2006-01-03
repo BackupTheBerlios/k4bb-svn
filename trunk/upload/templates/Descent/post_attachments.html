@@ -8,12 +8,11 @@
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="attachmanage" <if:if var="nojs" eq="0">style="display: none;"</if:if>>
 		<tr>
 			<td class="alt3">
-				<fieldset>
-					<legend>{$L_SELECTFILES}</legend>
-					<div class="smalltext">{$L_VALIDEXTENSIONS}: {$attachextensions}</div>
-					<input type="hidden" name="MAX_FILE_SIZE" value="{$maxattachsize}" />
-					{$attach_inputs}
-				</fieldset>
+				<if:if var="nojs" eq="0">
+					<iframe name="attach_frame" id="attach_frame" src="misc.php?act=attachments_manager&amp;forum_id={$forum_forum_id}&amp;post_id={$attach_post_id}" frameborder="no" style="width:100%;height:135px;"></iframe>
+				<if:else />
+					<core:import id="post_attach_form" file="post_attach_form.html" />
+				</if:if>
 			</td>
 		</tr>
 	</table>

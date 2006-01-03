@@ -312,6 +312,128 @@ class changePostBodyText extends FAAction {
 	}
 }
 
+class postAttachForm extends FAAction {
+	function execute(&$request) {
+		
+		if(isset($_REQUEST['forum_id']) && intval($_REQUEST['forum_id']) != 0) {
+			$forum = $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['forum_id']));
+			
+			if(!is_array($forum) || empty($forum))
+				exit;
+		} else {
+			exit;
+		}
+		
+		$request['template']->setVar('forum_id', $forum['forum_id']);
+
+		if($request['user']->get('perms') < get_map($request['user'], 'attachments', 'can_add', array('forum_id'=>$forum['forum_id']) ) ) {
+			exit;
+		}
+
+		$num_attachments = 0;
+		
+		// check for a post id and add attachments accordingly
+		if(isset($_REQUEST['post_id']) && intval($_REQUEST['post_id']) > 0) {
+			$post = $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id=". intval($_REQUEST['post_id']) ." AND poster_id=". intval($request['user']->get('id')));
+			if(!$post || !is_array($post) || empty($post)) {
+				exit;
+			}
+
+			$request['template']->setVar('post_id', $post['post_id']);
+
+			$num_attachments	= $post['attachments'];
+			post_attachment_options($request, $forum, $post);
+		}
+		
+		// if there are no attachments set by the above post check
+		if($request['template']->getVar('attach_inputs') == '') {
+			
+			// this will deal with any attachments in 'limbo'
+			$limbo_attachments = $request['dba']->getValue("SELECT COUNT(*) FROM ". K4ATTACHMENTS ." WHERE post_id = ". intval($post['post_id']) ." AND user_id=". intval($request['user']->get('id')));
+			post_attachment_options($request, $forum, array('post_id'=>0,'attachments'=>$limbo_attachments) );
+			
+			if($request['template']->getVar('attach_inputs') == '') {
+				if($request['user']->get('perms') >= get_map( 'attachments', 'can_add', array('forum_id'=>$forum['forum_id']))) {
+					$num_attachments	= $request['template']->getVar('nummaxattaches') - $num_attachments;
+					
+					$attach_inputs		= '';
+					for($i = 1; $i <= $num_attachments; $i++) {
+						$attach_inputs	.= '<br /><input type="file" class="inputbox" name="attach'. $i .'" id="attach'. $i .'" value="" size="55" />';
+					}
+					
+					$request['template']->setVar('attach_inputs', $attach_inputs);
+				}
+			}
+		}
+		
+		if(isset($_REQUEST['error']) && $_REQUEST['error'] != '') {			
+			$errorstr = '<strong>'. $request['template']->getVar('L_ERRORS') .'</strong><br />';
+			$temp = explode('|', $_REQUEST['error']);
+			$errorstr .= implode('<br />', $temp);
+			
+			$request['template']->setVar('errors', $errorstr);
+
+			unset($temp);
+		}
+		
+		// set some stuff
+		$templateset = $request['user']->isMember() ? $request['user']->get('templateset') : $forum['defaultstyle'];
+		$request['template_file'] = BB_BASE_DIR .'/templates/'. $templateset .'/misc_base.html';
+		$request['template']->setFile('content', 'post_attach_form.html');
+		$request['template']->setVisibility('copyright', FALSE);
+
+		return TRUE;
+	}
+}
+
+class AttachFilesToPost extends FAAction {
+	function execute(&$request) {
+		
+		if(isset($_REQUEST['forum_id']) && intval($_REQUEST['forum_id']) != 0) {
+			$forum = $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['forum_id']));
+			
+			if(!is_array($forum) || empty($forum))
+				exit;
+		} else {
+			exit;
+		}
+		
+		if($request['user']->get('perms') < get_map($request['user'], 'attachments', 'can_add', array('forum_id'=>$forum['forum_id']) ) ) {
+			exit;
+		}
+
+		$num_attachments = 0;
+		$post_id = 0;
+		$row_type = 0;
+		$parent_id = 0;
+
+		// check for a post id and add attachments accordingly
+		if(isset($_REQUEST['post_id']) && intval($_REQUEST['post_id']) > 0) {
+			$post = $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id=". intval($_REQUEST['post_id']) ." AND poster_id=". intval($request['user']->get('id')));
+			if(!$post || !is_array($post) || empty($post)) {
+				exit;
+			}
+
+			$post_id = $post['post_id'];
+			$row_type = $post['row_type'];
+			$parent_id = $post['parent_id'];
+		} else {
+			$post = array('post_id'=>$post_id,'parent_id'=>$parent_id,'row_type'=>$row_type);
+		}
+				
+		$result = attach_files($request, $forum, $post);
+		
+		$error_str = '';
+		if(is_array($result) && !empty($result)) {
+			$error_str = implode('|', $result);
+		}
+		
+		header("Location: misc.php?act=attachments_manager&post_id=". $post['post_id'] ."&forum_id=". $forum['forum_id'] ."&error=". $error_str);
+		
+		return TRUE;
+	}
+}
+
 $app = &new K4Controller('forum_base.html');
 $app->setAction('', new K4DefaultAction);
 $app->setDefaultEvent('');
@@ -320,6 +442,9 @@ $app->setAction('switch_editor', new SwitchEditors);
 $app->setAction('revert_text', new RevertHTMLText);
 $app->setAction('original_text', new PostBodyText);
 $app->setAction('save_text', new changePostBodyText);
+
+$app->setAction('attachments_manager', new postAttachForm);
+$app->setAction('attach_files', new AttachFilesToPost);
 
 $app->execute();
 

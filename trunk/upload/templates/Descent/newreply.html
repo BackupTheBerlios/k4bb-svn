@@ -156,7 +156,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="base3" align="center" colspan="2">
+			<td class="base3" colspan="2" style="text-align: center;">
 				<input type="hidden" name="submit_type" id="submit_type" value="" />
 				<input <if:if var="nojs" eq="1">name="post"</if:if> type="submit" class="button" value="{$L_SUBMIT}" accesskey="s" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'post'); }" />
 				<maps:if forum="forum_forum_id" var="post_preview" method="can_add">
@@ -170,9 +170,9 @@
 
 <core:import id="post_options" file="post_options.html" />
 
-<core:import id="post_attachments" file="post_attachments.html" />
-
 </form:form>
+
+<core:import id="post_attachments" file="post_attachments.html" />
 
 <core:import id="topic_review" file="post_topic_review.html" />
 
