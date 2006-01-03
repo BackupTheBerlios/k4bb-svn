@@ -10,28 +10,109 @@
 <div id="ajax_post_preview" style="display: none;"></div>
 <!-- / AJAX Reply Preview -->
 
-<div class="spacer">
-	<div class="header">
-		<div class="title">
-			<core:block id="post_reply">
-			<div style="float:right;" class="smalltext">
-				<strong>{$L_REPLY}:</strong>
-				<a href="findpost.php?id={$parent_id}" class="smalltext" style="font-weight: normal;" title="{$parent_name}">{$parent_name}</a>
-			</div>
-			{$L_POSTREPLY}
-			</core:block>
-			<core:block id="edit_post" hidden="yes">
-			<div style="float:right;" class="smalltext">
-				<strong>{$L_REPLY}:</strong>
-				<a href="findpost.php?id={$post_post_id}" class="smalltext" style="font-weight: normal;" title="{$post_name}">{$post_name}</a>
-			</div>
-			{$L_EDITPOST}: <span style="font-weight: normal;">{$post_name}</span>
-			</core:block>
+<div class="header">
+	<div class="title">
+		<core:block id="post_reply">
+		<div style="float:right;" class="smalltext">
+			<strong>{$L_REPLY}:</strong>
+			<a href="findpost.php?id={$parent_id}" class="smalltext" style="font-weight: normal;" title="{$parent_name}">{$parent_name}</a>
 		</div>
+		{$L_POSTREPLY}
+		</core:block>
+		<core:block id="edit_post" hidden="yes">
+		<div style="float:right;" class="smalltext">
+			<strong>{$L_REPLY}:</strong>
+			<a href="findpost.php?id={$post_post_id}" class="smalltext" style="font-weight: normal;" title="{$post_name}">{$post_name}</a>
+		</div>
+		{$L_EDITPOST}: <span style="font-weight: normal;">{$post_name}</span>
+		</core:block>
 	</div>
-	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+</div>
+<div class="spacer">
+	<table width="100%" cellspacing="0" cellpadding="0" border="0" class="">
 		<tr>
-			<td class="alt3" colspan="2" align="center">
+			<td rowspan="2" valign="top" style="padding:0px;margin:0px;border:0px;">
+				
+				<is:unlogged>
+				<!-- Poster Name -->
+				<div class="subheader"><label for="poster_name">{$L_YOURNAME}</label></div>
+				<div class="spacer">
+					<div class="alt4">
+						<input type="text" name="poster_name" id="poster_name" value="{$poster_name}" tabindex="1" size="{$maxuserlength}" class="inputbox" maxlength="{$maxuserlength}" />
+					</div>
+				</div>
+				<!-- / Poster Name -->
+				</is:unlogged>
+				
+				<maps:if forum="forum_forum_id" var="emoticons" method="can_add">
+				<list:list id="emoticons">
+				<if:if var="can_wysiwyg" eq="0">
+				<!-- Emoticons -->
+				<div class="subheader">{$L_EMOTICONS}</div>
+				<div class="spacer">
+					<div class="alt4" style="text-align:center;">
+						<table border="0" cellspacing="0">
+							<tr>
+								<td>
+									<table cellpadding="3" cellspacing="{$style_cellspacing}" id="posticons">
+										<tr>
+											<list:item list="emoticons">
+											<td align="center">
+												<a href="javascript:emoticon('{$typed}')" title="{$description}"><img src="tmp/upload/emoticons/{$image}" alt="{$description}" border="0" /></a>
+											</td>
+											<list:separator list="emoticons">
+												<list:alternate list="emoticons" count="{@emoticons_per_row}" remainder="{@emoticons_per_row_remainder}">
+													</tr><tr>
+												</list:alternate>
+											</list:separator>
+											</list:item>
+										</tr>	
+									</table>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<!-- / Emoticons -->
+				</if:if>
+				</list:list>
+				</maps:if>
+				
+				<maps:if forum="forum_forum_id" var="posticons" method="can_add">
+				<list:list id="posticons">
+				<!-- Post Icons -->
+				<div class="subheader">{$L_POSTICONS}</div>
+				<div class="spacer">
+					<div class="alt4">
+						<span class="smalltext">{$L_POSTICONSPOSTCHOOSE}<br /><br /></span>
+						<table cellpadding="3" cellspacing="{$style_cellspacing}" id="posticons">
+							<tr>
+								<td colspan="2"><label for="noicon"><input type="radio" name="posticon" id="noicon" value="clear.gif" checked="checked" onclick="swap_posticon(null)" />&nbsp;{$L_NOICON}</label></td>
+							</tr>
+							<tr>
+								<list:item list="posticons">
+								<td nowrap="nowrap">
+									<label for="pi{$id}">
+										<input type="radio" name="posticon" id="pi{$id}" value="{$image}" onclick="swap_posticon('pi_{$id}')" />&nbsp;&nbsp;<img src="tmp/upload/posticons/{$image}" alt="{$description}" id="pi_{$id}" />
+									</label>
+								</td>
+								<list:separator list="posticons">
+									<list:alternate list="posticons" count="2" remainder="1">
+										</tr><tr>
+									</list:alternate>
+								</list:separator>
+								</list:item>
+							</tr>	
+						</table>
+					</div>
+				</div>
+				<!-- / Post Icons -->
+				</list:list>
+				</maps:if>
+
+			</td>
+			<td rowspan="2" style="padding:0px;margin:0px;border:0px;">&nbsp;</td>
+			<td width="80%" class="alt3" valign="top">
 				
 				<!-- Main Posting Inputs -->
 				<span class="smalltext" style="float: right;">
@@ -42,22 +123,12 @@
 					<strong>{$L_GUEST}</strong>
 					</is:logged>
 				</span>
-				<table border="0" cellspacing="0">
-					<is:unlogged>
-					<tr>
-						<td>
-							<!-- Poster Name -->
-							<label for="poster_name" class="smalltext">{$L_YOURNAME}</label><br />
-							<input type="text" name="poster_name" id="poster_name" tabindex="1" value="{$poster_name}" size="{$maxuserlength}" class="inputbox" maxlength="{$maxuserlength}" />
-							<!-- / Poster Name -->
-						</td>
-					</tr>
-					</is:unlogged>
+				<table border="0" cellspacing="0" cellspacing="0" width="100%" class="">
 					<tr>
 						<td>
 							<!-- Post Title -->
 							<label for="name" class="smalltext">{$L_POSTTITLE}</label><br />
-							<input type="text" name="name" id="name" value="{$post_name}" tabindex="2" style="width: 500px;" class="inputbox" maxlength="255" />
+							<input type="text" name="name" id="name" value="{$post_name}" tabindex="2" style="width: 99%;" class="inputbox" maxlength="255" />
 							<form:error id="name_error" for="name" setclass="inputfailed" regex=".{{$topicminchars},{$topicmaxchars}}">{$L_TITLETOOSHORT}</form:error>
 							<!-- / Post Title -->
 						</td>
@@ -72,84 +143,12 @@
 							<label for="{$editor_input_id}" class="smalltext">{$L_POST}</label><br />
 							
 							<core:import id="editor" file="editor.html" />
-							<form:error id="{$editor_input_id}_error" for="{$editor_input_id}" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTREPLYMESSAGE}</form:error>
-							
+							<form:error id="{$editor_input_id}_error" for="{$editor_input_id}" setclass="inputfailed" regex="(\n|\r\n|\r|.)+">{$L_INSERTTOPICMESSAGE}</form:error>
+
 							<!-- / Post Message -->
 
 						</td>
-						<td valign="bottom">
-							<maps:if forum="forum_forum_id" var="emoticons" method="can_add">
-							<list:list id="emoticons">
-							
-							<!-- Emoticons -->
-							<table border="0" cellspacing="0">
-								<tr>
-									<td>
-										<fieldset>
-											<legend>{$L_EMOTICONS}</legend>
-											<table cellpadding="3" cellspacing="{$style_cellspacing}" id="posticons">
-												<tr>
-													<list:item list="emoticons">
-													<td align="center">
-														<a href="javascript:emoticon('{$typed}')" title="{$description}"><img src="tmp/upload/emoticons/{$image}" alt="{$description}" border="0" /></a>
-													</td>
-													<list:separator list="emoticons">
-														<list:alternate list="emoticons" count="{@emoticons_per_row}" remainder="{@emoticons_per_row_remainder}">
-															</tr><tr>
-														</list:alternate>
-													</list:separator>
-													</list:item>
-												</tr>	
-											</table>
-										</fieldset>
-									</td>
-								</tr>
-							</table>
-							<!-- / Emoticons -->
-
-							</list:list>
-							</maps:if>
-						</td>
 					</tr>
-					<maps:if forum="forum_forum_id" var="posticons" method="can_add">
-					<tr>
-						<td colspan="2">
-							<list:list id="posticons">
-							
-							<!-- Post Icons -->
-							<table border="0" cellspacing="0" width="100%">
-								<tr>
-									<td>
-										<fieldset>
-											<legend>{$L_POSTICONS}</legend>
-											<span class="smalltext">{$L_POSTICONSPOSTCHOOSE}</span>
-											<label for="noicon" style="float: left;margin-top: 10px;"><input type="radio" name="posticon" id="noicon" value="clear.gif" checked="checked" onclick="swap_posticon(null)" />&nbsp;{$L_NOICON}</label>
-											<table cellpadding="3" cellspacing="{$style_cellspacing}" id="posticons">
-												<tr>
-													<list:item list="posticons">
-													<td align="center">
-														<label for="pi{$id}">
-															<input type="radio" name="posticon" id="pi{$id}" value="{$image}" style="float: left;padding-right: 5px;" onclick="swap_posticon('pi_{$id}')" />&nbsp;&nbsp;<img src="tmp/upload/posticons/{$image}" alt="{$description}" id="pi_{$id}" style="margin-right:15px;" />
-														</label>
-													</td>
-													<list:separator list="posticons">
-														<list:alternate list="posticons" count="7" remainder="6">
-															</tr><tr>
-														</list:alternate>
-													</list:separator>
-													</list:item>
-												</tr>	
-											</table>
-										</fieldset>
-									</td>
-								</tr>
-							</table>
-							<!-- / Post Icons -->
-
-							</list:list>
-						</td>
-					</tr>
-					</maps:if>
 				</table>
 				<!-- / Main Posting Inputs -->
 
