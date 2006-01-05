@@ -44,7 +44,13 @@ if(!function_exists('one_dir_up')) {
 	}
 }
 
+// just some checks ;)
+if (isset($_REQUEST['GLOBALS'])) unset($_REQUEST['GLOBALS']);
+if (isset($_COOKIE['GLOBALS'])) unset($_COOKIE['GLOBALS']);
 
+//
+// start doing stuff
+//
 define('K4_BASE_DIR', dirname(__FILE__));
 define('BB_BASE_DIR', file_exists(dirname($_SERVER['SCRIPT_FILENAME']) .'/index.php') && is_dir(dirname($_SERVER['SCRIPT_FILENAME']) .'/includes') ? dirname($_SERVER['SCRIPT_FILENAME']) : one_dir_up(dirname(__FILE__), 2));
 

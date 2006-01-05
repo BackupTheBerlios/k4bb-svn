@@ -1,0 +1,25 @@
+<div class="alt3" style="padding:0px;margin:0px;border:0px;">
+	<fieldset>
+		<legend>{$L_SELECTFILES}</legend>
+		<form action="misc.php?act=attach_files" method="post" enctype="multipart/form-data">
+		<table width="100%" cellpadding="0" cellspacing="0" border="0">
+			<tr>
+				<td nowrap="nowrap" style="padding:0px;margin:0px;border:0px;">
+					<input type="hidden" name="forum_id" value="{$forum_id}" />
+					<input type="hidden" name="post_id" value="{$post_id}" />
+					<div class="smalltext">{$L_VALIDEXTENSIONS}: {$attachextensions}</div>
+					<input type="hidden" name="MAX_FILE_SIZE" value="{$maxattachsize}" />
+					
+					{$attach_inputs}
+				</td>
+				<td width="50%" style="padding:0px;margin:0px;border:0px;" valign="top">
+					<input type="submit" value="{$L_UPLOAD}" class="button" />
+					<input type="reset" value="{$L_RESET}" class="button" />
+					<br /><br />
+					{$errors}
+				</td>
+			</tr>
+		</table>
+		</form>
+	</fieldset>
+</div>

@@ -1,324 +1,431 @@
 /**
-* k4 Bulletin Board, k4rte JavaScript class
-* Copyright (c) 2005, Peter Goodman
-* @author Peter Goodman
-* @version $Id$
-* @package k42
-*/
+ * k4 Bulletin Board, k4rte JavaScript class
+ * Copyright (c) 2005, Peter Goodman
+ * Licensed under the LGPL license
+ * http://www.gnu.org/copyleft/lesser.html
+ * @author Peter Goodman
+ * @version $Id$
+ * @package k42
+ */
 
-var color_values = new Array('black', 'skyblue', 'royalblue', 'blue', 'darkblue', 'orange', 'orangered', 'crimson', 'red', 'firebrick', 'darkred', 'green', 'limegreen', 'seagreen', 'deeppink', 'tomato', 'coral', 'purple', 'indigo', 'burlywood', 'sandybrown', 'sienna', 'chocolate', 'teal', 'silver');
-var color_styles = new Array('color: black;', 'color: skyblue;', 'color: royalblue;', 'color: blue;', 'color: darkblue;', 'color: orange;', 'color: orangered;', 'color: crimson;', 'color: red;', 'color: firebrick;', 'color: darkred;', 'color: green;', 'color: limegreen;', 'color: seagreen;', 'color: deeppink;', 'color: tomato;', 'color: coral;', 'color: purple;', 'color: indigo;', 'color: burlywood;', 'color: sandybrown;', 'color: sienna;', 'color: chocolate;', 'color: teal;', 'color: silver;');
-var size_values = new Array(12, 7, 9, 12, 18, 24);
-var size_styles = new Array('font-size: auto;', 'font-size: 8px;', 'font-size: 9px;', 'font-size: 12px;');
-var img_dir = 'js/editor/';
-var default_src = 'js/editor/blank.html';
-var default_inst = 'rte';
-var bbcode = true;
-var use_rtm = false;
+var IMG_DIR			= 'js/editor/';
+var DEFAULT_SRC		= 'js/editor/blank.html';
+var DEFAULT_INST	= 'rte';
+var USE_BBCODE		= true;
+var USE_RTM			= false;
 
-function k4rte() {
+var color_values	= new Array('black', 'skyblue', 'royalblue', 'blue', 'darkblue', 'orange', 'orangered', 'crimson', 'red', 'firebrick', 'darkred', 'green', 'limegreen', 'seagreen', 'deeppink', 'tomato', 'coral', 'purple', 'indigo', 'burlywood', 'sandybrown', 'sienna', 'chocolate', 'teal', 'silver');
+var color_styles	= new Array('color: black;', 'color: skyblue;', 'color: royalblue;', 'color: blue;', 'color: darkblue;', 'color: orange;', 'color: orangered;', 'color: crimson;', 'color: red;', 'color: firebrick;', 'color: darkred;', 'color: green;', 'color: limegreen;', 'color: seagreen;', 'color: deeppink;', 'color: tomato;', 'color: coral;', 'color: purple;', 'color: indigo;', 'color: burlywood;', 'color: sandybrown;', 'color: sienna;', 'color: chocolate;', 'color: teal;', 'color: silver;');
+var size_values		= new Array(12, 7, 9, 12, 18, 24);
+var size_styles		= new Array('font-size: auto;', 'font-size: 8px;', 'font-size: 9px;', 'font-size: 12px;');
 
-	// public functions
-	this.init = init;
-	this.btn = btn;
-	this.hs = new Function();
-	this.sm = sm;
+//
+// k4RTE Class Constructor
+//
+function k4RTE(hooks, quicktags) {
+	this.hooks		= hooks;
+	this.quicktags	= quicktags;
+}
 
-	// private functions
-	this._get = _get;
-	this._getd = _getd;
-	this._rtm = _rtm;
-	this._set = _set;
-	this._cbtn = _cbtn;
-	this._bs = _bs;
-	this._it = _it;
-	
-	// vars
-	this._tags = new Array();
-	this._qt = new _qt();
-	var d = new k4lib();
-	var _t = this;
-	var rte_mode = new Array();
+// k4RTE class definition
+k4RTE.prototype = {
 
-	// get and object
-	function _get(o) {
+	hooks:		new Object(), // add-on functions
+	quicktags:	new Object(), // the JSQuickTags library by Alex King
+	tags:		new Array(), // tags array
+	lib:		new k4lib(), // the k4Lib library
+	rte_mode:	new Array(), // an array of editors
+
+	//
+	// initialize the editor
+	//
+	init: function(textarea_id) {
+		
+		textarea_obj = this.get_object(textarea_id);
+
+		if(textarea_obj) {
+			var iframe_id = textarea_id + '_k4rte';
+
+			this.create_buttons(iframe_id);
+			this.create_iframe(iframe_id);
+		}
+	},
+
+	//
+	// get an object
+	//
+	get_object: function(object_id) {
 		ret = false;
-		var obj = d.getElementById(o);
+		var obj = this.lib.getElementById(object_id);
 		if(obj && typeof(obj) == 'object') {
 			ret = obj;
 		}
 		return ret;
-	}
+	},
 
-	// get the 'document' of an iframe
-	function _getd(ix) {
-		ixd = ixw = false;
-		if(ix) {
+	//
+	// get the 'document' DOM of an object (an iframe)
+	//
+	get_object_document: function(iframe_obj) {
+		var dom_object		= false;
+		var frame_object	= false;
+
+		if(iframe_obj) {
 			if (document.all) {
-				try { ixw = frames[ix.id]; } catch(e) { }
+				try { frame_object = frames[iframe_obj.id]; } catch(ex) { debug('Could not fetch Frame object (document.all)', ex); }
 			} else {
-				try { ixw = ix.contentWindow; } catch(e) { }
+				try { frame_object = iframe_obj.contentWindow; } catch(e) { debug('Could not fetch Frame object (!document.all)', e); }
 			}
-			if(ixw) {
-				ixd	= ixw.document; 
-				if(!ixd && document.all && ix.contentWindow) {
-					ixd = ix.contentWindow.document;
+			if(frame_object) {
+
+				dom_object	= frame_object.document;
+
+				if(!dom_object && document.all && iframe_obj.contentWindow) {
+					dom_object = iframe_obj.contentWindow.document;
 				}
 			}
 		}
-		return ixd;
-	}
+		return dom_object;
+	},
 
-	// make an iframe go to rich-text mode
-	function _rtm(i) {
-		var ix = _t._get(i);
-		var ixd = _t._getd(ix);
-		var dm = false;
-		if(ix && ixd) {
-			ixd.open();
-			ixd.write("<html><head><style type=\"text/css\">body { font-family:Tahoma, Arial, Helvetica, Sans-serif;background-color:#FFFFFF; }</style></head><body></body></html>");
-			ixd.close();
+	//
+	// make an iframe go into 'rich text' mode
+	//
+	richtext_mode: function(iframe_id) {
+		var iframe_obj		= this.get_object(iframe_id);
+		var iframe_do	    = this.get_object_document(iframe_obj);
+		var ret			      = false;
+		if(iframe_obj && iframe_do) {
+
+			// open and write html to the iframe
+			iframe_do.open();
+			iframe_do.write("<html><head><style type=\"text/css\">body { font-family:Tahoma, Arial, Helvetica, Sans-serif;background-color:#FFFFFF; }</style></head><body></body></html>");
+			iframe_do.close();
+
+			// try to toggle designmode
 			if(typeof(document.designMode) != 'undefined') {
 				try {
-					ixd.designMode = "On";
-					dm = true;
-				} catch(e) { }
+					iframe_do.designMode	= "On";
+					ret						        = true;
+				} catch(e) { debug('Could not toggle design mode (document.designMode)', e); }
 			}
-			if(typeof(ix.contentDocument.designMode) != 'undefined') {
+			if(typeof(iframe_obj.contentDocument.designMode) != 'undefined') {
 				try {
-					ix.contentDocument.designMode = "on";
-					dm = true;
-				} catch(e) { }
+					iframe_obj.contentDocument.designMode	= "on";
+					ret									= true;
+				} catch(ex) { debug('Could not toggle design mode (contentDocument.designMode)', ex); }
 			}
-			if(typeof(ix.contentEditable) != 'undefined') {
-				ix.contentEditable = true;
-				dm = true;
-			}
-		}
-		return dm;
-	}
-
-	// create an iframe and position it
-	function _set(i) {
-		if(use_rtm) {
-			document.write('<iframe name="' + i + '" id="' + i + '" frameborder="no" style="background-color:#FFFFFF;" src="' + default_src + '"></iframe>');
-			if(_t._rtm(i)) {
-				var ix = _t._get(i);
-				var tx = _t._get(i.substring(0, i.length-6));
-				ix.style.width = d.width(tx) + 'px';
-				ix.style.height = d.height(tx) + 'px';
-				rte_mode[i] = false;
-				_t.sm(i);
+			if(typeof(iframe_obj.contentEditable) != 'undefined') {
+				iframe_obj.contentEditable	= true;
+				ret						= true;
 			}
 		}
-	}
+		return ret;
+	},
 
-	// execute a button command
-	function btn(i, cmd) {
-		var ix = _t._get(i);
-		var ixd = _t._getd(ix);
-		var t = i.substring(0, i.length-6);
-		if(cmd in _t.hs) {
-			eval("_t.hs." + cmd + "(t, i);");
+	//
+	// Create and position the iframe
+	//
+	create_iframe: function(iframe_id) {
+
+		var textarea_id = iframe_id.substring(0, iframe_id.length-6);
+
+		if(USE_RTM) {
+
+			// make the iframe
+			document.write('<iframe name="' + iframe_id + '" id="' + iframe_id + '" frameborder="no" style="background-color:#FFFFFF;" src="' + DEFAULT_SRC + '"></iframe>');
+
+			if(this.richtext_mode(iframe_id)) {
+
+				// get the iframe and textarea
+				var iframe_obj			= this.get_object(iframe_id);
+				var textarea_obj		= this.get_object(textarea_id);
+
+				// position the iframe
+				iframe_obj.style.width	= this.lib.width(textarea_obj) + 'px';
+				iframe_obj.style.height = this.lib.height(textarea_obj) + 'px';
+
+				// set the iframe modes
+				this.rte_mode[iframe_id] = false;
+				this.switch_mode(iframe_id);
+			}
+		}
+	},
+
+	//
+	// Execute a general command (e.g.when a button is clicked)
+	//
+	exec_command: function(iframe_id, command) {
+
+		// find a way to execute a command
+		if(command in this.hooks) {
+			eval("this.hooks." + command + "(textarea_id, iframe_id);");
 		} else {
-			if(rte_mode[i] == true) {
-				ixd.execCommand(cmd, false, '');
+
+			if(this.rte_mode[iframe_id] == true && USE_RTM) {
+
+				// get objects
+				var iframe_obj  = this.get_object(iframe_id);
+				var iframe_do	  = this.get_object_document(iframe_obj);
+
+				iframe_do.execCommand(command, false, '');
 			} else {
-				var tx = _t._get(i.substring(0, i.length-6));
-				_t._it(tx, cmd);
+
+				var textarea_id   = iframe_id.substring(0, iframe_id.length-6);
+				var textarea_obj	= this.get_object(textarea_id);
+
+				this.quicktags.initialize_tags(textarea_obj, command);
 			}
 		}
-	}
+	},
 
-	// create a button
-	function _cbtn(i, alt, img, cmd, tags_html, tags_bbcode) {
+	//
+	// Create a button
+	//
+	create_button: function(iframe_id, alt, img, command, tags_html, tags_bbcode) {
+
 		if(typeof(tags_html) != 'undefined' && typeof(tags_bbcode) != 'undefined') {
-			_t._tags[cmd] = (bbcode ? tags_bbcode : tags_html);
+			this.quicktags.tags[command] = (USE_BBCODE ? tags_bbcode : tags_html);
 		}
-		document.writeln('<a href="javascript:'+ default_inst + '.btn(\'' + i + '\', \'' + cmd + '\');" title="' + alt + '"><img src="' + img_dir + '' + img + '.gif" name="button_' + cmd + '" id="button_' + cmd  + '_' + i + '" alt="' + alt + '" border="0" /></a>');
-	}
 
-	// create a panel of buttons
-	function _bs(i) {
+		document.writeln('<a href="javascript:' + DEFAULT_INST + '.exec_command(\'' + iframe_id + '\', \'' + command + '\');" title="' + alt + '"><img src="' + IMG_DIR + '' + img + '.gif" name="button_' + command + '" id="button_' + command  + '_' + iframe_id + '" alt="' + alt + '" border="0" /></a>');
+	},
+
+	//
+	// Create the button set for the editor
+	//
+	create_buttons: function(iframe_id) {
+
 		document.write('<div class="alt1">');
-		_t._cbtn(i, 'Bold', 'bold', 'bold', ["<strong>", "</strong>"], ["[b]", "[/b]"]);
-		_t._cbtn(i, 'Italic', 'italic', 'italic', ["<em>", "</em>"], ["[i]", "[/i]"]);
-		_t._cbtn(i, 'Underline', 'underline', 'underline', ["<u>", "</u>"], ["[u]", "[/u]"]);
-		_t._cbtn(i, 'Left', 'justifyleft', 'justifyleft', ["<span style=\"text-align: left;\">", "</span>"], ["[left]", "[/left]"]);
-		_t._cbtn(i, 'Center', 'justifycenter', 'justifycenter', ["<span style=\"text-align: center;\">", "</span>"], ["[center]", "[/center]"]);
-		_t._cbtn(i, 'Right', 'justifyright', 'justifyright', ["<span style=\"text-align: right;\">", "</span>"], ["[right]", "[/right]"]);
-		_t._cbtn(i, 'Justify', 'justifyfull', 'justifyfull', ["<span style=\"text-align: justify;\">", "</span>"], ["[justify]", "[/justify]"]);
-		_t._cbtn(i, 'Ordered List', 'ol', 'insertorderedlist', ["<ol>", "</ol>"], ["[list=1]", "[/list]"]);
-		_t._cbtn(i, 'Unordered List', 'ul', 'insertunorderedlist', ["<ol>", "</ul>"], ["[list]", "[/list]"]);
-		_t._cbtn(i, 'Indent', 'indent', 'indent', ["<span style=\"margin-left: 20px;\">", "</span>"], ["[indent]", "[/indent]"]);
-		_t._cbtn(i, 'Outdent', 'outdent', 'outdent', ["<span style=\"margin-left: 0px;\">", "</span>"], ["[outdent]", "[/outdent]"]);
-		//_t._cbtn(i, 'Undo', 'undo', 'undo');
-		//_t._cbtn(i, 'Redo', 'redo', 'redo');
-		_t._cbtn(i, 'Color', 'textcolor', 'forecolor');
-		if(use_rtm) document.write('<a href="javascript:'+ default_inst + '.sm(\'' + i + '\');" title="Switch Mode"><img src="' + img_dir + 'switch_format.gif" name="button_switch" id="button_switch_' + i + '" alt="Switch Mode" border="0" /></a>');
+
+		this.create_button(iframe_id, 'Bold', 'bold', 'bold', ["<strong>", "</strong>"], ["[b]", "[/b]"]);
+		this.create_button(iframe_id, 'Italic', 'italic', 'italic', ["<em>", "</em>"], ["[i]", "[/i]"]);
+		this.create_button(iframe_id, 'Underline', 'underline', 'underline', ["<u>", "</u>"], ["[u]", "[/u]"]);
+		this.create_button(iframe_id, 'Left', 'justifyleft', 'justifyleft', ["<span style=\"text-align: left;\">", "</span>"], ["[left]", "[/left]"]);
+		this.create_button(iframe_id, 'Center', 'justifycenter', 'justifycenter', ["<span style=\"text-align: center;\">", "</span>"], ["[center]", "[/center]"]);
+		this.create_button(iframe_id, 'Right', 'justifyright', 'justifyright', ["<span style=\"text-align: right;\">", "</span>"], ["[right]", "[/right]"]);
+		this.create_button(iframe_id, 'Justify', 'justifyfull', 'justifyfull', ["<span style=\"text-align: justify;\">", "</span>"], ["[justify]", "[/justify]"]);
+		this.create_button(iframe_id, 'Ordered List', 'ol', 'insertorderedlist', ["<ol>", "</ol>"], ["[list=1]", "[/list]"]);
+		this.create_button(iframe_id, 'Unordered List', 'ul', 'insertunorderedlist', ["<ol>", "</ul>"], ["[list]", "[/list]"]);
+		this.create_button(iframe_id, 'Indent', 'indent', 'indent', ["<span style=\"margin-left: 20px;\">", "</span>"], ["[indent]", "[/indent]"]);
+		this.create_button(iframe_id, 'Outdent', 'outdent', 'outdent', ["<span style=\"margin-left: 0px;\">", "</span>"], ["[outdent]", "[/outdent]"]);
+		//this.create_button(iframe_id, 'Undo', 'undo', 'undo');
+		//this.create_button(iframe_id, 'Redo', 'redo', 'redo');
+		this.create_button(iframe_id, 'Color', 'textcolor', 'forecolor');
+
+		if(USE_RTM) {
+			document.write('<a href="javascript:'+ DEFAULT_INST + '.sm(\'' + iframe_id + '\');" title="Switch Mode"><img src="' + IMG_DIR + 'switch_format.gif" name="button_switch" id="button_switch_' + iframe_id + '" alt="Switch Mode" border="0" /></a>');
+		}
+
 		document.write('</div>');
-	}
+	},
 
-	// initialize the editor
-	function init(t) {
-		tx = _t._get(t);
-		if(tx && !d.is_opera) {
-			var i = t + '_k4rte';
-			_t._bs(i);
-			_t._set(i);
-		}
-	}
+	//
+	// Switch the editor mode
+	//
+	switch_mode: function(iframe_id) {
+		var iframe_obj    = this.get_object(iframe_id);
+		var iframe_do	    = this.get_object_document(iframe_obj);
+		var textarea_obj	= this.get_object(iframe_id.substring(0, iframe_id.length-6));
 
-	// switch editor modes
-	function sm(i) {
-		var ix = _t._get(i);
-		var ixd = _t._getd(ix);
-		var tx = _t._get(i.substring(0, i.length-6));
-		if(ix && ixd && tx) {
-			if(rte_mode[i] == true) {
-				rte_mode[i] = false;
-				tx.style.display = 'block';
-				ix.style.display = 'none';
-				objs = d.getElementsByTagName(ixd, 'body');
-				tx.innerHTML = objs[0].innerHTML;
-				tx.value = objs[0].innerHTML;
+		if(iframe_obj && iframe_do && textarea_obj) {
+			if(this.rte_mode[iframe_id] == true) {
+
+				this.rte_mode[iframe_id]  = false;
+				textarea_obj.style.display= 'block';
+				iframe_obj.style.display	= 'none';
+				objs					            = this.lib.getElementsByTagName(iframe_do, 'body');
+				textarea_obj.innerHTML		= objs[0].innerHTML;
+				textarea_obj.value			  = objs[0].innerHTML;
+
 			} else {
-				rte_mode[i] = true;
-				tx.style.display = 'none';
-				ix.style.display = 'block';
-				ixd.open();
-				ixd.write(tx.value);
-				ixd.close();
+
+				this.rte_mode[iframe_id]		= true;
+				textarea_obj.style.display	= 'none';
+				iframe_obj.style.display	  = 'block';
+
+				iframe_do.open();
+				iframe_do.write(textarea_obj.value);
+				iframe_do.close();
+
 			}
 		}
 	}
+}
 
-	/** 
-	 * The following code is modified from JS Quicktags
-	 * Copyright (c) 2002-2005 Alex King
-	 * http://www.alexking.org/
-	 *
-	 * Licensed under the LGPL license
-	 * http://www.gnu.org/copyleft/lesser.html
-	 *
-	 * Modified on December 11, 2005 by Peter Goodman
-	 * Modifications:
-	 *  - Changed function names
-	 *  - Made it use the k4lib() instead of its old functions
-	 *  - Put everything into a sub class of k4rte()
-	 *  - Made it remove opening & closing tags when selected and
-	 *    appropriate button is clicked.
-	 */
-	
-	// new quick tags object
-	function _qt(tags) {
-		
-		// private functions
-		this._pusht = _pusht;
-		this._popt = _popt;
-		this._tis = _tis;
-		this._rep = _rep;
+//
+// k4RTEHooks Class constructor
+//
 
-		// vars
-		var _tags = new Array();
+function k4RTEHooks() { return true; }
 
-		// push a tag onto the stack
-		function _pusht(cmd) {
-			d.array_push(_tags, cmd);
-		}
-
-		// pop a tag off the stack
-		function _popt(cmd) {
-			if(d.in_array(_tags, cmd)) {
-				d.unset(_tags, cmd);
-			}
-		}
-
-		// check if a tag is open
-		function _tis(cmd) {
-			ret = false;
-			if(d.in_array(_tags, cmd))
-				ret = true;
-			return ret;
-		}
-
-		// replace a selection with the appropriate tag or remove the surrounding tag
-		function _rep(open, txt, close) {
-			st = txt.substring(0, open.length);
-			ed = txt.substring(txt.length - close.length);
-			if(st == open && ed == close) {
-				return txt.substring(open.length, txt.length - close.length);
-			} else {
-				return open + txt + close;
-			}
-		}
+// the class
+k4RTEHooks.prototype = {
+	forecolor: function(textarea_id, iframe_id) {
+		alert('hazaa');
 	}
+}
 
-	// initialize the quick tags and deal with them all
-	function _it(txx, cmd) {
-		if (document.selection) {
-			txx.focus();
-			sel = document.selection.createRange();
-			if (sel.text.length > 0) {
-				sel.text = _t._qt._rep(_t._tags[cmd][0], sel.text, _t._tags[cmd][1]);
-			} else {
-				if (!_t._qt._tis(cmd) || _t._tags[cmd][1] == '') {
-					sel.text = _t._tags[cmd][0];
-					_t._qt._pusht(cmd);
-				} else {
-					sel.text = _t._tags[cmd][1];
-					_t._qt._popt(cmd);
-				}
-			}
-			if(txx.focus) txx.focus();
-		} else if (txx.selectionStart || txx.selectionStart == '0') {
-			var startPos = txx.selectionStart;
-			var endPos = txx.selectionEnd;
-			var cursorPos = endPos;
-			var scrollTop = txx.scrollTop;
-			if (startPos != endPos) {
-				txx.value = txx.value.substring(0, startPos)
-							  + _t._qt._rep(_t._tags[cmd][0], txx.value.substring(startPos, endPos), _t._tags[cmd][1])
-							  + txx.value.substring(endPos, txx.value.length);
-				cursorPos += _t._tags[cmd][0].length + _t._tags[cmd][1].length;
-			} else {
-				if (!_t._qt._tis(cmd) || _t._tags[cmd][1] == '') {
-					txx.value = txx.value.substring(0, startPos) 
-								  + _t._tags[cmd][0]
-								  + txx.value.substring(endPos, txx.value.length);
-					_t._qt._pusht(cmd);
-					cursorPos = startPos + _t._tags[cmd][0].length;
-				} else {
-					txx.value = txx.value.substring(0, startPos) 
-								  + _t._tags[cmd][1]
-								  + txx.value.substring(endPos, txx.value.length);
-					_t._qt._popt(cmd);
-					cursorPos = startPos + _t._tags[cmd][1].length;
-				}
-			}
-			if(txx.focus) txx.focus();
-			txx.selectionStart = cursorPos;
-			txx.selectionEnd = cursorPos;
-			txx.scrollTop = scrollTop;
+/**
+ * The following code is modified from JS Quicktags
+ * Copyright (c) 2002-2005 Alex King
+ * http://www.alexking.org/
+ *
+ * Licensed under the LGPL license
+ * http://www.gnu.org/copyleft/lesser.html
+ *
+ * Modified on December 11, 2005 by Peter Goodman
+ * Modifications:
+ *  - Changed function names
+ *  - Made it use the k4lib() instead of its old functions
+ *  - Put everything into a js class
+ *  - Made it remove opening & closing tags when selected and
+ *    appropriate button is clicked.
+ */
+
+//
+// Object Constructor
+//
+function k4QuickTags() { return true; }
+
+// Class
+k4QuickTags.prototype = {
+
+	tags:	new Array(),
+	lib:	new k4lib(),
+
+	//
+	// push a tag onto the stack
+	//
+	push_tag: function(cmd) {
+		this.lib.array_push(this.tags, cmd);
+	},
+
+	//
+	// pop a tag off the stack
+	//
+	pop_tag: function(cmd) {
+		if(this.lib.in_array(this.tags, cmd)) {
+			this.lib.unset(this.tags, cmd);
+		}
+	},
+
+	//
+	// check if a tag is open
+	//
+	tag_is_open: function(cmd) {
+		ret = false;
+		if(this.lib.in_array(this.tags, cmd)) {
+			ret = true;
+		}
+		return ret;
+	},
+
+	//
+	// replace a selection with the appropriate tag or remove the surrounding tag
+	//
+	replace_selection: function(open_tag, txt, close_tag) {
+		st = txt.substring(0, open_tag.length);
+		ed = txt.substring(txt.length - close_tag.length);
+		if(st == open_tag && ed == close_tag) {
+			return txt.substring(open_tag.length, txt.length - close_tag.length);
 		} else {
-			if (!_t._qt._tis(cmd) || _t._tags[cmd][1] == '') {
-				txx.value += _t._tags[cmd][0];
-				_t._qt._pusht(cmd);
+			return open_tag + txt + close_tag;
+		}
+	},
+
+	//
+	// Deal with the tags
+	//
+	initialize_tags: function(textarea_obj, cmd) {
+		if (document.selection) {
+
+			if(textarea_obj.focus) textarea_obj.focus();
+
+			sel	= document.selection.createRange();
+			if (sel.text.length > 0) {
+				sel.text = this.replace_selection(this.tags[cmd][0], sel.text, this.tags[cmd][1]);
 			} else {
-				txx.value += _t._tags[cmd][1];
-				_t._qt._popt(cmd);
+				if (!this.tag_is_open(cmd) || this.tags[cmd][1] == '') {
+					sel.text = this.tags[cmd][0];
+					this.push_tag(cmd);
+				} else {
+					sel.text = this.tags[cmd][1];
+					this.pop_tag(cmd);
+				}
 			}
-			if(txx.focus) txx.focus();
+			if(textarea_obj.focus) textarea_obj.focus();
+		} else if (textarea_obj.selectionStart || textarea_obj.selectionStart == '0') {
+
+			var startPos	= textarea_obj.selectionStart;
+			var endPos		= textarea_obj.selectionEnd;
+			var cursorPos	= endPos;
+			var scrollTop	= textarea_obj.scrollTop;
+
+			if (startPos != endPos) {
+				textarea_obj.value = textarea_obj.value.substring(0, startPos)
+							  + this.replace_selection(this.tags[cmd][0], textarea_obj.value.substring(startPos, endPos), this.tags[cmd][1])
+							  + textarea_obj.value.substring(endPos, textarea_obj.value.length);
+				cursorPos += this.tags[cmd][0].length + this.tags[cmd][1].length;
+			} else {
+				if (!this.tag_is_open(cmd) || this.tags[cmd][1] == '') {
+					textarea_obj.value = textarea_obj.value.substring(0, startPos)
+								  + this.tags[cmd][0]
+								  + textarea_obj.value.substring(endPos, textarea_obj.value.length);
+					this.push_tag(cmd);
+					cursorPos = startPos + this.tags[cmd][0].length;
+				} else {
+					textarea_obj.value = textarea_obj.value.substring(0, startPos)
+								  + this.tags[cmd][1]
+								  + textarea_obj.value.substring(endPos, textarea_obj.value.length);
+					this.pop_tag(cmd);
+					cursorPos = startPos + this.tags[cmd][1].length;
+				}
+			}
+
+			if(textarea_obj.focus) textarea_obj.focus();
+
+			textarea_obj.selectionStart = cursorPos;
+			textarea_obj.selectionEnd	= cursorPos;
+			textarea_obj.scrollTop		= scrollTop;
+
+		} else {
+
+			if (!this.tag_is_open(cmd) || this.tags[cmd][1] == '') {
+				textarea_obj.value += this.tags[cmd][0];
+				this.push_tag(cmd);
+			} else {
+				textarea_obj.value += this.tags[cmd][1];
+				this.pop_tag(cmd);
+			}
+
+			if(textarea_obj.focus) textarea_obj.focus();
 		}
 	}
+}
 
-	/**
-	 * END: modified Steven King code
-	 */
-	_t.hs.emoticon = function(t, i) {
-		
+//
+// Class factories
+//
+var k4RTEFactory = {
+    createInstance: function(hooks, quicktags) {
+        return new k4RTE(hooks, quicktags);
+    }
+}
+var k4QuickTagsFactory = {
+    createInstance: function() {
+        return new k4QuickTags();
+    }
+}
+var k4RTEHooksFactory = {
+	createInstance: function() {
+		return new k4RTEHooks();
 	}
-	_t.hs.forecolor = function(t, i) {
-		alert(t + ' ' + i);
-	}
+}
+
+//
+// Debug function
+//
+function debug(nice_error, exception) {
+	return true;
 }

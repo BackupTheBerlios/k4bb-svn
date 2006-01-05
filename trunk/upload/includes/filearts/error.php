@@ -49,11 +49,11 @@ class FAError extends FAObject {
 		
 	function getHtml() {
 		switch ($this->type) {
-			case E_USER_ERROR: return "<br />\n<b>Fatal error</b>: {$this->message} in <b>{$this->file}</b> on line <b>{$this->line}</b><br />\n";
+			case E_USER_ERROR: return "Fatal error: {$this->message} in {$this->file} on line {$this->line}\n";
 			case E_WARNING:
-			case E_USER_WARNING: return "<br />\n<b>Warning</b>: {$this->message} in <b>{$this->file}</b> on line <b>{$this->line}</b><br />\n";
+			case E_USER_WARNING: return "\nWarning: {$this->message} in {$this->file} on line {$this->line}\n";
 			case E_NOTICE:
-			case E_USER_NOTICE: return "<br />\n<b>Notice</b>: {$this->message} in <b>{$this->file}</b> on line <b>{$this->line}</b><br />\n";
+			case E_USER_NOTICE: return "\nNotice: {$this->message} in {$this->file} on line {$this->line}\n";
 			//default: return "<br />\n<b>Unknown</b>: {$this->message} in <b>{$this->file}</b> on line <b>{$this->line}</b><br />\n";
 		}
 	}
@@ -62,7 +62,7 @@ class FAError extends FAObject {
 		$buffer = '';
 				
 		if (!empty($this->backtrace)) {
-			$buffer .= "<b>Call stack:</b>\n<ul>\n";
+			$buffer .= "Call stack:\n\n";
 			
 			foreach ($this->backtrace as $call) {
 				$function = $call['function'];
@@ -85,17 +85,17 @@ class FAError extends FAObject {
 				
 				$args = implode(', ', $arglist);
 				
-				$buffer .= "<li><b>$function($args)</b>";
+				$buffer .= "$function($args)";
 				if (isset($call['file'], $call['line']))
-					$buffer .= " in <strong>". basename($call['file']) ."</strong> on line <b>{$call['line']}</b>";
+					$buffer .= " in ". basename($call['file']) ." on line {$call['line']}";
 				
-				$buffer .= "</li>\n";
+				$buffer .= "\n";
 			}
 			
-			$buffer .= "</ul>\n";
+			$buffer .= "\n";
 		}
 		
-		return $buffer;
+		return str_replace("\t", "", $buffer);
 	}
 }
 

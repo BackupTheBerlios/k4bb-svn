@@ -23,9 +23,7 @@
 </div>
 <div class="footer_block"><div>&nbsp;</div></div>
 {$redirect_html}
-<script type="text/javascript">
-//<![CDATA[
-setTimeout("document.location.href='{$redirect_url}';", {$redirect_time});
-//]]>
-</script>
+<if:if var="redirect_url" noteq="">
+<script type="text/javascript">setTimeout("document.location.href='{$redirect_url}';", {$redirect_time});</script>
+</if:if>
 <!-- / Information Table -->

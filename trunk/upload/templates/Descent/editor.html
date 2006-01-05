@@ -5,9 +5,12 @@
 	<if:if var="has_bbcode_perms" eq="1">
 	<script type="text/javascript" src="js/k4_editor.js"></script>
 	<script type="text/javascript">
-		var rte = new k4rte();
+				
+		var rte = k4RTEFactory.createInstance(
+							k4RTEHooksFactory.createInstance(), 
+							k4QuickTagsFactory.createInstance());
 		rte.init('{$editor_input_id}');
-		rte.sm('{$editor_input_id}');
+		rte.switch_mode('{$editor_input_id}');
 	</script>
 	</if:if>
 	</if:if>

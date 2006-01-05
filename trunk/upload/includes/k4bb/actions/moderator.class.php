@@ -796,20 +796,9 @@ class SimpleUpdateTopic extends FAAction {
 
 		global $_QUERYPARAMS, $_DATASTORE, $_SETTINGS;
 		
-		$ajax = (isset($_REQUEST['ajax']) && intval($_REQUEST['ajax']) == 1) ? TRUE : FALSE;
-		
 		/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
-
-		if (!$this->runPostFilter('name', new FALengthFilter(intval($_SETTINGS['topicmaxchars'])))) {
-			$action = new K4InformationAction(new K4LanguageElement('L_TITLETOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])), 'content', TRUE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message('L_TITLETOOSHORT');
-		}
-		if (!$this->runPostFilter('name', new FALengthFilter(intval($_SETTINGS['topicmaxchars']), intval($_SETTINGS['topicminchars'])))) {
-			$action = new K4InformationAction(new K4LanguageElement('L_TITLETOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])), 'content', TRUE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message('L_TITLETOOSHORT');
-		}
-
+		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
+		
 		/* Check the request ID */
 		if(!isset($_REQUEST['id']) || !$_REQUEST['id'] || intval($_REQUEST['id']) == 0) {
 			$action = new K4InformationAction(new K4LanguageElement('L_TOPICDOESNTEXIST'), 'content', FALSE);
@@ -837,11 +826,16 @@ class SimpleUpdateTopic extends FAAction {
 			$name	= strip_tags($_REQUEST['name']);
 		}
 
-		$name = $name == '' ? $topic['name'] : $name;
+		$name = ($name == '' ? $topic['name'] : $name);
+		
+		if( ( strlen($name) < intval($_SETTINGS['topicminchars'])) || (strlen($name) > intval($_SETTINGS['topicmaxchars']) ) ) {
+			$action = new K4InformationAction(new K4LanguageElement('L_TITLETOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])), 'content', TRUE);
+			return !USE_AJAX ? $action->execute($request) : ajax_message(sprintf('L_TITLETOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])));
+		}
 
 		if($name != $topic['name']) {
 			
-			$name = k4_htmlentities(html_entity_decode($name, ENT_QUOTES), ENT_QUOTES);
+			$name = k4_htmlentities($name, ENT_QUOTES);
 
 			if(!is_moderator($request['user']->getInfoArray(), $forum)) {
 				no_perms_error($request);
