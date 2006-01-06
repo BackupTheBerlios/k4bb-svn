@@ -1,6 +1,8 @@
 /**
- * k4 Bulletin Board, k4lib JavaScript class
+ * k4 Bulletin Board, k4lib JavaScript object
  * Copyright (c) 2005, Peter Goodman
+ * Licensed under the LGPL license
+ * http://www.gnu.org/copyleft/lesser.html
  * @author Peter Goodman
  * @version $Id$
  * @package k42
@@ -336,12 +338,12 @@ k4lib.prototype.width				= function(obj) {
 }
 
 /* get the height of an object */
-k4lib.prototype.height				= function(obj) {
+k4lib.prototype.height	= function(obj) {
 	
 	var objheight		= 0;
 	
 	if(obj) {
-		objheight			= obj.offsetHeight;
+		objheight		= obj.offsetHeight;
 	}
 
 	return objheight;
@@ -407,4 +409,38 @@ k4lib.prototype.get_event_target = function(e) {
 		targ = targ.parentNode;
 
 	return targ;
+}
+
+/* Create an overflow layer, for such things as Opera */
+k4lib.prototype.overflow_layer = function(obj, overflow_type) {
+
+	ret = false;
+	
+	// apparently opera doesn't actually need this.. ugh.
+	if(typeof(obj.style.overflow) == 'undefined' && this.is_opera && obj.id.indexOf('_overflowLayer') == -1) {
+		
+		// this is a hack of using document.write to make the node, (which I don't really like)
+		// then instead of having to position it, it will be removed
+		// and placed where 'obj' is. 'obj' will be duplicated and placed
+		// inside the newly created and moved node.
+		document.write('<div id="' + obj.id + '_overflowLayer" style="overflow:' + overflow_type + ';"></div>');
+
+		var overflow_layer = d.getElementById(obj.id + '_overflowLayer');
+
+		if(typeof(overflow_layer) != 'undefined' && overflow_layer) {
+			var temp_obj	= obj.cloneNode(false);
+			
+			if(obj.replaceNode(overflow_layer)) {
+				
+				this.obj	= overflow_layer;
+				obj.appendChild(temp_obj);
+				ret			= true;
+			}
+			
+			this.using_overflow = true;
+		}
+	} else {
+		ret = true;
+	}
+	return ret;
 }

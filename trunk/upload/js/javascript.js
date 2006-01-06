@@ -235,25 +235,18 @@ function switch_button(open, button) {
 	button.style.display		= 'block';
 }
 
-function collapse_tbody(button_id, element_id, maintitle_id) {
-	var element	= d.getElementById(element_id);
-	var button	= d.getElementById(button_id);
-	var maintitle = d.getElementById(maintitle_id);
+function collapse_tbody(button_id, element_id) {
+	var element		= d.getElementById(element_id);
+	var button		= d.getElementById(button_id);
 	
-	try {
-		if(element && maintitle) {
-			if(element.style.display == 'none') {
-				switch_button(true, button);
-				element.style.display = '';
-				//maintitle.style.margin = '0px 0px 0px 0px';
-			} else {
-				switch_button(false, button);
-				element.style.display = 'none';
-				//maintitle.style.margin = '0px 0px 1px 0px';
-			}
+	if(element) {
+		if(element.style.display == 'none') {
+			element.style.display = '';
+			switch_button(true, button);
+		} else {
+			switch_button(false, button);
+			element.style.display = 'none';
 		}
-	} catch(e) {
-		alert(e.message);
 	}
 }
 

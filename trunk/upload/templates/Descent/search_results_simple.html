@@ -1,0 +1,18 @@
+<list:list id="search_results">
+<list:default list="search_results">
+<div class="alt3" style="text-align:center;">
+	<strong>{$L_NOSEARCHRESULTS}</strong>
+</div>
+</list:default>
+<list:item list="search_results">
+<list:switch list="search_results" var="row_class" a="base3" b="base4">
+<div class="{$row_class}">
+	{$number}. <a href="findpost.php?id={$post_id}" title="{$name}" style="font-weight:bold;">{$name}</a>,
+	<span class="smalltext">
+		{$L_FORUM}: <a href="viewforum.php?id={$forum_id}" title="{$forum_name}">{$forum_name}</a>,
+		{$L_BY}: <if:if var="poster_name" eq="">{$L_GUEST}<if:else /><if:if var="poster_id" noteq="0"><a href="member.php?id={$poster_id}" title="{$poster_name}" style="{$post_user_background}">{$poster_name}</a><if:else />{$poster_name}</if:if></if:if>
+	</span>
+</div>
+</list:switch>
+</list:item>
+</list:list>

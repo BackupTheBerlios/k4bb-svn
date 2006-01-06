@@ -5,14 +5,12 @@
 		</tr>
 		<tr>
 			<td class="alt1">
-				<form action="search.php?act=find" method="post" enctype="multipart/form-data">
+				<form action="search.php?act=find" method="post" enctype="multipart/form-data" name="searc_ddmenu_form" id="searc_ddmenu_form">
 				<input type="text" name="keywords" value="" class="inputbox" />
-				
 				<input type="hidden" name="viewas" value="topics" />
 				<input type="hidden" name="searchsubforums" value="1" />
 				<input type="hidden" name="forums" value="" />
-
-				<input type="submit" value="{$L_GO}" class="button" />
+				<input type="button" value="{$L_GO}" class="button" onclick="showSearchResults(this)" />
 				</form>
 			</td>
 		</tr>

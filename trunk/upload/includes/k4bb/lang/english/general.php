@@ -55,6 +55,7 @@ $_LANG += array(
 'L_MEMBERLIST'			=> 'Member List',
 'L_QUICKLINKS'			=> 'Quick Links',
 'L_USERCONTROLPANEL'	=> 'User Control Panel',
+'L_NAVIGATE'			=> 'Navigate',
 'L_BY'					=> 'by',
 'L_IN'					=> 'in',
 'L_ON_LINE'				=> 'On Line',

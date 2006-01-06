@@ -1,6 +1,8 @@
 /**
- * k4 Bulletin Board, k4css JavaScript class
+ * k4 Bulletin Board, k4css JavaScript object
  * Copyright (c) 2005, Peter Goodman
+ * Licensed under the LGPL license
+ * http://www.gnu.org/copyleft/lesser.html
  * @author Peter Goodman
  * @version $Id$
  * @package k42

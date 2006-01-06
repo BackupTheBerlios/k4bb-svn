@@ -1,6 +1,8 @@
 /**
- * k4 Bulletin Board, XMLHttpRequest object
+ * k4 Bulletin Board, k4XMLHttpRequest object and related objects
  * Copyright (c) 2005, Peter Goodman
+ * Licensed under the LGPL license
+ * http://www.gnu.org/copyleft/lesser.html
  * @author Peter Goodman
  * @version $Id$
  * @package k42
@@ -258,6 +260,7 @@ k4IframeRequest.prototype = {
 	status:				200,
 	statusText:			'',
 	frame_loaded:		false,
+	iframe_timer:		false,
 
 	//
 	// Create the iframe
@@ -342,16 +345,13 @@ k4IframeRequest.prototype = {
 			// pass the url to the iframe
 			this.iframe_src		+= (send_data.length != '' ? append_str + send_data : '');
 			this.iframe_obj.src = this.iframe_src;
-			
-			// a temporary variable of this instance
-			k4_iframe_http		= this;
-			
+						
 			// set a function to the loading of the iframe using
 			// Gavin Kistner's AttachEvent function
 			AttachEvent(this.iframe_obj,'load',function() { k4_iframe_http.frame_loaded = true; },false);
 
 			// toggle a state change after 1 second
-			setTimeout( (function(k4_iframe_http){ return function(){ k4_iframe_http.stateChange(); } })(this), 1000);
+			this.iframe_timer = setTimeout( (function(k4_iframe_http){ return function(){ k4_iframe_http.stateChange(); } })(this), 1000);
 		}
 	},
 
@@ -362,6 +362,10 @@ k4IframeRequest.prototype = {
 		
 		if(this.frame_loaded) {
 			
+			if(this.iframe_timer) {
+				clearTimerout(this.iframe_timer);
+			}
+
 			var iframe_document = this.get_iframe_document();
 			
 			// get the stuf in the frame
@@ -372,6 +376,10 @@ k4IframeRequest.prototype = {
 				if(typeof(iframe_document.firstChild) != 'undefined') {
 					// should we strip out any tags?
 					frame_html			= iframe_document.firstChild.innerHTML;
+					
+					// NOTE: you could try iframe_document.firstChild.lastChild.nodeValue and probably
+					// get the same results
+
 					if(frame_html.indexOf('<head></head><body>') != -1) {
 						frame_html		= frame_html.substring(19);
 						frame_html		= frame_html.substring(0, (frame_html.length - 7));
@@ -395,8 +403,7 @@ k4IframeRequest.prototype = {
 				this.onreadystatechange();
 				
 				// toggle a state change after 1 second
-				k4_iframe_http	= this;
-				setTimeout( (function(k4_iframe_http){ return function(){ k4_iframe_http.stateChange(); } })(this), 1000);
+				this.iframe_timer = setTimeout( (function(k4_iframe_http){ return function(){ k4_iframe_http.stateChange(); } })(this), 1000);
 			}
 		}
 	},

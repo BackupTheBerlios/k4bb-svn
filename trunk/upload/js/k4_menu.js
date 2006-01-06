@@ -1,6 +1,8 @@
 /**
- * k4 Bulletin Board, k4menu JavaScript class
+ * k4 Bulletin Board, k4menu JavaScript object
  * Copyright (c) 2005, Peter Goodman
+ * Licensed under the LGPL license
+ * http://www.gnu.org/copyleft/lesser.html
  * @author Peter Goodman
  * @version $Id$
  * @package k42
@@ -460,8 +462,8 @@ function k4menu() {
 			ko = true;
 			if(pos[1] > d.bottom(mx)) ko = false;
 			if(pos[1] < d.top(lx)) ko = false;
-			if(pos[0] < d.left((tx ? tx : lx))) ko = false; // TODO: include force_right thing
-			if(pos[0] > d.right(lx)) ko = false;
+			if(pos[0] < d.left((tx ? tx : lx))) ko = false;
+			if(pos[0] > d.right(mx)) ko = false;
 			if(!ko) {
 				_t._close(mx);
 			}

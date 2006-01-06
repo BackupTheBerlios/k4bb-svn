@@ -917,7 +917,7 @@ function topic_icon($seen_topics, &$topic, $img_dir) {
 
 class TopicsIterator extends FAProxyIterator {
 	
-	var $result, $session, $img_dir, $forums, $dba, $user, $allforums, $cookieforums;
+	var $result, $session, $img_dir, $forums, $dba, $user, $allforums, $cookieforums, $increment;
 	
 	function TopicsIterator(&$dba, &$user, $result, $img_dir, $forum) {
 		$this->__construct($dba, $user, $result, $img_dir, $forum);
@@ -936,6 +936,7 @@ class TopicsIterator extends FAProxyIterator {
 		$this->allforums		= $_ALLFORUMS;
 		$this->cookietopics		= get_topic_cookies();
 		$this->flagged_users	= $_FLAGGEDUSERS;
+		$this->increment		= 1;
 		
 		parent::__construct($this->result);
 	}
@@ -989,10 +990,14 @@ class TopicsIterator extends FAProxyIterator {
 		/* Censor the topic name if needed */
 		replace_censors($temp['name']);
 
+		$temp['number']			= $this->increment;
+
 		/* Should we free the result? */
 		if(!$this->hasNext())
 			$this->result->free();
-
+		
+		$this->increment++;
+		
 		return $temp;
 	}
 }

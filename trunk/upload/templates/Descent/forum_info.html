@@ -7,60 +7,62 @@
 	</div>
 </div>
 
-<div class="spacer" id="whatsgoingon" style="">
-	<table width="100%" border="0" cellspacing="{$style_cellspacing}" class="table">
-		<tr>
-			<!--<td class="base2" width="5%" rowspan="2" valign="middle" style="text-align: center;">
-				<img src="Images/{$IMG_DIR}/Icons/forum_stats.gif" alt="{$L_STATISTICS}" />
-			</td>-->
-			<td class="alt1" width="50%">
-				<div class="minitext" align="left">
-					{$newest_member}
-					<br />
-					{$total_posts}
-					<br />
-					{$total_users}
-					<br />
-					{$most_users_ever}
-				</div>
-			</td>
-			<is:unlogged>
-			<td class="alt1" width="50%">
-				<core:import id="quick_login" />
-			</td>
-			</is:unlogged>
-		</tr>
-		<tr>
-			<td class="alt2"<is:unlogged> colspan="2"</is:unlogged>>
-				<div class="minitext" align="left">
-					{$L_LEGEND}:
-					<list:list id="usergroups_legend">
-					<list:item list="usergroups_legend">
-					<a href="usergroups.php?id={$id}" style="color: #{$color};font-weight: bold;" title="{$name}">{$name}</a><list:separator list="usergroups_legend">,</list:separator>
-					</list:item>
-					</list:list>
-					<br />
-					{$online_stats}
-					<br />
-					<if:if var="num_online_members" greater="0">
-					<maps:if var="can_see_wologgedusers" method="can_view">
-					<list:list id="online_users">
-						{$L_REGISTEREDUSERS}:
-						<list:item list="online_users">
-						<if:if var="name" noteq="">
-						<if:if var="invisible" eq="0">
-							<if:if var="user_id" noteq="0"><a href="member.php?id={$user_id}" style="color: #{$color};font-weight: {$font_weight};" class="smalltext">{$name}</a><if:else /><strong style="font-style: italic;font-weight: bold;">{$name}</strong></if:if>
-							<list:separator list="online_users">,&nbsp;</list:separator>
-						</if:if>
-						</if:if>
+<div id="whatsgoingon" style="">
+	<div class="spacer">
+		<table width="100%" border="0" cellspacing="{$style_cellspacing}" class="table">
+			<tr>
+				<!--<td class="base2" width="5%" rowspan="2" valign="middle" style="text-align: center;">
+					<img src="Images/{$IMG_DIR}/Icons/forum_stats.gif" alt="{$L_STATISTICS}" />
+				</td>-->
+				<td class="alt1" width="50%">
+					<div class="minitext" align="left">
+						{$newest_member}
+						<br />
+						{$total_posts}
+						<br />
+						{$total_users}
+						<br />
+						{$most_users_ever}
+					</div>
+				</td>
+				<is:unlogged>
+				<td class="alt1" width="50%">
+					<core:import id="quick_login" />
+				</td>
+				</is:unlogged>
+			</tr>
+			<tr>
+				<td class="alt2"<is:unlogged> colspan="2"</is:unlogged>>
+					<div class="minitext" align="left">
+						{$L_LEGEND}:
+						<list:list id="usergroups_legend">
+						<list:item list="usergroups_legend">
+						<a href="usergroups.php?id={$id}" style="color: #{$color};font-weight: bold;" title="{$name}">{$name}</a><list:separator list="usergroups_legend">,</list:separator>
 						</list:item>
-					</list:list>
-					</maps:if>
-					</if:if>
-				</div>
-			</td>
-		</tr>
-	</table>
+						</list:list>
+						<br />
+						{$online_stats}
+						<br />
+						<if:if var="num_online_members" greater="0">
+						<maps:if var="can_see_wologgedusers" method="can_view">
+						<list:list id="online_users">
+							{$L_REGISTEREDUSERS}:
+							<list:item list="online_users">
+							<if:if var="name" noteq="">
+							<if:if var="invisible" eq="0">
+								<if:if var="user_id" noteq="0"><a href="member.php?id={$user_id}" style="color: #{$color};font-weight: {$font_weight};" class="smalltext">{$name}</a><if:else /><strong style="font-style: italic;font-weight: bold;">{$name}</strong></if:if>
+								<list:separator list="online_users">,&nbsp;</list:separator>
+							</if:if>
+							</if:if>
+							</list:item>
+						</list:list>
+						</maps:if>
+						</if:if>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
 </div>
 <div class="footer_block"><div>&nbsp;</div></div>
 <!-- / General Forum Information -->

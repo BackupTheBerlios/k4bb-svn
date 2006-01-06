@@ -77,7 +77,7 @@ class K4SearchEverything extends FAAction {
 			
 			if(strlen($author) < $request['template']->getVar('minsearchlength') || strlen($author) > $request['template']->getVar('maxsearchlength')) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDSEARCHKEYWORDS', $request['template']->getVar('minsearchlength'), $request['template']->getVar('maxsearchlength')), 'content', TRUE, 'search.php', 5);
-				return $action->execute($request);
+				return (!USE_AJAX) ? $action->execute($request) : ajax_message(sprintf(str_replace('%s', '%d', 'L_INVALIDSEARCHKEYWORDS'), $request['template']->getVar('minsearchlength'), $request['template']->getVar('maxsearchlength')));
 			}
 
 			$users				= $request['dba']->executeQuery("SELECT * FROM ". K4USERS ." WHERE $user_search");
@@ -93,7 +93,7 @@ class K4SearchEverything extends FAAction {
 				$user_ids		.= ') ';
 			} else {
 				$action = new K4InformationAction(new K4LanguageElement('L_NOAUTHORSBYNAME'), 'content', FALSE, 'search.php', 5);
-				return $action->execute($request);
+				return (!USE_AJAX) ? $action->execute($request) : ajax_message('L_NOAUTHORSBYNAME');
 			}
 		}
 		
@@ -162,7 +162,7 @@ class K4SearchEverything extends FAAction {
 			// are the keywords too short or too long?
 			if(strlen($keywords) < $request['template']->getVar('minsearchlength') || strlen($keywords) > $request['template']->getVar('maxsearchlength')) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDSEARCHKEYWORDS', $request['template']->getVar('minsearchlength'), $request['template']->getVar('maxsearchlength')), 'content', TRUE, 'search.php', 5);
-				return $action->execute($request);
+				return (!USE_AJAX) ? $action->execute($request) : ajax_message(sprintf(str_replace('%s', '%d', 'L_INVALIDSEARCHKEYWORDS'), $request['template']->getVar('minsearchlength'), $request['template']->getVar('maxsearchlength')));
 			}
 			
 			// has the person specified where to search?
@@ -185,7 +185,7 @@ class K4SearchEverything extends FAAction {
 		// are there no keywords, user ids, etc?
 		if($keyword_query == '' && $user_ids == '' && !isset($_SESSION['search']['search_queries']) && !isset($_REQUEST['newposts'])) {
 			$action = new K4InformationAction(new K4LanguageElement('L_SEARCHINVALID'), 'content', TRUE, 'search.php', 3);
-			return $action->execute($request);
+			return (!USE_AJAX) ? $action->execute($request) : ajax_message('L_SEARCHINVALID');
 		}
 
 		/**
@@ -287,18 +287,15 @@ class K4SearchEverything extends FAAction {
 		
 		if($num_results > $resultsperpage) {
 			$request['template']->setPager('searchresults_pager', $pager);
-
 			/* Create a friendly url for our pager jump */
 			$request['template']->setVar('pagejumper_url', preg_replace('~&amp;~i', '&', $base_url->__toString()));
 		}
 		
 		/* Outside valid page range, redirect */
 		if(!$pager->hasPage($page) && $num_pages > 0) {
-			
 			$base_url->args['page']	= $num_pages;
-
 			$action = new K4InformationAction(new K4LanguageElement('L_PASTPAGELIMIT'), 'content', FALSE, $base_url->__toString(), 3);
-			return $action->execute($request);
+			return (!USE_AJAX) ? $action->execute($request) : ajax_message('L_PASTPAGELIMIT');
 		}
 		
 		// finish stuff off
@@ -307,35 +304,29 @@ class K4SearchEverything extends FAAction {
 		$request['template']->setList('search_results', $it);
 
 		/* Search data gathered */
+		$request['template']->setVar('search_viewas', $queries['viewas']);
+		$request['template']->setVar('search_viewas_int', ($queries['viewas'] == 'posts' ? 1 : 2)); // for the if statements
 		$request['template']->setVar('search_num_results', $num_results);
 		$request['template']->setVar('search_author', $queries['author']);
 		$request['template']->setVar('search_keywords', $queries['keywords']);
-		$request['template']->setVar('search_viewas', $queries['viewas']);
-		$request['template']->setVar('search_viewas_int', ($queries['viewas'] == 'posts' ? 1 : 2)); // for the if statements
 		$request['template']->setVar('search_sort', $queries['sort']);
 		$request['template']->setVar('search_limit', $queries['limit']);
 		$request['template']->setVar('search_order', $queries['order']);
 		$request['template']->setVar('search_subforums', $queries['subforums']);
 		$request['template']->setVar('search_daysprune', (isset($_REQUEST['daysprune']) ? intval($_REQUEST['daysprune']) : 0));
 		$request['template']->setVar('post_length', (isset($_REQUEST['post_length']) && intval($_REQUEST['post_length']) > 0 ? intval($_REQUEST['post_length']) : intval($request['template']->getVar('searchpostlength'))));
-		
-
 		$request['template']->setFile('content', 'search_results.html');
 		$request['template']->setFile('content_extra', 'search_sort_menu.html');
 		$request['template']->setVisibility('forum_midsection', FALSE);
-
-//		if(isset($_SESSION['search']['search_query'])) {
-//			unset($_SESSION['search']['search_result']);
-//			unset($_SESSION['search']['search_num_results']);
-//		}
-//
-//		if($num_pages > 1) {
-//			$_SESSION['search']['search_result']		= &$result;
-//			$_SESSION['search']['search_resultarray'] = array('num_results' => $num_results, 'resultsperpage' => $resultsperpage, 'num_pages' => $num_pages, 'viewas' => $viewas);
-//		}
 		
 		/* Memory Saving */
 		unset($result);
+
+		if(USE_AJAX) {
+			$html	= $request['template']->run(BB_BASE_DIR .'/templates/'. $request['user']->get('templateset') .'/search_results_simple.html');
+			echo $html;
+			exit;
+		}
 
 		return TRUE;
 	}
@@ -343,7 +334,7 @@ class K4SearchEverything extends FAAction {
 
 class SearchResultsIterator extends FAProxyIterator {
 	
-	var $dba, $result, $forums, $users, $qp, $groups, $topic_names;
+	var $dba, $result, $forums, $users, $qp, $groups, $topic_names, $increment;
 	
 	function SearchResultsIterator(&$dba, &$result) {
 		$this->__construct($dba, $result);
@@ -359,6 +350,7 @@ class SearchResultsIterator extends FAProxyIterator {
 		$this->groups		= $_USERGROUPS;
 		$this->users		= array();
 		$this->topic_names	= array();
+		$this->increment	= 1;
 		
 		parent::__construct($this->result);
 	}
@@ -399,11 +391,15 @@ class SearchResultsIterator extends FAProxyIterator {
 		
 		$temp['body_text']		= preg_replace("~<!--(.+?)-->~is", "", $temp['body_text']);
 		$temp['forum_name']		= isset($this->forums[$temp['forum_id']]['name']) ? $this->forums[$temp['forum_id']]['name'] : '--';
+		
+		$temp['number']			= $this->increment;
 
 		/* Should we free the result? */
 		if(!$this->hasNext())
 			$this->result->free();
 		
+		$this->increment++;
+
 		return $temp;
 	}
 }

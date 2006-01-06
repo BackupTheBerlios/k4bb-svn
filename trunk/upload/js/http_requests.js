@@ -1,26 +1,12 @@
 /**
-* k4 Bulletin Board, rs.js
-*
-* Copyright (c) 2005, Peter Goodman
-*
-* This library is free software; you can redistribute it and/orextension=php_gd2.dll
-* modify it under the terms of the GNU Lesser General Public
-* License as published by the Free Software Foundation; either
-* version 2.1 of the License, or (at your option) any later version.
-* 
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* Lesser General Public License for more details.
-* 
-* Licensed under the LGPL license
-* http://www.gnu.org/copyleft/lesser.html
-*
-* @author Peter Goodman
-* @version $Id$
-* @package k4-2.0-dev
-*/
-
+ * k4 Bulletin Board, AJAX functions
+ * Copyright (c) 2005, Peter Goodman
+ * Licensed under the LGPL license
+ * http://www.gnu.org/copyleft/lesser.html
+ * @author Peter Goodman
+ * @version $Id$
+ * @package k42
+ */
 
 var d = new k4lib();
 
@@ -29,9 +15,9 @@ var d = new k4lib();
 //	var k4_http = k4XMLHttpRequestFactory.createInstance();
 //	k4_http.setRequestType('GET');
 //	k4_http.Open('null.php', true);
-//	k4_http.successState = function() { alert('success'); }
-//	k4_http.loadingState = function() { /*alert('loading...');*/ }
-//	k4_http.errorState = function() { alert('ERROR'); }
+//	k4_http.successState = function() { alert('Success!!'); }
+//	k4_http.loadingState = function() { alert('loading...'); }
+//	k4_http.errorState = function() { alert('ERROR!'); }
 //	k4_http.Send("");
 //}
 
@@ -51,10 +37,28 @@ function responseError(response) {
 	}
 }
 
+/**
+ * Show a loading message
+ */
 function simpleLoadState(obj, anchor) {
 	obj.style.display = 'block';
 	obj.innerHTML = '<div style="padding: 30px;text-align: center;font-weight: bold;font-size:18px;font-family: Arial, Helvetica, serif;">Loading...</div>';
 	document.location = '#' + anchor;
+}
+
+/**
+ * escape a string
+ */
+function escape_str(str) {
+	if(typeof(escape) != 'undefined') {
+		str = escape(str);
+	} else {
+		if(typeof(encodeURIComponent) != 'undefined') {
+			str = escape_str(str);
+		}
+	}
+
+	return str;
 }
 
 /**
@@ -152,7 +156,7 @@ function updateTopicTitle(textbox_id, post_id, div_id) {
 		k4_http.setRequestType('POST');
 		k4_http.Open('mod.php?act=topic_simpleupdate', true);
 		k4_http.successState = function() { topicSimpleUpdate(k4_http, div_id); }
-		k4_http.Send('use_ajax=1&id=' + parseInt(post_id) + '&name=' + encodeURIComponent(textbox.value));
+		k4_http.Send('use_ajax=1&id=' + parseInt(post_id) + '&name=' + escape_str(textbox.value));
 	}
 }
 function topicSimpleUpdate(k4_http, topic_area_id) {
@@ -237,7 +241,7 @@ function saveQuickReply(form_id, textarea_id, post_id, forum_id, page) {
 	var query_string = '';
 	if(textarea && form) {
 		if(textarea_value(textarea) != '') {
-			query_string += 'message=' + encodeURIComponent(textarea_value(textarea));
+			query_string += 'message=' + escape_str(textarea_value(textarea));
 			
 			var k4_http = k4XMLHttpRequestFactory.createInstance();
 			k4_http.setRequestType('POST');
@@ -295,7 +299,7 @@ function errorCheckRegistration(button) {
 		
 		for(var i = 0; i < d.sizeof(fields); i++) {
 			field = d.getElementById(fields[i]);
-			if(field) query_string += sep + fields[i] + '=' + encodeURIComponent(field.value);
+			if(field) query_string += sep + fields[i] + '=' + escape_str(field.value);
 			sep = '&';
 		}
 		
@@ -374,7 +378,7 @@ function setSendPostPreview(form_url, editor_id) {
 			// if the field exists and had a value, add it to the query string
 			field = d.getElementById(fields[i]);
 			if(field && field.value != '') {
-				query_string += '&' + fields[i] + '=' + encodeURIComponent(field.value);
+				query_string += '&' + fields[i] + '=' + escape_str(field.value);
 			}
 		}
 
@@ -383,7 +387,7 @@ function setSendPostPreview(form_url, editor_id) {
 		
 		// if the value of the textare is not null, add it to the query string
 		if(field && textarea_value(field) != '') {
-			query_string += '&message=' + encodeURIComponent(textarea_value(field));
+			query_string += '&message=' + escape_str(textarea_value(field));
 		}
 		
 		var k4_http = k4XMLHttpRequestFactory.createInstance();
@@ -470,7 +474,7 @@ function switch_editor_type(switch_to, curr_type, textarea_id, iframe_id) {
 		
 		// add the textarea/iframe value to the query string
 		if(message_value != '') {
-			query_string += '&message=' + encodeURIComponent(message_value);
+			query_string += '&message=' + escape_str(message_value);
 		}
 		
 		// if we have the forum id and it's semi-valid
@@ -654,6 +658,59 @@ function saveQuickEdit(post_id, div_id) {
 		k4_http.Open('misc.php?act=save_text&post_id=' + post_id + '&use_ajax=1', true);
 		k4_http.successState = function() { showQuickEditForm(k4_http, quickedit_div, 0, post_id, true); }
 		k4_http.loadingState = function() { simpleLoadState(quickedit_div, post_id); }
-		k4_http.Send('message=' + encodeURIComponent(edited_msg));
+		k4_http.Send('message=' + escape_str(edited_msg));
+	}
+}
+
+/**
+ * Get and show the results from a quick search
+ */
+function showSearchResults(search_button) {	
+	var form_obj			= search_button.parentNode;
+	if(form_obj) {
+		var inputs			= d.getElementsByTagName(form_obj, 'input');
+		var separator_str	= '';
+		var query_str		= '';
+		if(inputs) {
+			for(var i=0; i<d.sizeof(inputs);i++) {
+				if(typeof(inputs[i].name) != 'undefined' && inputs[i].name != '') {
+					query_str	+= separator_str + inputs[i].name + '=' + escape_str(inputs[i].value);
+					separator_str = '&';
+				}
+			}
+		}
+		
+		var k4_http = k4XMLHttpRequestFactory.createInstance();
+		k4_http.setRequestType('POST');
+		k4_http.Open('search.php?act=find', true);
+		k4_http.successState = function() { showSimpleSearchResults(k4_http, 'search.php?act=find' + separator_str + query_str); }
+		k4_http.Send(query_str + '&use_ajax=1');
+	}
+}
+function showSimpleSearchResults(k4_http, search_url) {
+	var forum_head_obj = d.getElementById('forum_head');
+	
+	if(forum_head_obj && k4_http) {
+		
+		var response = k4_http.getResponseText();
+		
+		if(response && response != '') {
+			
+			var simple_search_results_box	= d.getElementById('simple_search_results_box');
+			var simple_search_results		= d.getElementById('simple_search_results');
+			var search_results_link			= d.getElementById('search_results_link');
+			if(simple_search_results_box && simple_search_results && search_results_link) {
+				//forum_head_obj.appendChild(simple_search_results);
+
+				var errorstr = responseError(response);
+				search_results_link.href = search_url;
+				if(errorstr == '') {
+					simple_search_results.innerHTML = response;
+				} else {
+					simple_search_results.innerHTML = '<div class="base3" style="text-align:center;">' + errorstr + '</div>';
+				}
+				k4SlideResizerFactory.createInstance().Init('simple_search_results_box', 0, 1, 10);
+			}
+		}
 	}
 }

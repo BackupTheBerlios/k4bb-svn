@@ -3,13 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" dir="{$lang_direction}" lang="{$LANGSHORT}">
 <core:import id="head" file="head.html" />
 <body>
+
 <div id="iframe_request_div" style="display:none;"><!-- AJAX IFRAME THING --></div>
 <div align="center">
 	<div align="left" class="forum_base" id="forum_base">
 		<br />
 		<div class="spacer">
 			<div class="forum_head" id="forum_head">
-				<div id="header">
+				<div id="forum_header">
 					<core:import id="header" file="header.html" />
 					
 					<!-- Menus -->
@@ -17,6 +18,8 @@
 					<core:import id="modpanel_menu" file="modpanel.html" />
 					<core:import id="search_menu" file="search_menu.html" />
 					<!-- / Menus -->
+
+					<core:import id="search_results_simple_box" file="search_results_simple_box.html" />
 				</div>
 			</div>
 		</div>
@@ -53,7 +56,7 @@
 		</div>
 		</core:block>
 		<div class="forum_foot">
-			<div id="footer">
+			<div id="forum_footer">
 				<core:import id="footer_breadcrumbs" file="footer_breadcrumbs.html" />
 				<core:import id="footer" file="footer.html" />
 			</div>

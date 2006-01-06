@@ -1,5 +1,5 @@
 /**
- * k4 Bulletin Board, k4rte JavaScript class
+ * k4 Bulletin Board, k4RTE JavaScript object and related objects
  * Copyright (c) 2005, Peter Goodman
  * Licensed under the LGPL license
  * http://www.gnu.org/copyleft/lesser.html
