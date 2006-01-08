@@ -102,6 +102,7 @@ $_LANG += array(
 'L_CLOSEWINDOW'			=> 'Close this Window',
 'L_INFO'				=> 'Info',
 'L_MOVED'				=> 'Moved',
+'L_CLOSE'				=> 'Close',
 
 /* User Titles */
 'L_JUNIORMEMBER'		=> 'Junior Member',

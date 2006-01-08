@@ -299,12 +299,10 @@
 			<td class="alt1">
 				<form action="search.php?act=find" method="post" enctype="multipart/form-data">
 				<input type="text" name="keywords" value="" class="inputbox" />
-				
 				<input type="hidden" name="viewas" value="topics" />
 				<input type="hidden" name="searchsubforums" value="0" />
 				<input type="hidden" name="forums" value="f{$forum_forum_id}" />
-
-				<input type="submit" value="{$L_GO}" class="button" />
+				<input type="button" value="{$L_GO}" class="button" onclick="showSearchResults(this)" />
 				</form>
 			</td>
 		</tr>

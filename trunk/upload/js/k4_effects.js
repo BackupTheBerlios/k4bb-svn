@@ -5,7 +5,7 @@
  * http://www.gnu.org/copyleft/lesser.html
  * @author Peter Goodman
  * @version $Id$
- * @package k42
+ * @package k4bb
  */
 
 //
@@ -93,7 +93,7 @@ k4SlideResizer.prototype = {
 			cum_width			= this.toZero( (this.x_dir == this.NOSLIDE) ? this.width : ( this.slide_step == 0 ? 0 : this.cum_width ) );
 			
 			if(cum_height <= this.height && cum_width <= this.width) {						
-
+				
 				// set the style using the clip method
 				if(this.obj.style.position == 'absolute') {
 
@@ -102,9 +102,9 @@ k4SlideResizer.prototype = {
 					clip_right				= (this.x_dir == this.NOSLIDE) ? this.width + 'px' : (this.x_dir == this.OPEN ? cum_width + 'px' : (this.width - cum_width) + 'px');
 					clip_bottom				= (this.y_dir == this.NOSLIDE) ? this.height + 'px' : (this.y_dir == this.OPEN ? cum_height + 'px' : (this.height - cum_height) + 'px');
 					clip_left				= '0px';
-
-					this.obj.style.clip		= 'rect(' + clip_top + ', ' + clip_right + ', ' + clip_bottom + ', ' + clip_left + ');';
-				
+					
+					this.obj.style.clip		= 'rect(' + clip_top + ', ' + clip_right + ', ' + clip_bottom + ', ' + clip_left + ')';
+					
 				// set the style using the overflow method
 				} else {
 					this.obj.style.overflow = 'hidden';

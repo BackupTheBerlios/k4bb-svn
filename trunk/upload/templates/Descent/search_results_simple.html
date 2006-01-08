@@ -7,9 +7,9 @@
 <list:item list="search_results">
 <list:switch list="search_results" var="row_class" a="base3" b="base4">
 <div class="{$row_class}">
-	{$number}. <a href="findpost.php?id={$post_id}" title="{$name}" style="font-weight:bold;">{$name}</a>,
+	{$number}. <a href="findpost.php?id={$post_id}" title="{$name}" style="font-weight:bold;">{$name}</a> &nbsp; 
 	<span class="smalltext">
-		{$L_FORUM}: <a href="viewforum.php?id={$forum_id}" title="{$forum_name}">{$forum_name}</a>,
+		{$L_FORUM}: <a href="viewforum.php?id={$forum_id}" title="{$forum_name}">{$forum_name}</a> &nbsp; 
 		{$L_BY}: <if:if var="poster_name" eq="">{$L_GUEST}<if:else /><if:if var="poster_id" noteq="0"><a href="member.php?id={$poster_id}" title="{$poster_name}" style="{$post_user_background}">{$poster_name}</a><if:else />{$poster_name}</if:if></if:if>
 	</span>
 </div>

@@ -5,7 +5,7 @@
  * http://www.gnu.org/copyleft/lesser.html
  * @author Peter Goodman
  * @version $Id$
- * @package k42
+ * @package k4bb
  */
 
 var IMG_DIR			= 'js/editor/';

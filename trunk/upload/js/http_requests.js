@@ -1,11 +1,11 @@
 /**
- * k4 Bulletin Board, AJAX functions
+ * k4 Bulletin Board, XMLHttpRequest-using/related functions
  * Copyright (c) 2005, Peter Goodman
  * Licensed under the LGPL license
  * http://www.gnu.org/copyleft/lesser.html
  * @author Peter Goodman
  * @version $Id$
- * @package k42
+ * @package k4bb
  */
 
 var d = new k4lib();
@@ -701,6 +701,10 @@ function showSimpleSearchResults(k4_http, search_url) {
 			var search_results_link			= d.getElementById('search_results_link');
 			if(simple_search_results_box && simple_search_results && search_results_link) {
 				//forum_head_obj.appendChild(simple_search_results);
+				
+				if(simple_search_results_box.style.display == 'block') {
+					simple_search_results_box.style.height = '';
+				}
 
 				var errorstr = responseError(response);
 				search_results_link.href = search_url;
@@ -711,6 +715,18 @@ function showSimpleSearchResults(k4_http, search_url) {
 				}
 				k4SlideResizerFactory.createInstance().Init('simple_search_results_box', 0, 1, 10);
 			}
+		}
+	}
+}
+function closeSimpleSearchBox() {
+	var simple_search_results_box	= d.getElementById('simple_search_results_box');
+	var simple_search_results		= d.getElementById('simple_search_results');
+	if(simple_search_results_box && simple_search_results) {
+		var effect = k4SlideResizerFactory.createInstance();
+		effect.Init('simple_search_results_box', 0, 2, 10);
+		effect.onFinished = function() { 
+			simple_search_results.innerHTML = ''; 
+			simple_search_results_box.style.height = '';
 		}
 	}
 }
