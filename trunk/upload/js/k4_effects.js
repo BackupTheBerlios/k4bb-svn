@@ -64,7 +64,7 @@ k4SlideResizer.prototype = {
 			this.y_dir						= y_dir;
 			this.slide_steps				= slide_steps;
 			this.slide_step					= 1;
-			
+						
 			// figure out what to increment the slider by
 			if(this.x_dir > this.NOSLIDE) {
 				this.x_increment = Math.ceil(this.x_increment / this.slide_steps);
@@ -152,7 +152,7 @@ k4SlideResizer.prototype = {
 			if(this.x_dir == this.CLOSE || this.y_dir == this.CLOSE) {
 				this.obj.style.display = 'none';
 			}
-
+			
 			this.obj.style.width	= this.width + 'px';
 			this.obj.style.height	= this.height + 'px';
 		}

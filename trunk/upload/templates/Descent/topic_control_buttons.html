@@ -6,10 +6,10 @@
 				<a href="newreply.php?id={$post_id}" title="{$L_POSTREPLY}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/reply.gif" alt="{$L_POSTREPLY}" /></a><maps:if forum="forum_id" var="bbcode" method="can_add"><a href="newreply.php?id={$post_id}&amp;quote=1" title="{$L_QUOTE}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/quote.gif" alt="{$L_QUOTE}" /></a></maps:if>
 			</maps:if>
 			<if:if var="post_user_id" eq="user_id">
-				<maps:if var="topics" forum="topic_forum_id" method="can_edit"><a href="<if:if var="nojs" eq="1">newtopic.php?act=edittopic&amp;id={$post_id}<if:else />javascript:;</if:if>" title="{$L_EDIT}" id="edit_button_{$post_id}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/edit.gif" alt="{$L_EDIT}" /></a></maps:if>
+				<maps:if var="topics" forum="topic_forum_id" method="can_edit"><a href="<if:if var="nojs" eq="1">newtopic.php?act=edittopic&amp;id={$post_id}<if:else />javascript:;</if:if>" title="{$L_EDIT}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/edit.gif" alt="{$L_EDIT}" id="edit_button_{$post_id}" /></a></maps:if>
 				<maps:if var="topics" forum="topic_forum_id" method="can_del"><a href="mod.php?act=deletetopic&amp;id={$post_id}" title="{$L_DELETE}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/delete.gif" alt="{$L_DELETE}" /></a></maps:if>
 			<if:else />
-				<maps:if var="other_topics" forum="topic_forum_id" method="can_edit"><a href="<if:if var="nojs" eq="1">newtopic.php?act=edittopic&amp;id={$post_id}<if:else />javascript:;</if:if>" title="{$L_EDIT}" id="edit_button_{$post_id}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/edit.gif" alt="{$L_EDIT}" /></a></maps:if>
+				<maps:if var="other_topics" forum="topic_forum_id" method="can_edit"><a href="<if:if var="nojs" eq="1">newtopic.php?act=edittopic&amp;id={$post_id}<if:else />javascript:;</if:if>" title="{$L_EDIT}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/edit.gif" alt="{$L_EDIT}" id="edit_button_{$post_id}" /></a></maps:if>
 				<maps:if var="other_topics" forum="topic_forum_id" method="can_del"><a href="mod.php?act=deletetopic&amp;id={$post_id}" title="{$L_DELETE}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/delete.gif" alt="{$L_DELETE}" /></a></maps:if>
 			</if:if>
 		</div>

@@ -20,7 +20,9 @@
 		<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="forums_{$forum_id}">
 			<list:list id="forums">
 			<list:item list="forums">
+			<list:switch list="forums" var="row_class" a="3" b="4">
 			<core:import id="forum_view" file="forum_view.html" />
+			</list:switch>
 			</list:item>
 			</list:list>
 		</table>

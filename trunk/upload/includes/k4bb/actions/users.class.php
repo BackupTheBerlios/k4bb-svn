@@ -43,7 +43,7 @@ class ValidateUserByEmail extends FAAction {
 				return $action->execute($request);
 			}
 
-			$u = $request['dba']->getRow("SELECT * FROM ". K4USERS ." WHERE reg_key = '". $request['dba']->quote($_REQUEST['key']));
+			$u = $request['dba']->getRow("SELECT * FROM ". K4USERS ." WHERE reg_key = '". $request['dba']->quote($_REQUEST['key']) ."'");
 
 			if(!is_array($u) || empty($u)) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDREGID'), 'content', FALSE);

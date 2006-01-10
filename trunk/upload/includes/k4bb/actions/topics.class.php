@@ -859,13 +859,13 @@ function topic_icon($seen_topics, &$topic, $img_dir) {
 	
 	if($topic['post_type']		== TOPIC_ANNOUNCE) {
 		$type					= 'announce';
-		$use_dot				= FALSE;
-		$hot					= FALSE;
+		//$use_dot				= FALSE;
+		//$hot					= FALSE;
 	
 	} elseif($topic['post_type']		== TOPIC_STICKY) {
 		$type					= 'sticky';
-		$use_dot				= FALSE;
-		$hot					= FALSE;
+		//$use_dot				= FALSE;
+		//$hot					= FALSE;
 	
 	} elseif($topic['is_feature']		== TOPIC_STICKY) {
 		$type					= 'sticky';
@@ -880,7 +880,7 @@ function topic_icon($seen_topics, &$topic, $img_dir) {
 			$hot				= FALSE;
 		
 		} elseif($topic['post_locked'] == 1) {
-			$use_dot			= FALSE;
+			//$use_dot			= FALSE;
 			$type				= 'folder_lock';		
 		} else {
 			$type				= 'folder';
@@ -906,7 +906,7 @@ function topic_icon($seen_topics, &$topic, $img_dir) {
 		$new					= TRUE;
 	}
 	
-	$image						= 'Images/'. $img_dir .'/Icons/Status/'. iif($use_dot, 'dot_', '') . iif($new, 'new', '') . iif($hot, 'hot', '') . $type . $EXT;
+	$image						= 'Images/'. $img_dir .'/Icons/Status/'. ($use_dot ? 'dot_' : '') . ($new ? 'new' : '') . ($hot ? 'hot' : '') . $type . $EXT;
 	
 	$topic['topicicon']			= $image;
 
