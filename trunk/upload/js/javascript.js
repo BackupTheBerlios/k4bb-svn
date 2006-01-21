@@ -12,6 +12,32 @@
 var d			= new k4lib();
 
 /**
+ * Do an emoticon
+ */
+function do_emoticon(textarea_id, emo_image, emo_typed) {
+	var textarea_obj = d.getElementById(textarea_id);
+	if(typeof(textarea_obj) != 'undefined') {
+		
+		if(typeof(textarea_obj.style.display) == 'undefined' 
+			|| textarea_obj.style.display == '' 
+			|| textarea_obj.style.display == 'block') {
+			textarea_obj.innerHTML += ' ' + emo_typed + ' ';
+		} else {
+			var editor_id = textarea_id + '_k4rte';
+			var editor_obj = d.getElementById(editor_id);
+			if(typeof(editor_obj) != 'undefined') {
+				
+				try {
+					var rte = k4RTEFactory.createInstance(false, false);
+					var editor_dom = rte.get_object_document(editor_obj);
+					editor_dom.execCommand('InsertImage', false, FORUM_URL + '/tmp/upload/emoticons/' + emo_image);
+				} catch(e) { }
+			}
+		}
+	}
+}
+
+/**
  * Show a div when there are new private messages
  */
 function show_newmessage_box(num_messages, text_to_write, img_dir, go_in_id) {

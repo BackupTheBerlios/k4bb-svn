@@ -1,27 +1,25 @@
 <!-- Forums List -->
 <ul>
-<list:list id="categories">
-	<list:default list="categories">
+<list:list id="tlforums">
+	<list:default list="tlforums">
 	<li><strong>{$L_NOFORUMSEXIST}</strong></li>
 	</list:default>
-	<list:item list="categories">
-	<if:if var="row_type" eq="2">
+<list:item list="tlforums">
 	<maps:if forum="forum_id" method="can_view">
+	<if:if var="row_type" eq="2">
 	<li>
 		<a href="viewforum.php?f={$forum_id}" title="{$name}">{$name}</a>
 		<ul>
 			<li>{$description}</li>
 		</ul>
 	</li>
-	</maps:if>
 	<else:if var="row_type" eq="1">
-	<maps:if forum="forum_id" method="can_view">
 	<li>
 		<a href="viewforum.php?c={$category_id}" title="{$name}">{$name}</a>
 		<ul>
 			<li>{$description}</li>
 		</ul>
-		<list:sublist list="categories" id="forums" column="forums">
+		<list:sublist list="tlforums" id="forums" column="forums">
 		<list:item list="forums">
 		<maps:if forum="forum_id" method="can_view">
 		<li>
@@ -56,9 +54,9 @@
 		</list:item>
 		</list:sublist>
 	</li>
-	</maps:if>
 	</if:if>
-	</list:item>
+	</maps:if>
+</list:item>
 </list:list>
 </ul>
 <!-- / Forums List -->

@@ -51,12 +51,13 @@ function create_editor(&$request, $text, $place, $forum = FALSE) {
 	$request['template']->setVar('use_wysiwyg', (USE_WYSIWYG ? 1 : 0));
 	$request['template']->setVar('use_bbcode', (USE_WYSIWYG ? 0 : 1));
 	
-	$editor_text = '';
+	$editor_text = (USE_WYSIWYG ? '<br />' : '');
 	if($text != '') {
 		$bbcode			= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $text, $forum['forum_id'], TRUE, TRUE, TRUE, TRUE, array('php', 'quote', 'code'));
 		
 		$editor_text	= $bbcode->revert();
 	}
+
 	$request['template']->setVar('editor_text_reverted', $editor_text);
 	$request['template']->setVar('editor_enabled', 1);
 }

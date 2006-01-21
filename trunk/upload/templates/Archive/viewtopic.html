@@ -17,9 +17,11 @@
 </ul>
 <hr />
 </page:navigator>
-<list:list id="topic">
+<list:list id="posts">
 <ul>
-	<list:item list="topic">
+	<list:item list="posts">
+	<if:if var="row_type" eq="4">
+	<maps:if var="topics" forum="topic_forum_id" method="can_view">
 	<li>
 		<ul>
 			<li><a name="t{$post_id}" id="t{$post_id}" title="{$name}">{$name}</a></li>
@@ -27,10 +29,9 @@
 			<if:if var="poster_id" noteq="0"><li>{$L_BY}: <a href="member.php?id={$poster_id}" title="{$L_PROFILE}: {$poster_name}">{$poster_name}</a></li></if:if>
 		</ul>
 	</li>
+	</maps:if>
+	<if:else />
 	<maps:if var="replies" forum="topic_forum_id" method="can_view">
-	<list:sublist list="topic" id="replies" column="replies">
-	<list:item list="replies">
-	<list:switch list="replies" var="list_type" a="square" b="circle">
 	<li>
 		<ul type="{$list_type}">
 			<li><a name="p{$post_id}" id="p{$post_id}" title="{$name}">{$name}</a></li>
@@ -38,10 +39,8 @@
 			<if:if var="poster_id" noteq="0"><li>{$L_BY}: <a href="member.php?id={$poster_id}" title="{$L_PROFILE}: {$poster_name}">{$poster_name}</a></li></if:if>
 		</ul>
 	</li>
-	</list:switch>
-	</list:item>
-	</list:sublist>
 	</maps:if>
+	</if:if>
 	</list:item>
 </ul>
 </list:list>
