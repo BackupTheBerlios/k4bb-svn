@@ -1,39 +1,43 @@
 
 <!-- Member List letter sorter -->
-<table width="100%" cellspacing="{$style_cellspacing}" class="inset_box_small">
-	<list:list id="letters">
-	<tr id="letters">
-		<list:item list="letters">
-		<td align="center" width="3%" class="{$class}" onclick="document.location='{$action}'"><a href="{$action}" title="">{$name}</a></td>
-		</list:item>
-	</tr>
-	</list:list>
-</table>
+<div class="spacer">
+	<div class="gen_box2_head"><div id="header">&nbsp;</div></div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="inset_box_small">
+		<list:list id="letters">
+		<tr id="letters">
+			<list:item list="letters">
+			<td style="text-align:center;" width="3%" class="{$class}" onclick="document.location='{$action}'"><a href="{$action}" title="">{$name}</a></td>
+			</list:item>
+		</tr>
+		</list:list>
+	</table>
+	<div class="gen_box2_foot"><div id="footer">&nbsp;</div></div>
+</div>
 <!-- / Member List letter sorter -->
 
-<br />
+<!-- Member List -->
+<div class="header"><div class="title">{$L_MEMBERLIST}</div></div>
 <page:navigator id="memberlist_pager">
-<div align="right">
-	<table cellspacing="{$style_cellspacing}" class="pagination">
-		<tr>
-			<td class="alt3" id="page_jump1" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
-			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
-			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
-			<page:list id="replies_pager" before="3" after="3">
-			<list:item list="replies_pager">
-				<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
-			</list:item>
-			</page:list>
-			<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
-			<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
-		</tr>
-	</table>
+<div class="spacer">
+	<div align="right" class="alt3">
+		<table cellspacing="{$style_cellspacing}" class="pagination">
+			<tr>
+				<td class="alt3" id="page_jump1" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
+				<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
+				<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
+				<page:list id="replies_pager" before="3" after="3">
+				<list:item list="replies_pager">
+					<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
+				</list:item>
+				</page:list>
+				<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
+				<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
+			</tr>
+		</table>
+	</div>
 </div>
 </page:navigator>
-
-<!-- Member List -->
 <div class="spacer">
-	<div class="header"><div class="title">{$L_MEMBERLIST}</div></div>
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
 			<td class="subheader">{$L_USERNAME}</td>
@@ -80,11 +84,10 @@
 		</list:list>
 	</table>
 </div>
-<div class="spacer"><div class="footer_block"><div>&nbsp;</div></div></div>
 <!-- / Member List -->
 
 <page:navigator id="memberlist_pager">
-<div align="right">
+<div align="right" class="alt3">
 	<table cellspacing="{$style_cellspacing}" class="pagination">
 		<tr>
 			<td class="alt3" id="page_jump2" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
@@ -110,7 +113,7 @@
 <input type="hidden" name="sort" value="{$ml_sort}" />
 
 <div class="spacer">
-	<div class="header"><div class="title">{$L_DISPLAYOPTIONS}</div></div>
+	<div class="supheader">{$L_DISPLAYOPTIONS}</div>
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
 			<td class="alt1" width="24%" align="center">
@@ -149,7 +152,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="base3" colspan="4" align="center">
+			<td class="base3" colspan="4" style="text-align:center;">
 				<input type="submit" value="{$L_GO}" class="button" />
 			</td>
 		</tr>
@@ -165,32 +168,8 @@
 //<![CDATA[
 	menu_init('page_jump1', 'page_jump_menu');
 	menu_init('page_jump2', 'page_jump_menu');
-	var letters			= d.getElementById('letters');
-
-	if(letters) {
-		var columns		= d.getElementsByTagName(letters, 'td');
-
-		if(columns) {
-			var numcols	= d.sizeof(columns);
-			for(var i = 0; i < numcols; i++) {
-				
-				if(columns[i]) {
-					
-					d.forceCursor(columns[i]);
-
-					if(columns[i].className == 'alt1') {
-
-						columns[i].onmouseover		= function() {
-							this.className		= 'alt2';
-						}
-						columns[i].onmouseout		= function() {
-							this.className		= 'alt1';
-						}
-					}
-				}
-			}
-		}
-	}
+	var letters = d.getElementById('letters');
+	k4ManageHoverCellFactory.createInstance().highlight(letters, 'alt2', 'alt1');
 
 //]]>
 </script>

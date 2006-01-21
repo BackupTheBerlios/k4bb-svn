@@ -227,21 +227,7 @@ k4MenuFilters.prototype = {
 	// Highlight the table cells (so hope that each menu has only 1 column)
 	//
 	highlightMenuRows: function(menu_obj) {
-			
-		var table_cells = this.lib.getElementsByTagName(menu_obj, 'td');
-		
-		if(table_cells) {
-
-			for(var i = 0; i < this.lib.sizeof(table_cells); i++ ) {
-				
-				if(typeof(table_cells[i].className) != 'undefined' 
-							&& table_cells[i].className == row_highlights[0]) {
-					
-					AttachEvent(table_cells[i],'mouseover',(function() { this.className = row_highlights[1]; }),false);
-					AttachEvent(table_cells[i],'mouseout',(function() { this.className = row_highlights[0]; }),false);
-				}
-			}
-		}
+		k4ManageHoverCellFactory.createInstance().highlight(menu_obj, row_highlights[1], row_highlights[0]);
 	},
 	
 	//

@@ -35,6 +35,7 @@ k4RTE.prototype = {
 	tags:		new Array(), // tags array
 	lib:		new k4lib(), // the k4Lib library
 	rte_mode:	new Array(), // an array of editors
+	toolbar:	null,
 
 	//
 	// initialize the editor
@@ -48,6 +49,7 @@ k4RTE.prototype = {
 
 			this.create_buttons(iframe_id);
 			this.create_iframe(iframe_id);
+			this.create_toolbar();
 		}
 	},
 
@@ -188,7 +190,7 @@ k4RTE.prototype = {
 			this.quicktags.tags[command] = (USE_BBCODE ? tags_bbcode : tags_html);
 		}
 
-		document.writeln('<a href="javascript:' + DEFAULT_INST + '.exec_command(\'' + iframe_id + '\', \'' + command + '\');" title="' + alt + '"><img src="' + IMG_DIR + '' + img + '.gif" name="button_' + command + '" id="button_' + command  + '_' + iframe_id + '" alt="' + alt + '" border="0" /></a>');
+		document.writeln('<a href="javascript:' + DEFAULT_INST + '.exec_command(\'' + iframe_id + '\', \'' + command + '\');" title="' + alt + '" class="editor_button"></a>'); // <img src="' + IMG_DIR + '' + img + '.gif" name="button_' + command + '" id="button_' + command  + '_' + iframe_id + '" alt="' + alt + '" border="0" />
 	},
 
 	//
@@ -212,12 +214,36 @@ k4RTE.prototype = {
 		//this.create_button(iframe_id, 'Undo', 'undo', 'undo');
 		//this.create_button(iframe_id, 'Redo', 'redo', 'redo');
 		this.create_button(iframe_id, 'Color', 'textcolor', 'forecolor');
-
 		if(USE_RTM) {
-			document.write('<a href="javascript:'+ DEFAULT_INST + '.sm(\'' + iframe_id + '\');" title="Switch Mode"><img src="' + IMG_DIR + 'switch_format.gif" name="button_switch" id="button_switch_' + iframe_id + '" alt="Switch Mode" border="0" /></a>');
+			document.write('<a href="javascript:'+ DEFAULT_INST + '.switch_mode(\'' + iframe_id + '\');" title="Switch Mode"><img src="' + IMG_DIR + 'switch_format.gif" name="button_switch" id="button_switch_' + iframe_id + '" alt="Switch Mode" border="0" /></a>');
 		}
 
 		document.write('</div>');
+	},
+	
+
+	//
+	// Create the toolbar object
+	//
+	create_toolbar: function() {
+			
+		// create a style definition on the fly
+		var head_tags	= this.lib.getElementsByTagName(document.documentElement, 'head');
+		var buttons		= new Array('bold','italic','underline','font','size','textcolor','backcolor','link',
+									'ol','ul','outdent','indent','quote','justifyleft','justifycenter','justifyright',
+									'removeformatting','hr','image','switchmode');
+
+		if(typeof(head_tags[0]) != 'undefined' && !this.lib.getElementById('editor_inline')) {
+			var style_definition	= document.createElement('style');
+			head_tags[0].appendChild(style_definition, textarea_obj);
+			style_definition.type	= 'text/css';
+			style_definition.media	= 'screen';
+			style_definition.id		= 'editor_inline';
+
+			for(var i = 0; i < this.lib.sizeof(buttons); i++) {
+				style_definition.innerHTML += '.editor_button_' + buttons[i] + ' {background:url(' + IMG_DIR + 'toolbar.gif) top left no-repeat;overflow:hidden;width:20px;height:20px;margin-left:-' + (i * 20) + 'px;}';
+			}
+		}
 	},
 
 	//

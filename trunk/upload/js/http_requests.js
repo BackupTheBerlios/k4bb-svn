@@ -41,9 +41,11 @@ function responseError(response) {
  * Show a loading message
  */
 function simpleLoadState(obj, anchor) {
-	obj.style.display = 'block';
-	obj.innerHTML = '<div style="padding: 30px;text-align: center;font-weight: bold;font-size:18px;font-family: Arial, Helvetica, serif;">Loading...</div>';
-	document.location = '#' + anchor;
+	if(typeof(obj) != 'undefined') {
+		obj.style.display = 'block';
+		obj.innerHTML = '<div align="center" style="text-align:center;"><br /><br /><br /><span style="background-color:#F7F7F7;height:20px;width:150px;padding:10px;text-align:center;font-weight: normal;border:1px outset;font-size:11px;">Loading...</span><br /></div>';
+		document.location = '#' + anchor;
+	}
 }
 
 /**

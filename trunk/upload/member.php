@@ -544,6 +544,7 @@ class K4MemberList extends FAAction {
 		
 		$page				= isset($_REQUEST['page']) && ctype_digit($_REQUEST['page']) && intval($_REQUEST['page']) > 0 ? intval($_REQUEST['page']) : 1;
 		$limit		= isset($_REQUEST['limit']) ? intval($_REQUEST['limit']) : intval($request['template']->getVar('memberlistperpage'));
+		$limit			= $limit > 100 ? 100 : $limit;
 		//$start		= isset($_REQUEST['start']) ? intval($_REQUEST['start']) : 0;
 		$start		= ($limit * $page) - $limit;
 		$sort		= isset($_REQUEST['order']) && in_array($_REQUEST['order'], $orders) ? $_REQUEST['order'] : 'id';

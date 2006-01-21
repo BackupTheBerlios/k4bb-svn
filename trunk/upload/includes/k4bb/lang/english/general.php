@@ -41,6 +41,7 @@ $_LANG += array(
 
 /* Base vars */
 'L_HOME'				=> 'Home',
+'L_PORTAL'				=> 'Portal',
 'L_NAME'				=> 'Name',
 'L_NICENAME'			=> 'Nice Name',
 'L_RE'					=> 'Re',

@@ -210,6 +210,7 @@ class K4DefaultAction extends FAAction {
 		$num_results		= $topic['num_replies'];
 
 		$perpage			= isset($_REQUEST['limit']) && ctype_digit($_REQUEST['limit']) && intval($_REQUEST['limit']) > 0 ? intval($_REQUEST['limit']) : $resultsperpage;
+		$perpage			= $perpage > 100 ? 100 : $perpage;
 		$num_pages			= @ceil($num_results / $perpage);
 		$page				= isset($_REQUEST['page']) && ctype_digit($_REQUEST['page']) && intval($_REQUEST['page']) > 0 ? intval($_REQUEST['page']) : 1;
 		

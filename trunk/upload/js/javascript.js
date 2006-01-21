@@ -9,7 +9,7 @@
 * @package k4bb
 */
 
-var d			= new k4lib()
+var d			= new k4lib();
 
 /**
  * Show a div when there are new private messages

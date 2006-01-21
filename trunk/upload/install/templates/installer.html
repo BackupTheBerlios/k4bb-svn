@@ -289,7 +289,6 @@
 						<td width="50%"><strong>Database User Name:</strong></td>
 						<td width="50%">
 							<input type="text" name="dba_username" id="dba_username" value="" class="inputbox" />
-							<script type="text/javascript">if(db_type != 'sqlite') { addVerification('dba_username', '.+', 'dba_username_error', 'inputfailed'); } </script>
 							<div id="dba_username_error" style="display: none;">Please insert a Database User Name.</div>
 						</td>
 					</tr>
@@ -297,7 +296,6 @@
 						<td width="50%"><strong>Database User Password:</strong></td>
 						<td width="50%">
 							<input type="password" name="dba_password" id="dba_password" value="" class="inputbox" />
-							<script type="text/javascript">if(db_type != 'sqlite') { addVerification('dba_password', '.+', 'dba_password_error', 'inputfailed'); } </script>
 							<div id="dba_password_error" style="display: none;">Please insert a Database Password.</div>
 						</td>
 					</tr>
@@ -340,7 +338,7 @@
 						<td width="50%"><strong>Use FTP?:</strong></td>
 						<td width="50%">
 							<script type="text/javascript">var use_ftp = 'TRUE';</script>
-							<select name="use_ftp" id="use_ftp" onchange="use_ftp = this[this.selectedIndex].value;" onselect="use_ftp = this[this.selectedIndex].value;">
+							<select name="use_ftp" id="use_ftp">
 								<option value="TRUE">Yes</option>
 								<option value="FALSE">No</option>
 							</select>
@@ -350,7 +348,6 @@
 						<td width="50%"><strong>FTP Username:</strong></td>
 						<td width="50%">
 							<input type="text" name="ftp_name" id="ftp_name" value="" class="inputbox" />
-							<script type="text/javascript">if(use_ftp != 'FALSE') { addVerification('ftp_name', '.+', 'username_error', 'inputfailed'); }</script>
 							<div id="username_error" style="display: none;">Please insert an FTP Username.</div>
 						</td>
 					</tr>
@@ -358,7 +355,6 @@
 						<td width="50%"><strong>FTP Password:</strong></td>
 						<td width="50%">
 							<input type="password" name="ftp_pass" id="ftp_pass" value="" class="inputbox" />
-							<script type="text/javascript">if(use_ftp != 'FALSE') { addVerification('ftp_pass', '.+', 'password_error', 'inputfailed'); }</script>
 							<div id="password_error" style="display: none;">Please insert an FTP Password.</div>
 						</td>
 					</tr>
@@ -366,7 +362,6 @@
 						<td width="50%"><strong>FTP Password: (check)</strong></td>
 						<td width="50%">
 							<input type="password" name="ftp_pass_check" id="ftp_pass_check" value="" class="inputbox" />
-							<script type="text/javascript">if(use_ftp != 'FALSE') { addCompare('ftp_pass_check', 'ftp_pass', 'ftp_password_error', 'inputfailed'); }</script>
 							<div id="ftp_password_error" style="display: none;">Your FTP password needs to match the password check.</div>
 						</td>
 					</tr>
