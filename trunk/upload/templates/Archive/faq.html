@@ -8,7 +8,7 @@
 		<li><strong>{$L_NOFAQANSWERS}</strong></li>
 		</list:default>
 		<list:item list="faq_answers">
-		<if:if var="has_top_level" eq="1"><li><a href="faq.php?c={$category_id}#faq{$answer_id}" title="{$question}">{$question}</a></li></if:if>
+		<if:if var="has_top_level" eq="1"><li><a href="{$U_FAQANSWER}" title="{$question}">{$question}</a></li></if:if>
 		</list:item>
 	</ul>
 	</list:list>
@@ -16,13 +16,13 @@
 <list:list id="faq_categories">
 <ul>
 	<list:item list="faq_categories">
-	<li><a href="faq.php?c={$category_id}" title="{$name}">{$name}</a>
+	<li><a href="{$U_FAQCATEGORY}" title="{$name}">{$name}</a>
 		<if:if var="num_answers" greater="0">
 		<list:sublist list="faq_categories" id="sub_answers" column="sub_answers">
 		<!-- Answers -->
 		<ul type="circle">
 			<list:item list="sub_answers">
-			<li><a href="faq.php?c={$category_id}#faq{$answer_id}" title="{$question}">{$question}</a></li>
+			<li><a href="{$U_FAQANSWER}" title="{$question}">{$question}</a></li>
 			</list:item>
 		</ul>
 		<!-- / Answers -->
@@ -34,7 +34,7 @@
 		<!-- Sub-Categories -->
 		<ul type="disc">
 			<list:item list="sub_categories">
-			<li><a href="faq.php?c={$category_id}" title="{$name}">{$name}</a></li>
+			<li><a href="{$U_FAQCATEGORY}" title="{$name}">{$name}</a></li>
 			</list:item>
 		</ul>
 		<!--/ Sub-Categories -->

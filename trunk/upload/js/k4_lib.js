@@ -59,6 +59,14 @@ k4lib.prototype.getElementsByTagName	= function(parentobj, tagname) {
 	return elements;
 }
 
+//
+// Append text onto any object
+//
+k4lib.prototype.appendText = function(obj, text) {
+    var text_obj = document.createTextNode(text);
+    obj.appendChild(text_obj);   
+}
+
 /**
  * Array functions
  */

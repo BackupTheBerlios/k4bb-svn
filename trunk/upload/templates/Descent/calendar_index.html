@@ -2,13 +2,8 @@
 <!-- Calendar -->
 <div class="header"><div class="title">{$L_CALENDAR}</div></div>
 <div class="subheader" style="text-align: center;">
-	<if:if var="nav_prev" eq="">
-		<a href="calendar.php?y={$year_prev}&amp;m={$month_prev}">&laquo;</a> 
-	</if:if>
-	{$month_label} {$year_label}
-	<if:if var="nav_next" eq="">
-		 <a href="calendar.php?y={$year_next}&amp;m={$month_next}">&raquo;</a>
-	</if:if>
+	<a href="{$U_CALENDARPREVMONTHURL}">&lt;</a> {$month_label} <a href="{$U_CALENDARNEXTMONTHURL}">&gt;</a> 
+	<a href="{$U_CALENDARPREVYEARURL}">&laquo;</a> {$year_label} <a href="{$U_CALENDARNEXTYEARURL}">&raquo;</a>
 </div>
 <div class="spacer">
 	<list:list id="calendar">
@@ -29,7 +24,7 @@
 		
 			<list:item list="calendar">
 			<list:alternate list="calendar" count="7" remainder="0">
-				<td class="base2" style="text-align: center"><a href="calendar.php?view=month&amp;y={$year}&amp;m={$month}&amp;w={$week}">&raquo;</a></td>
+				<td class="base2" style="text-align: center"><a href="{$U_CALENDARWEEKURL}">&raquo;</a></td>
 			</list:alternate>
 
 			<list:switch list="calendar" var="row_class" a="alt3" b="alt4">
@@ -50,7 +45,7 @@
 </div>
 <div class="spacer">
 	<div class="supheader" id="nav_title">
-		<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_nav', 'navigate', 'nav_title')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_nav" src="Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+		<div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_nav', 'navigate', 'nav_title')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_nav" src="Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
 		{$L_NAVIGATE}
 	</div>
 </div>

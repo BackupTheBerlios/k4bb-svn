@@ -1,7 +1,7 @@
 <maps:if forum="forum_forum_id" method="can_view">
 <core:import id="forum_rules" file="forum_rules.html" />
 <h4>{$forum_name}</h4>
-<a href="rss.php?f={$forum_forum_id}" title="{$L_RSSFEED}: {$forum_name}">{$L_RSSFEED}</a>
+<a href="{$U_FORUMRSSURL}" title="{$L_RSSFEED}: {$forum_name}">{$L_RSSFEED}</a>
 
 <page:navigator id="topics_pager">
 <hr />

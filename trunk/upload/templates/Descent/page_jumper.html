@@ -1,16 +1,6 @@
 <!-- Pager Jump To Drop Down Menu -->
-<script type="text/javascript">
-//<![CDATA[
-function jump_pages(input_id) {
-	var jumpto				= d.getElementById(input_id);
-	if(jumpto) {
-		page				= parseInt(jumpto.value);
-		document.location	= '{$pagejumper_url}&page=' + page;
-	}
-}
-//]]>
-</script>
-<div id="page_jump_menu" class="header" style="display: none;">
+<script type="text/javascript">function jump_pages(input_id){var jumpto=d.getElementById(input_id);if(jumpto){document.location='{$pagejumper_url}&page='+parseInt(jumpto.value);}}</script>
+<div id="page_jump_menu" style="display: none;">
 	<div class="subheader">{$L_JUMPTOPAGE}</div>
 	<table cellspacing="{$style_cellspacing}" class="table">
 		<tr>

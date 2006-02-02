@@ -168,7 +168,7 @@ class K4PollAnswersIterator extends FAProxyIterator {
 		$temp['users']			= &new UsersIterator($result);
 		$temp['num_votes']		= intval($result->numRows());
 		$temp['percent']		= @ceil(($temp['num_votes'] / $this->num_votes) * 100);
-		
+
 		return $temp;
 	}
 }

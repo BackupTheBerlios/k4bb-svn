@@ -40,6 +40,7 @@ require K4_BASE_DIR. '/editor.php';
 require K4_BASE_DIR. '/lazyload.php';
 require K4_BASE_DIR. '/breadcrumbs.php';
 require K4_BASE_DIR. '/globals.class.php';
+require K4_BASE_DIR. '/url.class.php';
 require K4_BASE_DIR. '/poll_template.php';
 
 /* Action Classes */

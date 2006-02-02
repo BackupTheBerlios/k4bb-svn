@@ -272,6 +272,10 @@ class FATemplateScope extends FAObject {
 		$this->_scope[count($this->_scope)][$name] = $value;
 	}
 
+	function setUrl($name, $url) {
+		$this->_scope[count($this->_scope)][$name] = $value;
+	}
+
 	function push($vars) {
 		if (is_array($vars)) {
 			array_push($this->_scope, $vars);

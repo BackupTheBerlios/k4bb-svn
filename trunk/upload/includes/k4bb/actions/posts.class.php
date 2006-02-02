@@ -1127,6 +1127,11 @@ class PostsIterator extends FAProxyIterator {
 
 		/* Do any polls if they exist */
 		do_post_polls($temp, $this->dba);
+		
+		// url's
+		$temp['U_TOPICURL'] = K4Url::getTopicUrl($temp['post_id']);
+		$temp['U_POSTURL'] = K4Url::getPostUrl($temp['post_id']);
+		$temp['U_MEMBERURL'] = K4Url::getMemberUrl($temp['poster_id']);
 
 		/* Should we free the result? */
 		if(!$this->hasNext())

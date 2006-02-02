@@ -16,12 +16,15 @@ var d			= new k4lib();
  */
 function do_emoticon(textarea_id, emo_image, emo_typed) {
 	var textarea_obj = d.getElementById(textarea_id);
-	if(typeof(textarea_obj) != 'undefined') {
+	if(textarea_obj && typeof(textarea_obj) != 'undefined') {
 		
 		if(typeof(textarea_obj.style.display) == 'undefined' 
-			|| textarea_obj.style.display == '' 
-			|| textarea_obj.style.display == 'block') {
-			textarea_obj.innerHTML += ' ' + emo_typed + ' ';
+			|| (typeof(textarea_obj.style.display) != 'undefined' 
+			&& (
+				textarea_obj.style.display == '' 
+				|| textarea_obj.style.display == 'block'
+			))) {
+			textarea_obj.value += ' ' + emo_typed + ' ';
 		} else {
 			var editor_id = textarea_id + '_k4rte';
 			var editor_obj = d.getElementById(editor_id);

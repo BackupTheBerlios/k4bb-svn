@@ -2,7 +2,7 @@
 <!-- General Forum Information -->
 <div class="header">
 	<div class="title" id="wto_maintitle">
-		<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_wgo', 'whatsgoingon', 'wto_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_wgo" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+		<div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_wgo', 'whatsgoingon', 'wto_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_wgo" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
 		{$L_STATISTICS}
 	</div>
 </div>
@@ -36,7 +36,7 @@
 						{$L_LEGEND}:
 						<list:list id="usergroups_legend">
 						<list:item list="usergroups_legend">
-						<a href="usergroups.php?id={$id}" style="color: #{$color};font-weight: bold;" title="{$name}">{$name}</a><list:separator list="usergroups_legend">,</list:separator>
+						<a href="{$U_USERGROUPURL}" style="color: #{$color};font-weight: bold;" title="{$name}">{$name}</a><list:separator list="usergroups_legend">,</list:separator>
 						</list:item>
 						</list:list>
 						<br />
@@ -49,7 +49,7 @@
 							<list:item list="online_users">
 							<if:if var="name" noteq="">
 							<if:if var="invisible" eq="0">
-								<if:if var="user_id" noteq="0"><a href="member.php?id={$user_id}" style="color: #{$color};font-weight: {$font_weight};" class="smalltext">{$name}</a><if:else /><strong style="font-style: italic;font-weight: bold;">{$name}</strong></if:if>
+								<if:if var="user_id" noteq="0"><a href="{$U_MEMBERURL}" style="color: #{$color};font-weight: {$font_weight};" class="smalltext">{$name}</a><if:else /><strong style="font-style: italic;font-weight: bold;">{$name}</strong></if:if>
 								<list:separator list="online_users">,&nbsp;</list:separator>
 							</if:if>
 							</if:if>

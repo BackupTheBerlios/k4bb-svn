@@ -33,5 +33,4 @@ class Moderator_Js_Compiler extends FATemplateTagCompiler {
 	}
 }
 
-
 ?>

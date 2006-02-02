@@ -49,8 +49,8 @@ class K4DefaultAction extends FAAction {
 		
 		# get the year month and day from request vars
 		$year		= isset($_REQUEST['y']) && intval($_REQUEST['y']) > 0 ? $_REQUEST['y'] : date('Y', time());
-		$month		= isset($_REQUEST['m']) && intval($_REQUEST['m']) > 0 ? $_REQUEST['m'] : date('j', time());
-		$day		= isset($_REQUEST['d']) && intval($_REQUEST['d']) > 0 ? $_REQUEST['d'] : 1;
+		$month		= isset($_REQUEST['m']) && intval($_REQUEST['m']) > 0 ? $_REQUEST['m'] : date('n', time());
+		$day		= isset($_REQUEST['d']) && intval($_REQUEST['d']) > 0 ? $_REQUEST['j'] : 1;
 		
 		# new k4Calendar instance
 		$c			= &new K4Calendar($year, $month, $day);
@@ -79,6 +79,7 @@ class K4DefaultAction extends FAAction {
 				$user['group_color']	= !isset($group['color']) || $group['color'] == '' ? '000000' : $group['color'];
 				
 				$user['age']			= $year - intval($parts[2]);
+				$user['U_MEMBERURL']	= K4Url::getMemberUrl($user['id']);
 				$bdays[$parts[1]][]		= $user;
 			}
 		}
@@ -92,6 +93,14 @@ class K4DefaultAction extends FAAction {
 		$request['template']->setList('calendar', $iteration_c);
 		$request['template']->setList('weekdays', $iteration_d);
 		
+		# url's, need fixing
+		$request['template']->setVarArray(array(
+			'U_CALENDARPREVYEARURL' => K4Url::getGenUrl('calendar', 'y='. $c->getPrevYear() .'&amp;m='. $c->getMonth()),
+			'U_CALENDARNEXTYEARURL' => K4Url::getGenUrl('calendar', 'y='. $c->getNextYear() .'&amp;m='. $c->getMonth()),
+			'U_CALENDARPREVMONTHURL' => K4Url::getGenUrl('calendar', 'y='. $c->getYear() .'&amp;m='. $c->getPrevMonth()),
+			'U_CALENDARNEXTMONTHURL' => K4Url::getGenUrl('calendar', 'y='. $c->getYear() .'&amp;m='. $c->getNextMonth()),
+			));
+
 		# The rest
 		$request['template']->setVar('month_label', date('F', mktime(0, 0, 0, $c->getMonth(), 1, $c->getYear())));
 		$request['template']->setVar('year_label', $c->getYear());

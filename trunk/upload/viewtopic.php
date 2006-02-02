@@ -250,8 +250,8 @@ class K4DefaultAction extends FAAction {
 		$similar_topics					= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE ((lower(name) LIKE lower('%". $request['dba']->quote($topic['name']) ."%') OR lower(name) LIKE lower('%". $request['dba']->quote($topic['body_text']) ."%')) OR (lower(body_text) LIKE lower('%". $request['dba']->quote($topic['name']) ."%') OR lower(body_text) LIKE lower('%". $request['dba']->quote($topic['body_text']) ."%'))) AND row_type=". TOPIC ." AND is_draft = 0 AND post_id <> ". intval($topic['post_id']) ." ORDER BY lastpost_created DESC LIMIT 10");
 		
 		if($similar_topics->hasNext()) {
-			//$it					= new TopicsIterator($request['dba'], $request['user'], $similar_topics, $request['template']->getVar('IMG_DIR'), $forum);
-			$it = new PostsIterator($request, $similar_topics);
+			//$it = new PostsIterator($request, $similar_topics);
+			$it = &new TopicsIterator($request['dba'], $request['user'], $similar_topics, $request['template']->getVar('IMG_DIR'), $forum);
 			$request['template']->setList('similar_topics', $it);
 			$request['template']->setFile('similar_topics', 'similar_topics.html');
 		}
@@ -316,18 +316,14 @@ class K4DefaultAction extends FAAction {
 		$request['template']->setVar('topic_row', $topic_row);
 		$request['template']->setVar('reply_row', $reply_row);
 		
-		$request['template']->setVar('newreply_act', 'newreply.php?act=postreply');
+		$request['template']->setVar('newreply_act', K4Url::getGenUrl('newreply', 'act=postreply'));
+		$request['template']->setVar('U_TOPICRSSURL', K4Url::getGenUrl('rss', 't='. $topic['post_id']));
 		
 		/**
 		 * Topic display
 		 */
-		if($request['user']->get('topic_display') == 0) {
-			$request['template']->setFile('topic_file', 'topic.html');
-			$request['template']->setFile('reply_file', 'reply.html');
-		} else {
-			$request['template']->setFile('topic_file', 'topic_linear.html');
-			$request['template']->setFile('reply_file', 'reply_linear.html');
-		}
+		$request['template']->setFile('topic_file', 'topic'. ($request['user']->get('topic_display') == 0 ? '' : '_linear') .'.html');
+		$request['template']->setFile('reply_file', 'reply'. ($request['user']->get('topic_display') == 0 ? '' : '_linear') .'.html');
 		
 		/* Set the file we need */
 		$request['template']->setVar('forum_forum_id', $forum['forum_id']);
@@ -340,7 +336,7 @@ class K4DefaultAction extends FAAction {
 		}
 
 		/* Create our editor for the quick reply */
-		create_editor($request, '', 'post', $forum);
+		create_editor($request, '', 'quickreply', $forum);
 		
 		// show the midsection of the forum
 		$request['template']->setVisibility('forum_midsection', TRUE);

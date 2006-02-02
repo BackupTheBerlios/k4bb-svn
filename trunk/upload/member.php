@@ -608,6 +608,9 @@ class MemberListIterator extends FAProxyIterator {
 		$temp['group_avatar']		= $group['avatar'];
 		$temp['online']				= (time() - ini_get('session.gc_maxlifetime')) > $temp['seen'] ? 'offline' : 'online';
 		
+		// custom url's
+		$temp['U_MEMBERURL'] = K4Url::getMemberUrl($temp['user_id']);
+
 		/* Should we free the result? */
 		if(!$this->hasNext())
 			$this->result->free();

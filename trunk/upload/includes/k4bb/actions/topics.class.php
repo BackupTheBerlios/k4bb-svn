@@ -991,6 +991,11 @@ class TopicsIterator extends FAProxyIterator {
 		replace_censors($temp['name']);
 
 		$temp['number']			= $this->increment;
+		
+		// urls
+		$temp['U_TOPICURL'] = K4Url::getTopicUrl($temp['post_id']);
+		$temp['U_POSTURL'] = K4Url::getPostUrl($temp['post_id']);
+		$temp['U_MEMBERURL'] = K4Url::getMemberUrl($temp['lastpost_uid']);
 
 		/* Should we free the result? */
 		if(!$this->hasNext())
@@ -1089,6 +1094,11 @@ class TopicIterator extends FAArrayIterator {
 		if(isset($temp['attachments']) && $temp['attachments'] > 0) {
 			$temp['attachment_files']		= new K4AttachmentsIterator($this->dba, $this->user, $temp['post_id'], 0);
 		}
+		
+		// url's
+		$temp['U_TOPICURL'] = K4Url::getTopicUrl($temp['post_id']);
+		$temp['U_POSTURL'] = K4Url::getPostUrl($temp['post_id']);
+		$temp['U_MEMBERURL'] = K4Url::getMemberUrl($temp['poster_id']);
 
 		if($this->sr && $temp['num_replies'] > 0) {
 			$this->result					= $this->dba->executeQuery("SELECT * FROM ". K4POSTS ." WHERE parent_id = ". intval($temp['post_id']) ." AND row_type=". REPLY ." ". ($this->post_id ? "AND post_id = ". $this->post_id : "") ." AND created >= ". (3600 * 24 * intval($temp['daysprune'])) ." ORDER BY ". $temp['sortedby'] ." ". $temp['sortorder'] ." LIMIT ". intval($temp['start']) .",". intval($temp['postsperpage']));

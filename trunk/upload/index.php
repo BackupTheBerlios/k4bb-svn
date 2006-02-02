@@ -103,8 +103,10 @@ class K4DefaultAction extends FAAction {
 			// Set the usergroups legend list
 			if(is_array($_USERGROUPS) && !empty($_USERGROUPS)) {
 				foreach($_USERGROUPS as $group) {
-					if($group['display_legend'] == 1)
+					if($group['display_legend'] == 1) {
+						$group['U_USERGROUPURL'] = K4Url::getUserGroupUrl($group['id']);
 						$groups[]	= $group;
+					}
 				}
 			}
 		}

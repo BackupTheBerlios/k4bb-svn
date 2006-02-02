@@ -26,17 +26,19 @@ function create_editor(&$request, $text, $place, $forum = FALSE) {
 	global $_LANG;
 	
 	$can_bbcode		= 0;
+	$request['template']->setVar('use_rteextras', 1);
 
 	if(isset($place) && $place != '') {
 		switch($place) {
+			case 'quickreply': {
+				$request['template']->setVar('use_rteextras', 0);
+			}
 			case 'post': {
 				$can_bbcode = $request['user']->get('perms') < get_map( 'bbcode', 'can_add', array('forum_id'=>$forum['forum_id'])) ? 0 : 1;
-				
 				break;
 			}
 			case 'signature': {
 				$can_bbcode = intval($request['template']->getVar('allowbbcodesignatures')) == 1 ? 1 : 0;
-				
 				break;
 			}
 			case 'pm': {

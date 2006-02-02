@@ -207,9 +207,12 @@ class UsersIterator extends FAProxyIterator {
 		$temp['group_color']	= !isset($group['color']) || $group['color'] == '' ? '000000' : $group['color'];
 		$temp['group_nicename']	= $group['nicename'];
 		$temp['group_avatar']	= $group['avatar'];
-		$temp['font_weight']	= @$group['min_perm'] > MEMBER ? 'bold' : 'normal';
+		$temp['font_weight']	= isset($group['min_perm']) && $group['min_perm'] > MEMBER ? 'bold' : 'normal';
 
 		$temp['warn_color']		= get_warning_color($temp['warn_level']);
+
+		// urls
+		$temp['U_MEMBERURL'] = K4Url::getMemberUrl($temp['user_id']);
 		
 		if(!$this->hasNext())
 			$this->result->free();

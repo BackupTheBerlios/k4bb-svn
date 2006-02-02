@@ -8,7 +8,7 @@
 		<list:sublist list="poll_answers" column="users" id="voters">
 		<list:item list="voters">
 		<if:if var="name" noteq="">
-			<if:if var="id" noteq="0"><a href="member.php?id={$id}" style="color: #{$group_color};font-weight: {$font_weight};" class="minitext">{$name}</a><if:else /><strong style="font-style: italic;">{$name}</strong></if:if><list:separator list="voters">,&nbsp;</list:separator>
+			<if:if var="id" noteq="0"><a href="{$U_MEMBERURL}" style="color: #{$group_color};font-weight: {$font_weight};" class="minitext">{$name}</a><if:else /><strong style="font-style: italic;">{$name}</strong></if:if><list:separator list="voters">,&nbsp;</list:separator>
 		</if:if>
 		</list:item>
 		</list:sublist>

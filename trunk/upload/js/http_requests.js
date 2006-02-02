@@ -68,7 +68,7 @@ function escape_str(str) {
  */
 function textarea_value(textarea) {
 	var inner_value = '';
-	if(typeof(textarea) == 'object') {
+	if(typeof(textarea) != 'undefined' && textarea) {
 		if(textarea.innerHTML && typeof(textarea.innerHTML) != 'undefined') {
 			inner_value = textarea.innerHTML && textarea.innerHTML != '' ? textarea.innerHTML : '';
 		}

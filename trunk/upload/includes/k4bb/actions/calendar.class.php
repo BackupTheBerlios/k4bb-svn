@@ -315,6 +315,10 @@ class K4CalendarIterator extends FAArrayIterator {
 		
 		// increment something to keep track of how many days we have iterated over
 		$this->iteration++;
+		
+		// urls
+		$temp['U_CALENDARDAYURL'] = K4Url::getGenUrl('calendar', 'view=day&amp;y='. $temp['year'] .'&amp;m='. $temp['month'] .'&amp;d='. $temp['day'] .'&amp;w='. $temp['week']);
+		$temp['U_CALENDARWEEKURL'] = K4Url::getGenUrl('calendar', 'view=week&amp;y='. $temp['year'] .'&amp;m='. $temp['month'] .'&amp;w='. $temp['week']);
 
 		// Return the formatted info
 		return $temp;

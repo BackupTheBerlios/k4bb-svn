@@ -1,7 +1,7 @@
 <script type="text/javascript">
 //<![CDATA[
 	function doHelpButton(help_id) {
-		document.write('<div style="float: right;"><a href="javascript:;" onclick="popup_file(\'admin.php?act=help#' + help_id + '\', 500, 450);" title="{$L_HELP}"><img src="Images/{$IMG_DIR}/Icons/help.gif" border="0" alt="{$L_HELP}" /></a></div>');
+		document.write('<div style="float:right;position:relative;"><a href="javascript:;" onclick="popup_file(\'admin.php?act=help#' + help_id + '\', 500, 450);" title="{$L_HELP}"><img src="Images/{$IMG_DIR}/Icons/help.gif" border="0" alt="{$L_HELP}" /></a></div>');
 	}
 
 	function popupImageBrowser(folder, input_id, selected) {

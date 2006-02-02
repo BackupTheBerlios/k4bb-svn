@@ -45,7 +45,7 @@
 		<list:switch list="memberlist" var="row_class" a="alt1" b="alt3">
 		<tr>
 			<td class="{$row_class}">
-				<a href="member.php?id={$id}" title="{$L_PROFILE}" style="font-weight: bold; color: #{$group_color};">{$name}</a>
+				<a href="{$U_MEMBERURL}" title="{$L_PROFILE}" style="font-weight: bold; color: #{$group_color};">{$name}</a>
 				<div class="smalltext">
 					<if:if var="group_nicename" noteq="">{$group_nicename}<br /></if:if>
 					<if:if var="group_avatar" noteq="">

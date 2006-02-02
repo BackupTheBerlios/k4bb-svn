@@ -1,11 +1,11 @@
 <if:if var="day" noteq="">
 	<td style="height: 64px; vertical-align: top;">
-		<div class="base4" style="text-align: right;"><a href="calendar.php?view=day&amp;y={$year}&amp;m={$month}&amp;d={$day}&amp;w={$week}">{$day}</a></div>
+		<div class="base4" style="text-align: right;"><a href="{$U_CALENDARDAYURL}">{$day}</a></div>
 		<if:if var="user_bdays" eq="1">
 		<list:sublist list="calendar" id="users" column="users">
 		<div class="minitext">
 			<list:item list="users">
-			<a href="member.php?id={$id}" style="color:#{$group_color};" title="{$name}">{$name}</a> ({$age})<list:separator list="users">, </list:separator>
+			<a href="{$U_MEMBERURL}" style="color:#{$group_color};" title="{$name}">{$name}</a> ({$age})<list:separator list="users">, </list:separator>
 			</list:item>
 		</div>
 		</list:sublist>

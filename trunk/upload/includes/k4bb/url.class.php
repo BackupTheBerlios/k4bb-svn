@@ -1,6 +1,6 @@
 <?php
 /**
-* k4 Bulletin Board, fatal_error.php
+* k4 Bulletin Board, common.php
 *
 * Copyright (c) 2005, Peter Goodman
 *
@@ -22,26 +22,31 @@
 * @package k42
 */
 
-/**
- * Return a nicely formatted fatal error message
- */
-function k4_fatal_error(&$error) {
-	?>
-	<div class="error_box">
-		<span class="redtext">The following critical error occured:</span>
-		<textarea rows="10" cols="100">
-<?php echo $error->message; ?>
-			
-Line: <?php echo $error->line; ?>
-File: <?php echo basename($error->file); ?>
+class K4Url extends FAUrl {
+	
+	function K4Url() { }
 
-<?php echo $error->getBacktraceHtml(); ?>
-		</textarea>
-	</div>
-	<br />
-	<a href="http://www.k4bb.org" title="k4 Bulletin Board" target="_blank">Powered By: k4 Bulletin Board</a>
-	<?php	
-	exit;
+	function getForumUrl($forum_id) {
+		return 'viewforum.php?f='. intval($forum_id);
+	}
+	function getRedirectUrl($id) {
+		return 'redirect.php?id='. intval($id);
+	}
+	function getTopicUrl($topic_id) {
+		return 'viewtopic.php?id='. intval($topic_id);
+	}
+	function getPostUrl($post_id) {
+		return 'findpost.php?id='. intval($post_id);
+	}
+	function getMemberUrl($member_id) {
+		return 'member.php?id='. intval($member_id);
+	}
+	function getUserGroupUrl($group_id) {
+		return 'usergroups.php?id='. intval($group_id);
+	}
+	function getGenUrl($file, $query) {
+		return $file .'.php?'. $query;
+	}
 }
 
 ?>

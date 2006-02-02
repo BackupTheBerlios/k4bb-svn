@@ -204,6 +204,41 @@ k4ManageHoverCell.prototype = {
 }
 
 //
+// Make the color picker menu
+//
+var k4ColorPicker = {
+	lib: new k4lib(),
+	Init: function(textarea_id, color_type, link_id) {
+		
+		var menu_id = textarea_id + '_k4rte_' + color_type;
+
+		// write the colorpicker to the page
+		var cp_html = '<div id="' + menu_id + '" style="display:none;border-right:1px solid #CCCCCC;border-bottom:1px solid #CCCCCC;background-color:#FFFFFF;"><table cellpadding="0" cellspacing="2" border="0"><tr><td id="#FFFFFF"><img /></td><td id="#FFCCCC"><img /></td><td id="#FFCC99"><img /></td><td id="#FFFF99"><img /></td><td id="#FFFFCC"><img /></td><td id="#99FF99"><img /></td><td id="#99FFFF"><img /></td><td id="#CCFFFF"><img /></td><td id="#CCCCFF"><img /></td><td id="#FFCCFF"><img /></td></tr><tr><td id="#CCCCCC"><img /></td><td id="#FF6666"><img /></td><td id="#FF9966"><img /></td><td id="#FFFF66"><img /></td><td id="#FFFF33"><img /></td><td id="#66FF99"><img /></td><td id="#33FFFF"><img /></td><td id="#66FFFF"><img /></td><td id="#9999FF"><img /></td><td id="#FF99FF"><img /></td></tr><tr><td id="#C0C0C0"><img /></td><td id="#FF0000"><img /></td><td id="#FF9900"><img /></td><td id="#FFCC66"><img /></td><td id="#FFFF00"><img /></td><td id="#33FF33"><img /></td><td id="#66CCCC"><img /></td><td id="#33CCFF"><img /></td><td id="#6666CC"><img /></td><td id="#CC66CC"><img /></td></tr><tr><td id="#999999"><img /></td><td id="#CC0000"><img /></td><td id="#FF6600"><img /></td><td id="#FFCC33"><img /></td><td id="#FFCC00"><img /></td><td id="#33CC00"><img /></td><td id="#00CCCC"><img /></td><td id="#3366FF"><img /></td><td id="#6633FF"><img /></td><td id="#CC33CC"><img /></td></tr><tr><td id="#666666"><img /></td><td id="#990000"><img /></td><td id="#CC6600"><img /></td><td id="#CC9933"><img /></td><td id="#999900"><img /></td><td id="#009900"><img /></td><td id="#339999"><img /></td><td id="#3333FF"><img /></td><td id="#6600CC"><img /></td><td id="#993399"><img /></td></tr><tr><td id="#333333"><img /></td><td id="#660000"><img /></td><td id="#993300"><img /></td><td id="#996633"><img /></td><td id="#666600"><img /></td><td id="#006600"><img /></td><td id="#336666"><img /></td><td id="#000099"><img /></td><td id="#333399"><img /></td><td id="#663366"><img /></td></tr><tr><td id="#000000"><img /></td><td id="#330000"><img /></td><td id="#663300"><img /></td><td id="#663333"><img /></td><td id="#333300"><img /></td><td id="#003300"><img /></td><td id="#003333"><img /></td><td id="#000066"><img /></td><td id="#330099"><img /></td><td id="#330033"><img /></td></tr></table></div>';
+		document.writeln(cp_html);
+		
+		// get the color picker
+		var cp_table = this.lib.getElementById(menu_id).firstChild;
+		
+		// alter the colorpicker table cells
+		if(cp_table && typeof(cp_table) != 'undefined') {
+
+			var cp_table_cells = this.lib.getElementsByTagName(cp_table, 'td');
+			
+			for(var v = 0; v < this.lib.sizeof(cp_table_cells); v++) {
+				cp_table_cells[v].style.backgroundColor = cp_table_cells[v].id;
+				cp_table_cells[v].style.border = '1px solid #999999;';
+				cp_table_cells[v].firstChild.alt = '';
+				cp_table_cells[v].firstChild.style.width = '10px;';
+				cp_table_cells[v].firstChild.style.height = '10px;';
+
+			}
+		}
+
+		menu_init(link_id, menu_id);
+	}
+}
+
+//
 // k4PopupAndDrag object constructor
 //
 function k4ManageDragElements() { }

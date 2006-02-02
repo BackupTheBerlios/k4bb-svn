@@ -355,6 +355,9 @@ class K4DefaultAction extends FAAction {
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
+
+		// urls
+		$request['template']->setVar('U_FORUMRSSURL', K4Url::getGenUrl('rss', 'f='. $forum['forum_id']));
 				
 		/* Add the cookies for this forum's topics */
 		bb_execute_topiccache();

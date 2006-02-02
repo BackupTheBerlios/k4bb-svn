@@ -37,16 +37,15 @@ function loop_recursive(&$breadcrumbs, &$dba, $temp) {
 		
 		switch($temp['row_type']) {
 			case TOPIC: {
-				$temp['location'] = 'viewtopic.php?id='. $temp['post_id'];
+				$temp['location'] = K4Url::getTopicUrl($temp['post_id']);
 				break;
 			}
 			case REPLY: {
-
-				$temp['location'] = 'findpost.php?id='. $temp['post_id'];
+				$temp['location'] = K4Url::getPostUrl($temp['post_id']);
 				break;
 			}
 			case FAQANSWER: {
-				$temp['location'] = 'faq.php?c='. $temp['category_id'] .'#faq'. $temp['answer_id'];
+				$temp['location'] = K4Url::getGenUrl('faq', $temp['category_id'] .'#faq'. $temp['answer_id']);
 				break;
 			}
 		}
@@ -91,7 +90,7 @@ function k4_bread_crumbs(&$template, &$dba, $location = NULL, $info = FALSE, $fo
 		} else {
 			if($info['row_type'] & FAQCATEGORY) {
 				$breadcrumbs	= follow_faqc_ids($breadcrumbs, $info);
-				$breadcrumbs[]	= array('name'=>$template->getVar('L_FAQLONG'),'location'=>'faq.php');
+				$breadcrumbs[]	= array('name'=>$template->getVar('L_FAQLONG'),'location'=>K4Url::getGenUrl('faq', ''));
 				$breadcrumbs	= array_reverse($breadcrumbs);
 			}
 		}
@@ -131,12 +130,9 @@ function follow_forum_ids($breadcrumbs, $forum) {
 	
 	switch($forum['row_type']) {
 		case CATEGORY:
-		case FORUM: {
-			$forum['location'] = 'viewforum.php?f='. $forum['forum_id'];
-			break;
-		}
+		case FORUM:
 		case GALLERY: {
-			$forum['location'] = 'viewgallery.php?f='. $forum['forum_id'];
+			$forum['location'] = K4Url::getForumUrl($forum['forum_id']);
 			break;
 		}
 	}
@@ -155,7 +151,7 @@ function follow_forum_ids($breadcrumbs, $forum) {
 
 function follow_faqc_ids($breadcrumbs, $category) {
 	
-	$category['location']	= 'faq.php?c='. $category['category_id'];
+	$category['location']	= K4Url::getGenUrl('faq', 'c='. $category['category_id']);
 	
 	$breadcrumbs[]			= $category;
 	

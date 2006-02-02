@@ -9,8 +9,9 @@
  */
 
 var ALL_MENUS		= new Array();
+var ALL_MENUSLINKS	= new Array();
 var open_menu		= false;
-var row_highlights	= new Array('alt1', 'alt2');
+var row_highlights	= new Array('alt1','alt2');
 
 //
 // k4Menu constructor
@@ -38,11 +39,13 @@ k4Menu.prototype = {
 			// set some stuff
 			menu_obj.style.display	= 'none';
 			menu_obj.style.position = 'absolute';
+			
 			menu_obj.link_id		= link_id;
 			this.lib.forceCursor(link_obj);
 			
 			// put this menu into an array of all of our menus
 			this.lib.array_push(ALL_MENUS, menu_obj);
+			this.lib.array_push(ALL_MENUSLINKS, new Array(link_obj, menu_obj));
 			
 			// apply filters to the menu
 			filters_obj.stopLinkRedirect(link_obj);
@@ -53,10 +56,10 @@ k4Menu.prototype = {
 			var body_element = this.lib.getElementsByTagName(document, 'body');
 			
 			// attach the events
-			AttachEvent(link_obj,'click',(function() {actions_obj.openMenu(link_obj, menu_obj); }),false);
-			AttachEvent(link_obj,'mouseover',(function() { actions_obj.openMenuIfOneIsOpen(link_obj, menu_obj); }),false);
-			AttachEvent(body_element[0],'click',(function(e) { var open_menu_find = actions_obj.getOpenMenu();if(actions_obj.shouldCloseMenu(e, open_menu_find)) { actions_obj.closeMenu(open_menu_find); } }),false);
-			AttachEvent(document,'click',(function(e) { var open_menu_find = actions_obj.getOpenMenu();if(actions_obj.shouldCloseMenu(e, open_menu_find)) { actions_obj.closeMenu(open_menu_find); } }),false);
+			AttachEvent(link_obj,'click',(function(){actions_obj.openMenu(link_obj,menu_obj);}),false);
+			AttachEvent(link_obj,'mouseover',(function(){actions_obj.openMenuIfOneIsOpen(link_obj,menu_obj);}),false);
+			AttachEvent(body_element[0],'click',(function(e){var open_menu_find=actions_obj.getOpenMenu();if(actions_obj.shouldCloseMenu(e,open_menu_find)){actions_obj.closeMenu(open_menu_find);}}),false);
+			AttachEvent(document,'click',(function(e){var open_menu_find=actions_obj.getOpenMenu();if(actions_obj.shouldCloseMenu(e,open_menu_find)){actions_obj.closeMenu(open_menu_find);}}),false);
 		}
 	}
 }
@@ -77,8 +80,9 @@ k4MenuActions.prototype = {
 	// Open a menu
 	//
 	openMenu: function(link_obj, menu_obj) {
+		
 		if(!this.menuIsOpen(menu_obj)) {
-
+			
 			var open_menu_find = this.getOpenMenu();
 			
 			if(open_menu_find && open_menu_find.id != menu_obj.id) {
@@ -87,11 +91,11 @@ k4MenuActions.prototype = {
 			
 			// open the menu
 			open_menu				= menu_obj;
-			menu_obj.style.display	= 'block';
+			open_menu.style.display	= 'block';
 			
-			k4MenuPositionsFactory.createInstance().setMenuXY(link_obj, menu_obj);
-			
-			this.onOpening(menu_obj);
+			k4MenuPositionsFactory.createInstance().setMenuXY(link_obj, open_menu);
+
+			this.onOpening(open_menu);
 
 		} else {
 			this.closeMenu(menu_obj);
@@ -147,15 +151,18 @@ k4MenuActions.prototype = {
 	getOpenMenu: function() {
 		if(typeof(open_menu) == 'undefined' || !open_menu) {
 			var open_menu_find = false;
-			for(var i = 0; i < this.lib.sizeof(ALL_MENUS); i++ ) {
-				if(this.menuIsOpen(ALL_MENUS[i])) {
-					open_menu_find = ALL_MENUS[i];
-					break;
+			if(typeof(ALL_MENUS) != 'undefined') {
+				for(var i = 0; i < this.lib.sizeof(ALL_MENUS); i++ ) {
+					if(this.menuIsOpen(ALL_MENUS[i])) {
+						open_menu_find = ALL_MENUS[i];
+						break;
+					}
 				}
 			}
 		} else {
 			open_menu_find = open_menu;
 		}
+		
 		return open_menu_find;
 	},
 	
@@ -164,17 +171,30 @@ k4MenuActions.prototype = {
 	//
 	shouldCloseMenu: function(e, menu_obj) {
 		var link_obj	= this.lib.getElementById(menu_obj.link_id);
-		var misc_obj	= k4MenuMiscFactory.createInstance();
-		var positions	= misc_obj.menuPositions(e); // x0 y1
+		var positions	= k4MenuMiscFactory.createInstance().menuPositions(e); // x0 y1
 		var should_close= false;
 		var event_target= this.lib.get_event_target(e);
-		
+
 		if(link_obj && menu_obj && event_target) {			
 
-			if(positions[0] < this.lib.left(menu_obj)) should_close = true;
-			if(positions[0] > this.lib.right(menu_obj)) should_close = true;
-			if(positions[1] < this.lib.top(menu_obj)) should_close = true;
-			if(positions[1] > this.lib.bottom(menu_obj)) should_close = true;
+			// deal with menus with same menus and different links
+			// this is a really ugly way of doing things though...
+			if(event_target.id != link_obj.id && event_target.parentNode.id != link_obj.id) {
+				for(var c = 0; c < this.lib.sizeof(ALL_MENUSLINKS); c++) { // l0 m1
+					if(ALL_MENUSLINKS[c][1].id == menu_obj.id) {
+						
+						if(ALL_MENUSLINKS[c][0].id == event_target.id || ALL_MENUSLINKS[c][0].id == event_target.parentNode.id) {
+							link_obj = event_target;
+							break;
+						}
+					}
+				}
+			}
+
+			if(positions[0] < this.lib.left(menu_obj)) { should_close = true; }
+			if(positions[0] > this.lib.right(menu_obj)) { should_close = true; }
+			if(positions[1] < this.lib.top(menu_obj)) { should_close = true; }
+			if(positions[1] > this.lib.bottom(menu_obj)) { should_close = true; }
 			if(event_target.id == link_obj.id || event_target.parentNode.id == link_obj.id) { should_close = false; }
 			if(event_target.id == menu_obj.id) { should_close = false; }
 		}

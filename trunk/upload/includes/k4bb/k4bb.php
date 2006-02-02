@@ -137,6 +137,18 @@ class K4Controller extends FAController {
 		$request['template']->setVar('domain', get_domain());
 
 		$request['template']->setVar('garbage_bin_id', GARBAGE_BIN);
+
+		// custom url's
+		$request['template']->setVarArray(array(
+										'U_INDEXURL' => K4Url::getGenUrl('index', ''),
+										'U_MEMBERLISTURL' => K4Url::getGenUrl('member', 'act=list&amp;start=0&amp;limit=30&amp;letter=*'),
+										'U_FAQURL' => K4Url::getGenUrl('faq', ''),
+										'U_MARKFORUMSURL' => K4Url::getGenUrl('index', 'act=markforums'),
+										'U_RSSNEWPOSTSURL' => K4Url::getGenUrl('rss', 'act=new_posts'),
+			'U_FORGOTPWURL' => K4Url::getGenUrl('member', 'act=forgotpw'),
+			'U_RESENDMAILURL' => K4Url::getGenUrl('member', 'act=resendemail'),
+			'U_REGISTERURL' => K4Url::getGenUrl('member', 'act=register'),
+		));
 		
 		$this->setRequest($request);
 		

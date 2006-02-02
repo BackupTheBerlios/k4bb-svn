@@ -1,7 +1,7 @@
 <!-- Topic Review -->
 <maps:if var="replies" forum="forum_forum_id" method="can_view">
 <div class="subheader" id="tr_title">
-	<if:if var="nojs" eq="0"><div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('topicreview_link', 'topicreview', 'tr_title')" title="{$L_EXPANDCOLLAPSE}"><img id="topicreview_link" src="Images/{$IMG_DIR}/Icons/collapse_thead<if:if var="nojs" eq="0">_collapsed</if:if>.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
+	<if:if var="nojs" eq="0"><div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('topicreview_link', 'topicreview', 'tr_title')" title="{$L_EXPANDCOLLAPSE}"><img id="topicreview_link" src="Images/{$IMG_DIR}/Icons/collapse_thead<if:if var="nojs" eq="0">_collapsed</if:if>.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
 	{$L_TOPICREVIEW} - {$post_name}
 </div>
 <div class="spacer">

@@ -1,25 +1,22 @@
 <is:admin>
-<input type="hidden" name="act" value="titles_finduser" />
-<div class="header"><div class="title">{$L_CUSTOMUSERTITLES}</div></div>
-<div class="spacer">
-	<div class="spacer">
-		<form action="admin.php" method="get">
-		<input type="hidden" name="act" value="titles_finduser" />
-		<div class="alt3" style="text-align: center;">
-			<br />
-			<strong>{$L_USERNAME}:</strong><br />
-			<input type="text" name="username" value="" class="inputbox" />
-			<br />
-			<span class="smalltext">({$L_WILDCARDSTARINFO})</span>
-			<br /><br />
-			<input type="submit" class="button" value="{$L_FINDUSER}" />
-			<br /><br />
-		</div>
-		</form>
-	</div>
-	<div class="footer_block"><div>&nbsp;</div></div>
-</div>
 <div class="header"><div class="title">{$L_USERTITLES}</div></div>
+<div class="supheader">{$L_CUSTOMUSERTITLES}</div>
+<div class="spacer">
+	<form action="admin.php" method="get">
+	<input type="hidden" name="act" value="titles_finduser" />
+	<input type="hidden" name="act" value="titles_finduser" />
+	<div class="alt3" style="text-align: center;">
+		<br />
+		<strong>{$L_USERNAME}:</strong><br />
+		<input type="text" name="username" value="" class="inputbox" />
+		<br />
+		<span class="smalltext">({$L_WILDCARDSTARINFO})</span>
+		<br /><br />
+		<input type="submit" class="button" value="{$L_FINDUSER}" />
+		<br /><br />
+	</div>
+	</form>
+</div>
 <div class="spacer">
 	<div class="alt3" style="text-align: center;">
 		<br />

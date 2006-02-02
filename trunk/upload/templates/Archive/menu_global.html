@@ -1,5 +1,5 @@
 <!-- Main Navigation -->
-	<a href="index.php" title="{$L_HOME}">{$L_HOME}</a>
-	<if:if var="enablememberlist" eq="1">| <a href="member.php?act=list&amp;start=0&amp;limit=30&amp;letter=*" title="{$L_MEMBERLIST}">{$L_MEMBERLIST}</a></if:if>
-	| <a href="faq.php" title="{$L_HELP}">{$L_HELP}</a>
+	<a href="{$L_INDEXURL}" title="{$L_HOME}">{$L_HOME}</a>
+	<if:if var="enablememberlist" eq="1">| <a href="{$U_MEMBERLISTURL}" title="{$L_MEMBERLIST}">{$L_MEMBERLIST}</a></if:if>
+	| <a href="{$U_FAQURL}" title="{$L_HELP}">{$L_HELP}</a>
 <!-- / Main Navigation -->

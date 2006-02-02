@@ -1,14 +1,13 @@
 <div>
 	<a name="editor" id="editor"></a>
-	<textarea name="message" id="{$editor_input_id}" class="inputbox" rows="10" cols="90" wrap="SOFT" style="width:99%;" tabindex="3">{$editor_text_reverted}</textarea>
+	<textarea name="message" id="{$editor_input_id}" class="inputbox" rows="10" cols="90" wrap="SOFT" style="margin:0px;width:99%;" tabindex="3">{$editor_text_reverted}</textarea>
 	<if:if var="allowbbcode" eq="1">
 	<if:if var="has_bbcode_perms" eq="1">
 	<script type="text/javascript" src="js/k4_editor.js"></script>
 	<script type="text/javascript">
-				
-		var rte = k4RTEFactory.createInstance(
-							k4RTEHooksFactory.createInstance(), 
-							k4QuickTagsFactory.createInstance());
+		var quick_tags = k4QuickTagsFactory.createInstance();
+		var rte = k4RTEFactory.createInstance(k4RTEHooksFactory.createInstance(),quick_tags);
+		<if:if var="use_rteextras" eq="0">rte.disableExtras();</if:if>
 		rte.init('{$editor_input_id}');
 		rte.switch_mode('{$editor_input_id}');
 	</script>

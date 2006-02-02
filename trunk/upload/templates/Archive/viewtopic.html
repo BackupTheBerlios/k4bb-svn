@@ -1,6 +1,6 @@
 <core:import id="forum_rules" file="forum_rules.html" />
 <h4>{$topic_name}</h4>
-<a href="rss.php?t={$topic_post_id}" title="{$L_RSSFEED}: {$topic_name}">{$L_RSSFEED}</a>
+<a href="{$U_TOPICRSSURL}" title="{$L_RSSFEED}: {$topic_name}">{$L_RSSFEED}</a>
 <page:navigator id="replie_pager">
 <hr />
 <ul>
@@ -26,7 +26,7 @@
 		<ul>
 			<li><a name="t{$post_id}" id="t{$post_id}" title="{$name}">{$name}</a></li>
 			<li>{$body_text}</li>
-			<if:if var="poster_id" noteq="0"><li>{$L_BY}: <a href="member.php?id={$poster_id}" title="{$L_PROFILE}: {$poster_name}">{$poster_name}</a></li></if:if>
+			<if:if var="poster_id" noteq="0"><li>{$L_BY}: <a href="{$U_MEMBERURL}" title="{$L_PROFILE}: {$poster_name}">{$poster_name}</a></li></if:if>
 		</ul>
 	</li>
 	</maps:if>
@@ -36,7 +36,7 @@
 		<ul type="{$list_type}">
 			<li><a name="p{$post_id}" id="p{$post_id}" title="{$name}">{$name}</a></li>
 			<li>{$body_text}</li>
-			<if:if var="poster_id" noteq="0"><li>{$L_BY}: <a href="member.php?id={$poster_id}" title="{$L_PROFILE}: {$poster_name}">{$poster_name}</a></li></if:if>
+			<if:if var="poster_id" noteq="0"><li>{$L_BY}: <a href="{$U_MEMBERURL}" title="{$L_PROFILE}: {$poster_name}">{$poster_name}</a></li></if:if>
 		</ul>
 	</li>
 	</maps:if>

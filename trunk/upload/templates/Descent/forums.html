@@ -39,8 +39,8 @@
 	<if:else />
 	<div class="spacer">
 		<div class="categorytitle" id="c{$forum_id}_maintitle">
-			<div style="float: right;"><a href="javascript:;" onclick="return collapse_tbody('collapse_{$forum_id}', 'forums_{$forum_id}', 'c{$forum_id}_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_{$forum_id}" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
-			<a href="viewforum.php?f={$forum_id}" title="{$description}">{$name}</a>
+			<div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_{$forum_id}', 'forums_{$forum_id}', 'c{$forum_id}_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_{$forum_id}" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+			<a href="{$U_FORUMURL}" title="{$description}">{$name}</a>
 		</div>
 		<!-- Forums -->
 		<list:sublist list="tlforums" id="forums" column="forums">

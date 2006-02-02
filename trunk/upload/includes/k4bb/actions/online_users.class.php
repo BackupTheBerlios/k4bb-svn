@@ -70,6 +70,8 @@ class K4OnlineUsersIterator extends FAProxyIterator {
 		/* Should we free the result? */
 		if(!$this->hasNext())
 			$this->result->free();
+		
+		$temp['U_MEMBERURL'] = K4Url::getMemberUrl($temp['user_id']);
 
 		//if($temp['name'] != '') {
 		//	if(((isset($temp['invisible']) && $temp['invisible'] == 0) || !isset($temp['invisible']))) {

@@ -35,6 +35,7 @@ k4RTE.prototype = {
 	tags:		new Array(), // tags array
 	lib:		new k4lib(), // the k4Lib library
 	rte_mode:	new Array(), // an array of editors
+	use_extras:	true,
 
 	//
 	// initialize the editor
@@ -46,7 +47,7 @@ k4RTE.prototype = {
 		if(textarea_obj) {
 			var iframe_id = textarea_id + '_k4rte';
 
-			this.create_buttons(iframe_id);
+			this.create_buttons(textarea_id, iframe_id);
 			this.create_iframe(iframe_id);
 		}
 	},
@@ -159,19 +160,19 @@ k4RTE.prototype = {
 
 		// find a way to execute a command
 		if(command in this.hooks) {
-			eval("this.hooks." + command + "(textarea_id, iframe_id);");
+			this.hooks[command](textarea_id, iframe_id);
 		} else {
 
 			if(this.rte_mode[iframe_id] == true && USE_RTM) {
 
 				// get objects
-				var iframe_obj  = this.get_object(iframe_id);
-				var iframe_do	  = this.get_object_document(iframe_obj);
+				var iframe_obj		= this.get_object(iframe_id);
+				var iframe_do		= this.get_object_document(iframe_obj);
 
 				iframe_do.execCommand(command, false, '');
 			} else {
 
-				var textarea_id   = iframe_id.substring(0, iframe_id.length-6);
+				var textarea_id		= iframe_id.substring(0, iframe_id.length-6);
 				var textarea_obj	= this.get_object(textarea_id);
 
 				this.quicktags.initialize_tags(textarea_obj, command);
@@ -188,33 +189,58 @@ k4RTE.prototype = {
 			this.quicktags.tags[command] = (USE_BBCODE ? tags_bbcode : tags_html);
 		}
 
-		document.writeln('<a href="javascript:' + DEFAULT_INST + '.exec_command(\'' + iframe_id + '\', \'' + command + '\');" title="' + alt + '"><img src="' + IMG_DIR + '' + img + '.gif" name="button_' + command + '" id="button_' + command  + '_' + iframe_id + '" alt="' + alt + '" border="0" /></a>');
+		document.writeln('<a href="javascript:;" onclick="' + DEFAULT_INST + '.exec_command(\'' + iframe_id + '\', \'' + command + '\')" title="' + alt + '" style="float:left;" id="button_' + command  + '_' + iframe_id + '"><img src="' + IMG_DIR + '' + img + '.gif" name="button_' + command + '" alt="' + alt + '" border="0" style="padding:2px;" /></a>');
+	
+		var button_img = this.lib.getElementById('button_' + command  + '_' + iframe_id);
+		if(button_img && typeof(button_img) != 'undefined') {
+			AttachEvent(button_img,'mouseover',(function(){button_img.style.backgroundColor='#DDDDDD';}),false);
+			AttachEvent(button_img,'mouseout',(function(){button_img.style.backgroundColor='';}),false);
+		}
 	},
 
 	//
 	// Create the button set for the editor
 	//
-	create_buttons: function(iframe_id) {
+	create_buttons: function(textarea_id, iframe_id) {
 
-		document.write('<div class="alt1">');
+		document.write('<div style="float:left;background-color:#FFFFFF;border-right:1px solid #CCCCCC;border-bottom:1px solid #CCCCCC;">');
 
 		this.create_button(iframe_id, 'Bold', 'bold', 'bold', ["<strong>", "</strong>"], ["[b]", "[/b]"]);
 		this.create_button(iframe_id, 'Italic', 'italic', 'italic', ["<em>", "</em>"], ["[i]", "[/i]"]);
 		this.create_button(iframe_id, 'Underline', 'underline', 'underline', ["<u>", "</u>"], ["[u]", "[/u]"]);
+		
+		if(this.use_extras) {
+			this.create_button(iframe_id, 'Font', 'font', 'fontname');
+			this.create_button(iframe_id, 'Font Size', 'size', 'fontsize');
+		}
+
 		this.create_button(iframe_id, 'Left', 'justifyleft', 'justifyleft', ["<span style=\"text-align: left;\">", "</span>"], ["[left]", "[/left]"]);
 		this.create_button(iframe_id, 'Center', 'justifycenter', 'justifycenter', ["<span style=\"text-align: center;\">", "</span>"], ["[center]", "[/center]"]);
 		this.create_button(iframe_id, 'Right', 'justifyright', 'justifyright', ["<span style=\"text-align: right;\">", "</span>"], ["[right]", "[/right]"]);
 		this.create_button(iframe_id, 'Justify', 'justifyfull', 'justifyfull', ["<span style=\"text-align: justify;\">", "</span>"], ["[justify]", "[/justify]"]);
+		
 		this.create_button(iframe_id, 'Ordered List', 'ol', 'insertorderedlist', ["<ol>", "</ol>"], ["[list=1]", "[/list]"]);
 		this.create_button(iframe_id, 'Unordered List', 'ul', 'insertunorderedlist', ["<ol>", "</ul>"], ["[list]", "[/list]"]);
+		
 		this.create_button(iframe_id, 'Indent', 'indent', 'indent', ["<span style=\"margin-left: 20px;\">", "</span>"], ["[indent]", "[/indent]"]);
 		this.create_button(iframe_id, 'Outdent', 'outdent', 'outdent', ["<span style=\"margin-left: 0px;\">", "</span>"], ["[outdent]", "[/outdent]"]);
-		//this.create_button(iframe_id, 'Undo', 'undo', 'undo');
-		//this.create_button(iframe_id, 'Redo', 'redo', 'redo');
-		this.create_button(iframe_id, 'Color', 'textcolor', 'forecolor');
-
+		
+		this.create_button(iframe_id, 'Horizauntal Rule', 'hr', 'inserthorizontalrule', ["<hr />", ""], ["[hr]", ""]);
+		this.create_button(iframe_id, 'Image', 'image', 'insertimage');
+		
 		if(USE_RTM) {
-			document.write('<a href="javascript:'+ DEFAULT_INST + '.switch_mode(\'' + iframe_id + '\');" title="Switch Mode"><img src="' + IMG_DIR + 'switch_format.gif" name="button_switch" id="button_switch_' + iframe_id + '" alt="Switch Mode" border="0" /></a>');
+			this.create_button(iframe_id, 'Undo', 'undo', 'undo');
+			this.create_button(iframe_id, 'Redo', 'redo', 'redo');
+		}
+		if(this.use_extras) {
+			this.create_button(iframe_id, 'Color', 'textcolor', 'forecolor');
+			this.create_button(iframe_id, 'Background Color', 'bgcolor', 'backcolor');
+			
+			k4ColorPicker.Init(textarea_id, 'forecolor', 'button_forecolor_' + iframe_id);
+			k4ColorPicker.Init(textarea_id, 'backcolor', 'button_backcolor_' + iframe_id);
+		}
+		if(USE_RTM) {
+			document.write('<a href="javascript:' + DEFAULT_INST + '.switch_mode(\'' + iframe_id + '\');" title="Switch Mode"><img src="' + IMG_DIR + 'switch_format.gif" name="button_switch" id="button_switch_' + iframe_id + '" alt="Switch Mode" border="0" /></a>');
 		}
 
 		document.write('</div>');
@@ -231,18 +257,18 @@ k4RTE.prototype = {
 		if(iframe_obj && iframe_do && textarea_obj) {
 			if(this.rte_mode[iframe_id] == true) {
 
-				this.rte_mode[iframe_id]  = false;
-				textarea_obj.style.display= 'block';
+				this.rte_mode[iframe_id]	= false;
+				textarea_obj.style.display	= 'block';
 				iframe_obj.style.display	= 'none';
-				objs					            = this.lib.getElementsByTagName(iframe_do, 'body');
-				textarea_obj.innerHTML		= objs[0].innerHTML;
-				textarea_obj.value			  = objs[0].innerHTML;
+				objs					    = this.lib.getElementsByTagName(iframe_do, 'body');
+				if(typeof(textarea_obj.innerHTML) != 'undefined') textarea_obj.innerHTML = objs[0].innerHTML;
+				if(typeof(textarea_obj.value) != 'undefined') textarea_obj.value = objs[0].innerHTML;
 
 			} else {
 
-				this.rte_mode[iframe_id]		= true;
+				this.rte_mode[iframe_id]	= true;
 				textarea_obj.style.display	= 'none';
-				iframe_obj.style.display	  = 'block';
+				iframe_obj.style.display	= 'block';
 
 				iframe_do.open();
 				iframe_do.write(textarea_obj.value);
@@ -250,6 +276,13 @@ k4RTE.prototype = {
 
 			}
 		}
+	},
+	
+	//
+	// Disable the use of the color picker buttons
+	//
+	disableExtras: function() {
+		this.use_extras = false;
 	}
 }
 
@@ -261,9 +294,11 @@ function k4RTEHooks() { return true; }
 
 // the class
 k4RTEHooks.prototype = {
-	forecolor: function(textarea_id, iframe_id) {
-		alert('hazaa');
-	}
+	forecolor: function(textarea_id, iframe_id) { },
+	backcolor: function(textarea_id, iframe_id) { },
+	insertimage: function(textarea_id, iframe_id) { },
+	fontname: function(textarea_id, iframe_id) { },
+	fontsize: function(textarea_id, iframe_id) { }
 }
 
 /**

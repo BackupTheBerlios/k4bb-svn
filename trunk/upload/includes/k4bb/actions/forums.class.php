@@ -302,6 +302,7 @@ class K4ForumsIterator extends FAProxyIterator {
 			if(is_array($groups)) {
 				foreach($groups as $g) {
 					if(isset($this->usergroups[$g])) {
+						$temp['U_USERGROUPURL'] = K4Url::getUserGroupUrl($g);
 						$temp['moderators'][]	= $this->usergroups[$g];
 					}
 				}
@@ -311,8 +312,10 @@ class K4ForumsIterator extends FAProxyIterator {
 		if($temp['moderating_users'] != '') {
 			$users					= force_unserialize($temp['moderating_users']);
 			if(is_array($users) && !empty($users)) {
-				foreach($users as $user_id => $username)
+				foreach($users as $user_id => $username) {
+					$temp['U_GMEMBERURL'] = K4Url::getMemberUrl($user_id);
 					$temp['moderators'][]		= array('user_id' => $user_id, 'name' => $username);
+				}
 			
 				$temp['are_moderators']		= 1;
 			}
@@ -334,6 +337,15 @@ class K4ForumsIterator extends FAProxyIterator {
 		$temp['safe_description']	= strip_tags($temp['description']);
 		
 		$temp['forum']				= $temp['row_type'] == CATEGORY ? 0 : 1;
+		
+		// custom url's
+		$temp['U_FORUMURL'] = K4Url::getForumUrl($temp['forum_id']);
+		$temp['U_TOPICURL'] = K4Url::getTopicUrl($temp['post_id']);
+		$temp['U_POSTURL'] = K4Url::getPostUrl($temp['post_id']);
+		$temp['U_FINDPOSTURL'] = K4Url::getPostUrl($temp['post_id']);
+		$temp['U_MEMBERURL'] = K4Url::getMemberUrl($temp['post_uid']);
+		$temp['U_REDIRECTURL'] = K4Url::getRedirectUrl($temp['forum_id']);
+		
 
 		/* Should we free the result? */
 		if(!$this->hasNext())
