@@ -1,32 +1,26 @@
 <!-- Sub-Forums of '{$current_location}' -->
 <div class="spacer">
-	<div class="header" id="f{$forum_id}_maintitle">
-		<div class="title">
-			<div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_{$forum_id}', 'forums_{$forum_id}', 'f{$forum_id}_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_{$forum_id}" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
-			{$L_SUBFORUMS}: <span style="font-weight: normal;">{$forum_name}</span>
-		</div>
-	</div>
-	<div class="spacer">
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<tr>
-				<td class="subheader" width="60%" align="left">&nbsp;{$L_FORUM}</td>
-				<td class="subheader" width="5%" align="center">&nbsp;{$L_POSTS}&nbsp;</td>
-				<td class="subheader" width="5%" align="center">&nbsp;{$L_TOPICS}&nbsp;</td>
-				<td class="subheader" width="30%" align="center">{$L_LASTPOST}</td>
-			</tr>
-		</table>
-	</div>
-	<div class="spacer">
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="forums_{$forum_id}">
-			<list:list id="forums">
-			<list:item list="forums">
-			<list:switch list="forums" var="row_class" a="3" b="4">
-			<core:import id="forum_view" file="forum_view.html" />
-			</list:switch>
-			</list:item>
-			</list:list>
-		</table>
-	</div>
-	<div class="footer_block"><div>&nbsp;</div></div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td class="supheader" width="60%" align="left">&nbsp;{$L_SUBFORUMS}</td>
+			<td class="supheader" width="5%" align="center">&nbsp;{$L_POSTS}&nbsp;</td>
+			<td class="supheader" width="5%" align="center">&nbsp;{$L_TOPICS}&nbsp;</td>
+			<td class="supheader" width="30%" align="center" id="subforums_maintitle">
+				<div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_subforums', 'subforums', 'subforums_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_subforums" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+				{$L_LASTPOST}
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="spacer" id="subforums" style="display:block;">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="forums_{$forum_id}">
+		<list:list id="forums">
+		<list:item list="forums">
+		<list:switch list="forums" var="row_class" a="3" b="4">
+		<core:import id="forum_view" file="forum_view.html" />
+		</list:switch>
+		</list:item>
+		</list:list>
+	</table>
 </div>
 <!-- / Sub-Forums of '{$current_location}' -->

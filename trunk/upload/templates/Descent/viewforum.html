@@ -1,4 +1,3 @@
-<if:if var="forum_subforums" geq="1"><core:import id="subforums" file="subforums.html" /></if:if>
 <core:import id="forum_rules" file="forum_rules.html" />
 
 <table width="100%" cellpadding="0" cellspacing="0" class="spacer">
@@ -44,6 +43,7 @@
 	<div class="alt2">{$description}</div>
 </div>
 </if:if>
+<if:if var="forum_subforums" geq="1"><core:import id="subforums" file="subforums.html" /></if:if>
 <div class="spacer">
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<list:list id="announcements">
