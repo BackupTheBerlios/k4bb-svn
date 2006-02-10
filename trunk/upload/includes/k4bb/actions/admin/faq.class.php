@@ -434,13 +434,13 @@ class AdminFAQInsertAnswer extends FAAction {
 			}
 			
 			$question = k4_htmlentities(html_entity_decode($_REQUEST['question'], ENT_QUOTES), ENT_QUOTES);
-			$bbcode = new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['answer'], FALSE, TRUE, TRUE, TRUE, TRUE);
-			
+			//$bbcode = new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['answer'], FALSE, TRUE, TRUE, TRUE, TRUE);
+			$parser = &new BBParser;
 			$insert = $request['dba']->prepareStatement("INSERT INTO ". K4FAQANSWERS ." (category_id,question,answer,row_order,created,can_view) VALUES (?,?,?,?,?,?)");
 			
 			$insert->setInt(1, $category_id);
 			$insert->setString(2, $question);
-			$insert->setString(3, $bbcode->parse());
+			$insert->setString(3, $parser->parse($_REQUEST['answer']));
 			$insert->setInt(4, $_REQUEST['row_order']);
 			$insert->setInt(5, time());
 			$insert->setInt(6, $_REQUEST['can_view']);
@@ -484,8 +484,9 @@ class AdminEditFAQAnswer extends FAAction {
 				return $action->execute($request);
 			}
 			
-			$bbcode = new BBCodex($request['dba'], $request['user']->getInfoArray(), $faq['answer'], FALSE, TRUE, TRUE, TRUE, TRUE);
-			$faq['answer'] = $bbcode->revert();
+			//$bbcode = new BBCodex($request['dba'], $request['user']->getInfoArray(), $faq['answer'], FALSE, TRUE, TRUE, TRUE, TRUE);
+			$parser = &new BBParser;
+			$faq['answer'] = $parser->revert($faq['answer']);
 
 			foreach($faq as $key => $val) {
 				$request['template']->setVar('faq_'. $key, $val);
@@ -528,12 +529,12 @@ class AdminUpdateFAQAnswer extends FAAction {
 			}
 			
 			$question = k4_htmlentities(html_entity_decode($_REQUEST['question'], ENT_QUOTES), ENT_QUOTES);
-			$bbcode = new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['answer'], FALSE, TRUE, TRUE, TRUE, TRUE);
-			
+			//$bbcode = new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['answer'], FALSE, TRUE, TRUE, TRUE, TRUE);
+			$parser = &new BBParser;
 			$update = $request['dba']->prepareStatement("UPDATE ". K4FAQANSWERS ." SET question=?,answer=?,row_order=?,can_view=? WHERE answer_id=?");
 			
 			$update->setString(1, $question);
-			$update->setString(2, $bbcode->parse());
+			$update->setString(2, $parser->parse($_REQUEST['answer']));
 			$update->setInt(3, $_REQUEST['row_order']);
 			$update->setInt(4, $_REQUEST['can_view']);
 			$update->setInt(5, $faq['answer_id']);

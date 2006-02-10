@@ -157,6 +157,8 @@ class K4LanguageFilter extends FAFilter {
 		
 		if ($_SESSION['user']->isMember())
 			$lang = ($_SESSION['user']->get('language') != '') ? $_SESSION['user']->get('language') : $lang;
+
+		// TODO: make it so forums can set the language
 		
 		k4_set_language($lang);
 	}

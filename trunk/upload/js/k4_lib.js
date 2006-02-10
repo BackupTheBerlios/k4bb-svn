@@ -10,9 +10,9 @@
 
 function k4lib() {
 	
-	/**
-	 * Get browser information
-	 */
+	//
+	// Get browser information
+	//
 	this.userAgent = navigator.userAgent.toLowerCase();
 	this.is_opera  = (this.userAgent.indexOf('opera') != -1);
 	this.is_saf    = ((this.userAgent.indexOf('applewebkit') != -1) || (navigator.vendor == 'Apple Computer, Inc.'));
@@ -27,71 +27,90 @@ function k4lib() {
 	this.is_mac    = (this.userAgent.indexOf('mac') != -1);
 }	
 
-/**
- * Get an object by its ID 
- */
-k4lib.prototype.getElementById			= function(id) {
-	
+//
+// Get an object by its ID 
+//
+String.prototype.obj = function() {
+	var ret_obj = false;
 	if (document.getElementById) {
-		return document.getElementById(id);
+		ret_obj =  document.getElementById(this);
 	} else if (document.all) {
-		return document.all[id];
+		ret_obj =  document.all[this];
 	} else if (document.layers) {
-		return document.layers[id];
-	} else {
-		return false;
+		ret_obj =  document.layers[this];
+	} else if (document.frames) {
+		ret_obj =  document.frames[this];
 	}
+	return ret_obj;
+}
+k4lib.prototype.getElementById = function(obj_id) {
+	return new String(obj_id).obj();	
 }
 
-/**
- * Get an object by its tag name 
- */
-k4lib.prototype.getElementsByTagName	= function(parentobj, tagname) {
-	
-	var elements			= false;
-
-	if (typeof parentobj.getElementsByTagName != 'undefined') {
-		elements			= parentobj.getElementsByTagName(tagname);
-	} else if (parentobj.all && parentobj.all.tags) {
-		elements			= parentobj.all.tags(tagname);
+//
+// Get an object by its tag name
+//
+Object.prototype.getTagsByName = document.getTagsByName = function(tagname) {
+	var elements = false;
+	if (typeof(this.getElementsByTagName) != 'undefined') {
+		elements = this.getElementsByTagName(tagname);
+	} else if(this.all && this.all.tags) {
+		elements = this.all.tags(tagname);
 	}
-
 	return elements;
+}
+k4lib.prototype.getElementsByTagName = function(parentobj, tagname) {
+	parentobj.getTagsByName(tagname);	
 }
 
 //
 // Append text onto any object
 //
+Object.prototype.appendText = function(text) {
+	var text_obj = document.createTextNode(text);
+    this.appendChild(text_obj); 
+}
 k4lib.prototype.appendText = function(obj, text) {
-    var text_obj = document.createTextNode(text);
-    obj.appendChild(text_obj);   
+     obj.appendText(text);
 }
 
-/**
- * Array functions
- */
+//
+// Prepend an object (obj) to its parent object
+//
+Object.prototype.prependChild = function(obj) {
+	var ret = false;
+	if(typeof(this.firstChild) != 'undefined') {
+		this.insertBefore(obj, this.firstChild);
+		ret = true;
+	}
+	return ret;
+}
 
-/**
- * Boolean true or false if a value is in an array
- */
-k4lib.prototype.in_array				= function(thearray, needle) {
+//
+// Boolean true or false if a value is in an array
+//
+Array.prototype.find = Object.prototype.find = function(needle) {
 	var bool				= false;
-	for(key in thearray) {
-		if(bool)
+	for(key in this) {
+		if(bool) {
 			break;
-		if(thearray[key] == needle) {
+		}
+		if(this[key] == needle) {
 			bool = true;
 		}
 	}
 	return bool;
 }
+k4lib.prototype.in_array = function(thearray, needle) {
+	return thearray.find(needle);
+}
 
-/**
- * Return the array key of a value
- */
-k4lib.prototype.array_key				= function(thearray, needle) {
+//
+// Return the array key of a value
+//
+Array.prototype.key = function(needle) {
 	var the_key				= false;
-	for(key in thearray) {
+	for(key in this) {
 		if(the_key)
 			break;
 		if(key == needle) {
@@ -100,89 +119,97 @@ k4lib.prototype.array_key				= function(thearray, needle) {
 	}
 	return the_key;
 }
+k4lib.prototype.array_key = function(thearray, needle) {
+	thearray.key(needle);
+}
 
-/**
- * Array unset function for a given value 
- */
-k4lib.prototype.unset					= function(thearray, value) {
-	
-	for(var i = 0; i < this.sizeof(thearray); i++) {
-		if(thearray[i] == value) {
-			delete thearray[i];
+//
+// Array unset function for a given value 
+//
+Array.prototype.kill = function(value) {
+	for(var i = 0; i < this.sizeof(); i++) {
+		if(this[i] == value) {
+			delete this[i];
 		}
 	}
-
 	return true;
 }
-
-/**
- * Array Push function 
- */
-k4lib.prototype.array_push					= function(thearray, value) {
-	thearray[this.sizeof(thearray)] = value;
+k4lib.prototype.unset = function(thearray, value) {
+	thearray.kill(value);	
 }
 
-/**
- * count()/sizeof() like function for an array 
- */
-k4lib.prototype.sizeof					= function(thearray) {
-	
+//
+// Array Push function 
+//
+Array.prototype.push = function(value) {
+	this[this.sizeof()] = value;
+}
+k4lib.prototype.array_push = function(thearray, value) {
+	thearray.push(value);
+}
+
+//
+// count()/sizeof() like function for an array 
+//
+Array.prototype.sizeof = Object.prototype.sizeof = function() {
 	array_length		= 0;
-
-	if(thearray != null && typeof thearray != 'undefined') {
-
-		for (i = 0; i < thearray.length; i++) {
-			if ((typeof thearray[i] == 'undefined') || (thearray[i] == '') || (thearray[i] == null)) {
+	if(this != null && typeof(this) != 'undefined') {
+		for (i = 0; i < this.length; i++) {
+			if ((typeof(this[i]) == 'undefined') || (this[i] == '') || (this[i] == null)) {
 				return i;
 			}
 		}
-	
-		array_length	= thearray.length;
+		array_length	= this.length;
 	} else {
 		array_length	= 0;
 	}
-
 	return array_length;
 }
+k4lib.prototype.sizeof = function(thearray) {
+	var ret = 0;
+	if(typeof(thearray) != 'undefined') {
+		ret = thearray.sizeof();
+	}
+	return ret;
+}
 	
-
-/**
- * Form functions
- */
-
-/* Set the index on a select form field */
-k4lib.prototype.setIndex				= function(element, array) {
-	var temp				= this.getElementById(array);
-
+//
+// Set the index on a select form field
+//
+k4lib.prototype.setIndex = function(needle, obj_id) {
+	var temp				= obj_id.obj();
 	if(temp) {
-		temp.selectedIndex	= this.getSelectedIndex(element, temp);
+		temp.selectedIndex	= temp.search(needle);
 	}
 }
 
-/* Set the index on a select form field and if the index doesn't exist,
- * set the first option to be it. */
-k4lib.prototype.forceSetIndex			= function(element, array) {
-	var temp				= this.getElementById(array);
+//
+// Set the index on a select form field and if the index doesn't exist,
+// set the first option to be it.
+//
+k4lib.prototype.forceSetIndex			= function(needle, obj_id) {
+	var temp				= obj_id.obj();
 
 	if(temp) {
-		temp.selectedIndex	= this.getSelectedIndex(element, temp);
+		temp.selectedIndex	= temp.search(needle);
 
 		if(temp.selectedIndex == 0) {
-			temp[0].value	= element;
-			temp[0].text	= element;
+			temp[0].value	= needle;
+			temp[0].text	= needle;
 		}
 		temp.disabled		= false;
 	}
 }
 
-/* Set the indices on a multi-select select field */
-k4lib.prototype.setIndices				= function(values_array, select) {
-	var temp = this.getElementById(select);
+//
+// Set the indices on a multi-select select field
+//
+k4lib.prototype.setIndices = function(values_array, obj_id) {
+	var temp = obj_id.obj();
 	if(temp) {
-		if(this.sizeof(values_array) > 0) {
-			for(var i=0; i < this.sizeof(temp.options); i++) {
-				
-				if(this.in_array(values_array, temp.options[i].value)) {
+		if(values_array.sizeof() > 0) {
+			for(var i = 0; i < temp.options.sizeof(); i++) {
+				if(values_array.find(temp.options[i].value)) {
 					temp.options[i].selected = true;
 				}
 			}
@@ -190,12 +217,13 @@ k4lib.prototype.setIndices				= function(values_array, select) {
 	}
 }
 
-/* set all selected items in a <select> field to false */
-k4lib.prototype.selectNone				= function(select) {
-	var temp				= this.getElementById(select);
-	
+//
+// set all selected items in a <select> field to false
+//
+k4lib.prototype.selectNone = function(obj_id) {
+	var temp = obj_id.obj();
 	if(temp) {
-		for(var i = 0; i < this.sizeof(temp.options); i++) {
+		for(var i = 0; i < temp.options.sizeof(); i++) {
 			if(temp.options[i].selected == true) {
 				temp.options[i].selected = false;
 			}
@@ -203,37 +231,37 @@ k4lib.prototype.selectNone				= function(select) {
 	}			
 }
 
-/* set all selected items in a <select> field to true */
-k4lib.prototype.selectAll				= function(select) {
-	var temp				= this.getElementById(select);
-	
+//
+// set all selected items in a <select> field to true
+//
+k4lib.prototype.selectAll = function(obj_id) {
+	var temp = obj_id.obj();
 	if(temp) {
-		for(var i = 0; i < this.sizeof(temp.options); i++) {
+		for(var i = 0; i < temp.options.sizeof(); i++) {
 			temp.options[i].selected = true;
 		}
 	}			
 }
 
-/* Set a text box */
-k4lib.prototype.setText		= function(text, textbox) {
-	var temp				= this.getElementById(textbox);
-
+//
+// Set a text box
+//
+k4lib.prototype.setText = function(text, obj_id) {
+	var temp = obj_id.obj();
 	if(temp) {
-		temp.value			= text;
-		temp.disabled		= false;
+		temp.value = text;
+		temp.disabled = false;
 	}
 }
 
-
-/* Set a radio button */
-k4lib.prototype.setRadio				= function(value, name) {
-	var inputs				= this.getElementsByTagName(document, 'input');
-	
+//
+// Set a radio button
+//
+k4lib.prototype.setRadio = function(value, name) {
+	var inputs = document.getElementsByTagName('input');
 	if(inputs) {
-		for (var x = 0; x < this.sizeof(inputs); x++) {
-			
+		for (var x = 0; x < inputs.sizeof(); x++) {
 			if(inputs[x]) {
-			
 				if(inputs[x].name == name) {
 					if(inputs[x].value == value) {
 						inputs[x].checked = true;
@@ -244,48 +272,62 @@ k4lib.prototype.setRadio				= function(value, name) {
 			}
 		}
 	}
-
 	return true;
 }
 
-/* Set a checkbox */
-k4lib.prototype.setCheckbox			= function(value, id) {
-	var input				= this.getElementById(id);
-	var check				= false;
-
+//
+// Set a checkbox
+//
+k4lib.prototype.setCheckbox = function(value, obj_id) {
+	var input = obj_id.obj();
+	var check = false;
 	if(input) {
 		check = (value || value > 0) ? true : false;	
 	}
-
-	input.checked			= check;
+	input.checked = check;
 }
 
-/* Get the positiong of an element in an array */
-k4lib.prototype.getSelectedIndex		= function(element, array) {
+//
+// Get the positiong of an element in an array
+//
+Array.prototype.search = Object.prototype.search = function(needle) {
 	var pos					= 0;
-	
-	if(array) {
-
-		for(var i = 0; i < this.sizeof(array); i++) {
-			if(array[i].value == element) {
-				pos			= i;
-			}
+	for(var i = 0; i < this.sizeof(); i++) {
+		if(this[i].value == needle) {
+			pos			= i;
 		}
 	}
 	return pos;
 }
+k4lib.prototype.getSelectedIndex = function(needle, thearray) {
+	thearray.search(needle);
+}
 
-/* Enable a form button */
+//
+// Enable a form button
+//
+Object.prototype.enable = function() {
+	if(typeof(this.disabled) != 'undefined') {
+		this.disabled = false;
+	}
+}
 k4lib.prototype.enableButton = function(button) {
 	if(button) {
-		button.disabled = false;
+		button.enable();
 	}
 }
 
-/* Disable a form button */
+//
+// Disable a form button
+//
+Object.prototype.disable = function() {
+	if(typeof(this.disabled) != 'undefined') {
+		this.disabled = true;
+	}
+}
 k4lib.prototype.disableButton = function(button) {
 	if(button) {
-		button.disabled = true;
+		button.disable();
 	}
 }
 
@@ -294,80 +336,86 @@ k4lib.prototype.disableButton = function(button) {
  */
 
 /* Get the top position of an object */
-k4lib.prototype.top				= function(obj) {
-	
+Object.prototype.top = function() {
 	var postop	= 0;
-	
-	while (obj && obj != null){
-		postop	+= obj.offsetTop; //  - obj.scrollTop
-		obj		= obj.offsetParent;
+	var obj = this;
+	while(obj && obj != null) {
+		postop += obj.offsetTop; // - obj.scrollTop
+		obj = obj.offsetParent;
 	}
-
 	return postop;
+}
+k4lib.prototype.top	= function(obj) {
+	return obj.top();
 }
 
 /* get the left position of an object */
-k4lib.prototype.left				= function(obj) {
-	
-	var posleft			= 0;
-
+Object.prototype.left = function() {
+	var posleft = 0;
+	var obj = this;
 	if(obj) {
-	
-		posleft			= obj.offsetLeft;
+		posleft = obj.offsetLeft;
 		while((obj = obj.offsetParent) != null) {
-			
-			posleft		+= obj.offsetLeft;
+			posleft += obj.offsetLeft;
 		}
 	}
-
 	return posleft;
 }
-
-/* get the bottom position of an object */
-k4lib.prototype.bottom				= function(obj) {
-	return (this.top(obj) + this.height(obj));
+k4lib.prototype.left = function(obj) {
+	return obj.left();
 }
 
-/* get the right position of an object */
-k4lib.prototype.right				= function(obj) {
-	return (this.left(obj) + this.width(obj));
-}
-	
 /* Get the width of an object */
-k4lib.prototype.width				= function(obj) {
-	
-	var objwidth		= 0;
-
+Object.prototype.width = function() {
+	return this.offsetWidth;
+}
+k4lib.prototype.width = function(obj) {
+	var objwidth = 0;
 	if(obj) {
-		objwidth			= obj.offsetWidth;
+		objwidth = obj.width();
 	}
-
 	return objwidth;
 }
 
 /* get the height of an object */
-k4lib.prototype.height	= function(obj) {
-	
-	var objheight		= 0;
-	
+Object.prototype.height = function() {
+	return this.offsetHeight;
+}
+k4lib.prototype.height = function(obj) {
+	var objheight = 0;
 	if(obj) {
-		objheight		= obj.offsetHeight;
+		objheight = obj.height();
 	}
-
 	return objheight;
+}
+
+/* get the bottom position of an object */
+Object.prototype.bottom = function() {
+	return parseInt(this.top() + this.offsetHeight);
+}
+k4lib.prototype.bottom = function(obj) {
+	return obj.bottom();
+}
+
+/* get the right position of an object */
+Object.prototype.right = function() {
+	return parseInt(this.left() + this.offsetWidth);
+}
+k4lib.prototype.right = function(obj) {
+	return obj.right();
 }
 		
 /* Check if 'over' overlaps 'under' */
-k4lib.prototype.overlaps			= function(over, under) {
-
+Object.prototype.overlaps = function(under) {
 	var does_overlap	= true;
-	
-	if(this.left(under) > this.right(over)) does_overlap = false;
-	if(this.right(under) < this.left(over)) does_overlap = false;
-	if(this.top(under) > this.bottom(over)) does_overlap = false;
-	if(this.bottom(under) < this.top(over)) does_overlap = false;
-	
+	if(under.left() > this.right()) does_overlap = false;
+	if(under.right() < this.left()) does_overlap = false;
+	if(under.top() > this.bottom()) does_overlap = false;
+	if(under.bottom() < this.top()) does_overlap = false;
 	return does_overlap;
+}
+k4lib.prototype.overlaps = function(over, under) {
+	return over.overlaps(under);
 }
 
 /**
@@ -375,30 +423,28 @@ k4lib.prototype.overlaps			= function(over, under) {
  */
 
 /* Make the object's cursor look like a link */
-k4lib.prototype.forceCursor		= function(obj) {
-	
+Object.prototype.linkCursor = function() {
+	try {
+		this.style.cursor = 'pointer';
+	} catch(e) {
+		this.style.cursor = 'hand';
+	}
+}
+k4lib.prototype.forceCursor	= function(obj) {
 	if(obj) {
-		try {
-			obj.style.cursor = 'pointer';
-		} catch(e) {
-			obj.style.cursor = 'hand';
-		}
+		obj.linkCursor();
 	}
 }
 
 /* Preload Images */
 k4lib.prototype.preload_images	= function() {
 	if(document.images){ 
-	
 		if(!document.preloaded_images) { 
 			document.preloaded_images = new Array();
 		}
-		
-		var j 			= this.sizeof(document.preloaded_images);
+		var j 			= document.preloaded_images.sizeof();
 		var func_args 	= this.preload_images.arguments; 
-		
-		for(var i = 0; i < this.sizeof(func_args); i++) {
-
+		for(var i = 0; i < func_args.sizeof(); i++) {
 			if (func_args[i].indexOf('#') != 0) { 
 				document.preloaded_images[j]		= new Image();
 				document.preloaded_images[j++].src	= func_args[i];
@@ -408,7 +454,7 @@ k4lib.prototype.preload_images	= function() {
 }
 
 /* Get the event target, function from QuirksMode */
-k4lib.prototype.get_event_target = function(e) {
+function get_event_target(e) {
 	var targ;
 	if (!e) var e = window.event;
 	if (e.target) targ = e.target;
@@ -418,37 +464,117 @@ k4lib.prototype.get_event_target = function(e) {
 
 	return targ;
 }
+k4lib.prototype.get_event_target = get_event_target;
 
 /* Create an overflow layer, for such things as Opera */
 k4lib.prototype.overflow_layer = function(obj, overflow_type) {
-
 	ret = false;
-	
 	// apparently opera doesn't actually need this.. ugh.
 	if(typeof(obj.style.overflow) == 'undefined' && this.is_opera && obj.id.indexOf('_overflowLayer') == -1) {
-		
 		// this is a hack of using document.write to make the node, (which I don't really like)
 		// then instead of having to position it, it will be removed
 		// and placed where 'obj' is. 'obj' will be duplicated and placed
 		// inside the newly created and moved node.
 		document.write('<div id="' + obj.id + '_overflowLayer" style="overflow:' + overflow_type + ';"></div>');
-
 		var overflow_layer = d.getElementById(obj.id + '_overflowLayer');
-
 		if(typeof(overflow_layer) != 'undefined' && overflow_layer) {
 			var temp_obj	= obj.cloneNode(false);
-			
 			if(obj.replaceNode(overflow_layer)) {
 				
 				this.obj	= overflow_layer;
 				obj.appendChild(temp_obj);
 				ret			= true;
 			}
-			
 			this.using_overflow = true;
 		}
 	} else {
 		ret = true;
 	}
 	return ret;
+}
+
+Object.prototype.show = function() {
+	if(typeof(this.style) != 'undefined') {
+		if(this.style.display == '' || this.style.display == 'none') {
+			this.style.display = 'block';
+		}
+	}
+}
+Object.prototype.hide = function() {
+	if(typeof(this.style) != 'undefined') {
+		this.style.display = 'none';
+	}
+}
+
+//
+// getPageScroll()
+// Returns array with x,y page scroll values.
+// Core code from - quirksmode.org
+//
+function getPageScroll(){
+
+	var yScroll;
+
+	if (self.pageYOffset) {
+		yScroll = self.pageYOffset;
+	} else if (document.documentElement && document.documentElement.scrollTop){	 // Explorer 6 Strict
+		yScroll = document.documentElement.scrollTop;
+	} else if (document.body) {// all other Explorers
+		yScroll = document.body.scrollTop;
+	}
+
+	arrayPageScroll = new Array('',yScroll) 
+	return arrayPageScroll;
+}
+
+//
+// getPageSize()
+// Returns array with page width, height and window width, height
+// Core code from - quirksmode.org
+// Edit for Firefox by pHaez
+//
+function getPageSize(){
+	
+	var xScroll, yScroll;
+	
+	if (window.innerHeight && window.scrollMaxY) {	
+		xScroll = document.body.scrollWidth;
+		yScroll = window.innerHeight + window.scrollMaxY;
+	} else if (document.body.scrollHeight > document.body.offsetHeight){ // all but Explorer Mac
+		xScroll = document.body.scrollWidth;
+		yScroll = document.body.scrollHeight;
+	} else { // Explorer Mac...would also work in Explorer 6 Strict, Mozilla and Safari
+		xScroll = document.body.offsetWidth;
+		yScroll = document.body.offsetHeight;
+	}
+	
+	var windowWidth, windowHeight;
+	if (self.innerHeight) {	// all except Explorer
+		windowWidth = self.innerWidth;
+		windowHeight = self.innerHeight;
+	} else if (document.documentElement && document.documentElement.clientHeight) { // Explorer 6 Strict Mode
+		windowWidth = document.documentElement.clientWidth;
+		windowHeight = document.documentElement.clientHeight;
+	} else if (document.body) { // other Explorers
+		windowWidth = document.body.clientWidth;
+		windowHeight = document.body.clientHeight;
+	}	
+	
+	// for small pages with total height less then height of the viewport
+	if(yScroll < windowHeight){
+		pageHeight = windowHeight;
+	} else { 
+		pageHeight = yScroll;
+	}
+
+	// for small pages with total width less then width of the viewport
+	if(xScroll < windowWidth){	
+		pageWidth = windowWidth;
+	} else {
+		pageWidth = xScroll;
+	}
+
+
+	arrayPageSize = new Array(pageWidth,pageHeight,windowWidth,windowHeight) 
+	return arrayPageSize;
 }

@@ -428,7 +428,7 @@ $_LANG += array(
 'L_JUMPFORUM'			=> 'Jump Forum (redirects)',
 'L_ARCHIVEFORUM'		=> 'Archive Forum (read only)',
 'L_GALLERYFORUM'		=> 'Gallery Forum (image gallery)',
-
+'L_FILTERED'			=> '(filtered)',
 'L_ONSMALL'				=> 'on',
 
 'L_MARKFORUMSREAD'		=> 'Mark Forums Read',
@@ -457,6 +457,7 @@ $_LANG += array(
 'L_ANNOUNCE'			=> 'Announcement Topics',
 'L_CLOSED'				=> 'Closed Topics',
 'L_AVATARS'				=> 'User Avatars',
+'L_PERSONALPICTURE'		=> 'Personal Picture',
 'L_SIGNATURES'			=> 'User Signatures',
 'L_HTML'				=> 'HTML Code',
 'L_BBCODE'				=> 'BB Code',

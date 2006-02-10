@@ -116,6 +116,14 @@ class InsertPost extends FAAction {
 				return !USE_AJAX ? $action->execute($request) : ajax_message('L_INSERTTOPICMESSAGE');
 			}				
 			
+			/* Initialize the bbcode parser with the topic message */
+			$body_text = $_REQUEST['message'];
+			if(!isset($_REQUEST['disable_bbcode']) || !$_REQUEST['disable_bbcode']) {
+				$parser 	= &new BBParser;
+				$body_text	= $parser->parse($body_text);
+			}
+
+			
 			if($submit_type == 'post' || $submit_type == 'draft' || $should_submit) {
 
 				/* set the breadcrumbs bit */
@@ -180,19 +188,8 @@ class InsertPost extends FAAction {
 				
 				$_REQUEST['message']	= substr($_REQUEST['message'], 0, $_SETTINGS['postmaxchars']);
 				
-				/* Initialize the bbcode parser with the topic message */
-				$bbcode	= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['message'], $forum['forum_id'], 
-					iif((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']), FALSE, TRUE), 
-					iif((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']), FALSE, TRUE), 
-					iif((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']), FALSE, TRUE), 
-					iif((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']), FALSE, TRUE));
-				
-
-				/* Parse the bbcode */
-				$body_text	= $bbcode->parse();
-						
 				// permissions are taken into account inside the poller
-				$poller		= &new K4BBPolls($body_text, '', $forum, 0);
+				//$poller		= &new K4BBPolls($body_text, '', $forum, 0);
 				
 				if($this->row_type & TOPIC) {		
 					/**
@@ -236,12 +233,12 @@ class InsertPost extends FAAction {
 				if($submit_type == 'post' || isset($_REQUEST['post'])) {
 					
 					// put it here to avoid previewing
-					$poll_text		= $poller->parse($request, $is_poll);
+					//$poll_text		= $poller->parse($request, $is_poll);
 									
-					if($body_text != $poll_text) {
-						$body_text	= $poll_text;
-						$is_poll	= 1;
-					}
+					//if($body_text != $poll_text) {
+						//$body_text	= $poll_text;
+						//$is_poll	= 1;
+					//}
 				}
 
 				/* Make sure we're not double-posting */
@@ -458,9 +455,10 @@ class InsertPost extends FAAction {
 
 					$request['template']->setVar('newtopic_action', 'newtopic.php?act=posttopic');
 				}
-				/* Set topic array items to be passed to the iterator */			
+				/* Set topic array items to be passed to the iterator */
+
 				$post_preview	= array(
-									'name' => k4_htmlentities(html_entity_decode($_REQUEST['name']), ENT_QUOTES),
+									'name' => k4_htmlentities($_REQUEST['name'], ENT_QUOTES),
 									'body_text' => $body_text,
 									'poster_name' => $request['user']->get('name'),
 									'poster_id' => $request['user']->get('id'),
@@ -479,7 +477,7 @@ class InsertPost extends FAAction {
 									);
 								
 				/* Assign the topic preview values to the template */
-				$post_preview['body_text'] = $_REQUEST['message'];
+				//$post_preview['body_text'] = $_REQUEST['message'];
 				
 				foreach($post_preview as $key => $val)
 					$request['template']->setVar('post_'. $key, $val);
@@ -615,17 +613,21 @@ class UpdatePost extends FAAction {
 				
 		/* Initialize the bbcode parser with the topic message */
 		$_REQUEST['message']	= substr($_REQUEST['message'], 0, $_SETTINGS['postmaxchars']);
-		$bbcode	= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['message'], $forum['forum_id'], 
+		/*$bbcode	= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['message'], $forum['forum_id'], 
 			iif((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']), FALSE, TRUE), 
 			iif((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']), FALSE, TRUE), 
 			iif((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']), FALSE, TRUE), 
-			iif((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']), FALSE, TRUE));
+			iif((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']), FALSE, TRUE));*/
 		
 		/* Parse the bbcode */
-		$body_text	= $bbcode->parse();
-
+		$body_text = $_REQUEST['message'];
+		
+		if(!isset($_REQUEST['disable_bbcode']) || !$_REQUEST['disable_bbcode']) {
+			$parser = &new BBParser;
+			$body_text	= $parser->parse($body_text);
+		}
 		// permissions are taken into account inside the poller
-		$poller		= &new K4BBPolls($body_text, $topic['body_text'], $forum, $topic['post_id']);
+		//$poller		= &new K4BBPolls($body_text, $topic['body_text'], $forum, $topic['post_id']);
 				
 		$request['template']->setVar('newtopic_action', 'newtopic.php?act=updatetopic');
 		
@@ -655,12 +657,12 @@ class UpdatePost extends FAAction {
 			
 			// put it here to avoid previewing
 			$is_poll		= 0;
-			$poll_text		= $poller->parse($request, $is_poll);
+			//$poll_text		= $poller->parse($request, $is_poll);
 
-			if($body_text != $poll_text) {
-				$body_text	= $poll_text;
-				$is_poll	= 1;
-			}
+			//if($body_text != $poll_text) {
+				//$body_text	= $poll_text;
+				//$is_poll	= 1;
+			//}
 
 			$posticon			= iif(($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif');
 			

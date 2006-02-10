@@ -25,23 +25,30 @@
 
 
 class BBEmoticons {
-	var $_smilies = array(
-		':D' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_biggrin.gif" />',
-		':o' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_redface.gif" />',
-		';)' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_wink.gif" />',
-		':p' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_razz.gif" />',
-		':)' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_smile.gif" />',
-		':(' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_frown.gif" />',
-		);
+//	var $_smilies = array(
+//		':D' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_biggrin.gif" />',
+//		':o' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_redface.gif" />',
+//		';)' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_wink.gif" />',
+//		':p' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_razz.gif" />',
+//		':)' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_smile.gif" />',
+//		':(' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_frown.gif" />',
+//		);
+//	
+//	var $_emos = array(
+//		':confused:' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_confused.gif" />',
+//		':cool:' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_cool.gif" />',
+//		':eek:' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_eek.gif" />',
+//		':mad:' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_mad.gif" />',
+//		':rolleyes:' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_rolleyes.gif" />',
+//		':twisted:' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_twisted.gif" />',
+//		);
+
+	var $_emos = array();
+	var $_smilies = array();
 	
-	var $_emos = array(
-		':confused:' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_confused.gif" />',
-		':cool:' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_cool.gif" />',
-		':eek:' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_eek.gif" />',
-		':mad:' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_mad.gif" />',
-		':rolleyes:' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_rolleyes.gif" />',
-		':twisted:' => '<img src="http://www.k4bb.org/k4/tmp/upload/emoticons/icon_twisted.gif" />',
-		);
+	function BBEmoticons() {
+		$this->getSmiliesEmos();
+	}
 
 	function &getInstance() {
 		static $instance = NULL;
@@ -52,15 +59,13 @@ class BBEmoticons {
 		return $instance[0];
 	}
 
-	function getSmilyImg($emo) {
-		$img = $this->_smilies[$emo];
-
-		return "<img src=\"$img\" />";
+	function getSmilyImg($item) {
+		return "<img src=\"tmp/upload/emoticons/". $item['image'] ."\" alt=\"". $item['description'] ."\" />";
 	}
 
 	function parse($text) {
-		foreach ($this->_smilies as $smily => $img) {
-			$regex = '~('.preg_quote($smily).')(\W)~e';
+		foreach ($this->_smilies as $smily) { //  => $img
+			$regex = '~('.preg_quote($smily['typed']).')(\W)~e';
 
 			$text = preg_replace($regex, '$this->_smilies["$1"]."$2"', $text);
 		}
@@ -68,6 +73,31 @@ class BBEmoticons {
 		$text = str_replace(array_keys($this->_emos), array_values($this->_emos), $text);
 
 		return $text;
+	}
+
+	function revert($text) {
+		$text = strtr($text, array_flip($this->_smilies));
+		$text = strtr($text, array_flip($this->_emos));
+		
+		return $text;
+	}
+
+	function getSmiliesEmos() {
+		global $_DBA;
+
+		$all = $_DBA->executeQuery("SELECT * FROM ". K4EMOTICONS);
+
+		while($all->next()) {
+			$item = $all->current();
+
+			if($item['typed']{0} == ':' && $item['typed']{(strlen($item['typed'])-1)} == ':') {
+				$this->_emos[$item['typed']] = $this->getSmilyImg($item);
+			} else {
+				$this->_smilies[$item['typed']] = $this->getSmilyImg($item);
+			}
+		}
+		
+		$all->free();
 	}
 }
 
@@ -93,10 +123,10 @@ class FAStack {
 
 	function &pop() {
 		$top = &$this->top();
-
+		
 		array_pop($this->_items);
 		$this->_update();
-
+		
 		return $top;
 	}
 
@@ -121,22 +151,45 @@ class BBNode {
 	function getChildren() {
 		return $this->_children;
 	}
+    
+    function getTagNames() {
+        return array();
+    }
+    
+    function getRevertPatterns() {
+        return array();
+    }
 
 	function flatten($noparse = FALSE) {
 		$buffer = '';
-
+		
 		for ($i = 0; $i < sizeof($this->_children); $i++) {
 			$buffer .= $this->_children[$i]->flatten($noparse);
 		}
-
+		
 		return $buffer;
 	}
+    
+    function revert() {
+		$buffer = '';
+		
+		for ($i = 0; $i < sizeof($this->_children); $i++) {
+			$buffer .= $this->_children[$i]->revert();
+		}
+		
+		return $buffer;
+    }
 }
 
 class BBRootNode extends BBNode {
 	function getTag() {
 		return 'ROOT_TAG';
 	}
+	/*
+	function revert() {
+		return str_replace('&amp;', '&', parent::revert());
+	}
+	*/
 }
 
 class BBTextNode extends BBNode {
@@ -149,7 +202,7 @@ class BBTextNode extends BBNode {
 	function handleUrl($matches) {
 		$url = ($matches[2]) ? $matches[0] : 'http://' . $matches[0];
 
-		return "<a href=\"$url\">{$matches[0]}</a>";
+		return "<a class=\"bb_url\" href=\"$url\">{$matches[0]}"; // </a>
 	}
 
 	function flatten($noparse = FALSE) {
@@ -158,9 +211,6 @@ class BBTextNode extends BBNode {
 		$buffer = preg_replace_callback('~((https?\:\/\/|ftps?\:\/\/)?(?:(?:[\w\d\-_\+\.]+\:)?(?:[\w\d\-_\+\.]+)?\@)?(?:[\w\d][\d_\-\w\.]+\w){2,}?\.[\dA-Za-z]{2,7})([\:\/]\S*)?~',
 			array(&$this, 'handleUrl'), $this->_text);
 
-		$emos = &BBEmoticons::getInstance();
-		$buffer = $emos->parse($buffer);
-
 		$paras = preg_split('~(?:\r?\n){2}~', $buffer);
 
 		if (count($paras) > 1) {
@@ -168,11 +218,20 @@ class BBTextNode extends BBNode {
 
 			foreach ($paras as $para)
 				if ($para = trim($para))
-					$buffer .= "\n<p>".nl2br($para)."</p>\n";
+					$buffer .= "\n\n<p>".nl2br($para)."</p>";
+				
+				$buffer .= "\n\n";
 		}
+
+		$emos = &BBEmoticons::getInstance();
+		$buffer = $emos->parse($buffer);
 
 		return $buffer;
 	}
+    
+    function revert() {		
+        return $this->_text;
+    }
 }
 
 class BBTagNode extends BBNode {
@@ -183,6 +242,10 @@ class BBTagNode extends BBNode {
 		$this->_tag = $tag;
 		$this->_attrib = $attrib;
 	}
+    
+    function getClass() {
+        return 'class="bb_'.$this->getTag().'"';
+    }
 
 	function getTag() {
 		return $this->_tag;
@@ -202,47 +265,126 @@ class BBDefaultNode extends BBTagNode {
 }
 
 class BBTagRegistry {
-	var $_cache = array();
+	var $_parse = array();
+    var $_revert = array();
 	var $_default;
 
 	function BBTagRegistry($default) {
 		$this->_default = $default;
 	}
 
-	function setClass($tag, $class) {
-		$this->_cache[$tag] = $class;
-	}
-
-	function getClass($tag) {
+	function getParserClass($tag) {
 		$class = $this->_default;
 		$tag = strtolower($tag);
 
-		if (isset($this->_cache[$tag]))
-			$class = $this->_cache[$tag];
+		if (isset($this->_parse[$tag]))
+			$class = $this->_parse[$tag];
 
 		return $class;
 	}
+    
+    function getReverterClass($tag) {
+        $ret = $this->_default;
+        
+        foreach ($this->_revert as $class => $pattern) {
+            if (preg_match($pattern, $tag)) {
+                $ret = $class;
+            }
+        }
+        
+        return $ret;
+    }
+    
+    function register($class) {
+        if (class_exists($class)) {
+            $tags = call_user_func(array($class, 'getTagNames'));
+            
+            foreach ($tags as $tag)
+                $this->_parse[$tag] = $class;
+            
+            $patterns = call_user_func(array($class, 'getRevertPatterns'));
+            
+            foreach ($patterns as $pattern)
+                $this->_revert[$pattern] = $class;
+        }
+    }
 }
 
 class BBParser {
 	function &createRegistry() {
 		$reg = &new BBTagRegistry('BBDefaultNode');
-		$reg->setClass('b', 'BBFormatNode');
-		$reg->setClass('i', 'BBFormatNode');
-		$reg->setClass('u', 'BBFormatNode');
-		$reg->setClass('color', 'BBFormatNode');
-		$reg->setClass('size', 'BBFormatNode');
-
-		$reg->setClass('center', 'BBCenterNode');
-		$reg->setClass('code', 'BBCodeNode');
-		$reg->setClass('link', 'BBLinkNode');
-		$reg->setClass('list', 'BBListNode');
-		$reg->setClass('php', 'BBPhpNode');
-		$reg->setClass('quote', 'BBQuoteNode');
-		$reg->setClass('url', 'BBLinkNode');
+        $reg->register('BBFormatNode');
+		$reg->register('BBCenterNode');
+		$reg->register('BBLeftNode');
+		$reg->register('BBRightNode');
+		$reg->register('BBJustifyNode');
+		$reg->register('BBHorizauntalRuleNode');
+		$reg->register('BBCodeNode');
+        $reg->register('BBCodeBodyNode');
+        $reg->register('BBCodeTitleNode');
+		$reg->register('BBLinkNode');
+		$reg->register('BBListNode');
+		$reg->register('BBListItemNode');
+		$reg->register('BBPhpNode');
+        $reg->register('BBPhpBodyNode');
+        $reg->register('BBPhpTitleNode');
+		$reg->register('BBQuoteNode');
+		$reg->register('BBQuoteBodyNode');
+		$reg->register('BBQuoteTitleNode');
+		$reg->register('BBLinkNode');
 
 		return $reg;
 	}
+    
+    function revert($buffer) {
+ 		$stack = &new FAStack;
+		$root = &new BBRootNode;
+		$registry = &$this->createRegistry();
+		$emos = &BBEmoticons::getInstance();
+        
+        $buffer = preg_replace('~<br( /)?>\n?~', "\n", $buffer);
+		$buffer = $emos->revert($buffer);
+
+		$stack->push($root);
+
+		$matches = preg_split('~< ( (?>[^<>]+) | (?R) )* >~x', $buffer, -1, PREG_SPLIT_DELIM_CAPTURE);
+        
+		foreach ($matches as $i => $match) {
+			$parent = &$stack->top();
+
+			if ((int)$i & 1) {
+				if (preg_match('~^(/?)([a-z]+)(?: class="bb_([a-z]+)"(.*?)(/?))?$~i', $match, $tag)) {
+                    if ($tag[5] == '/') {
+    					$class = $registry->getParserClass($tag[3]);
+                        
+						$node = &new $class($tag[3], $tag[4]);
+						$parent->addChild($node);
+                    } elseif ($tag[1] == '/') {
+						if ($stack->getSize() > 1)
+                        	$stack->pop();
+					} else {
+    					$class = $registry->getParserClass($tag[3]);
+                        
+						$node = &new $class($tag[3], $tag[4]);
+						$stack->push($node);
+						$parent->addChild($node);
+					}
+				} else {
+					$class = $registry->getParserClass('');
+					
+					$node = &new $class('', '');
+					$stack->push($node);
+					$parent->addChild($node);
+				}
+			} else {
+				$node = &new BBTextNode($match);
+				$parent->addChild($node);
+			}
+
+		}
+
+		return $root->revert();
+   }
 
 	function parse($buffer) {
 		$stack = &new FAStack;
@@ -251,7 +393,8 @@ class BBParser {
 
 		$stack->push($root);
 
-		$buffer = htmlentities($buffer);
+		$buffer = htmlentities($buffer, ENT_QUOTES);
+		$buffer = preg_replace('~(\r?\n)~', '<br />', $buffer);
 		$matches = preg_split('~\[ ( (?>[^\[\]]+) | (?R) )* \]~x', $buffer, -1, PREG_SPLIT_DELIM_CAPTURE);
 
 		foreach ($matches as $i => $match) {
@@ -259,7 +402,7 @@ class BBParser {
 
 			if ((int)$i & 1) {
 				if (preg_match('~^(/?)([a-z]+)(?:=([^\]]*))?$~i', $match, $tag)) {
-					$class = $registry->getClass($tag[2]);
+					$class = $registry->getParserClass($tag[2]);
 
 					if ($tag[1] == '/') {
 						if ($tag[2] == $parent->getTag()) {
@@ -289,7 +432,7 @@ class BBParser {
 			echo "Incomplete ".$node->getTag().", automatically closed<br />\n";
 		}
 
-		echo $root->flatten();
+		return $root->flatten();
 	}
 }
 
@@ -304,11 +447,95 @@ class BBCenterNode extends BBTagNode {
 		if ($noparse) return $this->getUnparsed($noparse);
 
 		$body = parent::flatten($noparse);
+        $class = $this->getClass();
 
-		return "<div style=\"text-align: center;\">$body</div>";
+		return "<div $class style=\"text-align: center;\">$body</div>";
 	}
+    
+    function getTagNames() {
+        return array('center');
+    }
+    
+    function revert() {
+        $body = parent::revert();
+        
+        return "[center]{$body}[/center]";
+    }
 }
+class BBLeftNode extends BBTagNode {
+	function flatten($noparse = FALSE) {
+		if ($noparse) return $this->getUnparsed($noparse);
 
+		$body = parent::flatten($noparse);
+        $class = $this->getClass();
+
+		return "<div $class style=\"text-align: left;\">$body</div>";
+	}
+    
+    function getTagNames() {
+        return array('left');
+    }
+    
+    function revert() {
+        $body = parent::revert();
+        
+        return "[left]{$body}[/left]";
+    }
+}
+class BBRightNode extends BBTagNode {
+	function flatten($noparse = FALSE) {
+		if ($noparse) return $this->getUnparsed($noparse);
+
+		$body = parent::flatten($noparse);
+        $class = $this->getClass();
+
+		return "<div $class style=\"text-align: right;\">$body</div>";
+	}
+    
+    function getTagNames() {
+        return array('right');
+    }
+    
+    function revert() {
+        $body = parent::revert();
+        
+        return "[right]{$body}[/right]";
+    }
+}
+class BBJustifyNode extends BBTagNode {
+	function flatten($noparse = FALSE) {
+		if ($noparse) return $this->getUnparsed($noparse);
+
+		$body = parent::flatten($noparse);
+        $class = $this->getClass();
+
+		return "<div $class style=\"text-align: justify;\">$body</div>";
+	}
+    
+    function getTagNames() {
+        return array('justify');
+    }
+    
+    function revert() {
+        $body = parent::revert();
+        
+        return "[justify]{$body}[/justify]";
+    }
+}
+class BBHorizauntalRuleNode extends BBTagNode {
+	function flatten($noparse = FALSE) {
+		if ($noparse) return $this->getUnparsed($noparse);
+		return "<hr />";
+	}
+    
+    function getTagNames() {
+        return array('hr');
+    }
+    
+    function revert() {
+        return "[hr /]";
+    }
+}
 class BBCodeNode extends BBTagNode {
 	function flatten($noparse = FALSE) {
 		if ($noparse) return $this->getUnparsed($noparse);
@@ -316,10 +543,42 @@ class BBCodeNode extends BBTagNode {
 		$body = parent::flatten(TRUE);
 
 		$title = '<div class="bb_codetitle">CODE:</div>';
-		$body = '<pre class="bb_codecontent">' . $body . '</pre>';
+		$body = '<pre class="bb_codebody">' . $body . '</pre>';
+        $class = $this->getClass();
 
-		return "<div class=\"bb_code\">$title$body</div>";
+
+		return "<div $class>$title$body</div>";
 	}
+    
+    function getTagNames() {
+        return array('code');
+    }
+    
+    function revert() {
+        $body = parent::revert();
+        
+        return "[code]{$body}[/code]";
+    }
+}
+
+class BBCodeBodyNode extends BBTagNode {
+    function getTagNames() {
+        return array('codebody');
+    }
+    
+    function revert() {
+        return parent::revert();
+    }
+}
+
+class BBCodeTitleNode extends BBTagNode {
+    function getTagNames() {
+        return array('codetitle');
+    }
+    
+    function revert() {
+        return '';
+    }
 }
 
 class BBFormatNode extends BBTagNode {
@@ -339,8 +598,15 @@ class BBFormatNode extends BBTagNode {
 		if (ctype_alpha($color))
 			return $color;
 
-		if (preg_match('~^[0-9a-f]{3,6}$~i', $color))
+		if (preg_match('~^#[0-9a-f]{3,6}$~i', $color))
 			return $color;
+	}
+
+	function getFont() {
+		$font = $this->_attrib;
+
+		if (ctype_alpha($font))
+			return $font;
 	}
 
 	function flatten($noparse = FALSE) {
@@ -353,12 +619,53 @@ class BBFormatNode extends BBTagNode {
 			'u' => 'text-decoration: underline;',
 			'color' => 'color: '.$this->getColor().';',
 			'size' => 'font-size: '.$this->getSize().';',
+			'font' => 'font-family: '.$this->getFont().';',
+			'indent' => 'margin-left: 40px;',
+			'outdent' => 'margin-left: 0px;',
 		);
 		
-		$style = $styles[$this->getTag()];
+        $tag = $this->getTag();
+		$style = $styles[$tag];
+        $class = $this->getClass();
 
-		return "<span style=\"$style\">$body</span><!--".$this->getTag()."-->";
+		return "<span $class style=\"$style\">$body</span>";
 	}
+    
+    function getTagNames() {
+        return array('b', 'color', 'i', 'size', 'u', 'font', 'indent', 'outdent');
+    }
+    
+    function revert() {
+        switch ($this->getTag()) {
+            case 'b': {
+                return "[b]".parent::revert()."[/b]";
+            }
+            case 'i': {
+                return "[i]".parent::revert()."[/i]";
+            }
+            case 'u': {
+                return "[u]".parent::revert()."[/u]";
+            }
+            case 'size': {
+                $size = preg_replace('~^.*font-size: (\S+);.*$~', '$1', $this->_attrib);
+                return "[size=$size]".parent::revert()."[/size]";
+            }
+            case 'color': {
+				$color = preg_replace('~^.*color: (\S+);.*$~', '$1', $this->_attrib);
+				return "[color=$color]".parent::revert()."[/color]";
+            }
+			case 'font': {
+				$font = preg_replace('~^.*font-family: (\S+);.*$~', '$1', $this->_attrib);
+				return "[font=$font]".parent::revert()."[/font]";
+            }
+			 case 'indent': {
+                return "[indent]".parent::revert()."[/indent]";
+            }
+			 case 'outdent': {
+                return "[outdent]".parent::revert()."[/outdent]";
+            }
+       }
+    }
 }
 
 class BBLinkNode extends BBTagNode {
@@ -367,9 +674,23 @@ class BBLinkNode extends BBTagNode {
 
 		$body = parent::flatten(TRUE);
 		$url = ($this->_attrib) ? $this->_attrib : $this->_body;
+        $class = $this->getClass();
 
-		return "<a href=\"$url\">$body</a>";
+		return "<a $class href=\"$url\">$body</a>";
 	}
+    
+    function getTagNames() {
+        return array('link', 'url');
+    }
+    
+    function revert() {
+        $body = parent::revert();
+		$tag = $this->getTag();
+		
+		$url = preg_replace('~^.*href="([^"]*)".*$~', '$1', $this->_attrib);
+        
+        return "[$tag=$url]{$body}[/$tag]";
+    }
 }
 
 class BBListNode extends BBTagNode {
@@ -377,8 +698,10 @@ class BBListNode extends BBTagNode {
 		if ($noparse) return $this->getUnparsed($noparse);
 
 		$body = parent::flatten($noparse);
+        $class = $this->getClass();
 
 		$items = explode('[*]', $body);
+		$param = $this->_attrib;
 
 		if (ctype_digit($param)) {
 			$list = 'ol';
@@ -393,12 +716,35 @@ class BBListNode extends BBTagNode {
 
 		$buffer = '';
 		foreach ($items as $item) {
-			if ($item = trim($item))
-				$buffer .= "<li>$item</li>\n";
+			if (trim($item))
+				$buffer .= "<li class=\"bb_li\">$item</li>";
 		}
 
-		return "<$list$attribs>\n$buffer</$list>";
+		return "<$list $class$attribs>\n$buffer</$list>";
 	}
+    
+    function getTagNames() {
+        return array('list');
+    }
+    
+    function revert() {
+        $body = parent::revert();
+		$type = preg_replace('~^.*type(=)"([^"]*)".*$~', '$1$2', $this->_attrib);
+        
+        return "[list$type]{$body}[/list]";
+    }
+}
+
+class BBListItemNode extends BBTagNode {
+	function getTagNames() {
+		return array('li');
+	}
+	
+    function revert() {
+        $body = parent::revert();
+        
+        return "[*]{$body}";
+    }
 }
 
 class BBPhpNode extends BBTagNode {
@@ -408,11 +754,42 @@ class BBPhpNode extends BBTagNode {
 		$body = parent::flatten(TRUE);
 		$body = highlight_string(html_entity_decode($body), TRUE);
 
-		$title = '<div class="phptitle">&lt;PHP:</div>';
-		$body = '<div class="phpbody">' . $body . '</div>';
+		$title = '<div class="bb_phptitle">&lt;PHP:</div>';
+		$body = '<div class="bb_phpbody">' . $body . '</div>';
+        $class = $this->getClass();
 
-		return "<div>$title$body</div>";
+		return "<div $class>$title$body</div>";
 	}
+    
+    function getTagNames() {
+        return array('php');
+    }
+	
+	function revert() {
+		$body = parent::revert();
+		
+		return "[php]{$body}[/php]";
+	}
+}
+
+class BBPhpBodyNode extends BBTagNode {
+    function getTagNames() {
+        return array('phpbody');
+    }
+    
+    function revert() {
+        return trim(html_entity_decode(strip_tags(parent::revert())));
+    }
+}
+
+class BBPhpTitleNode extends BBTagNode {
+    function getTagNames() {
+        return array('phptitle');
+    }
+    
+    function revert() {
+        return '';
+    }
 }
 
 class BBQuoteNode extends BBTagNode {
@@ -423,121 +800,39 @@ class BBQuoteNode extends BBTagNode {
 
 		$title = '<div class="bb_quotetitle">' . (($this->_attrib) ? "QUOTE ({$this->_attrib}):" : 'QUOTE:') . '</div>';
 		$body = '<div class="bb_quotebody">' . $body . '</div>';
+        $class = $this->getClass();
 
-		return "<div class=\"bb_quote\">$title$body</div>";
+
+		return "<div $class>$title$body</div>";
 	}
+    
+    function getTagNames() {
+        return array('quote');
+    }
 }
 
+class BBQuoteBodyNode extends BBTagNode {
+    function getTagNames() {
+        return array('quotebody');
+    }
+    
+    function revert() {
+		return html_entity_decode(parent::revert()) . "[/quote]";
+    }
+}
 
-$parser = &new BBParser;
-
-$source = <<<EOF
-www.bestwebever.com
-http://bestwebever.com
-http://k4.bestwebever.com.
-[b]bold text[/b]
-[i]italic text[/i]
-[u]underlined text[/u]
-[quote]quoted text[/quote]
-[code]code text[/code]
-[URL=http://www.bestwebever.com]BestWebEver.com[/URL]
-[url]http://k4.bestwebever.com[/url]
-[color=blue]colored text[/color]
-[size=18]Sized text[/size]
-
-Emoticons:
- :D :confused: :cool: :eek: :( :mad: :o :rolleyes: :) :p ;) :twisted:
-
-[list=a]
-[*]hiii
-[*]hooooo
-[*]
-[list=A]
-[*]hoohaaa
-[/list]
-[/list]
-
-
-[php]<?php
-$str = 'hello world'; echo $str; exit;
-if(1 >= 0) { echo 'hii'; }
-?>[/php]
-
-[code]INSERT INTO BLAH '' VALUES blah;[/code]
-
-[quote=peter wrote this on 29/04/2005]
-hello...
-[quote]just testing[/quote]
-[quote]another test[/quote]
-cool...
-[/quote]
-
-[quote]
-[quote=k4st]
-	top level
-	[quote]
-		second level
-		[quote]third level[/quote]
-		[quote]third level[/quote]
-	[/quote]
-	[quote]
-		second level
-		[quote]third level[/quote]
-	[/quote]
-	[quote]
-		second level
-		[quote]third level[/quote]
-		[quote]third level[/quote]
-	[/quote]
-[/quote]
-[b][/code]
-[b][i]lalla[/i][/b]
-[code]
-[quote= ]
-	top level
-	[quote]
-		second level
-		[quote]third level[/quote]
-		[quote]third level[/quote]
-	[/quote]
-	[quote]
-		second level
-		[quote]third level[/quote]
-	[/quote]
-	[quote]
-		second level
-		[quote]third level[/quote]
-		[quote]third level[/quote]
-	[/quote]
-[/quote]
-[b][/quote]
-[i]lalla[/i][/b]
-
-[b]www.k4bb.org
-[quote]
-	[b]this is bold[/b]
-	[i]italicized[/i]
-	[quote]
-		[u]underlined[/u]
-		[center]
-		[quote]
-			[quote]
-				blah blah
-			[quote]
-			blah blah more and more layers
-		[/quote]
-	[/quote]
-	[quote]
-		blah2
-	[/quote]
-[/quote]
-[php]<?php echo 'hello world!'; ?>[/php]
-[code]
-[/code]
-[b]Example Bold[/b]
-[/quote]
-EOF;
-
-$parser->parse($source);
+class BBQuoteTitleNode extends BBTagNode {
+    function getTagNames() {
+        return array('quotetitle');
+    }
+    
+    function revert() {
+		$title = '';
+		if (preg_match('~\((.+)\)~', parent::revert(), $matches)) {
+			$title = "={$matches[1]}";
+		}
+        return "[quote$title]";
+    }
+}
 
 ?>

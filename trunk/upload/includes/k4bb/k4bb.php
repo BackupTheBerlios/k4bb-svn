@@ -165,7 +165,14 @@ class K4Controller extends FAController {
 		 * Set some other important info to the template
 		 */
 		$request['template']->setVar('num_queries', $request['dba']->getNumQueries() + 1);
+		$request['template']->setVar('USE_AJAX', (USE_AJAX ? 1 : 0));
+		$request['template']->setVar('USE_TOTAL_AJAX', (USE_TOTAL_AJAX ? 1 : 0));
 		
+		// the page title
+		$curr_location = $request['template']->getVar('current_location');
+		$truncated_loc = strlen($curr_location) > 40 ? substr($curr_location, 0, 40) .'...' : $curr_location;
+		$request['template']->setVar('forum_title', $request['template']->getVar('bbtitle') .' - '. $truncated_loc .' - Powered by k4BB');
+
 		// reset the nojs variable if this is a new session
 		if($request['session']->isNew()) {
 			$request['template']->setVar('nojs', 0);
@@ -202,10 +209,17 @@ class K4Controller extends FAController {
 			}
 		}
 
+		// are we using the total ajax option?
+		if(USE_TOTAL_AJAX) {
+			$request['template']->setVisibility('forum_header', FALSE);
+			$request['template']->setVisibility('forum_footer', FALSE);
+			echo "<div id=\"page_title_element\" style=\"display:none;\">". $request['template']->getVar('forum_title') ."</div>\n";
+		}
+
 		/**
 		 * Start GZIP compression
 		 */
-		if($gzip && $encoding && function_exists('gzcompress')) {
+		if(!USE_TOTAL_AJAX && $gzip && $encoding && function_exists('gzcompress')) {
 
 			header('Content-Encoding: ' . $encoding);
 			

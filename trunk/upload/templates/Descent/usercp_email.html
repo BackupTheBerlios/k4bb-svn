@@ -1,66 +1,62 @@
 <is:logged>
 <form:form action="member.php?act=update_email" method="post" enctype="multipart/form-data">
+<div class="header"><div class="title">{$L_USERCONTROLPANEL}: <span style="font-weight: normal;">{$L_CHANGEEMAIL}</span></div></div>
 <div class="spacer">
-	<div class="header">
-		<div class="title">{$L_USERCONTROLPANEL}: <span style="font-weight: normal;">{$L_CHANGEEMAIL}</span></div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<tr class="alt3">
-				<td><span class="smalltext">{$L_USERCPEMAILMSG}</span></td>
-			</tr>
-		</table>
-	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr class="alt2">
+			<td><span class="smalltext">{$L_USERCPEMAILMSG}</span></td>
+		</tr>
+	</table>
 </div>
-<br />
+<div class="supheader">{$L_EMAILSETTINGS}</div>
 <div class="spacer">
-	<div class="header">
-		<div class="title">{$L_EMAILSETTINGS}</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<tr>
-				<td class="alt2" colspan="2">
-					<div align="center" class="smalltext">{$L_INSERTOLDEMAIL}</div>
-				</td>
-			</tr>
-			<tr>
-				<td class="alt1" width="50%">{$L_CURRENTEMAIL}</td>
-				<td class="alt3" width="50%">
-					<input type="email" name="email" id="email" value="" maxlength="150" class="inputbox" />
-					<form:error id="email_error" for="email" setclass="inputfailed" regex=".+">{$L_SUPPLYEMAIL}</form:error>
-				</td>
-			</tr>
-			<tr>
-				<td class="alt1" width="50%">{$L_CHECKCURRENTEMAIL}</td>
-				<td class="alt3" width="50%">
-					<input type="email" name="email2" id="email2" value="" maxlength="150" class="inputbox" />
-					<form:error id="email_match_error" for="email" setclass="inputfailed" match="email2">{$L_EMAILSDONTMATCH}</form:error>
-				</td>
-			</tr>
-			<tr>
-				<td class="alt2" colspan="2">
-					<div align="center" class="smalltext">{$L_NOWSUPPLYNEWEMAIL}</div>
-				</td>
-			</tr>
-			<tr>
-				<td class="alt1" width="50%">{$L_NEWEMAIL}</td>
-				<td class="alt3" width="50%">
-					<input type="email" name="newemail" id="newemail" value="" maxlength="150" class="inputbox" />
-					<form:error id="newemail_error" for="newemail" setclass="inputfailed" regex=".+">{$L_SUPPLYEMAIL}</form:error>
-				</td>
-			</tr>
-			<tr>
-				<td class="alt1" width="50%">{$L_CHECKNEWEMAIL}</td>
-				<td class="alt3" width="50%">
-					<input type="email" name="newemail2" id="newemail2" value="" maxlength="150" class="inputbox" />
-					<form:error id="newemail_match_error" for="newemail" setclass="inputfailed" match="newemail2">{$L_EMAILSDONTMATCH}</form:error>
-				</td>
-			</tr>
-			<tr>
-				<td class="subtitle" colspan="2" align="center">
-					<input type="submit" class="button" value="{$L_SAVE}" />
-					<input type="reset" class="button" value="{$L_RESET}" />
-				</td>
-			</tr>
-		</table>
-	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td class="base2" colspan="2">
+				<div align="center" class="smalltext">{$L_INSERTOLDEMAIL}</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%">{$L_CURRENTEMAIL}</td>
+			<td class="alt2" width="50%">
+				<input type="email" name="email" id="email" value="" maxlength="150" class="inputbox" />
+				<form:error id="email_error" for="email" setclass="inputfailed" regex=".+">{$L_SUPPLYEMAIL}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%">{$L_CHECKCURRENTEMAIL}</td>
+			<td class="alt2" width="50%">
+				<input type="email" name="email2" id="email2" value="" maxlength="150" class="inputbox" />
+				<form:error id="email_match_error" for="email" setclass="inputfailed" match="email2">{$L_EMAILSDONTMATCH}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td class="base2" colspan="2">
+				<div align="center" class="smalltext">{$L_NOWSUPPLYNEWEMAIL}</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%">{$L_NEWEMAIL}</td>
+			<td class="alt2" width="50%">
+				<input type="email" name="newemail" id="newemail" value="" maxlength="150" class="inputbox" />
+				<form:error id="newemail_error" for="newemail" setclass="inputfailed" regex=".+">{$L_SUPPLYEMAIL}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%">{$L_CHECKNEWEMAIL}</td>
+			<td class="alt2" width="50%">
+				<input type="email" name="newemail2" id="newemail2" value="" maxlength="150" class="inputbox" />
+				<form:error id="newemail_match_error" for="newemail" setclass="inputfailed" match="newemail2">{$L_EMAILSDONTMATCH}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td class="base3" colspan="2" style="text-align:center;">
+				<input type="submit" class="button" value="{$L_SAVE}" />
+				<input type="reset" class="button" value="{$L_RESET}" />
+			</td>
+		</tr>
+	</table>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 </form:form>
 </is:logged>

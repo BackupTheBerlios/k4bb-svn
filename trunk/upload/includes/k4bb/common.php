@@ -92,7 +92,6 @@ define('K4PRIVMSGTRACKER',	'k4_privmessagetracker');
 define('K4FAQCATEGORIES',	'k4_faqcategories');
 define('K4FAQANSWERS',		'k4_faqanswers');
 define('K4USERTITLES',		'k4_usertitles');
-
 define('K4TEMPTABLE',		'k4_'. substr(md5(uniqid(rand(), true)), 0, 16)); // special table
 
 
@@ -112,7 +111,7 @@ define('SUPERADMIN',		10);
 
 
 /**
- * Warning and flagging levels
+ * Warning and flagging levels, DO NOT CHANGE
  */
 define('WARN_GREEN',		0);
 define('WARN_YELLOW',		1);
@@ -121,18 +120,18 @@ define('WARN_RED',			3);
 
 
 /**
- * Some information about the user DO NOT CHANGE
+ * Some information about the user, DO NOT CHANGE
  */
 define('USER_AGENT',		isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? @gethostbyaddr($_SERVER['HTTP_X_FORWARDED_FOR']) : ''));
 define('USER_IP',			get_ip());
 define('USE_AJAX',			allow_AJAX());
+define('USE_TOTAL_AJAX',	FALSE); // (!USE_AJAX && isset($_REQUEST['currurl']) && $_REQUEST['currurl'] != '') ? TRUE : FALSE
 define('USE_WYSIWYG',		(FALSE && allow_WYSIWYG()));
 
 /**
  * The current k4 Url
  */
 define('K4_URL', current_url(TRUE));
-
 
 /**
  * Topic Types, DO NOT CHANGE
@@ -143,14 +142,14 @@ define('TOPIC_ANNOUNCE',	3);
 
 
 /**
- * Hard coded forum id's
+ * Hard coded forum id's, DO NOT CHANGE
  */
 define('GLBL_ANNOUNCEMENTS', 1);
 define('GARBAGE_BIN', 2);
 
 
 /**
- * Hard coded private message folder id's
+ * Hard coded private message folder id's, DO NOT CHANGE
  */
 define('PM_INBOX', 1);
 define('PM_SENTITEMS', 2);
@@ -160,7 +159,7 @@ define('PM_SAVEDITEMS', 3);
  * The interval between cache reloads, and all of the cache files
  */
 
-define('USE_CACHE',			TRUE);
+define('USE_CACHE',			TRUE); // don't set this to false, TODO: debug this
 define('CACHE_INTERVAL',	86400); // 24 hours
 define('CACHE_DIR',			BB_BASE_DIR .'/tmp/cache/');
 define('POST_IMPULSE_LIMIT',45); // seconds allowed between posts, 15 at least
@@ -185,7 +184,7 @@ define('K4_TABLE_CELLSPACING', 0);
 
 
 /**
- * MAPs conditionals
+ * MAPs conditionals, DO NOT CHANGE
  */
 define('MAPS_EQUALS',		1);
 define('MAPS_GREATER',		2);
@@ -193,10 +192,6 @@ define('MAPS_GEQ',			4);
 define('MAPS_LESS',			8);
 define('MAPS_LEQ',			16);
 
-
-/**
- * Filters for meta-forums
- */
 
 /**
  * Define all basic MAP items for categories, forums, etc.
@@ -231,6 +226,27 @@ $_QUERYPARAMS['maps']		= "m.id AS id, m.row_level AS row_level, m.name AS name, 
 $_QUERYPARAMS['pfield']		= ", pf.name AS name, pf.title AS title, pf.description AS description, pf.default_value AS default_value, pf.inputtype AS inputtype, pf.user_maxlength AS user_maxlength, pf.inputoptions AS inputoptions, pf.min_perm AS min_perm, pf.display_register AS display_register, pf.display_profile AS display_profile, pf.display_topic AS display_topic, pf.display_post AS display_post, pf.display_image AS display_image, pf.display_memberlist AS display_memberlist, pf.display_size AS display_size, pf.display_rows AS display_rows, pf.display_order AS display_order, pf.is_editable AS is_editable, pf.is_private AS is_private, pf.is_required AS is_required, pf.special_pcre AS special_pcre ";
 $_QUERYPARAMS['usersettings']= ", us.user_id AS user_id, us.language AS language, us.styleset AS styleset, us.imageset AS imageset, us.templateset AS templateset, us.topic_display AS topic_display, us.topic_threaded AS topic_threaded, us.notify_pm AS notify_pm, us.popup_pm AS popup_pm, us.viewflash AS viewflash, us.viewemoticons AS viewemoticons, us.viewsigs AS viewsigs, us.viewavatars AS viewavatars, us.viewimages AS viewimages, us.viewcensors AS viewcensors, us.attachsig AS attachsig, us.attachavatar AS attachavatar, us.topicsperpage AS topicsperpage, us.postsperpage AS postsperpage ";
 
+/**
+ * Parameters for meta forums
+ */
+$_METAFORUM['by_poster']		= " AND poster_id=%s ";
+$_METAFORUM['by_posters']		= " AND poster_name LIKE '%%s%' ";
+$_METAFORUM['by_announcement']	= " AND post_type=". TOPIC_ANNOUNCE ." ";
+$_METAFORUM['by_sticky']		= " AND post_type=". TOPIC_STICKY ." ";
+$_METAFORUM['by_feature']		= " AND is_feature=1 ";
+$_METAFORUM['by_lastpost']		= " AND lastpost_created<%s ";
+$_METAFORUM['by_keywords']		= " AND name LIKE '%%s%' AND body_text LIKE '%%s%' ";
+$_METAFORUM['by_locked']		= " AND post_locked=1 ";
+$_METAFORUM['by_poll']			= " AND is_poll=1 ";
+$_METAFORUM['by_attachments']	= " AND total_attachments>0 ";
+$_METAFORUM['by_created']		= " AND created>%s ";
+$_METAFORUM['by_num_replies_g'] = " AND num_replies>%s ";
+$_METAFORUM['by_num_replies_l'] = " AND num_replies<%s ";
+$_METAFORUM['by_views_g']		= " AND views>%s ";
+$_METAFORUM['by_views_l']		= " AND views<%s ";
+$_METAFORUM['by_rating_g']		= " AND rating>%s ";
+$_METAFORUM['by_rating_l']		= " AND rating<%s ";
+
 
 // Filter out all 
 function k4_error_filter(&$error) {
@@ -253,12 +269,13 @@ push_error_handler('k4_error_filter');
 
 
 /**
- * Set some super-globals 
+ * Set some super-globals
  */
 $_URL								= new FAUrl(current_url());
 $_URL->args['nojs']					= (isset($_COOKIE['k4_canjs']) && intval($_COOKIE['k4_canjs']) == 1) ? 0 : (isset($_COOKIE['k4_canjs']) ? 1 : 0);
 
-$GLOBALS['_URL']					= $_URL;
+$GLOBALS['_URL']					= &$_URL;
 $GLOBALS['_MAPITEMS']				= &$_MAPITEMS;
+$GLOBALS['_METAFORUMS']				= &$_METAFORUMS;
 
 ?>

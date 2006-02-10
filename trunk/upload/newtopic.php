@@ -30,11 +30,11 @@ class K4DefaultAction extends FAAction {
 		
 		global $_QUERYPARAMS;
 		
+		/* set the breadcrumbs bit */
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
+
 		/* Check the request ID */
 		if(!isset($_REQUEST['id']) || !$_REQUEST['id'] || intval($_REQUEST['id']) == 0) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDFORUM');
-			
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
@@ -43,20 +43,14 @@ class K4DefaultAction extends FAAction {
 		
 		/* Check the forum data given */
 		if(!$forum || !is_array($forum) || empty($forum)) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INVALIDFORUM');
-			
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
 			
 		/* Make sure the we are trying to post into a forum */
 		if(!($forum['row_type'] & FORUM)) {
-			/* set the breadcrumbs bit */
-			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
-			
-			$action = new K4InformationAction(new K4LanguageElement('L_CANTPOSTTOCATEGORY'), 'content', FALSE);
-			return $action->execute($request);
+			no_perms_error($request);
+			return TRUE;
 		}
 		
 		$is_poll		= (isset($_REQUEST['poll']) && intval($_REQUEST['poll']) == 1) ? TRUE : FALSE;
@@ -66,9 +60,6 @@ class K4DefaultAction extends FAAction {
 		if($request['user']->get('perms') < get_map( $perm, 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			no_perms_error($request);
 			return TRUE;
-
-			//$action = new K4InformationAction(new K4LanguageElement('L_PERMCANTPOST'), 'content', FALSE);
-			//return $action->execute($request);
 		}
 		
 		/* Prevent post flooding */
@@ -77,9 +68,6 @@ class K4DefaultAction extends FAAction {
 		
 		if(is_array($last_topic) && !empty($last_topic)) {
 			if(intval($last_topic['created']) + POST_IMPULSE_LIMIT > time() && $request['user']->get('perms') < MODERATOR) {
-				/* set the breadcrumbs bit */
-				k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
-				
 				$action = new K4InformationAction(new K4LanguageElement('L_MUSTWAITSECSTOPOST'), 'content', TRUE);
 				return $action->execute($request);
 			}
@@ -87,9 +75,6 @@ class K4DefaultAction extends FAAction {
 
 		if(is_array($last_reply) && !empty($last_reply)) {
 			if(intval($last_reply['created']) + POST_IMPULSE_LIMIT > time() && $request['user']->get('perms') < MODERATOR) {
-				/* set the breadcrumbs bit */
-				k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
-				
 				$action = new K4InformationAction(new K4LanguageElement('L_MUSTWAITSECSTOPOST'), 'content', TRUE);
 				return $action->execute($request);
 			}
@@ -154,8 +139,8 @@ class K4DefaultAction extends FAAction {
 				//$action = new K4InformationAction(new K4LanguageElement('L_DRAFTLOADED'), 'drafts', FALSE);
 
 				/* Turn the draft text back into bbcode */
-				$bbcode				= new BBCodex($request['dba'], $request['user']->getInfoArray(), $draft['body_text'], $forum['forum_id'], TRUE, TRUE, TRUE, TRUE);
-				$draft['body_text']	= $bbcode->revert();
+				$parser = &new BBParser;
+				$draft['body_text']	= $parser->revert($draft['body_text']);
 
 				$body_text			= $draft['body_text'];
 				

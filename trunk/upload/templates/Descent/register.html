@@ -4,126 +4,125 @@
 	<div class="base2" id="message_holder" style="text-align: center;"></div>
 	<br />
 </div>
+<div class="header"><div class="title">{$L_REGISTER}</div></div>
 <div class="spacer">
-	<div class="header">
-		<div class="title">{$L_REGISTER}</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<tr>
-				<td class="alt3">
-					<div class="outset_box">
-						<span class="smalltext">{$regmessage}</span>
-						<br /><br />
-						<label for="username"><strong>{$L_USERNAME}:</strong></label><br />
-						<input type="text" name="username" id="username" class="inputbox" value="" size="{$maxuserlength}" maxlength="{$maxuserlength}" tabindex="1" />
-						<form:error id="username_error" for="username" setclass="inputfailed" regex="^[a-zA-Z]([a-zA-Z0-9]*[-_ ]?)*[a-zA-Z0-9]*$">{$L_SUPPLYUSERNAME}</form:error>
-						<hr noshade="noshade" size="1" />
-						<span class="smalltext">{$L_FILLINPASSWORD}</span><br /><br />
-						<table width="100%" cellspacing="0">
-							<tr>
-								<td width="50%">
-									<label for="password"><strong>{$L_PASSWORD}:</strong></label><br />
-									<input type="password" name="password" id="password" class="inputbox" value="" size="{$maxuserlength}" maxlength="{$maxuserlength}" tabindex="2" />
-								</td>
-								<td width="50%">
-									<label for="password2"><strong>{$L_VALIDATEPW}:</strong></label><br />
-									<input type="password" name="password2" id="password2" class="inputbox" value="" size="{$maxuserlength}" maxlength="{$maxuserlength}" tabindex="3" />
-								</td>
-							</tr>
-						</table>
-						<form:error id="password_error" for="password" setclass="inputfailed" regex=".+">{$L_SUPPLYPASS}</form:error>
-						<form:error id="password_match_error" for="password" setclass="inputfailed" match="password2">{$L_PASSESDONTMATCH}</form:error>
-						<hr noshade="noshade" size="1" />
-						<span class="smalltext">{$L_FILLINEMAIL}</span><br /><br />
-						<table width="100%" cellspacing="0">
-							<tr>
-								<td width="50%">
-									<label for="email"><strong>{$L_EMAILADDRESS}:</strong></label><br />
-									<input type="text" name="email" id="email" class="inputbox" value="" maxlength="100" tabindex="4" />
-								</td>
-								<td width="50%">
-									<label for="email2"><strong>{$L_VALIDATEEMAILADDR}:</strong></label><br />
-									<input type="text" name="email2" id="email2" class="inputbox" value="" maxlength="100" tabindex="5" />
-								</td>
-							</tr>
-						</table>
-						<form:error id="email_error" for="email" setclass="inputfailed" regex=".+">{$L_SUPPLYEMAIL}</form:error>
-						<form:error id="email_match_error" for="email" setclass="inputfailed" match="email2">{$L_EMAILSDONTMATCH}</form:error>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td class="subtitle" align="center">
-					<input type="submit" value="{$L_REGISTER}" class="button" />
-					<!--<input type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" value="{$L_REGISTER}" class="button" onclick="if(checkForm(d.getElementById('register_form'))) { register(this); }" />-->
-					<input type="reset" value="{$L_RESET}" class="button" />
-				</td>
-			</tr>
-		</table>
-	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td class="alt3">
+				<div class="outset_box">
+					<span class="smalltext">{$regmessage}</span>
+					<br /><br />
+					<label for="username"><strong>{$L_USERNAME}:</strong></label><br />
+					<input type="text" name="username" id="username" class="inputbox" value="" size="{$maxuserlength}" maxlength="{$maxuserlength}" tabindex="1" />
+					<form:error id="username_error" for="username" setclass="inputfailed" regex="^[a-zA-Z]([a-zA-Z0-9]*[-_ ]?)*[a-zA-Z0-9]*$">{$L_SUPPLYUSERNAME}</form:error>
+					<hr noshade="noshade" size="1" />
+					<span class="smalltext">{$L_FILLINPASSWORD}</span><br /><br />
+					<table width="100%" cellspacing="0">
+						<tr>
+							<td width="50%">
+								<label for="password"><strong>{$L_PASSWORD}:</strong></label><br />
+								<input type="password" name="password" id="password" class="inputbox" value="" size="{$maxuserlength}" maxlength="{$maxuserlength}" tabindex="2" />
+							</td>
+							<td width="50%">
+								<label for="password2"><strong>{$L_VALIDATEPW}:</strong></label><br />
+								<input type="password" name="password2" id="password2" class="inputbox" value="" size="{$maxuserlength}" maxlength="{$maxuserlength}" tabindex="3" />
+							</td>
+						</tr>
+					</table>
+					<form:error id="password_error" for="password" setclass="inputfailed" regex=".+">{$L_SUPPLYPASS}</form:error>
+					<form:error id="password_match_error" for="password" setclass="inputfailed" match="password2">{$L_PASSESDONTMATCH}</form:error>
+					<hr noshade="noshade" size="1" />
+					<span class="smalltext">{$L_FILLINEMAIL}</span><br /><br />
+					<table width="100%" cellspacing="0">
+						<tr>
+							<td width="50%">
+								<label for="email"><strong>{$L_EMAILADDRESS}:</strong></label><br />
+								<input type="text" name="email" id="email" class="inputbox" value="" maxlength="100" tabindex="4" />
+							</td>
+							<td width="50%">
+								<label for="email2"><strong>{$L_VALIDATEEMAILADDR}:</strong></label><br />
+								<input type="text" name="email2" id="email2" class="inputbox" value="" maxlength="100" tabindex="5" />
+							</td>
+						</tr>
+					</table>
+					<form:error id="email_error" for="email" setclass="inputfailed" regex=".+">{$L_SUPPLYEMAIL}</form:error>
+					<form:error id="email_match_error" for="email" setclass="inputfailed" match="email2">{$L_EMAILSDONTMATCH}</form:error>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="base3" style="text-align:center;">
+				<input type="submit" value="{$L_REGISTER}" class="button" />
+				<!--<input type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" value="{$L_REGISTER}" class="button" onclick="if(checkForm(d.getElementById('register_form'))) { register(this); }" />-->
+				<input type="reset" value="{$L_RESET}" class="button" />
+			</td>
+		</tr>
+	</table>
 </div>
-<br />
+<div class="subheader" id="re_maintitle">
+	<div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_re', 'regextra', 're_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_re" src="Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+	{$L_ADDITIONALINFO}
+</div>
 <div class="spacer">
-	<div class="header">
-		<div class="title">{$L_ADDITIONALINFO}</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<tr>
-				<td class="alt3">
-					<div class="outset_box">
-						<label for="timezone"><strong>{$L_TIMEZONE}:</strong></label><br />
-						<span class="smalltext">{$L_TIMEZONEEXPLAIN}</span><br /><br />
-						<select name="timezone" id="timezone" class="smalltext">
-							<option value="-12">{$L_TIMEZONE1}</option>
-							<option value="-11">{$L_TIMEZONE2}</option>
-							<option value="-10">{$L_TIMEZONE3}</option>
-							<option value="-9">{$L_TIMEZONE4}</option>
-							<option value="-8">{$L_TIMEZONE5}</option>
-							<option value="-7">{$L_TIMEZONE6}</option>
-							<option value="-6">{$L_TIMEZONE7}</option>
-							<option value="-5">{$L_TIMEZONE8}</option>
-							<option value="-4">{$L_TIMEZONE9}</option>
-							<option value="-3.5">{$L_TIMEZONE10}</option>
-							<option value="-3">{$L_TIMEZONE11}</option>
-							<option value="-2">{$L_TIMEZONE12}</option>
-							<option value="-1">{$L_TIMEZONE13}</option>
-							<option value="0" selected="selected">{$L_TIMEZONE14}</option>
-							<option value="1">{$L_TIMEZONE15}</option>
-							<option value="2">{$L_TIMEZONE16}</option>
-							<option value="3">{$L_TIMEZONE17}</option>
-							<option value="3.5">{$L_TIMEZONE18}</option>
-							<option value="4">{$L_TIMEZONE19}</option>
-							<option value="4.5">{$L_TIMEZONE20}</option>
-							<option value="5">{$L_TIMEZONE21}</option>
-							<option value="5.5">{$L_TIMEZONE22}</option>
-							<option value="6">{$L_TIMEZONE23}</option>
-							<option value="7">{$L_TIMEZONE24}</option>
-							<option value="8">{$L_TIMEZONE25}</option>
-							<option value="9">{$L_TIMEZONE26}</option>
-							<option value="9.5">{$L_TIMEZONE27}</option>
-							<option value="10">{$L_TIMEZONE28}</option>
-							<option value="11">{$L_TIMEZONE29}</option>
-							<option value="12">{$L_TIMEZONE30}</option>
-						</select>
-						<list:list id="profilefields">
-						<list:item list="profilefields">
-						<hr noshade="noshade" size="1" />
-						<label for="{$name}"><strong>{$title}:</strong></label><br />
-						<span class="smalltext">{$description}</span><br /><br />
-						{$html}
-						</list:item>
-						</list:list>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td class="subtitle" align="center">
-					<input type="submit" value="{$L_REGISTER}" class="button" />
-					<!--<input type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" value="{$L_REGISTER}" class="button" onclick="if(checkForm(d.getElementById('register_form'))) { register(this); }" />-->
-					<input type="reset" value="{$L_RESET}" class="button" />
-				</td>
-			</tr>
-		</table>
-	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" id="regextra" class="table" style="display:none;">
+		<tr>
+			<td class="alt3">
+				<div class="outset_box">
+					<label for="timezone"><strong>{$L_TIMEZONE}:</strong></label><br />
+					<span class="smalltext">{$L_TIMEZONEEXPLAIN}</span><br /><br />
+					<select name="timezone" id="timezone" class="smalltext">
+						<option value="-12">{$L_TIMEZONE1}</option>
+						<option value="-11">{$L_TIMEZONE2}</option>
+						<option value="-10">{$L_TIMEZONE3}</option>
+						<option value="-9">{$L_TIMEZONE4}</option>
+						<option value="-8">{$L_TIMEZONE5}</option>
+						<option value="-7">{$L_TIMEZONE6}</option>
+						<option value="-6">{$L_TIMEZONE7}</option>
+						<option value="-5">{$L_TIMEZONE8}</option>
+						<option value="-4">{$L_TIMEZONE9}</option>
+						<option value="-3.5">{$L_TIMEZONE10}</option>
+						<option value="-3">{$L_TIMEZONE11}</option>
+						<option value="-2">{$L_TIMEZONE12}</option>
+						<option value="-1">{$L_TIMEZONE13}</option>
+						<option value="0" selected="selected">{$L_TIMEZONE14}</option>
+						<option value="1">{$L_TIMEZONE15}</option>
+						<option value="2">{$L_TIMEZONE16}</option>
+						<option value="3">{$L_TIMEZONE17}</option>
+						<option value="3.5">{$L_TIMEZONE18}</option>
+						<option value="4">{$L_TIMEZONE19}</option>
+						<option value="4.5">{$L_TIMEZONE20}</option>
+						<option value="5">{$L_TIMEZONE21}</option>
+						<option value="5.5">{$L_TIMEZONE22}</option>
+						<option value="6">{$L_TIMEZONE23}</option>
+						<option value="7">{$L_TIMEZONE24}</option>
+						<option value="8">{$L_TIMEZONE25}</option>
+						<option value="9">{$L_TIMEZONE26}</option>
+						<option value="9.5">{$L_TIMEZONE27}</option>
+						<option value="10">{$L_TIMEZONE28}</option>
+						<option value="11">{$L_TIMEZONE29}</option>
+						<option value="12">{$L_TIMEZONE30}</option>
+					</select>
+					<list:list id="profilefields">
+					<list:item list="profilefields">
+					<hr noshade="noshade" size="1" />
+					<label for="{$name}"><strong>{$title}:</strong></label><br />
+					<span class="smalltext">{$description}</span><br /><br />
+					{$html}
+					</list:item>
+					</list:list>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="base3" style="text-align:center;">
+				<input type="submit" value="{$L_REGISTER}" class="button" />
+				<!--<input type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" value="{$L_REGISTER}" class="button" onclick="if(checkForm(d.getElementById('register_form'))) { register(this); }" />-->
+				<input type="reset" value="{$L_RESET}" class="button" />
+			</td>
+		</tr>
+	</table>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 </form:form>
 <script type="text/javascript">
 	/*function register(button) {

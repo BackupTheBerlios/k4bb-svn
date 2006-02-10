@@ -88,8 +88,8 @@ class TopicReviewIterator extends FAArrayIterator {
 		//$num_replies					= @(($temp['row_right'] - $temp['row_left'] - 1) / 2);
 		
 		
-		$bbcode							= &new BBCodex($this->dba, $this->user, $temp['body_text'], $temp['forum_id'], TRUE, TRUE, TRUE, TRUE);
-
+		//$bbcode							= &new BBCodex($this->dba, $this->user, $temp['body_text'], $temp['forum_id'], TRUE, TRUE, TRUE, TRUE);
+		$parser = &new BBParser;
 		if($temp['num_replies'] > 0) {
 
 			$temp['replies']			= &new RepliesReviewIterator($this->result, $this->qp, $this->dba, $this->users, $this->groups, $this->user, $this->url, $this->poll_text, $bbcode);
@@ -118,11 +118,11 @@ class RepliesReviewIterator extends FAProxyIterator {
 	var $forums;
 	var $user;
 	
-	function RepliesReviewIterator(&$result, $queryparams, &$dba, $users, $groups, &$user, $url, $poll_text, &$bbcode) {
-		$this->__construct($result, $queryparams, $dba, $users, $groups, $user, $url, $poll_text, $bbcode);
+	function RepliesReviewIterator(&$result, $queryparams, &$dba, $users, $groups, &$user, $url, $poll_text) {
+		$this->__construct($result, $queryparams, $dba, $users, $groups, $user, $url, $poll_text);
 	}
 
-	function __construct(&$result, $queryparams, &$dba, $users, $groups, &$user, $url, $poll_text, &$bbcode) {
+	function __construct(&$result, $queryparams, &$dba, $users, $groups, &$user, $url, $poll_text) {
 		
 		$this->users			= $users;
 		$this->qp				= $queryparams;
@@ -133,7 +133,7 @@ class RepliesReviewIterator extends FAProxyIterator {
 		
 		$this->url				= $url;
 		$this->poll_text		= $poll_text;
-		$this->bbcode			= &$bbcode;
+		$this->bbcode			= &new BBParser;
 
 		parent::__construct($this->result);
 	}
@@ -164,8 +164,7 @@ class RepliesReviewIterator extends FAProxyIterator {
 				$temp['post_user_'. $key] = $val;
 		}
 		
-		$this->bbcode->text				= $temp['body_text'];
-		$temp['reverted_body_text']		= $this->bbcode->revert();
+		$temp['reverted_body_text']		= $this->bbcode->revert($temp['body_text']);
 		
 		if($temp['is_poll'] == 1) {
 			$temp['reverted_body_text']	= do_post_poll_urls($temp['reverted_body_text'], $this->dba, $this->url, $this->poll_text);

@@ -1,16 +1,14 @@
 <is:logged>
+<div class="header"><div class="title">{$L_USERCONTROLPANEL}: <span style="font-weight: normal;">{$L_MANAGEATTACHMENTS}</span></div></div>
 <div class="spacer">
-	<div class="header">
-		<div class="title">{$L_USERCONTROLPANEL}: <span style="font-weight: normal;">{$L_MANAGEATTACHMENTS}</span></div>
-	</div>	
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
 			<td class="alt3"><span class="smalltext">{$L_USERCPATTACHMENTSMSG}</span></td>
 		</tr>
 	</table>
 </div>
+<div class="supheader">{$L_CURRENTUSAGE}</div>
 <div class="spacer">
-	<div class="subheader">{$L_CURRENTUSAGE}</div>
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
 			<td class="alt1">
@@ -24,19 +22,19 @@
 		<tr>
 	</table>
 </div>
+<div class="supheader">{$L_ATTACHMENTS}</div>
 <div class="spacer">
-	<div class="subheader">{$L_ATTACHMENTS}</div>
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<list:list id="attachments">
 		<list:default list="attachments">
 		<tr>
 			<td class="alt3">
-				<div class="outset_box" style="text-align: center;"><br /><strong>{$L_NOATTACHMENTS}</strong><br /><br /></div>
+				<br /><strong>{$L_NOATTACHMENTS}</strong><br /><br />
 			</td>
 		</tr>
 		</list:default>
 		<list:item list="attachments">
-		<list:switch list="attachments" var="row_class" a="alt3" b="alt4">
+		<list:switch list="attachments" var="row_class" a="alt1" b="alt2">
 		<tr>
 			<td class="{$row_class}" valign="middle">
 				<div style="float:right;">

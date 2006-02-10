@@ -106,17 +106,22 @@ class PostDraft extends FAAction {
 		
 		/* Initialize the bbcode parser with the topic message */
 		$_REQUEST['message']	= substr($_REQUEST['message'], 0, $_SETTINGS['postmaxchars']);
-		$bbcode	= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['message'], $forum['forum_id'], 
+		/*$bbcode	= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['message'], $forum['forum_id'], 
 			((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']) ? FALSE : TRUE), 
 			((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']) ? FALSE : TRUE), 
 			((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']) ? FALSE : TRUE), 
-			((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']) ? FALSE : TRUE));
+			((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']) ? FALSE : TRUE));*/
 		
 		/* Parse the bbcode */
-		$body_text	= $bbcode->parse();
+		$body_text = $_REQUEST['message'];
+		
+		if(!isset($_REQUEST['disable_bbcode']) || !$_REQUEST['disable_bbcode']) {
+			$parser = &new BBParser;
+			$body_text	= $parser->parse($body_text);
+		}
 		
 		// permissions are taken into account inside the poller
-		$poller		= &new K4BBPolls($body_text, $draft['body_text'], $forum, $draft['post_id']);
+		//$poller		= &new K4BBPolls($body_text, $draft['body_text'], $forum, $draft['post_id']);
 		
 		/**
 		 * Figure out what type of topic type this is
@@ -140,12 +145,12 @@ class PostDraft extends FAAction {
 			
 			// put it here to avoid previewing
 			$is_poll	= 0;
-			$poll_text		= $poller->parse($request, $is_poll);
+			//$poll_text		= $poller->parse($request, $is_poll);
 
-			if($body_text != $poll_text) {
-				$is_poll	= 1;
-				$body_text	= $poll_text;
-			}
+			//if($body_text != $poll_text) {
+				//$is_poll	= 1;
+				//$body_text	= $poll_text;
+			//}
 
 			/**
 			 * Build the queries to add the draft

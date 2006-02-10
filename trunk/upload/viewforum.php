@@ -160,10 +160,10 @@ class K4DefaultAction extends FAAction {
 		
 		/**
 		 *
-		 * FORUM
+		 * FORUM / META FORUM
 		 *
 		 */
-		} else if($forum['row_type'] & FORUM) {						
+		} else if($forum['row_type'] & FORUM || $forum['row_type'] & METAFORUM) {						
 			
 			/* Add the forum info to the template */
 			foreach($forum as $key => $val)
@@ -344,8 +344,6 @@ class K4DefaultAction extends FAAction {
 			
 			$request['template']->setFile('content', 'viewgallery.html');
 			
-			
-
 		/**
 		 *
 		 * ERROR

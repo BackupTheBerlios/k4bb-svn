@@ -186,12 +186,9 @@ k4ManageHoverCell.prototype = {
 	// Highlight the rows
 	//
 	highlight: function(container_obj, hover_over, hover_off) {
-		var table_cells = this.lib.getElementsByTagName(container_obj, 'td');
-		
+		var table_cells = container_obj.getTagsByName('td');
 		if(table_cells) {
-
-			for(var i = 0; i < this.lib.sizeof(table_cells); i++ ) {
-				
+			for(var i = 0; i < table_cells.sizeof(); i++ ) {
 				if(typeof(table_cells[i].className) != 'undefined' 
 							&& table_cells[i].className == hover_off) {
 					

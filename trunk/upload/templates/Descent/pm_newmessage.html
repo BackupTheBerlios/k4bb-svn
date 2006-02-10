@@ -1,13 +1,8 @@
-<core:import id="preview" />
+
 
 <core:block id="br" hidden="yes"><br /></core:block>
 
 <form:form name="savepost_form" id="savepost_form" action="{$newpm_action}" method="post" enctype="multipart/form-data">
-
-<!-- AJAX Reply Preview -->
-<a name="preview" id="preview"></a>
-<div id="ajax_post_preview" style="display: none;"></div>
-<!-- / AJAX Reply Preview -->
 
 <core:block id="pm_id" hidden="yes"><input type="hidden" name="{$edit_type}" id="{$edit_type}" value="{$pm_pm_id}" /></core:block>
 
@@ -22,6 +17,11 @@
 		</core:block>
 	</div>
 </div>
+<core:import id="preview" />
+<!-- AJAX Reply Preview -->
+<a name="preview" id="preview"></a>
+<div id="ajax_post_preview" style="display: none;"></div>
+<!-- / AJAX Reply Preview -->
 <div class="spacer">
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
@@ -96,7 +96,7 @@
 													<tr>
 														<list:item list="emoticons">
 														<td align="center">
-															<a href="javascript:emoticon('{$typed}')" title="{$description}"><img src="tmp/upload/emoticons/{$image}" alt="{$description}" border="0" /></a>
+															<a href="javascript:;" onclick="do_emoticon('{$editor_input_id}','{$image}','{$typed}')" title="{$description}"><img src="tmp/upload/emoticons/{$image}" alt="{$description}" border="0" /></a>
 														</td>
 														<list:separator list="emoticons">
 															<list:alternate list="emoticons" count="{@emoticons_per_row}" remainder="{@emoticons_per_row_remainder}">
@@ -182,11 +182,11 @@
 
 <!-- Additional Post Options -->
 <div class="subheader" id="po_maintitle">
-	<if:if var="nojs" eq="0"><div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_po', 'postoptions', 'po_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_po" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
+	<if:if var="nojs" eq="0"><div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_po', 'postoptions', 'po_maintitle')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_po" src="Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div></if:if>
 	{$L_ADDITIONALOPTIONS}
 </div>
 <div class="spacer">
-	<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="postoptions">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="postoptions" style="display:none;">
 		<tr>
 			<td class="alt3">
 				<div class="outset_box">

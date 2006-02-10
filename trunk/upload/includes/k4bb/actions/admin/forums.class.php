@@ -23,7 +23,6 @@
 */
 
 
-
 if(!defined('IN_K4')) {
 	return;
 }
@@ -196,18 +195,19 @@ class AdminInsertForum extends FAAction {
 
 			$insert_a			= $request['dba']->prepareStatement("INSERT INTO ". K4FORUMS ." (name,description,pass,is_forum,is_link,link_href,link_show_redirects,forum_rules,topicsperpage,postsperpage,maxpolloptions,defaultlang,moderating_groups,prune_auto,prune_frequency,prune_post_age,prune_post_viewed_age,prune_old_polls,prune_announcements,prune_stickies,row_type,created,row_order,parent_id,moderating_users) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			
-			$forum_rules		= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['forum_rules'], FALSE, TRUE, TRUE, TRUE, TRUE);
-			$description		= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['description'], FALSE, TRUE, TRUE, TRUE, TRUE);
+			$parser				= &new BBParser;
+			$forum_rules		= $parser->parse((isset($_REQUEST['forum_rules']) ? $_REQUEST['forum_rules'] : ''));
+			$description		= $parser->parse((isset($_REQUEST['description']) ? $_REQUEST['description'] : ''));
 			
 			/* Build the query for the forums table */
 			$insert_a->setString(1, $_REQUEST['name']);
-			$insert_a->setString(2, $description->parse());
+			$insert_a->setString(2, $description);
 			$insert_a->setString(3, $_REQUEST['pass']);
-			$insert_a->setInt(4, iif(intval($_REQUEST['is_link']) == 1, 0, 1));
+			$insert_a->setInt(4, (intval($_REQUEST['is_link']) == 1 ? 0 : 1));
 			$insert_a->setInt(5, $_REQUEST['is_link']); 
 			$insert_a->setString(6, $_REQUEST['link_href']);
 			$insert_a->setInt(7, $_REQUEST['link_show_redirects']);
-			$insert_a->setString(8, $forum_rules->parse());
+			$insert_a->setString(8, $forum_rules);
 			$insert_a->setInt(9, $_REQUEST['topicsperpage']);
 			$insert_a->setInt(10, $_REQUEST['postsperpage']);
 			$insert_a->setInt(11, $_REQUEST['maxpolloptions']);
@@ -220,7 +220,7 @@ class AdminInsertForum extends FAAction {
 			$insert_a->setInt(18, $_REQUEST['prune_old_polls']);
 			$insert_a->setInt(19, $_REQUEST['prune_announcements']);
 			$insert_a->setInt(20, $_REQUEST['prune_stickies']);
-			$insert_a->setInt(21, (isset($_REQUEST['row_type']) && intval($_REQUEST['row_type']) ? $_REQUEST['row_type'] : FORUM));
+			$insert_a->setInt(21, (isset($_REQUEST['row_type']) && ctype_digit($_REQUEST['row_type']) ? $_REQUEST['row_type'] : FORUM));
 			$insert_a->setInt(22, time());
 			$insert_a->setInt(23, $_REQUEST['row_order']);
 			$insert_a->setInt(24, $parent_id);
@@ -233,7 +233,7 @@ class AdminInsertForum extends FAAction {
 			$forum_id			= $request['dba']->getInsertId(K4FORUMS, 'forum_id');
 			
 			// update the parent forum's subforums column
-			$request['dba']->executeUpdate("UPDATE ". K4FORUMS ." SET subforums = 1 WHERE forum_id = ". intval($forum['forum_id']));
+			$request['dba']->executeUpdate("UPDATE ". K4FORUMS ." SET subforums=1 WHERE forum_id=". intval($forum['forum_id']));
 			
 			$request['dba']->commitTransaction();
 
@@ -404,10 +404,9 @@ class AdminEditForum extends FAAction {
 				return $action->execute($request);
 			}
 			
-			$forum_rules				= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $forum['forum_rules'], $forum['forum_id'], TRUE, TRUE, TRUE, TRUE);
-			$forum['forum_rules']		= $forum_rules->revert();
-			$description				= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $forum['description'], FALSE, TRUE, TRUE, TRUE, TRUE);
-			$forum['description']		= $description->revert();
+			$parser = &new BBParser;
+			$forum['forum_rules']		= $parser->revert($forum['forum_rules']);
+			$forum['description']		= $parser->revert($forum['description']);
 			
 			$languages = get_files(K4_BASE_DIR .'/lang', TRUE, FALSE, array('.svn', '.htaccess', '.', '..'));
 			
@@ -565,18 +564,19 @@ class AdminUpdateForum extends FAAction {
 			$update_a			= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET name=?,description=?,pass=?,is_forum=?,is_link=?,link_href=?,link_show_redirects=?,forum_rules=?,topicsperpage=?,postsperpage=?,maxpolloptions=?,defaultlang=?,moderating_groups=?,prune_auto=?,prune_frequency=?,prune_post_age=?,prune_post_viewed_age=?,prune_old_polls=?,prune_announcements=?,prune_stickies=?,row_order=?,moderating_users=?,parent_id=?,row_type=? WHERE forum_id=?");
 			$update_b			= $request['dba']->prepareStatement("UPDATE ". K4MAPS ." SET name=? WHERE varname=?");
 						
-			$forum_rules		= new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['forum_rules'], $forum['forum_id'], TRUE, TRUE, TRUE, TRUE);
-			$description		= new BBCodex($request['dba'], $request['user']->getInfoArray(), @$_REQUEST['description'], $forum['forum_id'], TRUE, TRUE, TRUE, TRUE);
+			$parser = &new BBParser;
+			$forum_rules		= $parser->parse((isset($_REQUEST['forum_rules']) ? $_REQUEST['forum_rules'] : ''));
+			$description		= $parser->parse((isset($_REQUEST['description']) ? $_REQUEST['description'] : ''));
 			
 			/* Build the query for the forums table */
 			$update_a->setString(1, $_REQUEST['name']);
-			$update_a->setString(2, $description->parse());
+			$update_a->setString(2, $description);
 			$update_a->setString(3, $_REQUEST['pass']);
 			$update_a->setInt(4, iif(intval($_REQUEST['is_link']) == 1, 0, 1));
 			$update_a->setInt(5, $_REQUEST['is_link']);
 			$update_a->setString(6, $_REQUEST['link_href']);
 			$update_a->setInt(7, $_REQUEST['link_show_redirects']);
-			$update_a->setString(8, $forum_rules->parse());
+			$update_a->setString(8, $forum_rules);
 			$update_a->setInt(9, $_REQUEST['topicsperpage']);
 			$update_a->setInt(10, $_REQUEST['postsperpage']);
 			$update_a->setInt(11, $_REQUEST['maxpolloptions']);
@@ -592,7 +592,7 @@ class AdminUpdateForum extends FAAction {
 			$update_a->setInt(21, $_REQUEST['row_order']);
 			$update_a->setString(22, $users_array);
 			$update_a->setInt(23, $parent_id);
-			$update_a->setInt(24, (isset($_REQUEST['row_type']) && intval($_REQUEST['row_type']) == FORUM ? FORUM : CATEGORY));
+			$update_a->setInt(24, (isset($_REQUEST['row_type']) && ctype_digit($_REQUEST['row_type']) ? $_REQUEST['row_type'] : FORUM));
 			$update_a->setInt(25, $forum['forum_id']);
 			
 			/* Simple update on the maps table */

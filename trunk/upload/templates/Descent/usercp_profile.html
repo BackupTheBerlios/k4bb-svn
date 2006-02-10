@@ -1,194 +1,184 @@
 <is:logged>
 <form:form name="update_profile" id="update_profile" action="member.php?act=update_profile" method="post" enctype="multipart/form-data">
+<div class="header"><div class="title">{$L_USERCONTROLPANEL}: <span style="font-weight: normal;">{$L_EDITPROFILE}</span></div></div>
 <div class="spacer">
-	<div class="header">
-		<div class="title">{$L_USERCONTROLPANEL}: <span style="font-weight: normal;">{$L_EDITPROFILE}</span></div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<tr class="alt3">
-				<td><span class="smalltext">{$L_USERCPPROFILEMSG}</span></td>
-			</tr>
-		</table>
-	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr class="alt3">
+			<td><span class="smalltext">{$L_USERCPPROFILEMSG}</span></td>
+		</tr>
+	</table>
 </div>
-<br />
+<div class="supheader">{$L_PERSONALINFORMATION}</div>
 <div class="spacer">
-	<div class="header">
-		<div class="title">{$L_PERSONALINFORMATION}</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<tr>
-				<td class="alt1" width="50%"><label for="fullname"><strong>{$L_FULLNAME}:</strong></label></td>
-				<td class="alt3" width="50%"><input type="text" name="fullname" value="{$user_fullname}" id="fullname" maxlength="100" class="inputbox" /></td>
-			</tr>
-			<tr>
-				<td class="alt1" width="50%"><label for="bday_month"><strong>{$L_BIRTHDAY}:</strong></label></td>
-				<td class="alt3" width="50%">
-					<table cellspacing="0">
-						<tr>
-							<td class="alt3" align="center"><label class="smalltext" for="bday_month">{$L_MONTH}</label></td>
-							<td class="alt3" align="center"><label class="smalltext" for="bday_day">{$L_DAY}</label></td>
-							<td class="alt3" align="center"><label class="smalltext" for="bday_year">{$L_YEAR}</label></td>
-						</tr>
-						<tr>
-							<td class="alt3">
-								<select name="month" id="bday_month" id="month" class="inputbox">
-									<option value="0"></option>
-									<option value="01">{$L_JANUARY}</option>
-									<option value="02">{$L_FEBRUARY}</option>
-									<option value="03">{$L_MARCH}</option>
-									<option value="04">{$L_APRIL}</option>
-									<option value="05">{$L_MAY}</option>
-									<option value="06">{$L_JUNE}</option>
-									<option value="07">{$L_JULY}</option>
-									<option value="08">{$L_AUGUST}</option>
-									<option value="09">{$L_SEPTEMBER}</option>
-									<option value="10">{$L_OCTOBER}</option>
-									<option value="11">{$L_NOVEMBER}</option>
-									<option value="12">{$L_DECEMBER}</option>
-								</select>
-								<script type="text/javascript">d.setIndex({$bday_month}, 'bday_month');</script>
-							</td>
-							<td class="alt3">
-								<select name="day" id="bday_day" id="day" class="inputbox">
-									<option value="0"></option>
-									<option value="01">1</option>
-									<option value="02">2</option>
-									<option value="03">3</option>
-									<option value="04">4</option>
-									<option value="05">5</option>
-									<option value="06">6</option>
-									<option value="07">7</option>
-									<option value="08">8</option>
-									<option value="09">9</option>
-									<option value="10">10</option>
-									<option value="11">11</option>
-									<option value="12">12</option>
-									<option value="13">13</option>
-									<option value="14">14</option>
-									<option value="15">15</option>
-									<option value="16">16</option>
-									<option value="17">17</option>
-									<option value="18">18</option>
-									<option value="19">19</option>
-									<option value="20">20</option>
-									<option value="21">21</option>
-									<option value="22">22</option>
-									<option value="23">23</option>
-									<option value="24">24</option>
-									<option value="25">25</option>
-									<option value="26">26</option>
-									<option value="27">27</option>
-									<option value="28">28</option>
-									<option value="29">29</option>
-									<option value="30">30</option>
-									<option value="31">31</option>
-								</select>
-								<script type="text/javascript">d.setIndex({$bday_day}, 'bday_day');</script>
-							</td>
-							<td class="alt3"><input type="text" name="year" id="bday_year" value="{$bday_year}" size="4" maxlength="4" class="inputbox" /></td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>
-	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td class="alt1" width="50%"><label for="fullname"><strong>{$L_FULLNAME}:</strong></label></td>
+			<td class="alt3" width="50%"><input type="text" name="fullname" value="{$user_fullname}" id="fullname" maxlength="100" class="inputbox" /></td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="bday_month"><strong>{$L_BIRTHDAY}:</strong></label></td>
+			<td class="alt3" width="50%">
+				<table cellspacing="0">
+					<tr>
+						<td class="alt3" align="center"><label class="smalltext" for="bday_month">{$L_MONTH}</label></td>
+						<td class="alt3" align="center"><label class="smalltext" for="bday_day">{$L_DAY}</label></td>
+						<td class="alt3" align="center"><label class="smalltext" for="bday_year">{$L_YEAR}</label></td>
+					</tr>
+					<tr>
+						<td class="alt3">
+							<select name="month" id="bday_month" id="month" class="inputbox">
+								<option value="0"></option>
+								<option value="01">{$L_JANUARY}</option>
+								<option value="02">{$L_FEBRUARY}</option>
+								<option value="03">{$L_MARCH}</option>
+								<option value="04">{$L_APRIL}</option>
+								<option value="05">{$L_MAY}</option>
+								<option value="06">{$L_JUNE}</option>
+								<option value="07">{$L_JULY}</option>
+								<option value="08">{$L_AUGUST}</option>
+								<option value="09">{$L_SEPTEMBER}</option>
+								<option value="10">{$L_OCTOBER}</option>
+								<option value="11">{$L_NOVEMBER}</option>
+								<option value="12">{$L_DECEMBER}</option>
+							</select>
+							<script type="text/javascript">d.setIndex({$bday_month}, 'bday_month');</script>
+						</td>
+						<td class="alt3">
+							<select name="day" id="bday_day" id="day" class="inputbox">
+								<option value="0"></option>
+								<option value="01">1</option>
+								<option value="02">2</option>
+								<option value="03">3</option>
+								<option value="04">4</option>
+								<option value="05">5</option>
+								<option value="06">6</option>
+								<option value="07">7</option>
+								<option value="08">8</option>
+								<option value="09">9</option>
+								<option value="10">10</option>
+								<option value="11">11</option>
+								<option value="12">12</option>
+								<option value="13">13</option>
+								<option value="14">14</option>
+								<option value="15">15</option>
+								<option value="16">16</option>
+								<option value="17">17</option>
+								<option value="18">18</option>
+								<option value="19">19</option>
+								<option value="20">20</option>
+								<option value="21">21</option>
+								<option value="22">22</option>
+								<option value="23">23</option>
+								<option value="24">24</option>
+								<option value="25">25</option>
+								<option value="26">26</option>
+								<option value="27">27</option>
+								<option value="28">28</option>
+								<option value="29">29</option>
+								<option value="30">30</option>
+								<option value="31">31</option>
+							</select>
+							<script type="text/javascript">d.setIndex({$bday_day}, 'bday_day');</script>
+						</td>
+						<td class="alt3"><input type="text" name="year" id="bday_year" value="{$bday_year}" size="4" maxlength="4" class="inputbox" /></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
 </div>
-<br />
+<div class="supheader">{$L_INSTANTMESSAGING}</div>
 <div class="spacer">
-	<div class="header">
-		<div class="title">{$L_INSTANTMESSAGING}</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<tr>
-				<td class="alt1" width="50%"><label for="icq"><strong>{$L_ICQ}:</strong></label></td>
-				<td class="alt3" width="50%"><input type="text" name="icq" id="icq" value="{$user_icq}" maxlength="25" class="inputbox" /></td>
-			</tr>
-			<tr>
-				<td class="alt1" width="50%"><label for="aim"><strong>{$L_AIM}:</strong></label></td>
-				<td class="alt3" width="50%"><input type="text" name="aim" id="aim" value="{$user_aim}" maxlength="100" class="inputbox" /></td>
-			</tr>
-			<tr>
-				<td class="alt1" width="50%"><label for="msn"><strong>{$L_MSN}:</strong></label></td>
-				<td class="alt3" width="50%"><input type="text" name="msn" id="msn" value="{$user_msn}" maxlength="100" class="inputbox" /></td>
-			</tr>
-			<tr>
-				<td class="alt1" width="50%"><label for="yahoo"><strong>{$L_YAHOO}:</strong></label></td>
-				<td class="alt3" width="50%"><input type="text" name="yahoo" id="yahoo" value="{$user_yahoo}" maxlength="100" class="inputbox" /></td>
-			</tr>
-			<tr>
-				<td class="alt1" width="50%"><label for="jabber"><strong>{$L_JABBER}:</strong></label></td>
-				<td class="alt3" width="50%"><input type="text" name="jabber" id="jabber" value="{$user_jabber}" maxlength="100" class="inputbox" /></td>
-			</tr>
-			<tr>
-				<td class="alt1" width="50%"><label for="jabber"><strong>{$L_GOOGLETALK}:</strong></label></td>
-				<td class="alt3" width="50%"><input type="text" name="googletalk" id="googletalk" value="{$user_googletalk}" maxlength="100" class="inputbox" /></td>
-			</tr>
-		</table>
-	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td class="alt1" width="50%"><label for="icq"><strong>{$L_ICQ}:</strong></label></td>
+			<td class="alt3" width="50%"><input type="text" name="icq" id="icq" value="{$user_icq}" maxlength="25" class="inputbox" /></td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="aim"><strong>{$L_AIM}:</strong></label></td>
+			<td class="alt3" width="50%"><input type="text" name="aim" id="aim" value="{$user_aim}" maxlength="100" class="inputbox" /></td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="msn"><strong>{$L_MSN}:</strong></label></td>
+			<td class="alt3" width="50%"><input type="text" name="msn" id="msn" value="{$user_msn}" maxlength="100" class="inputbox" /></td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="yahoo"><strong>{$L_YAHOO}:</strong></label></td>
+			<td class="alt3" width="50%"><input type="text" name="yahoo" id="yahoo" value="{$user_yahoo}" maxlength="100" class="inputbox" /></td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="jabber"><strong>{$L_JABBER}:</strong></label></td>
+			<td class="alt3" width="50%"><input type="text" name="jabber" id="jabber" value="{$user_jabber}" maxlength="100" class="inputbox" /></td>
+		</tr>
+		<tr>
+			<td class="alt1" width="50%"><label for="jabber"><strong>{$L_GOOGLETALK}:</strong></label></td>
+			<td class="alt3" width="50%"><input type="text" name="googletalk" id="googletalk" value="{$user_googletalk}" maxlength="100" class="inputbox" /></td>
+		</tr>
+	</table>
 </div>
-<br />
+<div class="supheader">{$L_ADDITIONALINFO}</div>
 <div class="spacer">
-	<div class="header">
-		<div class="title">{$L_ADDITIONALINFO}</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<tr>
-				<td class="alt1" width="50%">
-					<label for="timezone"><strong>{$L_TIMEZONE}:</strong></label><br />
-					<span class="smalltext">{$L_TIMEZONEEXPLAIN}</span>
-				</td>
-				<td class="alt3" width="50%">
-					<select name="timezone" id="timezone" class="inputbox">
-						<option value="-12">{$L_TIMEZONE1}</option>
-						<option value="-11">{$L_TIMEZONE2}</option>
-						<option value="-10">{$L_TIMEZONE3}</option>
-						<option value="-9">{$L_TIMEZONE4}</option>
-						<option value="-8">{$L_TIMEZONE5}</option>
-						<option value="-7">{$L_TIMEZONE6}</option>
-						<option value="-6">{$L_TIMEZONE7}</option>
-						<option value="-5">{$L_TIMEZONE8}</option>
-						<option value="-4">{$L_TIMEZONE9}</option>
-						<option value="-3.5">{$L_TIMEZONE10}</option>
-						<option value="-3">{$L_TIMEZONE11}</option>
-						<option value="-2">{$L_TIMEZONE12}</option>
-						<option value="-1">{$L_TIMEZONE13}</option>
-						<option value="0" selected="selected">{$L_TIMEZONE14}</option>
-						<option value="1">{$L_TIMEZONE15}</option>
-						<option value="2">{$L_TIMEZONE16}</option>
-						<option value="3">{$L_TIMEZONE17}</option>
-						<option value="3.5">{$L_TIMEZONE18}</option>
-						<option value="4">{$L_TIMEZONE19}</option>
-						<option value="4.5">{$L_TIMEZONE20}</option>
-						<option value="5">{$L_TIMEZONE21}</option>
-						<option value="5.5">{$L_TIMEZONE22}</option>
-						<option value="6">{$L_TIMEZONE23}</option>
-						<option value="7">{$L_TIMEZONE24}</option>
-						<option value="8">{$L_TIMEZONE25}</option>
-						<option value="9">{$L_TIMEZONE26}</option>
-						<option value="9.5">{$L_TIMEZONE27}</option>
-						<option value="10">{$L_TIMEZONE28}</option>
-						<option value="11">{$L_TIMEZONE29}</option>
-						<option value="12">{$L_TIMEZONE30}</option>
-					</select>
-					<script type="text/javascript">d.setIndex('{$user_timezone}', 'timezone');</script>
-				</td>
-			</tr>
-			<list:list id="member_profilefields">
-			<list:item list="member_profilefields">
-			<tr>
-				<td class="alt1" width="50%"><label for="{$name}"><strong>{$title}:</strong></label></td>
-				<td width="50%" class="alt3">
-					{$html}
-					<if:if var="is_required" eq="1"><form:error id="{$name}" for="{$name}" setclass="inputfailed" regex=".+">{$L_REQUIREDFIELDS}: </strong>{$title}</strong></form:error></if:if>
-				</td>
-			</tr>
-			</list:item>
-			</list:list>
-			<tr>
-				<td class="subtitle" colspan="2" align="center">
-					<input type="submit" value="{$L_SAVE}" class="button" />
-					<input type="reset" value="{$L_RESET}" class="button" />
-				</td>
-			</tr>
-		</table>
-	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td class="alt1" width="50%">
+				<label for="timezone"><strong>{$L_TIMEZONE}:</strong></label><br />
+				<span class="smalltext">{$L_TIMEZONEEXPLAIN}</span>
+			</td>
+			<td class="alt3" width="50%">
+				<select name="timezone" id="timezone" class="inputbox">
+					<option value="-12">{$L_TIMEZONE1}</option>
+					<option value="-11">{$L_TIMEZONE2}</option>
+					<option value="-10">{$L_TIMEZONE3}</option>
+					<option value="-9">{$L_TIMEZONE4}</option>
+					<option value="-8">{$L_TIMEZONE5}</option>
+					<option value="-7">{$L_TIMEZONE6}</option>
+					<option value="-6">{$L_TIMEZONE7}</option>
+					<option value="-5">{$L_TIMEZONE8}</option>
+					<option value="-4">{$L_TIMEZONE9}</option>
+					<option value="-3.5">{$L_TIMEZONE10}</option>
+					<option value="-3">{$L_TIMEZONE11}</option>
+					<option value="-2">{$L_TIMEZONE12}</option>
+					<option value="-1">{$L_TIMEZONE13}</option>
+					<option value="0" selected="selected">{$L_TIMEZONE14}</option>
+					<option value="1">{$L_TIMEZONE15}</option>
+					<option value="2">{$L_TIMEZONE16}</option>
+					<option value="3">{$L_TIMEZONE17}</option>
+					<option value="3.5">{$L_TIMEZONE18}</option>
+					<option value="4">{$L_TIMEZONE19}</option>
+					<option value="4.5">{$L_TIMEZONE20}</option>
+					<option value="5">{$L_TIMEZONE21}</option>
+					<option value="5.5">{$L_TIMEZONE22}</option>
+					<option value="6">{$L_TIMEZONE23}</option>
+					<option value="7">{$L_TIMEZONE24}</option>
+					<option value="8">{$L_TIMEZONE25}</option>
+					<option value="9">{$L_TIMEZONE26}</option>
+					<option value="9.5">{$L_TIMEZONE27}</option>
+					<option value="10">{$L_TIMEZONE28}</option>
+					<option value="11">{$L_TIMEZONE29}</option>
+					<option value="12">{$L_TIMEZONE30}</option>
+				</select>
+				<script type="text/javascript">d.setIndex('{$user_timezone}', 'timezone');</script>
+			</td>
+		</tr>
+		<list:list id="member_profilefields">
+		<list:item list="member_profilefields">
+		<tr>
+			<td class="alt1" width="50%"><label for="{$name}"><strong>{$title}:</strong></label></td>
+			<td width="50%" class="alt3">
+				{$html}
+				<if:if var="is_required" eq="1"><form:error id="{$name}" for="{$name}" setclass="inputfailed" regex=".+">{$L_REQUIREDFIELDS}: </strong>{$title}</strong></form:error></if:if>
+			</td>
+		</tr>
+		</list:item>
+		</list:list>
+		<tr>
+			<td class="base3" colspan="2" style="text-align:center;">
+				<input type="submit" value="{$L_SAVE}" class="button" />
+				<input type="reset" value="{$L_RESET}" class="button" />
+			</td>
+		</tr>
+	</table>
 </div>
+<div class="footer_block"><div>&nbsp;</div></div>
 </form:form>
 </is:logged>

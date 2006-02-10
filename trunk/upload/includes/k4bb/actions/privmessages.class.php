@@ -597,14 +597,20 @@ class K4SendPMessage extends FAAction {
 		$_REQUEST['message']	= substr($_REQUEST['message'], 0, $_SETTINGS['pmmaxchars']);
 		
 		/* Initialize the bbcode parser with the topic message */
-		$bbcode	= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['message'], 0, 
+		/*$bbcode	= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['message'], 0, 
 			iif((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']), FALSE, TRUE), 
 			iif((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']), FALSE, TRUE), 
 			iif((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']), FALSE, TRUE), 
-			iif((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']), FALSE, TRUE));
+			iif((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']), FALSE, TRUE));*/
+		
 		
 		/* Parse the bbcode */
-		$body_text	= $bbcode->parse();
+		$body_text = $_REQUEST['message'];
+		
+		if(!isset($_REQUEST['disable_bbcode']) || !$_REQUEST['disable_bbcode']) {
+			$parser = &new BBParser;
+			$body_text	= $parser->parse($body_text);
+		}
 		$parent_id	= 0;
 		$message_id	= 0;
 

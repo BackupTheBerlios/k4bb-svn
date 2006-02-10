@@ -2,7 +2,7 @@
 	<div>
 		<div style="text-align: center;">
 			<if:if var="poster_id" greater="0">
-			<a href="#" title="{$L_PROFILE}" id="post_user_ddmenu_link{$post_id}" style="font-weight: bold;color: #{$post_user_group_color};font-size:14px;{$post_user_background}">{$poster_name}</a>
+			<a href="javascript:;" title="{$L_PROFILE}" id="post_user_ddmenu_link{$post_id}" style="font-weight: bold;color: #{$post_user_group_color};font-size:14px;{$post_user_background}">{$poster_name}</a>
 			<sup><img src="Images/{$IMG_DIR}/Icons/{$post_user_online}_small.gif" alt="<if:if var="post_user_online" eq="online">{$L_ONLINE}<if:else />{$L_OFFLINE}</if:if>" border="0" /></sup>
 			<if:else />
 			<strong><if:if var="poster_name" eq="">{$L_GUEST}<if:else />{$poster_name}</if:if></strong>

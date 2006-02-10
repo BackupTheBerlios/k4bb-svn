@@ -183,8 +183,8 @@ class K4DefaultAction extends FAAction {
 			}
 			
 			// revert the text with the bbcode parser
-			$bbcode			= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $parent['body_text'], $forum['forum_id'], TRUE, TRUE, TRUE, TRUE);
-			$body_text		= '[quote='. ($parent['poster_name'] == '' ? $request['template']->getVar('L_GUEST') : $parent['poster_name']) .']'. $bbcode->revert() .'[/quote]';
+			$parser = &new BBParser;
+			$body_text		= '[quote='. ($parent['poster_name'] == '' ? $request['template']->getVar('L_GUEST') : $parent['poster_name']) .']'. $parser->revert($parent['body_text']) .'[/quote]';
 		}
 
 		/* Set the title variable */

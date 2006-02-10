@@ -210,8 +210,19 @@ k4RTE.prototype = {
 		this.create_button(iframe_id, 'Underline', 'underline', 'underline', ["<u>", "</u>"], ["[u]", "[/u]"]);
 		
 		if(this.use_extras) {
+			document.write('<div id="font_picker_' + iframe_id + '" style="display:none;"><table cellspacing="0"><tr><td class="alt1" onclick="' + DEFAULT_INST + '.change_font(\'arial\',\'' + textarea_id + '\')" style="padding:2px;font-family:Arial, Helvetica, sans-serif;">Arial</td></tr><tr><td class="alt1" onclick="' + DEFAULT_INST + '.change_font(\'times\',\'' + textarea_id + '\')" style="padding:2px;font-family:\'Times New Roman\', Times, serif;">Times</td></tr><tr><td class="alt1" onclick="' + DEFAULT_INST + '.change_font(\'comic\',\'' + textarea_id + '\')" style="padding:2px;font-family:\'Comic Sans MS\';">Comic Sans MS</td></tr><tr><td class="alt1" onclick="' + DEFAULT_INST + '.change_font(\'verdana\',\'' + textarea_id + '\')" style="padding:2px;font-family:Verdana, Arial, Helvetica, sans-serif;">Verdana</td></tr></table></div>');
+			//document.write('<div id="size_picker_' + iframe_id + '" style="display:none;"><table cellspacing="0"><tr><td class="alt1" onclick="' + DEFAULT_INST + '.change_fontsize(\'arial\',\'' + textarea_id + '\')" style="padding:2px;font-family:Arial, Helvetica, sans-serif;">Arial</td></tr><tr><td class="alt1" onclick="' + DEFAULT_INST + '.change_font(\'times\',\'' + textarea_id + '\')" style="padding:2px;font-family:\'Times New Roman\', Times, serif;">Times</td></tr><tr><td class="alt1" onclick="' + DEFAULT_INST + '.change_font(\'comic\',\'' + textarea_id + '\')" style="padding:2px;font-family:\'Comic Sans MS\';">Comic Sans MS</td></tr><tr><td class="alt1" onclick="' + DEFAULT_INST + '.change_font(\'verdana\',\'' + textarea_id + '\')" style="padding:2px;font-family:Verdana, Arial, Helvetica, sans-serif;">Verdana</td></tr></table></div>');
+			
 			this.create_button(iframe_id, 'Font', 'font', 'fontname');
 			this.create_button(iframe_id, 'Font Size', 'size', 'fontsize');
+			
+			this.quicktags.tags['fontname_arial']	= ["[font=arial]","[/font]"];
+			this.quicktags.tags['fontname_times']	= ["[font=times]","[/font]"];
+			this.quicktags.tags['fontname_verdana'] = ["[font=verdana]","[/font]"];
+			this.quicktags.tags['fontname_comic']	= ["[font=comic]","[/font]"];
+			
+			menu_init('button_fontname_' + iframe_id, 'font_picker_' + iframe_id);
+			//menu_init('button_fontsize_' + iframe_id, 'size_picker_' + iframe_id);
 		}
 
 		this.create_button(iframe_id, 'Left', 'justifyleft', 'justifyleft', ["<span style=\"text-align: left;\">", "</span>"], ["[left]", "[/left]"]);
@@ -278,6 +289,27 @@ k4RTE.prototype = {
 		}
 	},
 	
+	//
+	// set the font
+	//
+	change_font: function(font_name, textarea_id) {
+		
+		var iframe_id = textarea_id + '_k4rte';
+
+		if(this.rte_mode[iframe_id] == true && USE_RTM) {
+			var font_family = '';
+			switch(font_name) {
+				case 'arial': { font_family = 'Arial, Helvetica, sans-serif'; break; }
+				case 'comic': { font_family = '\'Comic Sans MS\''; break; }
+				case 'times': { font_family = '\'Times New Roman\', Times, serif'; break; }
+				case 'verdana': { font_family = 'Verdana, Arial, Helvetica, sans-serif'; break; }
+			}
+			this.get_object_document(this.get_object(iframe_id)).execCommand('fontname', false, font_family);
+		} else {
+			this.quicktags.initialize_tags(this.get_object(textarea_id), 'fontname_' + font_name);
+		}
+	},
+
 	//
 	// Disable the use of the color picker buttons
 	//

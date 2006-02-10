@@ -1,118 +1,91 @@
 <is:logged>
+<div class="header"><div class="title">{$L_MYCONTROLS}</div></div>
 <div class="spacer">
-	<div class="header">
-		<div class="title">{$L_MYCONTROLS}</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="usercp_menu">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table" id="usercp_menu">
 
-			<!-- Settings & Options -->
-			<tr>
-				<td class="subtitle">{$L_SETTINGSOPTIONS}</td>
-			</tr>
-			<tr>
-				<td class="alt1"><a href="member.php?act=usercp&amp;view=profile" title="{$L_EDITPROFILE}" class="smalltext">{$L_EDITPROFILE}</a></td>
-			</tr>
-			<tr>
-				<td class="alt1"><a href="member.php?act=usercp&amp;view=password" title="{$L_CHANGEPASSWORD}" class="smalltext">{$L_CHANGEPASSWORD}</a></td>
-			</tr>
-			<tr>
-				<td class="alt1"><a href="member.php?act=usercp&amp;view=email" title="{$L_CHANGEEMAIL}" class="smalltext">{$L_CHANGEEMAIL}</a></td>
-			</tr>
-			<tr>
-				<td class="alt1"><a href="member.php?act=usercp&amp;view=options" title="{$L_EDITOPTIONS}" class="smalltext">{$L_EDITOPTIONS}</a></td>
-			</tr>
-			<if:if var="signaturesenabled" eq="1">
-			<tr>
-				<td class="alt1"><a href="member.php?act=usercp&amp;view=signature" title="{$L_EDITSIGNATURE}" class="smalltext">{$L_EDITSIGNATURE}</a></td>
-			</tr>
-			</if:if>
-			<if:if var="avatarenabled" eq="1">
-			<tr>
-				<td class="alt1"><a href="member.php?act=usercp&amp;view=avatar" title="{$L_EDITAVATAR}" class="smalltext">{$L_EDITAVATAR}</a></td>
-			</tr>
-			</if:if>
-			<if:if var="personalpicenabled" eq="1">
-			<tr>
-				<td class="alt1"><a href="member.php?act=usercp&amp;view=picture" title="{$L_EDITPERSONALPIC}" class="smalltext">{$L_EDITPERSONALPIC}</a></td>
-			</tr>
-			</if:if>
-			<!-- / Settings & Options -->
-			<if:if var="enablepms" eq="1">
-			<maps:if var="private_messaging" method="can_view">
-			<!-- Private Messaging -->
-			<tr>
-				<td class="subtitle">{$L_PRIVATEMESSAGING}</td>
-			</tr>
-			<list:list id="pmfolders">
-			<list:item list="pmfolders">
-			<tr>
-				<td class="alt1">
-					<if:if var="is_global" eq="1"><img src="Images/{$IMG_DIR}/Icons/folder.gif" alt="" border="" /><if:else /><img src="Images/{$IMG_DIR}/Icons/subfolder.gif" alt="" border="" /></if:if>
-					<a href="member.php?act=usercp&amp;view=pmfolder&amp;folder={$id}" title="{$name}" class="smalltext">{$name}</a>
-				</td>
-			</tr>
-			</list:item>
-			</list:list>
-			<tr>
-				<td class="alt1"><a href="member.php?act=usercp&amp;view=pmnewmessage" title="{$L_COMPOSENEWMESSAGE}" class="smalltext">{$L_COMPOSENEWMESSAGE}</a></td>
-			</tr>
-			<if:if var="allowcustomfolders" eq="1">
-			<maps:if var="pm_customfolders" method="can_add">
-			<tr>
-				<td class="alt1"><a href="member.php?act=usercp&amp;view=pmfolders" title="{$L_EDITSTORAGEFOLDERS}" class="smalltext">{$L_EDITSTORAGEFOLDERS}</a></td>
-			</tr>
-			</maps:if>
-			</if:if>
-			<if:if var="allowtrackpms" eq="1">
-			<maps:if var="pm_tracking" method="can_view">
-			<!--<tr>
-				<td class="alt1"><a href="member.php?act=usercp&amp;view=trackpms" title="{$L_MESSAGETRACKER}" class="smalltext">{$L_MESSAGETRACKER}</a></td>
-			</tr>-->
-			</maps:if>
-			</if:if>
-			<!-- / Private Messaging -->
-			</maps:if>
-			</if:if>
-			<tr>
-				<td class="subtitle">{$L_POSTMANAGEMENT}</td>
-			</tr>
-			<tr>
-				<td class="alt1"><a href="member.php?act=usercp&amp;view=attachments" title="{$L_MANAGEATTACHMENTS}" class="smalltext">{$L_MANAGEATTACHMENTS}</a></td>
-			</tr>
-			<tr>
-				<td class="alt1"><a href="member.php?act=usercp&amp;view=drafts" title="{$L_DRAFTS}" class="smalltext">{$L_DRAFTS}</a></td>
-			</tr>
-			<tr>
-				<td class="alt1"><a href="member.php?act=usercp&amp;view=subscriptions" title="{$L_MANAGESUBSCRIPTIONS}" class="smalltext">{$L_MANAGESUBSCRIPTIONS}</a></td>
-			</tr>
-		</table>
-	</div>
+		<!-- Settings & Options -->
+		<tr>
+			<td class="subheader">{$L_SETTINGSOPTIONS}</td>
+		</tr>
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=profile" title="{$L_EDITPROFILE}" class="smalltext">{$L_EDITPROFILE}</a></td>
+		</tr>
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=password" title="{$L_CHANGEPASSWORD}" class="smalltext">{$L_CHANGEPASSWORD}</a></td>
+		</tr>
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=email" title="{$L_CHANGEEMAIL}" class="smalltext">{$L_CHANGEEMAIL}</a></td>
+		</tr>
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=options" title="{$L_EDITOPTIONS}" class="smalltext">{$L_EDITOPTIONS}</a></td>
+		</tr>
+		<if:if var="signaturesenabled" eq="1">
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=signature" title="{$L_EDITSIGNATURE}" class="smalltext">{$L_EDITSIGNATURE}</a></td>
+		</tr>
+		</if:if>
+		<if:if var="avatarenabled" eq="1">
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=avatar" title="{$L_EDITAVATAR}" class="smalltext">{$L_EDITAVATAR}</a></td>
+		</tr>
+		</if:if>
+		<if:if var="personalpicenabled" eq="1">
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=picture" title="{$L_EDITPERSONALPIC}" class="smalltext">{$L_EDITPERSONALPIC}</a></td>
+		</tr>
+		</if:if>
+		<!-- / Settings & Options -->
+		<if:if var="enablepms" eq="1">
+		<maps:if var="private_messaging" method="can_view">
+		<!-- Private Messaging -->
+		<tr>
+			<td class="subheader">{$L_PRIVATEMESSAGING}</td>
+		</tr>
+		<list:list id="pmfolders">
+		<list:item list="pmfolders">
+		<tr>
+			<td class="alt1">
+				<if:if var="is_global" eq="1"><img src="Images/{$IMG_DIR}/Icons/folder.gif" alt="" border="" /><if:else /><img src="Images/{$IMG_DIR}/Icons/subfolder.gif" alt="" border="" /></if:if>
+				<a href="member.php?act=usercp&amp;view=pmfolder&amp;folder={$id}" title="{$name}" class="smalltext">{$name}</a>
+			</td>
+		</tr>
+		</list:item>
+		</list:list>
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=pmnewmessage" title="{$L_COMPOSENEWMESSAGE}" class="smalltext">{$L_COMPOSENEWMESSAGE}</a></td>
+		</tr>
+		<if:if var="allowcustomfolders" eq="1">
+		<maps:if var="pm_customfolders" method="can_add">
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=pmfolders" title="{$L_EDITSTORAGEFOLDERS}" class="smalltext">{$L_EDITSTORAGEFOLDERS}</a></td>
+		</tr>
+		</maps:if>
+		</if:if>
+		<if:if var="allowtrackpms" eq="1">
+		<maps:if var="pm_tracking" method="can_view">
+		<!--<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=trackpms" title="{$L_MESSAGETRACKER}" class="smalltext">{$L_MESSAGETRACKER}</a></td>
+		</tr>-->
+		</maps:if>
+		</if:if>
+		<!-- / Private Messaging -->
+		</maps:if>
+		</if:if>
+		<tr>
+			<td class="subheader">{$L_POSTMANAGEMENT}</td>
+		</tr>
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=attachments" title="{$L_MANAGEATTACHMENTS}" class="smalltext">{$L_MANAGEATTACHMENTS}</a></td>
+		</tr>
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=drafts" title="{$L_DRAFTS}" class="smalltext">{$L_DRAFTS}</a></td>
+		</tr>
+		<tr>
+			<td class="alt1"><a href="member.php?act=usercp&amp;view=subscriptions" title="{$L_MANAGESUBSCRIPTIONS}" class="smalltext">{$L_MANAGESUBSCRIPTIONS}</a></td>
+		</tr>
+	</table>
 </div>
-<script type="text/javascript">
-//<![CDATA[
-	var menu			= d.getElementById('usercp_menu');
+<div class="footer_block"><div>&nbsp;</div></div>
 
-	if(menu) {
-		var rows		= d.getElementsByTagName(menu, 'td');
-
-		if(rows) {
-			var numrows	= d.sizeof(rows);
-			for(var i = 0; i < numrows; i++) {
-				
-				if(rows[i]) {
-					if(rows[i].className == 'alt1') {
-						
-						rows[i].onmouseover		= function() {
-							this.className		= 'alt2';
-						}
-						rows[i].onmouseout		= function() {
-							this.className		= 'alt1';
-						}
-					}
-				}
-			}
-		}
-	}
-
-//]]>
-</script>
+<script type="text/javascript">k4ManageHoverCellFactory.createInstance().highlight(('usercp_menu').obj(),'alt2','alt1');</script>
 </is:logged>

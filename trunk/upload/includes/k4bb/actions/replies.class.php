@@ -91,7 +91,8 @@ class EditReply extends FAAction {
 			}
 		}
 		
-		$bbcode				= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $reply['body_text'], $forum['forum_id'], TRUE, TRUE, TRUE, TRUE);
+		//$bbcode				= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $reply['body_text'], $forum['forum_id'], TRUE, TRUE, TRUE, TRUE);
+		$parser = &new BBParser;
 		
 		/* Get and set the emoticons and post icons to the template */
 		$emoticons			= $request['dba']->executeQuery("SELECT * FROM ". K4EMOTICONS ." WHERE clickable = 1");
@@ -107,7 +108,7 @@ class EditReply extends FAAction {
 		topic_post_options($request['template'], $request['user'], $forum);
 		post_attachment_options($request, $forum, $reply);
 		
-		$reply['body_text'] = $bbcode->revert();
+		$reply['body_text'] = $parser->revert($reply['body_text']);
 
 		foreach($reply as $key => $val)
 			$request['template']->setVar('post_'. $key, $val);
@@ -135,7 +136,7 @@ class EditReply extends FAAction {
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_EDITREPLY', $topic, $forum);
 		
 		/* Create our editor */
-		create_editor($request, $bbcode->revert(), 'post', $forum);
+		create_editor($request, $reply['body_text'], 'post', $forum);
 
 		/* Set the post topic form */
 		//$request['template']->setFile('preview', 'post_preview.html');

@@ -58,16 +58,6 @@ function show_newmessage_box(num_messages, text_to_write, img_dir, go_in_id) {
 }
 
 /**
- * Add an emoticon into the textarea
- */
-function emoticon(typed) {
-	var editor		= d.getElementById('messagecodex');
-	if(editor) {
-		editor.value += ' ' + typed;
-	}
-}
-
-/**
  * Show / Hide a table or other block-level element
  */
 function showTable(table_id) {
@@ -132,8 +122,8 @@ function select_topic(span_object, button_id, post_id) {
 	try {
 		if(span_object) {
 
-			var button		= d.getElementById(button_id);
-			var checkbox	= d.getElementsByTagName(span_object, 'input');
+			var button		= button_id.obj();
+			var checkbox	= span_object.getTagsByName('input');
 			button_regex	= new RegExp("\(([0-9]+?)\)", "g");
 			
 			if(button && checkbox) {

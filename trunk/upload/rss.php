@@ -54,8 +54,6 @@ class K4DefaultAction extends FAAction {
 
 			k4_bread_crumbs($request['template'], $request['dba'], NULL, $forum);
 			
-			$bbcode = new BBCodex($request['dba'], $request['user'], NULL, $forum['forum_id'], TRUE, TRUE, TRUE, TRUE);
-
 			/**
 			 * Pagination
 			 */
@@ -104,7 +102,7 @@ class K4DefaultAction extends FAAction {
 			}
 			$it->addIterator($topics);
 			
-			$request['template']->setList('topics', new RSSPostIterator($it, $bbcode));
+			$request['template']->setList('topics', new RSSPostIterator($it));
 			$request['template']->setVarArray($forum);
 			$xml		= $request['template']->render(BB_BASE_DIR . '/templates/RSS/rss-'. $rss_version .'/forum.xml');
 			
@@ -138,8 +136,6 @@ class K4DefaultAction extends FAAction {
 				return $action->execute($request);
 			}
 			
-			$bbcode = new BBCodex($request['dba'], $request['user'], NULL, $topic['forum_id'], TRUE, TRUE, TRUE, TRUE);
-
 			$it = new FAChainedIterator($result);
 
 			if(get_map( 'replies', 'can_view', array('forum_id'=>$topic['forum_id'])) <= $request['user']->get('perms')) {
@@ -160,7 +156,7 @@ class K4DefaultAction extends FAAction {
 				}
 			}
 
-			$request['template']->setList('posts', new RSSPostIterator($it, $bbcode));
+			$request['template']->setList('posts', new RSSPostIterator($it));
 			$xml		= $request['template']->render(BB_BASE_DIR . '/templates/RSS/rss-'. $rss_version .'/topic.xml');
 			
 			header("Content-Type: text/xml");
@@ -198,13 +194,13 @@ class RSSPostIterator extends FAProxyIterator {
 	
 	var $bbcode;
 
-	function RSSPostIterator(&$it, $bbcode) {
-		$this->__construct($it, $bbcode);
+	function RSSPostIterator(&$it) {
+		$this->__construct($it);
 	}
 
 	function __construct(&$it, $bbcode) {
-		$this->bbcode	= $bbcode;
-
+		$this->bbcode	= &new BBParser;
+		
 		parent::__construct($it);
 	}
 

@@ -1,11 +1,12 @@
+<core:block id="forum_header">
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" dir="{$lang_direction}" lang="{$LANGSHORT}">
 <core:import id="head" file="head.html" />
 <body>
 
-<div id="iframe_request_div" style="display:none;"><!-- AJAX IFRAME THING --></div>
-<div align="center">
+<div align="center" id="t">
+</core:block>
 	<div align="left" class="forum_base" id="forum_base">
 		<br />
 		<div class="spacer">
@@ -62,9 +63,12 @@
 			</div>
 		</div>
 	</div>
+<core:block id="forum_footer">
 </div>
 <if:if var="copyrighttext" noteq=""><div align="center" class="smalltext"><br />{$copyrighttext}</div></if:if>
 <core:import id="new_pms_box" file="new_pms_box.html" />
+
+<if:if var="nojs" eq="0"><if:if var="USE_TOTAL_AJAX" eq="1"><script type="text/javascript">k4Ajx.parseLinks();set_cookie('k4_canjs', 1, 2592000, '{$domain}');</script></if:if></if:if>
 
 <a name="bottom" id="bottom"></a>
 
@@ -77,11 +81,7 @@
 * @author Peter Goodman
 * @author Geoffrey Goodman
 */ -->
-<if:if var="admin_css_edit" eq="1">
-<script type="text/javascript">
-var k4cssext = new k4css();
-k4cssext.init();
-</script>
-</if:if>
+<if:if var="admin_css_edit" eq="1"><if:if var="nojs" eq="0"><script type="text/javascript">var k4cssext=new k4css();k4cssext.init();</script></if:if></if:if>
 </body>
 </html>
+</core:block>

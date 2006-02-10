@@ -21,28 +21,27 @@
 		</tr>
 	</table>
 </div>
-<div class="spacer"><div class="footer_block"><div>&nbsp;</div></div></div>
+
+<div class="spacer"><div class="subheader">{$L_MEMBERS} ({$num_group_members})</div></div>
 
 <page:navigator id="users_pager">
-<div align="right">
-	<table cellspacing="{$style_cellspacing}" class="pagination">
-		<tr>
-			<td class="alt1" id="page_jump2"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
-			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
-			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
-			<page:list id="users_pager" before="3" after="3">
-			<list:item list="users_pager">
-				<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
-			</list:item>
-			</page:list>
-			<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
-			<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
-		</tr>
-	</table>
+<div class="spacer">
+	<div class="alt3" style="text-align:right;">
+		<span class="ddmenu_link" id="page_jump1"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></span>
+		<page:first><page:link>{$L_FIRST} </page:link></page:first>
+		<page:prev><page:link>{$L_PREV} </page:link></page:prev>
+		<page:list id="users_pager" before="3" after="3">
+		<list:item list="users_pager">
+			<page:link class="pager_link">{$pagenum}</page:link>
+			<list:separator list="users_pager">, </list:separator>
+		</list:item>
+		</page:list>
+		<page:next><page:link> {$L_NEXT}</page:link></page:next>
+		<page:last><page:link> {$L_LAST}</page:link></page:last>
+	</div>
 </div>
 </page:navigator>
 
-<div class="header"><div class="title">{$L_MEMBERS} ({$num_group_members})</div></div>
 <list:list id="users_in_usergroup">
 <div class="spacer">
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
@@ -59,42 +58,42 @@
 	</table>
 </div>
 </list:list>
-<div class="footer_block"><div>&nbsp;</div></div>
 
 <page:navigator id="users_pager">
-<div align="right">
-	<table cellspacing="{$style_cellspacing}" class="pagination">
-		<tr>
-			<td class="alt3" id="page_jump2" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
-			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
-			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
-			<page:list id="users_pager" before="3" after="3">
-			<list:item list="users_pager">
-				<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
-			</list:item>
-			</page:list>
-			<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
-			<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
-		</tr>
-	</table>
+<div class="spacer">
+	<div class="alt3" style="text-align:right;">
+		<span class="ddmenu_link" id="page_jump2"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></span>
+		<page:first><page:link>{$L_FIRST} </page:link></page:first>
+		<page:prev><page:link>{$L_PREV} </page:link></page:prev>
+		<page:list id="users_pager" before="3" after="3">
+		<list:item list="users_pager">
+			<page:link class="pager_link">{$pagenum}</page:link>
+			<list:separator list="users_pager">, </list:separator>
+		</list:item>
+		</page:list>
+		<page:next><page:link> {$L_NEXT}</page:link></page:next>
+		<page:last><page:link> {$L_LAST}</page:link></page:last>
+	</div>
 </div>
 </page:navigator>
 
 <core:block id="add_user" hidden="yes">
-<form:form name="addusertogroup" id="addusertogroup" action="usergroups.php?act=add_user_to_group" method="post" name="post" enctype="multipart/form-data">
-<br />
-<div class="outset_box_small">
-	<fieldset>
-		<legend>{$L_ADDUSERTOGROUP}:</legend>
+<form:form id="addusertogroup" action="usergroups.php?act=add_user_to_group" method="post" enctype="multipart/form-data">
+<div class="supheader">{$L_ADDUSERTOGROUP}</div>
+<div class="spacer">
+	<div class="alt3">
 		<input type="hidden" name="id" value="{$group_id}" />
 		<input type="text" class="inputbox" name="name" id="name" value="" />
 		<input type="submit" class="button" value="{$L_ADDUSER}" />
 		<input type="reset" class="button" value="{$L_RESET}" />
 		<form:error id="name_error" for="name" setclass="inputfailed" regex=".+">{$L_INSERTUSERNAME}</form:error>
-	</fieldset>
+	</div>
 </div>
 </form:form>
 </core:block>
+
+<div class="footer_block"><div>&nbsp;</div></div>
+
 <core:import id="page_jumper" file="page_jumper.html" />
 <script type="text/javascript">
 //<![CDATA[

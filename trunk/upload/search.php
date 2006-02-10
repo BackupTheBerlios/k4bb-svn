@@ -316,7 +316,7 @@ class K4SearchEverything extends FAAction {
 		$request['template']->setVar('search_daysprune', (isset($_REQUEST['daysprune']) ? intval($_REQUEST['daysprune']) : 0));
 		$request['template']->setVar('post_length', (isset($_REQUEST['post_length']) && intval($_REQUEST['post_length']) > 0 ? intval($_REQUEST['post_length']) : intval($request['template']->getVar('searchpostlength'))));
 		$request['template']->setFile('content', 'search_results.html');
-		$request['template']->setFile('content_extra', 'search_sort_menu.html');
+		//$request['template']->setFile('content_extra', 'search_sort_menu.html');
 		$request['template']->setVisibility('forum_midsection', FALSE);
 		
 		/* Memory Saving */

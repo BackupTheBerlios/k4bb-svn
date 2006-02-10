@@ -1,6 +1,6 @@
 <?php
 /**
-* k4 Bulletin Board, fatal_error.php
+* k4 Bulletin Board, portal.php
 *
 * Copyright (c) 2005, Peter Goodman
 *
@@ -22,27 +22,6 @@
 * @package k42
 */
 
-/**
- * Return a nicely formatted fatal error message
- */
-function k4_fatal_error(&$error) {
-	?>
-	<div class="error_box">
-		<span class="redtext">The following critical error occured:</span>
-		<textarea rows="10" cols="100">
-<?php echo $error->message; ?>
-			
-Line: <?php echo $error->line; ?>
 
-File: <?php echo basename($error->file); ?>
-
-<?php echo $error->getBacktraceHtml(); ?>
-		</textarea>
-	</div>
-	<br />
-	<a href="http://www.k4bb.org" title="k4 Bulletin Board" target="_blank">Powered By: k4 Bulletin Board</a>
-	<?php	
-	exit;
-}
 
 ?>

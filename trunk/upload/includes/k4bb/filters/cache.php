@@ -306,23 +306,23 @@ class K4GeneralCacheFilter extends FAFilter {
 			}
 			
 			/* Set the Global variables */
-			$GLOBALS['_SETTINGS']				= $cache['settings'];
-			$GLOBALS['_MAPS']					= $cache['maps'];
-			$GLOBALS['_USERGROUPS']				= $cache['usergroups'];
-			$GLOBALS['_ACRONYMS']				= $cache['acronyms'];
-			$GLOBALS['_CENSORS']				= $cache['censors'];
-			$GLOBALS['_SPIDERS']				= $cache['spiders'];
-			$GLOBALS['_SPIDERAGENTS']			= $cache['spider_agents'];
-			$GLOBALS['_PROFILEFIELDS']			= $cache['profile_fields'];
-			$GLOBALS['_ALLFORUMS']				= $cache['all_forums'];
-			$GLOBALS['_FLAGGEDUSERS']			= $cache['flagged_users'];
-			$GLOBALS['_BANNEDUSERIDS']			= $cache['banned_user_ids'];
-			$GLOBALS['_BANNEDUSERIPS']			= $cache['banned_user_ips'];
-			$GLOBALS['_STYLESETS']				= $cache['styles'];
-			$GLOBALS['_FAQCATEGORIES']			= $cache['faq_categories'];
+			$GLOBALS['_SETTINGS']				= &$cache['settings'];
+			$GLOBALS['_MAPS']					= &$cache['maps'];
+			$GLOBALS['_USERGROUPS']				= &$cache['usergroups'];
+			$GLOBALS['_ACRONYMS']				= &$cache['acronyms'];
+			$GLOBALS['_CENSORS']				= &$cache['censors'];
+			$GLOBALS['_SPIDERS']				= &$cache['spiders'];
+			$GLOBALS['_SPIDERAGENTS']			= &$cache['spider_agents'];
+			$GLOBALS['_PROFILEFIELDS']			= &$cache['profile_fields'];
+			$GLOBALS['_ALLFORUMS']				= &$cache['all_forums'];
+			$GLOBALS['_FLAGGEDUSERS']			= &$cache['flagged_users'];
+			$GLOBALS['_BANNEDUSERIDS']			= &$cache['banned_user_ids'];
+			$GLOBALS['_BANNEDUSERIPS']			= &$cache['banned_user_ips'];
+			$GLOBALS['_STYLESETS']				= &$cache['styles'];
+			$GLOBALS['_FAQCATEGORIES']			= &$cache['faq_categories'];
 			$GLOBALS['_MAILQUEUE']				= isset($cache['mail_queue']) ? $cache['mail_queue'] : array();
 			$GLOBALS['_DATASTORE']				= isset($cache['datastore']) ? $cache['datastore'] : array();
-			$GLOBALS['_USERTITLES']				= $cache['user_titles'];
+			$GLOBALS['_USERTITLES']				= &$cache['user_titles'];
 		}	
 		
 		/**
@@ -346,8 +346,10 @@ class K4GeneralCacheFilter extends FAFilter {
 
 		/* Add the extra values onto the end of the userinfo query params variable */
 		global $_QUERYPARAMS;
-		foreach($GLOBALS['_PROFILEFIELDS'] as $temp) {
-			$_QUERYPARAMS['userinfo']			.= ', ui.'. $temp['name'] .' AS '. $temp['name'];
+		if(is_array($GLOBALS['_PROFILEFIELDS']) && !empty($GLOBALS['_PROFILEFIELDS'])) {
+			foreach($GLOBALS['_PROFILEFIELDS'] as $temp) {
+				$_QUERYPARAMS['userinfo']			.= ', ui.'. $temp['name'] .' AS '. $temp['name'];
+			}
 		}
 		$GLOBALS['_QUERYPARAMS'] = $_QUERYPARAMS;
 

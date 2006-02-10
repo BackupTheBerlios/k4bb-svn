@@ -1,5 +1,5 @@
 <head>
-	<title>{$bbtitle} - <core:truncate length="40" append="...">{$current_location}</core:truncate> - Powered by k4BB</title>
+	<title>{$forum_title}</title>
 	<meta http-equiv="Content-Type" content="text/html; charset={$ENCODING}" />
 	<meta http-equiv="Content-Language" content="{$LANG}" />
 	<meta http-equiv="Content-Style-Type" content="text/css" />
@@ -26,6 +26,6 @@
 	<script type="text/javascript">
 		var d=new k4lib();var k4_domain='{$domain}';var CURR_URL='{$curr_url}';var FORUM_URL='{$forum_url}'; // important stuff, don't touch
 		set_cookie('k4_canjs', 1, 2592000, '{$domain}'); /* This cookie is very important and should always be set here. */
-		d.preload_images('Images/{$IMG_DIR}/Icons/collapse_thead.gif', 'Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif', 'Images/{$IMG_DIR}/Icons/dots.gif', 'Images/{$IMG_DIR}/Icons/icon_latest_reply.gif');
+		d.preload_images('Images/{$IMG_DIR}/Icons/collapse_thead.gif','Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif','Images/{$IMG_DIR}/Icons/dots.gif','Images/{$IMG_DIR}/Icons/icon_latest_reply.gif','Images/loading.gif');
 	</script>
 </head>

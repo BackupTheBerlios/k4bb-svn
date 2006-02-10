@@ -3,21 +3,20 @@
 	<div class="title">{$L_SEARCHRESULTS}: <span style="font-weight: normal;">{$search_num_results} {$L_RESULTSRETURNED}</span></div>
 </div>
 <page:navigator id="searchresults_pager">
-<div class="alt3" align="right">
-	<table cellspacing="{$style_cellspacing}" class="pagination">
-		<tr>
-			<td class="alt3" id="page_jump1" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
-			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
-			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
-			<page:list id="searchresults_pager" before="3" after="3">
-			<list:item list="searchresults_pager">
-				<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
-			</list:item>
-			</page:list>
-			<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
-			<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
-		</tr>
-	</table>
+<div class="spacer">
+	<div class="alt3" style="text-align:right;">
+		<span class="ddmenu_link" id="page_jump1"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></span>
+		<page:first><page:link>{$L_FIRST} </page:link></page:first>
+		<page:prev><page:link>{$L_PREV} </page:link></page:prev>
+		<page:list id="searchresults_pager" before="3" after="3">
+		<list:item list="searchresults_pager">
+			<page:link class="pager_link">{$pagenum}</page:link>
+			<list:separator list="searchresults_pager">, </list:separator>
+		</list:item>
+		</page:list>
+		<page:next><page:link> {$L_NEXT}</page:link></page:next>
+		<page:last><page:link> {$L_LAST}</page:link></page:last>
+	</div>
 </div>
 </page:navigator>
 <div class="spacer">
@@ -71,27 +70,27 @@
 	<if:if var="search_viewas_int" eq="2">
 		</table>
 	</if:if>
+<if:if var="search_viewas_int" eq="2"></div></if:if>
 
-	<page:navigator id="searchresults_pager">
-	<div class="alt3" align="right">
-		<table cellspacing="{$style_cellspacing}" class="pagination">
-			<tr>
-				<td class="alt3" id="page_jump2" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
-				<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
-				<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
-				<page:list id="searchresults_pager" before="3" after="3">
-				<list:item list="searchresults_pager">
-					<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
-				</list:item>
-				</page:list>
-				<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
-				<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
-			</tr>
-		</table>
+<page:navigator id="searchresults_pager">
+<div class="spacer">
+	<div class="alt3" style="text-align:right;">
+		<span class="ddmenu_link" id="page_jump2"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></span>
+		<page:first><page:link>{$L_FIRST} </page:link></page:first>
+		<page:prev><page:link>{$L_PREV} </page:link></page:prev>
+		<page:list id="searchresults_pager" before="3" after="3">
+		<list:item list="searchresults_pager">
+			<page:link class="pager_link">{$pagenum}</page:link>
+			<list:separator list="searchresults_pager">, </list:separator>
+		</list:item>
+		</page:list>
+		<page:next><page:link> {$L_NEXT}</page:link></page:next>
+		<page:last><page:link> {$L_LAST}</page:link></page:last>
 	</div>
-	</page:navigator>
-
-	<if:if var="search_viewas_int" eq="2"></div></if:if>
+</div>
+</page:navigator>
+	
+	<core:import id="search_sort_menu" file="search_sort_menu.html" />
 
 	<div class="footer_block"><div>&nbsp;</div></div>
 </div>

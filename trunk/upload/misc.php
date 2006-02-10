@@ -56,12 +56,12 @@ class SwitchEditors extends FAAction {
 			$message		= isset($_POST['message']) ? stripslashes($_POST['message']) : '';
 			$switchto		= ($_POST['switchto'] == 'wysiwyg' && USE_WYSIWYG) ? 'wysiwyg' : 'bbcode';
 			
-			$bbcode			= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $message, $forum['forum_id'], TRUE, TRUE, TRUE, TRUE);
+			//$bbcode			= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $message, $forum['forum_id'], TRUE, TRUE, TRUE, TRUE);
+			$parser = &new BBParser;
 			
 			$allowhtml		= $forum['forum_id'] > 0 ? TRUE : FALSE;
 			$allowbbcode	= TRUE;
 			$allowemoticons = TRUE;
-			$automaticurls	= TRUE;
 
 			if($switchto == 'wysiwyg') {
 
@@ -77,11 +77,9 @@ class SwitchEditors extends FAAction {
 								if($referer->args['view'] == 'signature') {
 									$allowbbcode	= (bool)intval($_SETTINGS['allowbbcodesignatures']);
 									$allowemoticons = (bool)intval($_SETTINGS['allowemoticonssignature']);
-									$automaticurls	= (bool)intval($_SETTINGS['autoparsesignatureurls']);
 								} else if($referer->args['view'] == 'pmnewmessage') {
 									$allowbbcode	= (bool)intval($_SETTINGS['privallowbbcode']);
 									$allowemoticons = (bool)intval($_SETTINGS['privallowemoticons']);
-									$automaticurls	= 1;
 								}
 							}
 							break;
@@ -91,7 +89,6 @@ class SwitchEditors extends FAAction {
 							if($referer->file == 'newtopic.php' || $referer->file == 'newreply.php') {
 								$allowbbcode	= (bool)($user['perms'] >= get_map($user, 'bbcode', 'can_add', array('forum_id'=>$forum_id)));
 								$allowemoticons = (bool)($user['perms'] >= get_map($user, 'emoticons', 'can_add', array('forum_id'=>$forum['forum_id'])));
-								$automaticurls	= TRUE;
 							}
 
 							break;
@@ -104,10 +101,10 @@ class SwitchEditors extends FAAction {
 				}
 			}
 			
-			$message = $bbcode->revert();
+			$message = $parser->revert($message);
 			$request['template']->setVar('editor_text_reverted', $message);
-			$bbcode = new BBCodex($request['dba'], $request['user']->getInfoArray(), $message, $forum['forum_id'], $allowhtml, $allowbbcode, $allowemoticons, $automaticurls, array('quote', 'php', 'code'));
-			$request['template']->setVar('editor_text', $bbcode->parse());
+			//$bbcode = new BBCodex($request['dba'], $request['user']->getInfoArray(), $message, $forum['forum_id'], $allowhtml, $allowbbcode, $allowemoticons, $automaticurls, array('quote', 'php', 'code'));
+			$request['template']->setVar('editor_text', $message); // $parser->parse($message)
 			
 			
 			$templateset = $request['user']->isMember() ? $request['user']->get('templateset') : ($forum['forum_id'] > 0 ? $forum['defaultstyle'] : $_SETTINGS['templateset']);
@@ -163,9 +160,9 @@ class RevertHTMLText extends FAAction {
 				return ajax_message('L_POSTDOESNTEXIST');
 			}
 			
-			$bbcode = &new BBCodex($request['dba'], $request['user']->getInfoArray(), $post['body_text'], $post['forum_id'], TRUE, TRUE, TRUE, TRUE);
-						
-			echo $bbcode->revert();
+			//$bbcode = &new BBCodex($request['dba'], $request['user']->getInfoArray(), $post['body_text'], $post['forum_id'], TRUE, TRUE, TRUE, TRUE);
+			$parser = &new BBParser;
+			echo $parser->revert($post['body_text']);
 			exit;
 		}
 
@@ -264,14 +261,13 @@ class changePostBodyText extends FAAction {
 				return ajax_message('L_INSERTPOSTMESSAGE');
 			}
 			
-			$bbcode	= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['message'], $post['forum_id'], 
-			(bool)$post['disable_html'], 
-			(bool)$post['disable_bbcode'], 
-			(bool)$post['disable_emoticons'], 
-			(bool)$post['disable_aurls']);
-						
-			$body_text	= $bbcode->parse();
-
+			//$bbcode	= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['message'], $post['forum_id'], 
+			//(bool)$post['disable_html'], 
+			//(bool)$post['disable_bbcode'], 
+			//(bool)$post['disable_emoticons'],
+			
+			$parser = &new BBParser;
+			$body_text = $parser->parse($_REQUEST['message']);
 			$poller		= &new K4BBPolls($body_text, '', array('forum_id'=>$post['forum_id']), $post['post_id']);
 
 			$is_poll	= 0;

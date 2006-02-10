@@ -3,13 +3,10 @@
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
 			<td class="alt3">
-				<div class="outset_box">
-					<span class="smalltext">{$L_PMSGSTATS} ({$pm_usedpercent}%)</span><br />
-					<div style="border:1px solid #000000;padding:1px;width:99%;">
-						<div style="width:100%;height:20px;background-color:green;" align="left">
-							<div style="width:{$pm_usedpercent}%;height:20px;background-color:#FF0000;"></div>
-						</div>
-					</div>
+				<span class="smalltext">{$L_PMSGSTATS} ({$pm_usedpercent}%)</span><br />
+				<div style="border: 1px solid #333333;width:400px;height:18px;background-color:#FFFFFF;">
+					<div style="width:{$pm_usedpercent}%;height:20px;background-color:#FF0000;"></div>
+				</div>
 			</td>
 		</tr>
 		<tr>
@@ -31,34 +28,27 @@
 		</tr>
 	</table>
 </div>
-<div class="footer_block"><div>&nbsp;</div></div>
-<table width="100%" cellspacing="0">
-	<tr>
-		<td width="50%" align="left"><span class="title_link">{$folder_name}</span></td>
-		<td width="50%" align="right">
-			<page:navigator id="pms_pager">
-			<div>
-				<table cellspacing="{$style_cellspacing}" class="pagination">
-					<tr>
-						<td class="alt3" id="page_jump1" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
-						<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
-						<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
-						<page:list id="pms_pager" before="3" after="3">
-						<list:item list="pms_pager">
-							<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
-						</list:item>
-						</page:list>
-						<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
-						<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
-					</tr>
-				</table>
-			</div>
-			</page:navigator>
-		</td>
-	</tr>
-</table>
+
+<page:navigator id="pms_pager">
+<div class="spacer">
+	<div class="alt3" style="text-align:right;">
+		<span class="ddmenu_link" id="page_jump1"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></span>
+		<page:first><page:link>{$L_FIRST} </page:link></page:first>
+		<page:prev><page:link>{$L_PREV} </page:link></page:prev>
+		<page:list id="pms_pager" before="3" after="3">
+		<list:item list="pms_pager">
+			<page:link class="pager_link">{$pagenum}</page:link>
+			<list:separator list="pms_pager">, </list:separator>
+		</list:item>
+		</page:list>
+		<page:next><page:link> {$L_NEXT}</page:link></page:next>
+		<page:last><page:link> {$L_LAST}</page:link></page:last>
+	</div>
+</div>
+</page:navigator>
+
 <form action="member.php?act=usercp&amp;view=pmperformact" method="post" enctype="multipart/form-data">
-<div class="header"><div class="title">{$L_MESSAGES}</div></div>
+<div class="spacer"><div class="supheader">{$L_MESSAGES}</div></div>
 <div class="spacer">
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
@@ -111,26 +101,28 @@
 		</tr>
 	</table>
 </div>
-<div class="footer_block"><div>&nbsp;</div></div>
-</form>
+
 <page:navigator id="pms_pager">
-<div align="right">
-	<table cellspacing="{$style_cellspacing}" class="pagination">
-		<tr>
-			<td class="alt3" id="page_jump1"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
-			<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
-			<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
-			<page:list id="pms_pager" before="3" after="3">
-			<list:item list="pms_pager">
-				<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
-			</list:item>
-			</page:list>
-			<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
-			<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
-		</tr>
-	</table>
+<div class="spacer">
+	<div class="alt3" style="text-align:right;">
+		<span class="ddmenu_link" id="page_jump2"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></span>
+		<page:first><page:link>{$L_FIRST} </page:link></page:first>
+		<page:prev><page:link>{$L_PREV} </page:link></page:prev>
+		<page:list id="pms_pager" before="3" after="3">
+		<list:item list="pms_pager">
+			<page:link class="pager_link">{$pagenum}</page:link>
+			<list:separator list="pms_pager">, </list:separator>
+		</list:item>
+		</page:list>
+		<page:next><page:link> {$L_NEXT}</page:link></page:next>
+		<page:last><page:link> {$L_LAST}</page:link></page:last>
+	</div>
 </div>
 </page:navigator>
+
+<div class="footer_block"><div>&nbsp;</div></div>
+</form>
+
 <core:import id="page_jumper" file="page_jumper.html" />
 <script type="text/javascript">
 	menu_init('page_jump1', 'page_jump_menu');

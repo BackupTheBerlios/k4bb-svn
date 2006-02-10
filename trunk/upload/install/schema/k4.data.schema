@@ -130,6 +130,7 @@ INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (1
 INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (10, '.spacer', 'padding-bottom:5px;', 1, 'description here');
 INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (10, '.header_table td', 'padding:0px;margin:0px;', 1, 'The header table');
 INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (11, '.forum_number_cell', 'height:64px;width:64px;text-align:center;', 1, 'Number-only cells in forum rows.');
+INSERT INTO k4_css (group_id, name, properties, style_id, description) VALUES (11, '.simple_box', 'padding:10px;border:1px solid #C3D950;background-color:#FFFFFF;', 1, 'The nice box with green border used in member profiles.');
 
 INSERT INTO k4_acronyms (id, acronym, meaning, replace_type) VALUES (1, 'lol', 'laughing out loud', 2);
 INSERT INTO k4_acronyms (id, acronym, meaning, replace_type) VALUES (2, 'iirc', 'if I remember correctly', 2);
@@ -151,6 +152,7 @@ INSERT INTO k4_acronyms (id, acronym, meaning, replace_type) VALUES (18, 'oic', 
 INSERT INTO k4_acronyms (id, acronym, meaning, replace_type) VALUES (19, 'css', 'Cascading Style Sheets', 2);
 INSERT INTO k4_acronyms (id, acronym, meaning, replace_type) VALUES (20, 'xhtml', 'Extensive Hypertext Markup Language', 2);
 INSERT INTO k4_acronyms (id, acronym, meaning, replace_type) VALUES (21, 'xml', 'Extensive Markup Language', 2);
+INSERT INTO k4_acronyms (id, acronym, meaning, replace_type) VALUES (22, 'nvm', 'nevermind', 2);
 
 INSERT INTO k4_wordcensors (id, word, replacement, method) VALUES (1, 'fuck', 'foobar', 1);
 INSERT INTO k4_wordcensors (id, word, replacement, method) VALUES (2, 'shit', 'poo', 1);
@@ -162,6 +164,7 @@ INSERT INTO k4_badusernames (id, name) VALUES (2, 'Administrator');
 INSERT INTO k4_badusernames (id, name) VALUES (5, 'Guest');
 INSERT INTO k4_badusernames (id, name) VALUES (3, 'Moderator');
 INSERT INTO k4_badusernames (id, name) VALUES (4, 'User');
+INSERT INTO k4_badusernames (id, name) VALUES (5, 'Member');
 
 INSERT INTO k4_spiders (id, useragent, spidername, allowaccess) VALUES (1, 'Mediapartners-Google', 'Google AdSense', 1);
 INSERT INTO k4_spiders (id, useragent, spidername, allowaccess) VALUES (2, 'Googlebot', 'Google', 1);
@@ -480,4 +483,6 @@ INSERT INTO k4_cache (varname, data, modified) VALUES ('user_titles', '', 0);
 
 INSERT INTO k4_usertitles (title_id,num_posts,title_text,num_pips,image) VALUES (1,0,'New',1,'');
 INSERT INTO k4_usertitles (title_id,num_posts,title_text,num_pips,image) VALUES (2,10,'Still New',2,'');
-INSERT INTO k4_usertitles (title_id,num_posts,title_text,num_pips,image) VALUES (3,100,'Well Known',3,'');
+INSERT INTO k4_usertitles (title_id,num_posts,title_text,num_pips,image) VALUES (3,100,'Known',3,'');
+INSERT INTO k4_usertitles (title_id,num_posts,title_text,num_pips,image) VALUES (4,200,'Well Known',4,'');
+INSERT INTO k4_usertitles (title_id,num_posts,title_text,num_pips,image) VALUES (5,400,'Big Spender',5,'');

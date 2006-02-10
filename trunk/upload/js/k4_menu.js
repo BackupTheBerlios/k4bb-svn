@@ -39,6 +39,7 @@ k4Menu.prototype = {
 			// set some stuff
 			menu_obj.style.display	= 'none';
 			menu_obj.style.position = 'absolute';
+			menu_obj.style.zIndex = '100';
 			
 			menu_obj.link_id		= link_id;
 			this.lib.forceCursor(link_obj);
@@ -53,7 +54,7 @@ k4Menu.prototype = {
 			filters_obj.slideResizeMenu(actions_obj, menu_obj);
 
 			// get the <body> tag
-			var body_element = this.lib.getElementsByTagName(document, 'body');
+			var body_element = document.getTagsByName('body');
 			
 			// attach the events
 			AttachEvent(link_obj,'click',(function(){actions_obj.openMenu(link_obj,menu_obj);}),false);

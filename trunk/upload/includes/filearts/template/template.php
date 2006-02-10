@@ -391,7 +391,7 @@ class FATemplate extends FAObject {
 			$runtime = &new FATemplateRuntime($filename, $this->_blocks, $this->_files, $this->_pagers);
 		
 		$template = $this;
-
+				
 		if (!$this->_force && $this->isCompiled($filename)) {
 			include $this->getCompiledFilename($filename);
 		} else {
@@ -402,14 +402,8 @@ class FATemplate extends FAObject {
 			if ($this->_cache) {
 				$this->writeBuffer($compiled_file, $buffer);
 			}
-
-			//$buffer		= preg_replace('~&amp;~i', '&', $buffer);
-			//$buffer		= preg_replace('~&~', '&amp;', $buffer);
-
-			//echo "<pre>$buffer</pre>";
 			
 			eval("?> $buffer");
-			// <?php
 
 		}
 	}

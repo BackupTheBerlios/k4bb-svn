@@ -36,6 +36,7 @@ require K4_BASE_DIR. '/maps.php';
 require K4_BASE_DIR. '/common.php';
 require K4_BASE_DIR. '/heirarchy.php';
 require K4_BASE_DIR. '/bbcode.php';
+require K4_BASE_DIR. '/bbparser.php';
 require K4_BASE_DIR. '/editor.php';
 require K4_BASE_DIR. '/lazyload.php';
 require K4_BASE_DIR. '/breadcrumbs.php';

@@ -1,48 +1,42 @@
 <is:logged>
+<div class="header"><div class="title">{$L_USERCONTROLPANEL}</div></div>
 <div class="spacer">
-	<div class="header">
-		<div class="title">{$L_USERCONTROLPANEL}</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<tr class="alt3">
-				<td><span class="smalltext">{$L_USERCPWELCOMEMSG}</span></td>
-			</tr>
-		</table>
-	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr class="alt3">
+			<td><span class="smalltext">{$L_USERCPWELCOMEMSG}</span></td>
+		</tr>
+	</table>
 </div>
-<br />
+<div class="supheader">{$L_IMPORTANTANNOUNCEMENTS}</div>
 <div class="spacer">
-	<div class="header">
-		<div class="title">{$L_IMPORTANTANNOUNCEMENTS}</div>
-		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-			<list:list id="announcements">
-			<list:default list="announcements">
-			<tr>
-				<td class="alt3" colspan="6">
-					<div class="outset_box" align="center">
-						<br />
-						<strong>{$L_NOIMPORTANTANNOUNCES}</strong>
-						<br /><br />
-					</div>
-				</td>
-			</tr>
-			</list:default>
-			<tr>
-				<td class="subheader" width="5%" colspan="2">&nbsp;</td>
-				<td class="subheader" align="center" width="55%">{$L_TOPICS}{$name_sort}/{$L_AUTHOR}</td>
-				<td class="subheader" align="center" nowrap="nowrap">&nbsp;{$L_REPLIES}&nbsp;</td>
-				<td class="subheader" align="center" nowrap="nowrap">&nbsp;{$L_VIEWS}&nbsp;</td>
-				<td class="subheader" align="center" nowrap="nowrap" width="30%">&nbsp;{$L_LASTPOST}&nbsp;</td>
-				<td class="subheader" width="3%">&nbsp;{$L_INFO}&nbsp;</td>
-			</tr>
-			<list:item list="announcements">
-			<list:switch list="announcements" var="row_class" a="3" b="4">
-			<core:import id="topic_view" file="topic_view.html" />
-			</list:switch>
-			</list:item>
-			</list:list>
-		</table>
-	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<list:list id="announcements">
+		<list:default list="announcements">
+		<tr>
+			<td class="alt3" colspan="7">
+				<div class="outset_box" align="center">
+					<br />
+					<strong>{$L_NOIMPORTANTANNOUNCES}</strong>
+					<br /><br />
+				</div>
+			</td>
+		</tr>
+		</list:default>
+		<tr>
+			<td class="subheader" width="5%" colspan="2">&nbsp;</td>
+			<td class="subheader" align="center" width="55%">{$L_TOPICS}{$name_sort}/{$L_AUTHOR}</td>
+			<td class="subheader" align="center" nowrap="nowrap">&nbsp;{$L_REPLIES}&nbsp;</td>
+			<td class="subheader" align="center" nowrap="nowrap">&nbsp;{$L_VIEWS}&nbsp;</td>
+			<td class="subheader" align="center" nowrap="nowrap" width="30%">&nbsp;{$L_LASTPOST}&nbsp;</td>
+			<td class="subheader" width="3%">&nbsp;{$L_INFO}&nbsp;</td>
+		</tr>
+		<list:item list="announcements">
+		<list:switch list="announcements" var="row_class" a="3" b="4">
+		<core:import id="topic_view" file="topic_view.html" />
+		</list:switch>
+		</list:item>
+		</list:list>
+	</table>
 </div>
-<br />
 <core:import id="member_profile" file="member_profile.html" />
 </is:logged>

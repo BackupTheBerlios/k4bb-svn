@@ -127,8 +127,11 @@ class K4DefaultAction extends FAAction {
 			$start				= ($page - 1) * $perpage;
 			
 			/* Get the members of this usergroup */
-			$result				= $request['dba']->executeQuery("SELECT ". $_QUERYPARAMS['user'] . $_QUERYPARAMS['userinfo'] ." FROM ". K4USERS ." u LEFT JOIN ". K4USERINFO ." ui ON u.id=ui.user_id WHERE u.usergroups LIKE '%|". intval($group['id']) ."|%' AND u.id <> ". intval($group['mod_id']) ." LIMIT ". intval($start) .", ". intval($perpage));
-			$users				= &new UsersIterator($result);
+			if($num_results > 0) {
+				$result				= $request['dba']->executeQuery("SELECT ". $_QUERYPARAMS['user'] . $_QUERYPARAMS['userinfo'] ." FROM ". K4USERS ." u LEFT JOIN ". K4USERINFO ." ui ON u.id=ui.user_id WHERE u.usergroups LIKE '%|". intval($group['id']) ."|%' AND u.id <> ". intval($group['mod_id']) ." LIMIT ". intval($start) .", ". intval($perpage));
+				$users				= &new UsersIterator($result);
+				$request['template']->setList('users_in_usergroup', $users);
+			}
 
 			$request['template']->setVar('num_group_members', $num_results);
 			
@@ -138,7 +141,6 @@ class K4DefaultAction extends FAAction {
 			}
 
 			k4_bread_crumbs($request['template'], $request['dba'], $group['name']);
-			$request['template']->setList('users_in_usergroup', $users);
 			$request['template']->setFile('content', 'lookup_usergroup.html');
 		}
 		

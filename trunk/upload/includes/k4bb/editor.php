@@ -55,9 +55,8 @@ function create_editor(&$request, $text, $place, $forum = FALSE) {
 	
 	$editor_text = (USE_WYSIWYG ? '<br />' : '');
 	if($text != '') {
-		$bbcode			= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $text, $forum['forum_id'], TRUE, TRUE, TRUE, TRUE, array('php', 'quote', 'code'));
-		
-		$editor_text	= $bbcode->revert();
+		$parser = &new BBParser;
+		$editor_text	= $parser->revert($text);
 	}
 
 	$request['template']->setVar('editor_text_reverted', $editor_text);
