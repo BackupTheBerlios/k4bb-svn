@@ -225,6 +225,10 @@ class MysqlConnection extends FADBConnection {
 	function commitTransaction() {
 		return TRUE;
 	}
+
+	function version() {
+		return intval(str_replace('.', '', mysql_get_server_info($this->link)));
+	}
 }
 
 ?>

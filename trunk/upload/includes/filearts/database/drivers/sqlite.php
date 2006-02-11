@@ -425,6 +425,9 @@ class SQLiteConnection extends FADBConnection {
 	function commitTransaction() {
 		$this->executeUpdate("COMMIT");
 	}
+	function version() {
+		return intval(str_replace('.', '', sqlite_libversion() ));
+	}
 }
 
 ?>

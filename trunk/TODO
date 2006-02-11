@@ -1,19 +1,18 @@
 [todo]
 Email this page (topic view, topic options menu)
-Portal
 Fix RSS <?xml declaration for all browsers
 RSS 2.0 templates
-Meta forums
+DONE - Meta forums
 Archive forums
-Put in new bbcode parser
+DONE - Put in new bbcode parser
 Fix the bug (that only I know about) in the quick search js thinger
 Read/unread topics, forums, etc!!! GET IT RIGHT!!
 
 [in progress]
 friendly urls with FAUrl generated urls
 Calendar
-Port all templates to Thasmo's design
-Make design work on the stupid idiot browser Internet Explorer
+DONE - Port all templates to Thasmo's design
+DONE - Make design work on the stupid idiot browser Internet Explorer
 
 [mods]
 Portal
@@ -23,3 +22,4 @@ Blog
 [moderator]
 manage attachments (ddmenu)
 Make viewing queued topics more intuitive
+Split/merge topics

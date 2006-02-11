@@ -290,10 +290,23 @@ class K4LanguageElement extends FAObject {
 	function __toString() {
 		global $_LANG;
 		
-		$this->_args[0] = isset($_LANG[$this->_args[0]]) ? $_LANG[$this->_args[0]] : $this->_args[0];
+		$this->_args[0]		= isset($_LANG[$this->_args[0]]) ? $_LANG[$this->_args[0]] : $this->_args[0];
 		
+		
+
 		if(count($this->_args) > 1) {
-			$return			= call_user_func_array('sprintf', $this->_args);
+			
+			$args			= array();
+			foreach($this->_args as $arg) {
+				if(is_string($arg)) {
+					if(strpos($arg, 'L_') !== FALSE) {
+						$arg	= $_LANG[$arg];
+					}
+					$args[]		= $arg;
+				}
+			}
+
+			$return			= call_user_func_array('sprintf', $args);
 		} else {
 			$return			= $this->_args[0];
 		}

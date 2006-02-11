@@ -139,6 +139,17 @@ $app->setAction('forums_update', new AdminUpdateForum);
 $app->setAction('forums_remove', new AdminRemoveForum);
 $app->setAction('forums_permissions', new AdminForumPermissions);
 $app->setAction('forums_updateperms', new AdminUpdateForumPermissions);
+$app->setAction('forums_filters', new AdminGetForumFilters);
+$app->setAction('forums_updatefilters', new AdminUpdateForumFilters);
+
+/* Filters */
+$app->setAction('filters_manage', new AdminFilters);
+$app->setAction('filters_add', new AdminAddFilter);
+$app->setAction('filters_edit', new AdminEditFilter);
+$app->setAction('filters_insert', new AdminInsertFilter);
+$app->setAction('filters_update', new AdminUpdateFilter);
+$app->setAction('filters_remove', new AdminRemoveFilter);
+$app->setAction('filters_selectforum', new AdminFiltersSelectForum);
 
 /* Users */
 $app->setAction('users', new AdminUsers);

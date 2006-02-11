@@ -223,6 +223,10 @@ class PgSQLConnection extends FADBConnection {
 	function commitTransaction() {
 		$this->executeUpdate("COMMIT");
 	}
+
+	function version() {
+		return 0; // TODO: how does one get the pgsql version?
+	}
 }
 
 ?>

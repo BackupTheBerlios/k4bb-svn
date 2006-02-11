@@ -924,4 +924,197 @@ class AdminUpdateForumPermissions extends FAAction {
 	}
 }
 
+class AdminGetForumFilters extends FAAction {
+	function addFilterData(&$filter, $insert, $data) {
+		
+		$return_val = '';
+		
+		switch($filter[$insert .'_type']) {
+			case META_STRING: {
+				$return_val = $data;
+				break;
+			}
+			case META_ID:
+			case META_INT: {
+				$return_val = intval($data);
+				break;
+			}
+			case META_TIME: {
+				$return_val = ceil($data / 86400);
+				break;
+			}
+		}
+		
+		if( ! ($filter[$insert .'_type'] & META_SAME) ) {
+			$filter[$insert .'_value']	= $return_val;
+		}
+	}
+	function execute(&$request) {		
+		
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
+			global $_FILTERS, $_FORUMFILTERS, $_ALLFORUMS;
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
+			
+			if(!isset($_REQUEST['forum_id']) || intval($_REQUEST['forum_id']) == 0) {
+				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
+				return $action->execute($request);
+			}
+
+			$forum = $_ALLFORUMS[intval($_REQUEST['forum_id'])];
+
+			if( ! ($forum['row_type'] & METAFORUM) ) {
+				$action = new K4InformationAction(new K4LanguageElement('L_FORUMCANTHAVEFILTERS'), 'content', FALSE);
+				return $action->execute($request);
+			}
+
+			foreach($forum as $key => $val)
+				$request['template']->setVar('forum_'. $key, $val);
+			
+			// merge the two arrays together
+			if(isset($_FORUMFILTERS[$forum['forum_id']])) {
+				foreach($_FORUMFILTERS[$forum['forum_id']] as $forum_id=>$filter) {
+					if(isset($_FILTERS[$filter['filter_id']])) {
+						$this->addFilterData($_FILTERS[$filter['filter_id']], 'insert1', $filter['insert1']);
+						$this->addFilterData($_FILTERS[$filter['filter_id']], 'insert2', $filter['insert2']);
+						$this->addFilterData($_FILTERS[$filter['filter_id']], 'insert3', $filter['insert3']);
+						$_FILTERS[$filter['filter_id']]['used'] = 1;
+					}
+				}
+			}
+
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_EDITFORUMFILTERS');
+			$request['template']->setList('filters', new FAArrayIterator($_FILTERS));
+			$request['template']->setVar('forums_on', '_on');
+			$request['template']->setFile('sidebar_menu', 'menus/forums.html');
+			$request['template']->setFile('content', 'forums_filters.html');
+		} else {
+			no_perms_error($request);
+		}
+
+		return TRUE;
+	}
+}
+
+class AdminUpdateForumFilters extends FAAction {
+	function getFilterVal(&$filter, $insert, $data) {
+		$return_val = '';
+		
+		switch($filter[$insert .'_type']) {
+			case META_STRING: {
+				$return_val = $data;
+				break;
+			}
+			case META_ID:
+			case META_INT: {
+				$return_val = intval($data);
+				break;
+			}
+			case META_TIME: {
+				$return_val = ceil($data * 86400);
+				break;
+			}
+		}
+
+		return $return_val;
+	}
+	function execute(&$request) {		
+		
+		if($request['user']->isMember() && ($request['user']->get('perms') >= SUPERADMIN)) {
+			global $_FILTERS, $_FORUMFILTERS, $_ALLFORUMS;
+			
+			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
+			
+			if(!isset($_REQUEST['forum_id']) || intval($_REQUEST['forum_id']) == 0) {
+				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDFORUM'), 'content', FALSE);
+				return $action->execute($request);
+			}
+
+			$forum = $_ALLFORUMS[intval($_REQUEST['forum_id'])];
+
+			if( ! ($forum['row_type'] & METAFORUM) ) {
+				$action = new K4InformationAction(new K4LanguageElement('L_FORUMCANTHAVEFILTERS'), 'content', FALSE);
+				return $action->execute($request);
+			}
+			
+			// clear all the filters, we might put them back in later ;)
+			$request['dba']->executeUpdate("DELETE FROM ". K4FORUMFILTERS ." WHERE forum_id=". intval($forum['forum_id']));
+			
+			// go through all of the filters checked off to use
+			$checked_filters = $_REQUEST['filters'];
+
+			if(is_array($checked_filters) && !empty($checked_filters)) {
+				
+				// create the query
+				$insert = $request['dba']->prepareStatement("INSERT INTO ". K4FORUMFILTERS ." (forum_id,filter_id,insert1,insert2,insert3) VALUES (?,?,?,?,?)");
+				$insert->setInt(1, $forum['forum_id']);
+				
+				foreach($checked_filters as $filter_id) {
+					
+					$filter_id = intval($filter_id);
+					$insert1 = $insert2 = $insert3 = '';
+					
+					if(isset($_FILTERS[$filter_id])) {
+						
+						$filter		= &$_FILTERS[$filter_id];
+						
+						if(intval($filter['num_inserts']) > 0) {
+							
+							if(isset($_REQUEST[$filter_id .'_insert1'])) {
+								if(intval($filter['insert1_type']) != 0 && $_REQUEST[$filter_id .'_insert1'] != '') {
+									$insert1 = $this->getFilterVal($filter, 'insert1', $_REQUEST[$filter_id .'_insert1']);
+								}
+							}
+							if(intval($filter['insert2_type']) != META_SAME) {
+								if(isset($_REQUEST[$filter_id .'_insert1'])) {
+									if($filter['insert2_type'] != 0 && $_REQUEST[$filter_id .'_insert2'] != '') {
+										$insert2 = $this->getFilterVal($filter, 'insert2', $_REQUEST[$filter_id .'_insert2']);
+									}
+								}
+							} else {
+								$insert2 = $insert1;
+							}
+							if(intval($filter['insert3_type']) != META_SAME) {
+								if(isset($_REQUEST[$filter_id .'_insert3'])) {
+									if($filter['insert3_type'] != 0 && $_REQUEST[$filter_id .'_insert3'] != '') {
+										$insert3 = $this->getFilterVal($filter, 'insert3', $_REQUEST[$filter_id .'_insert3']);
+									}
+								}
+							} else {
+								$insert3 = $insert2;
+							}
+						}
+
+						$num_filled = 0;
+						if($insert1 != '') $num_filled++;
+						if($insert2 != '') $num_filled++;
+						if($insert3 != '') $num_filled++;
+
+						if($num_filled >= intval($filter['num_inserts'])) {
+							
+							$insert->setInt(2, $filter_id);
+							$insert->setString(3, $insert1);
+							$insert->setString(4, $insert2);
+							$insert->setString(5, $insert3);
+							
+							$insert->executeUpdate();
+						}
+					}
+				}
+
+			}
+
+			reset_cache('forum_filters');
+			
+			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDFORUMFILTERS', $forum['name']), 'content', FALSE, 'admin.php?act=forum_select', 3);
+			return $action->execute($request);
+
+		} else {
+			no_perms_error($request);
+		}
+
+		return TRUE;
+	}
+}
+
 ?>

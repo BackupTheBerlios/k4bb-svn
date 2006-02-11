@@ -1,42 +1,47 @@
 <core:import id="forum_rules" file="forum_rules.html" />
 
-<div align="center">
-	<div style="width:95%;">
-		<div class="gen_box2_head"><div id="header">&nbsp;</div></div>
-		<div class="alt1" style="padding-top:0px;margin-top:0px;text-align:right;">
-			<page:navigator id="topics_pager">
-			<div style="float:left;">
-				<span class="ddmenu_link" id="page_jump2"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></span>
-				<page:first><page:link>{$L_FIRST} </page:link></page:first>
-				<page:prev><page:link>{$L_PREV} </page:link></page:prev>
-				<page:list id="topics_pager" before="3" after="3">
-				<list:item list="topics_pager">
-					<page:link class="pager_link">{$pagenum}</page:link>
-					<list:separator list="topics_pager">, </list:separator>
-				</list:item>
-				</page:list>
-				<page:next><page:link> {$L_NEXT}</page:link></page:next>
-				<page:last><page:link> {$L_LAST}</page:link></page:last>
-			</div>
-			</page:navigator>
-			<if:if var="forum_id" noteq="garbage_bin_id">
-				<maps:if var="topics" forum="forum_id" method="can_add"><a href="newtopic.php?id={$forum_id}" title="{$L_POSTTOPIC}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/post_topic.gif" alt="{$L_POSTTOPIC}" /></a></maps:if>
-			</if:if>
-		</div>
-	</div>
-</div>
+<table width="100%" cellspacing="0">
+	<tr>
+		<page:navigator id="topics_pager">
+		<td align="left" nowrap="nowrap" style="padding:0px;margin:0px;border:0px;">
+			<span class="ddmenu_link" id="page_jump1"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></span>
+			<page:first><page:link>{$L_FIRST} </page:link></page:first>
+			<page:prev><page:link>{$L_PREV} </page:link></page:prev>
+			<page:list id="topics_pager" before="3" after="3">
+			<list:item list="topics_pager">
+				<page:link class="pager_link">{$pagenum}</page:link>
+				<list:separator list="topics_pager">, </list:separator>
+			</list:item>
+			</page:list>
+			<page:next><page:link> {$L_NEXT}</page:link></page:next>
+			<page:last><page:link> {$L_LAST}</page:link></page:last>
+		</td>
+		</page:navigator>
+		<if:if var="can_post_in_forum" eq="1">
+		<td width="100%" nowrap="nowrap" style="text-align:right;padding:0px;margin:0px;border:0px;">
+			<maps:if var="topics" forum="forum_id" method="can_add"><a href="newtopic.php?id={$forum_id}" title="{$L_POSTTOPIC}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/post_topic.gif" alt="{$L_POSTTOPIC}" /></a></maps:if>
+		</td>
+		</if:if>
+	</tr>
+</table>
+
 <!-- Topics List of '{$current_location}' -->
 <div class="header">
 	<div class="title" align="right" style="overflow: hidden;">
 		<div style="float: left;text-align: left;">
-			{$name}
+			{$name} 
 			<a href="rss.php?f={$forum_forum_id}" title="{$L_RSSFEED}: {$forum_name}"><img src="Images/{$IMG_DIR}/Icons/rss_small.gif" alt="{$L_RSSFEED}: {$forum_name}" border="0" /></a>
+			
 		</div>
+		<if:if var="row_type" eq="256"><span class="ddmenu_link" id="forumfilters_link">{$L_FORUMFILTERS}</span></if:if>
+		<if:if var="row_type" less="16">
 		<!-- Drop Down Menus -->
 		<span class="ddmenu_link_alt" id="forumoptions_link">{$L_FORUMOPTIONS}</span>
 		<!-- / Drop Down Menus -->
+		</if:if>
 	</div>
 </div>
+
 <if:if var="description" noteq="">
 <div class="spacer">
 	<div class="alt2">{$description}</div>
@@ -186,8 +191,7 @@
 						<tr>
 							<td class="smalltext">{$L_FROMTHE}:</td>
 							<td>
-								<select name="daysprune" style="width:125px" class="inputbox">
-									<option value="1">{$L_LAST_DAY}</option>
+								<select name="daysprune" style="width:125px" class="inputbox"<if:if var="row_type" greater="16"> disabled="disabled"</if:if>>
 									<option value="2">{$L_LAST_2_DAYS}</option>
 									<option value="7">{$L_LAST_WEEK}</option>
 									<option value="10">{$L_LAST_10_DAYS}</option>
@@ -201,8 +205,8 @@
 									<option value="0" selected="selected">{$L_BEGINNING}</option>
 								</select>
 							</td>
-							<td class="smalltext">
-								{$L_LIMIT}: 
+							<td>
+								<span class="smalltext">{$L_LIMIT}: </span>
 								<select name="limit" class="inputbox">
 									<option value="5">5</option>
 									<option value="10">10</option>
@@ -224,11 +228,11 @@
 
 <div class="footer_block"><div>&nbsp;</div></div>
 
-<div align="center" class="spacer">
-	<div style="width:95%;">
-		<div class="alt1" style="padding-bottom:0px;margin-bottom:0px;text-align:right;">
+<div class="spacer">
+	<table width="100%" cellspacing="0">
+		<tr>
 			<page:navigator id="topics_pager">
-			<div style="float:left;">
+			<td align="left" nowrap="nowrap" style="padding:0px;margin:0px;border:0px;">
 				<span class="ddmenu_link" id="page_jump2"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></span>
 				<page:first><page:link>{$L_FIRST} </page:link></page:first>
 				<page:prev><page:link>{$L_PREV} </page:link></page:prev>
@@ -240,16 +244,17 @@
 				</page:list>
 				<page:next><page:link> {$L_NEXT}</page:link></page:next>
 				<page:last><page:link> {$L_LAST}</page:link></page:last>
-			</div>
+			</td>
 			</page:navigator>
-			<if:if var="forum_id" noteq="garbage_bin_id">
+			
+			<if:if var="can_post_in_forum" eq="1">
+			<td width="100%" nowrap="nowrap" style="text-align:right;padding:0px;margin:0px;border:0px;">
 				<maps:if var="topics" forum="forum_id" method="can_add"><a href="newtopic.php?id={$forum_id}" title="{$L_POSTTOPIC}"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/post_topic.gif" alt="{$L_POSTTOPIC}" /></a></maps:if>
+			</td>
 			</if:if>
-		</div>
-		<div class="gen_box2_foot"><div id="footer">&nbsp;</div></div>
-	</div>
+		</tr>
+	</table>
 </div>
-
 <!-- Forum User Posting Options -->
 <div class="spacer">
 	<div class="gen_box2_head"><div id="header">&nbsp;</div></div>
@@ -269,10 +274,11 @@
 	<div class="gen_box2_foot"><div id="footer">&nbsp;</div></div>
 </div>
 <!-- / Forum User Posting Options -->
-
+<if:if var="row_type" less="16">
 <!-- Forum Options -->
 <div id="forumoptions_menu" style="display: none;">
 	<table width="190" cellspacing="{$style_cellspacing}" class="table">
+		
 		<is:logged>
 		<tr>
 			<td class="alt1">
@@ -306,10 +312,24 @@
 	</table>
 </div>
 <!-- / Forum Options -->
+</if:if>
+
+<if:if var="row_type" eq="256">
+<!-- Forum Filters -->
+<div id="forumfilters_menu" style="display: none;">
+	<table cellspacing="{$style_cellspacing}" class="table">
+		<list:list id="forum_filters"><list:item list="forum_filters"><list:switch list="forum_filters" var="row_class" a="base3" b="base4">
+		<tr class="{$row_class}"><td nowrap="nowrap"><span class="smalltext">{$name}</span></td></tr>
+		</list:switch></list:item></list:list>
+	</table>
+</div>
+<!-- / Forum Filters -->
+</if:if>
 
 <core:import id="page_jumper" file="page_jumper.html" />
 <script type="text/javascript">
 	menu_init('forumoptions_link', 'forumoptions_menu');
+	menu_init('forumfilters_link', 'forumfilters_menu');
 	menu_init('page_jump1', 'page_jump_menu');
 	menu_init('page_jump2', 'page_jump_menu');
 </script>

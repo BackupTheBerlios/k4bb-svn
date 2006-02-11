@@ -269,6 +269,34 @@ class K4GeneralCacheFilter extends FAFilter {
 		}
 		$result->free();
 	}
+	/**
+	 * Get all of the filters for forums
+	 */
+	function cache_filters(&$cache, &$request) {
+		$cache['filters']						= array();
+		
+		$result									= $request['dba']->executeQuery("SELECT * FROM ". K4FILTERS);
+		while($result->next()) {
+			$temp								= $result->current();
+			
+			$cache['filters'][$temp['filter_id']]= $temp;
+		}
+		$result->free();
+	}
+	/**
+	 * Get all of the forum filters
+	 */
+	function cache_forum_filters(&$cache, &$request) {
+		$cache['forum_filters']					= array();
+		
+		$result									= $request['dba']->executeQuery("SELECT * FROM ". K4FORUMFILTERS);
+		while($result->next()) {
+			$temp								= $result->current();
+			
+			$cache['forum_filters'][intval($temp['forum_id'])][]= $temp;
+		}
+		$result->free();
+	}
 	function execute(&$action, &$request, $do_overwrite = FALSE) {
 				
 		$cache = array();		
@@ -280,12 +308,13 @@ class K4GeneralCacheFilter extends FAFilter {
 			
 			/* Include the cache file */
 			include_dir(CACHE_DIR);
-
+			
 //			if(!isset($cache) || !is_array($cache) || empty($cache)) {
 //				trigger_error('FILE: The cache array does not exist or it is empty.', E_USER_ERROR);
 //			}
 		}
 		
+
 		/**
 		 * Database caching
 		 */
@@ -298,10 +327,7 @@ class K4GeneralCacheFilter extends FAFilter {
 			
 			while($result->next()) {
 				$temp = $result->current();
-				
-				//	echo strlen($temp['data']) .'<br />'.$temp['data'] .'<br /><br />';
 				$cache[$temp['varname']] = force_unserialize($temp['data']);
-
 				unset($temp); // memory saving
 			}
 			
@@ -323,6 +349,8 @@ class K4GeneralCacheFilter extends FAFilter {
 			$GLOBALS['_MAILQUEUE']				= isset($cache['mail_queue']) ? $cache['mail_queue'] : array();
 			$GLOBALS['_DATASTORE']				= isset($cache['datastore']) ? $cache['datastore'] : array();
 			$GLOBALS['_USERTITLES']				= &$cache['user_titles'];
+			$GLOBALS['_FILTERS']				= &$cache['filters'];
+			$GLOBALS['_FORUMFILTERS']			= &$cache['forum_filters'];
 		}	
 		
 		/**
@@ -338,7 +366,7 @@ class K4GeneralCacheFilter extends FAFilter {
 						$this->$function($cache, $request);
 					}	
 				}
-
+				
 				/* Create the cache file */
 				DBCache::createCache($cache);
 			}
@@ -361,6 +389,8 @@ class K4GeneralCacheFilter extends FAFilter {
 		
 		$all_forums	 = new AllForumsIterator($_ALLFORUMS);
 		$request['template']->setList('all_forums', $all_forums);
+
+		return FALSE;
 	}
 
 	function getDependencies() {

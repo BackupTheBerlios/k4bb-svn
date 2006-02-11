@@ -3,24 +3,21 @@
 	<tr>
 		<page:navigator id="replies_pager">
 		<td align="left" nowrap="nowrap" style="padding:0px;margin:0px;border:0px;">
-			<table cellspacing="{$style_cellspacing}" class="pagination">
-				<tr>
-					<td class="alt3" id="page_jump1" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
-					<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
-					<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
-					<page:list id="replies_pager" before="3" after="3">
-					<list:item list="replies_pager">
-						<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
-					</list:item>
-					</page:list>
-					<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
-					<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
-				</tr>
-			</table>
+			<span class="ddmenu_link" id="page_jump1"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></span>
+			<page:first><page:link>{$L_FIRST} </page:link></page:first>
+			<page:prev><page:link>{$L_PREV} </page:link></page:prev>
+			<page:list id="replies_pager" before="3" after="3">
+			<list:item list="replies_pager">
+				<page:link class="pager_link">{$pagenum}</page:link>
+				<list:separator list="replies_pager">, </list:separator>
+			</list:item>
+			</page:list>
+			<page:next><page:link> {$L_NEXT}</page:link></page:next>
+			<page:last><page:link> {$L_LAST}</page:link></page:last>
 		</td>
 		</page:navigator>
 		<if:if var="forum_forum_id" noteq="garbage_bin_id">
-		<td width="100%" align="right" nowrap="nowrap" style="padding:0px;margin:0px;border:0px;">
+		<td width="100%" nowrap="nowrap" style="text-align:right;padding:0px;margin:0px;border:0px;">
 			<!-- Posting Buttons -->
 			<if:if var="topic_post_locked" eq="1"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/locked.gif" alt="{$L_LOCKED}" /></if:if>
 			<maps:if var="topics" forum="topic_forum_id" method="can_add">
@@ -101,24 +98,21 @@
 	<tr>
 		<page:navigator id="replies_pager">
 		<td align="left" nowrap="nowrap" style="padding:0px;margin:0px;border:0px;">
-			<table cellspacing="{$style_cellspacing}" class="pagination">
-				<tr>
-					<td class="alt3" id="page_jump2" nowrap="nowrap"><div class="ddmenu_link"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></div></td>
-					<page:first><td class="alt2"><page:link><span class="smalltext">{$L_FIRST}</span></page:link></td></page:first>
-					<page:prev><td class="alt2"><page:link><span class="smalltext">{$L_PREV}</span></page:link></td></page:prev>
-					<page:list id="replies_pager" before="3" after="3">
-					<list:item list="replies_pager">
-						<td class="alt1"><page:link class="pager_link"><span class="smalltext">{$pagenum}</span></page:link></td>
-					</list:item>
-					</page:list>
-					<page:next><td class="alt2"><page:link><span class="smalltext">{$L_NEXT}</span></page:link></td></page:next>
-					<page:last><td class="alt2"><page:link><span class="smalltext">{$L_LAST}</span></page:link></td></page:last>
-				</tr>
-			</table>
+			<span class="ddmenu_link" id="page_jump2"><span class="smalltext">{$L_PAGES} ({$num_pages})</span></span>
+			<page:first><page:link>{$L_FIRST} </page:link></page:first>
+			<page:prev><page:link>{$L_PREV} </page:link></page:prev>
+			<page:list id="replies_pager" before="3" after="3">
+			<list:item list="replies_pager">
+				<page:link class="pager_link">{$pagenum}</page:link>
+				<list:separator list="replies_pager">, </list:separator>
+			</list:item>
+			</page:list>
+			<page:next><page:link> {$L_NEXT}</page:link></page:next>
+			<page:last><page:link> {$L_LAST}</page:link></page:last>
 		</td>
 		</page:navigator>
 		<if:if var="forum_forum_id" noteq="garbage_bin_id">
-		<td width="100%" align="right" nowrap="nowrap" style="padding:0px;margin:0px;border:0px;">
+		<td width="100%" nowrap="nowrap" style="text-align:right;padding:0px;margin:0px;border:0px;">
 			<!-- Posting Buttons -->
 			<if:if var="topic_post_locked" eq="1"><img border="0" src="Images/{$IMG_DIR}/Buttons/{$LANG}/locked.gif" alt="{$L_LOCKED}" /></if:if>
 			<maps:if var="topics" forum="topic_forum_id" method="can_add">
@@ -165,10 +159,11 @@
 	</form>
 </div>
 <!-- / Rate Topic Drop Down Menu -->
+
+<core:import id="page_jumper" file="page_jumper.html" />
 <script type="text/javascript">
 	menu_init('topicoptions_link', 'topicoptions_menu');
 	menu_init('ratetopic_link', 'ratetopic_menu');
 	menu_init('page_jump1', 'page_jump_menu');
 	menu_init('page_jump2', 'page_jump_menu');
 </script>
-<core:import id="page_jumper" file="page_jumper.html" />

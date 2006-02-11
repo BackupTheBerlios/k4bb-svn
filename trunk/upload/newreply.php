@@ -62,10 +62,10 @@ class K4DefaultAction extends FAAction {
 			return $action->execute($request);
 		}
 			
-		/* Make sure the we are trying to delete from a forum */
-		if(!($forum['row_type'] & FORUM)) {
-			$action = new K4InformationAction(new K4LanguageElement('L_CANTDELFROMNONFORUM'), 'content', FALSE);
-			return $action->execute($request);
+		/* Make sure the we are trying to post to a forum */
+		if(!($forum['row_type'] & FORUM) || $forum['forum_id'] == GARBAGE_BIN) {
+			no_perms_error($request);
+			return TRUE;
 		}
 
 		/* Do we have permission to post to this topic in this forum? */

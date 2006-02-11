@@ -1,6 +1,20 @@
 <is:admin>
 <div class="header"><div class="title">{$L_FORUMPERMISSIONS}: <span style="font-weight: normal;"><if:if var="forum_id" noteq="0">{$forum_name}<if:else />{$L_MASTERPERMISSIONS}</if:if></span></div></div>
 <div class="spacer">
+	<div class="base3">
+		<strong>{$L_HOWDOMAPSPERMSWORK}</strong>
+		<p>
+			{$L_HOWMAPSPERMSWORK}
+		</p>
+		<if:if var="forum_forum_id" eq="0">
+		<strong>{$L_HOWDOMASTERPERMSWORK}</strong>
+		<p>
+			{$L_HOWMASTERPERMSWORK}
+		</p>
+		</if:if>
+	</div>
+</div>
+<div class="spacer">
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
 			<td class="subheader" width="30%">{$L_NAME}</td>

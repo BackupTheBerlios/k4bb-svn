@@ -11,6 +11,14 @@
 <!-- MAPS GUI -->
 <div class="header"><div class="title">{$L_PERMISSIONS}</div></div>
 <div class="spacer">
+	<div class="base3">
+		<strong>{$L_HOWDOMAPSPERMSWORK}</strong>
+		<p>
+			{$L_HOWMAPSPERMSWORK}
+		</p>
+	</div>
+</div>
+<div class="spacer">
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 		<tr>
 			<td class="subheader" width="30%">{$L_NAME}</td>
@@ -31,7 +39,7 @@
 		<tr>
 			<td class="{$row_class}" nowrap="nowrap">
 				<div id="maps_link{$id}" class="inputbox">{$level}{$name}</div>
-				<div id="maps_menu{$id}" class="header" style="">
+				<div id="maps_menu{$id}" style="">
 					<table cellspacing="{$style_cellspacing}" class="table">
 						<tr class="supheader">
 							<td nowrap="nowrap">{$L_VARNAME}: {$varname}</td>

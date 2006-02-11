@@ -1,0 +1,32 @@
+<is:admin>
+<div class="header"><div class="title">{$L_EDITFORUMFILTERS}</div></div>
+<div class="spacer">
+	<form action="admin.php" method="get" enctype="multipart/form-data">
+	<input type="hidden" name="act" value="forums_filters" />
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td class="alt3" colspan="5" style="text-align: center;">
+				<br />
+				<strong>{$L_METAFORUMS}</strong><br /><br />
+				<select name="forum_id" id="forum_id" class="inputbox">
+					<list:list id="all_forums">
+					<list:item list="all_forums">
+						<if:if var="row_type" eq="256">
+							<option value="{$forum_id}">{$name}</option>
+						</if:if>
+					</list:item>
+					</list:list>
+				</select>
+				<br /><br />
+			</td>
+		</tr>
+		<tr>
+			<td class="base3" style="text-align: center;">
+				<input type="submit" value="{$L_SELECT}" class="button" />
+			</td>
+		</tr>
+	</table>
+	</form>
+</div>
+<div class="footer_block"><div>&nbsp;</div></div>
+</is:admin>

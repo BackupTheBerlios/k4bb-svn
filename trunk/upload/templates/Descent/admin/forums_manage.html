@@ -15,8 +15,8 @@
 </div>
 <div class="spacer">
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-		<list:list id="forums">
-		<list:default list="forums">
+		<list:list id="all_forums">
+		<list:default list="all_forums">
 		<tr class="alt3">
 			<td>
 				<div class="outset_box" align="center">
@@ -45,6 +45,7 @@
 					</div>	
 					&nbsp;<strong>{$name}</strong>
 					<div align="right">
+						<if:if var="row_type" eq="256"><input type="button" class="button" value="{$L_EDITFILTERS}" onclick="document.location='admin.php?act=forums_filters&forum_id={$forum_id}'" /></if:if>
 						<input type="button" class="button" value="{$L_EDITPERMISSIONS}" onclick="document.location='admin.php?act=forums_permissions&forum_id={$forum_id}'" />
 						<input type="button" class="button" style="font-weight: bold;" value="{$L_ADDSUBFORUM}" onclick="document.location='admin.php?act=forums_add&category_id={$category_id}&forum_id={$forum_id}'" />
 					</div>

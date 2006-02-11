@@ -48,7 +48,7 @@ class K4DefaultAction extends FAAction {
 		}
 			
 		/* Make sure the we are trying to post into a forum */
-		if(!($forum['row_type'] & FORUM)) {
+		if(!($forum['row_type'] & FORUM) || $forum['forum_id'] == GARBAGE_BIN) {
 			no_perms_error($request);
 			return TRUE;
 		}

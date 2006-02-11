@@ -1,0 +1,87 @@
+<is:admin>
+<form:form action="{$filter_action}" method="post" enctype="multipart/form-data">
+<if:if var="is_edit" eq="1"><input type="hidden" name="filter_id" value="{$filter_filter_id}" /></if:if>
+<div class="header"><div class="title"><if:if var="is_edit" eq="1">{$L_EDITFILTER}<span style="font-weight: normal;">: {$filter_filter_name}</span><if:else />{$L_ADDFILTER}</if:if></div></div>
+<div class="subheader">{$L_GENERAL}</div>
+<div class="spacer">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr class="alt1">
+			<td width="30%"><strong>{$L_NAME}:</strong></td>
+			<td>
+				<input type="text" size="40" name="filter_name" id="filter_name" value="{$filter_filter_name}" maxlength="50" class="inputbox" />
+				<form:error id="name_error" for="filter_name" setclass="inputfailed" regex=".+">{$L_REQUIREDFIELD}</form:error>
+			</td>
+		</tr>
+		<tr class="alt2">
+			<td width="30%"><strong>{$L_DESCRIPTION}:</strong></td>
+			<td>
+				<input type="text" size="40" name="filter_desc" id="filter_desc" value="{$filter_filter_desc}" maxlength="255" class="inputbox" />
+				<form:error id="desc_error" for="filter_desc" setclass="inputfailed" regex=".+">{$L_REQUIREDFIELD}</form:error>
+			</td>
+		</tr>
+		<tr class="alt1">
+			<td width="30%">
+				<strong>{$L_QUERY}:</strong>
+				<div class="smalltext">
+					{$L_FILTERQUERYHOWTO}
+					<br /><br />
+					{$L_USEDOUBLESTART}
+					<br /><br />
+					{$L_SUBSELECTSARE} <strong><if:if var="can_subselect" eq="1">{$L_ON}<if:else />{$L_OFF}</if:if></strong>
+				</div>
+			</td>
+			<td>
+				<input type="text" size="40" name="filter_query" id="filter_query" value="{$filter_filter_query}" maxlength="50" class="inputbox" />
+				<form:error id="query_error" for="filter_query" setclass="inputfailed" regex=".+">{$L_REQUIREDFIELD}</form:error>
+			</td>
+		</tr>
+		<tr class="alt2">
+			<td width="30%">
+				<strong>{$L_NUMFILTERSUBSTITUTES}:</strong>
+			</td>
+			<td>
+				<input type="text" size="2" name="num_inserts" id="num_inserts" value="{$filter_num_inserts}" maxlength="1" class="inputbox" />
+				<form:error id="num_inserts_error" for="num_inserts" setclass="inputfailed" regex=".+">{$L_REQUIREDFIELD}</form:error>
+			</td>
+		</tr>
+		<tr>
+			<td class="base3" colspan="2" style="text-align: center;">
+				<input type="submit" class="button" value="{$L_SAVE}" />
+				<input type="reset" class="button" value="{$L_RESET}" />
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="subheader">{$L_SUBSTITUTEINFO}</div>
+<div class="alt3">
+	<br />{$L_HOWTOSUBSTITUTEINFO}<br /><br />
+</div>
+<div class="spacer">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<tr>
+			<td class="supheader" style="text-align:center;" width="50%">{$L_LABEL}</td>
+			<td class="supheader" style="text-align:center;" width="50%">{$L_SUBSTITUTETYPE}</td>
+		</tr>
+		<tr>
+			<td class="alt1" style="text-align:center;"><input type="text" name="insert1_label" value="{$filter_insert1_label}" size="20" maxlength="50" class="inputbox" /></td>
+			<td class="alt1" style="text-align:center;"><select name="insert1_type" id="insert1_type" class="inputbox"><option value="0">{$L_NONE}</option><option value="1">{$L_STRING}</option><option value="2">{$L_INTEGER}</option><option value="4">{$L_TIME}</option><option value="8">{$L_MEMBERID}</option><option value="16">{$L_SAMEASPREVIOUSSUB}</option></select><if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex({$filter_insert1_type}, 'insert1_type');</script></if:if></td>
+		</tr>
+		<tr>
+			<td class="alt2" style="text-align:center;"><input type="text" name="insert2_label" value="{$filter_insert2_label}" size="20" maxlength="50" class="inputbox" /></td>
+			<td class="alt2" style="text-align:center;"><select name="insert2_type" id="insert2_type" class="inputbox"><option value="0">{$L_NONE}</option><option value="1">{$L_STRING}</option><option value="2">{$L_INTEGER}</option><option value="4">{$L_TIME}</option><option value="8">{$L_MEMBERID}</option><option value="16">{$L_SAMEASPREVIOUSSUB}</option></select><if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex({$filter_insert2_type}, 'insert2_type');</script></if:if></td>
+		</tr>
+		<tr>
+			<td class="alt1" style="text-align:center;"><input type="text" name="insert3_label" value="{$filter_insert3_label}" size="20" maxlength="50" class="inputbox" /></td>
+			<td class="alt1" style="text-align:center;"><select name="insert3_type" id="insert3_type" class="inputbox"><option value="0">{$L_NONE}</option><option value="1">{$L_STRING}</option><option value="2">{$L_INTEGER}</option><option value="4">{$L_TIME}</option><option value="8">{$L_MEMBERID}</option><option value="16">{$L_SAMEASPREVIOUSSUB}</option></select><if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex({$filter_insert3_type}, 'insert3_type');</script></if:if></td>
+		</tr>
+		<tr>
+			<td class="base3" colspan="2" style="text-align: center;">
+				<input type="submit" class="button" value="{$L_SAVE}" />
+				<input type="reset" class="button" value="{$L_RESET}" />
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="footer_block"><div>&nbsp;</div></div>
+</form:form>
+</is:admin>

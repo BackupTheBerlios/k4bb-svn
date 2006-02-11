@@ -157,9 +157,8 @@ class FAController extends FAObject {
 
 			trigger_error("Unsatisfied dependencies for $filter: " . implode(', ', $unsatisfied), E_USER_ERROR);
 		}
-
+		
 		foreach ($this->_filters as $filter) {
-			
 			// If the filter returns FALSE run the action immediately
 			if ($filter->execute($action, $request))
 				break;

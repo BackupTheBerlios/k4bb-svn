@@ -201,6 +201,10 @@ class MysqliConnection extends FADBConnection {
 	function commitTransaction() {
 		mysqli_commit($this->link);
 	}
+
+	function version() {
+		return intval(str_replace('.', '', mysqli_get_server_info($this->link)));
+	}
 }
 
 ?>

@@ -1,12 +1,12 @@
 <is:admin>
 <script type="text/javascript">
 	function check_delete_forum() {
-		var obj = d.getElementById('forum_action');
-		if(obj[obj.selectedIndex].value == 'forums_remove') {
-			if(confirm('{$L_CHECKDELFORUM}')) { 
-				return true 
+		var forum_obj = ('forum_action').obj();
+		if(forum_obj[forum_obj.selectedIndex].value == 'forums_remove') {
+			if(confirm('{$L_CHECKDELFORUM}')) {
+				return true
 			} else { 
-				return false; 
+				return false;
 			}
 		}
 	}
@@ -32,6 +32,7 @@
 					<option value="forums_edit">{$L_EDIT}</option>
 					<option value="forums_add">{$L_ADDSUBFORUM}</option>
 					<option value="forums_permissions">{$L_EDITPERMISSIONS}</option>
+					<option value="forums_filters">{$L_EDITFILTERS}</option>
 					<option value="forums_remove" style="color: #FF0000;">{$L_DELETE}</option>
 				</select>
 				<br /><br />

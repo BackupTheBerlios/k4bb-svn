@@ -877,7 +877,7 @@ class SimpleUpdateTopic extends FAAction {
 			$update_a->executeUpdate();
 			
 			if($forum['post_id'] == $topic['post_id']) {
-				$update_c	= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET topic_name=? WHERE forum_id=?");
+				$update_c	= $request['dba']->prepareStatement("UPDATE ". K4FORUMS ." SET post_name=? WHERE forum_id=?");
 				$update_c->setString(1, $name);
 				$update_c->setInt(2, $forum['forum_id']);
 				$update_c->executeUpdate();

@@ -198,7 +198,51 @@ $_LANG += array(
 'L_MODERATINGGROUPS'	=> 'Moderating Groups',
 'L_MODERATINGUSERS'		=> 'Moderating Users',
 'L_ONEUSERPERLINE'		=> 'Put one username per line.',
+'L_HOWDOMASTERPERMSWORK'=> 'How do Master Forum Permissions work?',
+'L_HOWMASTERPERMSWORK'	=> 'These permissions get applied to every forum. However, if the forum has one of these permissions set differently than this master set, the forums custom permissions override these!',
+'L_HOWDOMAPSPERMSWORK'	=> 'How do MAPs Permissions Work?',
+'L_HOWMAPSPERMSWORK'	=> 'MAPs, short of Moduler Application Permissions work on four different fronts. Each permission, referred to by its name, has four different values. They are: view, add/execute, edit and delete. An example of these permissions at work would be the permission for \'topics\'. You can set what the permission is to view a topic, to add a topic to a forum, to edit a topic and to delete a topic. Cool, eh?',
+'L_EDITFILTERS'			=> 'Edit Filters',
+'L_FORUMCANTHAVEFILTERS'=> 'This forum cannot use Filters because it is not a META Forum.',
+'L_METAFORUMS'			=> 'META Forums',
+'L_UPDATEFORUMFILTERS'	=> 'Update Forum Filters',
+'L_UPDATEDFORUMFILTERS'	=> 'Successfully updated the META forums\' <strong>%s</strong> filters.',
 /* / Forum Management */
+
+/**
+ * Filters
+ */
+'L_FILTERS'				=> 'Filters',
+'L_HOWDOFILTERSWORK'	=> 'How do Filters work?',
+'L_HOWFILTERSWORK1'		=> 'Filters are admin-customizable sections of SQL queries. Each filter has the possibility of up to three substitute values that can be passed to it.',
+'L_HOWFILTERSWORK2'		=> 'Substitutes are values passed to each filter by meta forums. Meta forums use these filters with the substitute values to do their searches.',
+'L_ADDFILTER'			=> 'Add Filter',
+'L_EDITFILTER'			=> 'Edit Filter',
+'L_MANAGEFILTERS'		=> 'Manage Filters',
+'L_EDITFORUMFILTERS'	=> 'Edit Forum Filters',
+'L_NOFILTERS'			=> 'There are currently no filters available for use.',
+'L_CHECKDELFILTER'		=> 'Are you sure that you want to delete this filter? It may be active on one or more forums.',
+'L_QUERY'				=> 'Query',
+'L_FILTERQUERYHOWTO'	=> 'E.g. <strong>name=\'%s\' AND id=%s</strong><br /><br />Use <strong>%s</strong> for values that will be substituted in by the individual meta forums.',
+'L_NUMFILTERSUBSTITUTES'=> 'Number of values to substitute',
+'L_SUBSTITUTEINFO'		=> 'Substitute Information',
+'L_LABEL'				=> 'Label',
+'L_SUBSTITUTETYPE'		=> 'Substitute Type',
+'L_HOWTOSUBSTITUTEINFO' => 'Each line below represents one of the three substitutes. The label is how you represent the substitute and the type is the type of the value that the meta forum passes to the filter. Leave these blank if you did not use any substitutes.',
+'L_STRING'				=> 'String',
+'L_INTEGER'				=> 'Integer',
+'L_MEMBERID'			=> 'Member ID',
+'L_TIME'				=> 'Timestamp',
+'L_SAMEASPREVIOUSSUB'	=> 'Same as Previous Substitute',
+'L_INVALIDFILTER'		=> 'The selected filter does not exist.',
+'L_FILTERUSESSUBSELECTS'=> 'Your filter query appears to take advantage of sub-selects. However, your current database version does not support these. You will need to rewrite/make your filter.',
+'L_ADDEDFILTER'			=> 'Successfully added the filter <strong>%s</strong>.',
+'L_UPDATEDFILTER'		=> 'Successfully updated the filter <strong>%s</strong>.',
+'L_SUBSELECTSARE'		=> 'SQL Sub selects are',
+'L_REMOVEFILTER'		=> 'Remove Filter',
+'L_REMOVEDFILTER'		=> 'Successfully removed the filter <strong>%s</strong>.',
+'L_USEDOUBLESTART'		=> 'Use <strong>**</strong> instead of <strong>%</strong> for matching in LIKE clauses.',
+/* / Filters */
 
 /**
  * User Groups 
@@ -225,6 +269,8 @@ $_LANG += array(
 'L_INVALIDUSERGROUP'	=> 'You have specified and invalid User Group.',
 'L_REMOVEDUSERGROUP'	=> 'Successfully removed the user group <strong>%s</strong>.',
 'L_UPDATEDUSERGROUP'	=> 'Successfully updated the user group <strong>%s</strong>.',
+'L_HOWDOUSERGROUPSWORK'	=> 'How do User Groups work?',
+'L_HOWUSERGROUPSWORK'	=> 'User groups are used to group several members together. Whether it be administrators, moderators or other members, it serves as an easy way to properly define differences in user classes. Each user group can give advantages to users such as more permissions and likewise they can remove permissions from users. User groups are a useful way of managing users in bulk.',
 /* / User Groups */
 
 /**
@@ -748,6 +794,10 @@ $_LANG += array(
 'L_PAGEBREAKBEFORE'		=> 'Page break Before',
 'L_PAGEBREAKAFTER'		=> 'Page break After',
 'L_CURSOR'				=> 'Cursor',
+'L_HOWDOSTYLESETSWORK'	=> 'How do Style Sets work?',
+'L_HOWSTYLESETSWORK'	=> 'Style sets are used to manage your CSS (Cascading Style Sheets). This may sound like a lot of jargon, but style sets represent different ways that your forum can look. They group together the individual elements that change the theme of your board into one nice package.',
+'L_HOWDOESCSSWORK'		=> 'How does CSS work?',
+'L_HOWCSSWORKS'			=> 'CSS (Cascading Style Sheets) are like words and their definitions. Each CSS style refers to a definition that gives it meaning. However, instead of defining what a word means, these definitions tell HTML (Hypertext Markup Language, the stuff that makes web pages) what anything that uses the CSS styles should look like. When all of these styles are used together, a theme (style set) is born!',
 /* / CSS Editor */
 
 /* FAQ */
@@ -796,6 +846,8 @@ $_LANG += array(
 'L_REFRESHEDCACHEITEM'	=> 'Successfully refreshed the <strong>%s</strong> cache.',
 'L_REFRESHALL'			=> 'Refresh All',
 'L_TOTALCACHESIZE'		=> 'Total Cache Size',
+'L_HOWDOESCACHEWORK'	=> 'How does the forum Cache work?',
+'L_HOWCACHEWORK'		=> 'The forum cache stores a lot of useful forum information in either another part of the database or in separate files. The forum cache is used to reduce the number of queries the the forum has to make with the goal of getting better results for each page load/request. Refreshing cache data means it puts it right up to date; however, this is not normally necessary because the forum automatically keeps the cache up to date.',
 /* / Cache Control */
 
 /* User Titles */
@@ -834,6 +886,8 @@ $_LANG += array(
 'L_DISABLEDUSER'		=> 'Successfully disabled the user <strong>%s</strong>.',
 'L_ENABLEDUSER'			=> 'Successfully enabled the user <strong>%s</strong>.',
 'L_ADDTOGROUP'			=> 'Add to Group...',
+'L_HOWDOMASKPERMSWORK'	=> 'How do Permission Masks work?',
+'L_HOWMASKPERMSWORK'	=> 'Permission Masks overwrite the custom forum permissions which overwrite the master forum permissions. Woah, that was a lot to take in. Here is how it works: Assume that you make it so that only users with moderator permissions or above can view a forum. But, let\'s also say that you don\'t want a specific usergroup to see topics. You change the viewing permission for that group for that forum to a permission that would otherwise be higher (e.g. admin) than their normal permission (e.g. moderator) so that those users can\'t see the topics!',
 /* User Stuff */
 
 );

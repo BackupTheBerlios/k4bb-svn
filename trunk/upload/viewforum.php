@@ -68,7 +68,7 @@ class K4DefaultAction extends FAAction {
 		$num_online_total	= !$request['user']->isMember() ? $num_online_total+1 : $num_online_total;
 				
 		/* If there are more than 0 people browsing the forum, display the stats */
-		if($num_online_total > 0 && $forum_can_view <= $request['user']->get('perms') && ($forum['row_type'] & CATEGORY || $forum['row_type'] & FORUM)) {
+		if($num_online_total > 0 && $forum_can_view <= $request['user']->get('perms')) {
 			
 			$query				= "SELECT * FROM ". K4SESSIONS ." WHERE ((seen >= $expired $extra) $user_extra) AND ((user_id > 0) OR (user_id = 0 AND name <> '')) GROUP BY name ORDER BY seen DESC";
 			$users_browsing		= &new K4OnlineUsersIterator($request['dba'], '', $request['dba']->executeQuery($query));
@@ -249,8 +249,15 @@ class K4DefaultAction extends FAAction {
 			$request['template']->setVar('order', $sortorder == 'DESC' ? 'ASC' : 'DESC');
 			$image				= '<img src="Images/'. $request['template']->getVar('IMG_DIR') .'/Icons/arrow_'. ($sortorder == 'DESC' ? 'down' : 'up') .'.gif" alt="" border="0" />';
 			$request['template']->setVar($sortedby .'_sort', $image);
+			
 
-			if(($forum['topics'] + $extra_topics) > 0) {
+			/* If there are no topics, set the right message to display */
+			if($forum['topics'] <= 0) {
+				$request['template']->setVisibility('no_topics', TRUE);
+				$request['template']->setVar('topics_message', ($daysprune == 0 ? $request['template']->getVar('L_NOPOSTSINFORUM') : sprintf($request['template']->getVar('L_FORUMNOPOSTSSINCE'), $_daysprune )));
+			}
+
+			if(( ($forum['topics'] + $extra_topics) > 0) || $forum['row_type'] > GALLERY) {
 				
 				/**
 				 * Moderator Functions
@@ -276,62 +283,81 @@ class K4DefaultAction extends FAAction {
 				/**
 				 * Topic Setting
 				 */
+				
+				/* Make our query */
+				$query = "SELECT * FROM ". K4POSTS ." WHERE created>=$daysprune AND is_draft=0 AND display=1 AND row_type=". TOPIC ." AND forum_id=". intval($forum['forum_id']) ." AND (post_type <> ". TOPIC_ANNOUNCE ." AND post_type <> ". TOPIC_STICKY ." AND is_feature = 0) $extra ORDER BY $sortedby $sortorder LIMIT ?,?";
+				if($forum['row_type'] & METAFORUM) {
+					
+					global $_FILTERS, $_FORUMFILTERS;
+					
+					$query = "SELECT * FROM ". K4POSTS ." WHERE row_type=". TOPIC;
+					
+					// loop through the filters being applied to this forum
+					$forum_filters = array();
+					if(isset($_FORUMFILTERS[$forum['forum_id']])) {
 
+						foreach($_FORUMFILTERS[$forum['forum_id']] as $forum_filter) {
+							if(isset($_FILTERS[$forum_filter['filter_id']])) {
+								$forum_filters[] = array('name'=>$_FILTERS[$forum_filter['filter_id']]['filter_name']);
+								$query .= " AND ". sprintf($_FILTERS[$forum_filter['filter_id']]['filter_query'], $request['dba']->quote($forum_filter['insert1']), $request['dba']->quote($forum_filter['insert2']), $request['dba']->quote($forum_filter['insert3'])) ." ";
+							}
+						}
+					}
+					
+					$request['template']->setList('forum_filters', new FAArrayIterator($forum_filters));
+
+					$query .= " $extra ORDER BY $sortedby $sortorder LIMIT $start,$perpage";
+
+					$query = str_replace('**', '%', $query);
+				}
+				
 				/* get the topics */
-				$topics				= $request['dba']->prepareStatement("SELECT * FROM ". K4POSTS ." WHERE created>=? AND is_draft=0 AND display=1 AND row_type=". TOPIC ." AND forum_id=". intval($forum['forum_id']) ." AND (post_type <> ". TOPIC_ANNOUNCE ." AND post_type <> ". TOPIC_STICKY ." AND is_feature = 0) $extra ORDER BY $sortedby $sortorder LIMIT ?,?");
-				
-				/* Set the query values */
-				$topics->setInt(1, $daysprune);
-				$topics->setInt(2, $start);
-				$topics->setInt(3, $perpage);
-				
-				/* Execute the query */
-				$result				= $topics->executeQuery();
+				$result				= $request['dba']->executeQuery($query);
 				
 				/* Apply the topics iterator */
 				$it					= &new TopicsIterator($request['dba'], $request['user'], $result, $request['template']->getVar('IMG_DIR'), $forum);
 				$request['template']->setList('topics', $it);
 				
+				// let's just make sure..
+				if($result->hasNext()) {
+					$request['template']->setVisibility('no_topics', FALSE);
+				}
 
-				/**
-				 * Get announcement/global topics
-				 */
-				if($page == 1) {
-					$announcements		= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE (is_draft=0 AND display=1) AND row_type=". TOPIC ." AND post_type = ". TOPIC_ANNOUNCE ." AND (forum_id = ". intval($forum['forum_id']) ." OR forum_id = ". GLBL_ANNOUNCEMENTS .") $extra ORDER BY lastpost_created DESC");
-					if($announcements->hasNext()) {
-						$a_it				= &new TopicsIterator($request['dba'], $request['user'], $announcements, $request['template']->getVar('IMG_DIR'), $forum);
-						$request['template']->setList('announcements', $a_it);
+				if($forum['row_type'] <= GALLERY ) {
+
+					/**
+					 * Get announcement/global topics
+					 */
+					if($page == 1) {
+						$announcements		= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE (is_draft=0 AND display=1) AND row_type=". TOPIC ." AND post_type = ". TOPIC_ANNOUNCE ." AND (forum_id = ". intval($forum['forum_id']) ." OR forum_id = ". GLBL_ANNOUNCEMENTS .") $extra ORDER BY lastpost_created DESC");
+						if($announcements->hasNext()) {
+							$a_it				= &new TopicsIterator($request['dba'], $request['user'], $announcements, $request['template']->getVar('IMG_DIR'), $forum);
+							$request['template']->setList('announcements', $a_it);
+						}
+					}
+					
+					/**
+					 * Get sticky/feature topics
+					 */
+					$importants			= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE is_draft=0 AND row_type=". TOPIC ." AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (post_type <> ". TOPIC_ANNOUNCE .") AND (post_type = ". TOPIC_STICKY ." OR is_feature = 1) $extra ORDER BY lastpost_created DESC");
+					if($importants->hasNext()) {
+						$i_it				= &new TopicsIterator($request['dba'], $request['user'], $importants, $request['template']->getVar('IMG_DIR'), $forum);
+						$request['template']->setList('importants', $i_it);
 					}
 				}
-				
-				/**
-				 * Get sticky/feature topics
-				 */
-				$importants			= $request['dba']->executeQuery("SELECT * FROM ". K4POSTS ." WHERE is_draft=0 AND row_type=". TOPIC ." AND display = 1 AND forum_id = ". intval($forum['forum_id']) ." AND (post_type <> ". TOPIC_ANNOUNCE .") AND (post_type = ". TOPIC_STICKY ." OR is_feature = 1) $extra ORDER BY lastpost_created DESC");
-				if($importants->hasNext()) {
-					$i_it				= &new TopicsIterator($request['dba'], $request['user'], $importants, $request['template']->getVar('IMG_DIR'), $forum);
-					$request['template']->setList('importants', $i_it);
-				}
-				
+
 				/* Outside valid page range, redirect */
 				if(!$pager->hasPage($page) && $num_pages > 0) {
 					$action = new K4InformationAction(new K4LanguageElement('L_PASTPAGELIMIT'), 'content', FALSE, 'viewforum.php?f='. $forum['forum_id'] .'&limit='. $perpage .'&page='. $num_pages, 3);
 					return $action->execute($request);
 				}
 			}
-
-			/* If there are no topics, set the right messageto display */
-			if($forum['topics'] <= 0) {
-				$request['template']->setVisibility('no_topics', TRUE);
-				$request['template']->setVar('topics_message', iif($daysprune == 0, $request['template']->getVar('L_NOPOSTSINFORUM'), sprintf($request['template']->getVar('L_FORUMNOPOSTSSINCE'), $_daysprune )));
-				return TRUE;
-			}
 			
 			/**
 			 * Forum Subscriptions
 			 */
-			if($request['user']->isMember()) {
-				$subscribed						= $request['dba']->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE forum_id = ". intval($forum['forum_id']) ." AND post_id = 0 AND user_id = ". $request['user']->get('id'));
+			if($request['user']->isMember() && $forum['topics'] > 0) {
+				$subscribed = $request['dba']->executeQuery("SELECT * FROM ". K4SUBSCRIPTIONS ." WHERE forum_id = ". intval($forum['forum_id']) ." AND post_id = 0 AND user_id = ". $request['user']->get('id'));
 				$request['template']->setVar('is_subscribed', ($subscribed->numRows() > 0 ? 1 : 0));
 			}
 
@@ -353,6 +379,16 @@ class K4DefaultAction extends FAAction {
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
 			return $action->execute($request);
 		}
+
+		/**
+		 * Can we post in here?
+		 */
+		$can_post_in_forum = 1;
+		if( $forum['forum_id'] == GARBAGE_BIN || $forum['row_type'] > GALLERY ) {
+			$can_post_in_forum = 0;
+		}
+
+		$request['template']->setVar('can_post_in_forum', $can_post_in_forum);
 
 		// urls
 		$request['template']->setVar('U_FORUMRSSURL', K4Url::getGenUrl('rss', 'f='. $forum['forum_id']));

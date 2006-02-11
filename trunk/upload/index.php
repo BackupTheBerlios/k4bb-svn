@@ -119,7 +119,7 @@ class K4DefaultAction extends FAAction {
 		
 		$request['template']->setVar('can_see_board', get_map( 'can_see_board', 'can_view', array()));
 
-		k4_bread_crumbs($request['template'], $request['dba'], 'L_HOME');		
+		k4_bread_crumbs($request['template'], $request['dba'], 'L_HOME');	
 	}
 }
 

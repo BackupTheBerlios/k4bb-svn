@@ -1,0 +1,47 @@
+<is:admin>
+<div class="header"><div class="title">{$L_EDITFORUMFILTERS}<span style="font-weight: normal;">: {$forum_name}</span></div></div>
+<div class="subheader">{$L_GENERAL}</div>
+<div class="spacer">
+	<form action="admin.php?act=forums_updatefilters" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="forum_id" value="{$forum_forum_id}" />
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<list:list id="filters">
+		<list:default list="filters">
+		<tr>
+			<td class="alt3">
+				<div class="outset_box" align="center">
+					<br />
+					{$L_NOFILTERS}
+					<br /><br />
+				</div>
+			</td>
+		</tr>
+		</list:default>
+		<list:item list="filters">
+		<list:switch list="filters" var="row_class" a="1" b="2">
+		<tr>
+			<td class="<if:if var="used" eq="1">base4<if:else />alt{$row_class}</if:if>" width="50%">
+				<input type="checkbox" value="{$filter_id}" name="filters[]"<if:if var="used" eq="1"> checked="checked"</if:if> />
+				<strong>{$filter_name}</strong>
+				<br />
+				<span class="smalltext">{$filter_desc}</span>
+			</td>
+			<td class="<if:if var="used" eq="1">base4<if:else />alt{$row_class}</if:if>" width="50%" style="text-align:right;">
+				<if:if var="insert1_type" noteq="0">{$insert1_label}: <input type="text" name="{$filter_id}_insert1" id="{$filter_id}_insert1" value="{$insert1_value}" class="inputbox" /></if:if>
+				<if:if var="insert2_type" noteq="0"><if:if var="insert2_type" noteq="16"><br />{$insert2_label}: <input type="text" name="{$filter_id}_insert2" value="{$insert2_value}" class="inputbox" /></if:if></if:if>
+				<if:if var="insert3_type" noteq="0"><if:if var="insert3_type" noteq="16"><br />{$insert3_label}: <input type="text" name="{$filter_id}_insert3" value="{$insert3_value}" class="inputbox" /></if:if></if:if>
+			</td>
+		</tr>
+		</list:switch>
+		</list:item>
+		<tr>
+			<td class="base3" colspan="2" style="text-align:center;">
+				<input type="submit" value="{$L_UPDATEFORUMFILTERS}" class="button" />
+			</td>
+		</tr>
+		</list:list>
+	</table>
+	</form>
+</div>
+<div class="footer_block"><div>&nbsp;</div></div>
+</is:admin>

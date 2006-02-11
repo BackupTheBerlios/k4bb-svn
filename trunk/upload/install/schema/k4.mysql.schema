@@ -693,3 +693,29 @@ CREATE TABLE k4_usertitles (
 	PRIMARY KEY(title_id)
 );
 CREATE INDEX num_posts ON k4_usertitles (num_posts);
+
+DROP TABLE IF EXISTS k4_filters;
+CREATE TABLE k4_filters (
+	filter_id		INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	filter_name		VARCHAR(50) NOT NULL DEFAULT '',
+	filter_desc		VARCHAR(255) NOT NULL DEFAULT '',
+	filter_query		VARCHAR(255) NOT NULL DEFAULT '',
+	num_inserts		INT UNSIGNED NOT NULL DEFAULT 0,
+	insert1_type		INT UNSIGNED NOT NULL DEFAULT 0,
+	insert2_type		INT UNSIGNED NOT NULL DEFAULT 0,
+	insert3_type		INT UNSIGNED NOT NULL DEFAULT 0,
+	insert1_label		VARCHAR(50) NOT NULL DEFAULT '',
+	insert2_label		VARCHAR(50) NOT NULL DEFAULT '',
+	insert3_label		VARCHAR(50) NOT NULL DEFAULT '',
+
+	PRIMARY KEY(filter_id)
+);
+
+DROP TABLE IF EXISTS k4_forumfilters;
+CREATE TABLE k4_forumfilters (
+	forum_id		INT UNSIGNED NOT NULL DEFAULT 0,
+	filter_id		INT UNSIGNED NOT NULL DEFAULT 0,
+	insert1			VARCHAR(100) NOT NULL DEFAULT '',
+	insert2			VARCHAR(100) NOT NULL DEFAULT '',
+	insert3			VARCHAR(100) NOT NULL DEFAULT ''
+);

@@ -2,11 +2,9 @@
 <form:form action="{$forum_action}" method="post" enctype="multipart/form-data">
 <if:if var="is_edit" eq="1"><input type="hidden" name="forum_id" value="{$forum_forum_id}" /></if:if>
 <div class="header"><div class="title"><if:if var="is_edit" eq="1">{$L_EDITFORUM}<span style="font-weight: normal;">: {$forum_name}</span><if:else />{$L_ADDFORUM}</if:if></div></div>
+<div class="subheader">{$L_GENERAL}</div>
 <div class="spacer">
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-		<tr>
-			<td class="subheader" colspan="2">{$L_GENERAL}</td>
-		</tr>
 		<tr class="alt1">
 			<td width="30%"><strong>{$L_TYPE}:</strong></td>
 			<td>
@@ -43,7 +41,6 @@
 		<tr class="alt2">
 			<td width="30%"><strong>{$L_DESCRIPTION}:</strong></td>
 			<td>
-				<script type="text/javascript">doHelpButton('forum_description');</script>
 				<textarea name="description" id="description" rows="2" style="width: 80%;" class="inputbox" tabindex="2">{$forum_description}</textarea>
 			</td>
 		</tr>
@@ -67,11 +64,9 @@
 		</tr>
 	</table>
 </div>
+<div class="subheader">{$L_LINKING}</div>
 <div class="spacer">
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-		<tr>
-			<td class="subheader" colspan="2">{$L_LINKING}</td>
-		</tr>
 		<tr class="alt2">
 			<td width="30%">
 				<strong>{$L_ISLINK}:</strong><br />
@@ -101,11 +96,9 @@
 		</tr>
 	</table>
 </div>
+<div class="subheader">{$L_PRUNING}</div>
 <div class="spacer">
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-		<tr>
-			<td class="subheader" colspan="2">{$L_PRUNING}</td>
-		</tr>
 		<tr class="alt1">
 			<td width="30%"><strong>{$L_AUTOPRUNING}:</strong></td>
 			<td>
@@ -167,12 +160,9 @@
 		</tr>
 	</table>
 </div>
+<div class="subheader">{$L_VIEWING}</div>
 <div class="spacer">
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-
-		<tr>
-			<td class="subheader" colspan="2">{$L_VIEWING}</td>
-		</tr>
 		<tr class="alt2">
 			<td width="30%"><strong>{$L_TOPICSPERPAGE}:</strong></td>
 			<td>
@@ -191,11 +181,9 @@
 		</tr>
 	</table>
 </div>
+<div class="subheader">{$L_SETTINGS}</div>
 <div class="spacer">
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-		<tr>
-			<td class="subheader" colspan="2">{$L_SETTINGS}</td>
-		</tr>
 		<tr class="alt2">
 			<td width="30%"><strong>{$L_MAXPOLLOPTIONS}:</strong></td>
 			<td>
@@ -218,12 +206,9 @@
 		</tr>
 	</table>
 </div>
+<div class="subheader">{$L_MODERATORS}</div>
 <div class="spacer">
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
-
-		<tr>
-			<td class="subheader" colspan="2">{$L_MODERATORS}</td>
-		</tr>
 		<tr class="alt2">
 			<td width="30%"><strong>{$L_MODERATORS}:</strong></td>
 			<td>
@@ -250,7 +235,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="base4" colspan="2" style="text-align: center;">
+			<td class="base3" colspan="2" style="text-align: center;">
 				<input type="submit" class="button" value="{$L_SAVE}" tabindex="15" />
 				<input type="reset" class="button" value="{$L_RESET}" />
 			</td>

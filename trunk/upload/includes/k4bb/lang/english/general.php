@@ -104,6 +104,8 @@ $_LANG += array(
 'L_INFO'				=> 'Info',
 'L_MOVED'				=> 'Moved',
 'L_CLOSE'				=> 'Close',
+'L_REQUIREDFIELD'		=> 'This field is required.',
+'L_REQUIREDFIELD2'		=> 'The following field is required: <strong>%s</strong>.',
 
 /* User Titles */
 'L_JUNIORMEMBER'		=> 'Junior Member',
@@ -379,6 +381,7 @@ $_LANG += array(
 'L_HOTTOPIC'			=> 'Hot Topic (no new replies)',
 'L_LOCKEDTOPIC2'		=> 'Locked Topic',
 'L_FORUMOPTIONS'		=> 'Forum Options',
+'L_FORUMFILTERS'		=> 'Forum Filters',
 'L_SEARCHTHISFORUM'		=> 'Search This Forum',
 'L_MARKFORUMREAD'		=> 'Mark Forum as Read',
 'L_JUMPTOPAGE'			=> 'Jump to page',

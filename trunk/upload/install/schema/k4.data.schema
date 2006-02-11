@@ -161,10 +161,17 @@ INSERT INTO k4_wordcensors (id, word, replacement, method) VALUES (4, 'bitch', '
 
 INSERT INTO k4_badusernames (id, name) VALUES (1, 'Admin');
 INSERT INTO k4_badusernames (id, name) VALUES (2, 'Administrator');
-INSERT INTO k4_badusernames (id, name) VALUES (5, 'Guest');
-INSERT INTO k4_badusernames (id, name) VALUES (3, 'Moderator');
-INSERT INTO k4_badusernames (id, name) VALUES (4, 'User');
-INSERT INTO k4_badusernames (id, name) VALUES (5, 'Member');
+INSERT INTO k4_badusernames (id, name) VALUES (3, 'Guest');
+INSERT INTO k4_badusernames (id, name) VALUES (4, 'Moderator');
+INSERT INTO k4_badusernames (id, name) VALUES (5, 'User');
+INSERT INTO k4_badusernames (id, name) VALUES (6, 'Member');
+INSERT INTO k4_badusernames (id, name) VALUES (7, 'Google');
+INSERT INTO k4_badusernames (id, name) VALUES (8, 'Yahoo');
+INSERT INTO k4_badusernames (id, name) VALUES (9, 'Microsoft');
+INSERT INTO k4_badusernames (id, name) VALUES (10, 'k4BB');
+INSERT INTO k4_badusernames (id, name) VALUES (11, 'phpBB');
+INSERT INTO k4_badusernames (id, name) VALUES (12, 'vBulletin');
+INSERT INTO k4_badusernames (id, name) VALUES (13, 'IPB');
 
 INSERT INTO k4_spiders (id, useragent, spidername, allowaccess) VALUES (1, 'Mediapartners-Google', 'Google AdSense', 1);
 INSERT INTO k4_spiders (id, useragent, spidername, allowaccess) VALUES (2, 'Googlebot', 'Google', 1);
@@ -480,9 +487,32 @@ INSERT INTO k4_cache (varname, data, modified) VALUES ('spider_agents', '', 0);
 INSERT INTO k4_cache (varname, data, modified) VALUES ('styles', '', 0);
 INSERT INTO k4_cache (varname, data, modified) VALUES ('usergroups', '', 0);
 INSERT INTO k4_cache (varname, data, modified) VALUES ('user_titles', '', 0);
+INSERT INTO k4_cache (varname, data, modified) VALUES ('filters', '', 0);
+INSERT INTO k4_cache (varname, data, modified) VALUES ('forum_filters', '', 0);
 
 INSERT INTO k4_usertitles (title_id,num_posts,title_text,num_pips,image) VALUES (1,0,'New',1,'');
 INSERT INTO k4_usertitles (title_id,num_posts,title_text,num_pips,image) VALUES (2,10,'Still New',2,'');
 INSERT INTO k4_usertitles (title_id,num_posts,title_text,num_pips,image) VALUES (3,100,'Known',3,'');
 INSERT INTO k4_usertitles (title_id,num_posts,title_text,num_pips,image) VALUES (4,200,'Well Known',4,'');
 INSERT INTO k4_usertitles (title_id,num_posts,title_text,num_pips,image) VALUES (5,400,'Big Spender',5,'');
+
+INSERT INTO k4_filters (filter_id, filter_name, filter_desc, filter_query, num_inserts, insert1_type, insert2_type, insert3_type, insert1_label, insert2_label, insert3_label) VALUES (1, 'Member ID', 'Get topics by a specific member.', 'poster_id=%s', 1, 8, 0, 0, 'Member ID', '', '');
+INSERT INTO k4_filters (filter_id, filter_name, filter_desc, filter_query, num_inserts, insert1_type, insert2_type, insert3_type, insert1_label, insert2_label, insert3_label) VALUES (2, 'Member Name Search', 'Get topics by searching for a member''s name.', 'poster_name LIKE ''**%s**''', 1, 1, 0, 0, 'Member Name', '', '');
+INSERT INTO k4_filters (filter_id, filter_name, filter_desc, filter_query, num_inserts, insert1_type, insert2_type, insert3_type, insert1_label, insert2_label, insert3_label) VALUES (3, 'Announcement Topics', 'Get all topics that are announcements.', 'post_type=3', 0, 0, 0, 0, '', '', '');
+INSERT INTO k4_filters (filter_id, filter_name, filter_desc, filter_query, num_inserts, insert1_type, insert2_type, insert3_type, insert1_label, insert2_label, insert3_label) VALUES (4, 'Sticky Topics', 'Get all topics that are stickies.', 'post_type=2', 0, 0, 0, 0, '', '', '');
+INSERT INTO k4_filters (filter_id, filter_name, filter_desc, filter_query, num_inserts, insert1_type, insert2_type, insert3_type, insert1_label, insert2_label, insert3_label) VALUES (5, 'Featured Topics', 'Get all topics that are featured.', 'is_feature=1', 0, 0, 0, 0, '', '', '');
+INSERT INTO k4_filters (filter_id, filter_name, filter_desc, filter_query, num_inserts, insert1_type, insert2_type, insert3_type, insert1_label, insert2_label, insert3_label) VALUES (6, 'Keyword Search', 'Get all topics that have these keywords in them.', '(name LIKE ''**%s**'' AND body_text LIKE ''**%s**'')', 2, 1, 16, 0, 'Keywords', '', '');
+INSERT INTO k4_filters (filter_id, filter_name, filter_desc, filter_query, num_inserts, insert1_type, insert2_type, insert3_type, insert1_label, insert2_label, insert3_label) VALUES (7, 'Locked Topics', 'Get all locked topics.', 'post_locked=1', 0, 0, 0, 0, '', '', '');
+INSERT INTO k4_filters (filter_id, filter_name, filter_desc, filter_query, num_inserts, insert1_type, insert2_type, insert3_type, insert1_label, insert2_label, insert3_label) VALUES (8, 'Polls', 'Get all poll topics.', 'is_poll=1', 0, 0, 0, 0, '', '', '');
+INSERT INTO k4_filters (filter_id, filter_name, filter_desc, filter_query, num_inserts, insert1_type, insert2_type, insert3_type, insert1_label, insert2_label, insert3_label) VALUES (9, 'Topics with Attachments', 'Get all topics with attachments.', 'total_attachments>0', 0, 0, 0, 0, '', '', '');
+INSERT INTO k4_filters (filter_id, filter_name, filter_desc, filter_query, num_inserts, insert1_type, insert2_type, insert3_type, insert1_label, insert2_label, insert3_label) VALUES (10, 'Topics with no Attachments', 'Get all topics with no attachments.', 'total_attachments=0', 0, 0, 0, 0, '', '', '');
+INSERT INTO k4_filters (filter_id, filter_name, filter_desc, filter_query, num_inserts, insert1_type, insert2_type, insert3_type, insert1_label, insert2_label, insert3_label) VALUES (11, 'Topics newer than X', 'Get topics created within X days.', 'created<=%s', 1, 4, 0, 0, 'Number of Days', '', '');
+INSERT INTO k4_filters (filter_id, filter_name, filter_desc, filter_query, num_inserts, insert1_type, insert2_type, insert3_type, insert1_label, insert2_label, insert3_label) VALUES (12, 'Topics older than X', 'Get topics created before the last X days.', 'created>=%s', 1, 4, 0, 0, 'Number of Days', '', '');
+INSERT INTO k4_filters (filter_id, filter_name, filter_desc, filter_query, num_inserts, insert1_type, insert2_type, insert3_type, insert1_label, insert2_label, insert3_label) VALUES (13, 'Topics with replies newer than X', 'Get topics whose last reply has been posted within the last X days.', 'lastpost_created<=%s', 1, 4, 0, 0, 'Number of Days', '', '');
+INSERT INTO k4_filters (filter_id, filter_name, filter_desc, filter_query, num_inserts, insert1_type, insert2_type, insert3_type, insert1_label, insert2_label, insert3_label) VALUES (14, 'Topics with replies older than X', 'Get topics whose last reply is older than X days.', 'lastpost_created>=%s', 1, 4, 0, 0, 'Number of Days', '', '');
+INSERT INTO k4_filters (filter_id, filter_name, filter_desc, filter_query, num_inserts, insert1_type, insert2_type, insert3_type, insert1_label, insert2_label, insert3_label) VALUES (15, 'Topics with more than X replies.', 'Get topics with more than X replies.', 'num_replies>=%s', 1, 2, 0, 0, 'Number of Replies', '', '');
+INSERT INTO k4_filters (filter_id, filter_name, filter_desc, filter_query, num_inserts, insert1_type, insert2_type, insert3_type, insert1_label, insert2_label, insert3_label) VALUES (16, 'Topics with less than X replies', 'Get topics that have less than X replies.', 'num_replies<=%s', 1, 2, 0, 0, 'Number of Replies', '', '');
+INSERT INTO k4_filters (filter_id, filter_name, filter_desc, filter_query, num_inserts, insert1_type, insert2_type, insert3_type, insert1_label, insert2_label, insert3_label) VALUES (17, 'Topics with more than X views', 'Get topics that have more than X views.', 'views>=%s', 1, 2, 0, 0, 'Number of Views', '', '');
+INSERT INTO k4_filters (filter_id, filter_name, filter_desc, filter_query, num_inserts, insert1_type, insert2_type, insert3_type, insert1_label, insert2_label, insert3_label) VALUES (18, 'Topics with <= than X views', 'Get topics that have less than or equal X views.', 'views<=%s', 1, 2, 0, 0, 'Number of Views', '', '');
+INSERT INTO k4_filters (filter_id, filter_name, filter_desc, filter_query, num_inserts, insert1_type, insert2_type, insert3_type, insert1_label, insert2_label, insert3_label) VALUES (19, 'Topic with rating >= X', 'Get topics with ratings that are greater than or equal to X.', 'rating>=%s', 1, 2, 0, 0, 'Rating', '', '');
+INSERT INTO k4_filters (filter_id, filter_name, filter_desc, filter_query, num_inserts, insert1_type, insert2_type, insert3_type, insert1_label, insert2_label, insert3_label) VALUES (20, 'Topics with rating <= X', 'Get topics with ratings that are less than or equal to X.', 'rating<=%s', 1, 2, 0, 0, 'Rating', '', '');

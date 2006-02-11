@@ -60,7 +60,7 @@ class PostDraft extends FAAction {
 		}
 			
 		/* Make sure the we are trying to post into a forum */
-		if(!($forum['row_type'] & FORUM)) {
+		if(!($forum['row_type'] & FORUM) || $forum['forum_id'] == GARBAGE_BIN) {
 			$action = new K4InformationAction(new K4LanguageElement('L_CANTPOSTTONONFORUM'), 'content', FALSE);
 			return !USE_AJAX ? $action->execute($request) : ajax_message('L_CANTPOSTTONONFORUM');
 		}

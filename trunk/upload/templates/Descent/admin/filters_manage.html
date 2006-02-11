@@ -1,0 +1,60 @@
+<is:admin>
+<div class="header"><div class="title">{$L_FILTERS}</div></div>
+<div class="spacer">
+	<div class="base3">
+		<strong>{$L_HOWDOFILTERSWORK}</strong>
+		<p>
+			{$L_HOWFILTERSWORK1}
+		</p>
+		<p>
+			{$L_HOWFILTERSWORK2}
+		</p>
+	</div>
+</div>
+<div class="spacer">
+	<div class="alt3" style="text-align: center;">
+		<br />
+		<a href="admin.php?act=filters_selectforum" title="{$L_EDITFORUMFILTERS}">{$L_EDITFORUMFILTERS}</a>
+		| <a href="admin.php?act=filters_add" title="{$L_ADDFILTER}">{$L_ADDFILTER}</a>
+		<br /><br />
+	</div>
+</div>
+<div class="spacer">
+	<div class="categorytitle">
+		{$L_MANAGEFILTERS}
+	</div>
+</div>
+<div class="spacer">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<list:list id="filters">
+		<list:default list="filters">
+		<tr>
+			<td class="alt3">
+				<div class="outset_box" align="center">
+					<br />
+					{$L_NOFILTERS}
+					<br /><br />
+				</div>
+			</td>
+		</tr>
+		</list:default>
+		<list:item list="filters">
+		<list:switch list="filters" var="row_class" a="alt1" b="alt2">
+		<tr>
+			<td class="{$row_class}" width="90%">
+				<strong>{$filter_name}</strong>
+				<br />
+				<span class="smalltext">{$filter_desc}</span>
+			</td>
+			<td class="{$row_class}" width="10%">
+				<input type="button" class="button" value="{$L_EDIT}" onclick="document.location='admin.php?act=filters_edit&filter_id={$filter_id}'" />
+				<input type="button" class="button" style="color: #FF0000;" value="{$L_DELETE}" onclick="if(confirm('{$L_CHECKDELFILTER}')) { document.location='admin.php?act=filters_remove&filter_id={$filter_id}'; } else { return false; }" />
+			</td>
+		</tr>
+		</list:switch>
+		</list:item>
+		</list:list>
+	</table>
+</div>
+<div class="footer_block"><div>&nbsp;</div></div>
+</is:admin>

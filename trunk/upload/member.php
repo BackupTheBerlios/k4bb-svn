@@ -296,6 +296,11 @@ class K4InsertUserFilter extends FAFilter {
 }
 
 class K4ProfileAction extends FAAction {
+	function handleUrl($matches) {
+		$url = ($matches[2]) ? $matches[0] : 'http://' . $matches[0];
+
+		return "<a class=\"bb_url\" href=\"$url\">{$matches[0]}"; // </a>
+	}
 	function execute(&$request) {
 		
 		global $_QUERYPARAMS, $_DATASTORE, $_USERGROUPS, $_PROFILEFIELDS;
@@ -373,10 +378,15 @@ class K4ProfileAction extends FAAction {
 						case 'multiselect':
 						case 'radio':
 						case 'check': {
-							$field['value']		= $member[$field['name']] != '' ? implode(", ", iif(!force_unserialize($member[$field['name']]), array(), force_unserialize($member[$field['name']]))) : $request['template']->getVar('L_NOINFORMATION');
+							$unserialize		= @unserialize($member[$field['name']]);
+							$field['value']		= $member[$field['name']] != '' ? implode(", ", (!$unserialize ? force_unserialize($member[$field['name']]) : $unserialize)) : $request['template']->getVar('L_NOINFORMATION');
 							break;
 						}
 					}
+					
+					$field['value'] = preg_replace_callback('~((https?\:\/\/|ftps?\:\/\/)?(?:(?:[\w\d\-_\+\.]+\:)?(?:[\w\d\-_\+\.]+)?\@)?(?:[\w\d][\d_\-\w\.]+\w){2,}?\.[\dA-Za-z]{2,7})([\:\/]\S*)?~',
+							array(&$this, 'handleUrl'), $field['value']);
+
 					$fields[] = $field;
 				}
 			}
