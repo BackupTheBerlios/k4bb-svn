@@ -35,7 +35,8 @@ class K4DefaultAction extends FAAction {
 
 		if((isset($_REQUEST['f']) && intval($_REQUEST['f']) != 0) || (isset($_REQUEST['c']) && intval($_REQUEST['c']) != 0)) {
 			$thing = isset($_REQUEST['f']) ? 'f' : 'c';
-			$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST[$thing]));
+			//$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST[$thing]));
+			$forum = $_ALLFORUMS[$_REQUEST[$thing]];
 		} else {
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', TRUE);
 			return $action->execute($request);
@@ -285,7 +286,7 @@ class K4DefaultAction extends FAAction {
 				 */
 				
 				/* Make our query */
-				$query = "SELECT * FROM ". K4POSTS ." WHERE created>=$daysprune AND is_draft=0 AND display=1 AND row_type=". TOPIC ." AND forum_id=". intval($forum['forum_id']) ." AND (post_type <> ". TOPIC_ANNOUNCE ." AND post_type <> ". TOPIC_STICKY ." AND is_feature = 0) $extra ORDER BY $sortedby $sortorder LIMIT ?,?";
+				$query = "SELECT * FROM ". K4POSTS ." WHERE created>=$daysprune AND is_draft=0 AND display=1 AND row_type=". TOPIC ." AND forum_id=". intval($forum['forum_id']) ." AND (post_type <> ". TOPIC_ANNOUNCE ." AND post_type <> ". TOPIC_STICKY ." AND is_feature = 0) $extra ORDER BY $sortedby $sortorder LIMIT $start,$perpage";
 				if($forum['row_type'] & METAFORUM) {
 					
 					global $_FILTERS, $_FORUMFILTERS;
