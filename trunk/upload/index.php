@@ -43,7 +43,7 @@ class K4DefaultAction extends FAAction {
 		// The content panel
 		$request['template']->setFile('content', 'forums.html');
 		
-		$forums	= &new K4ForumsIterator($request['dba'], "SELECT * FROM ". K4FORUMS ." WHERE parent_id=0 ORDER BY row_order ASC");
+		$forums			= &new K4ForumsIterator($request['dba'], "SELECT * FROM ". K4FORUMS ." WHERE parent_id=0 ORDER BY row_order ASC");
 		//$categories	= &new K4ForumsIterator($request['dba'], "SELECT * FROM ". K4FORUMS ." WHERE row_type=". CATEGORY ." AND parent_id = 0 ORDER BY row_order ASC");
 				
 		$request['template']->setVisibility('no_forums', (!$forums->hasNext() ? TRUE : FALSE));

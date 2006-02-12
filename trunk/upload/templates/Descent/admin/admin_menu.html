@@ -1,70 +1,77 @@
 <is:admin>
-<div class="subheader" id="options_title">
-	<div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_options', 'options', 'options_title')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_options" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
-	{$L_OPTIONS}
+<div id="admin_menu">
+	<div class="subheader" id="options_title">
+		<div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_options', 'options', 'options_title')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_options" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+		{$L_OPTIONS}
+	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" id="options">
+		<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=options">{$L_OPTIONS}</a></td></tr>
+		<tr><td class="alt2"><a class="smalltext" target="k4_main" href="admin.php?act=permissions_gui">{$L_PERMISSIONS}</a></td></tr>
+		<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=cache">{$L_CACHECONTROL}</a></td></tr>
+	</table>
+	<div class="subheader" id="forums_title">
+		<div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_forums', 'forums', 'forums_title')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_forums" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+		{$L_FORUMS}
+	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" id="forums">
+		<tr><td class="alt1"><a class="smalltext" href="admin.php?act=forums" target="k4_main">{$L_FORUMS}</a> (<a class="smalltext" href="admin.php?act=forum_select" target="k4_main">{$L_SELECT}</a>)</td></tr>
+		<tr><td class="alt2"><a class="smalltext" target="k4_main" href="admin.php?act=forums_add">{$L_ADDFORUM}</a></td></tr>
+		<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=forums_permissions&id=0">{$L_MASTERPERMISSIONS}</a></td></tr>
+		<tr><td class="alt2"><a class="smalltext" target="k4_main" href="admin.php?act=filters_manage">{$L_FILTERS}</a></td></tr>
+		<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=archive_manage">{$L_ARCHIVEOPTIONS}</a></td></tr>
+		<!--<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=announcements">{$L_ANNOUNCEMENTS}</a></td></tr>-->
+	</table>
+	<div class="subheader" id="users_title">
+		<div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_users', 'users', 'users_title')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_users" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+		{$L_USERS}
+	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" id="users">
+		<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=users_add">{$L_ADDUSER}</a></td></tr>
+		<tr><td class="alt2"><a class="smalltext" target="k4_main" href="admin.php?act=users_find">{$L_FINDUSER}</a></td></tr>
+		<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=usernames">{$L_DISALLOWNAMES}</a></td></tr>
+		<tr><td class="alt2"><a class="smalltext" target="k4_main" href="admin.php?act=usertitles">{$L_USERTITLES}</a></td></tr>
+		<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=userfields">{$L_USERPROFILEFIELDS}</a></td></tr>
+		<tr><td class="alt2"><a class="smalltext" target="k4_main" href="admin.php?act=usergroups">{$L_USERGROUPS}</a></td></tr>
+		<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=masks">{$L_PERMISSIONMASKS}</a></td></tr>
+	</table>
+	<div class="subheader" id="posts_title">
+		<div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_posts', 'posts', 'posts_title')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_posts" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+		{$L_POSTS}
+	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" id="posts">
+		<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=posticons">{$L_POSTICONS}</a></td></tr>
+		<tr><td class="alt2"><a class="smalltext" target="k4_main" href="admin.php?act=emoticons">{$L_EMOTICONS}</a></td></tr>
+		<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=acronyms">{$L_ACRONYMS}</a></td></tr>
+		<tr><td class="alt2"><a class="smalltext" target="k4_main" href="admin.php?act=censors">{$L_WORDCENSORS}</a></td></tr>
+	</table>
+	<div class="subheader" id="styles_title">
+		<div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_styles', 'styles', 'styles_title')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_styles" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+		{$L_STYLES}
+	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" id="styles">
+		<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=stylesets">{$L_MANAGESTYLESETS}</a></td></tr>
+		<tr><td class="alt2"><a class="smalltext" target="k4_main" href="admin.php?act=css">{$L_MANAGECSSSTYLES}</a></td></tr>
+		<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=css_toggle">{$L_TOGGLECSSEDITING}</a></td></td></tr>
+	</table>
+	<div class="subheader" id="misc_title">
+		<div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_misc', 'misc', 'misc_title')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_misc" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+		{$L_MISCELLANEOUS}
+	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" id="misc">
+		<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=spiders">{$L_SEARCHSPIDERS}</a></td></tr>
+		<!--<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=email">{$L_EMAILUSERS}</a></td></tr>-->
+	</table>
+	<div class="subheader" id="faq_title">
+		<div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_faq', 'faq', 'faq_title')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_faq" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
+		{$L_FAQ}
+	</div>
+	<table width="100%" cellspacing="{$style_cellspacing}" id="faq">
+		<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=faq_categories">{$L_FAQCATEGORIES}</a></tr></td>
+		<tr><td class="alt2"><a class="smalltext" target="k4_main" href="admin.php?act=faq_answers">{$L_FAQANSWERS}</a></tr></td>
+	</table>
 </div>
-<table width="100%" cellspacing="{$style_cellspacing}" id="options">
-	<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=options">{$L_OPTIONS}</a></td></tr>
-	<tr><td class="alt2"><a class="smalltext" target="k4_main" href="admin.php?act=permissions_gui">{$L_PERMISSIONS}</a></td></tr>
-	<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=cache">{$L_CACHECONTROL}</a></td></tr>
-</table>
-<div class="subheader" id="forums_title">
-	<div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_forums', 'forums', 'forums_title')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_forums" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
-	{$L_FORUMS}
-</div>
-<table width="100%" cellspacing="{$style_cellspacing}" id="forums">
-	<tr><td class="alt1"><a class="smalltext" href="admin.php?act=forums" target="k4_main">{$L_FORUMS}</a> (<a class="smalltext" href="admin.php?act=forum_select" target="k4_main">{$L_SELECT}</a>)</td></tr>
-	<tr><td class="alt2"><a class="smalltext" target="k4_main" href="admin.php?act=forums_add">{$L_ADDFORUM}</a></td></tr>
-	<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=forums_permissions&id=0">{$L_MASTERPERMISSIONS}</a></td></tr>
-	<tr><td class="alt2"><a class="smalltext" target="k4_main" href="admin.php?act=filters_manage">{$L_FILTERS}</a></td></tr>
-	<!--<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=announcements">{$L_ANNOUNCEMENTS}</a></td></tr>-->
-</table>
-<div class="subheader" id="users_title">
-	<div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_users', 'users', 'users_title')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_users" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
-	{$L_USERS}
-</div>
-<table width="100%" cellspacing="{$style_cellspacing}" id="users">
-	<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=users_add">{$L_ADDUSER}</a></td></tr>
-	<tr><td class="alt2"><a class="smalltext" target="k4_main" href="admin.php?act=users_find">{$L_FINDUSER}</a></td></tr>
-	<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=usernames">{$L_DISALLOWNAMES}</a></td></tr>
-	<tr><td class="alt2"><a class="smalltext" target="k4_main" href="admin.php?act=usertitles">{$L_USERTITLES}</a></td></tr>
-	<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=userfields">{$L_USERPROFILEFIELDS}</a></td></tr>
-	<tr><td class="alt2"><a class="smalltext" target="k4_main" href="admin.php?act=usergroups">{$L_USERGROUPS}</a></td></tr>
-	<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=masks">{$L_PERMISSIONMASKS}</a></td></tr>
-</table>
-<div class="subheader" id="posts_title">
-	<div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_posts', 'posts', 'posts_title')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_posts" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
-	{$L_POSTS}
-</div>
-<table width="100%" cellspacing="{$style_cellspacing}" id="posts">
-	<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=posticons">{$L_POSTICONS}</a></td></tr>
-	<tr><td class="alt2"><a class="smalltext" target="k4_main" href="admin.php?act=emoticons">{$L_EMOTICONS}</a></td></tr>
-	<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=acronyms">{$L_ACRONYMS}</a></td></tr>
-	<tr><td class="alt2"><a class="smalltext" target="k4_main" href="admin.php?act=censors">{$L_WORDCENSORS}</a></td></tr>
-</table>
-<div class="subheader" id="styles_title">
-	<div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_styles', 'styles', 'styles_title')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_styles" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
-	{$L_STYLES}
-</div>
-<table width="100%" cellspacing="{$style_cellspacing}" id="styles">
-	<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=stylesets">{$L_MANAGESTYLESETS}</a></td></tr>
-	<tr><td class="alt2"><a class="smalltext" target="k4_main" href="admin.php?act=css">{$L_MANAGECSSSTYLES}</a></td></tr>
-	<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=css_toggle">{$L_TOGGLECSSEDITING}</a></td></td></tr>
-</table>
-<div class="subheader" id="misc_title">
-	<div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_misc', 'misc', 'misc_title')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_misc" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
-	{$L_MISCELLANEOUS}
-</div>
-<table width="100%" cellspacing="{$style_cellspacing}" id="misc">
-	<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=spiders">{$L_SEARCHSPIDERS}</a></td></tr>
-	<!--<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=email">{$L_EMAILUSERS}</a></td></tr>-->
-</table>
-<div class="subheader" id="faq_title">
-	<div style="float:right;position:relative;"><a href="javascript:;" onclick="return collapse_tbody('collapse_faq', 'faq', 'faq_title')" title="{$L_EXPANDCOLLAPSE}"><img id="collapse_faq" src="Images/{$IMG_DIR}/Icons/collapse_thead.gif" alt="{$L_EXPANDCOLLAPSE}" border="0" /></a></div>
-	{$L_FAQ}
-</div>
-<table width="100%" cellspacing="{$style_cellspacing}" id="faq">
-	<tr><td class="alt1"><a class="smalltext" target="k4_main" href="admin.php?act=faq_categories">{$L_FAQCATEGORIES}</a></tr></td>
-	<tr><td class="alt2"><a class="smalltext" target="k4_main" href="admin.php?act=faq_answers">{$L_FAQANSWERS}</a></tr></td>
-</table>
+<script type="text/javascript">
+k4ManageHoverCellFactory.createInstance().highlight(('admin_menu').obj(), 'base2', 'alt1');
+k4ManageHoverCellFactory.createInstance().highlight(('admin_menu').obj(), 'base2', 'alt2');
+</script>
 </is:admin>

@@ -1134,10 +1134,6 @@ class PostsIterator extends FAProxyIterator {
 		$temp['U_TOPICURL'] = K4Url::getTopicUrl($temp['post_id']);
 		$temp['U_POSTURL'] = K4Url::getPostUrl($temp['post_id']);
 		$temp['U_MEMBERURL'] = K4Url::getMemberUrl($temp['poster_id']);
-
-		/* Should we free the result? */
-		if(!$this->hasNext())
-			$this->result->free();
 		
 		return $temp;
 	}

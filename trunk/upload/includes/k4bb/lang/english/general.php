@@ -432,6 +432,7 @@ $_LANG += array(
 'L_ARCHIVEFORUM'		=> 'Archive Forum (read only)',
 'L_GALLERYFORUM'		=> 'Gallery Forum (image gallery)',
 'L_FILTERED'			=> '(filtered)',
+'L_READONLY'			=> '(read only)',
 'L_ONSMALL'				=> 'on',
 
 'L_MARKFORUMSREAD'		=> 'Mark Forums Read',

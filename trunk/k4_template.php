@@ -22,6 +22,10 @@
 * @package k42
 */
 
+if(!defined('IN_K4')) {
+	return;
+}
+
 ^!
 
 ?>

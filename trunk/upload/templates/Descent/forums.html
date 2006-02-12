@@ -30,7 +30,7 @@
 <list:item list="tlforums">
 <list:switch list="tlforums" var="row_class" a="1" b="2">
 <maps:if forum="forum_id" method="can_view">
-	<if:if var="row_type" eq="2">
+	<if:if var="row_type" noteq="1">
 	<div class="spacer">
 		<table width="100%" cellspacing="{$style_cellspacing}" class="table">
 			<core:import id="forum_view" file="forum_view.html" />

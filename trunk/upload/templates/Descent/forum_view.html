@@ -6,6 +6,7 @@
 			<td class="alt{$row_class}" width="55%">
 				<a href="{$U_FORUMURL}" class="alt{$row_class}_link" title="{$safe_description}"><strong>{$name}</strong></a>
 				<if:if var="row_type" eq="256"><span class="smalltext">{$L_FILTERED}</span></if:if>
+				<if:if var="row_type" eq="512"><span class="smalltext">{$L_READONLY}</span></if:if>
 				<br />
 				
 				<if:if var="showforumdescription" eq="1"><if:if var="description" noteq=""><span class="smalltext">{$description}<br /></span></if:if></if:if>
@@ -29,18 +30,17 @@
 			<td class="base{$row_class}"><div class="forum_number_cell"><span class="minitext"><br /><br />{$posts}</span></div></td>
 			<td class="base{$row_class}"><div class="forum_number_cell"><span class="minitext"><br /><br />{$topics}</span></div></td>
 			<td class="base{$row_class}" nowrap="nowrap" width="30%">
-				<div align="left" class="minitext">
+				
 				<if:if var="post_id" greater="0">
+				<div class="minitext" style="text-align:left;">
 					<if:if var="post_posticon" noteq="clear.gif"><img src="tmp/upload/posticons/{$post_posticon}" alt="" border="0" /></if:if>
 					<a href="{$U_POSTURL}" title="{$post_name}" class="alt{$row_class}_link"><strong><core:truncate length="27" append="...">{$post_name}</core:truncate></strong></a>
 					<br />
 					{$L_BY} <if:if var="post_uname" eq="">{$L_GUEST}<if:else /><if:if var="post_uid" noteq="0"><a href="{$U_MEMBERURL}" title="{$post_uname}"><strong>{$post_uname}</strong></a><if:else />{$post_uname}</if:if></if:if><br />
 					{$L_ONSMALL} <core:date format="%b %d %Y">{$post_created}</core:date>&nbsp;<span class="date_color"><core:date format="%I:%M%p">{$post_created}</core:date></span>
 					&nbsp;<a href="{$U_POSTURL}" title="{$post_name}"><img src="Images/{$IMG_DIR}/Icons/icon_latest_reply.gif" border="0" alt="{$post_name}" /></a>
-				<if:else />
-				<div style="text-align: center;">--</div>
-				</if:if>
 				</div>
+				<if:else /><div class="minitext" style="text-align:center;">--</div></if:if>
 			</td>
 		</tr>
 		<else:if var="is_link" eq="1" />

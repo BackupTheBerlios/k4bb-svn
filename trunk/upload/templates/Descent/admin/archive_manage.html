@@ -1,0 +1,44 @@
+<is:admin>
+<div class="header"><div class="title">{$L_ARCHIVEFORUMS}</div></div>
+<div class="spacer">
+	<div class="base3">
+		<strong>{$L_HOWDOARCHIVESWORK}</strong>
+		<p>
+			{$L_HOWARCHIVESWORK}
+		</p>
+	</div>
+</div>
+<div class="spacer">
+	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<list:list id="archive_forums">
+		<list:default list="archive_forums">
+		<tr class="alt3">
+			<td style="text-align:center;">
+				<br />
+				{$L_NOARCHIVEFORUMS}
+				<br /><br />
+			</td>
+		</tr>
+		</list:default>
+		<tr>
+			<td class="supheader">{$L_FORUM}</td>
+			<td class="supheader" colspan="2">{$L_MANAGEMENT}</td>
+		</tr>
+		<list:item list="archive_forums">
+		<list:switch list="archive_forums" var="row_class" a="alt1" b="base1">
+		<tr>
+			<td class="{$row_class}" width="80%">
+				<strong>{$name}</strong>
+				<if:if var="description" noteq=""><span class="smalltext"><br />{$description}</span></if:if>
+			</td>
+			<td class="{$row_class}" width="10%" align="center">
+				
+			</td>
+		</tr>
+		</list:switch>
+		</list:item>
+		</list:list>
+	</table>
+</div>
+<div class="footer_block"><div>&nbsp;</div></div>
+</is:admin>

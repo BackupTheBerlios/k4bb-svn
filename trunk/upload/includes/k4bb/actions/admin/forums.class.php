@@ -169,26 +169,30 @@ class AdminInsertForum extends FAAction {
 				return $action->execute($request);
 			}
 			
+			$row_type			= (isset($_REQUEST['row_type']) && ctype_digit($_REQUEST['row_type']) ? $_REQUEST['row_type'] : FORUM);
 
 			$users_array		= '';
 
-			/* Are there any moderating users? */
-			if(isset($_REQUEST['moderating_users']) && $_REQUEST['moderating_users'] != '') {
-				$users			= preg_replace("~(\r\n|\r|\n)~i", "\n", $_REQUEST['moderating_users']);
-				$users			= explode("\n", $users);
-				
-				$users_array	= array();
-
-				foreach($users as $username) {
-					$u			= $request['dba']->getRow("SELECT * FROM ". K4USERS ." WHERE name = '". $request['dba']->quote($username) ."'");
+			if($row_type <= GALLERY) {
+			
+				/* Are there any moderating users? */
+				if(isset($_REQUEST['moderating_users']) && $_REQUEST['moderating_users'] != '') {
+					$users			= preg_replace("~(\r\n|\r|\n)~i", "\n", $_REQUEST['moderating_users']);
+					$users			= explode("\n", $users);
 					
-					// TODO: incremement this users perms if they are not sufficient to moderate
-					if(is_array($u) && !empty($u)) {
-						$users_array[$u['id']]	= $u['name'];
+					$users_array	= array();
+
+					foreach($users as $username) {
+						$u			= $request['dba']->getRow("SELECT * FROM ". K4USERS ." WHERE name = '". $request['dba']->quote($username) ."'");
+						
+						// TODO: incremement this users perms if they are not sufficient to moderate
+						if(is_array($u) && !empty($u)) {
+							$users_array[$u['id']]	= $u['name'];
+						}
 					}
+					
+					$users_array	= count($users_array) > 0 ? serialize($users_array) : '';
 				}
-				
-				$users_array	= count($users_array) > 0 ? serialize($users_array) : '';
 			}
 						
 			$request['dba']->beginTransaction();
@@ -212,7 +216,7 @@ class AdminInsertForum extends FAAction {
 			$insert_a->setInt(10, $_REQUEST['postsperpage']);
 			$insert_a->setInt(11, $_REQUEST['maxpolloptions']);
 			$insert_a->setString(12, $_REQUEST['defaultlang']);
-			$insert_a->setString(13, ((isset($_REQUEST['moderators']) && is_array($_REQUEST['moderators']) && !empty($_REQUEST['moderators'])) ? implode('|', $_REQUEST['moderators']) : ''));
+			$insert_a->setString(13, ((isset($_REQUEST['moderators']) && is_array($_REQUEST['moderators']) && !empty($_REQUEST['moderators']) && $row_type <= GALLERY) ? implode('|', $_REQUEST['moderators']) : ''));
 			$insert_a->setInt(14, $_REQUEST['prune_auto']);
 			$insert_a->setInt(15, $_REQUEST['prune_frequency']);
 			$insert_a->setInt(16, $_REQUEST['prune_post_age']);
@@ -220,7 +224,7 @@ class AdminInsertForum extends FAAction {
 			$insert_a->setInt(18, $_REQUEST['prune_old_polls']);
 			$insert_a->setInt(19, $_REQUEST['prune_announcements']);
 			$insert_a->setInt(20, $_REQUEST['prune_stickies']);
-			$insert_a->setInt(21, (isset($_REQUEST['row_type']) && ctype_digit($_REQUEST['row_type']) ? $_REQUEST['row_type'] : FORUM));
+			$insert_a->setInt(21, $row_type);
 			$insert_a->setInt(22, time());
 			$insert_a->setInt(23, $_REQUEST['row_order']);
 			$insert_a->setInt(24, $parent_id);
@@ -537,27 +541,33 @@ class AdminUpdateForum extends FAAction {
 				}
 			}
 
+			$row_type			= (isset($_REQUEST['row_type']) && ctype_digit($_REQUEST['row_type']) ? $_REQUEST['row_type'] : FORUM);
+			
 			$users_array		= '';
-			/* Are there any moderating users? */
-			if(isset($_REQUEST['moderating_users']) && $_REQUEST['moderating_users'] != '') {
-				$users			= preg_replace("~(\r\n|\r|\n)~i", "\n", $_REQUEST['moderating_users']);
-				$users			= explode("\n", $users);
-				
-				$users_array	= array();
-
-				foreach($users as $username) {
-					$u			= $request['dba']->getRow("SELECT * FROM ". K4USERS ." WHERE name = '". $request['dba']->quote($username) ."'");
+			
+			if($row_type <= GALLERY) {
+			
+				/* Are there any moderating users? */
+				if(isset($_REQUEST['moderating_users']) && $_REQUEST['moderating_users'] != '') {
+					$users			= preg_replace("~(\r\n|\r|\n)~i", "\n", $_REQUEST['moderating_users']);
+					$users			= explode("\n", $users);
 					
-					if(is_array($u) && !empty($u)) {
-						
-						if($u['perms'] < MODERATOR)
-							$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET perms=". MODERATOR ." WHERE id=". intval($u['id']));
+					$users_array	= array();
 
-						$users_array[$u['id']]	= $u['name'];
+					foreach($users as $username) {
+						$u			= $request['dba']->getRow("SELECT * FROM ". K4USERS ." WHERE name = '". $request['dba']->quote($username) ."'");
+						
+						if(is_array($u) && !empty($u)) {
+							
+							if($u['perms'] < MODERATOR)
+								$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET perms=". MODERATOR ." WHERE id=". intval($u['id']));
+
+							$users_array[$u['id']]	= $u['name'];
+						}
 					}
+					
+					$users_array	= count($users_array) > 0 ? serialize($users_array) : '';
 				}
-				
-				$users_array	= count($users_array) > 0 ? serialize($users_array) : '';
 			}
 
 			/* Build the queries */
@@ -581,7 +591,7 @@ class AdminUpdateForum extends FAAction {
 			$update_a->setInt(10, $_REQUEST['postsperpage']);
 			$update_a->setInt(11, $_REQUEST['maxpolloptions']);
 			$update_a->setString(12, $_REQUEST['defaultlang']);
-			$update_a->setString(13, (isset($_REQUEST['moderators']) && is_array($_REQUEST['moderators']) && !empty($_REQUEST['moderators']) ? implode('|', $_REQUEST['moderators']) : ''));
+			$update_a->setString(13, (isset($_REQUEST['moderators']) && is_array($_REQUEST['moderators']) && !empty($_REQUEST['moderators']) && $row_type <= GALLERY ? implode('|', $_REQUEST['moderators']) : ''));
 			$update_a->setInt(14, $_REQUEST['prune_auto']);
 			$update_a->setInt(15, $_REQUEST['prune_frequency']);
 			$update_a->setInt(16, $_REQUEST['prune_post_age']);
@@ -592,7 +602,7 @@ class AdminUpdateForum extends FAAction {
 			$update_a->setInt(21, $_REQUEST['row_order']);
 			$update_a->setString(22, $users_array);
 			$update_a->setInt(23, $parent_id);
-			$update_a->setInt(24, (isset($_REQUEST['row_type']) && ctype_digit($_REQUEST['row_type']) ? $_REQUEST['row_type'] : FORUM));
+			$update_a->setInt(24, $row_type);
 			$update_a->setInt(25, $forum['forum_id']);
 			
 			/* Simple update on the maps table */

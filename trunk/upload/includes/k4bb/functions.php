@@ -61,7 +61,7 @@ function force_unserialize($str) {
 			
 			// add the string values in
 			for($i = 0; $i < count($matches_str); $i++) {
-				if($matches_str[2][$i] != '') {
+				if(isset($matches_str[2][$i]) && $matches_str[2][$i] != '') {
 					$array[$matches_str[2][$i]] = $matches_str[4][$i];
 				}
 			}

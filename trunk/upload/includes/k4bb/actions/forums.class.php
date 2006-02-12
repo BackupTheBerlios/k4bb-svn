@@ -346,11 +346,6 @@ class K4ForumsIterator extends FAProxyIterator {
 		$temp['U_MEMBERURL'] = K4Url::getMemberUrl($temp['post_uid']);
 		$temp['U_REDIRECTURL'] = K4Url::getRedirectUrl($temp['forum_id']);
 		
-
-		/* Should we free the result? */
-		if(!$this->hasNext())
-			$this->result->free();
-		
 		/* Return the formatted forum info */
 		return $temp;
 	}

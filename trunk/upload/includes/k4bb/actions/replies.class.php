@@ -168,10 +168,6 @@ class ThreadedRepliesIterator extends FAProxyIterator {
 
 		$temp['inset_level']	= str_repeat('&nbsp; &nbsp; &nbsp;', intval($temp['row_level'] - $this->start_level));
 		
-		/* Should we free the result? */
-		if(!$this->hasNext())
-			$this->result->free();
-		
 		return $temp;
 	}
 }

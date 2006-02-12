@@ -269,7 +269,7 @@ class K4DefaultAction extends FAAction {
 				$request['template']->setVar('modpanel', 0);
 				
 				/* is this user a moderator */
-				if(is_moderator($request['user']->getInfoArray(), $forum)) {
+				if(is_moderator($request['user']->getInfoArray(), $forum) && $forum['row_type'] <= GALLERY) {
 					
 					$request['template']->setVar('modpanel', 1);
 

@@ -47,5 +47,6 @@ require K4_BASE_DIR. '/actions/admin/titles.class.php';
 require K4_BASE_DIR. '/actions/admin/cache.class.php';
 require K4_BASE_DIR. '/actions/admin/announcements.class.php';
 require K4_BASE_DIR. '/actions/admin/filters.class.php';
+require K4_BASE_DIR. '/actions/admin/archive.class.php';
 
 ?>

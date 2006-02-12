@@ -1,6 +1,6 @@
 <?php
 /**
-* k4 Bulletin Board, common.php
+* k4 Bulletin Board, filters.class.php
 *
 * Copyright (c) 2005, Peter Goodman
 *

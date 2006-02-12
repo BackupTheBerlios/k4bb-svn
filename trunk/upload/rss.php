@@ -198,7 +198,7 @@ class RSSPostIterator extends FAProxyIterator {
 		$this->__construct($it);
 	}
 
-	function __construct(&$it, $bbcode) {
+	function __construct(&$it) {
 		$this->bbcode	= &new BBParser;
 		
 		parent::__construct($it);

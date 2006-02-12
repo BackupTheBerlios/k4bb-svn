@@ -210,6 +210,16 @@ $_LANG += array(
 /* / Forum Management */
 
 /**
+ * Archive Options
+ */
+'L_HOWDOARCHIVESWORK'	=> 'How do Archive Forums work?',
+'L_HOWARCHIVESWORK'		=> 'Archive forums store old topics and their replies into XML (Extensive Markup Language) files so that if one chooses to discontinue the use of a forum, it can be archived and its posts can be freed (removed) from the database.',
+'L_ARCHIVEOPTIONS'		=> 'Archive Options',
+'L_ARCHIVEFORUMS'		=> 'Archive Forums',
+'L_NOARCHIVEFORUMS'		=> 'There are currently no archive forums.',
+/* / Archive Options */
+
+/**
  * Filters
  */
 'L_FILTERS'				=> 'Filters',

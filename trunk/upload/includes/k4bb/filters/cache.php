@@ -148,7 +148,7 @@ class K4GeneralCacheFilter extends FAFilter {
 
 		$cache['all_forums']	= array();
 		$categories				= $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE row_type=". CATEGORY ." AND parent_id=0 ORDER BY row_order ASC");
-		$forums					= $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE parent_id=0 AND row_type=". FORUM ." ORDER BY row_order ASC");
+		$forums					= $request['dba']->executeQuery("SELECT * FROM ". K4FORUMS ." WHERE parent_id=0 AND row_type<>". CATEGORY ." ORDER BY row_order ASC");
 		$tmp_forums				= array();
 		
 		/* We want to get these top level forums in their proper order */

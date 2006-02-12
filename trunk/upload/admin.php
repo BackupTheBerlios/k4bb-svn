@@ -151,6 +151,9 @@ $app->setAction('filters_update', new AdminUpdateFilter);
 $app->setAction('filters_remove', new AdminRemoveFilter);
 $app->setAction('filters_selectforum', new AdminFiltersSelectForum);
 
+/* Archive Management */
+$app->setAction('archive_manage', new AdminArchiveForums);
+
 /* Users */
 $app->setAction('users', new AdminUsers);
 
