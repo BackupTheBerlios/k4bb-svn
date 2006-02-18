@@ -5,6 +5,7 @@
 <div class="subheader">{$L_GENERAL}</div>
 <div class="spacer">
 	<table width="100%" cellspacing="{$style_cellspacing}" class="table">
+		<if:if var="can_change_type" eq="1">
 		<tr class="alt1">
 			<td width="30%"><strong>{$L_TYPE}:</strong></td>
 			<td>
@@ -18,6 +19,7 @@
 				<if:if var="is_edit" eq="1"><script type="text/javascript">d.setIndex('{$forum_row_type}', 'row_type');</script></if:if>
 			</td>
 		</tr>
+		</if:if>
 		<tr class="alt2">
 			<td width="30%"><strong>{$L_PARENT}:</strong></td>
 			<td>

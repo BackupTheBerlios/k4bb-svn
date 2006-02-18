@@ -8,10 +8,12 @@
  * @package k4bb
  */
 
-var ALL_MENUS		= new Array();
-var ALL_MENUSLINKS	= new Array();
+var ALL_MENUS		= [];
+var ALL_MENUSLINKS	= [];
 var open_menu		= false;
-var row_highlights	= new Array('alt1','alt2');
+var row_highlights	= ['alt1','alt2'];
+
+if(typeof(debug) == 'undefined') { function debug(str) { return true; } }
 
 //
 // k4Menu constructor
@@ -29,8 +31,8 @@ k4Menu.prototype = {
 	Init: function(link_id, menu_id) {
 		
 		// get some vars
-		var link_obj	= this.lib.getElementById(link_id);
-		var menu_obj	= this.lib.getElementById(menu_id);
+		var link_obj	= link_id.obj();
+		var menu_obj	= menu_id.obj();
 		
 		if(menu_obj && link_obj) {	
 			var actions_obj = k4MenuActionsFactory.createInstance();
@@ -39,14 +41,14 @@ k4Menu.prototype = {
 			// set some stuff
 			menu_obj.style.display	= 'none';
 			menu_obj.style.position = 'absolute';
-			menu_obj.style.zIndex = '100';
+			menu_obj.style.zIndex	= '100';
 			
 			menu_obj.link_id		= link_id;
 			this.lib.forceCursor(link_obj);
 			
 			// put this menu into an array of all of our menus
 			this.lib.array_push(ALL_MENUS, menu_obj);
-			this.lib.array_push(ALL_MENUSLINKS, new Array(link_obj, menu_obj));
+			this.lib.array_push(ALL_MENUSLINKS, [link_obj, menu_obj]);
 			
 			// apply filters to the menu
 			filters_obj.stopLinkRedirect(link_obj);
@@ -63,7 +65,7 @@ k4Menu.prototype = {
 			AttachEvent(document,'click',(function(e){var open_menu_find=actions_obj.getOpenMenu();if(actions_obj.shouldCloseMenu(e,open_menu_find)){actions_obj.closeMenu(open_menu_find);}}),false);
 		}
 	}
-}
+};
 
 //
 // k4MenuActions constructor
@@ -153,7 +155,7 @@ k4MenuActions.prototype = {
 		if(typeof(open_menu) == 'undefined' || !open_menu) {
 			var open_menu_find = false;
 			if(typeof(ALL_MENUS) != 'undefined') {
-				for(var i = 0; i < this.lib.sizeof(ALL_MENUS); i++ ) {
+				for(var i = 0; i < ALL_MENUS.sizeof(); i++ ) {
 					if(this.menuIsOpen(ALL_MENUS[i])) {
 						open_menu_find = ALL_MENUS[i];
 						break;
@@ -181,7 +183,7 @@ k4MenuActions.prototype = {
 			// deal with menus with same menus and different links
 			// this is a really ugly way of doing things though...
 			if(event_target.id != link_obj.id && event_target.parentNode.id != link_obj.id) {
-				for(var c = 0; c < this.lib.sizeof(ALL_MENUSLINKS); c++) { // l0 m1
+				for(var c = 0; c < ALL_MENUSLINKS.sizeof(); c++) { // l0 m1
 					if(ALL_MENUSLINKS[c][1].id == menu_obj.id) {
 						
 						if(ALL_MENUSLINKS[c][0].id == event_target.id || ALL_MENUSLINKS[c][0].id == event_target.parentNode.id) {
@@ -192,17 +194,17 @@ k4MenuActions.prototype = {
 				}
 			}
 
-			if(positions[0] < this.lib.left(menu_obj)) { should_close = true; }
-			if(positions[0] > this.lib.right(menu_obj)) { should_close = true; }
-			if(positions[1] < this.lib.top(menu_obj)) { should_close = true; }
-			if(positions[1] > this.lib.bottom(menu_obj)) { should_close = true; }
+			if(positions[0] < menu_obj.left()) { should_close = true; }
+			if(positions[0] > menu_obj.right()) { should_close = true; }
+			if(positions[1] < menu_obj.top()) { should_close = true; }
+			if(positions[1] > menu_obj.bottom()) { should_close = true; }
 			if(event_target.id == link_obj.id || event_target.parentNode.id == link_obj.id) { should_close = false; }
 			if(event_target.id == menu_obj.id) { should_close = false; }
 		}
 		
 		return should_close;
 	}
-}
+};
 
 //
 // k4MenuPositions constructor
@@ -221,18 +223,18 @@ k4MenuPositions.prototype = {
 		
 		if(link_obj && menu_obj) {
 			
-			var link_obj_left		= this.lib.left(link_obj);
+			var link_obj_left		= link_obj.left();
 
 			menu_obj.style.position	= 'absolute';
-			menu_obj.style.top		= this.lib.bottom(link_obj) + 'px';
+			menu_obj.style.top		= link_obj.bottom() + 'px';
 			menu_obj.style.left		= link_obj_left + 'px';
 			
 			if( this.lib.right(menu_obj) > document.body.clientWidth) {
-				menu_obj.style.left	= (( link_obj_left - this.lib.width(menu_obj) ) + this.lib.width(link_obj)) + 'px';
+				menu_obj.style.left	= (( link_obj_left - menu_obj.width() ) + link_obj.width()) + 'px';
 			}
 		}
 	}
-}
+};
 
 //
 // k4MenuFilters constructor
@@ -257,7 +259,7 @@ k4MenuFilters.prototype = {
 	slideResizeMenu: function(actions_obj) {
 		actions_obj.onOpening = function(menu_obj) {
 			//k4SlideResizerFactory.createInstance().Init(menu_obj.id, 1, 1, 10);
-		}
+		};
 	},
 	
 	//
@@ -270,7 +272,7 @@ k4MenuFilters.prototype = {
 			}
 		}
 	}
-}
+};
 
 //
 // k4MenuMisc constructor
@@ -312,9 +314,9 @@ k4MenuMisc.prototype = {
 				}
 			}
 		}
-		return new Array(posX, posY);
+		return [posX, posY];
 	}
-}
+};
 
 //
 // Class factories
@@ -323,27 +325,27 @@ var k4MenuFactory = {
     createInstance: function() {
         return new k4Menu();
     }
-}
+};
 var k4MenuActionsFactory = {
     createInstance: function() {
         return new k4MenuActions();
     }
-}
+};
 var k4MenuPositionsFactory = {
     createInstance: function() {
         return new k4MenuPositions();
     }
-}
+};
 var k4MenuFiltersFactory = {
     createInstance: function() {
         return new k4MenuFilters();
     }
-}
+};
 var k4MenuMiscFactory = {
     createInstance: function() {
         return new k4MenuMisc();
     }
-}
+};
 
 //
 // Function to bring it all together nicely

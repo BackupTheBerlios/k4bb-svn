@@ -206,6 +206,12 @@ define('META_SAME',			16);
 
 
 /**
+ * Pagination constants for archiving / rss feeds
+ */
+define('XMLTOPICSPERPAGE',	30);
+define('XMLPOSTSPERPAGE',	15);
+
+/**
  * Define all basic MAP items for categories, forums, etc.
  */
 $_MAPITEMS['category'][]	= array('can_view' => GUEST, 'can_add' => SUPERADMIN, 'can_edit' => SUPERADMIN, 'can_del' => SUPERADMIN);

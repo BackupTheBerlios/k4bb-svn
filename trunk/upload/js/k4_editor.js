@@ -8,16 +8,18 @@
  * @package k4bb
  */
 
+if(typeof(debug) == 'undefined') { function debug(str) { return true; } }
+
 var IMG_DIR			= 'js/editor/';
 var DEFAULT_SRC		= 'js/editor/blank.html';
 var DEFAULT_INST	= 'rte';
 var USE_BBCODE		= true;
 var USE_RTM			= false;
 
-var color_values	= new Array('black', 'skyblue', 'royalblue', 'blue', 'darkblue', 'orange', 'orangered', 'crimson', 'red', 'firebrick', 'darkred', 'green', 'limegreen', 'seagreen', 'deeppink', 'tomato', 'coral', 'purple', 'indigo', 'burlywood', 'sandybrown', 'sienna', 'chocolate', 'teal', 'silver');
-var color_styles	= new Array('color: black;', 'color: skyblue;', 'color: royalblue;', 'color: blue;', 'color: darkblue;', 'color: orange;', 'color: orangered;', 'color: crimson;', 'color: red;', 'color: firebrick;', 'color: darkred;', 'color: green;', 'color: limegreen;', 'color: seagreen;', 'color: deeppink;', 'color: tomato;', 'color: coral;', 'color: purple;', 'color: indigo;', 'color: burlywood;', 'color: sandybrown;', 'color: sienna;', 'color: chocolate;', 'color: teal;', 'color: silver;');
-var size_values		= new Array(12, 7, 9, 12, 18, 24);
-var size_styles		= new Array('font-size: auto;', 'font-size: 8px;', 'font-size: 9px;', 'font-size: 12px;');
+var color_values	= ['black', 'skyblue', 'royalblue', 'blue', 'darkblue', 'orange', 'orangered', 'crimson', 'red', 'firebrick', 'darkred', 'green', 'limegreen', 'seagreen', 'deeppink', 'tomato', 'coral', 'purple', 'indigo', 'burlywood', 'sandybrown', 'sienna', 'chocolate', 'teal', 'silver'];
+var color_styles	= ['color: black;', 'color: skyblue;', 'color: royalblue;', 'color: blue;', 'color: darkblue;', 'color: orange;', 'color: orangered;', 'color: crimson;', 'color: red;', 'color: firebrick;', 'color: darkred;', 'color: green;', 'color: limegreen;', 'color: seagreen;', 'color: deeppink;', 'color: tomato;', 'color: coral;', 'color: purple;', 'color: indigo;', 'color: burlywood;', 'color: sandybrown;', 'color: sienna;', 'color: chocolate;', 'color: teal;', 'color: silver;'];
+var size_values		= [12, 7, 9, 12, 18, 24];
+var size_styles		= ['font-size: auto;', 'font-size: 8px;', 'font-size: 9px;', 'font-size: 12px;'];
 
 //
 // k4RTE Class Constructor
@@ -30,11 +32,11 @@ function k4RTE(hooks, quicktags) {
 // k4RTE class definition
 k4RTE.prototype = {
 
-	hooks:		new Object(), // add-on functions
-	quicktags:	new Object(), // the JSQuickTags library by Alex King
-	tags:		new Array(), // tags array
+	hooks:		new Function(), // add-on functions
+	quicktags:	new Function(), // the JSQuickTags library by Alex King
+	tags:		[], // tags array
 	lib:		new k4lib(), // the k4Lib library
-	rte_mode:	new Array(), // an array of editors
+	rte_mode:	[], // an array of editors
 	use_extras:	true,
 
 	//
@@ -57,7 +59,7 @@ k4RTE.prototype = {
 	//
 	get_object: function(object_id) {
 		ret = false;
-		var obj = this.lib.getElementById(object_id);
+		var obj = object_id.obj();
 		if(obj && typeof(obj) == 'object') {
 			ret = obj;
 		}
@@ -95,7 +97,7 @@ k4RTE.prototype = {
 	richtext_mode: function(iframe_id) {
 		var iframe_obj		= this.get_object(iframe_id);
 		var iframe_do	    = this.get_object_document(iframe_obj);
-		var ret			      = false;
+		var ret				= false;
 		if(iframe_obj && iframe_do) {
 
 			// open and write html to the iframe
@@ -157,6 +159,8 @@ k4RTE.prototype = {
 	// Execute a general command (e.g.when a button is clicked)
 	//
 	exec_command: function(iframe_id, command) {
+		
+		var textarea_id		= iframe_id.substring(0, iframe_id.length-6);
 
 		// find a way to execute a command
 		if(command in this.hooks) {
@@ -171,10 +175,7 @@ k4RTE.prototype = {
 
 				iframe_do.execCommand(command, false, '');
 			} else {
-
-				var textarea_id		= iframe_id.substring(0, iframe_id.length-6);
 				var textarea_obj	= this.get_object(textarea_id);
-
 				this.quicktags.initialize_tags(textarea_obj, command);
 			}
 		}
@@ -261,7 +262,7 @@ k4RTE.prototype = {
 	// Switch the editor mode
 	//
 	switch_mode: function(iframe_id) {
-		var iframe_obj    = this.get_object(iframe_id);
+		var iframe_obj		= this.get_object(iframe_id);
 		var iframe_do	    = this.get_object_document(iframe_obj);
 		var textarea_obj	= this.get_object(iframe_id.substring(0, iframe_id.length-6));
 
@@ -272,8 +273,12 @@ k4RTE.prototype = {
 				textarea_obj.style.display	= 'block';
 				iframe_obj.style.display	= 'none';
 				objs					    = this.lib.getElementsByTagName(iframe_do, 'body');
-				if(typeof(textarea_obj.innerHTML) != 'undefined') textarea_obj.innerHTML = objs[0].innerHTML;
-				if(typeof(textarea_obj.value) != 'undefined') textarea_obj.value = objs[0].innerHTML;
+				if(typeof(textarea_obj.innerHTML) != 'undefined') {
+					textarea_obj.innerHTML = objs[0].innerHTML;
+				}
+				if(typeof(textarea_obj.value) != 'undefined') {
+					textarea_obj.value = objs[0].innerHTML;
+				}
 
 			} else {
 
@@ -316,7 +321,7 @@ k4RTE.prototype = {
 	disableExtras: function() {
 		this.use_extras = false;
 	}
-}
+};
 
 //
 // k4RTEHooks Class constructor
@@ -331,7 +336,7 @@ k4RTEHooks.prototype = {
 	insertimage: function(textarea_id, iframe_id) { },
 	fontname: function(textarea_id, iframe_id) { },
 	fontsize: function(textarea_id, iframe_id) { }
-}
+};
 
 /**
  * The following code is modified from JS Quicktags
@@ -358,22 +363,22 @@ function k4QuickTags() { return true; }
 // Class
 k4QuickTags.prototype = {
 
-	tags:	new Array(),
+	tags:	[],
 	lib:	new k4lib(),
 
 	//
 	// push a tag onto the stack
 	//
 	push_tag: function(cmd) {
-		this.lib.array_push(this.tags, cmd);
+		this.tags.push(cmd);
 	},
 
 	//
 	// pop a tag off the stack
 	//
 	pop_tag: function(cmd) {
-		if(this.lib.in_array(this.tags, cmd)) {
-			this.lib.unset(this.tags, cmd);
+		if(this.tags.find(cmd)) {
+			this.tags.kill(cmd);
 		}
 	},
 
@@ -382,7 +387,7 @@ k4QuickTags.prototype = {
 	//
 	tag_is_open: function(cmd) {
 		ret = false;
-		if(this.lib.in_array(this.tags, cmd)) {
+		if(this.tags.find(cmd)) {
 			ret = true;
 		}
 		return ret;
@@ -407,7 +412,9 @@ k4QuickTags.prototype = {
 	initialize_tags: function(textarea_obj, cmd) {
 		if (document.selection) {
 
-			if(textarea_obj.focus) textarea_obj.focus();
+			if(textarea_obj.focus) {
+				textarea_obj.focus();
+			}
 
 			sel	= document.selection.createRange();
 			if (sel.text.length > 0) {
@@ -421,7 +428,9 @@ k4QuickTags.prototype = {
 					this.pop_tag(cmd);
 				}
 			}
-			if(textarea_obj.focus) textarea_obj.focus();
+			if(textarea_obj.focus) {
+				textarea_obj.focus();
+			}
 		} else if (textarea_obj.selectionStart || textarea_obj.selectionStart == '0') {
 
 			var startPos	= textarea_obj.selectionStart;
@@ -450,7 +459,9 @@ k4QuickTags.prototype = {
 				}
 			}
 
-			if(textarea_obj.focus) textarea_obj.focus();
+			if(textarea_obj.focus) {
+				textarea_obj.focus();
+			}
 
 			textarea_obj.selectionStart = cursorPos;
 			textarea_obj.selectionEnd	= cursorPos;
@@ -466,10 +477,12 @@ k4QuickTags.prototype = {
 				this.pop_tag(cmd);
 			}
 
-			if(textarea_obj.focus) textarea_obj.focus();
+			if(textarea_obj.focus) {
+				textarea_obj.focus();
+			}
 		}
 	}
-}
+};
 
 //
 // Class factories
@@ -478,21 +491,14 @@ var k4RTEFactory = {
     createInstance: function(hooks, quicktags) {
         return new k4RTE(hooks, quicktags);
     }
-}
+};
 var k4QuickTagsFactory = {
     createInstance: function() {
         return new k4QuickTags();
     }
-}
+};
 var k4RTEHooksFactory = {
 	createInstance: function() {
 		return new k4RTEHooks();
 	}
-}
-
-//
-// Debug function
-//
-function debug(nice_error, exception) {
-	return true;
-}
+};

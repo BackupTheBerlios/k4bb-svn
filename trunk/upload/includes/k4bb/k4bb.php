@@ -295,18 +295,7 @@ class K4LanguageElement extends FAObject {
 		
 
 		if(count($this->_args) > 1) {
-			
-			$args			= array();
-			foreach($this->_args as $arg) {
-				if(is_string($arg)) {
-					if(strpos($arg, 'L_') !== FALSE) {
-						$arg	= $_LANG[$arg];
-					}
-					$args[]		= $arg;
-				}
-			}
-
-			$return			= call_user_func_array('sprintf', $args);
+			$return			= call_user_func_array('sprintf', $this->_args);
 		} else {
 			$return			= $this->_args[0];
 		}

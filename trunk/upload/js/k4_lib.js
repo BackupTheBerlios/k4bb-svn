@@ -33,24 +33,28 @@ function k4lib() {
 String.prototype.obj = function() {
 	var ret_obj = false;
 	if (document.getElementById) {
-		ret_obj =  document.getElementById(this);
+		ret_obj = document.getElementById(this);
 	} else if (document.all) {
-		ret_obj =  document.all[this];
+		ret_obj = document.all[this];
 	} else if (document.layers) {
-		ret_obj =  document.layers[this];
+		ret_obj = document.layers[this];
 	} else if (document.frames) {
-		ret_obj =  document.frames[this];
+		ret_obj = document.frames[this];
 	}
 	return ret_obj;
-}
+};
 k4lib.prototype.getElementById = function(obj_id) {
-	return new String(obj_id).obj();	
-}
+	var obj = false;
+	if(typeof(obj_id) == 'string') {
+		obj = obj_id.obj();	
+	}
+	return obj;
+};
 
 //
 // Get an object by its tag name
 //
-Object.prototype.getTagsByName = document.getTagsByName = function(tagname) {
+Object.prototype.getTagsByName = function(tagname) {
 	var elements = false;
 	if (typeof(this.getElementsByTagName) != 'undefined') {
 		elements = this.getElementsByTagName(tagname);
@@ -58,10 +62,11 @@ Object.prototype.getTagsByName = document.getTagsByName = function(tagname) {
 		elements = this.all.tags(tagname);
 	}
 	return elements;
-}
+};
+document.getTagsByName = document.getElementsByTagName;
 k4lib.prototype.getElementsByTagName = function(parentobj, tagname) {
 	parentobj.getTagsByName(tagname);	
-}
+};
 
 //
 // Append text onto any object
@@ -69,10 +74,10 @@ k4lib.prototype.getElementsByTagName = function(parentobj, tagname) {
 Object.prototype.appendText = function(text) {
 	var text_obj = document.createTextNode(text);
     this.appendChild(text_obj); 
-}
+};
 k4lib.prototype.appendText = function(obj, text) {
      obj.appendText(text);
-}
+};
 
 //
 // Prepend an object (obj) to its parent object
@@ -84,7 +89,7 @@ Object.prototype.prependChild = function(obj) {
 		ret = true;
 	}
 	return ret;
-}
+};
 
 //
 // Boolean true or false if a value is in an array
@@ -100,10 +105,10 @@ Array.prototype.find = Object.prototype.find = function(needle) {
 		}
 	}
 	return bool;
-}
+};
 k4lib.prototype.in_array = function(thearray, needle) {
 	return thearray.find(needle);
-}
+};
 
 //
 // Return the array key of a value
@@ -111,17 +116,18 @@ k4lib.prototype.in_array = function(thearray, needle) {
 Array.prototype.key = function(needle) {
 	var the_key				= false;
 	for(key in this) {
-		if(the_key)
+		if(the_key) {
 			break;
+		}
 		if(key == needle) {
 			the_key = key;
 		}
 	}
 	return the_key;
-}
+};
 k4lib.prototype.array_key = function(thearray, needle) {
 	thearray.key(needle);
-}
+};
 
 //
 // Array unset function for a given value 
@@ -133,45 +139,47 @@ Array.prototype.kill = function(value) {
 		}
 	}
 	return true;
-}
+};
 k4lib.prototype.unset = function(thearray, value) {
 	thearray.kill(value);	
-}
+};
 
 //
 // Array Push function 
 //
 Array.prototype.push = function(value) {
 	this[this.sizeof()] = value;
-}
+};
 k4lib.prototype.array_push = function(thearray, value) {
 	thearray.push(value);
-}
+};
 
 //
 // count()/sizeof() like function for an array 
 //
-Array.prototype.sizeof = Object.prototype.sizeof = function() {
+function sizeof(thearray) {
 	array_length		= 0;
-	if(this != null && typeof(this) != 'undefined') {
-		for (i = 0; i < this.length; i++) {
-			if ((typeof(this[i]) == 'undefined') || (this[i] == '') || (this[i] == null)) {
+	if(thearray != null && typeof(thearray) != 'undefined') {
+		for (i = 0; i < thearray.length; i++) {
+			if ((typeof(thearray[i]) == 'undefined') || (thearray[i] == '') || (thearray[i] == null)) {
 				return i;
 			}
 		}
-		array_length	= this.length;
+		array_length	= thearray.length;
 	} else {
 		array_length	= 0;
 	}
 	return array_length;
 }
 k4lib.prototype.sizeof = function(thearray) {
-	var ret = 0;
-	if(typeof(thearray) != 'undefined') {
-		ret = thearray.sizeof();
-	}
-	return ret;
-}
+	return sizeof(thearray);
+};
+Array.prototype.sizeof = function() {
+	return sizeof(this);
+};
+Object.prototype.sizeof = function() {
+	return sizeof(this);
+};
 	
 //
 // Set the index on a select form field
@@ -181,7 +189,7 @@ k4lib.prototype.setIndex = function(needle, obj_id) {
 	if(temp) {
 		temp.selectedIndex	= temp.search(needle);
 	}
-}
+};
 
 //
 // Set the index on a select form field and if the index doesn't exist,
@@ -199,7 +207,7 @@ k4lib.prototype.forceSetIndex			= function(needle, obj_id) {
 		}
 		temp.disabled		= false;
 	}
-}
+};
 
 //
 // Set the indices on a multi-select select field
@@ -215,7 +223,7 @@ k4lib.prototype.setIndices = function(values_array, obj_id) {
 			}
 		}
 	}
-}
+};
 
 //
 // set all selected items in a <select> field to false
@@ -229,7 +237,7 @@ k4lib.prototype.selectNone = function(obj_id) {
 			}
 		}
 	}			
-}
+};
 
 //
 // set all selected items in a <select> field to true
@@ -241,7 +249,7 @@ k4lib.prototype.selectAll = function(obj_id) {
 			temp.options[i].selected = true;
 		}
 	}			
-}
+};
 
 //
 // Set a text box
@@ -252,7 +260,7 @@ k4lib.prototype.setText = function(text, obj_id) {
 		temp.value = text;
 		temp.disabled = false;
 	}
-}
+};
 
 //
 // Set a radio button
@@ -273,7 +281,7 @@ k4lib.prototype.setRadio = function(value, name) {
 		}
 	}
 	return true;
-}
+};
 
 //
 // Set a checkbox
@@ -285,7 +293,7 @@ k4lib.prototype.setCheckbox = function(value, obj_id) {
 		check = (value || value > 0) ? true : false;	
 	}
 	input.checked = check;
-}
+};
 
 //
 // Get the positiong of an element in an array
@@ -298,10 +306,10 @@ Array.prototype.search = Object.prototype.search = function(needle) {
 		}
 	}
 	return pos;
-}
+};
 k4lib.prototype.getSelectedIndex = function(needle, thearray) {
 	thearray.search(needle);
-}
+};
 
 //
 // Enable a form button
@@ -310,12 +318,12 @@ Object.prototype.enable = function() {
 	if(typeof(this.disabled) != 'undefined') {
 		this.disabled = false;
 	}
-}
+};
 k4lib.prototype.enableButton = function(button) {
 	if(button) {
 		button.enable();
 	}
-}
+};
 
 //
 // Disable a form button
@@ -324,12 +332,12 @@ Object.prototype.disable = function() {
 	if(typeof(this.disabled) != 'undefined') {
 		this.disabled = true;
 	}
-}
+};
 k4lib.prototype.disableButton = function(button) {
 	if(button) {
 		button.disable();
 	}
-}
+};
 
 /**
  * Position functions
@@ -344,10 +352,10 @@ Object.prototype.top = function() {
 		obj = obj.offsetParent;
 	}
 	return postop;
-}
+};
 k4lib.prototype.top	= function(obj) {
 	return obj.top();
-}
+};
 
 /* get the left position of an object */
 Object.prototype.left = function() {
@@ -360,63 +368,63 @@ Object.prototype.left = function() {
 		}
 	}
 	return posleft;
-}
+};
 k4lib.prototype.left = function(obj) {
 	return obj.left();
-}
+};
 
 /* Get the width of an object */
 Object.prototype.width = function() {
 	return this.offsetWidth;
-}
+};
 k4lib.prototype.width = function(obj) {
 	var objwidth = 0;
 	if(obj) {
 		objwidth = obj.width();
 	}
 	return objwidth;
-}
+};
 
 /* get the height of an object */
 Object.prototype.height = function() {
 	return this.offsetHeight;
-}
+};
 k4lib.prototype.height = function(obj) {
 	var objheight = 0;
 	if(obj) {
 		objheight = obj.height();
 	}
 	return objheight;
-}
+};
 
 /* get the bottom position of an object */
 Object.prototype.bottom = function() {
 	return parseInt(this.top() + this.offsetHeight);
-}
+};
 k4lib.prototype.bottom = function(obj) {
 	return obj.bottom();
-}
+};
 
 /* get the right position of an object */
 Object.prototype.right = function() {
 	return parseInt(this.left() + this.offsetWidth);
-}
+};
 k4lib.prototype.right = function(obj) {
 	return obj.right();
-}
+};
 		
 /* Check if 'over' overlaps 'under' */
 Object.prototype.overlaps = function(under) {
 	var does_overlap	= true;
-	if(under.left() > this.right()) does_overlap = false;
-	if(under.right() < this.left()) does_overlap = false;
-	if(under.top() > this.bottom()) does_overlap = false;
-	if(under.bottom() < this.top()) does_overlap = false;
+	if(under.left() > this.right()) { does_overlap = false; }
+	if(under.right() < this.left()) { does_overlap = false; }
+	if(under.top() > this.bottom()) { does_overlap = false; }
+	if(under.bottom() < this.top()) { does_overlap = false; }
 	return does_overlap;
-}
+};
 k4lib.prototype.overlaps = function(over, under) {
 	return over.overlaps(under);
-}
+};
 
 /**
  * Aesthetics
@@ -429,18 +437,18 @@ Object.prototype.linkCursor = function() {
 	} catch(e) {
 		this.style.cursor = 'hand';
 	}
-}
+};
 k4lib.prototype.forceCursor	= function(obj) {
 	if(obj) {
 		obj.linkCursor();
 	}
-}
+};
 
 /* Preload Images */
 k4lib.prototype.preload_images	= function() {
 	if(document.images){ 
 		if(!document.preloaded_images) { 
-			document.preloaded_images = new Array();
+			document.preloaded_images = [];
 		}
 		var j 			= document.preloaded_images.sizeof();
 		var func_args 	= this.preload_images.arguments; 
@@ -451,17 +459,23 @@ k4lib.prototype.preload_images	= function() {
 			}
 		}
 	}
-}
+};
 
 /* Get the event target, function from QuirksMode */
-function get_event_target(e) {
+function get_event_target(the_event) {
 	var targ;
-	if (!e) var e = window.event;
-	if (e.target) targ = e.target;
-	else if (e.srcElement) targ = e.srcElement;
-	if (targ.nodeType == 3) // defeat Safari bug
+	var e = the_event;
+	if (!e) { 
+		e = window.event; 
+	}
+	if (e.target) { 
+		targ = e.target; 
+	} else if (e.srcElement) {
+		targ = e.srcElement;
+	}
+	if (targ.nodeType == 3) { // defeat Safari bug
 		targ = targ.parentNode;
-
+	}
 	return targ;
 }
 k4lib.prototype.get_event_target = get_event_target;
@@ -491,7 +505,7 @@ k4lib.prototype.overflow_layer = function(obj, overflow_type) {
 		ret = true;
 	}
 	return ret;
-}
+};
 
 Object.prototype.show = function() {
 	if(typeof(this.style) != 'undefined') {
@@ -499,12 +513,12 @@ Object.prototype.show = function() {
 			this.style.display = 'block';
 		}
 	}
-}
+};
 Object.prototype.hide = function() {
 	if(typeof(this.style) != 'undefined') {
 		this.style.display = 'none';
 	}
-}
+};
 
 //
 // getPageScroll()
@@ -522,9 +536,8 @@ function getPageScroll(){
 	} else if (document.body) {// all other Explorers
 		yScroll = document.body.scrollTop;
 	}
-
-	arrayPageScroll = new Array('',yScroll) 
-	return arrayPageScroll;
+	
+	return ['',yScroll];
 }
 
 //
@@ -573,8 +586,6 @@ function getPageSize(){
 	} else {
 		pageWidth = xScroll;
 	}
-
-
-	arrayPageSize = new Array(pageWidth,pageHeight,windowWidth,windowHeight) 
-	return arrayPageSize;
+	
+	return [pageWidth,pageHeight,windowWidth,windowHeight];
 }

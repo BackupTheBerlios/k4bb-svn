@@ -109,6 +109,7 @@ class AdminAddForum extends FAAction {
 			$languages					= &new FAArrayIterator($languages);
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_FORUMS');
+			$request['template']->setVar('can_change_type', 1);
 			$request['template']->setVar('forum_parent', $parent);
 			$request['template']->setVar('forums_on', '_on');
 			$request['template']->setVar('forum_action', 'admin.php?act=forums_insert');
@@ -449,6 +450,8 @@ class AdminEditForum extends FAAction {
 
 			$request['template']->setVar('forum_moderating_users', $moderating_users);
 			
+			$request['template']->setVar('can_change_type', ($forum['row_type'] & ARCHIVEFORUM) ? 0 : 1);
+
 			// forum languages
 			$languages					= &new FAArrayIterator($languages);
 
@@ -541,7 +544,7 @@ class AdminUpdateForum extends FAAction {
 				}
 			}
 
-			$row_type			= (isset($_REQUEST['row_type']) && ctype_digit($_REQUEST['row_type']) ? $_REQUEST['row_type'] : FORUM);
+			$row_type			= (isset($_REQUEST['row_type']) && ctype_digit($_REQUEST['row_type']) ? $_REQUEST['row_type'] : $forum['row_type']);
 			
 			$users_array		= '';
 			

@@ -1,58 +1,62 @@
 /**
-* k4 Bulletin Board, form_check.js
-*
-* Copyright (c) 2005, Geoffrey Goodman
-*
-* This library is free software; you can redistribute it and/orextension=php_gd2.dll
-* modify it under the terms of the GNU Lesser General Public
-* License as published by the Free Software Foundation; either
-* version 2.1 of the License, or (at your option) any later version.
-* 
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* Lesser General Public License for more details.
-* 
-* Licensed under the LGPL license
-* http://www.gnu.org/copyleft/lesser.html
-*
-* @author Geoffrey Goodman
-* @version $Id: form_check.js 110 2005-06-13 20:48:58Z Peter Goodman $
-* @package k42
-*/
+ * k4 Bulletin Board, Geoffrey Checker
+ * Copyright (c) 2005, Peter Goodman
+ * Licensed under the LGPL license
+ * http://www.gnu.org/copyleft/lesser.html
+ * @author Geoffrey Goodman
+ * @version $Id$
+ * @package k4bb
+ */
 
-var elements = new Array();
-var matches = new Array();
-var regexs = new Array();
-var errors = new Array();
-var messages = new Array();
-var error_classes = new Array();
-var base_classes = new Array();
+
+var elements = [];
+var matches = [];
+var regexs = [];
+var errors = [];
+var messages = [];
+var error_classes = [];
+var base_classes = [];
 
 function resetErrors() {
-	for (var i = 0; i < elements.length; i++)
+	for (var i = 0; i < elements.sizeof(); i++)
 	{
-		var error = document.getElementById(errors[i]);
-		if (error) error.style.display = 'none';
-
-		var element = document.getElementById(elements[i]);
-		if (element) element.className = base_classes[i];
-
-		var message = document.getElementById(messages[i]);
-		if (message) message.style.display = 'block';
+		if(typeof(errors[i]) != 'undefined') {
+			var error = errors[i].obj();
+			if (error) {
+				error.style.display = 'none';
+			}
+		}
+		if(typeof(elements[i]) != 'undefined') {
+			var element = elements[i].obj();
+			if (element) {
+				element.className = base_classes[i];
+			}
+		}
+		if(typeof(messages[i]) != 'undefined') {
+			var message = messages[i].obj();
+			if (message) {
+				message.style.display = 'block';
+			}
+		}
 	}
 }
 
 function showError(num)
 {
-	var error = document.getElementById(errors[num]);
-	if (error) error.style.display = 'block';
+	var error = errors[num].obj();
+	if (error) {
+		error.show();
+	}
 
-	var element = document.getElementById(elements[num]);
-	if (element) element.className = error_classes[num];
+	var element = elements[num].obj();
+	if (element) {
+		element.className = error_classes[num];
+	}
 
-	var message = document.getElementById(messages[num]);
-	if (message) message.style.display = 'none';
+	var message = messages[num].obj();
+	if (message) {
+		message.hide();
+	}
 }
 function checkForm(form)
 {
@@ -60,10 +64,10 @@ function checkForm(form)
 
 	resetErrors();
 
-	for (var i = 0; i < form.elements.length; i++)
+	for (var i = 0; i < form.elements.sizeof(); i++)
 	{
 		var element = form.elements[i];
-		for (var j = 0; j < elements.length; j++)
+		for (var j = 0; j < elements.sizeof(); j++)
 		{
 			if (elements[j] == element.id)
 			{
@@ -76,7 +80,7 @@ function checkForm(form)
 				}
 				if(typeof matches != 'undefined' && matches) {
 					if (matches[j]) {
-						var match = document.getElementById(matches[j]);
+						var match = matches[j].obj();
 						if(typeof(match) != 'undefined' && match) {
 							if (element.value != match.value)
 							{
@@ -98,7 +102,7 @@ function checkForm(form)
 }
 function addMessage(id, message)
 {
-	for (var i = 0; i < elements.length; i++) {
+	for (var i = 0; i < elements.sizeof(); i++) {
 		if (elements[i] == id)
 		{
 			messages[i] = message;
@@ -107,14 +111,14 @@ function addMessage(id, message)
 }
 function addVerification(id, regex, error, errorclassname)
 {
-	var num = elements.length;
+	var num = elements.sizeof();
 
 	elements[num] = id;
 	regexs[num] = new RegExp('^'+regex+'$');
 	matches[num] = '';
 	errors[num] = error;
 
-	element = document.getElementById(id);
+	element = id.obj();
 	base_classes[num] = element.className;
 	error_classes[num] = (errorclassname && errorclassname != '') ? errorclassname : element.className;
 }
@@ -127,7 +131,7 @@ function addCompare(id, match, error, errorclassname)
 	matches[num] = match;
 	errors[num] = error;
 
-	element = document.getElementById(id);
+	element = id.obj();
 	base_classes[num] = element.className;
 	error_classes[num] = (errorclassname && errorclassname != '') ? errorclassname : element.className;
 }

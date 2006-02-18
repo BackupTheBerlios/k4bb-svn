@@ -63,10 +63,11 @@ function show_newmessage_box(num_messages, text_to_write, img_dir, go_in_id) {
 function showTable(table_id) {
 	var the_tr = d.getElementById(table_id);
 	if(the_tr.style.display == 'block') {
-		return the_tr.style.display = 'none';
+		the_tr.style.display = 'none';
 	} else {
-		return the_tr.style.display = 'block';
+		the_tr.style.display = 'block';
 	}
+	return true;
 }
 
 /**

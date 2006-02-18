@@ -35,8 +35,15 @@ class InsertPost extends FAAction {
 		$this->row_type = $row_type;
 	}
 	function execute(&$request) {
-		
-		if((isset($_REQUEST['submit_type']) && ($_REQUEST['submit_type'] == 'post' || $_REQUEST['submit_type'] == 'preview' || $_REQUEST['submit_type'] == 'draft')) || ( isset($_REQUEST['post']) || isset($_REQUEST['draft']) ) ) {
+		if(
+			(isset($_REQUEST['submit_type']) 
+				&& ($_REQUEST['submit_type'] == 'post' 
+					|| $_REQUEST['submit_type'] == 'preview' 
+					|| $_REQUEST['submit_type'] == 'draft'
+					)
+				) 
+			|| ( isset($_REQUEST['post']) || isset($_REQUEST['draft']) ) 
+			) {
 			
 			$submit_type = $_REQUEST['submit_type'];
 			$should_submit = ( isset($_REQUEST['post']) || isset($_REQUEST['draft']) );
@@ -102,11 +109,8 @@ class InsertPost extends FAAction {
 					return !USE_AJAX ? $action->execute($request) : ajax_message('L_INSERTTOPICNAME');
 				}
 
-				if (!$this->runPostFilter('name', new FALengthFilter(intval($_SETTINGS['topicmaxchars'])))) {
-					$action = new K4InformationAction(new K4LanguageElement('L_TITLETOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])), 'content', TRUE);
-					return !USE_AJAX ? $action->execute($request) : ajax_message(new K4LanguageElement('L_TITLETOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])));
-				}
-				if (!$this->runPostFilter('name', new FALengthFilter(intval($_SETTINGS['topicmaxchars']), intval($_SETTINGS['topicminchars'])))) {
+				$len = strlen($_REQUEST['name']);
+				if ($len < intval($_SETTINGS['topicminchars']) || $len > intval($_SETTINGS['topicmaxchars'])) {
 					$action = new K4InformationAction(new K4LanguageElement('L_TITLETOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])), 'content', TRUE);
 					return !USE_AJAX ? $action->execute($request) : ajax_message(new K4LanguageElement('L_TITLETOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])));
 				}
@@ -378,7 +382,7 @@ class InsertPost extends FAAction {
 						
 						/* Send a javascript redirect to the browser */
 						if(ceil(($topic['num_replies']+1) / $limit) > $page) {
-							$html	= '<div style="text-align: center;"><a href="viewtopic.php?id='. $topic['topic_id'] .'&page='. ceil(($topic['num_replies']+1) / $limit) .'&limit='. $limit .'?p='. $reply_id .'#p'. $reply_id .'" title="'. $request['template']->getVar('L_SEEYOURPOST') .'" style="font-weight: bold;">'. $request['template']->getVar('L_SEEYOURPOST') .'</a></div><br />';
+							$html	= '<div style="text-align: center;"><a href="viewtopic.php?id='. $topic['post_id'] .'&page='. ceil(($topic['num_replies']+1) / $limit) .'&limit='. $limit .'&p='. $post_id .'#p'. $reply_id .'" title="'. $request['template']->getVar('L_SEEYOURPOST') .'" style="font-weight: bold;">'. $request['template']->getVar('L_SEEYOURPOST') .'</a></div><br />';
 							echo $html;
 							exit;
 
@@ -514,6 +518,8 @@ class InsertPost extends FAAction {
 					exit;
 				}
 			}
+		} else {
+			no_perms_error($request);
 		}
 		return TRUE;
 	}
@@ -560,12 +566,9 @@ class UpdatePost extends FAAction {
 				$action = new K4InformationAction(new K4LanguageElement('L_INSERTTOPICNAME'), 'content', TRUE);
 				return !USE_AJAX ? $action->execute($request) : ajax_message('L_INSERTTOPICNAME');
 			}
-
-			if (!$this->runPostFilter('name', new FALengthFilter(intval($_SETTINGS['topicmaxchars'])))) {
-				$action = new K4InformationAction(new K4LanguageElement('L_TITLETOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])), 'content', TRUE);
-				return !USE_AJAX ? $action->execute($request) : ajax_message(new K4LanguageElement('L_TITLETOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])));
-			}
-			if (!$this->runPostFilter('name', new FALengthFilter(intval($_SETTINGS['topicmaxchars']), intval($_SETTINGS['topicminchars'])))) {
+			
+			$len = strlen($_REQUEST['name']);
+			if ($len < intval($_SETTINGS['topicminchars']) || $len > intval($_SETTINGS['topicmaxchars'])) {
 				$action = new K4InformationAction(new K4LanguageElement('L_TITLETOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])), 'content', TRUE);
 				return !USE_AJAX ? $action->execute($request) : ajax_message(new K4LanguageElement('L_TITLETOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])));
 			}

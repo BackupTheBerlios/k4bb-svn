@@ -1,5 +1,5 @@
 /**
- * k4 Bulletin Board, k4XMLHttpRequest object and related objects
+ * FileArts FAHttpsRequests object and related objects
  * Copyright (c) 2005, Peter Goodman
  * Licensed under the LGPL license
  * http://www.gnu.org/copyleft/lesser.html
@@ -8,41 +8,45 @@
  * @package k4bb
  */
 
-var total_requests = 0;
+var total_requests	= 0;
+var prev_url		= '';
+var future_url		= '';
+
+if(typeof(debug) == 'undefined') { function debug(str) { return true; } }
 
 //
-// k4XMLHttpRequest object constructor
+// FAHttpRequests object constructor
 //
-function k4XMLHttpRequest() {
+function FAHttpRequests() {
 	return this.InitRequest();
 }
 
 //
-// k4XMLHTTPRequestObject constructor
+// FAHttpRequestsObject constructor
 //
-function k4XMLHTTPRequestObject(request_obj) {
+function FAHttpRequestsObject(request_obj) {
 	this.request_obj = request_obj;
 }
 
 //
-// k4XMLHttpRequestStates constructor
+// FAHttpRequestsStates constructor
 //
-function k4XMLHttpRequestStates(k4_http) {
-	this.stateChanger(k4_http);
+function FAHttpRequestsStates(FA_http) {
+	this.stateChanger(FA_http);
 }
 
 //
-// k4IframeRequest object constructor
+// FAIframeRequest object constructor
 //
-function k4IframeRequest() {
+function FAIframeRequest() {
 	this.createIframe();
 	return this;
 }
 
 //
-// k4XMLHttpRequest class definition
+// FAHttpRequests class definition
 //
-k4XMLHttpRequest.prototype = {
+FAHttpRequests.prototype = {
 
 	// some vars
 	request_type:	'POST',
@@ -60,7 +64,7 @@ k4XMLHttpRequest.prototype = {
 			http_request = new XMLHttpRequest();
 
 		} else if(window.ActiveXObject) {
-			var control_types = new Array('MSXML2.XMLHTTP','MSXML2.XMLHTTP.5.0','MSXML2.XMLHTTP.4.0','MSXML2.XMLHTTP.3.0','Microsoft.XMLHTTP');
+			var control_types = ['MSXML2.XMLHTTP','MSXML2.XMLHTTP.5.0','MSXML2.XMLHTTP.4.0','MSXML2.XMLHTTP.3.0','Microsoft.XMLHTTP'];
 			for (var i = 0; i < 5 && (typeof(http_request) == 'undefined' || !http_request); i++) {
 				try {
 					http_request = new ActiveXObject(control_types[ i ]);
@@ -75,17 +79,17 @@ k4XMLHttpRequest.prototype = {
 		
 		// default to using an iframe if needed
 		if(!http_request) {
-			http_request = k4IframeRequestFactory.createInstance();
+			http_request = FAIframeRequestFactory.createInstance();
 		}
 
-		return k4XMLHTTPRequestObjectFactory.createInstance(http_request);;
+		return FAHttpRequestsObjectFactory.createInstance(http_request);
 	}
-}
+};
 
 //
-// k4XMLHTTPRequestObject object definition
+// FAHttpRequestsObject object definition
 //
-k4XMLHTTPRequestObject.prototype = {
+FAHttpRequestsObject.prototype = {
 
 	lib:			new k4lib(),
 	request_obj:	null,
@@ -101,11 +105,13 @@ k4XMLHTTPRequestObject.prototype = {
 	Open: function(url, asyno_flag) {
 
 		if(!this.request_obj || typeof(this.request_obj) == 'undefined') {
-			//k4XMLHttpRequest.InitRequest();
+			//FAHttpRequests.InitRequest();
 		}
 		if(this.request_obj && typeof(url) != 'undefined' && url != '' && typeof(this.request_obj) != 'undefined') {
 			// reset the state handlers so there's no overlapping
-			this.loadingState = this.errorState = this.successState = new Function();
+			this.loadingState	= new Function();
+			this.errorState		= new Function();
+			this.successState	= new Function();
 
 			// open the request
 			this.request_obj.open(this.request_type, url, asyno_flag);
@@ -129,9 +135,9 @@ k4XMLHTTPRequestObject.prototype = {
 	Send: function(data_to_send) {
 		if(this.request_obj && typeof(this.request_obj) != 'undefined') {
 
-			//var k4_state_change_handler = ;
-			var k4_http = this;
-			this.request_obj.onreadystatechange = function() { k4XMLHttpRequestStatesFactory.createInstance(k4_http); };
+			//var FA_state_change_handler = ;
+			var FA_http = this;
+			this.request_obj.onreadystatechange = function() { FAHttpRequestsStatesFactory.createInstance(FA_http); };
 			this.request_obj.send(data_to_send);
 		}
 	},
@@ -140,7 +146,7 @@ k4XMLHTTPRequestObject.prototype = {
 	// Set the request type (GET or POST)
 	//
 	setRequestType: function(request_type) {
-		if(request_type && typeof(request_type) != null) {
+		if(request_type && typeof(request_type) != 'undefined') {
 			
 			// make sure the request method is good
 			request_type = (request_type == 'GET' || request_type == 'get') ? 'GET' : 'POST';
@@ -213,40 +219,40 @@ k4XMLHTTPRequestObject.prototype = {
 		}
 		return response_status_text;
 	}
-}
+};
 
 // object definition
-k4XMLHttpRequestStates.prototype = {
+FAHttpRequestsStates.prototype = {
 
 	//
 	// Handle request state changes
 	//
-	stateChanger: function(k4_http) {
-		if(k4_http.request_obj && typeof(k4_http.request_obj) != 'undefined') {
+	stateChanger: function(FA_http) {
+		if(FA_http.request_obj && typeof(FA_http.request_obj) != 'undefined') {
 
-			var ready_state = k4_http.getReadyState();
+			var ready_state = FA_http.getReadyState();
 			
 			if(ready_state < 4) {
-				k4_http.loadingState();
+				FA_http.loadingState();
 			}
 			if(ready_state == 4) {
 
-				var request_status = k4_http.getStatus();
+				var request_status = FA_http.getStatus();
 
 				if(request_status == 404) {
-					k4_http.errorState();
+					FA_http.errorState();
 				} else {
-					k4_http.successState();
+					FA_http.successState();
 				}
 			}
 		} else {
-			k4_http.errorState();
+			FA_http.errorState();
 		}
 	}
-}
+};
 
 // object definition, mimicks the XMLHttpRequest object definition
-k4IframeRequest.prototype = {
+FAIframeRequest.prototype = {
 
 	// general vars
 	lib:				new k4lib(),
@@ -270,7 +276,7 @@ k4IframeRequest.prototype = {
 	createIframe: function() {
 		
 		// try to get the container to put the iframes in
-		var iframe_div = 'iframe_request_div'.obj();
+		var iframe_div = ('iframe_request_div').obj();
 
 		// if it doesn't exist, create it
 		if(typeof(iframe_div) == 'undefined' || !iframe_div) {			
@@ -362,13 +368,13 @@ k4IframeRequest.prototype = {
 			this.iframe_src		+= (send_data.length != '' ? append_str + send_data : '');
 			this.iframe_obj.src = this.iframe_src;
 			
-			var k4_iframe_http = this;						
+			var self = this;						
 
 			// set a function to the loading of the iframe using
-			AttachEvent(this.iframe_obj,'load',function(){k4_iframe_http.frame_loaded=true;},false);
+			AttachEvent(this.iframe_obj,'load',function(){self.frame_loaded=true;},false);
 
 			// toggle a state change after 1 second
-			this.iframe_timer = setTimeout( (function(k4_iframe_http){ return function(){ k4_iframe_http.stateChange(); } })(this), 1000);
+			this.iframe_timer = setTimeout( (function(self){return function(){self.stateChange();}})(this), 1000);
 		}
 	},
 
@@ -404,8 +410,6 @@ k4IframeRequest.prototype = {
 				}				
 			}
 			
-			
-
 			// change the state stuff
 			this.readyState		= 4;
 			this.status			= 200;
@@ -420,7 +424,7 @@ k4IframeRequest.prototype = {
 				this.onreadystatechange();
 				
 				// toggle a state change after 1 second
-				this.iframe_timer = setTimeout( (function(k4_iframe_http){ return function(){ k4_iframe_http.stateChange(); } })(this), 1000);
+				this.iframe_timer = setTimeout( (function(FA_iframe_http){ return function(){ FA_iframe_http.stateChange(); } })(this), 1000);
 			}
 		}
 	},
@@ -433,7 +437,7 @@ k4IframeRequest.prototype = {
 		var frame_object	= false;
 
 		if(this.iframe_obj) {
-			if (document.all) {
+			if(document.all) {
 				try { frame_object = frames[this.iframe_id]; } catch(ex) { debug('Could not fetch Frame object (document.all)', ex); }
 			} else {
 				try { frame_object = this.iframe_obj.contentWindow; } catch(e) { debug('Could not fetch Frame object (!document.all)', e); }
@@ -449,48 +453,49 @@ k4IframeRequest.prototype = {
 		}
 		return dom_object;
 	}
-}
+};
 
 //
 // Class factories
 //
-var k4XMLHttpRequestFactory = {
+var FAHttpRequestsFactory = {
     createInstance: function() {
-        return new k4XMLHttpRequest();
+        return new FAHttpRequests();
     }
-}
-var k4XMLHTTPRequestObjectFactory = {
+};
+var FAHttpRequestsObjectFactory = {
     createInstance: function(request_obj) {
-        return new k4XMLHTTPRequestObject(request_obj);
+        return new FAHttpRequestsObject(request_obj);
     }
-}
-var k4XMLHttpRequestStatesFactory = {
-    createInstance: function(k4_http) {
-        return new k4XMLHttpRequestStates(k4_http);
+};
+var FAHttpRequestsStatesFactory = {
+    createInstance: function(FA_http) {
+        return new FAHttpRequestsStates(FA_http);
     }
-}
-var k4IframeRequestFactory = {
+};
+var FAIframeRequestFactory = {
     createInstance: function() {
-        return new k4IframeRequest();
+        return new FAIframeRequest();
     }
-}
+};
 
 //
 // Send a request
 //
-k4XMLHTTPRequestObject.prototype.Request = k4IframeRequest.prototype.Request = function(r_type, r_url, r_loading, r_error, r_success) {
+FAHttpRequestsObject.prototype.Request = function(r_type, r_url, r_loading, r_error, r_success) {
 	this.setRequestType(r_type);
 	this.Open(r_url, true);
 	this.Send("");
 	this.loadingState	= r_loading ? r_loading : new Function();
 	this.errorState		= r_error ? r_error : new Function();
 	this.successState	= r_success ? r_success : new Function();
-}
+};
+FAIframeRequest.prototype.Request = FAHttpRequestsObject['Request'];
 
 //
 // Basic mini-lib of things to do
 //
-var k4Ajx = {
+var FAHTTP = {
 
 	//
 	// Load an entire page, start to finish
@@ -504,8 +509,8 @@ var k4Ajx = {
 			if(r_url != '' && r_url.indexOf('javascript:') == -1) {
 				
 				// deal with some objects
-				var k4_http			= k4XMLHttpRequestFactory.createInstance();
-				var container_obj	= ( new String(container_id) ).obj();
+				var FA_http			= FAHttpRequestsFactory.createInstance();
+				var container_obj	= (container_id).obj();
 
 				// get what's the current url?
 				var current_url		= this.escapeStr(document.location);
@@ -513,8 +518,11 @@ var k4Ajx = {
 				// add the current url onto the request url
 				r_url				= r_url + (r_url.indexOf('?') != -1 ? '&' : '?') + 'currurl=' + current_url;
 				
+				// get this instance
+				var self = this;
+
 				// get things in motion
-				k4_http.Request(r_method, r_url, (function(){k4Ajx.loadingState(container_obj,container_id+'_anchor');}), false, (function(){k4Ajx.loadHTML(k4_http,container_id);}));
+				FA_http.Request(r_method, r_url, (function(){self.loadingState(container_obj,container_id+'_anchor');}), false, (function(){self.loadHTML(FA_http,container_id);}));
 			}
 		}
 	},
@@ -522,8 +530,8 @@ var k4Ajx = {
 	//
 	// Load the response HTML of a request
 	//
-	loadHTML: function(k4_http, container_id) {
-		if(typeof(k4_http) != 'undefined' && k4_http) {
+	loadHTML: function(FA_http, container_id) {
+		if(typeof(FA_http) != 'undefined' && FA_http) {
 			
 			this.cancelLoader(container_id + '_anchor');
 			
@@ -531,7 +539,7 @@ var k4Ajx = {
 
 			if(typeof(container_obj) != 'undefined') {
 				
-				var response = k4_http.getResponseText();
+				var response = FA_http.getResponseText();
 				
 				// if there is no response
 				if(response != null && response != '') {
@@ -545,7 +553,7 @@ var k4Ajx = {
 						container_obj.innerHTML = response;
 
 						// now, change the title
-						var title_element = (new String('page_title_element')).obj();
+						var title_element = ('page_title_element').obj();
 						if(title_element && typeof(document.title) != 'undefined') {
 							document.title = title_element.innerHTML;
 						}
@@ -553,7 +561,7 @@ var k4Ajx = {
 						// go over all of the <script> tags.. this could be dangerous, but whatever
 						var script_objs = container_obj.getTagsByName('script');
 						for(var s = 0; s < script_objs.sizeof(); s++) {
-							try { eval(script_objs[s].innerHTML); } catch(e) { }
+							//try { eval(script_objs[s].innerHTML); } catch(e) { }
 						}
 						
 						// parse the links over again
@@ -574,7 +582,7 @@ var k4Ajx = {
 			container_obj.style.display		= 'block';
 			
 			// try to get the anchor, otherwise create it
-			if( ! (new String(anchor_id)).obj() ) {
+			if( ! (anchor_id).obj() ) {
 				var anchor					= document.createElement('a');
 				anchor.id					= anchor_id;
 				anchor.name					= anchor_id;
@@ -587,7 +595,7 @@ var k4Ajx = {
 			// change the url
 			this.changeUrl('#' + anchor_id);
 			
-			var loader_id						= new String(anchor_id + '_loader');
+			var loader_id						= anchor_id + '_loader';
 			var loader							= loader_id.obj();
 
 			// let's make sure none of these exist first!
@@ -633,10 +641,9 @@ var k4Ajx = {
 	// Destroy the loader message
 	//
 	cancelLoader: function(anchor_id) {
-		var loader_obj = (new String(anchor_id + '_loader')).obj();
-		if(typeof(loader_obj) != 'undefined') {
+		var loader_obj = (anchor_id + '_loader').obj();
+		if(typeof(loader_obj) != 'undefined' && loader_obj) {
 			loader_obj.style.display = 'none';
-			//loader_obj.parentNode.removeChild(loader_obj);
 		}
 	},
 	
@@ -644,11 +651,7 @@ var k4Ajx = {
 	// Function to change the current page url
 	//
 	changeUrl: function(url) {
-//		if(typeof(document.location.href) != 'undefined') {
-//			document.location	= url;
-//		} else if(typeof(document.location) != 'undefined') {
-//			document.location	= url;
-//		}
+		// hrmm..
 	},
 	
 	//
@@ -675,12 +678,15 @@ var k4Ajx = {
 					
 					// store the url of this link
 					if(typeof(link_tags[s].id) == 'undefined' || !link_tags[s].id || link_tags[s].id == '') {
-						link_tags[s].id		= 'k4link_' + s;
+						link_tags[s].id		= 'FAlink_' + s;
 					}
 					link_tag_hrefs[link_tags[s].id] = link_tags[s].href;
 					
+					// current instance
+					var self = this;
+
 					// attach an onlick event
-					AttachEvent(link_tags[s],'click',function(e){k4Ajx.loadPage(link_tag_hrefs[k4Ajx.linkTarget(e)],'GET','t');},false);
+					AttachEvent(link_tags[s],'click',function(e){self.loadPage(link_tag_hrefs[self.linkTarget(e)],'GET','t');},false);
 					
 					// change the link
 					link_tags[s].href	= 'javascript:;';
@@ -692,10 +698,11 @@ var k4Ajx = {
 	//
 	// Get the proper link target
 	//
-	linkTarget: function(e) {
+	linkTarget: function(the_event) {
 		var link_target;
-		if (!e) {
-			var e = window.event;
+		var e = the_event;
+		if (!the_event) {
+			e = window.event;
 		}
 		if (e.target) {
 			link_target = e.target;
@@ -726,7 +733,113 @@ var k4Ajx = {
 				str = escape_str(str);
 			}
 		}
-
 		return str;
 	}
-}
+};
+
+var FAUrlHandler = {
+	
+	handler: false,
+	
+	//
+	// Initialize the url handler
+	//
+	init: function() {
+		this.write();
+	},
+
+	//
+	// Register a url to the handler
+	//
+	register: function(url, anchor) {
+		var option		= document.createElement('option');
+		option.value	= url;
+		option.text		= anchor;
+		option.selected = true;
+		this.handler.appendChild(option);
+	},
+	
+	//
+	// Change the url
+	//
+	changeUrl: function(url, anchor) {
+		document.location = '#' + anchor;
+		this.register(url, anchor);
+	},
+
+	//
+	// Remove a url
+	//
+	remove: function(anchor) {
+		this.handler.removeChild(this.getByAnchor(anchor));
+	},
+	
+	//
+	// Get the option object for a specific anchor
+	//
+	getByAnchor: function(anchor) {
+		var option = false;
+		for(var i = this.handler.childNodes.sizeof(); i >= 0; i--) {
+			if(typeof(this.handler.childNodes[i]) != 'undefined') {
+				if(this.handler.childNodes[i].text == anchor) {
+					option = this.handler.childNodes[i];
+					break;
+				}
+			}
+		}
+		return option;
+	},
+
+	//
+	// Get the url by the anchor
+	//
+	getUrlByAnchor: function(anchor) {
+		var option = this.getByAnchor(anchor);
+		var url = '';
+		if(option) {
+			url = option.value;
+		}
+		return url;
+	},
+	
+	//
+	// Write the handler to the page
+	//
+	write: function() {
+		this.handler = document.createElement('select');
+		this.handler.style.display = 'none';
+		document.appendChild(this.handler);
+	},
+	
+	//
+	// Get the current url
+	//
+	getCurrentIndex: function() {
+		var current_index	= 0;
+		for(var i = this.handler.childNodes.sizeof(); i >= 0; i--) {
+			if(typeof(this.handler.childNodes[i]) != 'undefined') {
+				if(this.handler.childNodes[i].selected == true) {
+					current_index = i;
+					break;
+				}
+			}
+		}
+		
+		return current_index;
+	},
+	
+	//
+	// Get the previous page url and anchor
+	//
+	goBack: function() {
+		var i			= this.getCurrentIndex();
+
+		var prev_url	= '';
+		var prev_anchor = '';
+
+		if(i <= 0) {
+			prev_url	= this.handler.childNodes[0].url;
+			prev_anchor = this.handler.childNodes[0].text;
+		}
+	}
+};

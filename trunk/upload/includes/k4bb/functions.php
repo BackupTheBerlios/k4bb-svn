@@ -277,12 +277,16 @@ function allow_WYSIWYG() {
 function AJAX_message($lang_element, $prefix = 'ERROR') {
 	global $_LANG;
 	
-	if(is_a($lang_element, 'K4LanguageElement')) {
-		echo $prefix . $lang_element->__toString();
-	} else if(isset($_LANG[$lang_element])) {
-		echo $prefix . $_LANG[$lang_element];
-	}
+	$to_echo = 'ERROR';
 
+	if(is_a($lang_element, 'K4LanguageElement')) {
+		$to_echo = $prefix . $lang_element->__toString();
+	} else {
+		if(isset($_LANG[$lang_element])) {
+			$to_echo = $prefix . $_LANG[$lang_element];
+		}
+	}
+	echo $to_echo;
 	exit;
 }
 

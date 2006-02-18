@@ -45,10 +45,10 @@ class K4Calendar extends FAObject {
 	 * by reference, that's all you need :D (even in php4)
 	 */
 	function __construct($year = NULL, $month = NULL, $day = NULL) {
-		$this->timestamp = time();
-		$this->current_year = date('Y', $this->timestamp);
-		$this->current_month = date('n', $this->timestamp);
-		$this->current_day = date('j', $this->timestamp);
+		$this->timestamp		= time();
+		$this->current_year		= date('Y', $this->timestamp);
+		$this->current_month	= date('n', $this->timestamp);
+		$this->current_day		= date('j', $this->timestamp);
 		
 		$this->setCalendar($year, $month, $day);
 	}
@@ -115,15 +115,17 @@ class K4Calendar extends FAObject {
 	}
 	
 	function checkMonth($month = NULL) {
-		return($month !== NULL && $month > 0 && $month <= 12);
+		return ($month !== NULL && $month > 0 && $month <= 12);
 	}
 	
 	function checkPrevYear($year = NULL) {
-		if($year === NULL)
+		if($year === NULL) {
 			$year = $this->year;
+		}
 		
-		if($this->month == 1 && $year <= ($this->current_year - $this->years_past))
+		if($this->month == 1 && $year <= ($this->current_year - $this->years_past)) {
 			return -1;
+		}
 	}
 	
 	function checkNextYear($year = NULL) {
@@ -168,25 +170,39 @@ class K4Calendar extends FAObject {
 	}
 
 	function getWeek($m, $d, $y) {
-		$time = mktime(0,0,0,$m,$d,$y);
-		$day_of_year = date('z', $time);
-		$week_number = floor($day_of_year / 7);
+		$time			= mktime(0,0,0,$m,$d,$y);
+		$day_of_year	= date('z', $time);
+		$week_number	= floor($day_of_year / 7);
 
 		return $week_number;
 	}
 
-	function getWeekRange($m, $w, $y) {
+	function getWeekRange($m, $d, $y) {
+		$week			= $this->getWeek($m, $d, $y);
+		$week_day		= mktime(0,0,0,$m,$d,$y);
+		$start_day		= mktime(0,0,0,0,0,$y) + ($week * 7 * 86400);
+		$end_day		= $star_day + (7 * 86400);
 		
+		$week_array		= array();
+		//if($week_day <= $end_day && $week_day >= $start_day) {
+			for($i = 0; $i < 7; $i++) {
+				$day_time = ($start_day + ($i * 86400) );
+				$week_array[] = array('day'=>date("j", $day_time),'year'=>date("Y", $day_time),'month'=>date("n", $day_time),'week'=>$week);
+			}
+		//}
+
+		return $week_array;
 	}
 	
 	function getNextMonth($month = NULL) {
 		if($month === NULL)
 			$month = $this->month;
 
-		if($month == 12)
+		if($month >= 12) {
 			$month = $this->year >= ($this->current_year + $this->years_future) ? 12 : 1;
-		else
+		} else {
 			$month++;
+		}
 		
 		return $month;
 	}
@@ -195,10 +211,11 @@ class K4Calendar extends FAObject {
 		if($month === NULL)
 			$month = $this->month;
 		
-		if($month == 1)
+		if($month == 1) {
 			$month = $this->year <= ($this->current_year - $this->years_past) ? 1 : 12;
-		else
+		} else {
 			$month--;
+		}
 		
 		return $month;
 	}
@@ -207,20 +224,14 @@ class K4Calendar extends FAObject {
 		if($year === NULL)
 			$year = $this->year;
 		
-		if($this->month == 12)
-			$year += $this->year < ($this->current_year + $this->years_future) ? 1 : 0;
-		
-		return $year;
+		return $year+1;
 	}
 	
 	function getPrevYear($year = NULL) {
 		if($year === NULL)
 			$year = $this->year;
 		
-		if($this->month == 1)
-			$year -= $this->year > ($this->current_year - $this->years_past) ? 1 : 0;
-		
-		return $year;
+		return $year-1;
 	}
 	
 	/**
@@ -235,11 +246,11 @@ class K4Calendar extends FAObject {
 		
 		$first_day_time = mktime(0, 0, 0, $this->month, 1, $this->year);
 		
-		$days = date('t', $first_day_time); # total days of the month to display
-		$start = date('w', $first_day_time); # day of the week of the first day in the month
+		$days	= date('t', $first_day_time); # total days of the month to display
+		$start	= date('w', $first_day_time); # day of the week of the first day in the month
 
 		# fix the offset of the start day, +1 represents the current day
-		$start = $this->start_day == 1 ? (7 - ($start + 1)) : $start;
+		$start	= $this->start_day == 1 ? (7 - ($start + 1)) : $start;
 		
 		# total number of days (days in month + offset of start day)
 		$length = $start + $days; 

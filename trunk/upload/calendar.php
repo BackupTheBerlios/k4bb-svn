@@ -90,6 +90,8 @@ class K4DefaultAction extends FAAction {
 		$iteration_c = new K4CalendarIterator($c->getData(), $c->getWeek($month, $day, $year), $bdays);
 		$iteration_d = new FAArrayIterator($c->getWeekdays());
 		
+		//print_r($c->getWeekRange($month, $day, $year)); exit;
+
 		$request['template']->setList('calendar', $iteration_c);
 		$request['template']->setList('weekdays', $iteration_d);
 		

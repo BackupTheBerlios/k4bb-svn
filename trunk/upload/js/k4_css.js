@@ -41,7 +41,7 @@ function k4css() {
 		if(nx.nodeType == 1) {
 			_t._set_node(nx);
 			if(nx.childNodes) {
-				for(var i = 0; i < d.sizeof(nx.childNodes); i++) {
+				for(var i = 0; i < nx.childNodes.sizeof(); i++) {
 					_t._init_nodes(nx.childNodes[i]);
 				}
 			}
@@ -66,9 +66,10 @@ function k4css() {
 			bt = typeof(this.style.border) != 'undefined' ? this.style.border : '';
 		}
 
-		nx.onmouseover = function(e) { _t._highlight(e, this); }
-		nx.onmouseout = function(e) { _t._unhighlight(e, this, bt); }
-		nx.onclick = function(e) { _t._editor(e, this); }
+		var self = this;
+		AttachEvent(nx,'mouseover',function(e){_t._highlight(e,self);},false);
+		AttachEvent(nx,'mouseout',function(e){_t._unhighlight(e,self,bt);},false);
+		AttachEvent(nx,'click',function(e){_t._editor(e,self);},false);
 		
 		// come up with a name for it
 		var nxx = nx;
@@ -95,9 +96,9 @@ function k4css() {
 	// editor
 	function _editor(e, nx) {
 		
-		var ex = d.getElementById('css_inline_editor');
-		var ext = d.getElementById('css_inline_editor_title');
-		var ifr = _t._getd(d.getElementById('css_inline_editor_iframe'));
+		var ex = ('css_inline_editor').obj();
+		var ext = ('css_inline_editor_title').obj();
+		var ifr = _t._getd(('css_inline_editor_iframe').obj());
 		var t = d.get_event_target(e);
 		if(ex && ext && t && ifr) {
 			if(t.id != 'close_css_editor' && t.className != '') {

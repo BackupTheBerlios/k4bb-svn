@@ -112,13 +112,14 @@ class K4UserFilter extends FAFilter {
 		$session	= $request['session'];
 		
 		if (!$user->isMember() && $session->isNew()) {
-			$factory = &new K4UserFactory;
-			$validator = &new K4CookieValidator($request['dba']);
+			$factory	= &new K4UserFactory;
+			$validator	= &new K4CookieValidator($request['dba']);
 			
-			$user = $factory->getUser($validator);
+			$user		= $factory->getUser($validator);
 			
-			if ($user->isMember())
+			if ($user->isMember()) {
 				k4_set_login($request['dba'], $user, TRUE);
+			}
 		}
 
 		if($user->isMember() && !$session->isNew()) {
@@ -207,7 +208,7 @@ class K4LoginFilter extends FAFilter {
 							$remember = FALSE;
 
 						k4_set_login($request['dba'], $user, $remember);
-						$action = new K4InformationAction(new K4LanguageElement('L_LOGGEDINSUCCESS'), 'content', FALSE, $_SERVER['REQUEST_URI'], 3);
+						$action = new K4InformationAction(new K4LanguageElement('L_LOGGEDINSUCCESS'), 'content', FALSE, basename($_SERVER['REQUEST_URI']), 3);
 					} else {
 						// this is a pending user who cannot log in
 						k4_set_logout($request['dba'], $user);

@@ -164,7 +164,7 @@ class K4DefaultAction extends FAAction {
 		 * FORUM / META FORUM
 		 *
 		 */
-		} else if($forum['row_type'] & FORUM || $forum['row_type'] & METAFORUM) {						
+		} else if($forum['row_type'] & FORUM || $forum['row_type'] & METAFORUM || $forum['row_type'] & ARCHIVEFORUM) {						
 			
 			/* Add the forum info to the template */
 			foreach($forum as $key => $val)

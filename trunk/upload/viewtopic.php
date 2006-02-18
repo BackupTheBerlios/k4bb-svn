@@ -71,6 +71,26 @@ class K4DefaultAction extends FAAction {
 			$action = new K4InformationAction(new K4LanguageElement('L_PERMCANTVIEWTOPIC'), 'content', FALSE);
 			return $action->execute($request);
 		}
+		
+		// get the page number up here, the header call needs it!
+		// this is also used down below for pagination
+		$page = isset($_REQUEST['page']) && ctype_digit($_REQUEST['page']) && intval($_REQUEST['page']) > 0 ? intval($_REQUEST['page']) : 1;
+
+		/**
+		 * Are we in an archive??
+		 */
+		if($forum['row_type'] & ARCHIVEFORUM) {
+			
+			if(!file_exists(BB_BASE_DIR .'/archive/'. intval($forum['forum_id']). '/'. intval($topic['post_id']) .'-'. $page .'.xml')) {
+
+				$archiver = new k4Archiver();
+				$archiver->archiveTopicXML($request, $forum, $topic);
+			}
+			
+			// redirect us!
+			header("Location: archive.php?forum=". intval($forum['forum_id']) ."&topic=". intval($topic['post_id']) ."&page=". $page );
+			exit;
+		}
 
 		/**
 		 * Moderator functions
@@ -205,14 +225,14 @@ class K4DefaultAction extends FAAction {
 		/* Update the number of views for this topic */
 		$request['dba']->executeUpdate("UPDATE ". K4POSTS ." SET views=views+1 $extra WHERE post_id=". intval($topic['post_id']));
 		
-
 		$resultsperpage		= $request['user']->get('postsperpage') <= 0 ? $forum['postsperpage'] : $request['user']->get('postsperpage');
 		$num_results		= $topic['num_replies'];
 
 		$perpage			= isset($_REQUEST['limit']) && ctype_digit($_REQUEST['limit']) && intval($_REQUEST['limit']) > 0 ? intval($_REQUEST['limit']) : $resultsperpage;
-		$perpage			= $perpage > 100 ? 100 : $perpage;
+		$perpage			= $perpage > 50 ? 50 : $perpage;
 		$num_pages			= @ceil($num_results / $perpage);
-		$page				= isset($_REQUEST['page']) && ctype_digit($_REQUEST['page']) && intval($_REQUEST['page']) > 0 ? intval($_REQUEST['page']) : 1;
+		
+		// the $page is set above so that the archive options can use it ;)
 		
 		$request['template']->setVar('page', $page);
 

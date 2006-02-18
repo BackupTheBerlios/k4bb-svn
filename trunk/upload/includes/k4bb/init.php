@@ -57,6 +57,9 @@ require K4_BASE_DIR. '/actions/attachments.class.php';
 require K4_BASE_DIR. '/actions/usercp.class.php';
 require K4_BASE_DIR. '/actions/privmessages.class.php';
 
+/* Classes that do stuff */
+require K4_BASE_DIR. '/actions/archive.class.php';
+
 /* Moderator Action Classes */
 require K4_BASE_DIR. '/actions/moderator.class.php';
 require K4_BASE_DIR. '/actions/reports.class.php';

@@ -8,6 +8,8 @@
  * @package k4bb
  */
 
+if(typeof(debug) == 'undefined') { function debug(str) { return true; } }
+
 //
 // k4SlideResizer filter constructor
 //
@@ -19,7 +21,7 @@ function k4SlideResizer() {
 k4SlideResizer.prototype = {
 	
 	lib:			new k4lib(),
-	obj:			new Object(),
+	obj:			new Function(),
 	
 	onSliding:		new Function(),
 	onFinished:		new Function(),
@@ -50,7 +52,7 @@ k4SlideResizer.prototype = {
 	Init: function(obj_id, x_dir, y_dir, slide_steps) {
 		
 		// get the object
-		this.obj				= this.lib.getElementById(obj_id);
+		this.obj				= obj_id.obj();
 
 		if(typeof(this.obj) != 'undefined' && this.obj) {
 			
@@ -168,7 +170,7 @@ k4SlideResizer.prototype = {
 		}
 		return ret;
 	}
-}
+};
 
 //
 // Manage Mouse-over things
@@ -187,7 +189,7 @@ k4ManageHoverCell.prototype = {
 	//
 	highlight: function(container_obj, hover_over, hover_off) {
 		var table_cells = container_obj.getTagsByName('td');
-		if(table_cells) {
+		if(table_cells && typeof(table_cells) != 'undefined') {
 			for(var i = 0; i < table_cells.sizeof(); i++ ) {
 				if(typeof(table_cells[i].className) != 'undefined' 
 							&& table_cells[i].className == hover_off) {
@@ -198,7 +200,7 @@ k4ManageHoverCell.prototype = {
 			}
 		}
 	}
-}
+};
 
 //
 // Make the color picker menu
@@ -214,54 +216,26 @@ var k4ColorPicker = {
 		document.writeln(cp_html);
 		
 		// get the color picker
-		var cp_table = this.lib.getElementById(menu_id).firstChild;
+		var cp_table = menu_id.obj().firstChild;
 		
 		// alter the colorpicker table cells
 		if(cp_table && typeof(cp_table) != 'undefined') {
 
-			var cp_table_cells = this.lib.getElementsByTagName(cp_table, 'td');
+			var cp_table_cells = cp_table.getTagsByName('td');
 			
-			for(var v = 0; v < this.lib.sizeof(cp_table_cells); v++) {
-				cp_table_cells[v].style.backgroundColor = cp_table_cells[v].id;
-				cp_table_cells[v].style.border = '1px solid #999999;';
-				cp_table_cells[v].firstChild.alt = '';
-				cp_table_cells[v].firstChild.style.width = '10px;';
-				cp_table_cells[v].firstChild.style.height = '10px;';
+			for(var v = 0; v < cp_table_cells.sizeof(); v++) {
+				cp_table_cells[v].style.backgroundColor		= cp_table_cells[v].id;
+				cp_table_cells[v].style.border				= '1px solid #999999;';
+				cp_table_cells[v].firstChild.alt			= '';
+				cp_table_cells[v].firstChild.style.width	= '10px;';
+				cp_table_cells[v].firstChild.style.height	= '10px;';
 
 			}
 		}
 
 		menu_init(link_id, menu_id);
 	}
-}
-
-//
-// k4PopupAndDrag object constructor
-//
-function k4ManageDragElements() { }
-
-// object definition
-k4ManageDragElements.prototype = {
-	
-	drag_objs:	new Array(),
-	lib:		new k4lib(),
-		
-	addDragObj: function(handle_id, root_id) {
-		var handle_obj	= this.lib.getElementById(handle_id);
-		var root_obj	= this.lib.getElementById(root_id);
-
-		if(handle_obj && root_obj) {
-			this.lib.array_push(this.drag_objs, new Array(handle_obj, root_obj));
-			
-		}
-	},
-	
-	Init: function() {
-		for(var i = 0; i < this.lib.sizeof(this.drag_objs); i++ ) {
-			Drag.init(this.drag_objs[i][0], this.drag_objs[i][1]);
-		}
-	}
-}
+};
 
 //
 // Object factory
@@ -270,136 +244,9 @@ var k4SlideResizerFactory = {
     createInstance: function() {
         return new k4SlideResizer();
     }
-}
+};
 var k4ManageHoverCellFactory = {
 	createInstance: function() {
 		return new k4ManageHoverCell();
-	}
-}
-var k4ManageDragElementsFactory = {
-    createInstance: function() {
-        return new k4ManageDragElements();
-    }
-}
-
-/**************************************************
- * dom-drag.js
- * 09.25.2001
- * www.youngpup.net
- **************************************************
- * 10.28.2001 - fixed minor bug where events
- * sometimes fired off the handle, not the root.
- **************************************************/
-
-var Drag = {
-
-	obj : null,
-
-	init : function(o, oRoot, minX, maxX, minY, maxY, bSwapHorzRef, bSwapVertRef, fXMapper, fYMapper)
-	{
-		o.onmousedown	= Drag.start;
-
-		o.hmode			= bSwapHorzRef ? false : true ;
-		o.vmode			= bSwapVertRef ? false : true ;
-
-		o.root = oRoot && oRoot != null ? oRoot : o ;
-
-		if (o.hmode  && isNaN(parseInt(o.root.style.left  ))) o.root.style.left   = "0px";
-		if (o.vmode  && isNaN(parseInt(o.root.style.top   ))) o.root.style.top    = "0px";
-		if (!o.hmode && isNaN(parseInt(o.root.style.right ))) o.root.style.right  = "0px";
-		if (!o.vmode && isNaN(parseInt(o.root.style.bottom))) o.root.style.bottom = "0px";
-
-		o.minX	= typeof minX != 'undefined' ? minX : null;
-		o.minY	= typeof minY != 'undefined' ? minY : null;
-		o.maxX	= typeof maxX != 'undefined' ? maxX : null;
-		o.maxY	= typeof maxY != 'undefined' ? maxY : null;
-
-		o.xMapper = fXMapper ? fXMapper : null;
-		o.yMapper = fYMapper ? fYMapper : null;
-
-		o.root.onDragStart	= new Function();
-		o.root.onDragEnd	= new Function();
-		o.root.onDrag		= new Function();
-	},
-
-	start : function(e)
-	{
-		var o = Drag.obj = this;
-		e = Drag.fixE(e);
-		var y = parseInt(o.vmode ? o.root.style.top  : o.root.style.bottom);
-		var x = parseInt(o.hmode ? o.root.style.left : o.root.style.right );
-		o.root.onDragStart(x, y);
-
-		o.lastMouseX	= e.clientX;
-		o.lastMouseY	= e.clientY;
-
-		if (o.hmode) {
-			if (o.minX != null)	o.minMouseX	= e.clientX - x + o.minX;
-			if (o.maxX != null)	o.maxMouseX	= o.minMouseX + o.maxX - o.minX;
-		} else {
-			if (o.minX != null) o.maxMouseX = -o.minX + e.clientX + x;
-			if (o.maxX != null) o.minMouseX = -o.maxX + e.clientX + x;
-		}
-
-		if (o.vmode) {
-			if (o.minY != null)	o.minMouseY	= e.clientY - y + o.minY;
-			if (o.maxY != null)	o.maxMouseY	= o.minMouseY + o.maxY - o.minY;
-		} else {
-			if (o.minY != null) o.maxMouseY = -o.minY + e.clientY + y;
-			if (o.maxY != null) o.minMouseY = -o.maxY + e.clientY + y;
-		}
-
-		document.onmousemove	= Drag.drag;
-		document.onmouseup		= Drag.end;
-
-		return false;
-	},
-
-	drag : function(e)
-	{
-		e = Drag.fixE(e);
-		var o = Drag.obj;
-
-		var ey	= e.clientY;
-		var ex	= e.clientX;
-		var y = parseInt(o.vmode ? o.root.style.top  : o.root.style.bottom);
-		var x = parseInt(o.hmode ? o.root.style.left : o.root.style.right );
-		var nx, ny;
-
-		if (o.minX != null) ex = o.hmode ? Math.max(ex, o.minMouseX) : Math.min(ex, o.maxMouseX);
-		if (o.maxX != null) ex = o.hmode ? Math.min(ex, o.maxMouseX) : Math.max(ex, o.minMouseX);
-		if (o.minY != null) ey = o.vmode ? Math.max(ey, o.minMouseY) : Math.min(ey, o.maxMouseY);
-		if (o.maxY != null) ey = o.vmode ? Math.min(ey, o.maxMouseY) : Math.max(ey, o.minMouseY);
-
-		nx = x + ((ex - o.lastMouseX) * (o.hmode ? 1 : -1));
-		ny = y + ((ey - o.lastMouseY) * (o.vmode ? 1 : -1));
-
-		if (o.xMapper)		nx = o.xMapper(y)
-		else if (o.yMapper)	ny = o.yMapper(x)
-
-		Drag.obj.root.style[o.hmode ? "left" : "right"] = nx + "px";
-		Drag.obj.root.style[o.vmode ? "top" : "bottom"] = ny + "px";
-		Drag.obj.lastMouseX	= ex;
-		Drag.obj.lastMouseY	= ey;
-
-		Drag.obj.root.onDrag(nx, ny);
-		return false;
-	},
-
-	end : function()
-	{
-		document.onmousemove = null;
-		document.onmouseup   = null;
-		Drag.obj.root.onDragEnd(	parseInt(Drag.obj.root.style[Drag.obj.hmode ? "left" : "right"]), 
-									parseInt(Drag.obj.root.style[Drag.obj.vmode ? "top" : "bottom"]));
-		Drag.obj = null;
-	},
-
-	fixE : function(e)
-	{
-		if (typeof e == 'undefined') e = window.event;
-		if (typeof e.layerX == 'undefined') e.layerX = e.offsetX;
-		if (typeof e.layerY == 'undefined') e.layerY = e.offsetY;
-		return e;
 	}
 };
