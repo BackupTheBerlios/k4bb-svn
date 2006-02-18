@@ -187,28 +187,39 @@ class K4LoginFilter extends FAFilter {
 			$user = $request['user'];
 
 			if ($user->isMember()) {
+				
 				// Oops, trying to login when already logged in
-
 				$action = new K4InformationAction(new K4LanguageElement('L_CANTBELOGGEDIN'), 'content');
 			} else {
-				$factory = &new K4UserFactory($request['dba']);
-				$validator = &new K4RequestValidator($request['dba']);
+				
+				$factory	= &new K4UserFactory($request['dba']);
+				$validator	= &new K4RequestValidator($request['dba']);
 
-				$user = $factory->getUser($validator);
+				$user		= $factory->getUser($validator);
 
 				if ($user->isMember()) {
 					
 					if(($user->get('reg_key') == '') || ($user->get('reg_key') != '' && $request['template']->getVar('canloginunverified') == 1) ) {
-					
-						// User successfully logged in
 						
-						if (isset($_POST['rememberme']) && $_POST['rememberme'] == 'on')
+						//
+						// User successfully logged in
+						//
+
+						if (isset($_POST['rememberme']) && $_POST['rememberme'] == 'on') {
 							$remember = TRUE;
-						else 
+						} else {
 							$remember = FALSE;
+						}
 
 						k4_set_login($request['dba'], $user, $remember);
-						$action = new K4InformationAction(new K4LanguageElement('L_LOGGEDINSUCCESS'), 'content', FALSE, basename($_SERVER['REQUEST_URI']), 3);
+						
+						// make sure that we redirect the person to a nice place after logging in
+						$request_uri = isset($_SERVER['REQUEST_URI']) ? basename($_SERVER['REQUEST_URI']) : K4Url::getGenUrl('index', '');
+						if($request_uri == 'member.php?act=login') {
+							$request_uri = 'index.php';
+						}
+
+						$action = new K4InformationAction(new K4LanguageElement('L_LOGGEDINSUCCESS'), 'content', FALSE, $request_uri, 3);
 					} else {
 						// this is a pending user who cannot log in
 						k4_set_logout($request['dba'], $user);
