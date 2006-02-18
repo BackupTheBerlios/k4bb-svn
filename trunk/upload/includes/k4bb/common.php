@@ -211,6 +211,15 @@ define('META_SAME',			16);
 define('XMLTOPICSPERPAGE',	30);
 define('XMLPOSTSPERPAGE',	15);
 
+
+/**
+ * RSS Parser constants, DO NOT CHANGE
+ */
+define('XML_RSS',			1);
+define('XML_CHANNEL',		2);
+define('XML_IMAGE',			3);
+define('XML_ITEM',			4);
+
 /**
  * Define all basic MAP items for categories, forums, etc.
  */

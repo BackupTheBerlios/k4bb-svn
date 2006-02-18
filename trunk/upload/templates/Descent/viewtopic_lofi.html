@@ -1,0 +1,17 @@
+<list:list id="posts">
+<list:item list="posts">
+<list:switch list="posts" var="row_class" a="1" b="2">
+<if:if var="row_type" eq="4">
+<!-- Topic: {$name} -->
+<core:import id="topic_file" file="topic.html" />
+<!-- / Topic: {$name} -->
+<if:else />
+<maps:if var="replies" forum="forum_id" method="can_view">
+<!-- Reply: {$name} -->
+<core:import id="reply_file" file="reply.html" />
+<!-- / Reply: {$name} -->
+</maps:if>
+</if:if>
+</list:switch>
+</list:item>
+</list:list>

@@ -64,14 +64,14 @@ class k4Archiver {
 		$this->header .= $xml;
 	}
 	
-	function XMLItem($post) {
+	function XMLItem($post, $page) {
 		$xml = "\t<item>\n";
 		$xml .= "\t\t<title>". $post['name'] ."</title>\n";
 		$xml .= "\t\t<category>". $this->forum['name'] ."</category>\n";
-		$xml .= "\t\t<link>". $this->url ."findpost.php?id=". $post['post_id'] ."</link>\n";
+		$xml .= "\t\t<link>". $this->url ."archive.php?forum=". $this->forum['forum_id'] ."&amp;topic=". $this->topic['post_id'] ."&amp;page=". $page ."#p". $post['post_id'] ."</link>\n";
+		$xml .= "\t\t<description><![CDATA[". $post['body_text'] ."]]></description>\n";
 		$xml .= "\t\t<guid isPermaLink=\"false\">". $post['post_id'] ."</guid>\n";
 		$xml .= "\t\t<postInfo:postId>". $post['post_id'] ."</postInfo:postId>\n";
-		$xml .= "\t\t<description><![CDATA[". $post['body_text'] ."]]></description>\n";
 		$xml .= "\t\t<postInfo:authorId>". $post['poster_id'] ."</postInfo:authorId>\n";
 		$xml .= "\t\t<postInfo:authorName>". $post['poster_name'] ."</postInfo:authorName>\n";
 		$xml .= "\t\t<postInfo:pubDate>". $post['created'] ."</postInfo:pubDate>\n";
@@ -102,7 +102,7 @@ class k4Archiver {
 			
 			while($result->next()) {
 				
-				$this->XMLItem($result->current());
+				$this->XMLItem($result->current(), $page);
 				$i++;
 
 				// should we create this page now?

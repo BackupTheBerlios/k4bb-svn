@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="{$lang_direction}" lang="{$LANGSHORT}">
+<core:import id="head" file="head.html" />
+<body>
+<if:if var="can_see_board" method="can_view" geq="0">
+<div align="center" id="t">
+	<div align="left" class="forum_base" id="forum_base">
+		<br />
+		<div class="forum_head" id="forum_head">
+			<div id="forum_header">
+				<table class="header_table" cellspacing="0" width="100%">
+					<tr>
+						<td width="20%" valign="middle" style="text-align: left;"><div class="spacer"><a href="index.php" name="top" id="top" title="k4 Bulletin Board - {$bbtitle}"><img src="Images/{$IMG_DIR}/logo.gif" alt="{$bbtitle}" border="0" /></a></div></td>
+						<td width="80%" valign="bottom" align="right" colspan="2">
+							<div class="spacer" style="text-align: right;" align="right">				
+								<h1 style="color: #666666;padding-bottom:5px;">{$bbdescription}</h1>
+								<span class="minitext"><core:date format="%B %d, %Y"></core:date></span>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		
+		<div class="forum_main">				
+			<core:import id="footer_breadcrumbs" file="footer_breadcrumbs.html" />
+			<div class="alt2">
+				<a href="index.php" title="{$L_HOME}">{$L_HOME}</a>
+				<if:if var="enablememberlist" eq="1">| <a href="member.php?act=list&amp;start=0&amp;limit=30&amp;letter=*" title="{$L_MEMBERS}">{$L_MEMBERS}</a></if:if> 
+				<if:if var="enablesearches" eq="1">| <a href="search.php" title="{$L_SEARCH}" id="search_link">{$L_SEARCH}</a> </if:if>
+				| <a href="faq.php" title="{$L_HELP}">{$L_HELP}</a>
+			</div>
+			<core:import id="content" />
+		</div>
+		<div class="forum_foot">
+			<div id="forum_footer">
+				<core:import id="footer" file="footer.html" />
+			</div>
+		</div>
+	</div>
+</div>
+<if:if var="copyrighttext" noteq=""><div align="center" class="smalltext"><br />{$copyrighttext}</div></if:if>
+
+<a name="bottom" id="bottom"></a>
+</core:block>
+<!-- // Please keep this copyright notice in place
+/**
+* k4 Bulletin Board
+* Copyright (c) 2005, Peter Goodman
+* Licensed under the LGPL license
+* http://www.gnu.org/copyleft/lesser.html
+* @author Peter Goodman
+* @author Geoffrey Goodman
+*/ -->
+</body>
+</html>
