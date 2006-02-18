@@ -315,7 +315,14 @@ class K4LogoutFilter extends FAFilter {
 				$action = new K4InformationAction(new K4LanguageElement('L_NEEDLOGGEDIN'), 'content');
 			} else {
 				k4_set_logout($request['dba'], $request['user']);
-				$action = new K4InformationAction(new K4LanguageElement('L_LOGGEDOUTSUCCESS'), 'content', FALSE, $url->__toString(), 3);
+
+				// make sure we go to the right place!
+				$logout_url		= basename($url->__toString());
+				if(strpos($logout_url, 'login') !== FALSE) {
+					$logout_url = K4Url::getGenUrl('index', '');
+				}
+
+				$action = new K4InformationAction(new K4LanguageElement('L_LOGGEDOUTSUCCESS'), 'content', FALSE, $logout_url, 3);
 			}			
 		}
 	}
