@@ -32,20 +32,20 @@ var Default		= "css_type";
 
 /* Switch tabs on the advanced CSS editor */
 function switchView(this_id) {		
-	var top_name	= d.getElementById('curr_location');
+	var top_name	= FA.getObj('curr_location');
 	
-	for(var i=0; i < d.sizeof(menuViews); i++ ) {
-		d.getElementById(menuViews[i]).style.display = 'none';
+	for(var i=0; i < FA.sizeOf(menuViews); i++ ) {
+		FA.getObj(menuViews[i]).style.display = 'none';
 	}
 	
 	var temp		= this_id[this_id.selectedIndex];
 	top_name.value	= temp.text;
-	d.getElementById(temp.value).style.display = 'block';
+	FA.getObj(temp.value).style.display = 'block';
 }
 
 /* This will enable a disabled input element if the value of the text box which points to it is an integer */
 function enable_field(element, select_id) {
-	var input	= d.getElementById(select_id);
+	var input	= FA.getObj(select_id);
 	
 	if(element.type == 'select-one') {
 		var result = parseInt(element[element.selectedIndex].value) >= 0 ? false : true;
@@ -56,7 +56,7 @@ function enable_field(element, select_id) {
 	input.disabled = result;
 }
 
-var css_menu = d.getElementById('css_menu');
+var css_menu = FA.getObj('css_menu');
 /* This will give the color's preview and auto set the text boxes value */
 function View(color) {
 	var color_picker = fetch_cookie('color_picker');
@@ -64,8 +64,8 @@ function View(color) {
 		color_picker = color_picker.split("\n");
 		color_picker = color_picker[0].split(":");
 
-		d.getElementById(color_picker[1]).style.backgroundColor = '#' + color;
-		d.getElementById(color_picker[2]).value = '#' + color;
+		FA.getObj(color_picker[1]).style.backgroundColor = '#' + color;
+		FA.getObj(color_picker[2]).value = '#' + color;
 	}
 }
 /* This will set the color, and show the preview */
@@ -103,8 +103,8 @@ function ValidateColor(string) {
 var cp_textbox = cp_image = null;
 function init_color_picker(link_id, menu_id, textbox_id, image_id) {
 	menu_init(link_id, menu_id);
-	cp_textbox	= d.getElementById(textbox_id);
-	cp_image	= d.getElementById(image_id);
+	cp_textbox	= FA.getObj(textbox_id);
+	cp_image	= FA.getObj(image_id);
 }
 function set_cp_color(color, textbox, image) {
 	textbox.value				= color;

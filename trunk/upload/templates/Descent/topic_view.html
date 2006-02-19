@@ -54,7 +54,7 @@
 	<td class="alt{$row_class}" align="center">
 		<span class="cbStyled" onclick="select_topic(this, 'performact_button', {$post_id})" id="style_checkbox{$post_id}"><input type="checkbox" name="topic{$post_id}" id="topic{$post_id}" value="{$post_id}" /></span>
 		<script type="text/javascript">
-			<core:block id="check_checkboxes" hidden="yes">d.setCheckbox({$post_id}, 'topic{$post_id}');select_topic(d.getElementById('style_checkbox{$post_id}'), 'performact_button', {$post_id});</core:block>
+			<core:block id="check_checkboxes" hidden="yes">d.setCheckbox({$post_id}, 'topic{$post_id}');select_topic(FA.getObj('style_checkbox{$post_id}'), 'performact_button', {$post_id});</core:block>
 		</script>
 	</td>
 	</if:if>

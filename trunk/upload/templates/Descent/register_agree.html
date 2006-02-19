@@ -22,9 +22,9 @@
 <div class="footer_block"><div>&nbsp;</div></div>
 </form>
 <script type="text/javascript">
-	var aggree = d.getElementById('agree');
-	var reg_button = d.getElementById('reg_button');
-	reg_button.disabled = true;
-	AttachEvent(aggree,'click',function(){if(aggree.checked == true){reg_button.disabled=false;}else{reg_button.disabled=true;}},false);
+	var agree = FA.getObj('agree');
+	var reg_button = FA.getObj('reg_button');
+	FA.disableElm(reg_button);
+	FA.attachEvent(agree,'click',(function(){if(aggree.checked == true){FA.enableElm(reg_button);}else{FA.disableElm(reg_button);}}));
 </script>
 </is:unlogged>

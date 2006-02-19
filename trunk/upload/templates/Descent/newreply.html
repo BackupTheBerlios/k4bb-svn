@@ -83,9 +83,9 @@
 		<tr>
 			<td class="base3" colspan="2" style="text-align: center;">
 				<input type="hidden" name="submit_type" id="submit_type" value="" />
-				<input <if:if var="nojs" eq="1">name="post"</if:if> type="submit" class="button" value="{$L_SUBMIT}" accesskey="s" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'post'); }" />
+				<input <if:if var="nojs" eq="1">name="post"</if:if> type="submit" class="button" value="{$L_SUBMIT}" accesskey="s" onclick="try{set_message_text();}catch(e){}if(checkForm(FA.getObj('savepost_form'))) { change_submit_type('submit_type', 'post'); }" />
 				<maps:if forum="forum_forum_id" var="post_preview" method="can_add">
-					<input type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" <if:if var="nojs" eq="1">name="preview"</if:if>class="button" value="{$L_PREVIEW}" onclick="try{set_message_text();}catch(e){}if(checkForm(d.getElementById('savepost_form'))) { change_submit_type('submit_type', 'preview');setSendPostPreview('{$newreply_act}', '{$editor_input_id}'); }" />
+					<input type="<if:if var="nojs" eq="0">button<if:else />submit</if:if>" <if:if var="nojs" eq="1">name="preview"</if:if>class="button" value="{$L_PREVIEW}" onclick="try{set_message_text();}catch(e){}if(checkForm(FA.getObj('savepost_form'))) { change_submit_type('submit_type', 'preview');setSendPostPreview('{$newreply_act}', '{$editor_input_id}'); }" />
 				</maps:if>
 				<input type="reset" class="button" value="{$L_RESET}" />
 			</td>
@@ -142,11 +142,11 @@
 	 */
 	
 	try {
-		<maps:if forum="forum_forum_id" var="html" method="can_add">var disable_html			= document.getElementById('disable_html');</maps:if>
-		//var disable_bbcode			= d.getElementById('disable_bbcode');
-		var disable_emoticons		= d.getElementById('disable_emoticons');
-		var enable_sig				= d.getElementById('enable_sig');
-		var disable_areply			= d.getElementById('disable_areply');
+		<maps:if forum="forum_forum_id" var="html" method="can_add">var disable_html			= FA.getObj('disable_html');</maps:if>
+		//var disable_bbcode			= FA.getObj('disable_bbcode');
+		var disable_emoticons		= FA.getObj('disable_emoticons');
+		var enable_sig				= FA.getObj('enable_sig');
+		var disable_areply			= FA.getObj('disable_areply');
 		
 		<maps:if forum="forum_forum_id" var="html" method="can_add">disable_html.checked		= ({$post_disable_html} == 1) ? true : false;</maps:if>
 		//disable_bbcode.checked		= ({$post_disable_bbcode} == 1) ? true : false;
@@ -164,7 +164,7 @@
 	 */
 	d.setRadio('{$post_posticon}', 'posticon');
 
-	var pi_image	= d.getElementById('display_posticon');
+	var pi_image	= FA.getObj('display_posticon');
 	pi_image.src	= 'tmp/upload/posticons/{$post_posticon}';
 
 //]]>

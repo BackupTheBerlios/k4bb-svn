@@ -58,10 +58,12 @@ function escape_str(str) {
 function textarea_value(textarea) {
 	var inner_value = '';
 	if(typeof(textarea) != 'undefined' && textarea) {
-		if(typeof(textarea.innerHTML) != 'undefined' && textarea.innerHTML) {
+		if(typeof(textarea.innerHTML) != 'undefined') {
 			inner_value = textarea.innerHTML && textarea.innerHTML != '' ? textarea.innerHTML : '';
 		}
-		inner_value = textarea.value && textarea.value != '' ? textarea.value : inner_value;
+		if(typeof(textarea.value) != 'undefined') {
+			inner_value = textarea.value && textarea.value != '' ? textarea.value : inner_value;
+		}
 	}
 
 	return inner_value;
@@ -94,12 +96,12 @@ function disable_edit_mode(e) {
 		if(!e) {
 			e = window.event;
 		}
-		topic_area	= d.getElementById(edit_mode);
-		if( (e.clientX < topic_area.left() ||
-			e.clientX > topic_area.right() ||
-			e.clientY < topic_area.top() ||
-			e.clientY > topic_area.bottom())
-			&& d.get_event_target(e).id != topic_area.id
+		topic_area	= FA.getObj(edit_mode);
+		if( (e.clientX < FA.posLeft(topic_area) ||
+			e.clientX > FA.posRight(topic_area) ||
+			e.clientY < FA.posTop(topic_area) ||
+			e.clientY > FA.posBottom(topic_area))
+			&& FA.eventTarget(e).id != topic_area.id
 			) {
 			
 			// update the topic name
@@ -114,8 +116,8 @@ function getTopicTitle(post_id) {
 }
 function topicMakeUpdatable(k4_http, post_id) {
 	
-	var topic_span	= d.getElementById('topicname_' + post_id);
-	var topic_area	= d.getElementById('topicname_' + post_id + '_area');
+	var topic_span	= FA.getObj('topicname_' + post_id);
+	var topic_area	= FA.getObj('topicname_' + post_id + '_area');
 	var response	= k4_http.getResponseText();
 	
 	if(topic_span && topic_area) {
@@ -123,17 +125,17 @@ function topicMakeUpdatable(k4_http, post_id) {
 		topic_span.innerHTML	= '<input type="text" name="name" id="topic' + post_id + '_name" value="' + response + '" class="alt1" style="padding: 1px;font-size: 11px;" />';
 
 		// attach a function to monitor document clicks
-		AttachEvent(document,'click',disable_edit_mode,false);
+		FA.attachEvent(document,'click',disable_edit_mode);
 
 		// try to get the input and focus it
-		var input = d.getElementById('topic' + post_id + '_name');
+		var input = FA.getObj('topic' + post_id + '_name');
 		if(input) {
 			input.focus();
 		}
 	}
 }
 function updateTopicTitle(textbox_id, post_id, div_id) {
-	var textbox		= d.getElementById(textbox_id);
+	var textbox		= FA.getObj(textbox_id);
 	if(textbox) {
 		var k4_http = FAHttpRequestsFactory.createInstance();
 		k4_http.Request('POST', 'mod.php?act=topic_simpleupdate&use_ajax=1&id=' + parseInt(post_id) + '&name=' + escape_str(textbox.value), false, false, (function(){topicSimpleUpdate(k4_http,div_id);}));
@@ -141,7 +143,7 @@ function updateTopicTitle(textbox_id, post_id, div_id) {
 }
 function topicSimpleUpdate(k4_http, topic_area_id) {
 	
-	var topic_area	= d.getElementById(topic_area_id);
+	var topic_area	= FA.getObj(topic_area_id);
 	
 	if(topic_area) {
 		var response = k4_http.getResponseText();
@@ -172,7 +174,7 @@ function topicSimpleUpdate(k4_http, topic_area_id) {
 function updateTopicLocked(icon, post_id) {
 	if(icon) {
 		var lock_regex	= new RegExp("_lock\.gif$", "i");
-		var locked		= d.sizeof(icon.src.match(lock_regex)) > 0 ? true : false;
+		var locked		= FA.sizeOf(icon.src.match(lock_regex)) > 0 ? true : false;
 		
 		var k4_http = FAHttpRequestsFactory.createInstance();
 		k4_http.Request('GET', 'mod.php?act=' + (locked == 1 ? 'un' : '') + 'locktopic&id=' + parseInt(post_id) + '&use_ajax=1', false, false, (function(){changeLockedIcon(k4_http, icon);}));
@@ -184,25 +186,24 @@ function updateTopicLocked(icon, post_id) {
 // change the topic icon for locked
 function changeLockedIcon(k4_http, icon) {
 
-	var response_text = k4_http.getResponseText();
+	var response_text			= k4_http.getResponseText();
 	
 	if(response_text != '') {			
 		var bad_match			= new RegExp("(announce|sticky)", "i");
 		var matches				= icon.src.match(bad_match);
 		
-		if(matches.sizeof() == 0) {
+		if(FA.sizeOf(matches) == 0) {
 			
 			var lock_regex		= new RegExp("_lock\.gif$", "i");
-			var locked			= icon.src.match(lock_regex).sizeof() > 0 ? true : false;
+			var locked			= FA.sizeOf(icon.src.match(lock_regex)) > 0 ? true : false;
 
 			if(locked) {
-				new_src		= icon.src.replace(lock_regex, '.gif');
+				new_src			= icon.src.replace(lock_regex, '.gif');
 			} else {
 				icon_regex		= new RegExp("\.gif$", "i");
-				new_src		= icon.src.replace(icon_regex, '_lock.gif');
+				new_src			= icon.src.replace(icon_regex, '_lock.gif');
 			}
-			d.preload_images(new_src);
-			icon.src = new_src;
+			icon.src			= new_src;
 		}
 	}
 }
@@ -211,15 +212,15 @@ function changeLockedIcon(k4_http, icon) {
  * Quick Reply
  */
 function saveQuickReply(form_id, textarea_id, post_id, forum_id, page) {
-	var textarea	= (textarea_id).obj();
-	var form		= (form_id).obj();
+	var textarea	= FA.getObj(textarea_id);
+	var form		= FA.getObj(form_id);
 	var query_string = '&';
 	if(textarea && form) {
 		if(textarea_value(textarea) != '') {
 			query_string += 'message=' + escape_str(textarea_value(textarea));
 			
 			var k4_http = FAHttpRequestsFactory.createInstance();
-			k4_http.Request('POST', 'newreply.php?act=postreply&use_ajax=1&row_type=8&topic_id=' + parseInt(post_id) + '&forum_id=' + parseInt(forum_id) + '&submit_type=post&page=' + parseInt(page) + query_string, (function(){FAHTTP.loadingState(('ajax_post_preview').obj(),'preview');}), false, (function(){findQuickReply(k4_http,textarea);}));
+			k4_http.Request('POST', 'newreply.php?act=postreply&use_ajax=1&row_type=8&topic_id=' + parseInt(post_id) + '&forum_id=' + parseInt(forum_id) + '&submit_type=post&page=' + parseInt(page) + query_string, (function(){FAHTTP.loadingState(FA.getObj('ajax_post_preview'),'preview');}), false, (function(){findQuickReply(k4_http,textarea);}));
 		}
 	} else {
 		if(form) { form.submit(); }
@@ -229,10 +230,10 @@ function findQuickReply(k4_http, textarea) {
 	
 	FAHTTP.cancelLoader('preview');
 
-	var message_holder	= d.getElementById('quick_reply_sent');
-	var container		= d.getElementById('quick_reply_content');
-	var message			= d.getElementById('quick_reply_message');
-	var preview			= d.getElementById('ajax_post_preview');
+	var message_holder	= FA.getObj('quick_reply_sent');
+	var container		= FA.getObj('quick_reply_content');
+	var message			= FA.getObj('quick_reply_message');
+	var preview			= FA.getObj('ajax_post_preview');
 	
 	if(message_holder && container && preview) {
 		var response = k4_http.getResponseText();
@@ -264,13 +265,13 @@ function findQuickReply(k4_http, textarea) {
 function errorCheckRegistration(button) {
 	
 	var fields	= ['username','password','password2','email','email2'];
-	var form	= d.getElementById('register_form');
+	var form	= FA.getObj('register_form');
 	if(form) {
 		
 		var query_string	= '';
 		
-		for(var i = 0; i < d.sizeof(fields); i++) {
-			field = d.getElementById(fields[i]);
+		for(var i = 0; i < FA.sizeOf(fields); i++) {
+			field = FA.getObj(fields[i]);
 			if(field) {
 				query_string += '&' + fields[i] + '=' + escape_str(field.value);
 			}
@@ -287,9 +288,9 @@ function errorCheckRegistration(button) {
 function handleRegErrors(k4_http, button) {
 
 	// get the message holder, message area and form
-	var message_holder	= d.getElementById('message_holder');
-	var message_area	= d.getElementById('form_error');
-	var form			= d.getElementById('register_form');
+	var message_holder	= FA.getObj('message_holder');
+	var message_area	= FA.getObj('form_error');
+	var form			= FA.getObj('register_form');
 	
 	// if everything is a-okay
 	if(form && message_holder && message_area) {
@@ -314,7 +315,7 @@ function handleRegErrors(k4_http, button) {
 				message_holder.innerHTML	= errorstr;
 				message_area.style.display	= 'block';
 				document.location			= '#top';
-				d.enableButton(button);
+				FA.enableElm(button);
 
 			// Everything's good, submit the form
 			} else { form.submit(); }
@@ -331,7 +332,7 @@ function handleRegErrors(k4_http, button) {
 function setSendPostPreview(form_url, editor_id) {
 
 	// try to get the form object
-	var form = d.getElementById('savepost_form');
+	var form = FA.getObj('savepost_form');
 
 	// define several possible required fields to get values
 	// from to pass to the request
@@ -342,24 +343,24 @@ function setSendPostPreview(form_url, editor_id) {
 		
 		// loop through the above defined fields
 		var query_string = '&submit_type=preview';
-		for(var i = 0; i < d.sizeof(fields); i++) {
+		for(var i = 0; i < FA.sizeOf(fields); i++) {
 			
 			// if the field exists and had a value, add it to the query string
-			field = d.getElementById(fields[i]);
+			field = FA.getObj(fields[i]);
 			if(field && field.value != '') {
 				query_string += '&' + fields[i] + '=' + escape_str(field.value);
 			}
 		}
 
 		// get the textare field
-		field	= d.getElementById(editor_id);
+		field	= FA.getObj(editor_id);
 		
 		// if the value of the textare is not null, add it to the query string
 		if(field && textarea_value(field) != '') {
 			query_string += '&message=' + escape_str(textarea_value(field));
 		}
 		
-		var preview_holder	= d.getElementById('ajax_post_preview');
+		var preview_holder	= FA.getObj('ajax_post_preview');
 		var k4_http = FAHttpRequestsFactory.createInstance();
 		k4_http.Request('POST', form_url + '&use_ajax=1' + query_string, (function(){FAHTTP.loadingState(preview_holder,'preview');}), false, (function(){getPostPreview(k4_http);}));
 	}
@@ -371,8 +372,8 @@ function setSendPostPreview(form_url, editor_id) {
 function getPostPreview(k4_http) {
 
 	// try to get the form and preview holder
-	var form			= d.getElementById('savepost_form');
-	var preview_holder	= d.getElementById('ajax_post_preview');
+	var form			= FA.getObj('savepost_form');
+	var preview_holder	= FA.getObj('ajax_post_preview');
 	
 	FAHTTP.cancelLoader('preview');
 
@@ -414,7 +415,7 @@ function switch_editor_type(switch_to, curr_type, textarea_id, iframe_id) {
 	switchto = switch_to;
 	
 	// get the textare which will hold values
-	e_textarea = d.getElementById(textarea_id);
+	e_textarea = FA.getObj(textarea_id);
 
 	// if everything is good and this isn't Opera
 	if(e_textarea && !d.is_opera) {
@@ -514,13 +515,13 @@ var quick_edit = false;
 function quickEditPost(post_id, div_id) {
 	
 	// set the quick edit box
-	var quickedit_div		= d.getElementById(div_id);
+	var quickedit_div		= FA.getObj(div_id);
 	
 	// if we have a connection and the edit box
 	if(quickedit_div) {
 		
 		// set the height of the quickedit box
-		var quickedit_height	= d.height(quickedit_div);
+		var quickedit_height	= quickedit_div.offsetHeight;
 		quickedit_height		= quickedit_height > 200 ? (quickedit_height > 400 ? 400 : quickedit_height) : 200;
 		
 		// is there a quick edit already open?
@@ -572,7 +573,7 @@ function showQuickEditForm(k4_http, quickedit_div, quickedit_height, post_id, hi
 				}
 
 				// try to get the button pallette for the quick edit
-				var buttons = d.getElementById(post_id + '_qebuttons');
+				var buttons = FA.getObj(post_id + '_qebuttons');
 				if(buttons) {
 					buttons.style.display = (hide ? 'none' : 'block');
 				}
@@ -589,7 +590,7 @@ function showQuickEditForm(k4_http, quickedit_div, quickedit_height, post_id, hi
 function cancelQuickEdit(post_id, div_id) {
 	
 	// set the quick edit box
-	var quickedit_div		= d.getElementById(div_id);
+	var quickedit_div		= FA.getObj(div_id);
 	
 	// if we have a connection and the edit box
 	if(quickedit_div) {
@@ -605,11 +606,11 @@ function cancelQuickEdit(post_id, div_id) {
  */
 function saveQuickEdit(post_id, div_id) {
 	// set the quick edit box
-	var quickedit_div		= d.getElementById(div_id);
+	var quickedit_div		= FA.getObj(div_id);
 	
 	// if we have a connection and the edit box
 	if(quickedit_div) {
-		var textarea		= d.getElementById(post_id + '_message');
+		var textarea		= FA.getObj(post_id + '_message');
 		var edited_msg		= textarea_value(textarea);
 		quick_edit			= false;
 		
@@ -624,10 +625,10 @@ function saveQuickEdit(post_id, div_id) {
 function showSearchResults(search_button) {	
 	var form_obj			= search_button.parentNode;
 	if(form_obj) {
-		var inputs			= form_obj.getTagsByName('input');
+		var inputs			= FA.tagsByName(form_obj, 'input');
 		var query_str		= '';
 		if(inputs) {
-			for(var i = 0; i < inputs.sizeof(); i++) {
+			for(var i = 0; i < FA.sizeOf(inputs); i++) {
 				if(typeof(inputs[i].name) != 'undefined' && inputs[i].name != '') {
 					query_str	+= '&' + inputs[i].name + '=' + escape_str(inputs[i].value);
 				}
@@ -638,7 +639,7 @@ function showSearchResults(search_button) {
 	}
 }
 function showSimpleSearchResults(k4_http, search_url) {
-	var forum_head_obj = d.getElementById('forum_head');
+	var forum_head_obj = FA.getObj('forum_head');
 	
 	if(forum_head_obj && k4_http) {
 		
@@ -646,9 +647,9 @@ function showSimpleSearchResults(k4_http, search_url) {
 		
 		if(response && response != '') {
 			
-			var simple_search_results_box	= d.getElementById('simple_search_results_box');
-			var simple_search_results		= d.getElementById('simple_search_results');
-			var search_results_link			= d.getElementById('search_results_link');
+			var simple_search_results_box	= FA.getObj('simple_search_results_box');
+			var simple_search_results		= FA.getObj('simple_search_results');
+			var search_results_link			= FA.getObj('search_results_link');
 			if(simple_search_results_box && simple_search_results && search_results_link) {
 				//forum_head_obj.appendChild(simple_search_results);
 				
@@ -669,8 +670,8 @@ function showSimpleSearchResults(k4_http, search_url) {
 	}
 }
 function closeSimpleSearchBox() {
-	var simple_search_results_box	= d.getElementById('simple_search_results_box');
-	var simple_search_results		= d.getElementById('simple_search_results');
+	var simple_search_results_box	= FA.getObj('simple_search_results_box');
+	var simple_search_results		= FA.getObj('simple_search_results');
 	if(simple_search_results_box && simple_search_results) {
 		var effect = k4SlideResizerFactory.createInstance();
 		effect.Init('simple_search_results_box', 0, 2, 10);

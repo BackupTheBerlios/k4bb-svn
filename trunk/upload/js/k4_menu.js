@@ -31,8 +31,8 @@ k4Menu.prototype = {
 	Init: function(link_id, menu_id) {
 		
 		// get some vars
-		var link_obj	= link_id.obj();
-		var menu_obj	= menu_id.obj();
+		var link_obj	= FA.getObj(link_id);
+		var menu_obj	= FA.getObj(menu_id);
 		
 		if(menu_obj && link_obj) {	
 			var actions_obj = k4MenuActionsFactory.createInstance();
@@ -44,7 +44,7 @@ k4Menu.prototype = {
 			menu_obj.style.zIndex	= '100';
 			
 			menu_obj.link_id		= link_id;
-			this.lib.forceCursor(link_obj);
+			FA.linkCursor(link_obj);
 			
 			// put this menu into an array of all of our menus
 			this.lib.array_push(ALL_MENUS, menu_obj);
@@ -56,13 +56,13 @@ k4Menu.prototype = {
 			filters_obj.slideResizeMenu(actions_obj, menu_obj);
 
 			// get the <body> tag
-			var body_element = document.getTagsByName('body');
+			var body_element = FA.tagsByName(document, 'body');
 			
 			// attach the events
-			AttachEvent(link_obj,'click',(function(){actions_obj.openMenu(link_obj,menu_obj);}),false);
-			AttachEvent(link_obj,'mouseover',(function(){actions_obj.openMenuIfOneIsOpen(link_obj,menu_obj);}),false);
-			AttachEvent(body_element[0],'click',(function(e){var open_menu_find=actions_obj.getOpenMenu();if(actions_obj.shouldCloseMenu(e,open_menu_find)){actions_obj.closeMenu(open_menu_find);}}),false);
-			AttachEvent(document,'click',(function(e){var open_menu_find=actions_obj.getOpenMenu();if(actions_obj.shouldCloseMenu(e,open_menu_find)){actions_obj.closeMenu(open_menu_find);}}),false);
+			FA.attachEvent(link_obj,'click',(function(){actions_obj.openMenu(link_obj,menu_obj);}));
+			FA.attachEvent(link_obj,'mouseover',(function(){actions_obj.openMenuIfOneIsOpen(link_obj,menu_obj);}));
+			FA.attachEvent(body_element[0],'click',(function(e){var open_menu_find=actions_obj.getOpenMenu();if(actions_obj.shouldCloseMenu(e,open_menu_find)){actions_obj.closeMenu(open_menu_find);}}));
+			FA.attachEvent(document,'click',(function(e){var open_menu_find=actions_obj.getOpenMenu();if(actions_obj.shouldCloseMenu(e,open_menu_find)){actions_obj.closeMenu(open_menu_find);}}));
 		}
 	}
 };
@@ -155,7 +155,7 @@ k4MenuActions.prototype = {
 		if(typeof(open_menu) == 'undefined' || !open_menu) {
 			var open_menu_find = false;
 			if(typeof(ALL_MENUS) != 'undefined') {
-				for(var i = 0; i < ALL_MENUS.sizeof(); i++ ) {
+				for(var i = 0; i < FA.sizeOf(ALL_MENUS); i++ ) {
 					if(this.menuIsOpen(ALL_MENUS[i])) {
 						open_menu_find = ALL_MENUS[i];
 						break;
@@ -173,17 +173,17 @@ k4MenuActions.prototype = {
 	// Should this menu be closed?
 	//
 	shouldCloseMenu: function(e, menu_obj) {
-		var link_obj	= this.lib.getElementById(menu_obj.link_id);
+		var link_obj	= FA.getObj(menu_obj.link_id);
 		var positions	= k4MenuMiscFactory.createInstance().menuPositions(e); // x0 y1
 		var should_close= false;
-		var event_target= this.lib.get_event_target(e);
+		var event_target= FA.eventTarget(e);
 
 		if(link_obj && menu_obj && event_target) {			
 
 			// deal with menus with same menus and different links
 			// this is a really ugly way of doing things though...
 			if(event_target.id != link_obj.id && event_target.parentNode.id != link_obj.id) {
-				for(var c = 0; c < ALL_MENUSLINKS.sizeof(); c++) { // l0 m1
+				for(var c = 0; c < FA.sizeOf(ALL_MENUSLINKS); c++) { // l0 m1
 					if(ALL_MENUSLINKS[c][1].id == menu_obj.id) {
 						
 						if(ALL_MENUSLINKS[c][0].id == event_target.id || ALL_MENUSLINKS[c][0].id == event_target.parentNode.id) {
@@ -194,10 +194,10 @@ k4MenuActions.prototype = {
 				}
 			}
 
-			if(positions[0] < menu_obj.left()) { should_close = true; }
-			if(positions[0] > menu_obj.right()) { should_close = true; }
-			if(positions[1] < menu_obj.top()) { should_close = true; }
-			if(positions[1] > menu_obj.bottom()) { should_close = true; }
+			if(positions[0] < FA.posLeft(menu_obj)) { should_close = true; }
+			if(positions[0] > FA.posRight(menu_obj)) { should_close = true; }
+			if(positions[1] < FA.posTop(menu_obj)) { should_close = true; }
+			if(positions[1] > FA.posBottom(menu_obj)) { should_close = true; }
 			if(event_target.id == link_obj.id || event_target.parentNode.id == link_obj.id) { should_close = false; }
 			if(event_target.id == menu_obj.id) { should_close = false; }
 		}
@@ -223,14 +223,14 @@ k4MenuPositions.prototype = {
 		
 		if(link_obj && menu_obj) {
 			
-			var link_obj_left		= link_obj.left();
+			var link_obj_left		= FA.posLeft(link_obj);
 
 			menu_obj.style.position	= 'absolute';
-			menu_obj.style.top		= link_obj.bottom() + 'px';
+			menu_obj.style.top		= FA.posBottom(link_obj) + 'px';
 			menu_obj.style.left		= link_obj_left + 'px';
 			
-			if( this.lib.right(menu_obj) > document.body.clientWidth) {
-				menu_obj.style.left	= (( link_obj_left - menu_obj.width() ) + link_obj.width()) + 'px';
+			if( FA.posRight(menu_obj) > document.body.clientWidth) {
+				menu_obj.style.left	= (( link_obj_left - menu_obj.offsetWidth ) + link_obj.offsetWidth) + 'px';
 			}
 		}
 	}

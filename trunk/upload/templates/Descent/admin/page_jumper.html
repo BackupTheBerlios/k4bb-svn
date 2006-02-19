@@ -2,7 +2,7 @@
 <script type="text/javascript">
 //<![CDATA[
 function jump_pages(input_id) {
-	var jumpto				= d.getElementById(input_id);
+	var jumpto				= FA.getObj(input_id);
 	if(jumpto) {
 		page				= parseInt(jumpto.value);
 		document.location	= '{$pagejumper_url}&page=' + page;

@@ -99,6 +99,137 @@ class K4SessionFilter extends FAFilter {
 	}
 }
 
+class K4Guest extends FAUser {
+	function guestInfo() {
+		global $_SPIDERS, $_SPIDERAGENTS;
+		
+		$info	= array('name' => '', 'email' => '', 'id' => 0, 'usergroups' => '', 'perms' => 1, 'styleset' => '', 'topicsperpage' => 0, 'postsperpage' => 0, 'viewavatars' => 0,'viewflash'=>1,'viewemoticons'=>1,'viewsigs'=>1,'viewavatars'=> 1,'viewimages'=>1,'viewcensors'=>1,'invisible'=>0,'seen'=>time(),'last_seen'=>time(),'spider'=>FALSE);
+		
+		/* Check if this person is a search engine */
+		if(preg_match("~(". $_SPIDERAGENTS .")~is", USER_AGENT)) {
+			if(is_array($_SPIDERS)) {
+				foreach($_SPIDERS as $spider) {
+					if(eregi($spider['useragent'], USER_AGENT)) {
+						$info['name']	= $spider['spidername'];
+						$info['perms']	= $spider['allowaccess'] == 1 ? 1 : -1;
+						$info['spider']	= TRUE;
+					}
+				}
+			}
+		}
+
+		return $info;
+	}
+	function __construct() {
+		parent::__construct($this->guestInfo());
+	}
+}
+
+class K4Member extends FAMember {
+}
+
+class K4UserManager extends FAObject {
+	var $_info;
+	
+	function K4UserManager(&$dba) {
+		$this->__construct($dba);
+	}
+
+	function __construct(&$dba) {
+		global $_QUERYPARAMS;
+		
+		$this->_info = $dba->prepareStatement("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']}{$_QUERYPARAMS['usersettings']} FROM ". K4USERS ." u, ". K4USERINFO ." ui, ". K4USERSETTINGS ." us WHERE u.id=ui.user_id AND us.user_id=u.id AND u.id=? LIMIT 1");
+	}
+
+	function getInfo($id) {
+		$ret = FALSE;
+
+		$this->_info->setInt(1, $id);
+
+		$result = $this->_info->executeQuery();
+
+		if ($result->next())
+			$ret = $result->current();
+
+		return $ret;
+	}
+}
+
+class K4CookieValidator extends FAUserValidator {
+	var $_stmt;
+	
+	function K4CookieValidator(&$dba) {
+		$this->__construct($dba);
+	}
+
+	function __construct(&$dba) {
+		global $_QUERYPARAMS;
+
+		$this->_stmt = $dba->prepareStatement("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']}{$_QUERYPARAMS['usersettings']} FROM ". K4USERS ." u, ". K4USERINFO ." ui, ". K4USERSETTINGS ." us WHERE u.id=ui.user_id AND us.user_id=u.id AND u.id=? AND u.priv_key=? LIMIT 1");
+	}
+
+	function validateLoginKey() {
+		$ret = FALSE;
+
+		if (isset($_COOKIE[K4COOKIE_ID], $_COOKIE[K4COOKIE_KEY])) {
+			
+			$this->_stmt->setInt(1, $_COOKIE[K4COOKIE_ID]);
+			$this->_stmt->setString(2, $_COOKIE[K4COOKIE_KEY]);
+
+			$result = $this->_stmt->executeQuery();
+
+			if ($result->next())
+				$ret = $result->current();
+		}
+
+		return $ret;
+	}
+}
+
+class K4RequestValidator extends FAUserValidator {
+	var $_stmt;
+	
+	function K4RequestValidator(&$dba) {
+		$this->__construct($dba);
+	}
+
+	function __construct(&$dba) {
+		global $_QUERYPARAMS;
+
+		$this->_stmt = $dba->prepareStatement("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']}{$_QUERYPARAMS['usersettings']} FROM ". K4USERS ." u, ". K4USERINFO ." ui, ". K4USERSETTINGS ." us WHERE u.id=ui.user_id AND us.user_id=u.id AND u.name=? AND u.pass=? LIMIT 1");
+	}
+
+	function validateLoginKey() {
+		$ret = FALSE;
+
+		if (isset($_POST['username'], $_POST['password'])) {
+			$this->_stmt->setString(1, $_POST['username']);
+			$this->_stmt->setString(2, md5($_POST['password']));
+
+			$result = $this->_stmt->executeQuery();
+
+			if ($result->next())
+				$ret = $result->current();
+		}
+
+		return $ret;
+	}
+}
+
+class K4UserFactory extends FAUserFactory {
+
+	function createGuest() {
+		$ret = &new K4Guest();
+
+		return $ret;
+	}
+
+	function createMember($info) {
+		$ret = &new K4Member($info);
+		return $ret;
+	}
+}
+
 class K4UserFilter extends FAFilter {
 	function execute(&$action, &$request) {
 		

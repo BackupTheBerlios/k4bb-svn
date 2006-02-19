@@ -35,13 +35,13 @@ function k4css() {
 		_t._init_nodes(document.body);
 		document.write('<div id="css_inline_editor" style="display:none;"><div class="header"><div class="title" id="css_inline_editor_title"> </div></div>');
 		document.write('<div class="spacer"><div class="alt1"><iframe id="css_inline_editor_iframe" src="" frameborder="no" style="width: 100%;height: 200px;"></iframe></div></div>');
-		document.write('<div class="footer_block"><div style="text-align:center;" id="close_css_editor" onclick="d.getElementById(\'css_inline_editor\').style.display=\'none\';">X &nbsp; X &nbsp; X</div></div></div>');
+		document.write('<div class="footer_block"><div style="text-align:center;" id="close_css_editor" onclick="FA.getObj(\'css_inline_editor\').style.display=\'none\';">X &nbsp; X &nbsp; X</div></div></div>');
 	}
 	function _init_nodes(nx) {
 		if(nx.nodeType == 1) {
 			_t._set_node(nx);
 			if(nx.childNodes) {
-				for(var i = 0; i < nx.childNodes.sizeof(); i++) {
+				for(var i = 0; i < FA.sizeOf(nx.childNodes); i++) {
 					_t._init_nodes(nx.childNodes[i]);
 				}
 			}
@@ -67,9 +67,9 @@ function k4css() {
 		}
 
 		var self = this;
-		AttachEvent(nx,'mouseover',function(e){_t._highlight(e,self);},false);
-		AttachEvent(nx,'mouseout',function(e){_t._unhighlight(e,self,bt);},false);
-		AttachEvent(nx,'click',function(e){_t._editor(e,self);},false);
+		FA.attachEvent(nx,'mouseover',(function(e){_t._highlight(e,self);}));
+		FA.attachEvent(nx,'mouseout',(function(e){_t._unhighlight(e,self,bt);}));
+		FA.attachEvent(nx,'click',(function(e){_t._editor(e,self);}));
 		
 		// come up with a name for it
 		var nxx = nx;
@@ -96,10 +96,10 @@ function k4css() {
 	// editor
 	function _editor(e, nx) {
 		
-		var ex = ('css_inline_editor').obj();
-		var ext = ('css_inline_editor_title').obj();
-		var ifr = _t._getd(('css_inline_editor_iframe').obj());
-		var t = d.get_event_target(e);
+		var ex 	= FA.getObj('css_inline_editor');
+		var ext = FA.getObj('css_inline_editor_title');
+		var ifr = _t._getd(FA.getObj('css_inline_editor_iframe'));
+		var t 	= FA.eventTarget(e);
 		if(ex && ext && t && ifr) {
 			if(t.id != 'close_css_editor' && t.className != '') {
 				ex.style.position = 'absolute';

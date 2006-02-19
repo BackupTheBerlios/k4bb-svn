@@ -52,7 +52,7 @@ k4SlideResizer.prototype = {
 	Init: function(obj_id, x_dir, y_dir, slide_steps) {
 		
 		// get the object
-		this.obj				= obj_id.obj();
+		this.obj				= FA.getObj(obj_id);
 
 		if(typeof(this.obj) != 'undefined' && this.obj) {
 			
@@ -60,8 +60,8 @@ k4SlideResizer.prototype = {
 			this.obj.style.display = 'block';
 			
 			// get some measurements
-			this.x_increment = this.width	= this.lib.width(this.obj);
-			this.y_increment = this.height	= this.lib.height(this.obj);
+			this.x_increment = this.width	= this.obj.offsetWidth;
+			this.y_increment = this.height	= this.obj.offsetHeight;
 			this.x_dir						= x_dir;
 			this.y_dir						= y_dir;
 			this.slide_steps				= slide_steps;
@@ -188,14 +188,13 @@ k4ManageHoverCell.prototype = {
 	// Highlight the rows
 	//
 	highlight: function(container_obj, hover_over, hover_off) {
-		var table_cells = container_obj.getTagsByName('td');
+		var table_cells = FA.tagsByName(container_obj, 'td');
 		if(table_cells && typeof(table_cells) != 'undefined') {
-			for(var i = 0; i < table_cells.sizeof(); i++ ) {
-				if(typeof(table_cells[i].className) != 'undefined' 
-							&& table_cells[i].className == hover_off) {
+			for(var i = 0; i < FA.sizeOf(table_cells); i++ ) {
+				if(typeof(table_cells[i].className) != 'undefined' && table_cells[i].className == hover_off) {
 					
-					AttachEvent(table_cells[i],'mouseover',(function(){this.className=hover_over;}),false);
-					AttachEvent(table_cells[i],'mouseout',(function(){this.className=hover_off;}),false);
+					FA.attachEvent(table_cells[i],'mouseover',(function(){this.className=hover_over;}));
+					FA.attachEvent(table_cells[i],'mouseout',(function(){this.className=hover_off;}));
 				}
 			}
 		}
@@ -216,14 +215,14 @@ var k4ColorPicker = {
 		document.writeln(cp_html);
 		
 		// get the color picker
-		var cp_table = menu_id.obj().firstChild;
+		var cp_table = FA.getObj(menu_id).firstChild;
 		
 		// alter the colorpicker table cells
 		if(cp_table && typeof(cp_table) != 'undefined') {
 
-			var cp_table_cells = cp_table.getTagsByName('td');
+			var cp_table_cells = FA.tagsByName(cp_table, 'td');
 			
-			for(var v = 0; v < cp_table_cells.sizeof(); v++) {
+			for(var v = 0; v < FA.sizeOf(cp_table_cells); v++) {
 				cp_table_cells[v].style.backgroundColor		= cp_table_cells[v].id;
 				cp_table_cells[v].style.border				= '1px solid #999999;';
 				cp_table_cells[v].firstChild.alt			= '';

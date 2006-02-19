@@ -89,13 +89,13 @@
 				<script type="text/javascript">
 					doHelpButton('usergroup_color');
 					function set_color(color, input_id) {
-						link			= d.getElementById('colorpicker_link');
+						link			= FA.getObj('colorpicker_link');
 						link.style.backgroundColor = color;
 						
-						input			= d.getElementById(input_id);
+						input			= FA.getObj(input_id);
 						input.value		= color != '' ? color.substring(1, 7) : '';
 
-						cp				= d.getElementById('colorpicker_menu');
+						cp				= FA.getObj('colorpicker_menu');
 						closemenu(cp);
 					}
 				</script>

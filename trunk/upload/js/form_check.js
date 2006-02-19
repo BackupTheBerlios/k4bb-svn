@@ -18,22 +18,22 @@ var error_classes = [];
 var base_classes = [];
 
 function resetErrors() {
-	for (var i = 0; i < elements.sizeof(); i++)
+	for (var i = 0; i < FA.sizeOf(elements); i++)
 	{
 		if(typeof(errors[i]) != 'undefined') {
-			var error = errors[i].obj();
+			var error = FA.getObj(errors[i]);
 			if (error) {
 				error.style.display = 'none';
 			}
 		}
 		if(typeof(elements[i]) != 'undefined') {
-			var element = elements[i].obj();
+			var element = FA.getObj(elements[i]);
 			if (element) {
 				element.className = base_classes[i];
 			}
 		}
 		if(typeof(messages[i]) != 'undefined') {
-			var message = messages[i].obj();
+			var message = FA.getObj(messages[i]);
 			if (message) {
 				message.style.display = 'block';
 			}
@@ -43,19 +43,19 @@ function resetErrors() {
 
 function showError(num)
 {
-	var error = errors[num].obj();
+	var error = FA.getObj(errors[num]);
 	if (error) {
-		error.show();
+		FA.show(error);
 	}
 
-	var element = elements[num].obj();
+	var element = FA.getObj(elements[num]);
 	if (element) {
 		element.className = error_classes[num];
 	}
 
-	var message = messages[num].obj();
+	var message = FA.getObj(messages[num]);
 	if (message) {
-		message.hide();
+		FA.hide(message);
 	}
 }
 function checkForm(form)
@@ -64,10 +64,9 @@ function checkForm(form)
 
 	resetErrors();
 
-	for (var i = 0; i < form.elements.sizeof(); i++)
-	{
+	for (var i = 0; i < FA.sizeOf(form.elements); i++) {
 		var element = form.elements[i];
-		for (var j = 0; j < elements.sizeof(); j++)
+		for (var j = 0; j < FA.sizeOf(elements); j++)
 		{
 			if (elements[j] == element.id)
 			{
@@ -80,7 +79,7 @@ function checkForm(form)
 				}
 				if(typeof matches != 'undefined' && matches) {
 					if (matches[j]) {
-						var match = matches[j].obj();
+						var match = FA.getObj(matches[j]);
 						if(typeof(match) != 'undefined' && match) {
 							if (element.value != match.value)
 							{
@@ -102,7 +101,7 @@ function checkForm(form)
 }
 function addMessage(id, message)
 {
-	for (var i = 0; i < elements.sizeof(); i++) {
+	for (var i = 0; i < FA.sizeOf(elements); i++) {
 		if (elements[i] == id)
 		{
 			messages[i] = message;
@@ -111,14 +110,14 @@ function addMessage(id, message)
 }
 function addVerification(id, regex, error, errorclassname)
 {
-	var num = elements.sizeof();
+	var num = FA.sizeOf(elements);
 
 	elements[num] = id;
 	regexs[num] = new RegExp('^'+regex+'$');
 	matches[num] = '';
 	errors[num] = error;
 
-	element = id.obj();
+	element = FA.getObj(id);
 	base_classes[num] = element.className;
 	error_classes[num] = (errorclassname && errorclassname != '') ? errorclassname : element.className;
 }
@@ -131,7 +130,7 @@ function addCompare(id, match, error, errorclassname)
 	matches[num] = match;
 	errors[num] = error;
 
-	element = id.obj();
+	element = FA.getObj(id);
 	base_classes[num] = element.className;
 	error_classes[num] = (errorclassname && errorclassname != '') ? errorclassname : element.className;
 }

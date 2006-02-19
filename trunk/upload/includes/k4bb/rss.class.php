@@ -86,7 +86,7 @@ class RSS_Channel extends RSS_Tag {
 	var $num_pages;
 	var $post_id;
 
-	function AddChild(RSS_Element $element) {
+	function AddChild($element) {
 		if (is_a($element, 'RSS_Tag')) {
 			switch ($element->name) {
 				case 'title': {

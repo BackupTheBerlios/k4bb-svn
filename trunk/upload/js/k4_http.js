@@ -59,11 +59,12 @@ FAHttpRequests.prototype = {
 
 		var http_request = false;
 
-		if(window.XMLHttpRequest) {
+		if(typeof(window.XMLHttpRequest) != 'undefined') {
 
 			http_request = new XMLHttpRequest();
 
-		} else if(window.ActiveXObject) {
+		} else if(typeof(window.ActiveXObject) != 'undefined') {
+			
 			var control_types = ['MSXML2.XMLHTTP','MSXML2.XMLHTTP.5.0','MSXML2.XMLHTTP.4.0','MSXML2.XMLHTTP.3.0','Microsoft.XMLHTTP'];
 			for (var i = 0; i < 5 && (typeof(http_request) == 'undefined' || !http_request); i++) {
 				try {
@@ -276,7 +277,7 @@ FAIframeRequest.prototype = {
 	createIframe: function() {
 		
 		// try to get the container to put the iframes in
-		var iframe_div = ('iframe_request_div').obj();
+		var iframe_div = FA.getObj('iframe_request_div');
 
 		// if it doesn't exist, create it
 		if(typeof(iframe_div) == 'undefined' || !iframe_div) {			
@@ -286,13 +287,11 @@ FAIframeRequest.prototype = {
 			iframe_div.style.display	= 'none';
 			
 			// get the <body> tag
-			var body_elements			= document.getTagsByName('body');
+			var body_elements			= FA.tagsByName(document, 'body');
 			
 			// a bit of a hack to make our div without using document.write()
 			if(typeof(body_elements[0]) != 'undefined') {
-				if(!body_elements[0].prependChild(iframe_div)) {
-					body_elements[0].appendChild(iframe_div);
-				}
+				FA.prependChild(body_elements[0], iframe_div);
 			}
 		}
 		
@@ -353,7 +352,7 @@ FAIframeRequest.prototype = {
 	send: function(send_data) {
 		
 		if(!this.iframe_obj) {
-			this.iframe_obj		= this.iframe_id.obj();
+			this.iframe_obj		= FA.getObj(this.iframe_id);
 		}
 		
 		if(typeof(this.iframe_obj) != 'undefined' && this.iframe_obj) {
@@ -371,7 +370,7 @@ FAIframeRequest.prototype = {
 			var self = this;						
 
 			// set a function to the loading of the iframe using
-			AttachEvent(this.iframe_obj,'load',function(){self.frame_loaded=true;},false);
+			FA.attachEvent(this.iframe_obj,'load',function(){self.frame_loaded=true;});
 
 			// toggle a state change after 1 second
 			this.iframe_timer = setTimeout( (function(self){return function(){self.stateChange();}})(this), 1000);
@@ -510,7 +509,7 @@ var FAHTTP = {
 				
 				// deal with some objects
 				var FA_http			= FAHttpRequestsFactory.createInstance();
-				var container_obj	= (container_id).obj();
+				var container_obj	= FA.getObj(container_id);
 
 				// get what's the current url?
 				var current_url		= this.escapeStr(document.location);
@@ -535,7 +534,7 @@ var FAHTTP = {
 			
 			this.cancelLoader(container_id + '_anchor');
 			
-			var container_obj = container_id.obj();
+			var container_obj = FA.getObj(container_id);
 
 			if(typeof(container_obj) != 'undefined') {
 				
@@ -553,14 +552,14 @@ var FAHTTP = {
 						container_obj.innerHTML = response;
 
 						// now, change the title
-						var title_element = ('page_title_element').obj();
+						var title_element = FA.getObj('page_title_element');
 						if(title_element && typeof(document.title) != 'undefined') {
 							document.title = title_element.innerHTML;
 						}
 
 						// go over all of the <script> tags.. this could be dangerous, but whatever
-						var script_objs = container_obj.getTagsByName('script');
-						for(var s = 0; s < script_objs.sizeof(); s++) {
+						var script_objs = FA.tagsByName(container_obj, 'script');
+						for(var s = 0; s < FA.sizeOf(script_objs); s++) {
 							//try { eval(script_objs[s].innerHTML); } catch(e) { }
 						}
 						
@@ -582,21 +581,19 @@ var FAHTTP = {
 			container_obj.style.display		= 'block';
 			
 			// try to get the anchor, otherwise create it
-			if( ! (anchor_id).obj() ) {
-				var anchor					= document.createElement('a');
-				anchor.id					= anchor_id;
-				anchor.name					= anchor_id;
+			if( ! FA.getObj(anchor_id) ) {
+				var anchor_obj				= document.createElement('a');
+				anchor_obj.id				= anchor_id;
+				anchor_obj.name				= anchor_id;
 				
-				if(!container_obj.prependChild(anchor)) {
-					container_obj.appendChild(anchor);
-				}
+				FA.prependChild(container_obj, anchor_obj);
 			}
 
 			// change the url
 			this.changeUrl('#' + anchor_id);
 			
 			var loader_id						= anchor_id + '_loader';
-			var loader							= loader_id.obj();
+			var loader							= FA.getObj(loader_id);
 
 			// let's make sure none of these exist first!
 			if( ! loader ) {
@@ -608,7 +605,7 @@ var FAHTTP = {
 				
 				// do some stuff to the loader
 				loader.id						= anchor_id + '_loader';
-				loader.style.top				= parseInt(container_obj.top() + 30) + 'px';
+				loader.style.top				= parseInt(FA.posTop(container_obj) + 30) + 'px';
 				loader.style.textAlign			= 'center';
 				loader.style.zIndex				= 100;
 				loader.style.position			= 'absolute';
@@ -619,7 +616,7 @@ var FAHTTP = {
 				loader.appendChild(loader_img);
 				
 				// get the <body> tag
-				var body_elements				= document.getTagsByName('body');
+				var body_elements				= FA.tagsByName(document, 'body');
 				
 				// a bit of a hack to make our div without using document.write()
 				if(typeof(body_elements[0]) != 'undefined') {
@@ -632,8 +629,8 @@ var FAHTTP = {
 			// center the loader on the page
 			var arrayPageSize	= getPageSize();
 			var arrayPageScroll = getPageScroll();
-			loader.style.top	= (arrayPageScroll[1] + ((arrayPageSize[3] - 35 - loader.height()) / 2) + 'px');
-			loader.style.left	= (((arrayPageSize[0] - 20 - loader.width()) / 2) + 'px');
+			loader.style.top	= (arrayPageScroll[1] + ((arrayPageSize[3] - 35 - loader.offsetHeight) / 2) + 'px');
+			loader.style.left	= (((arrayPageSize[0] - 20 - loader.offsetWidth) / 2) + 'px');
 		}
 	},
 	
@@ -641,7 +638,7 @@ var FAHTTP = {
 	// Destroy the loader message
 	//
 	cancelLoader: function(anchor_id) {
-		var loader_obj = (anchor_id + '_loader').obj();
+		var loader_obj = FA.getObj(anchor_id + '_loader');
 		if(typeof(loader_obj) != 'undefined' && loader_obj) {
 			loader_obj.style.display = 'none';
 		}
@@ -659,11 +656,11 @@ var FAHTTP = {
 	//
 	parseLinks: function() {
 		// get the <a> tags
-		var link_tags		= document.getTagsByName('a');
+		var link_tags		= FA.tagsByName(document, 'a');
 		var link_tag_hrefs	= { };
 
 		// loop through all of the <a> tags
-		for(var s = 0; s < link_tags.sizeof(); s++) {
+		for(var s = 0; s < FA.sizeOf(link_tags); s++) {
 			if(typeof(link_tags[s].href) != 'undefined') {
 				
 				// should we change this one?
@@ -686,7 +683,7 @@ var FAHTTP = {
 					var self = this;
 
 					// attach an onlick event
-					AttachEvent(link_tags[s],'click',function(e){self.loadPage(link_tag_hrefs[self.linkTarget(e)],'GET','t');},false);
+					FA.attachEvent(link_tags[s],'click',(function(e){self.loadPage(link_tag_hrefs[self.linkTarget(e)],'GET','t');}));
 					
 					// change the link
 					link_tags[s].href	= 'javascript:;';
@@ -699,26 +696,15 @@ var FAHTTP = {
 	// Get the proper link target
 	//
 	linkTarget: function(the_event) {
-		var link_target;
-		var e = the_event;
-		if (!the_event) {
-			e = window.event;
-		}
-		if (e.target) {
-			link_target = e.target;
-		} else if (e.srcElement) {
-			link_target = e.srcElement;
-		}
+		var link_target = FA.eventTarget(the_event);
 		if (link_target.nodeType == 3) { // defeat Safari bug
 			link_target = link_target.parentNode;
 		}
-
 		if(link_target.nodeName.toLowerCase() != 'a') {
 			if(link_target.parentNode.nodeName.toLowerCase() == 'a') {
 				link_target = link_target.parentNode;
 			}
 		}
-
 		return link_target.id;
 	},
 	
@@ -734,112 +720,5 @@ var FAHTTP = {
 			}
 		}
 		return str;
-	}
-};
-
-var FAUrlHandler = {
-	
-	handler: false,
-	
-	//
-	// Initialize the url handler
-	//
-	init: function() {
-		this.write();
-	},
-
-	//
-	// Register a url to the handler
-	//
-	register: function(url, anchor) {
-		var option		= document.createElement('option');
-		option.value	= url;
-		option.text		= anchor;
-		option.selected = true;
-		this.handler.appendChild(option);
-	},
-	
-	//
-	// Change the url
-	//
-	changeUrl: function(url, anchor) {
-		document.location = '#' + anchor;
-		this.register(url, anchor);
-	},
-
-	//
-	// Remove a url
-	//
-	remove: function(anchor) {
-		this.handler.removeChild(this.getByAnchor(anchor));
-	},
-	
-	//
-	// Get the option object for a specific anchor
-	//
-	getByAnchor: function(anchor) {
-		var option = false;
-		for(var i = this.handler.childNodes.sizeof(); i >= 0; i--) {
-			if(typeof(this.handler.childNodes[i]) != 'undefined') {
-				if(this.handler.childNodes[i].text == anchor) {
-					option = this.handler.childNodes[i];
-					break;
-				}
-			}
-		}
-		return option;
-	},
-
-	//
-	// Get the url by the anchor
-	//
-	getUrlByAnchor: function(anchor) {
-		var option = this.getByAnchor(anchor);
-		var url = '';
-		if(option) {
-			url = option.value;
-		}
-		return url;
-	},
-	
-	//
-	// Write the handler to the page
-	//
-	write: function() {
-		this.handler = document.createElement('select');
-		this.handler.style.display = 'none';
-		document.appendChild(this.handler);
-	},
-	
-	//
-	// Get the current url
-	//
-	getCurrentIndex: function() {
-		var current_index	= 0;
-		for(var i = this.handler.childNodes.sizeof(); i >= 0; i--) {
-			if(typeof(this.handler.childNodes[i]) != 'undefined') {
-				if(this.handler.childNodes[i].selected == true) {
-					current_index = i;
-					break;
-				}
-			}
-		}
-		
-		return current_index;
-	},
-	
-	//
-	// Get the previous page url and anchor
-	//
-	goBack: function() {
-		var i			= this.getCurrentIndex();
-
-		var prev_url	= '';
-		var prev_anchor = '';
-
-		if(i <= 0) {
-			prev_url	= this.handler.childNodes[0].url;
-			prev_anchor = this.handler.childNodes[0].text;
-		}
 	}
 };

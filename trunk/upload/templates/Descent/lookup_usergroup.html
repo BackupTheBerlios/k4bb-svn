@@ -101,7 +101,7 @@
 	menu_init('page_jump2', 'page_jump_menu');
 	
 	function jump_pages() {
-		jumpto				= d.getElementById('jumpto');
+		jumpto				= FA.getObj('jumpto');
 		page				= parseInt(jumpto.value);
 		document.location	= '{$pagejumper_url}&page=' + page;
 	}

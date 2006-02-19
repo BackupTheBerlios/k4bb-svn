@@ -59,8 +59,8 @@ k4RTE.prototype = {
 	//
 	get_object: function(object_id) {
 		ret = false;
-		var obj = object_id.obj();
-		if(obj && typeof(obj) == 'object') {
+		var obj = FA.getObj(object_id);
+		if(obj && typeof(obj) != 'undefined') {
 			ret = obj;
 		}
 		return ret;
@@ -145,8 +145,8 @@ k4RTE.prototype = {
 				var textarea_obj		= this.get_object(textarea_id);
 
 				// position the iframe
-				iframe_obj.style.width	= this.lib.width(textarea_obj) + 'px';
-				iframe_obj.style.height = this.lib.height(textarea_obj) + 'px';
+				iframe_obj.style.width	= textarea_obj.offsetWidth + 'px';
+				iframe_obj.style.height = textarea_obj.offsetHeight + 'px';
 
 				// set the iframe modes
 				this.rte_mode[iframe_id] = false;
@@ -192,10 +192,10 @@ k4RTE.prototype = {
 
 		document.writeln('<a href="javascript:;" onclick="' + DEFAULT_INST + '.exec_command(\'' + iframe_id + '\', \'' + command + '\')" title="' + alt + '" style="float:left;" id="button_' + command  + '_' + iframe_id + '"><img src="' + IMG_DIR + '' + img + '.gif" name="button_' + command + '" alt="' + alt + '" border="0" style="padding:2px;" /></a>');
 	
-		var button_img = this.lib.getElementById('button_' + command  + '_' + iframe_id);
+		var button_img = FA.getObj('button_' + command  + '_' + iframe_id);
 		if(button_img && typeof(button_img) != 'undefined') {
-			AttachEvent(button_img,'mouseover',(function(){button_img.style.backgroundColor='#DDDDDD';}),false);
-			AttachEvent(button_img,'mouseout',(function(){button_img.style.backgroundColor='';}),false);
+			FA.attachEvent(button_img,'mouseover',(function(){button_img.style.backgroundColor='#DDDDDD';}));
+			FA.attachEvent(button_img,'mouseout',(function(){button_img.style.backgroundColor='';}));
 		}
 	},
 
@@ -272,7 +272,7 @@ k4RTE.prototype = {
 				this.rte_mode[iframe_id]	= false;
 				textarea_obj.style.display	= 'block';
 				iframe_obj.style.display	= 'none';
-				objs					    = this.lib.getElementsByTagName(iframe_do, 'body');
+				objs					    = FA.tagsByName(iframe_do, 'body');
 				if(typeof(textarea_obj.innerHTML) != 'undefined') {
 					textarea_obj.innerHTML = objs[0].innerHTML;
 				}

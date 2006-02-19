@@ -12,7 +12,7 @@
 		}
 	}
 	function set_file(filename, input) {
-		var inputobj				= document.getElementById(input);
+		var inputobj				= FA.getObj(input);
 		
 		if(inputobj) {
 			
@@ -21,7 +21,7 @@
 	}
 
 	function select_file(input, opener_input) {
-		var inputobj				= document.getElementById(input);
+		var inputobj				= FA.getObj(input);
 		if(inputobj) {
 			var openerobj			= window.opener.document.getElementById(opener_input);
 			if(openerobj) {

@@ -81,7 +81,7 @@
 					<list:separator list="member_usergroups"><br /></list:separator>
 					</list:item>
 				</select>
-				<input type="button" value="{$L_GO}" class="button" onclick="var s = document.getElementById('member_usergroups');document.location='usergroups.php?id=' + s[s.selectedIndex].value;" />
+				<input type="button" value="{$L_GO}" class="button" onclick="var s=FA.getObj('member_usergroups');document.location='usergroups.php?id=' + s[s.selectedIndex].value;" />
 				</list:list>
 
 			</td>

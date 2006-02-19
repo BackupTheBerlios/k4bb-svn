@@ -17,15 +17,15 @@
 	<link rel="alternate" type="application/rss+xml" title="{$L_NEWPOSTS}" href="{$forum_url}/rss.php?act=new_posts" />
 	<script type="text/javascript" src="js/k4_lib.js"></script>
 	<script type="text/javascript" src="js/javascript.js"></script>
+	<script type="text/javascript" src="js/k4_effects.js"></script>
 	<script type="text/javascript" src="js/form_check.js"></script>
 	<script type="text/javascript" src="js/k4_menu.js"></script>
 	<script type="text/javascript" src="js/k4_http.js"></script>
-	<script type="text/javascript" src="js/k4_effects.js"></script>
 	<script type="text/javascript" src="js/http_requests.js"></script>
 	<if:if var="admin_css_edit" eq="1"><script type="text/javascript" src="js/k4_css.js"></script></if:if>
 	<script type="text/javascript">
 		var d=new k4lib();var k4_domain='{$domain}';var CURR_URL='{$curr_url}';var FORUM_URL='{$forum_url}'; // important stuff, don't touch
 		set_cookie('k4_canjs', 1, 2592000, '{$domain}'); /* This cookie is very important and should always be set here. */
-		d.preload_images('Images/{$IMG_DIR}/Icons/collapse_thead.gif','Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif','Images/{$IMG_DIR}/Icons/dots.gif','Images/{$IMG_DIR}/Icons/icon_latest_reply.gif','Images/loading.gif');
+		FA.preloadImages('Images/{$IMG_DIR}/Icons/collapse_thead.gif','Images/{$IMG_DIR}/Icons/collapse_thead_collapsed.gif','Images/{$IMG_DIR}/Icons/dots.gif','Images/{$IMG_DIR}/Icons/icon_latest_reply.gif','Images/loading.gif');
 	</script>
 </head>

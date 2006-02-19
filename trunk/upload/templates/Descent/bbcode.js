@@ -158,11 +158,11 @@ function replace_selection(editor, open, close, selection) {
  */
 function bbcodex_button_click(i) {
 	
-	var obj			= document.getElementById(bbcode_button_objects[i]);
+	var obj			= FA.getObj(bbcode_button_objects[i]);
 
 	/* Get this context's editor */
 	var editor		= bbcode_button_objects[i].split('_');
-	editor			= document.getElementById(editor[sizeof(editor)-1]);
+	editor			= FA.getObj(editor[sizeof(editor)-1]);
 
 	/* Get selected text, if any */
 	var selection	= get_selection(editor);
@@ -326,7 +326,7 @@ function get_open_tag(obj, val) {
  * Function to close all tags in an editor
  */
 function bbcodex_close_tags(editor_id) {
-	var editor = document.getElementById(editor_id);
+	var editor = FA.getObj(editor_id);
 
 	/* Loop through the open tags array */
 	for(var i = (sizeof(bbcode_opentags) - 1); i >= 0; i--) {
