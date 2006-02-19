@@ -186,6 +186,7 @@ class DatabaseAndFileChecks extends FAAction {
 			&& is_readable('../templates/RSS/rss-2.0/compiled') && is_writable('../templates/RSS/rss-2.0/compiled');
 
 		$fs_check = array(
+								'has_chmod_archive'	=> $this->tpl_ret(is_readable('../archive') && is_writable('../archive')),
 								'has_chmod_tmp'		=> $this->tpl_ret($tmp_dir),
 								'has_chmod_k4bb'	=> $this->tpl_ret(is_readable('../includes/k4bb') && is_writable('../includes/k4bb')),
 								'has_chmod_tc'		=> $this->tpl_ret(is_readable('../templates/Descent/compiled') && is_writable('../templates/Descent/compiled')),
