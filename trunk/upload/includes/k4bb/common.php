@@ -96,7 +96,6 @@ define('K4FORUMFILTERS',	'k4_forumfilters');
 define('K4FILTERS',			'k4_filters');
 define('K4TEMPTABLE',		'k4_'. substr(md5(uniqid(rand(), true)), 0, 16)); // special table
 
-
 /**
  * User permission levels, DO NOT CHANGE
  */
@@ -219,6 +218,12 @@ define('XML_RSS',			1);
 define('XML_CHANNEL',		2);
 define('XML_IMAGE',			3);
 define('XML_ITEM',			4);
+
+
+/**
+ * Server stuff, YOU CAN CHANGE!
+ */
+define('MAXALLOWEDSERVERLOAD', 1000); // in miliseconds
 
 /**
  * Define all basic MAP items for categories, forums, etc.

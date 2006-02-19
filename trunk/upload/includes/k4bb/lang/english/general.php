@@ -106,6 +106,7 @@ $_LANG += array(
 'L_CLOSE'				=> 'Close',
 'L_REQUIREDFIELD'		=> 'This field is required.',
 'L_REQUIREDFIELD2'		=> 'The following field is required: <strong>%s</strong>.',
+'L_TOOMUCHSERVERLOAD'	=> 'The server is currently experience an unusual amount of traffic. Please come back in a few minutes, the forums might be available then.',
 
 /* User Titles */
 'L_JUNIORMEMBER'		=> 'Junior Member',

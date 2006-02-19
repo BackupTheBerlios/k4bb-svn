@@ -95,6 +95,7 @@ class K4Controller extends FAController {
 		$this->addFilter(new K4LoginFilter);
 		$this->addFilter(new K4LogoutFilter);
 		$this->addFilter(new K4TemplateFilter($template));
+		$this->addFilter(new K4ServerLoadFilter);
 		
 		// general template info
 		$this->addFilter(new K4GeneralInformation);

@@ -558,6 +558,25 @@ class K4TemplateFilter extends FAFilter {
 	}
 }
 
+class K4ServerLoadFilter extends FAFilter {
+	function execute(&$action, &$request) {
+
+		$server = new K4ServerInfo();
+		$load = $server->loadAverage();
+
+		if($load > MAXALLOWEDSERVERLOAD) {
+			$action = new K4InformationAction(new K4LanguageElement('L_TOOMUCHSERVERLOAD'), 'content', FALSE);
+		}
+	}
+	function getDependencies() {
+		return array('template');
+	}
+
+	function getId() {
+		return 'serverload';
+	}
+}
+
 class K4GeneralInformation extends FAFilter {
 	function execute(&$action, &$request) {
 		

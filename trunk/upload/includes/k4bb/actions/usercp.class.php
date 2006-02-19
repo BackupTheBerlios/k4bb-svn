@@ -705,8 +705,9 @@ class K4UpdateUserFile extends FAAction {
 		
 		global $_SETTINGS;
 		
-		foreach($_REQUEST as $key => $val)
+		foreach($_REQUEST as $key => $val) {
 			$_REQUEST[$key]		= k4_htmlentities(strip_tags($val), ENT_QUOTES);
+		}
 
 		/* Check if the user is logged in or not */
 		if(!$request['user']->isMember()) {
@@ -731,6 +732,9 @@ class K4UpdateUserFile extends FAAction {
 		$filetypes		= explode(" ", trim(str_replace(',', ' ', $_SETTINGS[$this->smallname .'allowedfiles'])));
 		$use_avatar		= isset($_REQUEST['use'. $this->table_column]) ? TRUE : FALSE;
 		$add			= TRUE;
+		
+		// bring in the image class
+		$image = new K4Image();
 
 		$avatar			= $request['dba']->getRow("SELECT * FROM ". $this->table ." WHERE user_id = ". intval($request['user']->get('id')));
 		
@@ -740,67 +744,76 @@ class K4UpdateUserFile extends FAAction {
 			if(isset($_FILES) && is_array($_FILES) && isset($_FILES[$this->table_column .'_file']) && is_array($_FILES[$this->table_column .'_file']) && !empty($_FILES[$this->table_column .'_file']) && $_FILES[$this->table_column .'_file']['error'] < 4) {
 				
 				__chmod($upload_dir, 0777);
-
-				// check if this files is valid to upload	
-				if($_FILES[$this->table_column .'_file']['size'] <= $max_size) {
 					
-					// get some file information
-					$filetype				= file_extension($_FILES[$this->table_column .'_file']['name']);
-					$filename				= $upload_dir . $request['user']->get('id') .'.'. $filetype;
-					$filesize				= $_FILES[$this->table_column .'_file']['size'];
+				// get some file information
+				$filetype				= file_extension($_FILES[$this->table_column .'_file']['name']);
+				$filename				= $upload_dir . $request['user']->get('id') .'.'. $filetype;
+				$filesize				= $_FILES[$this->table_column .'_file']['size'];
+				
+				// upload it
+				if(!$image->upload($this->table_column .'_file', $filename, $filetypes)) {
+					$action		= new K4InformationAction(new K4LanguageElement('L_INVALID'. strtoupper($this->table_column) .'DIMS', $_SETTINGS[$this->smallname .'maxwidth'], $_SETTINGS[$this->smallname .'maxheight']), 'usercp_content', TRUE);
+					$add		= FALSE;
+				}
+				
+				/**
+				 * check the file dimensions
+				 */
+				$dimensions		= @getimagesize($filename);
+				
+				if($add && (!$dimensions || !is_array($dimensions) || empty($dimensions))) {
+					$action		= new K4InformationAction(new K4LanguageElement('L_INVALID'. strtoupper($this->table_column) .'DIMS', $_SETTINGS[$this->smallname .'maxwidth'], $_SETTINGS[$this->smallname .'maxheight']), 'usercp_content', TRUE);
+					$add		= FALSE;
+					$dimensions = array(0, 0);
+				}
+				
+				if($add && ($dimensions[0] > intval($_SETTINGS[$this->smallname .'maxwidth']) || $dimensions[1] > intval($_SETTINGS[$this->smallname .'maxheight']))) {
+					// try to resize the image
 					
-					if(in_array($filetype, $filetypes) && is_writeable($upload_dir)) {
-						
-						/**
-						 * check the file dimensions
-						 */
-						$dimensions		= @getimagesize($_FILES[$this->table_column .'_file']['tmp_name']);
-						
-						if(!$dimensions || !is_array($dimensions) || empty($dimensions)) {
-							$action		= new K4InformationAction(new K4LanguageElement('L_INVALID'. strtoupper($this->table_column) .'DIMS', $_SETTINGS[$this->smallname .'maxwidth'], $_SETTINGS[$this->smallname .'maxheight']), 'usercp_content', TRUE);
-							$add		= FALSE;
-						}
-						
-						if($dimensions[0] > $_SETTINGS[$this->smallname .'maxwidth'] || $dimensions[1] > $_SETTINGS[$this->smallname .'maxheight']) {
-							$action		= new K4InformationAction(new K4LanguageElement('L_INVALID'. strtoupper($this->table_column) .'DIMS', $_SETTINGS[$this->smallname .'maxwidth'], $_SETTINGS[$this->smallname .'maxheight']), 'usercp_content', TRUE);
-							$add		= FALSE;
-						}
-						
-						if($add) {
-							// did the upload go smoothly?
-							if(@move_uploaded_file($_FILES[$this->table_column .'_file']['tmp_name'], $filename)) {
-								
-								// make sure that the file was actually uploaded
-								if(file_exists($filename) && is_readable($filename)) {
-									
-									// change the file permissions on the just uploaded file
-									__chmod($filename, 0777);
-									
-									$request['dba']->executeUpdate("UPDATE ". K4USERINFO ." SET ". $this->table_column ." = 1 WHERE user_id = ". intval($request['user']->get('id')));
-
-									// prepare the sql query to insert it into the db
-									
-										
-									$contents		= file_get_contents($filename);
-									$mimetype		= get_mimetype($filename);
-									$mimetype		= $_FILES[$this->table_column .'_file']['type'] != '' && strtolower($_FILES[$this->table_column .'_file']['type']) != $mimetype ? strtolower($_FILES[$this->table_column .'_file']['type']) : $mimetype;
-									$url			= '';
-									
-									// remove the file if we are storing it in the db
-									if($in_db) {
-										@unlink($filename);
-									}
-								}
-							}
-						}
+					$result = $image->resize($filename, $filetype, $dimensions[0], $dimensions[1], $_SETTINGS[$this->smallname .'maxwidth'], $_SETTINGS[$this->smallname .'maxheight'], TRUE);
+					
+					if(!$result) {
+						$action	= new K4InformationAction(new K4LanguageElement('L_INVALID'. strtoupper($this->table_column) .'DIMS', $_SETTINGS[$this->smallname .'maxwidth'], $_SETTINGS[$this->smallname .'maxheight']), 'usercp_content', TRUE);
+						$add	= FALSE;								
 					} else {
-						$action = new K4InformationAction(new K4LanguageElement('L_INVALID'. strtoupper($this->table_column) .'FILETYPE', $_SETTINGS[$this->smallname .'allowedfiles']), 'usercp_content', TRUE);
-						$add	= FALSE;
+						$filesize = $result['size'];
+						$contents = $result['contents'];
+						$mimetype = $result['mimetype'];
 					}
-				} else {
+				}
+				
+				if($add && $filesize > $max_size) {
 					$action = new K4InformationAction(new K4LanguageElement('L_'. strtoupper($this->table_column) .'TOOBIG', $max_size), 'usercp_content', TRUE);
 					$add	= FALSE;
 				}
+				
+				if($add) {
+					// did the upload go smoothly?
+						
+					// make sure that the file was actually uploaded
+					if(file_exists($filename) && is_readable($filename)) {
+						
+						// change the file permissions on the just uploaded file
+						__chmod($filename, 0777);
+						
+						$request['dba']->executeUpdate("UPDATE ". K4USERINFO ." SET ". $this->table_column ." = 1 WHERE user_id = ". intval($request['user']->get('id')));
+
+						// prepare the sql query to insert it into the db
+						
+						if(!isset($result)) {
+							$contents		= file_get_contents($filename);
+							$mimetype		= get_mimetype($filename);
+							$mimetype		= $filetype != $mimetype ? $filetype : $mimetype;
+						}
+						$url			= '';
+					}
+				}
+				
+				// remove the file
+				if(file_exists($filename) ) { //  ($in_db || !$add) && 
+					@unlink($filename);
+				}
+
 			/* Deal with files from a given website url */
 			} elseif(isset($_REQUEST[$this->table_column .'_website']) && $_REQUEST[$this->table_column .'_website'] != '') {
 				$url		= '';
@@ -826,13 +839,18 @@ class K4UpdateUserFile extends FAAction {
 						$dimensions		= @getimagesize($url);
 
 						if(!$dimensions) {
-							$action = new K4InformationAction(new K4LanguageElement('L_INVALID'. strtoupper($this->table_column) .'DIMS', $_SETTINGS[$this->smallname .'maxwidth'], $_SETTINGS[$this->smallname .'maxheight']), 'usercp_content', TRUE);
+							$action		= new K4InformationAction(new K4LanguageElement('L_INVALID'. strtoupper($this->table_column) .'DIMS', $_SETTINGS[$this->smallname .'maxwidth'], $_SETTINGS[$this->smallname .'maxheight']), 'usercp_content', TRUE);
 							$add		= FALSE;
 						}
 
 						if($dimensions[0] > $_SETTINGS[$this->smallname .'maxwidth'] || $dimensions[1] > $_SETTINGS[$this->smallname .'maxheight']) {
-							$action = new K4InformationAction(new K4LanguageElement('L_INVALID'. strtoupper($this->table_column) .'DIMS', $_SETTINGS[$this->smallname .'maxwidth'], $_SETTINGS[$this->smallname .'maxheight']), 'usercp_content', TRUE);
-							$add		= FALSE;
+							$image = new K4Image();
+							if(!$image->resize($url, $filetype, $dimensions[0], $dimensions[1], $_SETTINGS[$this->smallname .'maxwidth'], $_SETTINGS[$this->smallname .'maxheight'])) {
+								$action		= new K4InformationAction(new K4LanguageElement('L_INVALID'. strtoupper($this->table_column) .'DIMS', $_SETTINGS[$this->smallname .'maxwidth'], $_SETTINGS[$this->smallname .'maxheight']), 'usercp_content', TRUE);
+								$add		= FALSE;
+							} else {
+								$contents	= @file_get_contents($url);
+							}
 						}
 						
 						if(!extension_loaded('fileinfo')) {
@@ -840,7 +858,7 @@ class K4UpdateUserFile extends FAAction {
 						}
 						if(!extension_loaded('fileinfo')) {
 							// TODO: contact admin if this happens
-							$request['dba']->executeUpdate("UPDATE ". K4SETTINGS ." SET value = '0' WHERE varname = '". $this->smallname ."allowdynamicwebsite'");
+							$request['dba']->executeUpdate("UPDATE ". K4SETTINGS ." SET value=0 WHERE varname='". $this->smallname ."allowdynamicwebsite'");
 							$action		= new K4InformationAction(new K4LanguageElement('L_'. strtoupper($this->table_column) .'CRITICALERROR'), 'usercp_content', TRUE);
 							$add		= FALSE;
 						}

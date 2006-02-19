@@ -192,6 +192,15 @@ INSERT INTO k4_spiders (id, useragent, spidername, allowaccess) VALUES (16, 'Wis
 INSERT INTO k4_spiders (id, useragent, spidername, allowaccess) VALUES (17, 'msnbot', 'MSN', 1);
 INSERT INTO k4_spiders (id, useragent, spidername, allowaccess) VALUES (18, 'msnbot/1.0', 'MSN', 1);
 INSERT INTO k4_spiders (id, useragent, spidername, allowaccess) VALUES (19, 'W3C_Validator', 'W3C', 1);
+INSERT INTO k4_spiders (id, useragent, spidername, allowaccess) VALUES (20, 'Gigabot', 'Gigablast', 1);
+INSERT INTO k4_spiders (id, useragent, spidername, allowaccess) VALUES (21, 'ConveraCrawler', 'Convera.com', 1);
+INSERT INTO k4_spiders (id, useragent, spidername, allowaccess) VALUES (22, 'CoralWebPrx', 'Coral Cache', 1);
+INSERT INTO k4_spiders (id, useragent, spidername, allowaccess) VALUES (23, 'ichiro', 'Ichiro', 1);
+INSERT INTO k4_spiders (id, useragent, spidername, allowaccess) VALUES (24, 'FeedFetcher Google;', 'Google FeedFetcher', 1);
+INSERT INTO k4_spiders (id, useragent, spidername, allowaccess) VALUES (25, 'LinkWalker', 'LinkWalker', 1);
+INSERT INTO k4_spiders (id, useragent, spidername, allowaccess) VALUES (26, 'Googlebot Image', 'Google Images', 1);
+INSERT INTO k4_spiders (id, useragent, spidername, allowaccess) VALUES (27, 'Baiduspider+', 'Baido.com', 1);
+INSERT INTO k4_spiders (id, useragent, spidername, allowaccess) VALUES (28, 'Microsoft URL Control 6.00.8862', 'SPAM Link Checker', 0);
 
 INSERT INTO k4_settinggroups VALUES (1,'L_KFOURONOFF',1);
 INSERT INTO k4_settinggroups VALUES (2,'L_GENERALSETTINGS',2);
