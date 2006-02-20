@@ -844,12 +844,14 @@ class K4UpdateUserFile extends FAAction {
 						}
 
 						if($dimensions[0] > $_SETTINGS[$this->smallname .'maxwidth'] || $dimensions[1] > $_SETTINGS[$this->smallname .'maxheight']) {
-							$image = new K4Image();
-							if(!$image->resize($url, $filetype, $dimensions[0], $dimensions[1], $_SETTINGS[$this->smallname .'maxwidth'], $_SETTINGS[$this->smallname .'maxheight'])) {
+							$result = $image->resize($url, $filetype, $dimensions[0], $dimensions[1], $_SETTINGS[$this->smallname .'maxwidth'], $_SETTINGS[$this->smallname .'maxheight']);
+							if(!$result) {
 								$action		= new K4InformationAction(new K4LanguageElement('L_INVALID'. strtoupper($this->table_column) .'DIMS', $_SETTINGS[$this->smallname .'maxwidth'], $_SETTINGS[$this->smallname .'maxheight']), 'usercp_content', TRUE);
 								$add		= FALSE;
 							} else {
-								$contents	= @file_get_contents($url);
+								$filesize	= $result['size'];
+								$contents	= $result['contents'];
+								$mimetype	= $result['mimetype'];
 							}
 						}
 						
@@ -885,9 +887,12 @@ class K4UpdateUserFile extends FAAction {
 							}
 						}
 						if($add) {
-							$filesize		= strlen($contents);
-							$filetype		= get_fileextension($mimetype);
 							
+							if(!isset($filesize)) {
+								$filesize		= strlen($contents);
+								$filetype		= get_fileextension($mimetype);
+							}
+
 							if($filesize <= $max_size) {
 
 								// TODO: users can file spam the forum
