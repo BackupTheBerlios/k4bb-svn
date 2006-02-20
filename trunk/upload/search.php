@@ -77,7 +77,7 @@ class K4SearchEverything extends FAAction {
 			
 			if(strlen($author) < $request['template']->getVar('minsearchlength') || strlen($author) > $request['template']->getVar('maxsearchlength')) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDSEARCHKEYWORDS', $request['template']->getVar('minsearchlength'), $request['template']->getVar('maxsearchlength')), 'content', TRUE, 'search.php', 5);
-				return (!USE_AJAX) ? $action->execute($request) : ajax_message(sprintf(str_replace('%s', '%d', 'L_INVALIDSEARCHKEYWORDS'), $request['template']->getVar('minsearchlength'), $request['template']->getVar('maxsearchlength')));
+				return (!USE_AJAX) ? $action->execute($request) : ajax_message(sprintf($request['template']->getVar('L_INVALIDSEARCHKEYWORDS'), $request['template']->getVar('minsearchlength'), $request['template']->getVar('maxsearchlength')));
 			}
 
 			$users				= $request['dba']->executeQuery("SELECT * FROM ". K4USERS ." WHERE $user_search");
@@ -162,7 +162,7 @@ class K4SearchEverything extends FAAction {
 			// are the keywords too short or too long?
 			if(strlen($keywords) < $request['template']->getVar('minsearchlength') || strlen($keywords) > $request['template']->getVar('maxsearchlength')) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDSEARCHKEYWORDS', $request['template']->getVar('minsearchlength'), $request['template']->getVar('maxsearchlength')), 'content', TRUE, 'search.php', 5);
-				return (!USE_AJAX) ? $action->execute($request) : ajax_message(sprintf(str_replace('%s', '%d', 'L_INVALIDSEARCHKEYWORDS'), $request['template']->getVar('minsearchlength'), $request['template']->getVar('maxsearchlength')));
+				return (!USE_AJAX) ? $action->execute($request) : ajax_message(sprintf($request['template']->getVar('L_INVALIDSEARCHKEYWORDS'), $request['template']->getVar('minsearchlength'), $request['template']->getVar('maxsearchlength')));
 			}
 			
 			// has the person specified where to search?

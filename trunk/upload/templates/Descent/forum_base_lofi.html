@@ -1,7 +1,24 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" dir="{$lang_direction}" lang="{$LANGSHORT}">
-<core:import id="head" file="head.html" />
+<head>
+	<title>{$forum_title}</title>
+	<meta http-equiv="Content-Type" content="text/html; charset={$ENCODING}" />
+	<meta http-equiv="Content-Language" content="{$LANG}" />
+	<meta http-equiv="Content-Style-Type" content="text/css" />
+	<meta name="generator" content="k4 Bulletin Board {$VERSION}" />
+	<meta name="robots" content="all" />
+	<meta name="revisit-after" content="1 Days" />
+	<meta http-equiv="Expires" content="1" />
+	<meta name="description" content="{$bbsearchdescription}" />
+	<meta name="keywords" content="{$bbkeywords}" />
+	<meta name="author" content="k4 Bulletin Board" />
+	<meta name="distribution" content="GLOBAL" />
+	<meta name="rating" content="general" />
+	<link rel="icon" href="favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" href="tmp/stylesets/{$STYLESET}.css" type="text/css" media="screen" />
+	<link rel="alternate" type="application/rss+xml" title="{$L_NEWPOSTS}" href="{$forum_url}/rss.php?act=new_posts" />
+</head>
 <body>
 <if:if var="can_see_board" method="can_view" geq="0">
 <div align="center" id="t">

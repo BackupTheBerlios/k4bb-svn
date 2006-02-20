@@ -274,10 +274,10 @@ function allow_WYSIWYG() {
 /**
  * Send plain text to the browser for javascript to interpret
  */
-function AJAX_message($lang_element, $prefix = 'ERROR') {
+function ajax_message($lang_element, $prefix = 'ERROR') {
 	global $_LANG;
 	
-	$to_echo = 'ERROR';
+	$to_echo = $prefix . $lang_element;
 
 	if(is_a($lang_element, 'K4LanguageElement')) {
 		$to_echo = $prefix . $lang_element->__toString();
