@@ -35,8 +35,8 @@ class K4DefaultAction extends FAAction {
 
 		if((isset($_REQUEST['f']) && intval($_REQUEST['f']) != 0) || (isset($_REQUEST['c']) && intval($_REQUEST['c']) != 0)) {
 			$thing = isset($_REQUEST['f']) ? 'f' : 'c';
-			//$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST[$thing]));
-			$forum = $_ALLFORUMS[$_REQUEST[$thing]];
+			$forum					= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST[$thing]));
+			//$forum = $_ALLFORUMS[$_REQUEST[$thing]];
 		} else {
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', TRUE);
 			return $action->execute($request);

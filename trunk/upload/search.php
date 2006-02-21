@@ -404,11 +404,28 @@ class SearchResultsIterator extends FAProxyIterator {
 	}
 }
 
+class K4AutoSuggest extends FAAction {
+	function execute(&$request) {
+		
+		// do we have permission to use the advanced search?
+		if(get_map( 'advsearch', 'can_view', array()) > $request['user']->get('perms')) {
+			exit;
+		}
+
+		// put query and loop and stuff here
+
+		exit;
+		
+		return TRUE;
+	}
+}
+
 $app = &new K4Controller('forum_base.html');
 $app->setAction('', new K4DefaultAction);
 $app->setDefaultEvent('');
 
 $app->setAction('find', new K4SearchEverything);
+$app->setAction('suggest', new K4AutoSuggest);
 
 $app->execute();
 
