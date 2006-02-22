@@ -166,8 +166,8 @@ class K4Controller extends FAController {
 		 * Set some other important info to the template
 		 */
 		$request['template']->setVar('num_queries', $request['dba']->getNumQueries() + 1);
-		$request['template']->setVar('USE_AJAX', (USE_AJAX ? 1 : 0));
-		$request['template']->setVar('USE_TOTAL_AJAX', (USE_TOTAL_AJAX ? 1 : 0));
+		$request['template']->setVar('USE_XMLHTTP', (USE_XMLHTTP ? 1 : 0));
+		$request['template']->setVar('USE_TOTAL_XMLHTTP', (USE_TOTAL_XMLHTTP ? 1 : 0));
 		
 		// the page title
 		$curr_location = $request['template']->getVar('current_location');
@@ -211,7 +211,7 @@ class K4Controller extends FAController {
 		}
 
 		// are we using the total ajax option?
-		if(USE_TOTAL_AJAX) {
+		if(USE_TOTAL_XMLHTTP) {
 			$request['template']->setVisibility('forum_header', FALSE);
 			$request['template']->setVisibility('forum_footer', FALSE);
 			echo "<div id=\"page_title_element\" style=\"display:none;\">". $request['template']->getVar('forum_title') ."</div>\n";
@@ -220,7 +220,7 @@ class K4Controller extends FAController {
 		/**
 		 * Start GZIP compression
 		 */
-		if(!USE_TOTAL_AJAX && $gzip && $encoding && function_exists('gzcompress')) {
+		if(!USE_TOTAL_XMLHTTP && $gzip && $encoding && function_exists('gzcompress')) {
 
 			header('Content-Encoding: ' . $encoding);
 			

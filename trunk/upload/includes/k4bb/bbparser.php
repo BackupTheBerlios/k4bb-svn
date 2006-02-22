@@ -22,7 +22,9 @@
 * @package k4bb
 */
 
-
+if(!defined('IN_K4')) {
+	return;
+}
 
 class BBEmoticons {
 //	var $_smilies = array(

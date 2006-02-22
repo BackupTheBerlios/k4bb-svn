@@ -742,7 +742,7 @@ class getTopicTitle extends FAAction {
 		/* Check the request ID */
 		if(!isset($_REQUEST['post_id']) || !$_REQUEST['post_id'] || intval($_REQUEST['post_id']) == 0) {
 			$action = new K4InformationAction(new K4LanguageElement('L_TOPICDOESNTEXIST'), 'content', FALSE);
-			return !USE_AJAX ? $action->execute($request) : exit();
+			return !USE_XMLHTTP ? $action->execute($request) : exit();
 		}			
 		
 		/* Get our topic */
@@ -750,7 +750,7 @@ class getTopicTitle extends FAAction {
 		
 		if(!$topic || !is_array($topic) || empty($topic)) {
 			$action = new K4InformationAction(new K4LanguageElement('L_TOPICDOESNTEXIST'), 'content', FALSE);
-			return !USE_AJAX ? $action->execute($request) : exit();
+			return !USE_XMLHTTP ? $action->execute($request) : exit();
 		}
 		
 		/* Get its forum */
@@ -758,29 +758,29 @@ class getTopicTitle extends FAAction {
 		
 		if(!$forum || !is_array($forum) || empty($forum)) {
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
-			return !USE_AJAX ? $action->execute($request) : exit();
+			return !USE_XMLHTTP ? $action->execute($request) : exit();
 		}
 		
 		/* Is this user a moderator? */
 		if(!is_moderator($request['user']->getInfoArray(), $forum)) {
 			no_perms_error($request);
-			return !USE_AJAX ? TRUE : exit();
+			return !USE_XMLHTTP ? TRUE : exit();
 		}
 
 		if($topic['poster_id'] == $request['user']->get('id')) {
 			if($request['user']->get('perms') < get_map( 'topics', 'can_edit', array('forum_id' => $topic['forum_id']))) {
 				no_perms_error($request);
-				return !USE_AJAX ? TRUE : exit();
+				return !USE_XMLHTTP ? TRUE : exit();
 			}
 		} else {
 			if($request['user']->get('perms') < get_map( 'other_topics', 'can_edit', array('forum_id' => $topic['forum_id']))) {
 				no_perms_error($request);
-				return !USE_AJAX ? TRUE : exit();
+				return !USE_XMLHTTP ? TRUE : exit();
 			}
 		}
 		
 //		/* Return the title */
-//		if(!USE_AJAX) {
+//		if(!USE_XMLHTTP) {
 //			k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 //			$action = new K4InformationAction(new K4LanguageElement('L_TOPICTITLEIS', $topic['name']), 'content', FALSE);
 //			return $action->execute($request);
@@ -802,7 +802,7 @@ class SimpleUpdateTopic extends FAAction {
 		/* Check the request ID */
 		if(!isset($_REQUEST['id']) || !$_REQUEST['id'] || intval($_REQUEST['id']) == 0) {
 			$action = new K4InformationAction(new K4LanguageElement('L_TOPICDOESNTEXIST'), 'content', FALSE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message('L_TOPICDOESNTEXIST');
+			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message('L_TOPICDOESNTEXIST');
 		}			
 
 		/* Get our topic */
@@ -810,14 +810,14 @@ class SimpleUpdateTopic extends FAAction {
 		
 		if(!$topic || !is_array($topic) || empty($topic)) {
 			$action = new K4InformationAction(new K4LanguageElement('L_TOPICDOESNTEXIST'), 'content', FALSE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message('L_TOPICDOESNTEXIST');
+			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message('L_TOPICDOESNTEXIST');
 		}
 		
 		$forum = $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($topic['forum_id']));
 		
 		if(!$forum || !is_array($forum) || empty($forum)) {
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message('L_FORUMDOESNTEXIST');
+			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message('L_FORUMDOESNTEXIST');
 		}
 
 		if(!isset($_REQUEST['name']) || $_REQUEST['name'] == '') {
@@ -830,7 +830,7 @@ class SimpleUpdateTopic extends FAAction {
 		
 		if( ( strlen($name) < intval($_SETTINGS['topicminchars'])) || (strlen($name) > intval($_SETTINGS['topicmaxchars']) ) ) {
 			$action = new K4InformationAction(new K4LanguageElement('L_TITLETOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])), 'content', TRUE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message(sprintf('L_TITLETOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])));
+			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message(sprintf('L_TITLETOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])));
 		}
 
 		if($name != $topic['name']) {
@@ -839,18 +839,18 @@ class SimpleUpdateTopic extends FAAction {
 
 			if(!is_moderator($request['user']->getInfoArray(), $forum)) {
 				no_perms_error($request);
-				return !USE_AJAX ? TRUE : ajax_message('L_NEEDPERMS');
+				return !USE_XMLHTTP ? TRUE : xmlhttp_message('L_NEEDPERMS');
 			}
 
 			if($topic['poster_id'] == $request['user']->get('id')) {
 				if($request['user']->get('perms') < get_map( 'topics', 'can_edit', array('forum_id' => $topic['forum_id']))) {
 					no_perms_error($request);
-					return !USE_AJAX ? TRUE : ajax_message('L_NEEDPERMS');
+					return !USE_XMLHTTP ? TRUE : xmlhttp_message('L_NEEDPERMS');
 				}
 			} else {
 				if($request['user']->get('perms') < get_map( 'other_topics', 'can_edit', array('forum_id' => $topic['forum_id']))) {
 					no_perms_error($request);
-					return !USE_AJAX ? TRUE : ajax_message('L_NEEDPERMS');
+					return !USE_XMLHTTP ? TRUE : xmlhttp_message('L_NEEDPERMS');
 				}
 			}
 
@@ -892,14 +892,15 @@ class SimpleUpdateTopic extends FAAction {
 			}
 		}
 
-		if(!USE_AJAX) {
+		if(!USE_XMLHTTP) {
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_EDITTOPIC', $forum);
 			$action = new K4InformationAction(new K4LanguageElement('L_UPDATEDTOPIC', $topic['name']), 'content', FALSE, referer(), 3);
 			return $action->execute($request);
 		} else {
 			
+			xmlhttp_header();
 			echo '<a href="viewtopic.php?id='. $topic['post_id'] .'" title="'. $name .'" style="font-size: 13px;">'. (strlen($name) > 40 ? substr($name, 0, 40) .'...' : $name) .'</a>';
-			exit;
+			xmlhttp_footer();
 		}
 	}
 }

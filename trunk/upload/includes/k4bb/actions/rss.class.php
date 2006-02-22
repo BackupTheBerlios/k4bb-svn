@@ -138,6 +138,12 @@ class RSS_Channel extends RSS_Tag {
 				case 'postInfo:postId': {
 					$this->post_id		= intval($element->__toString());
 				break; }
+				case 'postInfo:numPages': {
+					$this->num_pages	= intval($element->__toString());
+				break; }
+				case 'postInfo:page': {
+					$this->page	= intval($element->__toString());
+				break; }
 			}
 		}
 	}
@@ -158,6 +164,9 @@ class RSS_Item extends RSS_Tag {
 	var $description;
 	var $subject;
 	var $date;
+	var $author_id;
+	var $author_name;
+	var $post_id;
 
 	function AddChild($element) {
 		if (is_a($element, 'RSS_Tag')) {
@@ -186,6 +195,15 @@ class RSS_Item extends RSS_Tag {
 				break; }
 				case 'postInfo:pubDate': {
 					$this->date			= intval($element->__toString());
+				break; }
+				case 'postInfo:authorId': {
+					$this->author_id	= intval($element->__toString());
+				break; }
+				case 'postInfo:authorName': {
+					$this->author_name	= $element->__toString();
+				break; }
+				case 'postInfo:postId': {
+					$this->post_id		= intval($element->__toString());
 				break; }
 			}
 		}

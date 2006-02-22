@@ -8,20 +8,6 @@
  * @package k4bb
  */
 
-var d = new k4lib();
-
-
-//function test_ajax() {
-//	var k4_http = FAHttpRequestsFactory.createInstance();
-//	k4_http.setRequestType('GET');
-//	k4_http.Open('null.php', true);
-//	k4_http.successState = function() { alert('Success!!'); }
-//	k4_http.loadingState = function() { alert('loading...'); }
-//	k4_http.errorState = function() { alert('ERROR!'); }
-//	k4_http.Send("");
-//}
-
-
 /**
  * Function to check if the server response is an error
  */
@@ -138,7 +124,7 @@ function updateTopicTitle(textbox_id, post_id, div_id) {
 	var textbox		= FA.getObj(textbox_id);
 	if(textbox) {
 		var k4_http = FAHttpRequestsFactory.createInstance();
-		k4_http.Request('POST', 'mod.php?act=topic_simpleupdate&use_ajax=1&id=' + parseInt(post_id) + '&name=' + escape_str(textbox.value), false, false, (function(){topicSimpleUpdate(k4_http,div_id);}));
+		k4_http.Request('POST', 'mod.php?act=topic_simpleupdate&use_xmlhttp=1&id=' + parseInt(post_id) + '&name=' + escape_str(textbox.value), false, false, (function(){topicSimpleUpdate(k4_http,div_id);}));
 	}
 }
 function topicSimpleUpdate(k4_http, topic_area_id) {
@@ -177,7 +163,7 @@ function updateTopicLocked(icon, post_id) {
 		var locked		= FA.sizeOf(icon.src.match(lock_regex)) > 0 ? true : false;
 		
 		var k4_http = FAHttpRequestsFactory.createInstance();
-		k4_http.Request('GET', 'mod.php?act=' + (locked == 1 ? 'un' : '') + 'locktopic&id=' + parseInt(post_id) + '&use_ajax=1', false, false, (function(){changeLockedIcon(k4_http, icon);}));
+		k4_http.Request('GET', 'mod.php?act=' + (locked == 1 ? 'un' : '') + 'locktopic&id=' + parseInt(post_id) + '&use_xmlhttp=1', false, false, (function(){changeLockedIcon(k4_http, icon);}));
 
 	} else {
 		document.location.href = 'mod.php?act=' + (locked == 1 ? 'un' : '') + 'locktopic&id=' + parseInt(post_id);
@@ -220,7 +206,7 @@ function saveQuickReply(form_id, textarea_id, post_id, forum_id, page) {
 			query_string += 'message=' + escape_str(textarea_value(textarea));
 			
 			var k4_http = FAHttpRequestsFactory.createInstance();
-			k4_http.Request('POST', 'newreply.php?act=postreply&use_ajax=1&row_type=8&topic_id=' + parseInt(post_id) + '&forum_id=' + parseInt(forum_id) + '&submit_type=post&page=' + parseInt(page) + query_string, (function(){FAHTTP.loadingState(FA.getObj('ajax_post_preview'),'preview');}), false, (function(){findQuickReply(k4_http,textarea);}));
+			k4_http.Request('POST', 'newreply.php?act=postreply&use_xmlhttp=1&row_type=8&topic_id=' + parseInt(post_id) + '&forum_id=' + parseInt(forum_id) + '&submit_type=post&page=' + parseInt(page) + query_string, (function(){FAHTTP.loadingState('preview_loader');}), false, (function(){findQuickReply(k4_http,textarea);}));
 		}
 	} else {
 		if(form) { form.submit(); }
@@ -228,7 +214,7 @@ function saveQuickReply(form_id, textarea_id, post_id, forum_id, page) {
 }
 function findQuickReply(k4_http, textarea) {
 	
-	FAHTTP.cancelLoader('preview');
+	FAHTTP.cancelLoader('preview_loader');
 
 	var message_holder	= FA.getObj('quick_reply_sent');
 	var container		= FA.getObj('quick_reply_content');
@@ -278,7 +264,7 @@ function errorCheckRegistration(button) {
 		}
 
 		var k4_http = FAHttpRequestsFactory.createInstance();
-		k4_http.Request('POST', 'member.php?act=register_user&use_ajax=1' + query_string, false, false, (function(){handleRegErrors(k4_http,button);}));
+		k4_http.Request('POST', 'member.php?act=register_user&use_xmlhttp=1' + query_string, false, false, (function(){handleRegErrors(k4_http,button);}));
 	}
 }
 
@@ -362,7 +348,7 @@ function setSendPostPreview(form_url, editor_id) {
 		
 		var preview_holder	= FA.getObj('ajax_post_preview');
 		var k4_http = FAHttpRequestsFactory.createInstance();
-		k4_http.Request('POST', form_url + '&use_ajax=1' + query_string, (function(){FAHTTP.loadingState(preview_holder,'preview');}), false, (function(){getPostPreview(k4_http);}));
+		k4_http.Request('POST', form_url + '&use_xmlhttp=1' + query_string, (function(){FAHTTP.loadingState('preview_loader');}), false, (function(){getPostPreview(k4_http);}));
 	}
 }
 
@@ -375,7 +361,7 @@ function getPostPreview(k4_http) {
 	var form			= FA.getObj('savepost_form');
 	var preview_holder	= FA.getObj('ajax_post_preview');
 	
-	FAHTTP.cancelLoader('preview');
+	FAHTTP.cancelLoader('preview_loader');
 
 	// if everything looks good
 	if(preview_holder && form) {
@@ -453,7 +439,7 @@ function switch_editor_type(switch_to, curr_type, textarea_id, iframe_id) {
 		}
 		
 		var k4_http = FAHttpRequestsFactory.createInstance();
-		k4_http.Request('POST', 'misc.php?act=switch_editor&switchto=' + switch_to + '&use_ajax=1' + query_string, (function(){FAHTTP.loadingState(editorcodex,'top');}), false, (function(){createEditor(k4_http);}));
+		k4_http.Request('POST', 'misc.php?act=switch_editor&switchto=' + switch_to + '&use_xmlhttp=1' + query_string, (function(){FAHTTP.loadingState('top_loader');}), false, (function(){createEditor(k4_http);}));
 	}
 }
 
@@ -536,7 +522,7 @@ function quickEditPost(post_id, div_id) {
 		quick_edit = { 'id' : post_id, 'div' : div_id };
 		
 		var k4_http = FAHttpRequestsFactory.createInstance();
-		k4_http.Request('GET', 'misc.php?act=revert_text&post_id=' + post_id + '&use_ajax=1', (function(){FAHTTP.loadingState(quickedit_div,'p'+post_id);}), false, (function(){showQuickEditForm(k4_http,quickedit_div,quickedit_height,post_id,false);}));
+		k4_http.Request('GET', 'misc.php?act=revert_text&post_id=' + post_id + '&use_xmlhttp=1', (function(){FAHTTP.loadingState('p'+post_id+'_loader');}), false, (function(){showQuickEditForm(k4_http,quickedit_div,quickedit_height,post_id,false);}));
 	}
 }
 
@@ -546,7 +532,7 @@ function quickEditPost(post_id, div_id) {
  */
 function showQuickEditForm(k4_http, quickedit_div, quickedit_height, post_id, hide) {
 	
-	FAHTTP.cancelLoader('p'+post_id);
+	FAHTTP.cancelLoader('p'+post_id+'_loader');
 
 	// if we have a connection and the edit box
 	if(quickedit_div) {
@@ -596,7 +582,7 @@ function cancelQuickEdit(post_id, div_id) {
 	if(quickedit_div) {
 		
 		var k4_http = FAHttpRequestsFactory.createInstance();
-		k4_http.Request('GET', 'misc.php?act=original_text&post_id=' + post_id + '&use_ajax=1', (function(){FAHTTP.loadingState(quickedit_div,'p'+post_id);}), false, (function(){showQuickEditForm(k4_http,quickedit_div,0,post_id,true);}));
+		k4_http.Request('GET', 'misc.php?act=original_text&post_id=' + post_id + '&use_xmlhttp=1', (function(){FAHTTP.loadingState('p'+post_id+'_loader');}), false, (function(){showQuickEditForm(k4_http,quickedit_div,0,post_id,true);}));
 	}
 }
 
@@ -615,7 +601,7 @@ function saveQuickEdit(post_id, div_id) {
 		quick_edit			= false;
 		
 		var k4_http = FAHttpRequestsFactory.createInstance();
-		k4_http.Request('POST', 'misc.php?act=save_text&post_id=' + post_id + '&use_ajax=1&message=' + escape_str(edited_msg), (function(){FAHTTP.loadingState(quickedit_div,'p'+post_id);}), false, (function(){showQuickEditForm(k4_http,quickedit_div,0,post_id,true);}));
+		k4_http.Request('POST', 'misc.php?act=save_text&post_id=' + post_id + '&use_xmlhttp=1&message=' + escape_str(edited_msg), (function(){FAHTTP.loadingState('p'+post_id+'_loader');}), false, (function(){showQuickEditForm(k4_http,quickedit_div,0,post_id,true);}));
 	}
 }
 
@@ -635,10 +621,11 @@ function showSearchResults(search_button) {
 			}
 		}
 		var k4_http = FAHttpRequestsFactory.createInstance();
-		k4_http.Request('POST', 'search.php?act=find' + query_str + '&use_ajax=1', false, false, (function(){showSimpleSearchResults(k4_http,'search.php?act=find'+query_str);}));
+		k4_http.Request('POST', 'search.php?act=find' + query_str + '&use_xmlhttp=1', false, false, (function(){showSimpleSearchResults(k4_http,'search.php?act=find'+query_str);}));
 	}
 }
 function showSimpleSearchResults(k4_http, search_url) {
+	
 	var forum_head_obj = FA.getObj('forum_head');
 	
 	if(forum_head_obj && k4_http) {
@@ -650,6 +637,7 @@ function showSimpleSearchResults(k4_http, search_url) {
 			var simple_search_results_box	= FA.getObj('simple_search_results_box');
 			var simple_search_results		= FA.getObj('simple_search_results');
 			var search_results_link			= FA.getObj('search_results_link');
+			
 			if(simple_search_results_box && simple_search_results && search_results_link) {
 				//forum_head_obj.appendChild(simple_search_results);
 				

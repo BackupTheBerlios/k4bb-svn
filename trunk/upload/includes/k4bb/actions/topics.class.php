@@ -42,13 +42,13 @@ class PostDraft extends FAAction {
 		/* Check the request ID */
 		if(!isset($_REQUEST['forum_id']) || !$_REQUEST['forum_id'] || intval($_REQUEST['forum_id']) == 0) {
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message('L_FORUMDOESNTEXIST');
+			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message('L_FORUMDOESNTEXIST');
 		}
 			
 		/* Check the request ID */
 		if(!isset($_REQUEST['forum_id']) || !$_REQUEST['forum_id'] || intval($_REQUEST['forum_id']) == 0) {
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message('L_FORUMDOESNTEXIST');
+			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message('L_FORUMDOESNTEXIST');
 		}
 			
 		$forum				= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['forum_id']));
@@ -56,39 +56,39 @@ class PostDraft extends FAAction {
 		/* Check the forum data given */
 		if(!$forum || !is_array($forum) || empty($forum)) {
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message('L_FORUMDOESNTEXIST');
+			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message('L_FORUMDOESNTEXIST');
 		}
 			
 		/* Make sure the we are trying to post into a forum */
 		if(!($forum['row_type'] & FORUM) || $forum['forum_id'] == GARBAGE_BIN) {
 			$action = new K4InformationAction(new K4LanguageElement('L_CANTPOSTTONONFORUM'), 'content', FALSE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message('L_CANTPOSTTONONFORUM');
+			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message('L_CANTPOSTTONONFORUM');
 		}
 
 		/* Do we have permission to post to this forum? */
 		if($request['user']->get('perms') < get_map( 'topics', 'can_add', array('forum_id'=>$forum['forum_id']))) {
 			$action = new K4InformationAction(new K4LanguageElement('L_PERMCANTPOST'), 'content', FALSE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message('L_PERMCANTPOST');
+			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message('L_PERMCANTPOST');
 		}
 
 		/* General error checking */
 		if(!isset($_REQUEST['name']) || $_REQUEST['name'] == '') {
 			$action = new K4InformationAction(new K4LanguageElement('L_INSERTTOPICNAME'), 'content', TRUE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message('L_INSERTTOPICNAME');
+			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message('L_INSERTTOPICNAME');
 		}
 
 		if (!$this->runPostFilter('name', new FALengthFilter(intval($_SETTINGS['topicmaxchars'])))) {
 			$action = new K4InformationAction(new K4LanguageElement('L_TITLETOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])), 'content', TRUE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message(new K4LanguageElement('L_TITLETOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])));
+			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message(new K4LanguageElement('L_TITLETOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])));
 		}
 		if (!$this->runPostFilter('name', new FALengthFilter(intval($_SETTINGS['topicmaxchars']), intval($_SETTINGS['topicminchars'])))) {
 			$action = new K4InformationAction(new K4LanguageElement('L_TITLETOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])), 'content', TRUE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message(new K4LanguageElement('L_TITLETOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])));
+			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message(new K4LanguageElement('L_TITLETOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])));
 		}
 
 		if(!isset($_REQUEST['message']) || $_REQUEST['message'] == '') {
 			$action = new K4InformationAction(new K4LanguageElement('L_INSERTTOPICMESSAGE'), 'content', TRUE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message('L_INSERTTOPICMESSAGE');
+			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message('L_INSERTTOPICMESSAGE');
 		}
 		
 		/* Get our topic */
@@ -96,7 +96,7 @@ class PostDraft extends FAAction {
 		
 		if(!$draft || !is_array($draft) || empty($draft)) {
 			$action = new K4InformationAction(new K4LanguageElement('L_DRAFTDOESNTEXIST'), 'content', FALSE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message('L_DRAFTDOESNTEXIST');
+			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message('L_DRAFTDOESNTEXIST');
 		}
 
 		/* set the breadcrumbs bit */
@@ -248,7 +248,7 @@ class PostDraft extends FAAction {
 			 * Post Previewing
 			 */
 			
-			if(!USE_AJAX) {
+			if(!USE_XMLHTTP) {
 
 				$request['template']->setVar('L_TITLETOOSHORT', sprintf($request['template']->getVar('L_TITLETOOSHORT'), $request['template']->getVar('topicminchars'), $request['template']->getVar('topicmaxchars')));
 
@@ -312,7 +312,7 @@ class PostDraft extends FAAction {
 			
 			$request['template']->setVar('is_topic', 1);
 
-			if(!USE_AJAX) {
+			if(!USE_XMLHTTP) {
 
 				/* Set the the button display options */
 				$request['template']->setVisibility('save_draft', FALSE);
@@ -330,8 +330,10 @@ class PostDraft extends FAAction {
 			} else {
 				$templateset = $request['user']->isMember() ? $request['user']->get('templateset') : $forum['defaultstyle'];
 				$html = $request['template']->run(BB_BASE_DIR .'/templates/'. $templateset .'/post_preview.html');
+				
+				xmlhttp_header();
 				echo $html;
-				exit;
+				xmlhttp_footer();
 			}
 		}
 
@@ -598,7 +600,7 @@ class LockTopic extends FAAction {
 
 		if(!isset($_REQUEST['id']) || !$_REQUEST['id'] || intval($_REQUEST['id']) == 0) {
 			$action = new K4InformationAction(new K4LanguageElement('L_TOPICDOESNTEXIST'), 'content', FALSE);
-			return !USE_AJAX ? $action->execute($request) : exit();
+			return !USE_XMLHTTP ? $action->execute($request) : exit();
 		}
 
 		/* Get our topic */
@@ -606,7 +608,7 @@ class LockTopic extends FAAction {
 		
 		if(!$topic || !is_array($topic) || empty($topic)) {
 			$action = new K4InformationAction(new K4LanguageElement('L_TOPICDOESNTEXIST'), 'content', FALSE);
-			return !USE_AJAX ? $action->execute($request) : exit();
+			return !USE_XMLHTTP ? $action->execute($request) : exit();
 		}
 			
 		$forum				= $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($topic['forum_id']));
@@ -614,25 +616,25 @@ class LockTopic extends FAAction {
 		/* Check the forum data given */
 		if(!$forum || !is_array($forum) || empty($forum)) {
 			$action = new K4InformationAction(new K4LanguageElement('L_FORUMDOESNTEXIST'), 'content', FALSE);
-			return !USE_AJAX ? $action->execute($request) : exit();
+			return !USE_XMLHTTP ? $action->execute($request) : exit();
 		}
 			
 		/* Make sure the we are trying to delete from a forum */
 		if(!($forum['row_type'] & FORUM)) {
 			$action = new K4InformationAction(new K4LanguageElement('L_CANTDELFROMNONFORUM'), 'content', FALSE);
-			return !USE_AJAX ? $action->execute($request) : exit();
+			return !USE_XMLHTTP ? $action->execute($request) : exit();
 		}
 
 		if(get_map( 'closed', 'can_add', array('forum_id' => $forum['forum_id'])) > $request['user']->get('perms')) {
 			$request['template']->setFile('content', '../login_form.html');
 			$request['template']->setVisibility('no_perms', TRUE);
-			return !USE_AJAX ? TRUE : exit();
+			return !USE_XMLHTTP ? TRUE : exit();
 		}
 
 		if(!is_moderator($request['user']->getInfoArray(), $forum)) {
 			$request['template']->setFile('content', '../login_form.html');
 			$request['template']->setVisibility('no_perms', TRUE);
-			return !USE_AJAX ? TRUE : exit();
+			return !USE_XMLHTTP ? TRUE : exit();
 		}
 		
 		/* set the breadcrumbs bit */
@@ -648,11 +650,12 @@ class LockTopic extends FAAction {
 			$request['dba']->executeUpdate("DELETE FROM ". K4BADPOSTREPORTS ." WHERE post_id = ". intval($topic['post_id']) ." AND post_id = 0");
 
 		/* Redirect the user */
-		if(!USE_AJAX) {
+		if(!USE_XMLHTTP) {
 			$action = new K4InformationAction(new K4LanguageElement($this->lock == 1 ? 'L_LOCKEDTOPIC' : 'L_UNLOCKEDTOPIC', $topic['name']), 'content', FALSE, 'viewtopic.php?id='. $topic['post_id'], 3);
 			return $action->execute($request);
 		} else {
-			echo $this->lock == 1 ? 'locked' : 'unlocked'; exit;
+			echo $this->lock == 1 ? 'locked' : 'unlocked'; 
+			exit;
 		}
 	}
 }

@@ -71,12 +71,11 @@ class K4InsertUserFilter extends FAFilter {
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_REGISTER');
 			
 			if(intval($request['template']->getVar('allowregistration')) == 0) {
-				if(!USE_AJAX) {
+				if(!USE_XMLHTTP) {
 					no_perms_error($request);
 					return TRUE;
 				} else {
-					ajax_message('L_YOUNEEDPERMS');
-					exit;
+					xmlhttp_message('L_YOUNEEDPERMS');
 				}
 			}
 
@@ -87,7 +86,7 @@ class K4InsertUserFilter extends FAFilter {
 				/* If we are not allowed to register */
 				if(isset($_SETTINGS['allowregistration']) && $_SETTINGS['allowregistration'] == 0) {
 					$action = new K4InformationAction(new K4LanguageElement('L_CANTREGISTERADMIN'), 'content', FALSE);
-					return !USE_AJAX ? TRUE : ajax_message('L_CANTREGISTERADMIN');
+					return !USE_XMLHTTP ? TRUE : xmlhttp_message('L_CANTREGISTERADMIN');
 				}
 				
 				/* Collect the custom profile fields to display */
@@ -132,30 +131,30 @@ class K4InsertUserFilter extends FAFilter {
 				/* Username checks */
 				if (!$this->runPostFilter('username', new FARequiredFilter)) {
 					$action = new K4InformationAction(new K4LanguageElement('L_BADUSERNAME'), 'content', TRUE);
-					return !USE_AJAX ? TRUE : ajax_message('L_BADUSERNAME');
+					return !USE_XMLHTTP ? TRUE : xmlhttp_message('L_BADUSERNAME');
 				}
 				
 				if (!$this->runPostFilter('username', new FARegexFilter('~^[a-zA-Z]([a-zA-Z0-9]*[-_ ]?)*[a-zA-Z0-9]*$~'))) {
 					$action = new K4InformationAction(new K4LanguageElement('L_BADUSERNAME'), 'content', TRUE);
-					return !USE_AJAX ? TRUE : ajax_message('L_BADUSERNAME');
+					return !USE_XMLHTTP ? TRUE : xmlhttp_message('L_BADUSERNAME');
 				}
 				if (!$this->runPostFilter('username', new FALengthFilter(intval($_SETTINGS['maxuserlength'])))) {
 					$action = new K4InformationAction(new K4LanguageElement('L_USERNAMETOOLONG', intval($_SETTINGS['maxuserlength'])), 'content', TRUE);
-					return !USE_AJAX ? TRUE : ajax_message('L_USERNAMETOOSHORT');
+					return !USE_XMLHTTP ? TRUE : xmlhttp_message('L_USERNAMETOOSHORT');
 				}
 				if (!$this->runPostFilter('username', new FALengthFilter(intval($_SETTINGS['maxuserlength']), intval($_SETTINGS['minuserlength'])))) {
 					$action = new K4InformationAction(new K4LanguageElement('L_USERNAMETOOSHORT', intval($_SETTINGS['minuserlength']), intval($_SETTINGS['maxuserlength'])), 'content', TRUE);
-					return !USE_AJAX ? TRUE : ajax_message(new K4LanguageElement('L_USERNAMETOOSHORT', intval($_SETTINGS['minuserlength']), intval($_SETTINGS['maxuserlength'])));
+					return !USE_XMLHTTP ? TRUE : xmlhttp_message(new K4LanguageElement('L_USERNAMETOOSHORT', intval($_SETTINGS['minuserlength']), intval($_SETTINGS['maxuserlength'])));
 				}
 
 				if($request['dba']->getValue("SELECT COUNT(*) FROM ". K4USERS ." WHERE name = '". $request['dba']->quote($_REQUEST['username']) ."'") > 0) {
 					$action = new K4InformationAction(new K4LanguageElement('L_USERNAMETAKEN'), 'content', TRUE);
-					return !USE_AJAX ? TRUE : ajax_message('L_USERNAMETAKEN');
+					return !USE_XMLHTTP ? TRUE : xmlhttp_message('L_USERNAMETAKEN');
 				}
 				
 				if($request['dba']->getValue("SELECT COUNT(*) FROM ". K4BADUSERNAMES ." WHERE name = '". $request['dba']->quote($_REQUEST['username']) ."'") > 0) {
 					$action = new K4InformationAction(new K4LanguageElement('L_USERNAMENOTGOOD'), 'content', TRUE);
-					return !USE_AJAX ? TRUE : ajax_message('L_USERNAMENOTGOOD');
+					return !USE_XMLHTTP ? TRUE : xmlhttp_message('L_USERNAMENOTGOOD');
 				}
 				
 				/* Check the appropriatness of the username */
@@ -164,55 +163,55 @@ class K4InsertUserFilter extends FAFilter {
 
 				if($name != $_REQUEST['username']) {
 					$action = new K4InformationAction(new K4LanguageElement('L_INNAPROPRIATEUNAME'), 'content', TRUE);
-					return !USE_AJAX ? TRUE : ajax_message('L_INNAPROPRIATEUNAME');
+					return !USE_XMLHTTP ? TRUE : xmlhttp_message('L_INNAPROPRIATEUNAME');
 				}
 
 				/* Password checks */
 				if(!$this->runPostFilter('password', new FARequiredFilter)) {
 					$action = new K4InformationAction(new K4LanguageElement('L_SUPPLYPASSWORD'), 'content', TRUE);
-					return !USE_AJAX ? TRUE : ajax_message('L_SUPPLYPASSWORD');
+					return !USE_XMLHTTP ? TRUE : xmlhttp_message('L_SUPPLYPASSWORD');
 				}
 
 				if(!$this->runPostFilter('password2', new FARequiredFilter)) {
 					$action = new K4InformationAction(new K4LanguageElement('L_SUPPLYPASSCHECK'), 'content', TRUE);
-					return !USE_AJAX ? TRUE : ajax_message('L_SUPPLYPASSCHECK');
+					return !USE_XMLHTTP ? TRUE : xmlhttp_message('L_SUPPLYPASSCHECK');
 				}
 
 				if(!$this->runPostFilter('password', new FACompareFilter('password2'))) {
 					$action = new K4InformationAction(new K4LanguageElement('L_PASSESDONTMATCH'), 'content', TRUE);
-					return !USE_AJAX ? TRUE : ajax_message('L_PASSESDONTMATCH');
+					return !USE_XMLHTTP ? TRUE : xmlhttp_message('L_PASSESDONTMATCH');
 				}
 				
 				/* Email checks */
 				if(!$this->runPostFilter('email', new FARequiredFilter)) {
 					$action = new K4InformationAction(new K4LanguageElement('L_SUPPLYEMAIL'), 'content', TRUE);
-					return !USE_AJAX ? TRUE : ajax_message('L_SUPPLYEMAIL');
+					return !USE_XMLHTTP ? TRUE : xmlhttp_message('L_SUPPLYEMAIL');
 				}
 
 				if(!$this->runPostFilter('email2', new FARequiredFilter)) {
 					$action = new K4InformationAction(new K4LanguageElement('L_SUPPLYEMAILCHECK'), 'content', TRUE);
-					return !USE_AJAX ? TRUE : ajax_message('L_SUPPLYEMAILCHECK');
+					return !USE_XMLHTTP ? TRUE : xmlhttp_message('L_SUPPLYEMAILCHECK');
 				}
 
 				if(!$this->runPostFilter('email', new FACompareFilter('email2'))) {
 					$action = new K4InformationAction(new K4LanguageElement('L_EMAILSDONTMATCH'), 'content', TRUE);
-					return !USE_AJAX ? TRUE : ajax_message('L_EMAILSDONTMATCH');
+					return !USE_XMLHTTP ? TRUE : xmlhttp_message('L_EMAILSDONTMATCH');
 				}
 
 				if (!$this->runPostFilter('email', new FARegexFilter('~^([0-9a-zA-Z]+[-._+&])*[0-9a-zA-Z]+@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}$~'))) {
 					$action = new K4InformationAction(new K4LanguageElement('L_NEEDVALIDEMAIL'), 'content', TRUE);
-					return !USE_AJAX ? TRUE : ajax_message('L_NEEDVALIDEMAIL');
+					return !USE_XMLHTTP ? TRUE : xmlhttp_message('L_NEEDVALIDEMAIL');
 				}
 
 				if($_SETTINGS['requireuniqueemail'] == 1) {
 					if($request['dba']->getValue("SELECT COUNT(*) FROM ". K4USERS ." WHERE email = '". $request['dba']->quote($_REQUEST['email']) ."'") > 0) {
 						$action = new K4InformationAction(new K4LanguageElement('L_EMAILTAKEN'), 'content', TRUE);
-						return !USE_AJAX ? TRUE : ajax_message('L_EMAILTAKEN');
+						return !USE_XMLHTTP ? TRUE : xmlhttp_message('L_EMAILTAKEN');
 					}
 				}
 				
 				/* Exit right here to send no content to the browser if ajax is enabled */
-				if(USE_AJAX) exit;
+				if(USE_XMLHTTP) exit;
 
 				/**
 				 * Do the database inserting

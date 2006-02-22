@@ -164,13 +164,13 @@ function get_profile_fields($fields, $temp) {
  */
 function no_perms_error(&$request, $section = 'content') {
 	
-	if(!USE_AJAX) {
+	if(!USE_XMLHTTP) {
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_INFORMATION');
 		$request['template_file'] = BB_BASE_DIR . "/templates/". $request['user']->get('templateset') ."/information_base.html";
 		$request['template']->setFile($section, 'login_form.html');
 		$request['template']->setVisibility('no_perms', TRUE);
 	} else {
-		return ajax_message('L_YOUNEEDPERMS');
+		return xmlhttp_message('L_YOUNEEDPERMS');
 	}
 }
 
@@ -178,50 +178,19 @@ function no_perms_error(&$request, $section = 'content') {
  * Rudimentry function to see if AJAX should be supported
  * Most of this was from the PHP manual comments
  */
-function allow_AJAX() {
+function allow_xmlhttp() {
 	
-	$use_ajax = FALSE;
+	$use_xmlhttp = TRUE;
 	
-	if(isset($_COOKIE['k4_canjs']) && intval($_COOKIE['k4_canjs']) == 0)
-		return FALSE;
-
-	$browsers = array ('MSIE','OPERA','MOZILLA','NETSCAPE','FIREFOX','SAFARI',);
-	
-	foreach ($browsers as $browser) {
-		$s			= strpos(strtoupper($_SERVER['HTTP_USER_AGENT']), $browser);
-		$f			= $s + strlen($browser);
-		$version	= substr($_SERVER['HTTP_USER_AGENT'], $f, 5);
-		$version	= preg_replace('/[^0-9,.]/','', $version);
-
-		if (strpos(strtoupper($_SERVER['HTTP_USER_AGENT']), $browser)) {
-			switch($browser) {
-				case 'MSIE':
-				case 'OPERA': {
-					$use_ajax = (intval($version) >= 5) ? TRUE : FALSE;
-					break;
-				}
-				case 'MOZILLA': {
-					$use_ajax = (floatval($version) >= 1.3) ? TRUE : FALSE;
-					break;
-				}
-				case 'NETSCAPE': {
-					$use_ajax = (intval($version) >= 6) ? TRUE : FALSE;
-					break;
-				}
-				case 'FIREFOX':
-				case 'SAFARI': {
-					$use_ajax = TRUE;
-					break;
-				}
-			}
-		}
-	}
-	
-	if(!isset($_REQUEST['use_ajax']) || intval($_REQUEST['use_ajax']) == 0) {
-		$use_ajax = FALSE;
+	if(!isset($_REQUEST['use_xmlhttp']) || intval($_REQUEST['use_xmlhttp']) == 0) {
+		$use_xmlhttp = FALSE;
 	}
 
-	return $use_ajax;
+	if(isset($_COOKIE['k4_canjs']) && intval($_COOKIE['k4_canjs']) == 0) {
+		$use_xmlhttp = FALSE;
+	}
+
+	return $use_xmlhttp;
 }
 
 /**
@@ -234,7 +203,7 @@ function allow_WYSIWYG() {
 	
 	$browsers = array ('MSIE','OPERA','MOZILLA','NETSCAPE','FIREFOX','SAFARI',);
 	
-	foreach ($browsers as $browser) {
+	foreach($browsers as $browser) {
 		$s			= strpos(strtoupper($_SERVER['HTTP_USER_AGENT']), $browser);
 		$f			= $s + strlen($browser);
 		$version	= substr($_SERVER['HTTP_USER_AGENT'], $f, 5);
@@ -274,19 +243,29 @@ function allow_WYSIWYG() {
 /**
  * Send plain text to the browser for javascript to interpret
  */
-function ajax_message($lang_element, $prefix = 'ERROR') {
-	global $_LANG;
-	
-	$to_echo = $prefix . $lang_element;
-
+function xmlhttp_message($lang_element, $prefix = 'ERROR') {
 	if(is_a($lang_element, 'K4LanguageElement')) {
 		$to_echo = $prefix . $lang_element->__toString();
 	} else {
+		global $_LANG;
 		if(isset($_LANG[$lang_element])) {
 			$to_echo = $prefix . $_LANG[$lang_element];
 		}
 	}
+	xmlhttp_header();
 	echo $to_echo;
+	xmlhttp_footer();
+}
+
+//
+// Create a ajax header & footer
+//
+function xmlhttp_header() {
+	//header("Content-type: text/xml");
+	//echo '<div>';
+}
+function xmlhttp_footer() {
+	//echo '</div>';
 	exit;
 }
 

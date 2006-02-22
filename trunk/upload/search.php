@@ -54,8 +54,9 @@ class K4SearchEverything extends FAAction {
 		}
 		
 		/* Do we force it to rewrite the session? */
-		if(isset($_REQUEST['rewrite_session']) && intval($_REQUEST['rewrite_session']) == 1 && isset($_SESSION['search']['search_queries']))
+		if(isset($_REQUEST['rewrite_session']) && intval($_REQUEST['rewrite_session']) == 1 && isset($_SESSION['search']['search_queries'])) {
 			unset($_SESSION['search']['search_queries']);
+		}
 
 		/**
 		 * Sort out author information
@@ -77,7 +78,7 @@ class K4SearchEverything extends FAAction {
 			
 			if(strlen($author) < $request['template']->getVar('minsearchlength') || strlen($author) > $request['template']->getVar('maxsearchlength')) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDSEARCHKEYWORDS', $request['template']->getVar('minsearchlength'), $request['template']->getVar('maxsearchlength')), 'content', TRUE, 'search.php', 5);
-				return (!USE_AJAX) ? $action->execute($request) : ajax_message(sprintf($request['template']->getVar('L_INVALIDSEARCHKEYWORDS'), $request['template']->getVar('minsearchlength'), $request['template']->getVar('maxsearchlength')));
+				return (!USE_XMLHTTP) ? $action->execute($request) : xmlhttp_message(sprintf($request['template']->getVar('L_INVALIDSEARCHKEYWORDS'), $request['template']->getVar('minsearchlength'), $request['template']->getVar('maxsearchlength')));
 			}
 
 			$users				= $request['dba']->executeQuery("SELECT * FROM ". K4USERS ." WHERE $user_search");
@@ -93,7 +94,7 @@ class K4SearchEverything extends FAAction {
 				$user_ids		.= ') ';
 			} else {
 				$action = new K4InformationAction(new K4LanguageElement('L_NOAUTHORSBYNAME'), 'content', FALSE, 'search.php', 5);
-				return (!USE_AJAX) ? $action->execute($request) : ajax_message('L_NOAUTHORSBYNAME');
+				return (!USE_XMLHTTP) ? $action->execute($request) : xmlhttp_message('L_NOAUTHORSBYNAME');
 			}
 		}
 		
@@ -162,7 +163,7 @@ class K4SearchEverything extends FAAction {
 			// are the keywords too short or too long?
 			if(strlen($keywords) < $request['template']->getVar('minsearchlength') || strlen($keywords) > $request['template']->getVar('maxsearchlength')) {
 				$action = new K4InformationAction(new K4LanguageElement('L_INVALIDSEARCHKEYWORDS', $request['template']->getVar('minsearchlength'), $request['template']->getVar('maxsearchlength')), 'content', TRUE, 'search.php', 5);
-				return (!USE_AJAX) ? $action->execute($request) : ajax_message(sprintf($request['template']->getVar('L_INVALIDSEARCHKEYWORDS'), $request['template']->getVar('minsearchlength'), $request['template']->getVar('maxsearchlength')));
+				return (!USE_XMLHTTP) ? $action->execute($request) : xmlhttp_message(sprintf($request['template']->getVar('L_INVALIDSEARCHKEYWORDS'), $request['template']->getVar('minsearchlength'), $request['template']->getVar('maxsearchlength')));
 			}
 			
 			// has the person specified where to search?
@@ -185,7 +186,7 @@ class K4SearchEverything extends FAAction {
 		// are there no keywords, user ids, etc?
 		if($keyword_query == '' && $user_ids == '' && !isset($_SESSION['search']['search_queries']) && !isset($_REQUEST['newposts'])) {
 			$action = new K4InformationAction(new K4LanguageElement('L_SEARCHINVALID'), 'content', TRUE, 'search.php', 3);
-			return (!USE_AJAX) ? $action->execute($request) : ajax_message('L_SEARCHINVALID');
+			return (!USE_XMLHTTP) ? $action->execute($request) : xmlhttp_message('L_SEARCHINVALID');
 		}
 
 		/**
@@ -295,7 +296,7 @@ class K4SearchEverything extends FAAction {
 		if(!$pager->hasPage($page) && $num_pages > 0) {
 			$base_url->args['page']	= $num_pages;
 			$action = new K4InformationAction(new K4LanguageElement('L_PASTPAGELIMIT'), 'content', FALSE, $base_url->__toString(), 3);
-			return (!USE_AJAX) ? $action->execute($request) : ajax_message('L_PASTPAGELIMIT');
+			return (!USE_XMLHTTP) ? $action->execute($request) : xmlhttp_message('L_PASTPAGELIMIT');
 		}
 		
 		// finish stuff off
@@ -322,10 +323,11 @@ class K4SearchEverything extends FAAction {
 		/* Memory Saving */
 		unset($result);
 
-		if(USE_AJAX) {
+		if(USE_XMLHTTP) {
 			$html	= $request['template']->run(BB_BASE_DIR .'/templates/'. $request['user']->get('templateset') .'/search_results_simple.html');
+			xmlhttp_header();
 			echo $html;
-			exit;
+			xmlhttp_footer();
 		}
 
 		return TRUE;

@@ -123,7 +123,7 @@ class FASession extends FAObject {
 			}
 			
 			if ($this->isNew()) {	
-				if(!USE_AJAX) {
+				if(!USE_XMLHTTP) {
 					//(id, seen, name, user_id, user_agent, usergroups data, location_file, location_act, location_id)
 					$this->_write_stmt->setString(1,	$sessid);
 					$this->_write_stmt->setInt(2,		time());

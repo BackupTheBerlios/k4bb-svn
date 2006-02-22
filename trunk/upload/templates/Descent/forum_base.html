@@ -65,10 +65,11 @@
 	</div>
 <core:block id="forum_footer">
 </div>
+<br />
 <if:if var="copyrighttext" noteq=""><div align="center" class="smalltext"><br />{$copyrighttext}</div></if:if>
 <core:import id="new_pms_box" file="new_pms_box.html" />
 
-<if:if var="nojs" eq="0"><if:if var="USE_TOTAL_AJAX" eq="1"><script type="text/javascript">FAHTTP.parseLinks();set_cookie('k4_canjs', 1, 2592000, '{$domain}');</script></if:if></if:if>
+<if:if var="nojs" eq="0"><if:if var="USE_TOTAL_XMLHTTP" eq="1"><script type="text/javascript">FAHTTP.parseLinks();set_cookie('k4_canjs', 1, 2592000, '{$domain}');</script></if:if></if:if>
 
 <a name="bottom" id="bottom"></a>
 

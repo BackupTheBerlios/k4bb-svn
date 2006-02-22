@@ -1,17 +1,41 @@
+<if:if var="archive_pager" noteq="">
+<div class="spacer">
+	<div class="base2">
+		<strong>{$L_PAGES}:</strong> {$archive_pager}
+	</div>
+</div>
+</if:if>
+
+<div class="spacer">
+	<div class="base3">
+		<strong>{$post_name}</strong><br />
+		{$L_BY} <a href="member.php?id={$post_poster_id}" title="$post_poster_name">{$post_poster_name}</a> 
+		{$L_ONSMALL} <core:date format="%b %d %y">{$post_created}</core:date>&nbsp;<core:date format="%I:%M%p">{$post_created}</core:date>
+	</div>
+	<div class="alt3">
+		{$post_body_text}
+	</div>
+</div>
+
 <list:list id="posts">
 <list:item list="posts">
 <list:switch list="posts" var="row_class" a="1" b="2">
-<if:if var="row_type" eq="4">
-<!-- Topic: {$name} -->
-<core:import id="topic_file" file="topic.html" />
-<!-- / Topic: {$name} -->
-<if:else />
-<maps:if var="replies" forum="forum_id" method="can_view">
-<!-- Reply: {$name} -->
-<core:import id="reply_file" file="reply.html" />
-<!-- / Reply: {$name} -->
-</maps:if>
-</if:if>
+<div class="spacer">
+	<div class="base{$row_class}">
+		<if:if var="post_name" noteq=""><strong>{$post_name}</strong><br /></if:if>
+		{$L_BY} <a href="member.php?id={$post_poster_id}" title="$post_poster_name">{$post_poster_name}</a> 
+		{$L_ONSMALL} <core:date format="%b %d %y">{$post_created}</core:date>&nbsp;<core:date format="%I:%M%p">{$post_created}</core:date>
+	</div>
+	<div class="alt{$row_class}">
+		{$post_body_text}
+	</div>
+</div>
 </list:switch>
 </list:item>
 </list:list>
+
+<if:if var="archive_pager" noteq="">
+<div class="base2">
+	<strong>{$L_PAGES}:</strong> {$archive_pager}
+</div>
+</if:if>

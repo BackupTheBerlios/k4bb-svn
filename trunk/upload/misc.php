@@ -38,12 +38,13 @@ class SwitchEditors extends FAAction {
 		
 		global $_SETTINGS, $_URL;
 
-		if(USE_AJAX){
+		if(USE_XMLHTTP){
 			if(isset($_REQUEST['forum_id']) && intval($_REQUEST['forum_id']) != 0) {
 				$forum = $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['forum_id']));
 			
-				if(!is_array($forum) || empty($forum))
+				if(!is_array($forum) || empty($forum)) {
 					exit;
+				}
 			} else {
 				$forum = array('forum_id' => 0, 'defaultstyle' => $request['user']->get('templateset'));
 			}
@@ -114,8 +115,9 @@ class SwitchEditors extends FAAction {
 			
 			$html = $request['template']->run(BB_BASE_DIR .'/templates/'. $templateset .'/editor_'. $switchto .'.html');
 			
+			xmlhttp_header();
 			echo $html;
-			exit;
+			xmlhttp_footer();
 		}
 
 		return TRUE;
@@ -125,45 +127,46 @@ class SwitchEditors extends FAAction {
 class RevertHTMLText extends FAAction {
 	function execute(&$request) {
 		
-		if(USE_AJAX){
+		if(USE_XMLHTTP){
 			if(!isset($_REQUEST['post_id']) || intval($_REQUEST['post_id']) == 0) {
-				return ajax_message('L_YOUNEEDPERMS');
+				return xmlhttp_message('L_YOUNEEDPERMS');
 			}
 				
 			// get the post
 			$post = $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($_REQUEST['post_id']));
 			
 			if(!is_array($post) || empty($post)) {
-				return ajax_message('L_POSTDOESNTEXIST');
+				return xmlhttp_message('L_POSTDOESNTEXIST');
 			}
 			
 			if($post['row_type'] & TOPIC) {
 
 				if($request['user']->get('id') == $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
-					return ajax_message('L_YOUNEEDPERMS');
+					return xmlhttp_message('L_YOUNEEDPERMS');
 				}
 
 				if($request['user']->get('id') != $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'other_topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
-					return ajax_message('L_YOUNEEDPERMS');
+					return xmlhttp_message('L_YOUNEEDPERMS');
 				}
 			} else if($post['row_type'] & REPLY) {
 				
 				if($request['user']->get('id') == $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'replies', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
-					return ajax_message('L_YOUNEEDPERMS');
+					return xmlhttp_message('L_YOUNEEDPERMS');
 				}
 
 				if($request['user']->get('id') != $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'other_replies', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
-					return ajax_message('L_YOUNEEDPERMS');
+					return xmlhttp_message('L_YOUNEEDPERMS');
 				}
 
 			} else {
-				return ajax_message('L_POSTDOESNTEXIST');
+				return xmlhttp_message('L_POSTDOESNTEXIST');
 			}
 			
 			//$bbcode = &new BBCodex($request['dba'], $request['user']->getInfoArray(), $post['body_text'], $post['forum_id'], TRUE, TRUE, TRUE, TRUE);
 			$parser = &new BBParser;
+			xmlhttp_header();
 			echo $parser->revert($post['body_text']);
-			exit;
+			xmlhttp_footer();
 		}
 
 		return TRUE;
@@ -173,46 +176,47 @@ class RevertHTMLText extends FAAction {
 class PostBodyText extends FAAction {
 	function execute(&$request) {
 		
-		if(USE_AJAX){
+		if(USE_XMLHTTP){
 			
 			if(!isset($_REQUEST['post_id']) || intval($_REQUEST['post_id']) == 0) {
-				return ajax_message('L_YOUNEEDPERMS');
+				return xmlhttp_message('L_YOUNEEDPERMS');
 			}
 				
 			// get the post
 			$post = $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($_REQUEST['post_id']));
 			
 			if(!is_array($post) || empty($post)) {
-				return ajax_message('L_POSTDOESNTEXIST');
+				return xmlhttp_message('L_POSTDOESNTEXIST');
 			}
 			
 			if($post['row_type'] & TOPIC) {
 				
 				if($request['user']->get('id') == $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'topics', 'can_view', array('forum_id'=>$post['forum_id'])) ) {
-					return ajax_message('L_YOUNEEDPERMS');
+					return xmlhttp_message('L_YOUNEEDPERMS');
 				}
 
 				if($request['user']->get('id') != $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'other_topics', 'can_view', array('forum_id'=>$post['forum_id'])) ) {
-					return ajax_message('L_YOUNEEDPERMS');
+					return xmlhttp_message('L_YOUNEEDPERMS');
 				}
 
 			} else if($post['row_type'] & REPLY) {
 				
 				if($request['user']->get('id') == $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'replies', 'can_view', array('forum_id'=>$post['forum_id'])) ) {
-					return ajax_message('L_YOUNEEDPERMS');
+					return xmlhttp_message('L_YOUNEEDPERMS');
 				}
 
 				if($request['user']->get('id') != $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'other_replies', 'can_view', array('forum_id'=>$post['forum_id'])) ) {
-					return ajax_message('L_YOUNEEDPERMS');
+					return xmlhttp_message('L_YOUNEEDPERMS');
 				}
 
 			} else {
-				return ajax_message('L_YOUNEEDPERMS');
+				return xmlhttp_message('L_YOUNEEDPERMS');
 			}
 			
 			// echo out the original post body text
+			xmlhttp_header();
 			echo $post['body_text'];
-			exit;
+			xmlhttp_footer();
 		}
 
 		return TRUE;
@@ -222,43 +226,43 @@ class PostBodyText extends FAAction {
 class changePostBodyText extends FAAction {
 	function execute(&$request) {
 		
-		if(USE_AJAX){
+		if(USE_XMLHTTP){
 
 			if(!isset($_REQUEST['post_id']) || intval($_REQUEST['post_id']) == 0) {
-					return ajax_message('L_YOUNEEDPERMS');
+					return xmlhttp_message('L_YOUNEEDPERMS');
 			}
 				
 			// get the post
 			$post = $request['dba']->getRow("SELECT * FROM ". K4POSTS ." WHERE post_id = ". intval($_REQUEST['post_id']));
 			
 			if(!is_array($post) || empty($post)) {
-				return ajax_message('L_POSTDOESNTEXIST');
+				return xmlhttp_message('L_POSTDOESNTEXIST');
 			}
 			
 			if($post['row_type'] & TOPIC) {
 					
 				if($request['user']->get('id') == $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
-					return ajax_message('L_YOUNEEDPERMS');
+					return xmlhttp_message('L_YOUNEEDPERMS');
 				}
 
 				if($request['user']->get('id') != $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'other_topics', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
-					return ajax_message('L_YOUNEEDPERMS');
+					return xmlhttp_message('L_YOUNEEDPERMS');
 				}
 			} else if($post['row_type'] & REPLY) {
 				
 				if($request['user']->get('id') == $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'replies', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
-					return ajax_message('L_YOUNEEDPERMS');
+					return xmlhttp_message('L_YOUNEEDPERMS');
 				}
 
 				if($request['user']->get('id') != $post['poster_id'] && $request['user']->get('perms') < get_map($user, 'other_replies', 'can_edit', array('forum_id'=>$post['forum_id'])) ) {
-					return ajax_message('L_YOUNEEDPERMS');
+					return xmlhttp_message('L_YOUNEEDPERMS');
 				}
 			} else {
-				return ajax_message('L_YOUNEEDPERMS');
+				return xmlhttp_message('L_YOUNEEDPERMS');
 			}
 			
 			if(!isset($_REQUEST['message']) || $_REQUEST['message'] == '') {
-				return ajax_message('L_INSERTPOSTMESSAGE');
+				return xmlhttp_message('L_INSERTPOSTMESSAGE');
 			}
 			
 			//$bbcode	= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['message'], $post['forum_id'], 
@@ -301,8 +305,9 @@ class changePostBodyText extends FAAction {
 			$update->setInt(6, $post['post_id']);
 			$update->executeUpdate();
 			
+			xmlhttp_header();
 			echo $body_text;
-			exit;
+			xmlhttp_footer();
 		}
 		return TRUE;
 	}
@@ -314,8 +319,9 @@ class postAttachForm extends FAAction {
 		if(isset($_REQUEST['forum_id']) && intval($_REQUEST['forum_id']) != 0) {
 			$forum = $request['dba']->getRow("SELECT * FROM ". K4FORUMS ." WHERE forum_id = ". intval($_REQUEST['forum_id']));
 			
-			if(!is_array($forum) || empty($forum))
+			if(!is_array($forum) || empty($forum)) {
 				exit;
+			}
 		} else {
 			exit;
 		}

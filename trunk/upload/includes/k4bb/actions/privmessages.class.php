@@ -525,7 +525,7 @@ class K4SendPMessage extends FAAction {
 		
 		if($num_pms >= $max_pms) {
 			$action = new K4InformationAction(new K4LanguageElement('L_TOOMANYPMS', $num_pms, $max_pms), 'usercp_content', FALSE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message(new K4LanguageElement('L_TOOMANYPMS', $num_pms, $max_pms));
+			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message(new K4LanguageElement('L_TOOMANYPMS', $num_pms, $max_pms));
 		}
 
 		k4_bread_crumbs($request['template'], $request['dba'], 'L_USERCONTROLPANEL');
@@ -536,7 +536,7 @@ class K4SendPMessage extends FAAction {
 		 */
 		if (!$this->runPostFilter('to', new FARequiredFilter)) {
 			$action = new K4InformationAction(new K4LanguageElement('L_NEEDSENDPMTOSOMEONE'), 'usercp_content', TRUE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message('L_NEEDSENDPMTOSOMEONE');
+			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message('L_NEEDSENDPMTOSOMEONE');
 		}
 
 		$users			= (isset($_REQUEST['to']) && $_REQUEST['to'] != '') ? explode(",", $_REQUEST['to']) : array($_REQUEST['to']);
@@ -564,7 +564,7 @@ class K4SendPMessage extends FAAction {
 
 		if(!is_array($valid_users) || empty($valid_users)) {
 			$action = new K4InformationAction(new K4LanguageElement('L_PMNOVALIDRECIEVERS'), 'usercp_content', TRUE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message('L_PMNOVALIDRECIEVERS');
+			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message('L_PMNOVALIDRECIEVERS');
 		}
 
 		/**
@@ -574,21 +574,21 @@ class K4SendPMessage extends FAAction {
 		/* General error checking */
 		if (!$this->runPostFilter('name', new FARequiredFilter)) {
 			$action = new K4InformationAction(new K4LanguageElement('L_INSERTTOPICNAME'), 'usercp_content', TRUE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message('L_INSERTPMSUBJECT');
+			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message('L_INSERTPMSUBJECT');
 		}
 
 		if (!$this->runPostFilter('name', new FALengthFilter(intval($_SETTINGS['topicmaxchars'])))) {
 			$action = new K4InformationAction(new K4LanguageElement('L_PMSUBJECTTOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])), 'usercp_content', TRUE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message(new K4LanguageElement('L_PMSUBJECTTOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])));
+			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message(new K4LanguageElement('L_PMSUBJECTTOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])));
 		}
 		if (!$this->runPostFilter('name', new FALengthFilter(intval($_SETTINGS['topicmaxchars']), intval($_SETTINGS['topicminchars'])))) {
 			$action = new K4InformationAction(new K4LanguageElement('L_PMSUBJECTTOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])), 'usercp_content', TRUE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message(new K4LanguageElement('L_PMSUBJECTTOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])));
+			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message(new K4LanguageElement('L_PMSUBJECTTOOSHORT', intval($_SETTINGS['topicminchars']), intval($_SETTINGS['topicmaxchars'])));
 		}
 
 		if(!isset($_REQUEST['message']) || $_REQUEST['message'] == '') {
 			$action = new K4InformationAction(new K4LanguageElement('L_INSERTPMMESSAGE'), 'usercp_content', TRUE);
-			return !USE_AJAX ? $action->execute($request) : ajax_message('L_INSERTPMMESSAGE');
+			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message('L_INSERTPMMESSAGE');
 		}
 		
 		/* Set the message created time */
@@ -792,7 +792,7 @@ class K4SendPMessage extends FAAction {
 			 * Message Previewing
 			 */
 
-			if(!USE_AJAX) {
+			if(!USE_XMLHTTP) {
 				
 				$request['template']->setVar('L_PMSUBJECTTOOSHORT', sprintf($request['template']->getVar('L_TITLETOOSHORT'), $request['template']->getVar('topicminchars'), $request['template']->getVar('topicmaxchars')));
 
@@ -841,7 +841,7 @@ class K4SendPMessage extends FAAction {
 			foreach($msg_preview as $key => $val)
 				$request['template']->setVar('pm_'. $key, $val);
 
-			if(!USE_AJAX) {
+			if(!USE_XMLHTTP) {
 				/* Set the the button display options */
 				$request['template']->setVisibility('save_draft', FALSE);
 				$request['template']->setVisibility('load_button', FALSE);
@@ -872,8 +872,10 @@ class K4SendPMessage extends FAAction {
 				$request['template']->setFile('content', 'usercp.html');
 				$request['template']->setFile('usercp_content', 'pm_newmessage.html');
 			} else {
+				
+				xmlhttp_header();
 				echo $request['template']->run(BB_BASE_DIR .'/templates/'. $request['user']->get('templateset') .'/pm_preview.html');
-				exit;
+				xmlhttp_footer();
 			}
 		}
 	}

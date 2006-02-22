@@ -49,17 +49,54 @@ class K4DefaultAction extends FAAction {
 
 		$parser		= new RSS_Parser();
 		$feed		= $parser->Parse($file);
-		$topic		= $feed->channel;
+		$channel	= $feed->channel;
 		$posts		= $feed->items;
 		
-		k4_bread_crumbs($request['template'], $request['dba'], $feed->channel->title);
+		k4_bread_crumbs($request['template'], $request['dba'], $channel->title);
+		
+		$request['template']->setVar('post_name', $channel->title);
+		$request['template']->setVar('post_link', $channel->link);
+		$request['template']->setVar('post_body_text', $channel->description);
+		$request['template']->setVar('post_forum', $channel->subject);
+		$request['template']->setVar('post_post_id', $channel->post_id);
+		$request['template']->setVar('post_poster_name', $channel->author_name);
+		$request['template']->setVar('post_poster_id', $channel->author_id);
+		$request['template']->setVar('post_page', $channel->page);
+		
+		if($channel->num_pages > 1) {
+			$separator = '';
+			$html = '';
+			for($i = 1; $i <= $channel->num_pages; $i++) {
+				$html .= $separator. '<a href="archive.php?forum='. $forum_id .'&topic='. $topic_id .'&page='. $i .'" title="" '. ($i == $channel->page ? 'style="font-weight:bold;"' : '') .'>'. $i .'</a>';
+				$separator = ', ';
+			}
+			$request['template']->setVar('archive_pager', $html);
+			$request['template']->setList('posts', new XMLArchivedPostsIterator($posts));
+		}
 
 		$request['template']->setFile('content', 'viewtopic_lofi.html');
 	}
 }
 
-class XMLPostsIterator extends FAArrayIterator {
-	
+class XMLArchivedPostsIterator extends FAArrayIterator {
+	function XMLArchivedPostsIterator(&$posts) {
+		$this->__construct($posts);
+	}
+
+	function current() {
+		$temp					= parent::current();
+		
+		$post = array();
+		$post['post_name']			= $temp->title;
+		$post['post_link']			= $temp->link;
+		$post['post_body_text']		= $temp->description;
+		$post['post_forum']			= $temp->subject;
+		$post['post_post_id']		= $temp->post_id;
+		$post['post_poster_name']	= $temp->author_name;
+		$post['post_poster_id']		= $temp->author_id;
+				
+		return $post;
+	}
 }
 
 $app = &new K4Controller('forum_base_lofi.html');

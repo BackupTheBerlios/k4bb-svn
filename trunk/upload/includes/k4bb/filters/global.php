@@ -350,7 +350,7 @@ class K4LoginFilter extends FAFilter {
 							$request_uri = 'index.php';
 						}
 
-						$action = new K4InformationAction(new K4LanguageElement('L_LOGGEDINSUCCESS'), 'content', FALSE, $request_uri, 3);
+						$action = new K4InformationAction(new K4LanguageElement('L_LOGGEDINSUCCESS'), 'content', FALSE, dirname(current_url()) .'/'. $request_uri, 3);
 					} else {
 						// this is a pending user who cannot log in
 						k4_set_logout($request['dba'], $user);
@@ -436,8 +436,9 @@ class K4LogoutFilter extends FAFilter {
 			// Ok, a logout attempt is being made
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_LOGOUT');
-
-			$url = &new FAUrl($_SERVER['REQUEST_URI']);
+			
+			$request_uri = !isset($_REQUEST['REQUEST_URI']) ? K4Url::getGenUrl('index', '') : $_SERVER['REQUEST_URI'];
+			$url = &new FAUrl($request_uri);
 			unset($url->args['logout']);
 			
 			if (!$request['user']->isMember()) {
@@ -449,11 +450,11 @@ class K4LogoutFilter extends FAFilter {
 
 				// make sure we go to the right place!
 				$logout_url		= basename($url->__toString());
-				if(strpos($logout_url, 'login') !== FALSE) {
+				if(strpos($logout_url, 'login') !== FALSE || isset($url->args['login'])) {
 					$logout_url = K4Url::getGenUrl('index', '');
 				}
 
-				$action = new K4InformationAction(new K4LanguageElement('L_LOGGEDOUTSUCCESS'), 'content', FALSE, $logout_url, 3);
+				$action = new K4InformationAction(new K4LanguageElement('L_LOGGEDOUTSUCCESS'), 'content', FALSE, dirname(current_url()) .'/'. $logout_url, 3);
 			}			
 		}
 	}

@@ -262,14 +262,19 @@ var FA = {
 	"sizeOf": function(thearray) {
 		array_length		= 0;
 		if(thearray != null && typeof(thearray) != 'undefined') {
-			for (i = 0; i < thearray.length; i++) {
-				if ((typeof(thearray[i]) == 'undefined') || (thearray[i] == '') || (thearray[i] == null)) {
-					return i;
+			
+			if(typeof(thearray.length) != 'undefined') {
+				array_length	= thearray.length;
+			} else {
+				
+				var i = 0;
+				for (key in thearray) {
+					if ((typeof(thearray[i]) == 'undefined') || (thearray[i] == '') || (thearray[i] == null)) {
+						return i;
+					}
+					i++;
 				}
 			}
-			array_length	= thearray.length;
-		} else {
-			array_length	= 0;
 		}
 		return array_length;
 	},

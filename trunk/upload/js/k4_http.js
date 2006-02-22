@@ -175,8 +175,14 @@ FAHttpRequestsObject.prototype = {
 	getResponseXML: function() {
 		var response_xml = null;
 		if(this.request_obj && typeof(this.request_obj) != 'undefined') {
-			if(this.request_obj.responseXML && typeof(this.request_obj.responseXML) != 'undefined') {
-				response_xml = this.request_obj.responseXML;
+			if(typeof(this.request_obj.responseXML) != 'undefined' && this.request_obj.responseXML) {
+				
+				response_xml		= this.request_obj.responseXML;
+				
+				// see if we have a custom k4 response
+				if(typeof(response_xml.firstChild) != 'undefined') {
+					response_xml	= response_xml.firstChild;
+				}
 			}
 		}
 		return response_xml;
@@ -390,7 +396,9 @@ FAIframeRequest.prototype = {
 
 			var iframe_document = this.get_iframe_document();
 			
-			// get the stuf in the frame
+			//
+			// get the stuf in the frame as text
+			//
 			frame_html					= '';
 			if(typeof(iframe_document.body) != 'undefined' && iframe_document.body) {
 				frame_html				= iframe_document.body.innerHTML;
@@ -408,11 +416,26 @@ FAIframeRequest.prototype = {
 					}
 				}				
 			}
+
+			//
+			// get the stuff from the frame as xml
+			//
+			var frame_xml		= iframe_document;
+			
+			// do we have a custom k4 response?
+			var xmlhttp_tags	= FA.tagsByName(iframe_document, 'xmlhttp_response');
+			if(typeof(frame_xml.firstChild) != 'undefined') {
+				if(typeof(frame_xml.firstChild) != 'undefined') {
+					frame_xml	= frame_xml.firstChild;
+				}
+			}
+
 			
 			// change the state stuff
 			this.readyState		= 4;
 			this.status			= 200;
 			this.responseText	= frame_html;
+			this.responseXML	= frame_xml;
 			this.onreadystatechange();
 			this.abort();
 
@@ -574,9 +597,9 @@ var FAHTTP = {
 	//
 	// Show the nice loading thing
 	//
-	loadingState: function(container_obj, anchor_id) {
-		if(typeof(container_obj) != 'undefined') {
-			
+	loadingState: function(loader_id) {
+		//if(typeof(container_obj) != 'undefined') {
+			/*
 			// show the object
 			container_obj.style.display		= 'block';
 			
@@ -593,6 +616,7 @@ var FAHTTP = {
 			this.changeUrl('#' + anchor_id);
 			
 			var loader_id						= anchor_id + '_loader';
+			*/
 			var loader							= FA.getObj(loader_id);
 
 			// let's make sure none of these exist first!
@@ -604,9 +628,7 @@ var FAHTTP = {
 				var loader_img					= new Image(); //document.createElement('img')
 				
 				// do some stuff to the loader
-				loader.id						= anchor_id + '_loader';
-				loader.style.top				= parseInt(FA.posTop(container_obj) + 30) + 'px';
-				loader.style.textAlign			= 'center';
+				loader.id						= loader_id;
 				loader.style.zIndex				= 100;
 				loader.style.position			= 'absolute';
 				loader_img.src					= 'Images/loading.gif';
@@ -631,14 +653,14 @@ var FAHTTP = {
 			var arrayPageScroll = getPageScroll();
 			loader.style.top	= (arrayPageScroll[1] + ((arrayPageSize[3] - 35 - loader.offsetHeight) / 2) + 'px');
 			loader.style.left	= (((arrayPageSize[0] - 20 - loader.offsetWidth) / 2) + 'px');
-		}
+		//}
 	},
 	
 	//
 	// Destroy the loader message
 	//
-	cancelLoader: function(anchor_id) {
-		var loader_obj = FA.getObj(anchor_id + '_loader');
+	cancelLoader: function(loader_id) {
+		var loader_obj = FA.getObj(loader_id);
 		if(typeof(loader_obj) != 'undefined' && loader_obj) {
 			loader_obj.style.display = 'none';
 		}

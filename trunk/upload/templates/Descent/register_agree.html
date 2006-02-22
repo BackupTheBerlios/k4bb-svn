@@ -25,6 +25,6 @@
 	var agree = FA.getObj('agree');
 	var reg_button = FA.getObj('reg_button');
 	FA.disableElm(reg_button);
-	FA.attachEvent(agree,'click',(function(){if(aggree.checked == true){FA.enableElm(reg_button);}else{FA.disableElm(reg_button);}}));
+	FA.attachEvent(agree,'click',(function(){if(agree.checked == true){FA.enableElm(reg_button);}else{FA.disableElm(reg_button);}}));
 </script>
 </is:unlogged>
