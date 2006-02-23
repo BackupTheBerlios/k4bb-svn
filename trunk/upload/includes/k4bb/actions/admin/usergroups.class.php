@@ -424,20 +424,22 @@ class AdminUpdateUserGroup extends FAAction {
 			$update_a->setString(10, $filename);
 			$update_a->setInt(11, $group['id']);
 			
-			/* Add the category to the info table */
 			$update_a->executeUpdate();
-
+			
+			// update all user perms
+			$request['dba']->executeUpdate("UPDATE ". K4USERS ." SET perms=". intval($_REQUEST['min_perm']) ." WHERE usergroups LIKE '|". intval($group['id']) ."|' AND perms < ". intval($_REQUEST['min_perm']));
+			
 			$group_id			= $request['dba']->getInsertId(K4USERGROUPS, 'id');
 			
+			// update the mod
 			$usergroups			= $moderator['usergroups'] != '' ? explode('|', $moderator['usergroups']) : array();
-
 			if(is_array($usergroups)) {
 				$usergroups[]	= $group_id;
 			} else {
 				$usergroups		= array($group_id);
 			}
 
-			$update_b->setString(1, implode('|', $usergroups));
+			$update_b->setString(1, '|'. implode('|', $usergroups) .'|');
 			$update_b->setInt(2, (intval($_REQUEST['min_perm']) > $moderator['perms'] ? $_REQUEST['min_perm'] : $moderator['perms']));
 			$update_b->setInt(3, $moderator['id']);
 			

@@ -22,9 +22,9 @@
 * @package k4bb
 */
 
-if(!defined('IN_K4')) {
-	return;
-}
+//if(!defined('IN_K4')) {
+//	return;
+//}
 
 class BBEmoticons {
 //	var $_smilies = array(
@@ -86,60 +86,61 @@ class BBEmoticons {
 
 	function getSmiliesEmos() {
 		global $_DBA;
-
-		$all = $_DBA->executeQuery("SELECT * FROM ". K4EMOTICONS);
-
-		while($all->next()) {
-			$item = $all->current();
-
-			if($item['typed']{0} == ':' && $item['typed']{(strlen($item['typed'])-1)} == ':') {
-				$this->_emos[$item['typed']] = $this->getSmilyImg($item);
-			} else {
-				$this->_smilies[$item['typed']] = $this->getSmilyImg($item);
-			}
-		}
 		
-		$all->free();
+		if(is_a($_DBA, 'FADBConnection')) {
+			$all = $_DBA->executeQuery("SELECT * FROM ". K4EMOTICONS);
+
+			while($all->next()) {
+				$item = $all->current();
+
+				if($item['typed']{0} == ':' && $item['typed']{(strlen($item['typed'])-1)} == ':') {
+					$this->_emos[$item['typed']] = $this->getSmilyImg($item);
+				} else {
+					$this->_smilies[$item['typed']] = $this->getSmilyImg($item);
+				}
+			}
+			
+			$all->free();
+		}
 	}
 }
 
 class FAStack {
 	var $_items = array();
-	var $_size;
+	var $_size = 0;
 
 	function _update() {
 		$this->_size = sizeof($this->_items);
 	}
-
-	function getArray() {
-		return $this->_items;
-	}
-
+	
 	function getSize() {
 		return $this->_size;
 	}
 
-	function isEmpty() {
-		return (!$this->getSize());
-	}
-
-	function &pop() {
-		$top = &$this->top();
-		
+	function pop() {
+        $ret = FALSE;
+        
+        if ($this->_size > 0)
+            $ret = TRUE;
+        
 		array_pop($this->_items);
 		$this->_update();
-		
-		return $top;
+
+		return $ret;
 	}
 
 	function push(&$value) {
-		$this->_items[] = $value;
+		$this->_items[] = &$value;
 		$this->_update();
 	}
 
 	function &top() {
-		if (isset($this->_items[$this->_size - 1]))
-			return $this->_items[$this->_size - 1];
+        $ret = NULL;
+        
+		if ($this->_size > 0)
+			$ret = &$this->_items[$this->_size - 1];
+        
+        return $ret;
 	}
 }
 
@@ -168,7 +169,6 @@ class BBNode {
 		for ($i = 0; $i < sizeof($this->_children); $i++) {
 			$buffer .= $this->_children[$i]->flatten($noparse);
 		}
-		
 		return $buffer;
 	}
     
