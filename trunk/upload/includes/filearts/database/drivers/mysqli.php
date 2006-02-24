@@ -96,7 +96,7 @@ class MysqliStatement extends FADBStatement {
 }
 
 class MysqliConnection extends FADBConnection {
-	var $_link;
+	var $link;
 	var $valid = TRUE;
 
 	function __construct() {

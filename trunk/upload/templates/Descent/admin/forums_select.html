@@ -1,7 +1,7 @@
 <is:admin>
 <script type="text/javascript">
 	function check_delete_forum() {
-		var forum_obj = ('forum_action').obj();
+		var forum_obj = FA.getObj('forum_action');
 		if(forum_obj[forum_obj.selectedIndex].value == 'forums_remove') {
 			if(confirm('{$L_CHECKDELFORUM}')) {
 				return true

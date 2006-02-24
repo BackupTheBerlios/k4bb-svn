@@ -430,8 +430,8 @@ class BBParser {
 		}
 
 		while ($stack->getSize() > 1) {
-			$node = &$stack->pop();
-			echo "Incomplete ".$node->getTag().", automatically closed<br />\n";
+			//$node = &$stack->pop();
+			//echo "Incomplete ".$node->getTag().", automatically closed<br />\n";
 		}
 
 		return $root->flatten();

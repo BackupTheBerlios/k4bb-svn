@@ -26,9 +26,23 @@ class K4SqlDebugger extends FAObject {
 	var $_obj;
 	var $_queries = array();
 	var $_results = array();
+	var $_lines = array();
+	var $_files = array();
 
 	function __construct(&$obj) {
 		$this->_obj = &$obj;
+	}
+
+	function getBacktrace() {
+		$result = debug_backtrace();
+		
+		$key = count($result)-5;
+		
+		//if(isset($result[$key-1]['line']))
+		//	$key -= 1;
+
+		$this->_lines[] = $result[$key]['line'];
+		$this->_files[] = $result[$key]['file'];
 	}
 
 	function affectedRows() {
@@ -49,6 +63,8 @@ class K4SqlDebugger extends FAObject {
 
 		$this->_queries[] = $stmt;
 		$this->_results[] = $result;
+		
+		$this->getBackTrace();
 
 		return $result;
 	}
@@ -58,6 +74,8 @@ class K4SqlDebugger extends FAObject {
 
 		$this->_queries[] = $stmt;
 		$this->_results[] = $result;
+		
+		$this->getBackTrace();
 
 		return $result;
 	}
@@ -87,8 +105,22 @@ class K4SqlDebugger extends FAObject {
 
 		$this->_queries[] = $query;
 		$this->_results[] = $result;
+		
+		$this->getBackTrace();
 
 		return $result;
+	}
+	
+	function createTemporary($table, $original = FALSE) {
+		return $this->_obj->createTemporary($table, $original);
+	}
+
+	function alterTable($table, $stmt) {
+		return $this->_obj->alterTable($table, $stmt);
+	}
+
+	function version() {
+		return $this->_obj->version();
 	}
 
 	function getValue($query) {
@@ -96,22 +128,28 @@ class K4SqlDebugger extends FAObject {
 
 		$this->_queries[] = $query;
 		$this->_results[] = $result;
+		
+		$this->getBackTrace();
 
 		return $result;
 	}
 
 	function getDebugIterator() {
-		$ret = &new K4SqlDebuggerIterator($this->_queries, $this->_results);
+		$ret = &new K4SqlDebuggerIterator($this->_queries, $this->_results, $this->_lines, $this->_files);
 		return $ret;
 	}
 }
 
 class K4SqlDebuggerIterator extends FAArrayIterator {
 	var $_results;
+	var $_lines;
+	var $_files;
 
-	function __construct(&$queries, &$results) {
+	function __construct(&$queries, &$results, &$lines, &$files) {
 		parent::__construct($queries);
 		$this->_results = &$results;
+		$this->_lines = &$lines;
+		$this->_files = &$files;
 	}
 
 	function current() {
@@ -130,6 +168,9 @@ class K4SqlDebuggerIterator extends FAArrayIterator {
 			$current['results'] = '--';
 			$current['num_rows'] = 0;
 		}
+
+		$current['file'] = basename($this->_files[$this->key()]);
+		$current['line'] = $this->_lines[$this->key()];
 
 		return $current;
 	}

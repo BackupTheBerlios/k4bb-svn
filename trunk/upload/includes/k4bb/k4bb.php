@@ -67,6 +67,8 @@ ini_set('url_rewriter.tags',	'a=href,area=href,frame=src,input=src,fieldset=');
 require K4_BASE_DIR . '/config.php';
 require K4_BASE_DIR . '/init.php';
 
+session_start();
+
 class K4Controller extends FAController {
 	function __construct($template) {
 
@@ -209,14 +211,14 @@ class K4Controller extends FAController {
 				$encoding = 'gzip';
 			}
 		}
-
+		
 		// are we using the total ajax option?
 		if(USE_TOTAL_XMLHTTP) {
 			$request['template']->setVisibility('forum_header', FALSE);
 			$request['template']->setVisibility('forum_footer', FALSE);
 			echo "<div id=\"page_title_element\" style=\"display:none;\">". $request['template']->getVar('forum_title') ."</div>\n";
 		}
-
+		
 		/**
 		 * Start GZIP compression
 		 */
@@ -251,6 +253,8 @@ class K4Controller extends FAController {
 			$request['template']->setVar('enablegzip', 0);
 			$request['template']->render($request['template_file']);
 		}
+
+		$request['session']->write();
 	}
 }
 

@@ -126,7 +126,7 @@ define('WARN_RED',			3);
 define('USER_AGENT',		isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? @gethostbyaddr($_SERVER['HTTP_X_FORWARDED_FOR']) : ''));
 define('USER_IP',			get_ip());
 define('USE_XMLHTTP',		allow_xmlhttp());
-define('USE_TOTAL_XMLHTTP',	FALSE); // (!USE_XMLHTTP && isset($_REQUEST['currurl']) && $_REQUEST['currurl'] != '') ? TRUE : FALSE
+define('USE_TOTAL_XMLHTTP',	FALSE); // 
 define('USE_WYSIWYG',		(FALSE && allow_WYSIWYG()));
 
 /**

@@ -544,7 +544,7 @@ var FAHTTP = {
 				var self = this;
 
 				// get things in motion
-				FA_http.Request(r_method, r_url, (function(){self.loadingState(container_obj,container_id+'_anchor');}), false, (function(){self.loadHTML(FA_http,container_id);}));
+				FA_http.Request(r_method, r_url, (function(){self.loadingState('total_xmlhttp_loader');}), false, (function(){self.loadHTML(FA_http,container_id);}));
 			}
 		}
 	},
@@ -555,7 +555,7 @@ var FAHTTP = {
 	loadHTML: function(FA_http, container_id) {
 		if(typeof(FA_http) != 'undefined' && FA_http) {
 			
-			this.cancelLoader(container_id + '_anchor');
+			this.cancelLoader('total_xmlhttp_loader');
 			
 			var container_obj = FA.getObj(container_id);
 

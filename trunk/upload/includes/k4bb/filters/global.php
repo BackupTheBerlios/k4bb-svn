@@ -86,7 +86,10 @@ class K4SqlDebugPreFilter extends FAFilter {
 
 class K4SessionFilter extends FAFilter {
 	function execute(&$action, &$request) {
-		$session = FASession::start($request['dba'], K4SESSIONS);
+		//$session = FASession::start($request['dba']);
+		
+		$session = new FASession($request['dba']);
+		$session->gc();
 		$request['session'] = &$session;
 	}
 
@@ -128,29 +131,24 @@ class K4Guest extends FAUser {
 class K4Member extends FAMember {
 }
 
-class K4UserManager extends FAObject {
+class K4UserManager {
 	var $_info;
 	
 	function K4UserManager(&$dba) {
-		$this->__construct($dba);
-	}
-
-	function __construct(&$dba) {
 		global $_QUERYPARAMS;
 		
 		$this->_info = $dba->prepareStatement("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']}{$_QUERYPARAMS['usersettings']} FROM ". K4USERS ." u, ". K4USERINFO ." ui, ". K4USERSETTINGS ." us WHERE u.id=ui.user_id AND us.user_id=u.id AND u.id=? LIMIT 1");
 	}
-
+	
 	function getInfo($id) {
 		$ret = FALSE;
 
 		$this->_info->setInt(1, $id);
-
 		$result = $this->_info->executeQuery();
 
 		if ($result->next())
 			$ret = $result->current();
-
+		
 		return $ret;
 	}
 }
@@ -159,15 +157,11 @@ class K4CookieValidator extends FAUserValidator {
 	var $_stmt;
 	
 	function K4CookieValidator(&$dba) {
-		$this->__construct($dba);
-	}
-
-	function __construct(&$dba) {
 		global $_QUERYPARAMS;
 
 		$this->_stmt = $dba->prepareStatement("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']}{$_QUERYPARAMS['usersettings']} FROM ". K4USERS ." u, ". K4USERINFO ." ui, ". K4USERSETTINGS ." us WHERE u.id=ui.user_id AND us.user_id=u.id AND u.id=? AND u.priv_key=? LIMIT 1");
 	}
-
+	
 	function validateLoginKey() {
 		$ret = FALSE;
 
@@ -190,10 +184,6 @@ class K4RequestValidator extends FAUserValidator {
 	var $_stmt;
 	
 	function K4RequestValidator(&$dba) {
-		$this->__construct($dba);
-	}
-
-	function __construct(&$dba) {
 		global $_QUERYPARAMS;
 
 		$this->_stmt = $dba->prepareStatement("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']}{$_QUERYPARAMS['usersettings']} FROM ". K4USERS ." u, ". K4USERINFO ." ui, ". K4USERSETTINGS ." us WHERE u.id=ui.user_id AND us.user_id=u.id AND u.name=? AND u.pass=? LIMIT 1");
@@ -234,15 +224,14 @@ class K4UserFilter extends FAFilter {
 	function execute(&$action, &$request) {
 		
 		global $_QUERYPARAMS;
-
+		
 		if (!isset($_SESSION['user']) || !is_a($_SESSION['user'], 'FAUser')) {
 			$_SESSION['user'] = &new K4Guest();
 		}
 
 		$user		= &$_SESSION['user'];
-		$session	= $request['session'];
 		
-		if (!$user->isMember() && $session->isNew()) {
+		if (!$user->isMember() && $request['session']->isNew()) {
 			$factory	= &new K4UserFactory;
 			$validator	= &new K4CookieValidator($request['dba']);
 			
@@ -253,7 +242,7 @@ class K4UserFilter extends FAFilter {
 			}
 		}
 
-		if($user->isMember() && !$session->isNew()) {
+		if($user->isMember() && !$request['session']->isNew()) {
 			$info = $request['dba']->getRow("SELECT {$_QUERYPARAMS['user']}{$_QUERYPARAMS['userinfo']}{$_QUERYPARAMS['usersettings']} FROM ". K4USERS ." u, ". K4USERINFO ." ui, ". K4USERSETTINGS ." us WHERE u.id=ui.user_id AND us.user_id=u.id AND u.id=". intval($_SESSION['user']->get('id')) ." LIMIT 1");
 
 			if(is_array($info) && !empty($info)) {
@@ -350,7 +339,7 @@ class K4LoginFilter extends FAFilter {
 							$request_uri = 'index.php';
 						}
 
-						$action = new K4InformationAction(new K4LanguageElement('L_LOGGEDINSUCCESS'), 'content', FALSE, dirname(current_url()) .'/'. $request_uri, 3);
+						$action = new K4InformationAction(new K4LanguageElement('L_LOGGEDINSUCCESS'), 'content', FALSE, $request_uri, 3);
 					} else {
 						// this is a pending user who cannot log in
 						k4_set_logout($request['dba'], $user);
@@ -436,9 +425,8 @@ class K4LogoutFilter extends FAFilter {
 			// Ok, a logout attempt is being made
 			
 			k4_bread_crumbs($request['template'], $request['dba'], 'L_LOGOUT');
-			
-			$request_uri = !isset($_REQUEST['REQUEST_URI']) ? K4Url::getGenUrl('index', '') : $_SERVER['REQUEST_URI'];
-			$url = &new FAUrl($request_uri);
+
+			$url = &new FAUrl($_SERVER['REQUEST_URI']);
 			unset($url->args['logout']);
 			
 			if (!$request['user']->isMember()) {
@@ -450,11 +438,11 @@ class K4LogoutFilter extends FAFilter {
 
 				// make sure we go to the right place!
 				$logout_url		= basename($url->__toString());
-				if(strpos($logout_url, 'login') !== FALSE || isset($url->args['login'])) {
+				if(strpos($logout_url, 'login') !== FALSE) {
 					$logout_url = K4Url::getGenUrl('index', '');
 				}
 
-				$action = new K4InformationAction(new K4LanguageElement('L_LOGGEDOUTSUCCESS'), 'content', FALSE, dirname(current_url()) .'/'. $logout_url, 3);
+				$action = new K4InformationAction(new K4LanguageElement('L_LOGGEDOUTSUCCESS'), 'content', FALSE, $logout_url, 3);
 			}			
 		}
 	}
