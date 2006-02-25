@@ -27,7 +27,7 @@ if(!defined('IN_K4')) {
 	return;
 }
 
-define('VERSION', '2.0 PRC1');
+define('VERSION', '2.0 RC1');
 
 /**
  * Constants that define what a category/forum/thread/etc is
