@@ -1,5 +1,5 @@
 /**
- * k4 Bulletin Board, k4css JavaScript object
+ * k4 Bulletin Board, k4CSS JavaScript object
  * Copyright (c) 2005, Peter Goodman
  * Licensed under the LGPL license
  * http://www.gnu.org/copyleft/lesser.html
@@ -8,125 +8,117 @@
  * @package k42
  */
 
-function k4css() {
-	this.init = init;
-	this._init_nodes = _init_nodes;
-	this._set_node = _set_node;
-	this._highlight = _highlight;
-	this._unhighlight = _unhighlight;
-	this._editor = _editor;
-	this._getd = _getd;
+var k4CSS = {
 	
-	var d = new k4lib();
-	var ils = new Array('strong', 'b', 'em', 'i', 'span', 'i', 'label', 
-						'font', 'img', 'select', 'input', 'textarea', 'strike',
-						'sub', 'sup', 'textarea', 'tt', 'u', 'dfn', 'acronym',
-						'abbr', 'cite', 'code', 'dfn', 'button');
-	
-	var level_cs = new Array();
-	level_cs['inline'] = '#00EA06';
-	level_cs['block'] = '#0000EA';
-	level_cs['body'] = '#D70000';
-	
-	var _t = this;
+	"inline_elements": ['strong', 'b', 'em', 'i', 'span', 'i', 'label',	'font', 'img', 'select', 'input', 'textarea', 'strike',	'sub', 'sup', 'textarea', 'tt', 'u', 'dfn', 'acronym', 'abbr', 'cite', 'code', 'dfn', 'button'],
+	"element_types": false,
+	"css_editor": false,
+	"css_editor_title": false,
+	"css_editor_iframe": false,
 
-	// initialize
-	function init() {
-		_t._init_nodes(document.body);
-		document.write('<div id="css_inline_editor" style="display:none;"><div class="header"><div class="title" id="css_inline_editor_title"> </div></div>');
+	"init": function() {
+		
+		document.write('<div id="css_inline_editor" style="display:none;width:60%;position:absolute;left:20%;z-index:999;"><div class="header"><div class="title" id="css_inline_editor_title"> </div></div>');
 		document.write('<div class="spacer"><div class="alt1"><iframe id="css_inline_editor_iframe" src="" frameborder="no" style="width: 100%;height: 200px;"></iframe></div></div>');
 		document.write('<div class="footer_block"><div style="text-align:center;" id="close_css_editor" onclick="FA.getObj(\'css_inline_editor\').style.display=\'none\';">X &nbsp; X &nbsp; X</div></div></div>');
-	}
-	function _init_nodes(nx) {
-		if(nx.nodeType == 1) {
-			_t._set_node(nx);
-			if(nx.childNodes) {
-				for(var i = 0; i < FA.sizeOf(nx.childNodes); i++) {
-					_t._init_nodes(nx.childNodes[i]);
+		
+		this.element_types = { 'inline':'#00EA06','block':'#0000EA','body':'#D70000' };
+		this.css_editor = FA.getObj('css_inline_editor');
+		this.css_editor_title = FA.getObj('css_inline_editor_title');
+		this.css_editor_iframe = FA.getObj('css_inline_editor_iframe');
+		
+		this.initNodes(document.body);
+	},
+	
+	//
+	// Initialize the hovering of nodes, starting with node_obj
+	//
+	"initNodes": function(node_obj) {
+		if(node_obj.nodeType == 1) {
+			this.setNode(node_obj);
+			if(node_obj.childNodes) {
+				for(var i = 0; i < FA.sizeOf(node_obj.childNodes); i++) {
+					if(node_obj.id != 'css_inline_editor') {
+						this.initNodes(node_obj.childNodes[i]);
+					}
 				}
 			}
 		}
-	}
-	// set properties, etc for a specific node
-	function _set_node(nx) {
+	},
+	
+	//
+	// Add the events to a node, etc
+	//
+	"setNode": function(node_obj) {
 		// node name
-		var nn = nx.nodeName.toLowerCase();
+		var node_name = node_obj.nodeName.toLowerCase();
 		
 		// determing the level of the node (block/inline/body)
-		if (d.in_array(ils, nn)) {
-			nx._nodeType = 'inline';
-		} else if (nn == 'body') {
-			nx._nodeType = 'body';
+		if (FA.search(this.inline_elements, node_name)) {
+			node_obj._nodeType = 'inline';
+		} else if (node_name == 'body') {
+			node_obj._nodeType = 'body';
 		} else {
-			nx._nodeType = 'block';
+			node_obj._nodeType = 'block';
 		}
 		
-		var bt = '';
-		if(typeof(this.style) != 'undefined') {
-			bt = typeof(this.style.border) != 'undefined' ? this.style.border : '';
+		var previous_border = '';
+		if(typeof(node_obj.style) != 'undefined') {
+			previous_border = typeof(node_obj.style.border) != 'undefined' ? node_obj.style.border : '';
 		}
 
 		var self = this;
-		FA.attachEvent(nx,'mouseover',(function(e){_t._highlight(e,self);}));
-		FA.attachEvent(nx,'mouseout',(function(e){_t._unhighlight(e,self,bt);}));
-		FA.attachEvent(nx,'click',(function(e){_t._editor(e,self);}));
+		FA.attachEvent(node_obj,'mouseover',(function(){self.highlightObj(node_obj);}));
+		FA.attachEvent(node_obj,'mouseout',(function(){self.unhighlightObj(node_obj,previous_border);}));
+		FA.attachEvent(node_obj,'click',(function(e){self.displayEditor(e);}));
 		
 		// come up with a name for it
-		var nxx = nx;
-		var ttl = '';
-		while (nxx && nxx != document) {
-			if (ttl) {
-				ttl = nxx.nodeName.toLowerCase() + ' > ' + ttl;
+		var node_obj_i = node_obj;
+		var obj_title = '';
+		while (node_obj_i && node_obj_i != document) {
+			if (obj_title) {
+				obj_title = node_obj_i.nodeName.toLowerCase() + ' > ' + obj_title;
 			} else {
-				ttl = nxx.nodeName.toLowerCase();
+				obj_title = node_obj_i.nodeName.toLowerCase();
 			}
-			nxx = nxx.parentNode;
+			node_obj_i = node_obj_i.parentNode;
 		}
-		nx.title = ttl;
-	}
-	// un/highlight
-	function _highlight(e, nx) {
-		nx.style.borderWidth = '1px';
-		nx.style.borderColor = level_cs[nx._nodeType];
-		nx.style.borderStyle = (nx.className == '' ? 'dotted' : 'solid');
-	}
-	function _unhighlight(e, nx, bt) {
-		nx.style.border = bt;
-	}
-	// editor
-	function _editor(e, nx) {
-		
-		var ex 	= FA.getObj('css_inline_editor');
-		var ext = FA.getObj('css_inline_editor_title');
-		var ifr = _t._getd(FA.getObj('css_inline_editor_iframe'));
-		var t 	= FA.eventTarget(e);
-		if(ex && ext && t && ifr) {
-			if(t.id != 'close_css_editor' && t.className != '') {
-				ex.style.position = 'absolute';
-				ex.style.top = '20%';
-				ex.style.left = '20%';
-				ex.style.width = '60%';
-				ex.style.display = 'block';
-				ext.innerHTML = 'CSS: ' + t.className + '<br />' + t.title + '';
-				ifr.location.href = 'admin.php?act=css_editstyle&editor=1&class=' + t.className.replace(/\s/, '+');
-			}
-		}
-	}
-	function _getd(ix) {
-		ixd = ixw = false;
-		if(ix) {
-			if (document.all) {
-				try { ixw = frames[ix.id]; } catch(e) { }
-			} else {
-				try { ixw = ix.contentWindow; } catch(e) { }
-			}
-			if(ixw) {
-				ixd	= ixw.document; 
-				if(!ixd && document.all && ix.contentWindow) {
-					ixd = ix.contentWindow.document;
-				}
+		node_obj.title = obj_title;
+	},
+	
+	//
+	// Add a border to one whatever we are hovering over
+	//
+	"highlightObj": function(node_obj) {
+		node_obj.style.borderWidth = '1px';
+		node_obj.style.borderColor = this.element_types[node_obj._nodeType];
+		node_obj.style.borderStyle = (node_obj.className == '' ? 'dotted' : 'solid');
+	},
+	
+	//
+	// Remove the border from the hovered object
+	//
+	"unhighlightObj": function(node_obj, previous_border) {
+		node_obj.style.border = previous_border;
+	},
+	
+	//
+	// Display the CSS editor
+	//
+	"displayEditor": function(e) {
+		var target = FA.eventTarget(e);
+		if(this.css_editor && target && this.css_editor_iframe && this.css_editor_title) {
+			if(target.id != 'close_css_editor' && target.className != '') {
+				
+				var arrayPageSize	= getPageSize();
+				var arrayPageScroll = getPageScroll();
+				this.css_editor.style.top = (arrayPageScroll[1] + ((arrayPageSize[3] - 35 - this.css_editor.offsetHeight) / 2) + 'px');
+				
+				FA.show(this.css_editor);
+
+				this.css_editor_title.innerHTML = 'CSS: ' + target.className + '<br />' + target.title + '';
+				this.css_editor_iframe.src = 'admin.php?act=css_editstyle&editor=1&class=' + target.className.replace(/\s/, '+');
 			}
 		}
-		return ixd;
 	}
-}
+};

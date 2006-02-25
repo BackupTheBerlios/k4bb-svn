@@ -265,6 +265,10 @@ function k4_error_filter(&$error) {
 		return TRUE;
 	}
 }
+// return no error
+function k4_error_none(&$error) {
+	return TRUE;
+}
 
 
 /**

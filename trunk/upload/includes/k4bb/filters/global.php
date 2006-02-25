@@ -90,6 +90,7 @@ class K4SessionFilter extends FAFilter {
 		
 		$session = new FASession($request['dba']);
 		$session->gc();
+		$session->read();
 		$request['session'] = &$session;
 	}
 
@@ -167,13 +168,23 @@ class K4CookieValidator extends FAUserValidator {
 
 		if (isset($_COOKIE[K4COOKIE_ID], $_COOKIE[K4COOKIE_KEY])) {
 			
-			$this->_stmt->setInt(1, $_COOKIE[K4COOKIE_ID]);
-			$this->_stmt->setString(2, $_COOKIE[K4COOKIE_KEY]);
+			if($_COOKIE[K4COOKIE_ID] != '' && $_COOKIE[K4COOKIE_KEY] != '') {
+				$this->_stmt->setInt(1, $_COOKIE[K4COOKIE_ID]);
+				$this->_stmt->setString(2, $_COOKIE[K4COOKIE_KEY]);
 
-			$result = $this->_stmt->executeQuery();
-
-			if ($result->next())
-				$ret = $result->current();
+				$result = $this->_stmt->executeQuery();
+				
+				// user exists
+				if ($result->next()) {
+					$ret = $result->current();
+				}
+			}
+		}
+		
+		if(!$ret) {
+			$dom = get_domain();
+			setcookie(K4COOKIE_ID, "", time() - 3600, $dom);
+			setcookie(K4COOKIE_KEY, "", time() - 3600, $dom);
 		}
 
 		return $ret;

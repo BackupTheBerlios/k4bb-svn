@@ -25,15 +25,21 @@
 if (!defined('FILEARTS'))
 	return;
 
+//
+// Use this class to log and debug the session class,
+// this can obviously be used for other things as well
 class Logger {
 	function write($log) {
-		if ($handle = fopen('log.txt', 'a')) {
-			fwrite($handle, $log . "\n");
-			fclose($handle);
-		}
+		//if ($handle = fopen('log.txt', 'a')) {
+		//	fwrite($handle, $log . "\n");
+		//	fclose($handle);
+		//}
 	}
 }
 
+//
+// Manage guest/member sessions
+//
 class FASession extends FAObject {
 	var $_is_new;
 	
@@ -53,7 +59,7 @@ class FASession extends FAObject {
 		$this->_write_stmt		= $dba->prepareStatement("INSERT INTO ". K4SESSIONS ." (id, seen, name, user_id, usergroups, invisible, user_agent, data, location_file, location_act, location_id, user_ip) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
 		$this->_update_stmt		= $dba->prepareStatement("UPDATE ". K4SESSIONS ." SET name=?,user_id=?,usergroups=?,invisible=?,data=?,seen=?,user_agent=?,location_file=?,location_act=?,location_id=? WHERE id=? AND user_ip=?");
 		$this->_update_user_stmt= $dba->prepareStatement("UPDATE ". K4USERS ." SET last_seen=?,seen=?,ip=? WHERE id=?");
-		$this->_destroy_stmt	= $dba->prepareStatement("DELETE FROM ". K4SESSIONS ." WHERE sess_id=?");
+		$this->_destroy_stmt	= $dba->prepareStatement("DELETE FROM ". K4SESSIONS ." WHERE sess_id=? OR user_ip=?");
 		$this->_gc_stmt			= $dba->prepareStatement("DELETE FROM ". K4SESSIONS ." WHERE seen<?");
 	}
 
@@ -66,7 +72,7 @@ class FASession extends FAObject {
 			
 			//session_start();
 		
-			Logger::write('Started session');
+			Logger::write('[Started session]');
 		} else {
 			trigger_error("Session already started", E_USER_NOTICE);
 		}
@@ -79,12 +85,12 @@ class FASession extends FAObject {
 	}
 
 	function open($dirname, $sessid) {
-		Logger::write('Opened session.');
+		Logger::write('[Opened session]');
 		return TRUE;
 	}
 
 	function close() {
-		Logger::write('Closed session.');
+		Logger::write('[Closed session]');
 		return TRUE;
 	}
 
@@ -105,11 +111,13 @@ class FASession extends FAObject {
 			$this->_is_new = FALSE;
 			$data = $result->get('data');
 
-			Logger::write("\tThis session is new.");
+			Logger::write("\tThis session is not new.");
 		}
 		
 		session_decode($data);
 		
+		Logger::write("[Read session]");
+
 		return TRUE;
 	}
 
@@ -128,32 +136,19 @@ class FASession extends FAObject {
 				$this->_update_user_stmt->setInt(4, $_SESSION['user']->get('id'));
 				$this->_update_user_stmt->executeUpdate();
 			
-				Logger::write("\tUpdated user");
+				Logger::write("\tUpdated [Member] object.");
 			} else {
 				$_SESSION['user']->set('last_seen', $_SESSION['user']->get('seen'));
 				$_SESSION['user']->set('seen', time());
+
+				Logger::write("\tUpdated [Guest] object.");
 			}
 			
-//			// is this a search engine spider?
-//			if(!isset($_SESSION['user']) || !$_SESSION['user']->isMember()) {
-//				if(preg_match("~(". $_SPIDERAGENTS .")~is", USER_AGENT)) {
-//					
-//					Logger::write("\tRecognized bot.");
-//					
-//					foreach($_SPIDERS as $spider) {
-//						if(eregi($spider['useragent'], USER_AGENT)) {
-//							$_SESSION['user']->set('name', $spider['spidername']);
-//							$_SESSION['user']->set('id', 0);
-//							$_SESSION['user']->set('perms', ($spider['allowaccess'] == 1 ? 1 : -1));
-//						}
-//					}
-//				}
-//			}
 		}
 		
 		if ($this->isNew()) {
 			
-			Logger::write("\tThis session is new");
+			Logger::write("\tThis session is new, writing new session...");
 
 			$this->_write_stmt->setString(1,	session_id());
 			$this->_write_stmt->setInt(2,		time());
@@ -167,10 +162,19 @@ class FASession extends FAObject {
 			$this->_write_stmt->setString(10,	isset($_REQUEST['act']) ? $_REQUEST['act'] : '');
 			$this->_write_stmt->setInt(11,		isset($_REQUEST['id']) ? $_REQUEST['id'] : 0);
 			$this->_write_stmt->setString(12,	USER_IP);
-			$this->_write_stmt->executeUpdate();
+			
+			push_error_handler('k4_error_none');
+			if(!@$this->_write_stmt->executeUpdate()) {
+				$this->destroy();
+				$this->_write_stmt->executeUpdate();
+			}
+			pop_error_handler('k4_error_none');
 
-			Logger::write("\t\Wrote new session.");
+			Logger::write("\t\tWrote new session.");
 		} else {
+			
+			Logger::write("\tThis session is not new, updating session...");
+
 			$this->_update_stmt->setString(1,	$_SESSION['user']->get('name'));
 			$this->_update_stmt->setInt(2,		$_SESSION['user']->get('id'));
 			$this->_update_stmt->setString(3,	$_SESSION['user']->get('usergroups'));
@@ -185,26 +189,27 @@ class FASession extends FAObject {
 			$this->_update_stmt->setString(12,	USER_IP);
 			$this->_update_stmt->executeUpdate();
 
-			Logger::write("\tUpdated session.");
+			Logger::write("\t\tUpdated session.");
 		}
 
-		Logger::write('Wrote session.');
+		Logger::write("[Finished page session management]\n\n");
 
 		return TRUE;
 	}
 
-	function destroy($sessid) {
+	function destroy() {
 		$this->_destroy_stmt->setString(1, session_id());
+		$this->_destroy_stmt->setString(2, USER_IP);
 		$this->_destroy_stmt->executeUpdate();
 		$this->_is_new = FALSE;
-		Logger::write('Destroyed session.');
+		Logger::write('[Destroyed session]');
 		return TRUE;
 	}
 
 	function gc() {
 		$this->_gc_stmt->setInt(1, time() - ini_get('session.gc_maxlifetime'));
 		$this->_gc_stmt->executeUpdate();
-		Logger::write('Garbage collected.');
+		Logger::write('[Garbage collected]');
 		return TRUE;
 	}
 

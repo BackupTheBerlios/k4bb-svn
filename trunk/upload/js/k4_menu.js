@@ -54,14 +54,11 @@ k4Menu.prototype = {
 			filters_obj.stopLinkRedirect(link_obj);
 			filters_obj.highlightMenuRows(menu_obj);
 			filters_obj.slideResizeMenu(actions_obj, menu_obj);
-
-			// get the <body> tag
-			var body_element = FA.tagsByName(document, 'body');
-			
+						
 			// attach the events
 			FA.attachEvent(link_obj,'click',(function(){actions_obj.openMenu(link_obj,menu_obj);}));
 			FA.attachEvent(link_obj,'mouseover',(function(){actions_obj.openMenuIfOneIsOpen(link_obj,menu_obj);}));
-			FA.attachEvent(body_element[0],'click',(function(e){var open_menu_find=actions_obj.getOpenMenu();if(actions_obj.shouldCloseMenu(e,open_menu_find)){actions_obj.closeMenu(open_menu_find);}}));
+			FA.attachEvent(document.body,'click',(function(e){var open_menu_find=actions_obj.getOpenMenu();if(actions_obj.shouldCloseMenu(e,open_menu_find)){actions_obj.closeMenu(open_menu_find);}}));
 			FA.attachEvent(document,'click',(function(e){var open_menu_find=actions_obj.getOpenMenu();if(actions_obj.shouldCloseMenu(e,open_menu_find)){actions_obj.closeMenu(open_menu_find);}}));
 		}
 	}

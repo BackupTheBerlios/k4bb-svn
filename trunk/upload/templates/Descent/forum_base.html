@@ -82,7 +82,7 @@
 * @author Peter Goodman
 * @author Geoffrey Goodman
 */ -->
-<if:if var="admin_css_edit" eq="1"><if:if var="nojs" eq="0"><script type="text/javascript">var k4cssext=new k4css();k4cssext.init();</script></if:if></if:if>
+<if:if var="admin_css_edit" eq="1"><if:if var="nojs" eq="0"><script type="text/javascript" src="js/k4_css.js"></script><script type="text/javascript">k4CSS.init();</script></if:if></if:if>
 </body>
 </html>
 </core:block>

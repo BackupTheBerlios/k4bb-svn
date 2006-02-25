@@ -72,7 +72,9 @@ class K4DefaultAction extends FAAction {
 		foreach($cookieinfo as $key => $val)
 			$cookiestr					.= ','. $key .','. intval($val);
 		
-		setcookie(K4FORUMINFO, trim($cookiestr, ','), time() + 2592000, get_domain());
+		$domain = get_domain();
+		
+		setcookie(K4FORUMINFO, trim($cookiestr, ','), time() + 2592000, $domain);
 		
 		unset($cookieinfo, $cookiestr);
 
@@ -97,7 +99,7 @@ class K4DefaultAction extends FAAction {
 				$cookiestr					.= ','. $key .','. intval($val);
 		}
 		
-		setcookie(K4TOPICINFO, trim($cookiestr, ','), time() + 2592000, get_domain());		
+		setcookie(K4TOPICINFO, trim($cookiestr, ','), time() + 2592000, $domain);		
 		unset($cookieinfo, $cookiestr);
 				
 		/**

@@ -185,7 +185,7 @@ var FA = {
 	// Get an event
 	//
 	"getEvent": function(e) {
-		if (typeof(e) == 'undefined') { e = window.event; }
+		if (!e) { e = window.event; }
 		if (typeof(e.layerX) == 'undefined') { e.layerX = e.offsetX; }
 		if (typeof(e.layerY) == 'undefined') { e.layerY = e.offsetY; }
 		return e;
@@ -199,12 +199,12 @@ var FA = {
 		var e		= this.getEvent(ev);
 		var targ	= false;
 
-		if (e.target) {
+		if(typeof(e.target) != 'undefined' && e.target) {
 			targ = e.target;
-		} else if (e.srcElement) {
+		} else if(typeof(e.srcElement) != 'undefined' && e.srcElement) {
 			targ = e.srcElement;
 		}
-		if (targ.nodeType == 3) { // defeat Safari bug
+		if(targ.nodeType == 3) { // defeat Safari bug
 			targ = targ.parentNode;
 		}
 		return targ;
@@ -290,6 +290,31 @@ var FA = {
 			}
 		}
 		return pos;
+	},
+	
+	//
+	// Get the DOM object for an iframe
+	//
+	"getDocument": function(iframe_obj) {
+		var dom_object		= false;
+		var frame_object	= false;
+
+		if(this.iframe_obj) {
+			if(document.all) {
+				try { frame_object = frames[iframe_obj.id]; } catch(ex) { }
+			} else {
+				try { frame_object = iframe_obj.contentWindow; } catch(e) { }
+			}
+			if(frame_object) {
+
+				dom_object	= frame_object.document;
+
+				if(!dom_object && document.all && iframe_obj.contentWindow) {
+					dom_object = iframe_obj.contentWindow.document;
+				}
+			}
+		}
+		return dom_object;
 	}
 };
 

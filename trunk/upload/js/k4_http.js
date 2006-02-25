@@ -292,12 +292,8 @@ FAIframeRequest.prototype = {
 			iframe_div.id				= 'iframe_request_div';
 			iframe_div.style.display	= 'none';
 			
-			// get the <body> tag
-			var body_elements			= FA.tagsByName(document, 'body');
-			
-			// a bit of a hack to make our div without using document.write()
-			if(typeof(body_elements[0]) != 'undefined') {
-				FA.prependChild(body_elements[0], iframe_div);
+			if(typeof(document.body) != 'undefined') {
+				FA.prependChild(document.body, iframe_div);
 			}
 		}
 		
@@ -394,7 +390,7 @@ FAIframeRequest.prototype = {
 				clearTimeout(this.iframe_timer);
 			}
 
-			var iframe_document = this.get_iframe_document();
+			var iframe_document = FA.getDocument(this.iframe_obj);
 			
 			//
 			// get the stuf in the frame as text
@@ -449,31 +445,6 @@ FAIframeRequest.prototype = {
 				this.iframe_timer = setTimeout( (function(FA_iframe_http){ return function(){ FA_iframe_http.stateChange(); } })(this), 1000);
 			}
 		}
-	},
-	
-	//
-	// get the 'document' DOM of an object (an iframe)
-	//
-	get_iframe_document: function() {
-		var dom_object		= false;
-		var frame_object	= false;
-
-		if(this.iframe_obj) {
-			if(document.all) {
-				try { frame_object = frames[this.iframe_id]; } catch(ex) { debug('Could not fetch Frame object (document.all)', ex); }
-			} else {
-				try { frame_object = this.iframe_obj.contentWindow; } catch(e) { debug('Could not fetch Frame object (!document.all)', e); }
-			}
-			if(frame_object) {
-
-				dom_object	= frame_object.document;
-
-				if(!dom_object && document.all && this.iframe_obj.contentWindow) {
-					dom_object = this.iframe_obj.contentWindow.document;
-				}
-			}
-		}
-		return dom_object;
 	}
 };
 
@@ -637,12 +608,8 @@ var FAHTTP = {
 				// bring it all together
 				loader.appendChild(loader_img);
 				
-				// get the <body> tag
-				var body_elements				= FA.tagsByName(document, 'body');
-				
-				// a bit of a hack to make our div without using document.write()
-				if(typeof(body_elements[0]) != 'undefined') {
-					body_elements[0].appendChild(loader);
+				if(typeof(document.body) != 'undefined') {
+					document.body.appendChild(loader);
 				}
 			} else {
 				loader.style.display			= 'block';
