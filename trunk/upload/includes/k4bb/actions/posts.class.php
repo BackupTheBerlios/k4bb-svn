@@ -45,7 +45,7 @@ class InsertPost extends FAAction {
 			|| ( isset($_REQUEST['post']) || isset($_REQUEST['draft']) ) 
 			) {
 			
-			$submit_type = $_REQUEST['submit_type'];
+			$submit_type = isset($_REQUEST['submit_type']) ? $_REQUEST['submit_type'] : 'post';
 			$should_submit = ( isset($_REQUEST['post']) || isset($_REQUEST['draft']) );
 
 			global $_QUERYPARAMS, $_DATASTORE, $_SETTINGS;
@@ -124,7 +124,15 @@ class InsertPost extends FAAction {
 			$body_text = $_REQUEST['message'];
 			if(!isset($_REQUEST['disable_bbcode']) || !$_REQUEST['disable_bbcode']) {
 				$parser 	= &new BBParser;
+				
+				Globals::setGlobal('forum_id', $forum['forum_id']);
+				Globals::setGlobal('maxpolloptions', ($request['template']->getVar('maxpolloptions') > $forum['maxpolloptions'] ? $forum['maxpolloptions'] : $request['template']->getVar('maxpolloptions')));
+				Globals::setGlobal('maxpollquestions', ($request['template']->getVar('maxpollquestions') > $forum['maxpollquestions'] ? $forum['maxpollquestions'] : $request['template']->getVar('maxpollquestions')));
+				if($submit_type == 'post' || isset($_REQUEST['post'])) {
+					$parser->register('BBPollNode');
+				}
 				$body_text	= $parser->parse($body_text);
+				$is_poll = Globals::getGlobal('is_poll');
 			}
 			
 			if($submit_type == 'post' || $submit_type == 'draft' || $should_submit) {
@@ -231,19 +239,7 @@ class InsertPost extends FAAction {
 				 */
 				
 				$poster_name		= ($request['user']->get('id') <= 0 ? k4_htmlentities((isset($_REQUEST['poster_name']) ? $_REQUEST['poster_name'] : '') , ENT_QUOTES) : $request['user']->get('name'));
-				
-				$is_poll	= 0;
-				if($submit_type == 'post' || isset($_REQUEST['post'])) {
-					
-					// put it here to avoid previewing
-					//$poll_text		= $poller->parse($request, $is_poll);
-									
-					//if($body_text != $poll_text) {
-						//$body_text	= $poll_text;
-						//$is_poll	= 1;
-					//}
-				}
-				
+								
 				/* Make sure we're not double-posting */
 				if(!empty($last_topic) && (($_REQUEST['name'] == $last_topic['name']) && ($body_text == $last_topic['body_text']))) {
 					$action = new K4InformationAction(new K4LanguageElement('L_DOUBLEPOSTED'), 'content', TRUE, 'viewtopic.php?id='. $last_topic['post_id'], 3);
@@ -610,28 +606,34 @@ class UpdatePost extends FAAction {
 		}
 		
 		/* Does this user have permission to edit this topic if it is locked? */
-		if($topic['post_locked'] == 1 && get_map( 'closed', 'can_edit', array('forum_id' => $forum['forum_id'])) > $request['user']->get('perms')) {
+		if($post['post_locked'] == 1 && get_map( 'closed', 'can_edit', array('forum_id' => $forum['forum_id'])) > $request['user']->get('perms')) {
 			$action = new K4InformationAction(new K4LanguageElement('L_YOUNEEDPERMS'), 'content', FALSE);
 			return !USE_XMLHTTP ? $action->execute($request) : xmlhttp_message('L_YOUNEEDPERMS');
 		}
 
 		/* set the breadcrumbs bit */
-		k4_bread_crumbs($request['template'], $request['dba'], ($this->row_type & TOPIC ? 'L_EDITTOPIC' : 'L_EDITREPLY'), $topic, $forum);
+		k4_bread_crumbs($request['template'], $request['dba'], ($this->row_type & TOPIC ? 'L_EDITTOPIC' : 'L_EDITREPLY'), $post, $forum);
 				
 		/* Initialize the bbcode parser with the topic message */
 		$_REQUEST['message']	= substr($_REQUEST['message'], 0, $_SETTINGS['postmaxchars']);
-		/*$bbcode	= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['message'], $forum['forum_id'], 
-			iif((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']), FALSE, TRUE), 
-			iif((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']), FALSE, TRUE), 
-			iif((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']), FALSE, TRUE), 
-			iif((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']), FALSE, TRUE));*/
-		
+				
 		/* Parse the bbcode */
 		$body_text = $_REQUEST['message'];
-		
+		$submit_type = isset($_REQUEST['submit_type']) ? $_REQUEST['submit_type'] : 'post';
 		if(!isset($_REQUEST['disable_bbcode']) || !$_REQUEST['disable_bbcode']) {
 			$parser = &new BBParser;
+			
+			Globals::setGlobal('forum_id', $forum['forum_id']);
+			Globals::setGlobal('maxpolloptions', ($request['template']->getVar('maxpolloptions') > $forum['maxpolloptions'] ? $forum['maxpolloptions'] : $request['template']->getVar('maxpolloptions')));
+			Globals::setGlobal('maxpollquestions', ($request['template']->getVar('maxpollquestions') > $forum['maxpollquestions'] ? $forum['maxpollquestions'] : $request['template']->getVar('maxpollquestions')));
+			if($submit_type == 'post' || isset($_REQUEST['post'])) {
+				$parser->register('BBPollNode');
+			}
 			$body_text	= $parser->parse($body_text);
+			if($submit_type == 'post' || isset($_REQUEST['post'])) {
+				$body_text = $parser->comparePolls($post['post_id'], $body_text, $post['body_text'], $request['dba']);
+			}
+			$is_poll = Globals::getGlobal('is_poll');
 		}
 		// permissions are taken into account inside the poller
 		//$poller		= &new K4BBPolls($body_text, $topic['body_text'], $forum, $topic['post_id']);
@@ -660,17 +662,8 @@ class UpdatePost extends FAAction {
 		}
 
 		/* If we are saving this topic */
-		if((isset($_REQUEST['submit_type']) && $_REQUEST['submit_type'] == 'post') || isset($_REQUEST['post'])) {
-			
-			// put it here to avoid previewing
-			$is_poll		= 0;
-			//$poll_text		= $poller->parse($request, $is_poll);
-
-			//if($body_text != $poll_text) {
-				//$body_text	= $poll_text;
-				//$is_poll	= 1;
-			//}
-
+		if($submit_type == 'post' || isset($_REQUEST['post'])) {
+						
 			$posticon			= iif(($request['user']->get('perms') >= get_map( 'posticons', 'can_add', array('forum_id'=>$forum['forum_id']))), (isset($_REQUEST['posticon']) ? $_REQUEST['posticon'] : 'clear.gif'), 'clear.gif');
 			
 			$time				= time();

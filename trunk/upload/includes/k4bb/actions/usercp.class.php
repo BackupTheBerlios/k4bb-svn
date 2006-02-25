@@ -253,7 +253,7 @@ class K4UserCPSignature extends FAAction {
 		$body_text = '';
 		if($request['user']->get('signature') != '') {
 			//$bbcodex		= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $request['user']->get('signature'), FALSE, TRUE, TRUE, TRUE, TRUE);
-			$parser = &new BBParser;
+			$parser 		= &new BBParser;
 			$body_text		= $parser->revert($request['user']->get('signature'));
 		}
 
@@ -671,7 +671,7 @@ class K4UpdateUserSignature extends FAAction {
 		//$bbcode				= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['message'], FALSE, FALSE, (bool)intval($_SETTINGS['allowbbcodesignatures']), (bool)intval($_SETTINGS['allowemoticonssignature']), (bool)intval($_SETTINGS['autoparsesignatureurls']));
 		$signature = $_REQUEST['message'];
 		if((bool)intval($_SETTINGS['allowbbcodesignatures'])) {
-			$parser = &new BBParser;
+			$parser 			= &new BBParser;
 			$signature			= $parser->parse($signature);
 		}
 		$signature			= substr($request['dba']->quote($signature), 0, 255);

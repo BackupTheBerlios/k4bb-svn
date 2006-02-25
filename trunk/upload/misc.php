@@ -265,23 +265,16 @@ class changePostBodyText extends FAAction {
 				return xmlhttp_message('L_INSERTPOSTMESSAGE');
 			}
 			
-			//$bbcode	= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['message'], $post['forum_id'], 
-			//(bool)$post['disable_html'], 
-			//(bool)$post['disable_bbcode'], 
-			//(bool)$post['disable_emoticons'],
+			global $_ALLFORUMS;
 			
+			Globals::setGlobal('forum_id', $post['forum_id']);
+			Globals::setGlobal('maxpolloptions', ($request['template']->getVar('maxpolloptions') > $_ALLFORUMS[$post['forum_id']]['maxpolloptions'] ? $_ALLFORUMS[$post['forum_id']]['maxpolloptions'] : $request['template']->getVar('maxpolloptions')));
+			Globals::setGlobal('maxpollquestions', ($request['template']->getVar('maxpollquestions') > $_ALLFORUMS[$post['forum_id']]['maxpollquestions'] ? $_ALLFORUMS[$post['forum_id']]['maxpollquestions'] : $request['template']->getVar('maxpollquestions')));
 			$parser = &new BBParser;
+			$parser->register('BBPollNode');
 			$body_text = $parser->parse($_REQUEST['message']);
-			$poller		= &new K4BBPolls($body_text, '', array('forum_id'=>$post['forum_id']), $post['post_id']);
-
-			$is_poll	= 0;
-			// put it here to avoid previewing
-			$poll_text		= $poller->parse($request, $is_poll);
-							
-			if($body_text != $poll_text) {
-				$body_text	= $poll_text;
-				$is_poll	= 1;
-			}
+			$body_text = $parser->comparePolls($post['post_id'], $body_text, $post['body_text'], $request['dba']);
+			$is_poll = Globals::getGlobal('is_poll');
 			
 			/* If this topic is a redirect/ connects to one, update the original */
 			if($post['row_type'] & TOPIC && ($post['moved_new_post_id'] > 0 || $post['moved_old_post_id'] > 0)) {

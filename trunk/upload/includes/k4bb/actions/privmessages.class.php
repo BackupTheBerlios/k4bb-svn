@@ -609,6 +609,10 @@ class K4SendPMessage extends FAAction {
 		
 		if(!isset($_REQUEST['disable_bbcode']) || !$_REQUEST['disable_bbcode']) {
 			$parser = &new BBParser;
+			
+			Globals::setGlobal('forum_id', 0);
+			Globals::setGlobal('maxpolloptions', 0);
+			
 			$body_text	= $parser->parse($body_text);
 		}
 		$parent_id	= 0;

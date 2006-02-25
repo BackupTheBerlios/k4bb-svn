@@ -22,8 +22,6 @@
 * @package k42
 */
 
-
-
 if(!defined('IN_K4')) {
 	return;
 }
@@ -93,6 +91,9 @@ class EditReply extends FAAction {
 		
 		//$bbcode				= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $reply['body_text'], $forum['forum_id'], TRUE, TRUE, TRUE, TRUE);
 		$parser = &new BBParser;
+		
+		Globals::setGlobal('forum_id', $forum['forum_id']);
+		Globals::setGlobal('maxpolloptions', $forum['maxpolloptions']);
 		
 		/* Get and set the emoticons and post icons to the template */
 		$emoticons			= $request['dba']->executeQuery("SELECT * FROM ". K4EMOTICONS ." WHERE clickable = 1");

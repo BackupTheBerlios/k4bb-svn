@@ -175,7 +175,7 @@ function changeLockedIcon(k4_http, icon) {
 	var response_text			= k4_http.getResponseText();
 	
 	if(response_text != '') {			
-		var bad_match			= new RegExp("(announce|sticky)", "i");
+		var bad_match			= new RegExp("(announce|sticky|poll)", "i");
 		var matches				= icon.src.match(bad_match);
 		
 		if(FA.sizeOf(matches) == 0) {

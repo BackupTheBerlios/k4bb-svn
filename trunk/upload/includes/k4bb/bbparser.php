@@ -313,29 +313,39 @@ class BBTagRegistry {
 }
 
 class BBParser {
-	function &createRegistry() {
-		$reg = &new BBTagRegistry('BBDefaultNode');
-        $reg->register('BBFormatNode');
-		$reg->register('BBCenterNode');
-		$reg->register('BBLeftNode');
-		$reg->register('BBRightNode');
-		$reg->register('BBJustifyNode');
-		$reg->register('BBHorizauntalRuleNode');
-		$reg->register('BBCodeNode');
-        $reg->register('BBCodeBodyNode');
-        $reg->register('BBCodeTitleNode');
-		$reg->register('BBLinkNode');
-		$reg->register('BBListNode');
-		$reg->register('BBListItemNode');
-		$reg->register('BBPhpNode');
-        $reg->register('BBPhpBodyNode');
-        $reg->register('BBPhpTitleNode');
-		$reg->register('BBQuoteNode');
-		$reg->register('BBQuoteBodyNode');
-		$reg->register('BBQuoteTitleNode');
-		$reg->register('BBLinkNode');
+	var $_reg;
+	
+	function BBParser() {
+		$this->_reg = &new BBTagRegistry('BBDefaultNode');
+	}
 
-		return $reg;
+	function register($class) {
+		$this->_reg->register($class);
+		return TRUE;
+	}
+
+	function &createRegistry() {
+        $this->register('BBFormatNode');
+		$this->register('BBCenterNode');
+		$this->register('BBLeftNode');
+		$this->register('BBRightNode');
+		$this->register('BBJustifyNode');
+		$this->register('BBHorizauntalRuleNode');
+		$this->register('BBCodeNode');
+        $this->register('BBCodeBodyNode');
+        $this->register('BBCodeTitleNode');
+		$this->register('BBLinkNode');
+		$this->register('BBListNode');
+		$this->register('BBListItemNode');
+		$this->register('BBPhpNode');
+        $this->register('BBPhpBodyNode');
+        $this->register('BBPhpTitleNode');
+		$this->register('BBQuoteNode');
+		$this->register('BBQuoteBodyNode');
+		$this->register('BBQuoteTitleNode');
+		$this->register('BBLinkNode');
+
+		return $this->_reg;
 	}
     
     function revert($buffer) {
@@ -435,6 +445,56 @@ class BBParser {
 		}
 
 		return $root->flatten();
+	}
+
+	// compare polls
+	function comparePolls($post_id, $new_text, $old_text, &$dba) {
+		
+		$to_delete = array();
+		$new_polls = array();
+
+		preg_match_all('~\[poll=([0-9]+?)\]~i', $new_text, $new_poll_matches, PREG_SET_ORDER);
+		preg_match_all('~\[poll=([0-9]+?)\]~i', $old_text, $old_poll_matches, PREG_SET_ORDER);
+		
+		// go over the new text
+		if(isset($new_poll_matches[0])) {
+			$i = 0;
+			foreach($new_poll_matches as $poll) {
+				if($i > Globals::getGlobal('maxpollquestions')) {
+					$new_text = str_replace($poll[0], '', $new_text);
+					$to_delete[] = $poll[1];
+				} else {
+					$new_polls[]	= $poll[1];
+				}
+				$i++;
+			}
+		}
+		
+		// go over the old text
+		if(isset($old_poll_matches[0])) {
+			foreach($old_poll_matches as $poll) {
+				if(!in_array($poll[1], $new_polls)) {
+					$to_delete[] = $poll[1];
+				}
+			}
+		}
+		// delete all the polls that need to be removed
+		foreach($to_delete as $poll_id) {
+			
+			// check if this poll is being used somewhere else
+			$topic_matches		= $dba->executeQuery("SELECT * FROM ". K4POSTS ." WHERE lower(body_text) LIKE lower('%[poll=". $poll_id ."]%') AND post_id <> ". intval($post_id));
+			$reply_matches		= $dba->executeQuery("SELECT * FROM ". K4POSTS ." WHERE lower(body_text) LIKE lower('%[poll=". $poll_id ."]%') AND post_id <> ". intval($post_id));
+			
+			// we can delete it
+			if( !$topic_matches->hasNext() && !$reply_matches->hasNext() ) {
+				
+				$dba->executeUpdate("DELETE FROM ". K4POLLQUESTIONS ." WHERE id = ". intval($poll_id));
+				$dba->executeUpdate("DELETE FROM ". K4POLLANSWERS ." WHERE question_id = ". intval($poll_id));
+				$dba->executeUpdate("DELETE FROM ". K4POLLVOTES ." WHERE question_id = ". intval($poll_id));
+			}
+		}
+		
+		return $new_text;
 	}
 }
 
@@ -734,6 +794,65 @@ class BBListNode extends BBTagNode {
 		$type = preg_replace('~^.*type(=)"([^"]*)".*$~', '$1$2', $this->_attrib);
         
         return "[list$type]{$body}[/list]";
+    }
+}
+
+class BBPollNode extends BBTagNode {
+	function flatten($noparse = FALSE) {
+		if ($noparse) return $this->getUnparsed($noparse);
+		
+		$body			= parent::flatten($noparse);
+        $question		= trim($this->_attrib);
+		
+		$items			= explode('[*]', $body);
+		$param			= $this->_attrib;
+		
+		$maxpolloptions = intval(Globals::getGlobal('maxpolloptions'));
+		$forum_id		= intval(Globals::getGlobal('forum_id'));
+		
+		if(!Globals::getGlobal('num_polls')) {
+			Globals::setGlobal('num_polls', 0);
+		}
+
+		$can_poll = ($forum_id > 0 && $_SESSION['user']->get('perms') >= get_map( 'bbcode', 'can_add', array('forum_id'=>$forum_id)));
+
+		$ret = '';
+		
+		if(count($items) > 0 && $maxpolloptions > 0 && $can_poll && $question != '' && Globals::getGlobal('num_polls') <= Globals::getGlobal('maxpollquestions')) {
+			
+			global $_DBA;
+
+			$question		= $_DBA->quote(k4_htmlentities($question, ENT_QUOTES));
+			$insert_question= $_DBA->executeUpdate("INSERT INTO ". K4POLLQUESTIONS ." (question, created, user_id, user_name) VALUES ('{$question}', ". time() .", ". intval($_SESSION['user']->get('id')) .", '". $_DBA->quote($_SESSION['user']->get('name')) ."')");
+			$question_id	= $_DBA->getInsertId(K4POLLQUESTIONS, 'id');
+
+			$buffer = '';
+			$i = 0;
+			foreach ($items as $item) {
+				if($i >= $maxpolloptions) {
+					break;
+				}
+				$item = trim(strip_tags(preg_replace("~(\r\n|\r|\n|\t|<br>|<br\/>|<br \/>)~i", "", $item)));
+				if ($item != '') {
+					$_DBA->executeUpdate("INSERT INTO ". K4POLLANSWERS ." (question_id,answer) VALUES (". intval($question_id) .", '". $_DBA->quote(k4_htmlentities($item, ENT_QUOTES)) ."')");
+					$i++;
+				}
+			}
+			
+			Globals::setGlobal('is_poll', TRUE);
+			Globals::setGlobal('num_polls', Globals::getGlobal('num_polls')+1);
+
+			$ret = "[poll=$question_id]";
+		}
+		return $ret;
+	}
+    
+    function getTagNames() {
+        return array('question');
+    }
+    
+    function revert() {
+        return "";
     }
 }
 

@@ -89,10 +89,9 @@ class TopicReviewIterator extends FAArrayIterator {
 		
 		
 		//$bbcode							= &new BBCodex($this->dba, $this->user, $temp['body_text'], $temp['forum_id'], TRUE, TRUE, TRUE, TRUE);
-		$parser = &new BBParser;
 		if($temp['num_replies'] > 0) {
 
-			$temp['replies']			= &new RepliesReviewIterator($this->result, $this->qp, $this->dba, $this->users, $this->groups, $this->user, $this->url, $this->poll_text, $bbcode);
+			$temp['replies']			= &new RepliesReviewIterator($this->result, $this->qp, $this->dba, $this->users, $this->groups, $this->user, $this->url, $this->poll_text);
 
 		}
 		
@@ -104,7 +103,7 @@ class TopicReviewIterator extends FAArrayIterator {
 
 		do_post_polls($temp, $this->dba, $this->url, $this->poll_text);
 		
-		unset($bbcode, $user, $group);
+		unset($user, $group);
 
 		return $temp;
 	}
@@ -171,12 +170,7 @@ class RepliesReviewIterator extends FAProxyIterator {
 		}
 
 		do_post_polls($temp, $this->dba, $this->url, $this->poll_text);
-
-		/* Should we free the result? */
-		if(!$this->hasNext()) {
-			$this->result->free();
-		}
-
+		
 		return $temp;
 	}
 }

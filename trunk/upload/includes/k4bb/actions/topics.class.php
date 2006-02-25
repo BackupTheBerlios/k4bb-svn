@@ -106,18 +106,21 @@ class PostDraft extends FAAction {
 		
 		/* Initialize the bbcode parser with the topic message */
 		$_REQUEST['message']	= substr($_REQUEST['message'], 0, $_SETTINGS['postmaxchars']);
-		/*$bbcode	= &new BBCodex($request['dba'], $request['user']->getInfoArray(), $_REQUEST['message'], $forum['forum_id'], 
-			((isset($_REQUEST['disable_html']) && $_REQUEST['disable_html']) ? FALSE : TRUE), 
-			((isset($_REQUEST['disable_bbcode']) && $_REQUEST['disable_bbcode']) ? FALSE : TRUE), 
-			((isset($_REQUEST['disable_emoticons']) && $_REQUEST['disable_emoticons']) ? FALSE : TRUE), 
-			((isset($_REQUEST['disable_aurls']) && $_REQUEST['disable_aurls']) ? FALSE : TRUE));*/
-		
+				
 		/* Parse the bbcode */
 		$body_text = $_REQUEST['message'];
+		$submit_type = isset($_REQUEST['submit_type']) ? $_REQUEST['submit_type'] : 'post';
 		
 		if(!isset($_REQUEST['disable_bbcode']) || !$_REQUEST['disable_bbcode']) {
 			$parser = &new BBParser;
+			Globals::setGlobal('forum_id', $forum['forum_id']);
+			Globals::setGlobal('maxpolloptions', ($request['template']->getVar('maxpolloptions') > $forum['maxpolloptions'] ? $forum['maxpolloptions'] : $request['template']->getVar('maxpolloptions')));
+			Globals::setGlobal('maxpollquestions', ($request['template']->getVar('maxpollquestions') > $forum['maxpollquestions'] ? $forum['maxpollquestions'] : $request['template']->getVar('maxpollquestions')));
+			if($submit_type == 'post' || $submit_type == 'draft' || isset($_REQUEST['post'])) {
+				$parser->register('BBPollNode');
+			}
 			$body_text	= $parser->parse($body_text);
+			$is_poll = Globals::getGlobal('is_poll');
 		}
 		
 		// permissions are taken into account inside the poller
@@ -141,22 +144,13 @@ class PostDraft extends FAAction {
 		}
 		
 		/* If we are submitting or saving a draft */
-		if((isset($_REQUEST['submit_type']) && ($_REQUEST['submit_type'] == 'post' || $_REQUEST['submit_type'] == 'draft')) || ( isset($_REQUEST['post']) || isset($_REQUEST['draft']) ) ) {
+		if( ($submit_type == 'post' || $submit_type == 'draft') || ( isset($_REQUEST['post']) || isset($_REQUEST['draft'])) ) {		
 			
-			// put it here to avoid previewing
-			$is_poll	= 0;
-			//$poll_text		= $poller->parse($request, $is_poll);
-
-			//if($body_text != $poll_text) {
-				//$is_poll	= 1;
-				//$body_text	= $poll_text;
-			//}
-
 			/**
 			 * Build the queries to add the draft
 			 */
 			
-			$poster_name		= iif($request['user']->get('id') <= 0,  k4_htmlentities((isset($_REQUEST['poster_name']) ? $_REQUEST['poster_name'] : '') , ENT_QUOTES), $request['user']->get('name'));
+			$poster_name		= ($request['user']->get('id') <= 0 ? k4_htmlentities((isset($_REQUEST['poster_name']) ? $_REQUEST['poster_name'] : '') , ENT_QUOTES) : $request['user']->get('name'));
 
 			$update_a			= $request['dba']->prepareStatement("UPDATE ". K4POSTS ." SET name=?,body_text=?,posticon=?,disable_html=?,disable_bbcode=?,disable_emoticons=?,disable_sig=?,disable_areply=?,disable_aurls=?,is_draft=?,post_type=?,is_feature=?,is_poll=?,created=? WHERE post_id=?");
 			
