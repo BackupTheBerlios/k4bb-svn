@@ -940,7 +940,7 @@ class DeletePost extends FAAction {
 		if($this->row_type & REPLY) {
 			$request['dba']->executeUpdate("DELETE FROM ". K4BADPOSTREPORTS ." WHERE post_id = ". intval($post['post_id']) );
 		} else {
-			$posts = $request['dba']->executeQuery("SELECT post_id,poster_id,attachments FROM ". K4POSTS ." WHERE ( (parent_id=". intval($post['post_id']) ." AND row_type=". REPLY .") OR parent_id=". intval($post['post_id']) .")");
+			$posts = $request['dba']->executeQuery("SELECT post_id,poster_id,attachments FROM ". K4POSTS ." WHERE ( (parent_id=". intval($post['post_id']) ." AND row_type=". REPLY .") OR (post_id=". intval($post['post_id']) ." AND row_type=". TOPIC .") )");
 			$num_replies_to_remove = intval($posts->numrows() - 1);
 			while($posts->next()) {
 				$p = $posts->current();

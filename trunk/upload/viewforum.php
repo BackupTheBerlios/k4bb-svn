@@ -290,7 +290,7 @@ class K4DefaultAction extends FAAction {
 					
 					global $_FILTERS, $_FORUMFILTERS;
 					
-					$query = "SELECT * FROM ". K4POSTS ." WHERE row_type=". TOPIC;
+					$query = "SELECT * FROM ". K4POSTS ." WHERE row_type=". TOPIC ." AND forum_id<>". GARBAGE_BIN ." ";
 					
 					// loop through the filters being applied to this forum
 					$forum_filters = array();
